@@ -11,6 +11,7 @@ COPY package*.json ./
 COPY bun.lockb ./bun.lock
 
 RUN bun install
+RUN bun install -g nodemon chokidar
 
 COPY . .
 
@@ -18,4 +19,4 @@ COPY . .
 EXPOSE 3000
 
 # Command to run the development server
-CMD ["bun", "run", "dev"]
+CMD ["bun", "run", "dev"] 

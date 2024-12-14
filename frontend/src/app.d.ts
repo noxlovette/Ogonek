@@ -11,7 +11,7 @@ declare global {
 		interface Task {
 		id: string;
 		title: string;
-		description: string;
+		content: string;
 		priority: int;
 		created_at: string;
 		updated_at: string;
