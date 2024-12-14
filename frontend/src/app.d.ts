@@ -8,12 +8,15 @@ declare global {
 		// interface PageState {}
 		// interface Platform {}
 
-		interface Article {
+		interface Task {
 		id: string;
 		title: string;
-		content: string;
-		processed_html: string;
-		}
+		description: string;
+		priority: int;
+		created_at: string;
+		updated_at: string;
+		status: string;
+	}
 	}
 }
 

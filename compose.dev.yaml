@@ -3,7 +3,7 @@ services:
     build: 
       context: ./frontend
       dockerfile: Dockerfile.dev
-    container_name: frontend-deuterium
+    container_name: frontend-firelight
     ports:
       - "3001:3000"  # Different external port for frontend
     volumes:
@@ -18,20 +18,20 @@ services:
     depends_on:
       - backend
   
-  frontend-admin:
+  midend:
     build:
-      context: ./frontend-admin
+      context: ./midend
       dockerfile: Dockerfile.dev
-    container_name: frontend-admin-deuterium
+    container_name: midend-firelight
     ports:
       - "3002:3000"  # Different external port for frontend-admin
     volumes:
-      - ./frontend-admin:/app
+      - ./midend:/app
     environment:
       - NODE_ENV=development
       - BACKEND_URL="http://backend:8000"
     env_file:
-      - ./frontend-admin/.env
+      - ./midend/.env
     depends_on:
       - backend
 
@@ -39,7 +39,7 @@ services:
     build: 
       context: ./backend
       dockerfile: Dockerfile.dev
-    container_name: backend-deuterium
+    container_name: backend-firelight
     ports:
       - "8002:8000"  # Different external port for backend
     volumes:
@@ -52,7 +52,7 @@ services:
 
   redis:
     image: redis/redis-stack:latest
-    container_name: redis-deuterium
+    container_name: redis-firelight
     ports:
       - "6379:6379"
       - "8003:8001"
@@ -62,9 +62,9 @@ services:
     restart: always
     user: postgres
     volumes:
-      - db-data-deuterium:/var/lib/postgresql/data  # Separate volume for the new database
+      - db-data-firelight:/var/lib/postgresql/data  # Separate volume for the new database
     environment:
-      - POSTGRES_DB=deuterium
+      - POSTGRES_DB=firelight
       - POSTGRES_PASSWORD=changeme
     ports:
       - "5433:5432"  # Different external port for Postgres
@@ -75,4 +75,4 @@ services:
       retries: 5
 
 volumes:
-  db-data-deuterium:
+  db-data-firelight:

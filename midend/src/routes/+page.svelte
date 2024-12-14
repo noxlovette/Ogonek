@@ -2,7 +2,7 @@
 
 </script>
 <h1 class="text-3xl font-bold">
-    Welcome to Deuterium ADMIN! 🧑🏻‍💻
+    Welcome to Deuterium ADMIN!
   </h1>
   
   <nav>

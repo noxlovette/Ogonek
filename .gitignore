@@ -8,6 +8,8 @@ node_modules
 /.next
 venv
 
+.idea/
+
 # Cache
 .cache
 .cache-loader

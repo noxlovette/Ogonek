@@ -18,14 +18,11 @@ Including another URLconf
 from django.contrib import admin
 from rest_framework.routers import DefaultRouter
 from django.urls import path, include
-from blog.views import ArticleViewSet, CategoryViewSet, TagViewSet, ConceptViewSet
+from blog.views import TaskViewSet
 
 
 router = DefaultRouter()
-router.register(r'articles', ArticleViewSet, basename='article')
-router.register(r'categories', CategoryViewSet, basename='category')
-router.register(r'tags', TagViewSet, basename='tag')
-router.register(r'concepts', ConceptViewSet, basename='concept')
+router.register(r'tasks', TaskViewSet, basename='task')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
