@@ -1,0 +1,78 @@
+services:
+  frontend:
+    build: 
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    container_name: frontend-deuterium
+    ports:
+      - "3001:3000"  # Different external port for frontend
+    volumes:
+     # - ./frontend/static:/app/static
+     # - ./frontend/src:/app/src
+     - ./frontend:/app
+    environment:
+      - NODE_ENV=development
+      - BACKEND_URL="http://backend:8000"
+    env_file:
+      - ./frontend/.env
+    depends_on:
+      - backend
+  
+  frontend-admin:
+    build:
+      context: ./frontend-admin
+      dockerfile: Dockerfile.dev
+    container_name: frontend-admin-deuterium
+    ports:
+      - "3002:3000"  # Different external port for frontend-admin
+    volumes:
+      - ./frontend-admin:/app
+    environment:
+      - NODE_ENV=development
+      - BACKEND_URL="http://backend:8000"
+    env_file:
+      - ./frontend-admin/.env
+    depends_on:
+      - backend
+
+  backend:
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    container_name: backend-deuterium
+    ports:
+      - "8002:8000"  # Different external port for backend
+    volumes:
+      - ./backend:/app
+    env_file:
+      - ./backend/.env
+    command: python manage.py runserver 0.0.0.0:8000
+    depends_on:
+      - db
+
+  redis:
+    image: redis/redis-stack:latest
+    container_name: redis-deuterium
+    ports:
+      - "6379:6379"
+      - "8003:8001"
+
+  db:
+    image: postgres
+    restart: always
+    user: postgres
+    volumes:
+      - db-data-deuterium:/var/lib/postgresql/data  # Separate volume for the new database
+    environment:
+      - POSTGRES_DB=deuterium
+      - POSTGRES_PASSWORD=changeme
+    ports:
+      - "5433:5432"  # Different external port for Postgres
+    healthcheck:
+      test: ["CMD", "pg_isready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  db-data-deuterium:

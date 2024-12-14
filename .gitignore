@@ -1,0 +1,49 @@
+node_modules
+
+# Build
+/dist
+/build
+/out
+/public
+/.next
+venv
+
+# Cache
+.cache
+.cache-loader
+.nuxt
+yarn-error.log
+yarn.lock
+package-lock.json
+bun.lockb
+
+# Output
+.output
+.vercel
+.svelte-kit
+/build
+.npmrc
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env
+.env
+.env.*
+!.env.example
+!.env.test
+
+# Vite
+vite.config.js.timestamp-*
+vite.config.ts.timestamp-*
+
+# django
+*.sqlite3
+*.pyc
+*.pyo
+*.pyd
+__pycache__
+.env
+db.sqlite3
+myenv
