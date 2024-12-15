@@ -1,9 +1,16 @@
 <script lang="ts">
+	import UsefulLInks from "./UsefulLInks.svelte";
+	import Word from "./Word.svelte";
+	import Lessons from "./Lessons.svelte";
+
 </script>
 
-<div>
-	<div class="flex flex-col w-64 h-screen bg-sand-800/70 text-sand-50 text-2xl">
-		<h1>Word of The Day</h1>
-		<div class="mt-auto p-6 flex items-baseline space-x-2"></div>
+
+	<div class="flex flex-col h-screen text-sand-100 font-serif text-2xl justify-between space-y-4 px-6 py-4">
+		<Word></Word>
+		<Lessons></Lessons>
+		<UsefulLInks></UsefulLInks>
 	</div>
-</div>
+
+	
+	

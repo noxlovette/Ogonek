@@ -1,43 +1,58 @@
 <script lang="ts">
-	import { getContext } from 'svelte';
-
-	const user = getContext('user');
+	import {user} from '$lib/stores';
+	import { Hand, House, ListTodo, MessageSquare, Settings, Video, WholeWord } from 'lucide-svelte';
 </script>
 
 <div>
 	<div
-		class="flex flex-col w-64 h-screen bg-sand-900/70 text-sand-50 text-2xl font-serif shadow-lg border-r border-sand-900/10"
+		class="flex flex-col w-64 h-screen text-sand-100 text-2xl font-serif  justify-between"
 	>
-		<div class="flex h-18 bg-sand-950/80 p-4">
-			<h1 class=" text-3xl p-2">Firelight</h1>
+		<div class="flex p-4">
+			<h1 class=" text-4xl p-2">Firelight</h1>
 		</div>
 
-		<ul class="flex flex-col p-4 shadow-inner">
-			<a href="/" class="p-2">Dashboard</a>
+		<ul class="flex flex-col p-4 justify-between h-1/2">
+			<a href="/u/dashboard" class="px-2 py-4 inline-flex">
+				<House class="size-8 mr-2 " />
+				Dashboard</a>
 
-			<a href="/tasks" class="p-2">Tasks</a>
+			<a href="/u/tasks" class="px-2 py-4 inline-flex">
+				<ListTodo class="size-8 mr-2" />
+				Tasks</a>
 
-			<a href="/grok" class="p-2">Grok</a>
+			<a href="/u/grok" class="px-2 py-4 inline-flex">
+				<MessageSquare class="size-8 mr-2" />
+				Grok</a>
 
 			<a
 				href="https://us05web.zoom.us/j/3661071003?pwd=RTlrUkRPaHJaakljZXQxaGpOYmdIZz09"
-				class="p-2"
+				class="px-2 py-4 inline-flex"
 			>
+			<Video class="size-8 mr-2" />
 				Zoom
 			</a>
-			<a href="https://quizlet.com" class="p-2"> Quizlet </a>
-		</ul>
-		<div class="mt-auto p-4">
+			<a href="{$user.quizlet_url}" class="px-2 py-4 inline-flex">
+				<WholeWord class="size-8 mr-2" />
+				
+				Quizlet </a>
+
 			<a
-				href="/settings"
-				class="p-2
-					">Settings</a
+				href="/u/settings"
+				class="px-2 py-4 inline-flex
+					">
+					<Settings class="size-8 mr-2" />
+					
+					Settings</a
 			>
-			<h2>
+		</ul>
+		<div class="p-4">
+			
+			<h2 class="p-2 inline-flex">
 				{#if user}
-					<p class="p-2">Logged in as {user.email}</p>
+				<Hand class="size-8 mr-2" />
+					{$user.username}
 				{:else}
-					<p class="p-2">Not logged in</p>
+					Not logged in
 				{/if}
 			</h2>
 		</div>
@@ -46,6 +61,6 @@
 
 <style>
 	a:hover {
-		@apply bg-sand-900/70 transition-colors duration-300 rounded-lg text-sand-100;
+		@apply bg-sand-900/20 transition-colors duration-300 rounded-lg text-sand-100;
 	}
 </style>
