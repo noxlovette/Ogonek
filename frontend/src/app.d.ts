@@ -37,6 +37,16 @@ declare global {
 		is_authenticated: boolean;
 		csrfToken: string;
 	}
+
+	interface Lesson {
+		id: string;
+		title: string;
+		content: string;
+		created_at: string;
+		updated_at: string;
+		topic: string;
+		bookmarked: boolean;
+	}
 }
 }
 

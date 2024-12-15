@@ -1,9 +1,22 @@
-<a href="/u/dashboard" class="px-2 py-1 flex flex-col">
+<script lang="ts">
+    export let lesson: App.Lesson;
+
+    const date = new Date(lesson.created_at);
+
+const formattedDate = date.toLocaleDateString('en-GB', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric'
+});
+</script>
+
+
+<a href="/u/lessons/{lesson.id}" class="px-2 py-1 flex flex-col">
     <h3>
-        Date
+        {formattedDate}
     </h3>
     <p class="text-base">
-        Topic
+        {lesson.topic}
     </p>
 </a>
 

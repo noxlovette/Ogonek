@@ -18,11 +18,12 @@ Including another URLconf
 from django.contrib import admin
 from rest_framework.routers import DefaultRouter
 from django.urls import path, include
-from blog.views import TaskViewSet,UserDataApi, LoginAPIView, CheckSessionAPI
+from blog.views import TaskViewSet,UserDataApi, LoginAPIView, CheckSessionAPI, LessonViewSet
 
 
 router = DefaultRouter()
 router.register(r'tasks', TaskViewSet, basename='task')
+router.register(r'lessons', LessonViewSet, basename='lesson')
 
 urlpatterns = [
     path('admin/', admin.site.urls),

@@ -58,3 +58,19 @@ class Comment(models.Model):
     def __str__(self):
         return self.content
 
+
+class Lessons(models.Model):
+    id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
+    title = models.CharField(max_length=255)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    category = models.CharField(max_length=50, default='grammmar')
+    topic = models.CharField(max_length=50, default='english')
+
+    bookmarked = models.BooleanField(default=False)
+
+    assignee = models.ForeignKey(User, on_delete=models.CASCADE, related_name='lessons')
+
+    def __str__(self):
+        return self.title

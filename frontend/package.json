@@ -35,6 +35,8 @@
   },
   "type": "module",
   "dependencies": {
-    "lucide-svelte": "^0.468.0"
+    "lucide-svelte": "^0.468.0",
+    "marked": "^15.0.4",
+    "mdsvex": "^0.12.3"
   }
 }

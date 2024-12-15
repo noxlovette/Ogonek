@@ -1,6 +1,6 @@
 from rest_framework import viewsets
-from .models import Task, User
-from .serializers import TaskSerializer, UserSerializer
+from .models import Task, User, Lessons
+from .serializers import TaskSerializer, UserSerializer, LessonSerializer
 from rest_framework.views import APIView
 from django.http import JsonResponse
 from rest_framework.response import Response
@@ -16,6 +16,11 @@ class TaskViewSet(viewsets.ModelViewSet):
 class UserDataApi(APIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+
+class LessonViewSet(viewsets.ModelViewSet):
+    queryset = Lessons.objects.all()
+    serializer_class = LessonSerializer
 
 class LoginAPIView(APIView):
     def post(self, request):

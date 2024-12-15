@@ -1,6 +1,6 @@
 <script lang="ts">
 	import {user} from '$lib/stores';
-	import { Hand, House, ListTodo, MessageSquare, Settings, Video, WholeWord } from 'lucide-svelte';
+	import { Bookmark, Hand, House, ListTodo, MessageSquare, Settings, Video, WholeWord } from 'lucide-svelte';
 </script>
 
 <div>
@@ -19,6 +19,10 @@
 			<a href="/u/tasks" class="px-2 py-4 inline-flex">
 				<ListTodo class="size-8 mr-2" />
 				Tasks</a>
+
+				<a href="/u/bookmarked" class="px-2 py-4 inline-flex">
+					<Bookmark class="size-8 mr-2" />
+					Bookmarks</a>
 
 			<a href="/u/grok" class="px-2 py-4 inline-flex">
 				<MessageSquare class="size-8 mr-2" />
