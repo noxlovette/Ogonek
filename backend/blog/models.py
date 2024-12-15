@@ -5,7 +5,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.contrib.auth.models import AbstractUser
 
 class User(AbstractUser):
-    pass
+    quizlet_url = models.URLField(null=True, blank=True)
 
 # Create your models here.
 class Task(models.Model):

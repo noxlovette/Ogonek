@@ -16,6 +16,8 @@ declare global {
 		created_at: string;
 		updated_at: string;
 		status: string;
+		due_date: string;
+		completed: boolean;
 	}
 	}
 }
