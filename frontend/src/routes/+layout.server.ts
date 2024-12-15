@@ -22,8 +22,6 @@ export const load: LayoutServerLoad = async ({ cookies, fetch, depends }) => {
   if (response.headers.get('content-type')?.includes('application/json')) {
     let user = await response.json() as App.User;
 
-    console.log("User is authenticated", user);
-
     cookies.set("csrftoken", user.csrfToken, { path: "/" });
     depends("app:user:login");
     return { user };

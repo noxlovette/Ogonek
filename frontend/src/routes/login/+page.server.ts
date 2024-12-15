@@ -35,7 +35,7 @@ export const actions: Actions = {
           httpOnly: false,
           sameSite: 'lax'
         });
-        console.log('Login successful:', result);
+
         return { result };
       } else {
         return fail(400, { success: false, message: result.message || 'Login failed' });

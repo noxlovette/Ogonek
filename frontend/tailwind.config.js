@@ -5,6 +5,10 @@ export default {
   content: ['./src/**/*.{html,js,svelte,ts}'],
   theme: {
     extend: {
+      backgroundImage: {
+        'roses-center': "url('/beauty/roses-center-2.svg')",
+        'noise': "url('/beauty/nnnoise.svg')",
+      },
       fontFamily: {
         // sans: ["Inter var", ...defaultTheme.fontFamily.sans],
         garamond: ['EB Garamond', 'serif'],

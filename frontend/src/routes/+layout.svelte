@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Notification from '$lib/components/Notification.svelte';
-	import type { LayoutData } from "./$types";
+	import type { LayoutData } from './$types';
 	import { setUser } from '$lib/stores';
 	import '../app.css';
 
@@ -9,11 +9,11 @@
 
 	export let data: LayoutData;
 	onMount(() => {
-    setUser(data.user);
-  });
+		setUser(data.user);
+	});
 </script>
 
-<div class="flex bg-sand-50 text-sand-900 h-screen w-screen items-center justify-center">
+<div class="flex text-sand-900 h-screen w-screen items-center justify-center bg-sand-50">
 	<slot />
 </div>
 
