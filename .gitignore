@@ -8,7 +8,9 @@ node_modules
 /.next
 venv
 
+logs/
 .idea/
+debug.log
 
 # Cache
 .cache
