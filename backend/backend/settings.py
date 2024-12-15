@@ -28,6 +28,13 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['backend', 'localhost', '10.8.0.6', 'backend-firelight']
 
+# settings.py
+
+# Session cookie age in seconds
+SESSION_COOKIE_AGE = 60 * 60 * 24  # 1 day in seconds
+
+# Ensure sessions do not expire when the browser closes
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
 # Application definition
 

@@ -18,7 +18,7 @@ Including another URLconf
 from django.contrib import admin
 from rest_framework.routers import DefaultRouter
 from django.urls import path, include
-from blog.views import TaskViewSet,UserDataApi, LoginAPIView
+from blog.views import TaskViewSet,UserDataApi, LoginAPIView, CheckSessionAPI
 
 
 router = DefaultRouter()
@@ -29,5 +29,6 @@ urlpatterns = [
     path('api/', include(router.urls)),
     path('api/user/', UserDataApi.as_view()),
     path('api/login/', LoginAPIView.as_view(), name='login'),
+    path('api/check-session/', CheckSessionAPI.as_view(), name='check-session'),
 ]
 

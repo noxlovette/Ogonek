@@ -1,6 +1,4 @@
 <script lang="ts">
-	import TaskBar from '$lib/components/TaskBar.svelte';
-
 	function getGreeting() {
 		const date = new Date();
 		const hours = date.getHours();
@@ -19,4 +17,18 @@
 	const greeting = getGreeting();
 </script>
 
-<h1 class="text-3xl font-bold">Good {greeting}</h1>
+<div class="flex flex-col p-6 border-l-2 border-sand-800/60">
+	<h1 class="text-4xl font-bold">Good {greeting}</h1>
+	<div>
+		<p>
+			You're on <b>Firelight.</b> If you're my student, please log in below. If you aren't... why aren't
+			you?
+		</p>
+		<a href="https://noxlovette.com" class="opacity-80 text-sm"> Made by Danila Volkov </a>
+	</div>
+	<a
+		href="/login"
+		class="bg-forest-800 text-forest-100 w-20 mt-5 rounded p-2 text-center hover:bg-forest-700 transition-colors"
+		>Log In</a
+	>
+</div>

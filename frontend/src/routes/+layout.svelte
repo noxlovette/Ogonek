@@ -1,19 +1,20 @@
 <script lang="ts">
-	import Sidebar from '$lib/components/Sidebar.svelte';
-	import Rightbar from '$lib/components/Rightbar.svelte';
+	import Notification from '$lib/components/Notification.svelte';
+	import type { LayoutData } from "./$types";
+	import { setUser } from '$lib/stores';
 	import '../app.css';
 
-	import { setContext } from 'svelte';
-	export let data: any;
-	const tasks: App.Task[] = data.tasks;
+	import { user } from '$lib/stores';
+	import { onMount } from 'svelte';
 
-	setContext('tasks', tasks);
+	export let data: LayoutData;
+	onMount(() => {
+    setUser(data.user);
+  });
 </script>
 
-<div class="flex bg-sand-50 text-sand-900">
-	<Sidebar />
-	<div class="flex flex-col w-full p-6">
-		<slot />
-	</div>
-	<Rightbar />
+<div class="flex bg-sand-50 text-sand-900 h-screen w-screen items-center justify-center">
+	<slot />
 </div>
+
+<Notification></Notification>

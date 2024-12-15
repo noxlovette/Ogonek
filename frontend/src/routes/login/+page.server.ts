@@ -6,6 +6,8 @@ const DJANGO_URL = 'http://backend-firelight:8000';
 export const actions: Actions = {
   login: async ({ request, cookies }) => {
     const data = await request.formData();
+    const csrfToken = cookies.get("csrftoken");
+    const sessionid = cookies.get("sessionid");
     const username = data.get('username');
     const password = data.get('password');
 
@@ -14,6 +16,7 @@ export const actions: Actions = {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
+          Cookie: `sessionid=${sessionid}; csrftoken=${csrfToken}`,
         },
         body: new URLSearchParams({
           username: username as string,
@@ -21,13 +24,19 @@ export const actions: Actions = {
         }),
       });
 
-      const result = await response.json();
+      const result:App.ResponseLogin = await response.json();
 
       if (response.ok) {
         // Assuming your Django API returns some form of session token or user info
         // Here you might want to set a cookie or session
-        cookies.set('session', JSON.stringify(result), { path: '/' });
-        return { success: true, message: result.message };
+        cookies.set('sessionid', result.sessionid, { 
+          path: '/', 
+          maxAge: 60 * 60 * 24, // One day in seconds
+          httpOnly: false,
+          sameSite: 'lax'
+        });
+        console.log('Login successful:', result);
+        return { result };
       } else {
         return fail(400, { success: false, message: result.message || 'Login failed' });
       }

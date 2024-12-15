@@ -19,7 +19,25 @@ declare global {
 		due_date: string;
 		completed: boolean;
 	}
+
+	interface ResponseLogin {
+		sessionid: string;
+		email: string;
+		username: string;
+		is_authenticated: boolean;
+		success: boolean;
+		quizlet_url: string;
+		message: string;
 	}
+
+	interface User {
+		id: string;
+		email: string;
+		username: string;
+		is_authenticated: boolean;
+		csrfToken: string;
+	}
+}
 }
 
 export {};
