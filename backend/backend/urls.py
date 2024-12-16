@@ -18,7 +18,9 @@ Including another URLconf
 from django.contrib import admin
 from rest_framework.routers import DefaultRouter
 from django.urls import path, include
-from blog.views import TaskViewSet,UserDataApi, LoginAPIView, CheckSessionAPI, LessonViewSet
+from blog.views import TaskViewSet,UserDataApi, LoginAPIView, CheckSessionAPI, LessonViewSet, DownloadFileView
+from django.conf import settings
+from django.conf.urls.static import static
 
 
 router = DefaultRouter()
@@ -31,5 +33,6 @@ urlpatterns = [
     path('api/user/', UserDataApi.as_view()),
     path('api/login/', LoginAPIView.as_view(), name='login'),
     path('api/check-session/', CheckSessionAPI.as_view(), name='check-session'),
-]
+    path('api/download/<int:file_id>/', DownloadFileView.as_view(), name='download-file'),
+] 
 

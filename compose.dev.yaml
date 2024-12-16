@@ -1,13 +1,14 @@
 services:
   frontend:
-    build: 
+    build:
       context: ./frontend
       dockerfile: Dockerfile.dev
     container_name: frontend-firelight
     ports:
-      - "3001:3000"  # Different external port for frontend
+      - "3001:3000" # Different external port for frontend
     volumes:
       - ./frontend:/app
+
     environment:
       - NODE_ENV=development
       - BACKEND_URL="http://backend:8000"
@@ -15,39 +16,33 @@ services:
       - ./frontend/.env
     depends_on:
       - backend
-  
-  midend:
-    build:
-      context: ./midend
-      dockerfile: Dockerfile.dev
-    container_name: midend-firelight
-    ports:
-      - "3002:3000"  # Different external port for frontend-admin
-    volumes:
-      - ./midend:/app
-    environment:
-      - NODE_ENV=development
-      - BACKEND_URL="http://backend:8000"
-    env_file:
-      - ./midend/.env
-    depends_on:
-      - backend
 
   backend:
-    build: 
+    build:
       context: ./backend
       dockerfile: Dockerfile.dev
-    user: "${UID}:${GID}"
     container_name: backend-firelight
     ports:
-      - "8002:8000"  # Different external port for backend
+      - "8002:8000" # Different external port for backend
     volumes:
       - ./backend:/app
+      - media-volume:/app/media
     env_file:
       - ./backend/.env
     command: python manage.py runserver 0.0.0.0:8000
     depends_on:
       - db
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80" # Only expose Nginx to the outside world
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf  # Main config file
+      - ./nginx/conf.d:/etc/nginx/conf.d  # For additional server configs
+      - media-volume:/app/media # Serve media files through Nginx
+    depends_on:
+      - backend
 
   redis:
     image: redis/redis-stack:latest
@@ -61,12 +56,12 @@ services:
     restart: always
     user: postgres
     volumes:
-      - db-data-firelight:/var/lib/postgresql/data  # Separate volume for the new database
+      - db-data-firelight:/var/lib/postgresql/data # Separate volume for the new database
     environment:
       - POSTGRES_DB=firelight
       - POSTGRES_PASSWORD=changeme
     ports:
-      - "5433:5432"  # Different external port for Postgres
+      - "5433:5432" # Different external port for Postgres
     healthcheck:
       test: ["CMD", "pg_isready"]
       interval: 10s
@@ -75,3 +70,4 @@ services:
 
 volumes:
   db-data-firelight:
+  media-volume: # Here you define the volume

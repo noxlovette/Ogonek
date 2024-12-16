@@ -4,6 +4,7 @@ import uuid
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.hashers import make_password
+from django.conf import settings
 
 class User(AbstractUser):
     quizlet_url = models.URLField(null=True, blank=True)
@@ -29,11 +30,20 @@ class Task(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     due_date = models.DateTimeField(null=True, blank=True)
 
+    file = models.FileField(upload_to='tasks/', null=True, blank=True)
+
 
     assignee = models.ForeignKey(User, on_delete=models.CASCADE, related_name='tasks')
 
     def __str__(self):
         return self.title
+    
+    def get_file_url(self):
+        if settings.DEBUG:
+            base_url = 'http://localhost:80'
+        else:
+            base_url = 'https://media.firelight.noxlovette.com'
+        return f"{base_url}{self.file.url}"
     
 class Recommendation(models.Model):
     id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)

@@ -9,6 +9,8 @@ from django.middleware.csrf import get_token
 from rest_framework import permissions, status
 from rest_framework.permissions import IsAuthenticated
 from django_filters.rest_framework import DjangoFilterBackend
+from django.http import FileResponse
+from django.views import View
 
 
 class TaskViewSet(viewsets.ModelViewSet):
@@ -19,6 +21,16 @@ class TaskViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         # Filter lessons by the authenticated user
         return self.queryset.filter(assignee=self.request.user)
+    
+class DownloadFileView(View):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, file_id):    
+        file_instance = Task.objects.get(id=file_id)  # Fetch the correct model instance
+        file_path = file_instance.file.path  # Get the file path
+        response = FileResponse(open(file_path, 'rb'))
+        response['Content-Disposition'] = f'attachment; filename="{file_instance.file.name}"'
+        return response
  
 class UserDataApi(APIView):
     queryset = User.objects.all()

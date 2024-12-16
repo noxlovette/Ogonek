@@ -18,6 +18,7 @@ declare global {
 		status: string;
 		due_date: string;
 		completed: boolean;
+		file: string;
 	}
 
 	interface ResponseLogin {

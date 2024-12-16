@@ -36,7 +36,7 @@ class TaskAdmin(admin.ModelAdmin):
     # Fields to include in the form for adding/changing entries
     fieldsets = (
         (None, {
-            'fields': ('title', 'content', 'priority', 'completed', 'due_date', 'assignee')
+            'fields': ('title', 'content', 'priority', 'completed', 'due_date', 'assignee', 'file')
         }),
         ('Date Information', {
             'fields': ('created_at', 'updated_at'),
