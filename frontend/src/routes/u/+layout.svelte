@@ -33,7 +33,7 @@
 
 
 	:global(.markdown h1) {
-		@apply text-2xl;
+		@apply text-2xl font-bold opacity-80;
 	}
 
 	:global(.markdown h2) {

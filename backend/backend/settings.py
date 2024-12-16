@@ -35,6 +35,9 @@ SESSION_COOKIE_AGE = 60 * 60 * 24  # 1 day in seconds
 # Ensure sessions do not expire when the browser closes
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+SESSION_CACHE_ALIAS = "default"
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -45,6 +48,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'debug_toolbar',
+    'django_redis',
     'blog',
 ]
 
@@ -58,6 +62,17 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://redis:6379/2",  # Change to your Redis server's location
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
+
 
 ROOT_URLCONF = 'backend.urls'
 

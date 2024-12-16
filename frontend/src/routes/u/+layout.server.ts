@@ -54,8 +54,6 @@ export const load: LayoutServerLoad = async ({ fetch, cookies, url, depends }) =
         'x-rapidapi-host': 'wordsapiv1.p.rapidapi.com',
         'x-rapidapi-key': `${VITE_API_WORD_KEY}` // Replace this with your actual RapidAPI key
       }}).then((res) => res.json())
-
-      console.log(word);
       await redis.set('wordAPI', JSON.stringify(word), 'EX', 60 * 60 * 24); // Cache for 24 hours
   }
   depends("app:user:login");
