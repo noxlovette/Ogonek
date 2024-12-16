@@ -7,21 +7,20 @@
 	let password = '';
 
 	const handleLoginResult = async ({ result, update }) => {
-		if (result.data.result.success) {
-			$user.is_authenticated = true;
-			$user.quizlet_url = result.data.result.quizlet_url;
-			$user.username = result.data.result.username;
-			notification.set({ message: 'Welcome back!', type: 'success' });
-			await goto('/u/dashboard');
-		} else {
-			notification.set({
-				message: result.data.error || 'Login failed',
-				type: 'error'
-			});
-		}
+  console.log('Received result:', result); // Log the entire result for debugging
+  if (result.status === 302) {
+    // Assuming 'location' is how the redirect URL is sent back
+    notification.set({ message: 'Welcome back!', type: 'success' });
+    await goto(result.location);
+  } else {
+    notification.set({
+      message: result.data.message || 'Login failed',
+      type: 'error'
+    });
+  }
+  update();
+};
 
-		update();
-	};
 </script>
 
 <div
@@ -36,28 +35,29 @@
 	>
 		<h1 class="font-serif text-4xl text-center mb-4">Firelight</h1>
 
-	
-			<input
-				type="text"
-				id="username"
-				name="username"
-				placeholder="Username"
-				bind:value={username}
-				required
-				class="rounded-lg bg-white border border-sand-900/20 p-1 mb-2"
-			/>
+		<input
+			type="text"
+			id="username"
+			name="username"
+			placeholder="Username"
+			bind:value={username}
+			required
+			class="rounded-lg bg-white border border-sand-900/20 p-1 mb-2"
+		/>
 
-			<input
-				type="password"
-				id="password"
-				name="password"
-				bind:value={password}
-				required
-				placeholder="Password"
-				class="rounded-lg bg-white border border-sand-900/20 p-1"
-			/>
-		
-		<button type="submit" class="py-1 px-4 bg-sand-800/60 text-sand-50 hover:bg-forest-700 transition-colors rounded-lg mt-4 mb-4"
+		<input
+			type="password"
+			id="password"
+			name="password"
+			bind:value={password}
+			required
+			placeholder="Password"
+			class="rounded-lg bg-white border border-sand-900/20 p-1"
+		/>
+	
+		<button
+			type="submit"
+			class="py-1 px-4 bg-sand-800/60 text-sand-50 hover:bg-forest-700 transition-colors rounded-lg mt-4 mb-4"
 			>Login</button
 		>
 	</form>
