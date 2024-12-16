@@ -77,7 +77,8 @@ TEMPLATES = [
         },
     },
 ]
-
+USE_TZ = True
+TIME_ZONE = 'Europe/Berlin'
 WSGI_APPLICATION = 'backend.wsgi.application'
 
 AUTH_USER_MODEL = 'blog.User'

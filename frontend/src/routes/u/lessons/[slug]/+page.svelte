@@ -9,12 +9,11 @@
 	export let data: PageServerData;
 	export let html: string;
 
+	let lesson = data.lesson;
 	let bookmarked: boolean = data.lesson.bookmarked;
 
-	onMount(() => {
-		console.log(data.lesson);
-		html = marked.parse(data.lesson.content);
-	});
+	$: bookmarked = data.lesson.bookmarked;
+	$: html = marked.parse(data.lesson.content);
 
 	const handleToggle = async ({ result, update }) => {
 		if (result.data.result.success) {
@@ -28,16 +27,19 @@
 		update();
 	};
 
-	const date = new Date(data.lesson.created_at);
+	let date;
+	$:date = new Date(data.lesson.created_at);
 
-	const formattedDate = date.toLocaleDateString('en-GB', {
+
+	let formattedDate;
+	$: formattedDate = date.toLocaleDateString('en-GB', {
 		month: 'short',
 		day: 'numeric',
 		year: 'numeric'
 	});
 </script>
 
-<article class="text-lg">
+<article class="flex flex-col text-lg size-full">
 	<div id="header" class="flex flex-row items-start justify-between">
 		<h1 class="text-4xl font-bold">{formattedDate}</h1>
 		<div class="flex flex-col border-2 px-2 py-1 rounded-lg border-sand-900/60">
@@ -48,12 +50,12 @@
 		</div>
 	</div>
 	<div class="markdown">{@html html}</div>
-	<div class="mt-4">
+
 		<form action="?/bookmark" use:enhance={() => handleToggle} method="post">
 			<input type="hidden" name="id" value={data.lesson.id} />
 			<input type="hidden" name="bookmarked" value={bookmarked} />
 			<button
-				class="hover:bg-sand-900/60 hover:text-sand-100 transition-colors duration-300 rounded-lg p-2 mt-2 inline-flex" on:click={() => (bookmarked = !bookmarked)}
+				class="hover:bg-sand-900/60 hover:text-sand-100 transition-colors duration-300 rounded-lg my-8 p-2 mb-32 inline-flex" on:click={() => (bookmarked = !bookmarked)}
 			>
       {#if bookmarked}
       <BookmarkMinus class="size-8 mr-2" />
@@ -64,5 +66,5 @@
 				{/if}
 			</button>
 		</form>
-	</div>
+
 </article>

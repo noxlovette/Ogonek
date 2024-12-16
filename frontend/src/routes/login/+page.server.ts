@@ -4,7 +4,7 @@ import { error, redirect, fail } from '@sveltejs/kit';
 const DJANGO_URL = 'http://backend-firelight:8000';
 
 export const actions: Actions = {
-  login: async ({ request, cookies }) => {
+  login: async ({ request, cookies, url }) => {
     const data = await request.formData();
     const csrfToken = cookies.get("csrftoken");
     const sessionid = cookies.get("sessionid");
@@ -24,11 +24,10 @@ export const actions: Actions = {
         }),
       });
 
-      const result:App.ResponseLogin = await response.json();
+      const result: App.ResponseLogin = await response.json();
 
       if (response.ok) {
-        // Assuming your Django API returns some form of session token or user info
-        // Here you might want to set a cookie or session
+        // Set the session cookie with the new sessionid
         cookies.set('sessionid', result.sessionid, { 
           path: '/', 
           maxAge: 60 * 60 * 24, // One day in seconds
@@ -36,7 +35,11 @@ export const actions: Actions = {
           sameSite: 'lax'
         });
 
-        return { result };
+        // Check for a redirect parameter from the URL
+        const redirectTo = url.searchParams.get('redirectTo') || '/';
+        
+        // Redirect to the specified path or default to home
+        throw redirect(302, redirectTo);
       } else {
         return fail(400, { success: false, message: result.message || 'Login failed' });
       }

@@ -3,15 +3,24 @@
 
 	import { getContext } from 'svelte';
 
-	const lessons: App.Lesson[] = getContext('lessons');
+	const lessons: App.Lesson[] = getContext('lessons') || [];
+
+	if (lessons.length > 3) {
+		lessons.slice(0, 3);
+	}
+
 </script>
 
 <div class="p-4 border-2 rounded-lg border-sand-900/20">
 	<h2 class="text-xl">Recent Lessons</h2>
 	<ul class="">
-		{#each lessons as lesson}
-			<LessonCard {lesson} />
-		{/each}
+		{#if lessons.length === 0}
+			<p>No lessons found</p>
+		{:else}
+			{#each lessons as lesson}
+				<LessonCard {lesson} />
+			{/each}
+		{/if}
 	</ul>
 	<a href="/u/lessons" class="text-sand-400 text-sm font-sans p-1">View All Lessons</a>
 </div>

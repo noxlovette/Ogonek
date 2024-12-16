@@ -7,6 +7,8 @@ from rest_framework.response import Response
 from django.contrib.auth import authenticate, login
 from django.middleware.csrf import get_token
 from rest_framework import permissions, status
+from rest_framework.permissions import IsAuthenticated
+from django_filters.rest_framework import DjangoFilterBackend
 
 
 class TaskViewSet(viewsets.ModelViewSet):
@@ -21,6 +23,13 @@ class UserDataApi(APIView):
 class LessonViewSet(viewsets.ModelViewSet):
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
+    permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['assignee']  # Assuming there's a field 'assignee' in Lesson model for the user
+
+    def get_queryset(self):
+        # Filter lessons by the authenticated user
+        return self.queryset.filter(assignee=self.request.user)
 
 class LoginAPIView(APIView):
     def post(self, request):
