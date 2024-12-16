@@ -8,6 +8,7 @@
 		Download,
 		Square
 	} from 'lucide-svelte';
+	import { enhance } from '$app/forms';
 
 	let overdue = false;
 	let completed = task.completed;
@@ -42,6 +43,7 @@
 		class="inline-flex space-x-1 p-2 bg-forest-700/90 text-forest-50 rounded-t-lg text-xl"
 		class:overdue
 	>
+	<form class="flex items-center space-x-1" method="post" use:enhance action="?/completed">
 		<button on:click={() => (completed = !completed)} class="text-forest-500" class:overdue>
 			{#if completed}
 				<CheckSquare class="w-6 h-6" />
@@ -49,6 +51,9 @@
 				<Square class="w-6 h-6" />
 			{/if}
 		</button>
+		<input type="hidden" name="completed" value="{completed}" />
+		<input type="hidden" name="id" value="{task.id}" />
+	</form>
 		<h2 class="font-bold">{task.title}</h2>
 	</div>
 	<p class="opacity-80 p-2">{@html task.content}</p>

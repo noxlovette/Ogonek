@@ -40,6 +40,7 @@ declare global {
 
 	interface Lesson {
 		id: string;
+		manual_date?: string;
 		title: string;
 		content: string;
 		created_at: string;

@@ -28,7 +28,7 @@
 	};
 
 	let date;
-	$:date = new Date(data.lesson.created_at);
+	$:date = new Date(data.lesson.manual_date || data.lesson.created_at);
 
 
 	let formattedDate;

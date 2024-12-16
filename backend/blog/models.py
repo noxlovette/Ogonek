@@ -75,6 +75,8 @@ class Lesson(models.Model):
     category = models.CharField(max_length=50, default='grammar')
     topic = models.CharField(max_length=50, default='english')
 
+    manual_date = models.DateTimeField(blank=True, null=True)
+
     bookmarked = models.BooleanField(default=False)
 
     assignee = models.ForeignKey(User, on_delete=models.CASCADE, related_name='lessons')

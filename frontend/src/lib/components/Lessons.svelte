@@ -3,10 +3,10 @@
 
 	import { getContext } from 'svelte';
 
-	const lessons: App.Lesson[] = getContext('lessons') || [];
+	let lessons: App.Lesson[] = getContext('lessons') || [];
 
 	if (lessons.length > 3) {
-		lessons.slice(0, 3);
+		lessons = lessons.slice(0, 3);
 	}
 
 </script>

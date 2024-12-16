@@ -13,11 +13,21 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 class TaskViewSet(viewsets.ModelViewSet):
     queryset = Task.objects.all()
+    permission_classes = [IsAuthenticated]
     serializer_class = TaskSerializer
+
+    def get_queryset(self):
+        # Filter lessons by the authenticated user
+        return self.queryset.filter(assignee=self.request.user)
  
 class UserDataApi(APIView):
     queryset = User.objects.all()
+    permission_classes = [IsAuthenticated]
     serializer_class = UserSerializer
+
+    def get_queryset(self):
+        # Filter lessons by the authenticated user
+        return self.queryset.filter(assignee=self.request.user)
 
 
 class LessonViewSet(viewsets.ModelViewSet):

@@ -1,7 +1,7 @@
 <script lang="ts">
     export let lesson: App.Lesson;
 
-    const date = new Date(lesson.created_at);
+    const date = new Date(lesson.manual_date||lesson.created_at);
 
 const formattedDate = date.toLocaleDateString('en-GB', {
     month: 'short',
