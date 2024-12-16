@@ -35,6 +35,7 @@
   },
   "type": "module",
   "dependencies": {
+    "ioredis": "^5.4.1",
     "lucide-svelte": "^0.468.0",
     "marked": "^15.0.4",
     "mdsvex": "^0.12.3"
