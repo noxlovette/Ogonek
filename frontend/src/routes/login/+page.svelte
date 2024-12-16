@@ -32,7 +32,7 @@
 		method="POST"
 		use:enhance={() => handleLoginResult}
 		action="?/login"
-		class="login-form bg-sand-50 p-3 rounded-md shadow-lg z-10 flex flex-col items-center ring ring-sand-800/60"
+		class="login-form bg-sand-100 p-3 rounded-md shadow-lg z-10 flex flex-col items-center ring ring-sand-900/20"
 	>
 		<h1 class="font-serif text-4xl text-center mb-4">Firelight</h1>
 

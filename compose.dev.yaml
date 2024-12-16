@@ -37,6 +37,7 @@ services:
     build: 
       context: ./backend
       dockerfile: Dockerfile.dev
+    user: "${UID}:${GID}"
     container_name: backend-firelight
     ports:
       - "8002:8000"  # Different external port for backend

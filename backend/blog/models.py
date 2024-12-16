@@ -3,9 +3,16 @@ from django.utils.text import slugify
 import uuid
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.hashers import make_password
 
 class User(AbstractUser):
     quizlet_url = models.URLField(null=True, blank=True)
+    def save(self, *args, **kwargs):
+        if self.has_usable_password:
+            self.password = make_password(self.password)
+        super().save(*args, **kwargs)
+
+    
 
 # Create your models here.
 class Task(models.Model):
@@ -59,13 +66,13 @@ class Comment(models.Model):
         return self.content
 
 
-class Lessons(models.Model):
+class Lesson(models.Model):
     id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
     title = models.CharField(max_length=255)
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    category = models.CharField(max_length=50, default='grammmar')
+    category = models.CharField(max_length=50, default='grammar')
     topic = models.CharField(max_length=50, default='english')
 
     bookmarked = models.BooleanField(default=False)

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Task, User, Lessons
+from .models import Task, User, Lesson
 
 class TaskSerializer(serializers.ModelSerializer):
     class Meta:
@@ -14,5 +14,5 @@ class UserSerializer(serializers.ModelSerializer):
 
 class LessonSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Lessons
+        model = Lesson
         fields = '__all__'

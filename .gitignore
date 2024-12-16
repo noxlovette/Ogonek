@@ -8,6 +8,8 @@ node_modules
 /.next
 venv
 
+students_data/
+
 logs/
 .idea/
 debug.log

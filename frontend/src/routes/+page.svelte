@@ -17,7 +17,7 @@
 	const greeting = getGreeting();
 </script>
 
-<div class="flex flex-col p-6 border-l-2 border-sand-800/60">
+<div class="flex flex-col p-6 border-l-2 border-sand-800/60 text-sand-100">
 	<h1 class="text-4xl font-bold font-serif">Good {greeting}</h1>
 	<div>
 		<p>
