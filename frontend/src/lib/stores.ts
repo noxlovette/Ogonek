@@ -29,3 +29,15 @@ export  const user = writable({
     message: "",
     type: "none",
   });
+
+
+  export const lesson = writable({
+    title: "",
+    description: "",
+    bookmarked: false,
+    manual_date: "",
+    content: "",
+    created_at: "",
+    updated_at: "",
+    topic: "",
+  });

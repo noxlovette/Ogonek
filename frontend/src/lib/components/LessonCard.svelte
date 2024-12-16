@@ -11,7 +11,7 @@ const formattedDate = date.toLocaleDateString('en-GB', {
 </script>
 
 
-<a href="/u/lessons/{lesson.id}" class="px-2 py-1 flex flex-col">
+<a href="/u/lessons/l/{lesson.id}" class="px-2 py-1 flex flex-col">
     <h3>
         {formattedDate}
     </h3>

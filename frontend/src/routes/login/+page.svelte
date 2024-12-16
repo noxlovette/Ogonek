@@ -31,9 +31,9 @@
 		method="POST"
 		use:enhance={() => handleLoginResult}
 		action="?/login"
-		class="login-form bg-sand-100 p-3 rounded-md shadow-lg z-10 flex flex-col items-center ring ring-sand-900/20"
+		class="login-form bg-sand-900 p-3 rounded-md shadow-lg z-10 flex flex-col items-center ring ring-sand-900/20"
 	>
-		<h1 class="font-serif text-4xl text-center mb-4">Firelight</h1>
+		<h1 class="font-serif text-4xl text-center mb-4 text-sand-100">Firelight</h1>
 
 		<input
 			type="text"
@@ -57,7 +57,7 @@
 	
 		<button
 			type="submit"
-			class="py-1 px-4 bg-sand-800/60 text-sand-50 hover:bg-forest-700 transition-colors rounded-lg mt-4 mb-4"
+			class="bg-sand-800/60 border-sand-800/80 border-2 text-sand-50 w-20 mt-5 rounded-lg p-2 text-center hover:bg-sand-200 hover:text-sand-800 transition-colors"
 			>Login</button
 		>
 	</form>

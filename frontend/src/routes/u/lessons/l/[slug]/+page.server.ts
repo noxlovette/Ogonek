@@ -30,11 +30,7 @@ export const load: PageServerLoad = async ({ params, cookies }) => {
 
     const lesson = await response.json();
 
-    // if (!lesson || !lesson.assignee || lesson.assignee !== sessionid) {
-    //   // Check if the lesson is assigned to the current user
-   //    // Note: This assumes 'assignee' in the lesson object is the sessionid of the user
-   //    throw error(403, "You do not have permission to access this lesson.");
-   //  }
+   
 
     return {
       lesson,
@@ -80,9 +76,16 @@ export const actions = {
         };
       }
 
+      const lessons = await fetch(`${VITE_API_URL}/api/lessons/`, {
+        headers: {
+          Cookie: `sessionid=${sessionid}; csrftoken=${csrfToken}`,
+        },
+      }).then((res) => res.json());
+
       return {
         success: true,
         message: "Lesson updated successfully",
+        lessons: lessons, // Return the updated list of lessons
       };
     } catch (error) {
       console.error("Fetch error:", error);

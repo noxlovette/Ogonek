@@ -20,7 +20,7 @@
 				<ListTodo class="size-8 mr-2" />
 				Tasks</a>
 
-				<a href="/u/bookmarked" class="px-2 py-4 inline-flex">
+				<a href="/u/lessons/bookmarked" class="px-2 py-4 inline-flex">
 					<Bookmark class="size-8 mr-2" />
 					Bookmarks</a>
 

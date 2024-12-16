@@ -11,7 +11,7 @@
 
 </script>
 
-<div class="p-4 border-2 rounded-lg border-sand-900/20">
+<div class="p-4 border-2 flex flex-col  rounded-lg border-sand-900/20">
 	<h2 class="text-xl">Recent Lessons</h2>
 	<ul class="">
 		{#if lessons.length === 0}

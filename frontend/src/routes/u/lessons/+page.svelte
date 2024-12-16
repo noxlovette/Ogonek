@@ -13,3 +13,5 @@
 {/each}
 
 </div>
+
+<a href="/u/lessons/bookmarked" class="text-sm font-sans p-1 hover:text-sand-800">View Bookmarked</a>

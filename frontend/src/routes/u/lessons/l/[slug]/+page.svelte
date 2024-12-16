@@ -1,23 +1,30 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import type { PageServerData } from '../$types';
 	import { marked } from 'marked';
-	import { Bookmark, BookmarkMinus, BookmarkPlus } from 'lucide-svelte';
+	import { BookmarkMinus, BookmarkPlus } from 'lucide-svelte';
 	import { enhance } from '$app/forms';
 	import { notification } from '$lib/stores';
+	import { setContext } from 'svelte';
+
 
 	export let data: PageServerData;
 	export let html: string;
 
-	let lesson = data.lesson;
+	console.log(data);
 	let bookmarked: boolean = data.lesson.bookmarked;
 
 	$: bookmarked = data.lesson.bookmarked;
 	$: html = marked.parse(data.lesson.content);
 
+	
+
 	const handleToggle = async ({ result, update }) => {
-		if (result.data.result.success) {
-			notification.set({ message: 'Bookmark Added', type: 'success' });
+		if (result.data) {
+			if (bookmarked) {
+				notification.set({ message: 'Bookmark Added', type: 'success' });
+			} else {
+				notification.set({ message: 'Bookmark Removed', type: 'success' });
+			}
 		} else {
 			notification.set({
 				message: result.data.error || 'Failed to Add Bookmark',

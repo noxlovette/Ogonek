@@ -4,7 +4,7 @@
 
 </script>
 
-<div class="flex flex-col border-2 border-sand-900/20 p-4 rounded-lg">
+<div class="flex flex-col  border-2 border-sand-900/20 p-4 rounded-lg">
     <h2 class="text-xl">
         Useful Links
     </h2>

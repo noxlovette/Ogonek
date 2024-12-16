@@ -6,7 +6,7 @@ const VITE_API_URL = "http://backend:8000";
 
 
 export const actions = {
-    completed: async ({ request, cookies }) => {
+  completed: async ({ request, cookies }) => {
     const formData = await request.formData();
     const sessionid = cookies.get('sessionid');
     const csrfToken = cookies.get('csrftoken');
@@ -15,40 +15,52 @@ export const actions = {
       id: formData.get("id"),
       completed: formData.get("completed"),
     };
-    
 
     try {
-      const response = await fetch(
+      const headers = {
+        'Cookie': `sessionid=${sessionid}; csrftoken=${csrfToken}`,
+        'Content-Type': "application/json",
+        'X-CSRFToken': csrfToken,
+      };
+
+      // Update the task first
+      const updateResponse = await fetch(
         `${VITE_API_URL}/api/tasks/${formData.get("id")}/`,
         {
           method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            Cookie: `sessionid=${sessionid}; csrftoken=${csrfToken}`,
-            "X-CSRFToken": csrfToken,
-          },
+          headers: headers,
           body: JSON.stringify(body),
         }
       );
 
-      if (!response.ok) {
-        const errorData = await response.json(); // Parse error details
-        console.error("Error updating lesson:", errorData);
+      if (!updateResponse.ok) {
+        const errorData = await updateResponse.json(); // Parse error details
+        console.error("Error updating task:", errorData);
         return {
           success: false,
           error: errorData,
         };
       }
 
+      // Then fetch all tasks
+      const [tasks] = await Promise.all([
+        fetch(`${VITE_API_URL}/api/tasks/`, {
+          headers: {
+            'Cookie': `sessionid=${sessionid}; csrftoken=${csrfToken}`
+          }
+        }).then((res) => res.json())
+      ]);
+
       return {
         success: true,
-        message: "Lesson updated successfully",
+        message: "Task updated successfully",
+        tasks: tasks, // Return the updated list of tasks
       };
     } catch (error) {
       console.error("Fetch error:", error);
       return {
         success: false,
-        error: "An error occurred while updating the lesson",
+        error: "An error occurred while updating or fetching tasks",
       };
     }
   },

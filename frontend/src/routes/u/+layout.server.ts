@@ -3,6 +3,7 @@ import type { LayoutServerLoad } from "../$types";
 
 
 const VITE_API_URL = "http://backend:8000";
+const VITE_API_WORD_KEY = process.env.VITE_API_WORD_KEY;
 
 export const load: LayoutServerLoad = async ({ fetch, cookies, url, depends }) => {
   const sessionid = cookies.get('sessionid');
@@ -32,15 +33,20 @@ export const load: LayoutServerLoad = async ({ fetch, cookies, url, depends }) =
   const headers = {
     'Cookie': `sessionid=${sessionid}; csrftoken=${csrfToken}`
   };
-
-  const [tasks, lessons] = await Promise.all([
+  const [tasks, lessons, word] = await Promise.all([
     fetch(`${VITE_API_URL}/api/tasks/`, {
       headers: headers
     }).then((res) => res.json()),
     fetch(`${VITE_API_URL}/api/lessons/`, {
       headers: headers
     }).then((res) => res.json()),
+    fetch('https://wordsapiv1.p.rapidapi.com/words?random=true', {
+      method: 'GET',
+      headers: {
+        'x-rapidapi-host': 'wordsapiv1.p.rapidapi.com',
+        'x-rapidapi-key': `${VITE_API_WORD_KEY}` // Replace this with your actual RapidAPI key
+      }}).then((res) => res.json())
   ]);
   depends("app:user:login");
-  return { tasks, lessons, user };
+  return { tasks, lessons, user, word };
 };

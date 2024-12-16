@@ -4,6 +4,8 @@
 	import { setUser } from '$lib/stores';
 	import { onMount } from 'svelte';
 	import { setContext } from 'svelte';
+
+
 	export let data: any;
 	onMount(() => {
 		setUser(data.user);
@@ -14,11 +16,13 @@
 
 	setContext('tasks', tasks);
 	setContext('lessons', lessons);
+	setContext('word', data.word);
+
 </script>
 
 <Sidebar />
 <div
-	class="flex flex-col w-full py-6 px-12 bg-sand-100 size-full border-l-2 border-r-2 border-sand-900/70 items-center justify-center overflow-y-scroll custom-scrollbar"
+	class="flex flex-col w-full py-24 px-12 bg-sand-100 size-full border-l-2 border-r-2 border-sand-900/70 items-center justify-center overflow-y-scroll custom-scrollbar"
 >
 	<slot />
 </div>
