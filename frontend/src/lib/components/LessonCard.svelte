@@ -1,13 +1,10 @@
 <script lang="ts">
     export let lesson: App.Lesson;
 
-    const date = new Date(lesson.manual_date||lesson.created_at);
+    import { formatDate } from "$lib/utils";
 
-const formattedDate = date.toLocaleDateString('en-GB', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric'
-});
+    const formattedDate =formatDate(lesson.manual_date || lesson.created_at);
+   
 </script>
 
 

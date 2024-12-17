@@ -3,32 +3,11 @@
 	import { CheckSquare, Download, Square } from 'lucide-svelte';
 	import { enhance } from '$app/forms';
 	import { notification } from '$lib/stores';
+	import { formatDate } from '$lib/utils';
 
 	let overdue = false;
 	let completed = task.completed;
-	const today = new Date();
-	today.setHours(0, 0, 0, 0);
-
-	const tomorrow = new Date(today);
-	tomorrow.setDate(tomorrow.getDate() + 1);
-
-	const dueDate = new Date(task.due_date);
-	dueDate.setHours(0, 0, 0, 0); // Normalize time to midnight for comparison
-
-	overdue = dueDate < today;
-
-	let formattedDate;
-	if (dueDate.toDateString() === today.toDateString()) {
-		formattedDate = 'today';
-	} else if (dueDate.toDateString() === tomorrow.toDateString()) {
-		formattedDate = 'tomorrow';
-	} else {
-		formattedDate = dueDate.toLocaleDateString('en-GB', {
-			month: 'short',
-			day: 'numeric',
-			year: 'numeric'
-		});
-	}
+	const formattedDate = formatDate(task.due_date);
 
 	function handleDownload() {
 		// Create an anchor element
@@ -77,10 +56,11 @@
 	>
 		<p class:overdue class="opacity-60">Due {formattedDate}</p>
 
-		<input type="hidden" name="file" value={task.file} />
+		{#if task.file}
 		<button on:click={handleDownload}>
 			<Download class="w-6 h-6" />
 		</button>
+		{/if}
 	</div>
 </div>
 

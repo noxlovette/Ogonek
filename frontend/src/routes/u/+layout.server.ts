@@ -17,8 +17,6 @@ export const load: LayoutServerLoad = async ({ fetch, cookies, url, depends }) =
     },
   });
 
-  console.log(sessionCheckResponse)
-
   if (sessionCheckResponse.status === 401) {
     // Redirect to login if unauthorized, but only if not already on the login page
     const redirectTo = url.pathname;

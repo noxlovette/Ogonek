@@ -1,13 +1,8 @@
 <script lang="ts">
 	export let lesson: App.Lesson;
+	import { formatDate } from "$lib/utils";
 
-	const date = new Date(lesson.manual_date || lesson.created_at);
-
-	const formattedDate = date.toLocaleDateString('en-GB', {
-		month: 'short',
-		day: 'numeric',
-		year: 'numeric'
-	});
+	const formattedDate = formatDate(lesson.manual_date || lesson.created_at);
 </script>
 
 <a href="/u/lessons/l/{lesson.id}" class="flex flex-col hover:bg-sand-900/60 hover:text-sand-100 transition-colors shadow border border-sand-900/10 rounded-lg max-h-[150px] overflow-clip py-2">
