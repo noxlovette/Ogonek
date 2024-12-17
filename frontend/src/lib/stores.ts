@@ -5,6 +5,7 @@ export  const user = writable({
     username: "",
     email: "",
     quizlet_url: "",
+    client_id: "",
   });
 
   export function setUser(data) {
@@ -20,7 +21,7 @@ export  const user = writable({
       username: "",
       email: "",
       quizlet_url: "",
-        
+      client_id: "",
     }));
   }
   

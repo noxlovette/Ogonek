@@ -31,6 +31,7 @@ class LoginAPIView(APIView):
 
         if user is not None:
             login(request, user)
+            profile = Profile.objects.get(user=user)
             return Response(
                 {
                     "success": True,
@@ -39,7 +40,8 @@ class LoginAPIView(APIView):
                     "is_authenticated": user.is_authenticated,
                     "email": user.email,
                     "sessionid": request.session.session_key,
-                    "quizlet_url": user.quizlet_url,
+                    "quizlet_url": profile.quizlet_url,
+                    "client_id": profile.client_id,
                 }
             )
         else:
@@ -55,13 +57,15 @@ class CheckSessionAPI(APIView):
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             csrf_token = get_token(request)
+            profile = Profile.objects.get(user=request.user)
             return Response(
                 {
                     "is_authenticated": request.user.is_authenticated,
-                    "quizlet_url": request.user.quizlet_url,
                     "username": request.user.username,
                     "email": request.user.email,
                     "csrfToken": csrf_token,
+                    "quizlet_url": profile.quizlet_url,
+                    "client_id": profile.client_id,
                 }
             )
         else:

@@ -37,6 +37,8 @@ declare global {
 		username: string;
 		is_authenticated: boolean;
 		csrfToken: string;
+		quizlet_url: string;
+		client_id: string;
 	}
 
 	interface Lesson {

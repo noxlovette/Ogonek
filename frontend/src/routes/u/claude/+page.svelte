@@ -5,6 +5,4 @@ import { onMount } from 'svelte';
     
  
   </script>
-  
-
     <Talk />
