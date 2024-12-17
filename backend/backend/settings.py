@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'django_redis',
     'blog',
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -63,9 +64,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',
-]
 
 CACHES = {
     "default": {
@@ -98,8 +96,6 @@ TEMPLATES = [
 USE_TZ = True
 TIME_ZONE = 'Europe/Berlin'
 WSGI_APPLICATION = 'backend.wsgi.application'
-
-AUTH_USER_MODEL = 'blog.User'
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases

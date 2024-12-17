@@ -6,8 +6,7 @@ services:
     container_name: frontend-firelight
     ports:
       - "3001:3000" # Different external port for frontend
-    volumes:
-      - ./frontend:/app
+    
 
     environment:
       - NODE_ENV=development

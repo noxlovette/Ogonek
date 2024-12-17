@@ -1,14 +1,6 @@
 from django.contrib import admin
-from .models import Task, Recommendation, Comment, User, Lesson
-from django.utils.html import format_html
-from django.urls import reverse
+from .models import Task, Lesson
 
-
-# Register your models here.
-
-admin.site.register(Recommendation)
-admin.site.register(Comment)
-admin.site.register(User)
 
 # Use decorator for Lessons model with custom admin settings
 @admin.register(Lesson)
