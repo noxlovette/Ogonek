@@ -25,9 +25,3 @@
 </div>
 
 </div>
-
-<style>
-    a:hover {
-        @apply bg-sand-900/20 transition-colors duration-300 rounded-lg text-sand-100;
-    }
-</style>

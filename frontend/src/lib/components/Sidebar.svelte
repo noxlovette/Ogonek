@@ -24,9 +24,9 @@
 					<Bookmark class="size-8 mr-2" />
 					Bookmarks</a>
 
-			<a href="/u/grok" class="px-2 py-4 inline-flex">
+			<a href="/u/claude" class="px-2 py-4 inline-flex">
 				<MessageSquare class="size-8 mr-2" />
-				Grok</a>
+				Claude</a>
 
 			<a
 				href="https://us05web.zoom.us/j/3661071003?pwd=RTlrUkRPaHJaakljZXQxaGpOYmdIZz09"
