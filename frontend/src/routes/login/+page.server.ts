@@ -39,6 +39,7 @@ export const actions: Actions = {
         // Redirect to the specified path or default to home
         throw redirect(302, redirectTo);
       } else {
+        console.log(result)
         // Check for specific error messages from the server
         if (result.message?.toLowerCase().includes('password')) {
           return fail(400, { username, incorrect: true, message: result.message });

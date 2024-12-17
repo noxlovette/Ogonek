@@ -7,11 +7,17 @@ from django.contrib.auth.hashers import make_password
 from django.conf import settings
 
 class User(AbstractUser):
+    USERNAME_FIELD = 'username'
+    client_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+
     quizlet_url = models.URLField(null=True, blank=True)
     def save(self, *args, **kwargs):
         if self.has_usable_password:
             self.password = make_password(self.password)
         super().save(*args, **kwargs)
+
+    class Meta:
+        swappable = 'AUTH_USER_MODEL'
 
     
 
