@@ -20,6 +20,7 @@
 
 	function moveBack() {
 		hidden = false;
+	
 		topPosition.set(0);
 	}
 	let search = '';
@@ -84,11 +85,13 @@
 	class="flex flex-col items-center justify-center"
 	style="transform: translateY({$topPosition}px); transition: transform 0.3s;"
 >
-	<div class="inline-flex group caret-sand-900 focus:shadow-lg text-xl relative">
+	<div class="inline-flex group caret-sand-900 focus:shadow-lg lg:text-lg xl:text-xl relative">
 		<div
 			class="rounded-l-full border-sand-900/60 border-r-0 border-2 bg-sand-900/60 px-4 py-2 my-4 group-focus-within:border-sand-900 group-focus-within:bg-sand-100 transition-colors group-focus-within:text-sand-100"
 		>
-			<Search class="w-8 h-8 text-sand-100 group-focus-within:text-sand-900/70" />
+			<Search
+				class=" size-6 lg:size-7 xl:size-8 text-sand-100 group-focus-within:text-sand-900/70"
+			/>
 		</div>
 		<input
 			type="text"
@@ -100,7 +103,7 @@
 		/>
 	</div>
 
-	<div class="grid grid-cols-2 gap-4 absolute top-20 w-[600px]">
+	<div class="grid grid-cols-2 gap-4 absolute top-20 xl:w-[600px]">
 		{#if search}
 			{#each filteredLessons as lesson}
 				<a
@@ -108,11 +111,11 @@
 					class="flex flex-col hover:bg-sand-900/60 hover:text-sand-100 transition-colors shadow border border-sand-900/10 rounded-lg max-h-[150px] overflow-clip py-2"
 				>
 					<div class="flex flex-col py-3 px-5">
-						<h3 class="text-3xl">
+						<h3 class="text-lg md:text-xl lg:text-2xl xl:text-3xl">
 							{formatDate(lesson.manual_date || lesson.created_at)}
 						</h3>
 
-						<p class="opacity-80 highlighted-content">
+						<p class="opacity-80 highlighted-content text-sm md:text-base">
 							{@html lesson.highlightedContent}
 						</p>
 					</div>

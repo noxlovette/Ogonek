@@ -4,7 +4,7 @@
 	import { setUser } from '$lib/stores';
 	import { onMount } from 'svelte';
 	import { setContext } from 'svelte';
-
+	import BottomMenu from '$lib/components/mobile/BottomMenu.svelte';
 
 	export let data: any;
 	onMount(() => {
@@ -17,21 +17,19 @@
 	setContext('tasks', tasks);
 	setContext('lessons', lessons);
 	setContext('word', data.word);
-
 </script>
 
 <Sidebar />
+
 <div
-	class="flex flex-col w-full py-24 px-12 bg-sand-100 size-full border-l-2 border-r-2 border-sand-900/70 items-center justify-center overflow-y-scroll custom-scrollbar"
+	class="flex flex-col w-full py-12 px-6 lg:py-24 lg:px-12 bg-sand-100 size-full border-l-2 border-r-2 border-sand-900/70 items-center justify-center overflow-y-scroll custom-scrollbar"
 >
 	<slot />
 </div>
 <Rightbar />
+<BottomMenu />
 
 <style lang="postcss">
-	
-
-
 	:global(.markdown h1) {
 		@apply text-2xl font-bold opacity-80;
 	}

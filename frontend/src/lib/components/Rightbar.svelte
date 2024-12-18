@@ -5,9 +5,7 @@
 	import { Send } from "lucide-svelte";
 
 </script>
-
-
-	<div class="flex flex-col h-screen text-sand-100 font-serif text-2xl w-1/4 space-y-4 px-6 py-4">
+	<div class="hidden flex-col h-screen text-sand-100 font-serif text-2xl w-1/4 space-y-4 px-6 py-4 md:flex">
 		<a href="https://t.me/noxlovette" target="_blank" class="px-2 py-4 inline-flex">
 			<Send class="size-8 mr-2" />
 			

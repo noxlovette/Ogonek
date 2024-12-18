@@ -1,59 +1,71 @@
 <script lang="ts">
-	import {user} from '$lib/stores';
-	import { Bookmark, Hand, House, ListTodo, MessageSquare, Settings, Video, WholeWord } from 'lucide-svelte';
+	import { user } from '$lib/stores';
+	import {
+		Bookmark,
+		Hand,
+		House,
+		ListTodo,
+		MessageSquare,
+		Settings,
+		Video,
+		WholeWord
+	} from 'lucide-svelte';
 </script>
 
-<div>
-	<div
-		class="flex flex-col w-64 h-screen text-sand-100 text-2xl font-serif  justify-between"
-	>
+<div class="md:flex flex-col hidden md:text-lg lg:text-xl xl:text-2xl">
+	<div class="flex flex-col w-42 lg:w-56 xl:w-64 h-screen text-sand-100 font-serif justify-between">
 		<div class="flex p-4">
-			<h1 class=" text-4xl p-2">Firelight</h1>
+			<h1 class="text-2xl lg:text-3xl xl:text-4xl p-2">Firelight</h1>
 		</div>
 
 		<ul class="flex flex-col p-4 justify-between h-1/2">
 			<a href="/u/dashboard" class="px-2 py-4 inline-flex">
-				<House class="size-8 mr-2 " />
-				Dashboard</a>
+				<House class="xl:size-8 lg:size-7 size-6 mr-2 " />
+				Dashboard</a
+			>
 
 			<a href="/u/tasks" class="px-2 py-4 inline-flex">
-				<ListTodo class="size-8 mr-2" />
-				Tasks</a>
+				<ListTodo class="xl:size-8 lg:size-7 size-6 mr-2" />
+				Tasks</a
+			>
 
-				<a href="/u/lessons/bookmarked" class="px-2 py-4 inline-flex">
-					<Bookmark class="size-8 mr-2" />
-					Bookmarks</a>
+			<a href="/u/lessons/bookmarked" class="px-2 py-4 inline-flex">
+				<Bookmark class="xl:size-8 lg:size-7 size-6 mr-2" />
+				Bookmarks</a
+			>
 
 			<a href="/u/claude" class="px-2 py-4 inline-flex">
-				<MessageSquare class="size-8 mr-2" />
-				Claude</a>
+				<MessageSquare class="xl:size-8 lg:size-7 size-6 mr-2" />
+				Claude</a
+			>
 
 			<a
 				href="https://us05web.zoom.us/j/3661071003?pwd=RTlrUkRPaHJaakljZXQxaGpOYmdIZz09"
 				class="px-2 py-4 inline-flex"
 			>
-			<Video class="size-8 mr-2" />
+				<Video class="xl:size-8 lg:size-7 size-6 mr-2" />
 				Zoom
 			</a>
-			<a href="{$user.quizlet_url}" class="px-2 py-4 inline-flex">
-				<WholeWord class="size-8 mr-2" />
-				
-				Quizlet </a>
+			<a href={$user.quizlet_url} class="px-2 py-4 inline-flex">
+				<WholeWord class="xl:size-8 lg:size-7 size-6 mr-2" />
+
+				Quizlet
+			</a>
 
 			<a
 				href="/u/settings"
 				class="px-2 py-4 inline-flex
-					">
-					<Settings class="size-8 mr-2" />
-					
-					Settings</a
+					"
+			>
+				<Settings class="xl:size-8 lg:size-7 size-6 mr-2" />
+
+				Settings</a
 			>
 		</ul>
 		<div class="p-4">
-			
 			<h2 class="p-2 inline-flex">
 				{#if user}
-				<Hand class="size-8 mr-2" />
+					<Hand class="xl:size-8 lg:size-7 size-6 mr-2" />
 					{$user.username}
 				{:else}
 					Not logged in
