@@ -1,8 +1,12 @@
-<div class="flex-col hidden md:flex">
+<script>
+	import Header from "$lib/components/fonts/Header.svelte";
 
-    The settings page
+</script>
 
-</div>
+<Header>
+    Settings
+</Header>
+
 
 <div class="md:hidden">
 The settings page is not available on mobile

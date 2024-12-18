@@ -11,26 +11,29 @@
 		WholeWord
 	} from 'lucide-svelte';
 	import { user } from '$lib/stores';
+    import { page } from '$app/stores';
+    
+
 </script>
 
-<footer class="md:hidden w-full text-sand-100">
+<footer class="md:hidden w-full text-sand-100 bg-sand-900/60 mt-auto rounded-full">
 	<ul class="flex flex-row justify-between px-6 items-center">
         
-        <a href="/u/tasks" class="px-2 py-4 ">
+        <a href="/u/tasks" class="{ $page.url.pathname === '/u/tasks' ? 'p-2 bg-sand-100/20 rounded-full' : 'px-2 py-4' }">
 			<ListTodo class="size-6 " />
 			</a
             >
             
-            <a href="/u/lessons/bookmarked" class="px-2 py-4 ">
+            <a href="/u/lessons/bookmarked" class="{ $page.url.pathname === '/u/lessons/bookmarked' ? 'p-2 bg-sand-100/20 rounded-full' : 'px-2 py-4' }">
                 <Bookmark class="size-6 " />
                 </a
                 >
                  
-                <a href="/u/lessons" class="px-2 py-4 ">
+                <a href="/u/lessons" class=" { $page.url.pathname === '/u/lessons' ? 'p-2 bg-sand-100/20 rounded-full' : 'px-2 py-4' }">
                     <BookOpenText class="size-6 " />
                     </a
                     >
-                    <a href="/u/dashboard" class="p-2 bg-sand-100/20 rounded-full">
+                    <a href="/u/dashboard" class=" { $page.url.pathname === '/u/dashboard' ? 'p-2 bg-sand-100/20 rounded-full' : 'px-2 py-4' }">
                         <House class="size-6 rounded-full  " />
                         </a
                     >

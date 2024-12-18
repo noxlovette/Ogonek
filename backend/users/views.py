@@ -36,12 +36,8 @@ class LoginAPIView(APIView):
                 {
                     "success": True,
                     "message": "Login successful!",
-                    "username": user.username,
-                    "is_authenticated": user.is_authenticated,
-                    "email": user.email,
                     "sessionid": request.session.session_key,
-                    "quizlet_url": profile.quizlet_url,
-                    "client_id": profile.client_id,
+                 
                 }
             )
         else:
@@ -66,6 +62,8 @@ class CheckSessionAPI(APIView):
                     "csrfToken": csrf_token,
                     "quizlet_url": profile.quizlet_url,
                     "client_id": profile.client_id,
+                    "first_name": request.user.first_name,
+                    "last_name": request.user.last_name,
                 }
             )
         else:

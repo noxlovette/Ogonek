@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { getContext } from 'svelte';
 	import { formatDate } from '$lib/utils';
-	import { Search } from 'lucide-svelte';
+	import { Search, X } from 'lucide-svelte';
 	import { tweened } from 'svelte/motion';
 	import { cubicOut, quadInOut, quadIn } from 'svelte/easing';
 
@@ -15,13 +15,13 @@
 	});
 	function moveToTop() {
 		hidden = true;
-		topPosition.set(-300); // Adjust this value as per your layout
+		// topPosition.set(-300); // Adjust this value as per your layout
 	}
 
 	function moveBack() {
 		hidden = false;
 	
-		topPosition.set(0);
+		// topPosition.set(0);
 	}
 	let search = '';
 	let filteredLessons = [];
@@ -82,12 +82,12 @@
 </script>
 
 <div
-	class="flex flex-col items-center justify-center"
+	class="flex flex-col w-full items-center justify-center"
 	style="transform: translateY({$topPosition}px); transition: transform 0.3s;"
 >
 	<div class="inline-flex group caret-sand-900 focus:shadow-lg lg:text-lg xl:text-xl relative">
 		<div
-			class="rounded-l-full border-sand-900/60 border-r-0 border-2 bg-sand-900/60 px-4 py-2 my-4 group-focus-within:border-sand-900 group-focus-within:bg-sand-100 transition-colors group-focus-within:text-sand-100"
+			class="rounded-l-full border-sand-900/60 border-r-0 border-2 bg-sand-900/20 px-4 py-2 my-4 group-focus-within:border-sand-900 group-focus-within:bg-sand-100 transition-colors group-focus-within:text-sand-100"
 		>
 			<Search
 				class=" size-6 lg:size-7 xl:size-8 text-sand-100 group-focus-within:text-sand-900/70"
@@ -97,7 +97,7 @@
 			type="text"
 			placeholder="Search lessons"
 			bind:value={search}
-			class="border-sand-900/60 pl-0 bg-sand-900/60 text-sand-900 border-2 border-l-0 focus:outline-none focus:border-sand-900 focus:bg-sand-100 placeholder:text-sand-100 focus:placeholder:text-sand-900/70 transition-colors rounded-r-full px-4 py-2 my-4"
+			class="border-sand-900/60 pl-0 bg-sand-900/20 text-sand-900 border-2 border-l-0 focus:outline-none focus:border-sand-900 focus:bg-sand-100 placeholder:text-sand-100 focus:placeholder:text-sand-900/70 transition-colors rounded-r-full px-4 py-2 my-4"
 			on:focus={moveToTop}
 			on:blur={moveBack}
 		/>
@@ -108,7 +108,7 @@
 			{#each filteredLessons as lesson}
 				<a
 					href="/u/lessons/l/{lesson.id}"
-					class="flex flex-col hover:bg-sand-900/60 hover:text-sand-100 transition-colors shadow border border-sand-900/10 rounded-lg max-h-[150px] overflow-clip py-2"
+					class="flex flex-col hover:bg-sand-900/20 hover:text-sand-100 transition-colors shadow border border-sand-900/10 rounded-lg max-h-[150px] overflow-clip py-2"
 				>
 					<div class="flex flex-col py-3 px-5">
 						<h3 class="text-lg md:text-xl lg:text-2xl xl:text-3xl">

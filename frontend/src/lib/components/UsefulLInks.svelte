@@ -4,28 +4,28 @@
 
 </script>
 
-<div class="flex flex-col  border-2 border-sand-900/20 p-4 rounded-lg">
-    <h2 class="text-xl">
+<div class="flex flex-col  border-2 border-sand-900/20 p-2 lg:p-3 xl:p-4 rounded-lg">
+    <h2 class="lg:text-lg xl:text-xl">
         Useful Links
     </h2>
     <a href="https://forvo.com/languages/en/"
     
-    class="px-2 py-4 inline-flex">
-				<AudioLines class="size-8 mr-2 " />
-    Pronunciation
+    class="lg:px-2 lg:py-4 px-1 py-2 inline-flex">
+				<AudioLines class="size-6 lg:size-7 xl:size-8 mr-2 " />
+    Pron
     
     </a>
     <a href='https://dictionary.cambridge.org/'
-    class="px-2 py-4 inline-flex">
+    class="lg:px-2 lg:py-4 px-1 py-2 inline-flex">
 
-    <Book class="size-8 mr-2" />
+    <Book class="size-6 lg:size-7 xl:size-8 mr-2" />
         
         
         Dictionary</a>
     <a href='https://www.thesaurus.com/'
-    class="px-2 py-4 inline-flex">
+    class="lg:px-2 lg:py-4 px-1 py-2 inline-flex">
 
-    <BookCopy class="size-8 mr-2" />
+    <BookCopy class="size-6 lg:size-7 xl:size-8 mr-2" />
     Thesaurus
     
     

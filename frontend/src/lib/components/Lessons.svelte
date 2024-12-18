@@ -11,8 +11,8 @@
 
 </script>
 
-<div class="p-4 border-2 flex flex-col  rounded-lg border-sand-900/20">
-	<h2 class="text-xl">Recent Lessons</h2>
+<div class="p-2 lg:p-3 xl:p-4 border-2 flex flex-col my-4 rounded-lg border-sand-900/20">
+	<h2 class=" lg:text-lg xl:text-xl">Recent Lessons</h2>
 	<ul class="">
 		{#if lessons.length === 0}
 			<p>No lessons found</p>
@@ -22,7 +22,7 @@
 			{/each}
 		{/if}
 	</ul>
-	<a href="/u/lessons" class="text-sand-400 text-sm font-sans p-1">View All Lessons</a>
+	<a href="/u/lessons" class="text-sand-400 text-xs lg:text-sm font-sans p-1">View All Lessons</a>
 </div>
 
 <style>

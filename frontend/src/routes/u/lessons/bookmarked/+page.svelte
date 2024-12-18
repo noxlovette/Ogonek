@@ -1,6 +1,7 @@
 <script lang='ts'>
     
-    import LessonCardBig from '$lib/components/LessonCardBig.svelte';
+    import Header from '$lib/components/fonts/Header.svelte';
+import LessonCardBig from '$lib/components/LessonCardBig.svelte';
     
 	import { Squirrel } from 'lucide-svelte';
 
@@ -16,11 +17,14 @@
         <p class="text-lg mt-2">No bookmarked lessons found</p>
         
         {:else}
-        <h1 class='text-4xl'>Bookmarked</h1>
+
+        <Header>
+            Bookmarked
+        </Header>
         <div class='grid grid-cols-2 my-4 gap-4'>
             {#each bookmarked as lesson}
             <LessonCardBig {lesson} />
             {/each}
         </div>
         {/if}
-        <a href="/u/lessons" class="text-sm font-sans p-1 hover:text-sand-800">View All Lessons</a>
+        <a href="/u/lessons" class="text-sm font-sans hover:text-sand-800">View All Lessons</a>

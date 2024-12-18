@@ -7,9 +7,8 @@
 	import BottomMenu from '$lib/components/mobile/BottomMenu.svelte';
 
 	export let data: any;
-	onMount(() => {
-		setUser(data.user);
-	});
+
+	$: setUser(data.user);
 
 	const tasks: App.Task[] = data.tasks;
 	const lessons: App.Lesson[] = data.lessons;
@@ -20,14 +19,13 @@
 </script>
 
 <Sidebar />
-
 <div
-	class="flex flex-col w-full py-12 px-6 lg:py-24 lg:px-12 bg-sand-100 size-full border-l-2 border-r-2 border-sand-900/70 items-center justify-center overflow-y-scroll custom-scrollbar"
+	class="flex flex-col w-full min-h-screen py-7 px-6 lg:px-12 bg-sand-100 border-l-2 border-r-2 border-sand-900/80 justify-start items-center font-medium"
 >
 	<slot />
+	<BottomMenu />
 </div>
 <Rightbar />
-<BottomMenu />
 
 <style lang="postcss">
 	:global(.markdown h1) {
@@ -51,7 +49,7 @@
 	}
 
 	:global(.markdown a) {
-		color: #cc6d0e;
+		color: #737d3f;
 		text-decoration: underline;
 	}
 
