@@ -1,0 +1,74 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.prod
+    container_name: frontend-firelight-prod
+    ports:
+      - "5174:3000" # Expose frontend on port 5174 for direct access if needed
+    environment:
+      - NODE_ENV=production
+      - BACKEND_URL="http://backend:8000"
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.prod
+    container_name: backend-firelight-prod
+    ports:
+      - "8003:8000" # Expose backend on port 8002 for direct access if needed
+    volumes:
+      - media-volume:/app/media
+    env_file:
+      - ./backend/.env.prod
+    depends_on:
+      - db
+    # Assuming you're using a production server like Gunicorn instead of Django's runserver
+    command: gunicorn your_project.wsgi:application --bind 0.0.0.0:8000
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443" # HTTPS port for production
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - media-volume:/app/media
+    depends_on:
+      - backend
+
+  redis:
+    image: redis/redis-stack:latest
+    container_name: redis-firelight-prod
+    ports:
+      - "6379:6379" # Expose Redis for monitoring or external usage if needed
+
+  db:
+    image: postgres
+    restart: always
+    user: postgres
+    volumes:
+      - db-data-firelight:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=firelight-production
+      - POSTGRES_PASSWORD=${DB_PASSWORD} # Use environment variable for security
+    ports:
+      - "5434:5432" # Keep this port mapping for admin access or debugging
+    healthcheck:
+      test: ["CMD", "pg_isready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  db-data-firelight:
+  media-volume:
+
+networks:
+  default:
+    name: firelight-prod-network
