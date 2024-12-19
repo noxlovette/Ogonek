@@ -9,8 +9,10 @@ services:
     environment:
       - NODE_ENV=production
       - BACKEND_URL="http://backend:8000"
+      - ORIGIN = "https://firelight.noxlovette.com"
     depends_on:
       - backend
+      - redis
 
   backend:
     build:

@@ -26,6 +26,8 @@ RUN pip install --upgrade pip \
 # Copy the project files into the container.
 COPY . .
 
+RUN python manage.py collectstatic --noinput
+
 # Expose the port
 EXPOSE 8000
 

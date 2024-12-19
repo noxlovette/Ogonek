@@ -4,7 +4,7 @@ import os
 DEBUG = False
 
 # ALLOWED_HOSTS = ['admin.firelight.noxlovette.com','firelight.noxlovette.com' ,'noxlovette.com', 'backend', 'backend-firelight-prod', 'firelight-backend']  # Update with your domain
-
+ROOT_URLCONF = "backend.urls"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",

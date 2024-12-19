@@ -8,6 +8,7 @@ BASE_DIR = (
 
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 
+ROOT_URLCONF = "backend.urls"
 
 # Application definition
 INSTALLED_APPS = [
@@ -21,6 +22,8 @@ INSTALLED_APPS = [
     "blog",
     "users",
 ]
+
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 ALLOWED_HOSTS = ["*"]
 
@@ -64,7 +67,6 @@ LOGGING = {
         },
     },
 }
-
 
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ORIGIN_ALLOW_ALL = True
@@ -115,7 +117,7 @@ MIDDLEWARE = [
 # }
 
 
-ROOT_URLCONF = "backend.urls"
+
 
 TEMPLATES = [
     {
