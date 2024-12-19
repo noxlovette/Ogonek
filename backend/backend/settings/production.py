@@ -3,7 +3,7 @@ import os
 
 DEBUG = False
 
-ALLOWED_HOSTS = ['admin.firelight.noxlovette.com','firelight.noxlovette.com' ,'noxlovette.com', 'backend', 'backend-firelight-prod', 'firelight-backend']  # Update with your domain
+# ALLOWED_HOSTS = ['admin.firelight.noxlovette.com','firelight.noxlovette.com' ,'noxlovette.com', 'backend', 'backend-firelight-prod', 'firelight-backend']  # Update with your domain
 
 DATABASES = {
     "default": {
@@ -17,14 +17,11 @@ DATABASES = {
 }
 
 REST_FRAMEWORK = {
-    'DEFAULT_THROTTLE_CLASSES': [
-        'rest_framework.throttling.AnonRateThrottle',
-        'rest_framework.throttling.UserRateThrottle'
+    "DEFAULT_THROTTLE_CLASSES": [
+        "rest_framework.throttling.AnonRateThrottle",
+        "rest_framework.throttling.UserRateThrottle",
     ],
-    'DEFAULT_THROTTLE_RATES': {
-        'anon': '100/day',
-        'user': '1000/day'
-    }
+    "DEFAULT_THROTTLE_RATES": {"anon": "100/day", "user": "1000/day"},
 }
 
 # Email configuration for production - Use actual SMTP server or a service like SendGrid
@@ -36,31 +33,17 @@ REST_FRAMEWORK = {
 # EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 
 # Logging - Ensure logs are written to a location accessible by your deployment environment
-#LOGGING['handlers']['info_file']['filename'] = '/path/to/production/logs/info.log'
-#LOGGING['handlers']['error_file']['filename'] = '/path/to/production/logs/error.log'
-#LOGGING['handlers']['db']['filename'] = '/path/to/production/logs/db.log'
+# LOGGING['handlers']['info_file']['filename'] = '/path/to/production/logs/info.log'
+# LOGGING['handlers']['error_file']['filename'] = '/path/to/production/logs/error.log'
+# LOGGING['handlers']['db']['filename'] = '/path/to/production/logs/db.log'
 
-CACHES = {
-    "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://your-redis-server:6379/2",
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
-        }
-    }
-}
-
-if 'debug_toolbar' in INSTALLED_APPS:
-    INSTALLED_APPS.remove('debug_toolbar')
-if 'debug_toolbar.middleware.DebugToolbarMiddleware' in MIDDLEWARE:
-    MIDDLEWARE.remove('debug_toolbar.middleware.DebugToolbarMiddleware')
+if "debug_toolbar" in INSTALLED_APPS:
+    INSTALLED_APPS.remove("debug_toolbar")
+if "debug_toolbar.middleware.DebugToolbarMiddleware" in MIDDLEWARE:
+    MIDDLEWARE.remove("debug_toolbar.middleware.DebugToolbarMiddleware")
 
 # Other production-specific settings might include:
 # - Rate limiting
 # - Security headers
 # - CORS settings if needed
 # - Session settings for longer-term or more secure configurations
-
-CORS_ALLOW_ALL_ORIGINS = True
-CORS_ORIGIN_ALLOW_ALL = True
-CORS_ALLOW_CREDENTIALS = True

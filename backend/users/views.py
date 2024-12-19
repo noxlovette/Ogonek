@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from .models import Profile
@@ -8,26 +7,35 @@ from django.http import JsonResponse
 from django.contrib.auth import authenticate, login
 from django.middleware.csrf import get_token
 from rest_framework import status
+from .permissions import HasAPIKey
+from django.utils.decorators import method_decorator
 
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import logging
+logger = logging.getLogger(__name__)
 
-
-# Create your views here.
 class UserDataApi(APIView):
     queryset = Profile.objects.all()
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, HasAPIKey]
     serializer_class = ProfileSerializer
 
     def get_queryset(self):
         # Filter lessons by the authenticated user
         return self.queryset.filter(assignee=self.request.user)
-    
+
+
 
 class LoginAPIView(APIView):
+    permission_classes = [HasAPIKey]
+
     def post(self, request):
-        username = request.POST.get('username')
-        password = request.POST.get('password')
+        logger.info(f'Headers: {request.headers}')
+        username = request.POST.get("username")
+        password = request.POST.get("password")
 
         user = authenticate(request, username=username, password=password)
+        
 
         if user is not None:
             login(request, user)
@@ -37,12 +45,14 @@ class LoginAPIView(APIView):
                     "success": True,
                     "message": "Login successful!",
                     "sessionid": request.session.session_key,
-                 
                 }
             )
         else:
-            return JsonResponse({'success': False, 'message': 'Invalid username or password.'}, status=400)
-        
+            return JsonResponse(
+                {"success": False, "message": "Invalid username or password."},
+                status=400,
+            )
+
 
 
 class CheckSessionAPI(APIView):
@@ -50,6 +60,9 @@ class CheckSessionAPI(APIView):
     Check if the user is authenticated.
     """
 
+    permission_classes = [HasAPIKey]
+
+    @csrf_exempt
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             csrf_token = get_token(request)

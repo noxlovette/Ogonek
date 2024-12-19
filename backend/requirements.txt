@@ -1,5 +1,6 @@
 asgiref==3.8.1
 Django==5.1.4
+django-cors-headers==4.6.0
 django-debug-toolbar==4.4.6
 django-filter==24.3
 django-redis==5.4.0

@@ -1,15 +1,13 @@
 <script lang="ts">
-    
-    import Header from '$lib/components/fonts/Header.svelte';
-import LessonCardBig from '$lib/components/LessonCardBig.svelte';
-    
+	import Header from '$lib/components/fonts/Header.svelte';
+	import LessonCardBig from '$lib/components/LessonCardBig.svelte';
+
 	import { Squirrel } from 'lucide-svelte';
-    import { language, translations } from '$lib/stores';
+	import { language, translations } from '$lib/stores';
 
-    export let data:PageServerData;
-    let lessons: App.Lesson[] = data.lessons;
-    let bookmarked = lessons.filter(lesson => lesson.bookmarked);
-
+	export let data: PageServerData;
+	let lessons: App.Lesson[] = data.lessons;
+	let bookmarked = lessons.filter((lesson) => lesson.bookmarked);
 </script>
 
 {#if bookmarked.length === 0}

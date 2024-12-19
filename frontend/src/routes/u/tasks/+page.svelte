@@ -1,6 +1,6 @@
 <script lang="ts">
 	import TaskBox from '$lib/components/TaskBox.svelte';
-	import {translations, language} from '$lib/stores';
+	import { translations, language } from '$lib/stores';
 
 	import { getContext } from 'svelte';
 
@@ -9,49 +9,42 @@
 
 	let tasks: App.Task[] = getContext('tasks');
 
-	let filtered = tasks.filter(task => task.completed === false);
-	let completed = tasks.filter(task => task.completed === true);
+	let filtered = tasks.filter((task) => task.completed === false);
+	let completed = tasks.filter((task) => task.completed === true);
 
 	let completedVisible = false;
-
 </script>
 
-
 {#if filtered.length > 0}
-
-<Header>
-	{$translations.tasks[$language]}
-</Header>
-<div class="grid grid-cols-1 gap-4 md:grid-cols-2 my-4 w-full">
+	<Header>
+		{$translations.tasks[$language]}
+	</Header>
+	<div class="grid grid-cols-1 gap-4 lg:grid-cols-2 my-4 w-full">
 		{#each filtered as task}
 			<TaskBox {task} />
 		{/each}
-</div>
-	
+	</div>
 {:else}
-<Bird class="size-32 mx-auto text-sand-900" />
+	<Bird class="size-32 mx-auto text-sand-900" />
 	<p>
-		
 		{$translations.no_tasks[$language]}
-
-
 	</p>
-	
 {/if}
-<button on:click={()=> completedVisible = !completedVisible} class="text-sm font-sans text-left hover:text-sand-800">
-		
+<button
+	on:click={() => (completedVisible = !completedVisible)}
+	class="text-sm font-sans text-left hover:text-sand-800"
+>
 	{#if completedVisible}
-	{$translations.tasks_completed[$language]}
+		{$translations.tasks_notcompleted[$language]}
 	{:else}
-	{$translations.tasks_notcompleted[$language]} 
+		{$translations.tasks_completed[$language]}
 	{/if}
-
 </button>
 
 {#if completedVisible}
-<div class='grid grid-cols-2 my-4 gap-4'>
-    {#each completed as task}
-		<TaskBox {task} />
-    {/each}
-</div>
+	<div class="grid grid-cols-2 my-4 gap-4">
+		{#each completed as task}
+			<TaskBox {task} />
+		{/each}
+	</div>
 {/if}

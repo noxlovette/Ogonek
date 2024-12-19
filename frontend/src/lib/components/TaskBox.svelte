@@ -29,26 +29,29 @@
 	}
 </script>
 
-<div class="flex w-full flex-col py-2 shadow border border-sand-900/10 rounded-lg min-h-[150px]" class:completed>
+<div
+	class="flex w-full flex-col py-2 shadow border border-sand-900/10 rounded-lg min-h-[150px]"
+	class:completed
+>
 	<div
 		id="task-header"
-		class="inline-flex py-3 px-5 space-x-1rounded-t-lg text-3xl justify-between"
+		class="inline-flex py-3 px-5 space-x-8 text-lg md:text-xl lg:text-2xl xl:text-3xl justify-between items-baseline"
 	>
-	<h2 class="">{task.title}</h2>
-	<form class="flex items-center space-x-1" method="post" use:enhance action="?/completed">
-		<button on:click={() => (completed = !completed)} class="" class:overdue>
-			{#if completed}
-				<CheckSquare class="w-6 h-6" />
-			{:else}
-				<Square class="w-6 h-6" />
-			{/if}
-		</button>
-		<input type="hidden" name="completed" value={completed} />
-		<input type="hidden" name="id" value={task.id} />
-	</form>
+		<h2 class="flex">{task.title}</h2>
+		<form class="flex" method="post" use:enhance action="?/completed">
+			<button on:click={() => (completed = !completed)} class="" class:overdue>
+				{#if completed}
+					<CheckSquare class="w-6 h-6" />
+				{:else}
+					<Square class="w-6 h-6" />
+				{/if}
+			</button>
+			<input type="hidden" name="completed" value={completed} />
+			<input type="hidden" name="id" value={task.id} />
+		</form>
 	</div>
 
-	<p class="px-5">{@html task.content}</p>
+	<p class="px-5 text-sm lg:text-base">{@html task.content}</p>
 
 	<div
 		id="task-footer"
@@ -57,9 +60,9 @@
 		<p class:overdue class="opacity-60">Due {formattedDate}</p>
 
 		{#if task.file}
-		<button on:click={handleDownload}>
-			<Download class="w-6 h-6" />
-		</button>
+			<button on:click={handleDownload}>
+				<Download class="w-6 h-6" />
+			</button>
 		{/if}
 	</div>
 </div>

@@ -20,7 +20,7 @@
 
 <Sidebar />
 <div
-	class="flex flex-col w-full min-h-screen py-7 px-6 lg:px-12 bg-sand-100 border-l-2 border-r-2 border-sand-900/80 justify-start items-center font-medium"
+	class="flex flex-col w-full min-h-screen py-7 px-6 lg:px-12 bg-sand-100 border-l-2 border-r-2 border-sand-900/80 justify-start items-center font-medium overflow-auto"
 >
 	<slot />
 	<BottomMenu />

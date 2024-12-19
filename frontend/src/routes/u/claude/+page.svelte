@@ -1,8 +1,7 @@
 <script>
-    import Chat from '$lib/components/Chat.svelte';
+	import Chat from '$lib/components/Chat.svelte';
 	import Talk from '$lib/components/Talk.svelte';
-import { onMount } from 'svelte';
-    
- 
-  </script>
-    <Talk />
+	import { onMount } from 'svelte';
+</script>
+
+<Talk />

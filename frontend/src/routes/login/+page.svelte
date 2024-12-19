@@ -13,10 +13,14 @@
 			notification.set({ message: 'Welcome back!', type: 'success' });
 			await goto(result.location);
 		} else {
-			notification.set({
-				message: result.data.message || 'Login failed',
-				type: 'error'
-			});
+			if (result.data) {
+				notification.set({
+					message: result.data.message || 'Login failed',
+					type: 'error'
+				});
+			} else {
+				notification.set({ message: 'Login failed', type: 'error' });
+			}
 		}
 		update();
 	};
@@ -25,7 +29,7 @@
 <div
 	class="absolute left-1/2 transform -translate-x-1/2 z-0 bg-roses-center bg-cover bg-center h-full opacity-50 w-full"
 ></div>
-<div class="relative  w-full max-w-[420px] my-auto mx-auto">
+<div class="relative w-full max-w-[420px] my-auto mx-auto">
 	<form
 		method="POST"
 		use:enhance={() => handleLoginResult}

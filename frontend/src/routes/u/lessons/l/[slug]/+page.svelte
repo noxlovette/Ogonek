@@ -5,8 +5,6 @@
 	import { enhance } from '$app/forms';
 	import { notification } from '$lib/stores';
 
-
-
 	export let data: PageServerData;
 	export let html: string;
 
@@ -15,7 +13,6 @@
 
 	$: bookmarked = data.lesson.bookmarked;
 	$: html = marked.parse(data.lesson.content);
-
 
 	const handleToggle = async ({ result, update }) => {
 		if (result.data) {
@@ -34,8 +31,7 @@
 	};
 
 	let date;
-	$:date = new Date(data.lesson.manual_date || data.lesson.created_at);
-
+	$: date = new Date(data.lesson.manual_date || data.lesson.created_at);
 
 	let formattedDate;
 	$: formattedDate = date.toLocaleDateString('en-GB', {
@@ -57,20 +53,20 @@
 	</div>
 	<div class="markdown">{@html html}</div>
 
-		<form action="?/bookmark" use:enhance={() => handleToggle} method="post">
-			<input type="hidden" name="id" value={data.lesson.id} />
-			<input type="hidden" name="bookmarked" value={bookmarked} />
-			<button
-				class="hover:bg-sand-900/60 hover:text-sand-100 transition-colors duration-300 rounded-lg my-8 p-2 inline-flex" on:click={() => (bookmarked = !bookmarked)}
-			>
-      {#if bookmarked}
-      <BookmarkMinus class="size-8 mr-2" />
-      Remove from bookmarks
-      {:else}
-      <BookmarkPlus class="size-8 mr-2" />
-					Bookmark
-				{/if}
-			</button>
-		</form>
-
+	<form action="?/bookmark" use:enhance={() => handleToggle} method="post">
+		<input type="hidden" name="id" value={data.lesson.id} />
+		<input type="hidden" name="bookmarked" value={bookmarked} />
+		<button
+			class="hover:bg-sand-900/60 hover:text-sand-100 transition-colors duration-300 rounded-lg my-8 p-2 inline-flex"
+			on:click={() => (bookmarked = !bookmarked)}
+		>
+			{#if bookmarked}
+				<BookmarkMinus class="size-8 mr-2" />
+				Remove from bookmarks
+			{:else}
+				<BookmarkPlus class="size-8 mr-2" />
+				Bookmark
+			{/if}
+		</button>
+	</form>
 </article>

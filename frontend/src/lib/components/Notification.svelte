@@ -16,7 +16,7 @@
 {#if $notification.message}
 	<div
 		transition:fade
-		class="fixed bottom-2 left-2 bg-sand-900 border-2 border-sand-950/60 text-sand-100 text-center rounded-lg flex p-4 items-center justify-center"
+		class="fixed bottom-2 left-2 bg-sand-900 border-2 border-sand-900/20 text-sand-100 text-center rounded-lg flex p-4 items-center justify-center"
 	>
 		<p class=" font-bold text-xl p-2">{$notification.message}</p>
 	</div>

@@ -4,7 +4,7 @@
 	import { Search, X } from 'lucide-svelte';
 	import { tweened } from 'svelte/motion';
 	import { cubicOut, quadInOut, quadIn } from 'svelte/easing';
-	import {language, translations} from '$lib/stores';
+	import { language, translations } from '$lib/stores';
 
 	const lessons = getContext('lessons');
 	const tasks = getContext('tasks');
@@ -21,7 +21,7 @@
 
 	function moveBack() {
 		hidden = false;
-	
+
 		// topPosition.set(0);
 	}
 	let search = '';

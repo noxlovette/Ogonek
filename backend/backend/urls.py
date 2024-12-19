@@ -1,4 +1,3 @@
-
 """
 URL configuration for backend project.
 
@@ -15,23 +14,25 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from django.contrib import admin
 from rest_framework.routers import DefaultRouter
 from django.urls import path, include
-from blog.views import TaskViewSet,LessonViewSet, DownloadFileView
+from blog.views import TaskViewSet, LessonViewSet, DownloadFileView
 from users.views import UserDataApi, LoginAPIView, CheckSessionAPI
 
 
 router = DefaultRouter()
-router.register(r'tasks', TaskViewSet, basename='task')
-router.register(r'lessons', LessonViewSet, basename='lesson')
+router.register(r"tasks", TaskViewSet, basename="task")
+router.register(r"lessons", LessonViewSet, basename="lesson")
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('api/', include(router.urls)),
-    path('api/user/', UserDataApi.as_view()),
-    path('api/login/', LoginAPIView.as_view(), name='login'),
-    path('api/check-session/', CheckSessionAPI.as_view(), name='check-session'),
-    path('api/download/<int:file_id>/', DownloadFileView.as_view(), name='download-file'),
-] 
-
+    path("admin/", admin.site.urls),
+    path("api/", include(router.urls)),
+    path("api/user/", UserDataApi.as_view()),
+    path("api/login/", LoginAPIView.as_view(), name="login"),
+    path("api/check-session/", CheckSessionAPI.as_view(), name="check-session"),
+    path(
+        "api/download/<int:file_id>/", DownloadFileView.as_view(), name="download-file"
+    ),
+]

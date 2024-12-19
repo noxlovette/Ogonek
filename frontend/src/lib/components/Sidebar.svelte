@@ -35,8 +35,6 @@
 			{$translations.bookmarks[$language]}</a
 		>
 
-		
-
 		<a
 			href="https://us05web.zoom.us/j/3661071003?pwd=RTlrUkRPaHJaakljZXQxaGpOYmdIZz09"
 			class="lg:px-2 lg:py-4 px-1 py-2 inline-flex"
