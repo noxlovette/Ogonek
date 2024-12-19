@@ -1,5 +1,6 @@
 <script lang="ts">
 	import LessonCard from './LessonCard.svelte';
+	import { language, translations } from '$lib/stores';
 
 	import { getContext } from 'svelte';
 
@@ -12,7 +13,12 @@
 </script>
 
 <div class="p-2 lg:p-3 xl:p-4 border-2 flex flex-col my-4 rounded-lg border-sand-900/20">
-	<h2 class=" lg:text-lg xl:text-xl">Recent Lessons</h2>
+	<h2 class=" lg:text-lg xl:text-xl">
+		
+		{$translations.recent[$language]}
+
+
+	</h2>
 	<ul class="">
 		{#if lessons.length === 0}
 			<p>No lessons found</p>
@@ -22,7 +28,11 @@
 			{/each}
 		{/if}
 	</ul>
-	<a href="/u/lessons" class="text-sand-400 text-xs lg:text-sm font-sans p-1">View All Lessons</a>
+	<a href="/u/lessons" class="text-sand-400 text-xs lg:text-sm font-sans p-1">
+		
+		{$translations.view_all[$language]}
+	
+	</a>
 </div>
 
 <style>

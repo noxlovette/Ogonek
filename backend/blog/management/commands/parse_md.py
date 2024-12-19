@@ -1,7 +1,8 @@
 import os
 from django.core.management.base import BaseCommand
 from django.contrib.auth.hashers import make_password
-from blog.models import User, Lesson
+from blog.models import Lesson
+from django.contrib.auth.models import User
 
 class Command(BaseCommand):
     help = 'Parse Markdown files, populate User and Lesson models, and hash user passwords'

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import TaskBox from '$lib/components/TaskBox.svelte';
+	import {translations, language} from '$lib/stores';
 
 	import type { PageServerData } from './$types';
 	export let data:PageServerData;
@@ -22,7 +23,7 @@
 {#if filtered.length > 0}
 
 <Header>
-	My Tasks
+	{$translations.tasks[$language]}
 </Header>
 <div class="grid grid-cols-1 gap-4 md:grid-cols-2 my-4 w-full">
 		{#each filtered as task}
@@ -32,17 +33,21 @@
 	
 {:else}
 <Bird class="size-32 mx-auto text-sand-900" />
-	<p>No tasks</p>
+	<p>
+		
+		{$translations.no_tasks[$language]}
+
+
+	</p>
 	
 {/if}
 <button on:click={()=> completedVisible = !completedVisible} class="text-sm font-sans text-left hover:text-sand-800">
 		
 	{#if completedVisible}
-	Hide
+	{$translations.tasks_completed[$language]}
 	{:else}
-	View 
+	{$translations.tasks_notcompleted[$language]} 
 	{/if}
-	Completed
 
 </button>
 

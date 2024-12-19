@@ -1,39 +1,43 @@
 <script lang="ts">
-	import { AudioLines, Book, BookCopy } from "lucide-svelte";
-
-
+	import { AudioLines, Book, BookCopy } from 'lucide-svelte';
+	import { language, translations } from '$lib/stores';
 </script>
 
-<div class="flex flex-col  border-2 border-sand-900/20 p-2 lg:p-3 xl:p-4 rounded-lg">
-    <h2 class="lg:text-lg xl:text-xl">
-        Useful Links
-    </h2>
-    <a href="https://forvo.com/languages/en/"
-    
-    class="lg:px-2 lg:py-4 px-1 py-2 inline-flex">
-				<AudioLines class="size-6 lg:size-7 xl:size-8 mr-2 " />
-    Pron
-    
-    </a>
-    <a href='https://dictionary.cambridge.org/'
-    class="lg:px-2 lg:py-4 px-1 py-2 inline-flex">
+<div class="flex flex-col border-2 border-sand-900/20 p-2 lg:p-3 xl:p-4 rounded-lg">
+	<h2 class="lg:text-lg xl:text-xl">
+		{$translations.useful_links[$language]}
+	</h2>
+	<a href="https://forvo.com/languages/en/" class="lg:px-2 lg:py-4 px-1 py-2 inline-flex">
+		<AudioLines class="size-6 lg:size-7 xl:size-8 mr-2 " />
+		{$translations.pronunciation[$language]}
+	</a>
 
-    <Book class="size-6 lg:size-7 xl:size-8 mr-2" />
-        
-        
-        Dictionary</a>
-    <a href='https://www.thesaurus.com/'
-    class="lg:px-2 lg:py-4 px-1 py-2 inline-flex">
+	{#if $language === 'de'}
+		<a href="https://www.dwds.de/" class="lg:px-2 lg:py-4 px-1 py-2 inline-flex">
+			<Book class="size-6 lg:size-7 xl:size-8 mr-2" />
 
-    <BookCopy class="size-6 lg:size-7 xl:size-8 mr-2" />
-    Thesaurus
-    
-    
-    </a>
+			{$translations.dictionary[$language]}
+		</a>
+		<a href="https://www.openthesaurus.de/" class="lg:px-2 lg:py-4 px-1 py-2 inline-flex">
+			<BookCopy class="size-6 lg:size-7 xl:size-8 mr-2" />
+			{$translations.thesaurus[$language]}
+		</a>
+	{:else}
+		<a href="https://dictionary.cambridge.org/" class="lg:px-2 lg:py-4 px-1 py-2 inline-flex">
+			<Book class="size-6 lg:size-7 xl:size-8 mr-2" />
+
+			{$translations.dictionary[$language]}
+		</a>
+
+		<a href="https://www.thesaurus.com/" class="lg:px-2 lg:py-4 px-1 py-2 inline-flex">
+			<BookCopy class="size-6 lg:size-7 xl:size-8 mr-2" />
+			{$translations.thesaurus[$language]}
+		</a>
+	{/if}
 </div>
 
 <style>
-    a:hover {
-        @apply bg-sand-900/20 transition-colors duration-300 rounded-lg text-sand-100;
-    }
+	a:hover {
+		@apply bg-sand-900/20 transition-colors duration-300 rounded-lg text-sand-100;
+	}
 </style>

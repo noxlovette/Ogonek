@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { user } from '$lib/stores';
+	import { user, translations, language } from '$lib/stores';
 	import {
 		Bookmark,
 		Hand,
@@ -22,17 +22,17 @@
 	<ul class="flex flex-col p-4 space-y-2 lg:space-y-3 xl:space-y-4">
 		<a href="/u/dashboard" class="lg:px-2 lg:py-4 px-1 py-2 inline-flex">
 			<House class="xl:size-8 lg:size-7 size-6 mr-2 " />
-			Dashboard</a
+			{$translations.dashboard[$language]}</a
 		>
 
 		<a href="/u/tasks" class="lg:px-2 lg:py-4 px-1 py-2 inline-flex">
 			<ListTodo class="xl:size-8 lg:size-7 size-6 mr-2" />
-			Tasks</a
+			{$translations.tasks[$language]}</a
 		>
 
 		<a href="/u/lessons/bookmarked" class="lg:px-2 lg:py-4 px-1 py-2 inline-flex">
 			<Bookmark class="xl:size-8 lg:size-7 size-6 mr-2" />
-			Bookmarks</a
+			{$translations.bookmarks[$language]}</a
 		>
 
 		
@@ -57,7 +57,7 @@
 		>
 			<Settings class="xl:size-8 lg:size-7 size-6 mr-2" />
 
-			Settings</a
+			{$translations.settings[$language]}</a
 		>
 	</ul>
 	<div class="p-4 mt-auto">

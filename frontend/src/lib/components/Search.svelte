@@ -4,6 +4,7 @@
 	import { Search, X } from 'lucide-svelte';
 	import { tweened } from 'svelte/motion';
 	import { cubicOut, quadInOut, quadIn } from 'svelte/easing';
+	import {language, translations} from '$lib/stores';
 
 	const lessons = getContext('lessons');
 	const tasks = getContext('tasks');
@@ -95,7 +96,7 @@
 		</div>
 		<input
 			type="text"
-			placeholder="Search lessons"
+			placeholder={$translations.search[$language]}
 			bind:value={search}
 			class="border-sand-900/60 pl-0 bg-sand-900/20 text-sand-900 border-2 border-l-0 focus:outline-none focus:border-sand-900 focus:bg-sand-100 placeholder:text-sand-100 focus:placeholder:text-sand-900/70 transition-colors rounded-r-full px-4 py-2 my-4"
 			on:focus={moveToTop}

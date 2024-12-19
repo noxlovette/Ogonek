@@ -68,7 +68,7 @@
       Remove from bookmarks
       {:else}
       <BookmarkPlus class="size-8 mr-2" />
-					Save the lesson for later
+					Bookmark
 				{/if}
 			</button>
 		</form>
