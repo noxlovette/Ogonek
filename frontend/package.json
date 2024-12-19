@@ -6,6 +6,7 @@
     "dev": "vite dev",
     "build": "vite build",
     "preview": "vite preview",
+    "start": "bun build/index.js",
     "test": "playwright test",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
@@ -36,6 +37,7 @@
   "type": "module",
   "dependencies": {
     "@anthropic-ai/sdk": "^0.32.1",
+    "@sveltejs/adapter-node": "^5.2.11",
     "ioredis": "^5.4.1",
     "lucide-svelte": "^0.468.0",
     "marked": "^15.0.4",

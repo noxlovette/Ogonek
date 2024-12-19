@@ -2,9 +2,6 @@
 	import TaskBox from '$lib/components/TaskBox.svelte';
 	import {translations, language} from '$lib/stores';
 
-	import type { PageServerData } from './$types';
-	export let data:PageServerData;
-
 	import { getContext } from 'svelte';
 
 	import { Bird } from 'lucide-svelte';

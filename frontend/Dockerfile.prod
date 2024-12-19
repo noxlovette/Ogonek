@@ -1,0 +1,44 @@
+# syntax=docker/dockerfile:1
+
+# Use the official Bun image for building
+FROM oven/bun:latest as builder
+
+WORKDIR /app
+
+# Copy package.json and bun.lockb first to leverage Docker cache
+COPY package.json bun.lockb ./
+
+# Install production dependencies only
+RUN bun install --frozen-lockfile --production
+
+# Copy the rest of the application
+COPY . .
+
+# Build the application if needed (adjust as per your build process)
+RUN bun run build
+
+# Use a slim Alpine image for the final stage to reduce size
+FROM oven/bun:alpine as runner
+
+WORKDIR /app
+
+# Create a non-root user
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+USER appuser
+
+# Copy production node_modules and build from builder stage
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/build ./build
+COPY --from=builder /app/package.json .
+
+# Expose the port
+EXPOSE 3000
+
+# Set environment variables for production
+ENV NODE_ENV production
+
+# Health check (you'll need to implement healthcheck.js)
+# HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 CMD bun run healthcheck.js
+
+# Command to run the app
+CMD ["bun", "run", "start"]
