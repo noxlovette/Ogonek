@@ -1,7 +1,7 @@
 import type { Actions } from './$types';
 import { error, redirect, fail } from '@sveltejs/kit';
 
-const DJANGO_URL = 'http://backend:8000';
+const BACKEND_URL = process.env.BACKEND_URL || 'http://backend:8000';
 const API_KEY_DJANGO = process.env.API_KEY_DJANGO || '';
 
 export const actions: Actions = {
@@ -9,12 +9,14 @@ export const actions: Actions = {
 		const data = await request.formData();
 		const username = data.get('username') as string;
 		const password = data.get('password') as string;
+		const csrfToken = cookies.get('csrftoken');
 
-		const response = await fetch(`${DJANGO_URL}/api/login/`, {
+		const response = await fetch(`${BACKEND_URL}/api/login/`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/x-www-form-urlencoded',
-				'X-API-Key': API_KEY_DJANGO
+				'X-API-Key': API_KEY_DJANGO,
+				'X-CSRFToken': csrfToken
 			},
 			body: new URLSearchParams({
 				username,

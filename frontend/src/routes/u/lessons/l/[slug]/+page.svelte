@@ -8,7 +8,6 @@
 	export let data: PageServerData;
 	export let html: string;
 
-	console.log(data);
 	let bookmarked: boolean = data.lesson.bookmarked;
 
 	$: bookmarked = data.lesson.bookmarked;

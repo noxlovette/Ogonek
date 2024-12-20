@@ -5,13 +5,13 @@ services:
       dockerfile: Dockerfile.dev
     container_name: frontend-firelight
     ports:
-      - "3001:3000" # Different external port for frontend
+      - "3100:3000" # Different external port for frontend
     volumes:
       - ./frontend:/app
 
     environment:
       - NODE_ENV=development
-      - BACKEND_URL="http://backend:8000"
+      - BACKEND_URL=http://backend:8000
     env_file:
       - ./frontend/.env
     depends_on:
@@ -33,16 +33,16 @@ services:
     depends_on:
       - db
 
-  nginx:
-    image: nginx:alpine
-    ports:
-      - "80:80" # Only expose Nginx to the outside world
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf # Main config file
-      - ./nginx/conf.d:/etc/nginx/conf.d # For additional server configs
-      - media-volume:/app/media # Serve media files through Nginx
-    depends_on:
-      - backend
+ # nginx:
+ #   image: nginx:alpine
+ #   ports:
+ #     - "80:80" # Only expose Nginx to the outside world
+ #   volumes:
+ #     - ./nginx/nginx.conf:/etc/nginx/nginx.conf # Main config file
+ #     - ./nginx/conf.d:/etc/nginx/conf.d # For additional server configs
+ #     - media-volume:/app/media # Serve media files through Nginx
+ #   depends_on:
+ #     - backend
 
   redis:
     image: redis/redis-stack:latest
@@ -61,7 +61,7 @@ services:
       - POSTGRES_DB=firelight
       - POSTGRES_PASSWORD=changeme
     ports:
-      - "5433:5432" # Different external port for Postgres
+      - "5435:5432" # Different external port for Postgres
     healthcheck:
       test: ["CMD", "pg_isready"]
       interval: 10s

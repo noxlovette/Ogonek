@@ -7,7 +7,6 @@
 	let password = '';
 
 	const handleLoginResult = async ({ result, update }) => {
-		console.log('Received result:', result); // Log the entire result for debugging
 		if (result.status === 302) {
 			// Assuming 'location' is how the redirect URL is sent back
 			notification.set({ message: 'Welcome back!', type: 'success' });

@@ -2,7 +2,7 @@ import type { Actions } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { error } from '@sveltejs/kit';
 
-const VITE_API_URL = 'http://backend:8000';
+const BACKEND_URL = process.env.BACKEND_URL || 'http://backend:8000';
 
 export const load: PageServerLoad = async ({ params, cookies }) => {
 	const { slug } = params;
@@ -14,7 +14,7 @@ export const load: PageServerLoad = async ({ params, cookies }) => {
 	};
 
 	try {
-		const response = await fetch(`${VITE_API_URL}/api/lessons/${slug}/`, {
+		const response = await fetch(`${BACKEND_URL}/api/lessons/${slug}/`, {
 			headers: headers
 		});
 
@@ -51,7 +51,7 @@ export const actions = {
 		};
 
 		try {
-			const response = await fetch(`${VITE_API_URL}/api/lessons/${formData.get('id')}/`, {
+			const response = await fetch(`${BACKEND_URL}/api/lessons/${formData.get('id')}/`, {
 				method: 'PATCH',
 				headers: {
 					'Content-Type': 'application/json',
@@ -71,7 +71,7 @@ export const actions = {
 				};
 			}
 
-			const lessons = await fetch(`${VITE_API_URL}/api/lessons/`, {
+			const lessons = await fetch(`${BACKEND_URL}/api/lessons/`, {
 				headers: {
 					Cookie: `sessionid=${sessionid}; csrftoken=${csrfToken}`,
 					'X-API-Key': process.env.API_KEY_DJANGO || ''

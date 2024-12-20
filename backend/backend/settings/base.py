@@ -16,6 +16,7 @@ INSTALLED_APPS = [
     "django.contrib.auth",
     "django.contrib.contenttypes",
     # 'corsheaders',
+    "debug_toolbar",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
@@ -24,9 +25,6 @@ INSTALLED_APPS = [
 ]
 
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
-
-ALLOWED_HOSTS = ["*"]
-
 # Common settings like MIDDLEWARE, TEMPLATES, etc.
 
 LOGGING = {
@@ -68,21 +66,24 @@ LOGGING = {
     },
 }
 
-CORS_ALLOW_ALL_ORIGINS = True
-CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_METHODS = ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"]
 CSRF_TRUSTED_ORIGINS = [
     "https://next-precisely-piranha.ngrok-free.app",
     "http://frontend:3000",
+    "https://*.noxlovette.com",
+    "http://localhost:3000",
+    "https://admin.noxlovette.com",
+    "http://localhost:8080",
+    "http://localhost:8000",
 ]
-CSRF_COOKIE_HTTPONLY = False
-CSRF_COOKIE_SECURE = False
-SESSION_COOKIE_SECURE = False
+CSRF_COOKIE_HTTPONLY = True
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
 SESSION_COOKIE_SAMESITE = "None"
 CSRF_COOKIE_SAMESITE = "None"
 # CSRF_COOKIE_DOMAIN = "test.bcfapp.app"
-SESSION_COOKIE_SECURE = False
+SESSION_COOKIE_SECURE = True
 
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 
@@ -98,6 +99,7 @@ MIDDLEWARE = [
     #  'corsheaders.middleware.CorsMiddleware',
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -182,5 +184,6 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+#this is relavant where django saves files
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
-MEDIA_URL = "http://localhost:80/media/"
+MEDIA_URL = "http://localhost:8080/media/"

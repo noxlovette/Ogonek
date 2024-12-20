@@ -30,7 +30,8 @@ class LoginAPIView(APIView):
     permission_classes = [HasAPIKey]
 
     def post(self, request):
-        logger.info(f'Headers: {request.headers}')
+        logger.info(f'Headers LOGIN: {request.headers}')
+        logger.info(f'Body LOGIN: {request.body}')
         username = request.POST.get("username")
         password = request.POST.get("password")
 

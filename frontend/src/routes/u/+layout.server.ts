@@ -2,7 +2,7 @@ import { redirect } from '@sveltejs/kit';
 import type { LayoutServerLoad } from '../$types';
 import redis from '$lib/redisClient';
 
-const VITE_API_URL = 'http://backend:8000';
+const BACKEND_URL = process.env.BACKEND_URL || 'http://backend:8000';
 const VITE_API_WORD_KEY = process.env.VITE_API_WORD_KEY;
 const API_KEY_DJANGO = process.env.API_KEY_DJANGO || '';
 
@@ -11,7 +11,7 @@ export const load: LayoutServerLoad = async ({ fetch, cookies, url, depends }) =
 	const csrfToken = cookies.get('csrftoken') || '';
 
 	// Check session first
-	const sessionCheckResponse = await fetch(`${VITE_API_URL}/api/check-session/`, {
+	const sessionCheckResponse = await fetch(`${BACKEND_URL}/api/check-session/`, {
 		method: 'GET',
 		headers: {
 			Cookie: `sessionid=${sessionid}`,
@@ -37,10 +37,10 @@ export const load: LayoutServerLoad = async ({ fetch, cookies, url, depends }) =
 		'X-API-Key': API_KEY_DJANGO
 	};
 	const [tasks, lessons] = await Promise.all([
-		fetch(`${VITE_API_URL}/api/tasks/`, {
+		fetch(`${BACKEND_URL}/api/tasks/`, {
 			headers: headers
 		}).then((res) => res.json()),
-		fetch(`${VITE_API_URL}/api/lessons/`, {
+		fetch(`${BACKEND_URL}/api/lessons/`, {
 			headers: headers
 		}).then((res) => res.json())
 	]);

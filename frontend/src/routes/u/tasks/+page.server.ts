@@ -2,8 +2,8 @@ import type { Actions } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { error } from '@sveltejs/kit';
 
-const VITE_API_URL = 'http://backend:8000';
-const DJANGO_API_KEY = process.env.DJANGO_API_KEY || '';
+const BACKEND_URL = process.env.BACKEND_URL || 'http://backend:8000';
+const API_KEY_DJANGO = process.env.API_KEY_DJANGO || '';
 
 export const actions = {
 	completed: async ({ request, cookies }) => {
@@ -21,11 +21,11 @@ export const actions = {
 				Cookie: `sessionid=${sessionid}; csrftoken=${csrfToken}`,
 				'Content-Type': 'application/json',
 				'X-CSRFToken': csrfToken,
-				'X-API-Key': DJANGO_API_KEY
+				'X-API-Key': API_KEY_DJANGO
 			};
 
 			// Update the task first
-			const updateResponse = await fetch(`${VITE_API_URL}/api/tasks/${formData.get('id')}/`, {
+			const updateResponse = await fetch(`${BACKEND_URL}/api/tasks/${formData.get('id')}/`, {
 				method: 'PATCH',
 				headers: headers,
 				body: JSON.stringify(body)
@@ -42,10 +42,10 @@ export const actions = {
 
 			// Then fetch all tasks
 			const [tasks] = await Promise.all([
-				fetch(`${VITE_API_URL}/api/tasks/`, {
+				fetch(`${BACKEND_URL}/api/tasks/`, {
 					headers: {
 						Cookie: `sessionid=${sessionid}; csrftoken=${csrfToken}`,
-						'X-API-Key': DJANGO_API_KEY
+						'X-API-Key': API_KEY_DJANGO
 					}
 				}).then((res) => res.json())
 			]);
@@ -76,7 +76,7 @@ export const actions = {
 					'Content-Type': 'application/json',
 					Cookie: `sessionid=${sessionid}; csrftoken=${csrfToken}`,
 					'X-CSRFToken': csrfToken,
-					'X-API-Key': DJANGO_API_KEY,
+					'X-API-Key': API_KEY_DJANGO,
 				}
 			});
 
