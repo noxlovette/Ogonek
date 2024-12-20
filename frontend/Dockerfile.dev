@@ -18,6 +18,4 @@ COPY . .
 # Expose the port used by your app (adjust if needed)
 EXPOSE 3000
 
-# Set environment variable and run the development server
-ENV ORIGIN="https://next-precisely-piranha.ngrok-free.app"
 CMD ["bun", "run", "dev"]

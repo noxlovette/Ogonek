@@ -3,13 +3,19 @@ import os
 
 DEBUG = False
 SESSION_SAVE_EVERY_REQUEST = True
-ALLOWED_HOSTS = ['admin.noxlovette.com', 'backend-firelight-prod', 'localhost', 'backend', 'media.noxlovette.com']
+ALLOWED_HOSTS = [
+    "admin.noxlovette.com",
+    "backend-firelight-prod",
+    "localhost",
+    "backend",
+    "media.noxlovette.com",
+]
 
 # SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 # USE_X_FORWARDED_HOST = True
 # FORCE_SCRIPT_NAME = ''
-STATIC_URL = 'https://media.noxlovette.com/static/'
-MEDIA_URL = 'https://media.noxlovette.com/media/'
+STATIC_URL = "https://media.noxlovette.com/static/"
+MEDIA_URL = "https://media.noxlovette.com/media/"
 
 CORS_ALLOWED_ORIGINS = [
     "https://firelight.noxlovette.com",

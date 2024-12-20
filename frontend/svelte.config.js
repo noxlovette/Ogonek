@@ -6,13 +6,13 @@ const config = {
 	preprocess: vitePreprocess(),
 	kit: {
 		adapter: adapter({
-			out: "build",
-			precompress: false,
-		  }),
-		  csrf: {
+			out: 'build',
+			precompress: false
+		}),
+		csrf: {
 			checkOrigin: false
-		  },
-		},
+		}
+	}
 };
 
 export default config;

@@ -119,8 +119,6 @@ MIDDLEWARE = [
 # }
 
 
-
-
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
@@ -184,6 +182,6 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-#this is relavant where django saves files
+# this is relavant where django saves files
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = "http://localhost:8080/media/"

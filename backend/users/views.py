@@ -13,7 +13,9 @@ from django.utils.decorators import method_decorator
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import logging
+
 logger = logging.getLogger(__name__)
+
 
 class UserDataApi(APIView):
     queryset = Profile.objects.all()
@@ -25,18 +27,16 @@ class UserDataApi(APIView):
         return self.queryset.filter(assignee=self.request.user)
 
 
-
 class LoginAPIView(APIView):
     permission_classes = [HasAPIKey]
 
     def post(self, request):
-        logger.info(f'Headers LOGIN: {request.headers}')
-        logger.info(f'Body LOGIN: {request.body}')
+        logger.info(f"Headers LOGIN: {request.headers}")
+        logger.info(f"Body LOGIN: {request.body}")
         username = request.POST.get("username")
         password = request.POST.get("password")
 
         user = authenticate(request, username=username, password=password)
-        
 
         if user is not None:
             login(request, user)
@@ -53,7 +53,6 @@ class LoginAPIView(APIView):
                 {"success": False, "message": "Invalid username or password."},
                 status=400,
             )
-
 
 
 class CheckSessionAPI(APIView):

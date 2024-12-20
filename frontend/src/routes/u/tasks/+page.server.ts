@@ -76,7 +76,7 @@ export const actions = {
 					'Content-Type': 'application/json',
 					Cookie: `sessionid=${sessionid}; csrftoken=${csrfToken}`,
 					'X-CSRFToken': csrfToken,
-					'X-API-Key': API_KEY_DJANGO,
+					'X-API-Key': API_KEY_DJANGO
 				}
 			});
 
