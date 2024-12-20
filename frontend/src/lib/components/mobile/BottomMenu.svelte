@@ -51,16 +51,20 @@
 
 		<a
 			href="https://dictionary.cambridge.org/"
+			target="_blank"
+			rel="noopener noreferrer"
 			class="px-2 py-4
                     "
 		>
 			<Book class="size-6 " />
 		</a>
-		<a href={$user.quizlet_url} class="px-2 py-4">
+		<a href={$user.quizlet_url} class="px-2 py-4" target="_blank" rel="noopener noreferrer">
 			<WholeWord class="size-6 " />
 		</a>
 		<a
 			href="https://us05web.zoom.us/j/3661071003?pwd=RTlrUkRPaHJaakljZXQxaGpOYmdIZz09"
+			target="_blank"
+			rel="noopener noreferrer"
 			class="px-2 py-4"
 		>
 			<Video class="size-6 " />
