@@ -11,6 +11,8 @@ ALLOWED_HOSTS = [
     "media.noxlovette.com",
 ]
 
+SESSION_COOKIE_AGE = 60 * 60 * 24 * 7  # 7 days in seconds
+
 # SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 # USE_X_FORWARDED_HOST = True
 # FORCE_SCRIPT_NAME = ''
