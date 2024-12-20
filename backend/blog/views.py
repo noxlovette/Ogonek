@@ -11,7 +11,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 
 class TaskViewSet(viewsets.ModelViewSet):
-    queryset = Task.objects.all()
+    queryset = Task.objects.order_by('-created_at')
     permission_classes = [IsAuthenticated, HasAPIKey]
     serializer_class = TaskSerializer
 
@@ -36,7 +36,7 @@ class DownloadFileView(View):
 
 
 class LessonViewSet(viewsets.ModelViewSet):
-    queryset = Lesson.objects.all()
+    queryset = Lesson.objects.order_by('-created_at')
     serializer_class = LessonSerializer
     permission_classes = [IsAuthenticated, HasAPIKey]
     filter_backends = [DjangoFilterBackend]
