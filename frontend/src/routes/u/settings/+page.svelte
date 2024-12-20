@@ -3,6 +3,10 @@
 	import { language, translations } from '$lib/stores';
 </script>
 
+<svelte:head>
+	<title>Settings</title>
+</svelte:head>
+
 <Header>{$translations.settings[$language]}</Header>
 
 <div

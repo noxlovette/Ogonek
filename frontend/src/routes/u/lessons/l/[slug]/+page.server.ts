@@ -26,7 +26,7 @@ export const load: PageServerLoad = async ({ params, cookies }) => {
 			// For other errors, you might want to handle them differently
 			const errorData = await response.json();
 			throw error(response.status, errorData.message || 'Error fetching lesson');
-		}
+		} 
 
 		const lesson = await response.json();
 

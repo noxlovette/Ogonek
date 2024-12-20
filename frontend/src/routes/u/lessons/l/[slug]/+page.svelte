@@ -40,6 +40,10 @@
 	});
 </script>
 
+<svelte:head>
+	<title>Lesson from {formattedDate}</title>
+</svelte:head>
+
 <article class="flex flex-col text-lg size-full px-8 py-4">
 	<div id="header" class="flex flex-col md:flex-row items-start justify-between">
 		<h1 class="text-4xl font-bold">{formattedDate}</h1>

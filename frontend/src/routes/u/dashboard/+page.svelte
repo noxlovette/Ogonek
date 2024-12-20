@@ -19,6 +19,10 @@
 	let recent_lesson = lessons[0];
 </script>
 
+<svelte:head>
+	<title>Dashboard</title>
+</svelte:head>
+
 <div class="flex flex-col items-center">
 	<h1 class="text-xl lg:text-2xl xl:text-3xl font-serif">
 		{$translations[greeting][$language]}, {$user.first_name}

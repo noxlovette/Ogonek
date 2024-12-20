@@ -15,6 +15,10 @@
 	let completedVisible = false;
 </script>
 
+<svelte:head>
+	<title>Tasks</title>
+</svelte:head>
+
 {#if filtered.length > 0}
 	<Header>
 		{$translations.tasks[$language]}

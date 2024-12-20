@@ -10,6 +10,10 @@
 	let bookmarked = lessons.filter((lesson) => lesson.bookmarked);
 </script>
 
+<svelte:head>
+	<title>Bookmarked</title>
+</svelte:head>
+
 {#if bookmarked.length === 0}
 	<Squirrel class="size-32" />
 	<p class="text-lg mt-2">
