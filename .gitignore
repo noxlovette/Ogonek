@@ -7,6 +7,10 @@ node_modules
 /public
 /.next
 venv
+target/
+cargo/
+*.rs.bk
+*.pdb
 
 students_data/
 
