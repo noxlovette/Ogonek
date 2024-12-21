@@ -1,0 +1,8 @@
+-- This file should undo anything in `up.sql`
+ALTER TABLE users ALTER COLUMN first_name SET NOT NULL;
+ALTER TABLE users ALTER COLUMN last_name SET NOT NULL;
+ALTER TABLE users ALTER COLUMN email SET NOT NULL;
+ALTER TABLE users ALTER COLUMN is_superuser DROP DEFAULT;
+ALTER TABLE users ALTER COLUMN is_staff DROP DEFAULT;
+ALTER TABLE users ALTER COLUMN is_active DROP DEFAULT;
+ALTER TABLE users ALTER COLUMN date_joined DROP DEFAULT;

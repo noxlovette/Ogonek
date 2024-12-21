@@ -1,11 +1,37 @@
 // @generated automatically by Diesel CLI.
 
 diesel::table! {
-    posts (id) {
-        id -> Int4,
+    lessons (id) {
+        id -> Uuid,
+        #[max_length = 255]
         title -> Varchar,
-        body -> Text,
-        published -> Bool,
+        content -> Text,
+        created_at -> Timestamptz,
+        updated_at -> Timestamptz,
+        #[max_length = 50]
+        category -> Varchar,
+        #[max_length = 50]
+        topic -> Varchar,
+        manual_date -> Nullable<Timestamptz>,
+        bookmarked -> Bool,
+        assignee_id -> Uuid,
+    }
+}
+
+diesel::table! {
+    tasks (id) {
+        id -> Uuid,
+        #[max_length = 255]
+        title -> Varchar,
+        content -> Text,
+        priority -> Int2,
+        completed -> Bool,
+        created_at -> Timestamptz,
+        updated_at -> Timestamptz,
+        due_date -> Nullable<Timestamptz>,
+        #[max_length = 255]
+        file -> Nullable<Varchar>,
+        assignee_id -> Uuid,
     }
 }
 
@@ -19,18 +45,22 @@ diesel::table! {
         #[max_length = 150]
         username -> Varchar,
         #[max_length = 150]
-        first_name -> Varchar,
+        first_name -> Nullable<Varchar>,
         #[max_length = 150]
-        last_name -> Varchar,
+        last_name -> Nullable<Varchar>,
         #[max_length = 254]
-        email -> Varchar,
+        email -> Nullable<Varchar>,
         is_staff -> Bool,
         is_active -> Bool,
         date_joined -> Timestamptz,
     }
 }
 
+diesel::joinable!(lessons -> users (assignee_id));
+diesel::joinable!(tasks -> users (assignee_id));
+
 diesel::allow_tables_to_appear_in_same_query!(
-    posts,
+    lessons,
+    tasks,
     users,
 );
