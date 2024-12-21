@@ -25,6 +25,10 @@
 	};
 </script>
 
+<svelte:head>
+	<title>Firelight | Login</title>
+	</svelte:head>
+
 <div
 	class="absolute left-1/2 transform -translate-x-1/2 z-0 bg-roses-center bg-cover bg-center h-full opacity-50 w-full"
 ></div>

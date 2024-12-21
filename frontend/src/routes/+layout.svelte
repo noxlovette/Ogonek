@@ -9,6 +9,9 @@
 		language.set(localStorage.getItem('language') || 'en');
 	});
 </script>
+<svelte:head>
+	<title>Firelight</title>
+	</svelte:head>
 
 <main class="bg-sand-900/70 overflow-auto min-h-screen antialiased w-screen">
 	<div
