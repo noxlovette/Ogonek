@@ -2,6 +2,7 @@ use std::io::stdin;
 use rust::db::postgres::establish_connection;
 use rust::db::users::create_user;
 
+
 fn main() {
     let connection = &mut establish_connection();
 

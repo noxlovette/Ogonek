@@ -20,7 +20,7 @@ diesel::table! {
 
 diesel::table! {
     tasks (id) {
-        id -> Uuid,
+        id -> Text,
         #[max_length = 255]
         title -> Varchar,
         content -> Text,

@@ -2,11 +2,15 @@
 use crate::models::{NewUser, User};
 use crate::schema::users;
 use diesel::prelude::*;
+use bcrypt::{hash, DEFAULT_COST};
 
 pub fn create_user(conn: &mut PgConnection, username: &str, password: &str, superuser: &bool) -> User {
+
+    let hashed_password = hash(password, DEFAULT_COST).expect("Failed to hash password");
+
     let new_user = NewUser {
         username,
-        password,
+        password: &hashed_password,
         date_joined: chrono::Local::now().naive_local(),
         last_login: None,
         is_superuser: Some(*superuser),
