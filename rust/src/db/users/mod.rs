@@ -3,8 +3,12 @@ use crate::models::{NewUser, User};
 use crate::schema::users;
 use diesel::prelude::*;
 use bcrypt::{hash, DEFAULT_COST};
+use crate::db::postgres::establish_connection;
+use diesel::result::Error as DieselError;
 
-pub fn create_user(conn: &mut PgConnection, username: &str, password: &str, superuser: &bool) -> User {
+pub fn create_user(username: &str, password: &str, superuser: &bool) -> Result<User, DieselError> {
+
+    let connection = &mut establish_connection();
 
     let hashed_password = hash(password, DEFAULT_COST).expect("Failed to hash password");
 
@@ -24,6 +28,5 @@ pub fn create_user(conn: &mut PgConnection, username: &str, password: &str, supe
     diesel::insert_into(users::table)
         .values(&new_user)
         .returning(User::as_returning())
-        .get_result(conn)
-        .expect("Error saving new user")
+        .get_result(connection)
 }
