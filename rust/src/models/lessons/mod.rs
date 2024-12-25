@@ -5,7 +5,7 @@ use uuid::Uuid;
 #[diesel(table_name = crate::schema::tasks)]
 #[diesel(check_for_backend(diesel::pg::Pg))]
 pub struct Task {
-    pub id: Uuid,
+    pub id: String,
     pub title: String,
     pub content: String,
     pub priority: i16,

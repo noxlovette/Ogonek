@@ -11,7 +11,7 @@ fn main() {
     let connection = &mut establish_connection();
     let num_deleted = diesel::delete(users.filter(username.like(pattern)))
         .execute(connection)
-        .expect("Error deleting posts");
+        .expect("Error deleting users");
 
     println!("Deleted {} users", num_deleted);
 }
