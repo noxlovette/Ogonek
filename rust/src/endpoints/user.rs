@@ -1,6 +1,6 @@
-use actix_web::{web, Responder, HttpResponse, HttpRequest, post};
+use actix_web::{web, Responder, HttpResponse, HttpRequest, post, get};
 use crate::auth::*;
-use rust::db::users::{retrieve_user, update_user, delete_user};
+use rust::db::users::{retrieve_user, update_user, delete_user, retrieve_all_users, retrieve_single_user};
 use serde::{Deserialize, Serialize};
 use rust::db::users::create_user;
 use rust::middleware::check_sudo;
@@ -146,6 +146,40 @@ pub async fn delete_user_endpoint(req: HttpRequest, user_request: web::Json<User
         Err(e) => {
             log::error!("Failed to delete user: {}", e);
             HttpResponse::InternalServerError().body(format!("Failed to delete user: {}", e))
+        }
+    }
+}
+
+#[get("/retrieve_user")]
+pub async fn retrieve_user_endpoint(req: HttpRequest, user_request: web::Json<UserUpdateRequest>) -> impl Responder {
+    // Check for sudo privileges
+    if let Err(response) = check_sudo(&req) {
+        return response;
+    }
+
+    // Retrieve user
+    match retrieve_single_user(user_request.user_id.clone()) {
+        Ok(user) => HttpResponse::Ok().json(user),
+        Err(e) => {
+            log::error!("Failed to retrieve user: {}", e);
+            HttpResponse::InternalServerError().body(format!("Failed to retrieve user: {}", e))
+        }
+    }
+}
+
+#[get("/retrieve_all_users")]
+pub async fn retrieve_all_users_endpoint(req: HttpRequest) -> impl Responder {
+    // Check for sudo privileges
+    if let Err(response) = check_sudo(&req) {
+        return response;
+    }
+
+    // Retrieve all users
+    match retrieve_all_users() {
+        Ok(users) => HttpResponse::Ok().json(users),
+        Err(e) => {
+            log::error!("Failed to retrieve users: {}", e);
+            HttpResponse::InternalServerError().body(format!("Failed to retrieve users: {}", e))
         }
     }
 }

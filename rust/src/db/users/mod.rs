@@ -30,7 +30,7 @@ pub fn create_user(username: &str, password: &str, superuser: &bool) -> Result<U
         .get_result(connection)
 }
 
-// RETRIEVE
+// RETRIEVE-LOGIN
 
 use bcrypt::verify;
 use uuid::Uuid;
@@ -82,4 +82,18 @@ pub fn delete_user(user_id: String) -> Result<User, DieselError> {
     let user_id = Uuid::parse_str(&user_id).expect("Invalid user ID");
     diesel::delete(users::table.find(user_id))
         .get_result(connection)
+}
+
+// RETRIEVE SINGLE
+pub fn retrieve_single_user(user_id: String) -> Result<User, DieselError> {
+    let connection = &mut establish_connection();
+    let user_id = Uuid::parse_str(&user_id).expect("Invalid user ID");
+    users::table.find(user_id)
+        .first(connection)
+}
+
+// RETRIEVE ALL
+pub fn retrieve_all_users() -> Result<Vec<User>, DieselError> {
+    let connection = &mut establish_connection();
+    users::table.load(connection)
 }
