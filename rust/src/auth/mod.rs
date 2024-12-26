@@ -1,4 +1,6 @@
 // src/auth/mod.rs
+// only for authentication related functions
+
 use chrono::{Duration, Utc};
 use jsonwebtoken::{encode, Header, Algorithm, EncodingKey};
 use uuid::Uuid;
