@@ -31,7 +31,6 @@ pub fn create_user(username: &str, password: &str, superuser: &bool) -> Result<U
 }
 
 // RETRIEVE-LOGIN
-
 use bcrypt::verify;
 use uuid::Uuid;
 
