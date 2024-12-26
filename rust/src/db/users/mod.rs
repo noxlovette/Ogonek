@@ -73,4 +73,13 @@ pub fn update_user(user_id: String, update_data: UserUpdate) -> Result<User, Die
     diesel::update(users::table.find(user_id))
         .set(&update_data)
         .get_result(connection)
+
+}
+
+// DELETE
+pub fn delete_user(user_id: String) -> Result<User, DieselError> {
+    let connection = &mut establish_connection();
+    let user_id = Uuid::parse_str(&user_id).expect("Invalid user ID");
+    diesel::delete(users::table.find(user_id))
+        .get_result(connection)
 }

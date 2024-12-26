@@ -1,7 +1,6 @@
 use actix_web::{web, Responder, HttpResponse, HttpRequest, post};
-use rust::schema::users::password;
 use crate::auth::*;
-use rust::db::users::{retrieve_user, update_user};
+use rust::db::users::{retrieve_user, update_user, delete_user};
 use serde::{Deserialize, Serialize};
 use rust::db::users::create_user;
 use rust::middleware::check_sudo;
@@ -130,6 +129,23 @@ pub async fn update_user_endpoint(req: HttpRequest, user_request: web::Json<User
         Err(e) => {
             log::error!("Failed to update user: {}", e);
             HttpResponse::InternalServerError().body(format!("Failed to update user: {}", e))
+        }
+    }
+}
+
+#[post("/delete_user")]
+pub async fn delete_user_endpoint(req: HttpRequest, user_request: web::Json<UserUpdateRequest>) -> impl Responder {
+    // Check for sudo privileges
+    if let Err(response) = check_sudo(&req) {
+        return response;
+    }
+
+    // Delete user
+    match delete_user(user_request.user_id.clone()) {
+        Ok(_) => HttpResponse::Ok().body("User deleted"),
+        Err(e) => {
+            log::error!("Failed to delete user: {}", e);
+            HttpResponse::InternalServerError().body(format!("Failed to delete user: {}", e))
         }
     }
 }
