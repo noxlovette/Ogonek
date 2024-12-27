@@ -33,6 +33,9 @@ pub struct NewTask<'a> {
     pub assignee_id: &'a Uuid,
 }
 
+#[derive(Deserialize, Serialize, AsChangeset)]
+#[diesel(table_name = crate::schema::tasks)]
+#[diesel(check_for_backend(diesel::pg::Pg))]
 pub struct UpdateTask {
     pub title: Option<String>,
     pub content: Option<String>,

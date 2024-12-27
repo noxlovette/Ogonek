@@ -1,5 +1,5 @@
 // src/posts/mod.rs
-use crate::models::{Task, NewTask};
+use crate::models::{Task, NewTask, UpdateTask};
 use crate::db::postgres::establish_connection;
 use diesel::result::Error as DieselError;
 use crate::schema::tasks;
@@ -19,7 +19,7 @@ pub fn create_task(
 ) -> Result<Task, DieselError> {
     let connection = &mut establish_connection();
 
-    let id = Ulid::new().to_string(); // Generate ULID
+    let id = Ulid::new().to_string();
     let new_task = NewTask {
         id,
         title,
@@ -36,10 +36,33 @@ pub fn create_task(
         .get_result(connection)
 }
 
-
-
 // UPDATE
+pub fn update_task(
+    id: &str, 
+    title: Option<&str>, 
+    content: Option<&str>, 
+    priority: Option<&i16>, 
+    completed: Option<&bool>, 
+    due_date: Option<&chrono::DateTime<chrono::Utc>>, 
+    file: Option<&str>, 
+    assignee_id: Option<&Uuid>
+) -> Result<Task, DieselError> {
+    let connection = &mut establish_connection();
 
+    let update_task = UpdateTask {
+        title: title.map(|s| s.to_string()),
+        content: content.map(|s| s.to_string()),
+        priority: priority.copied(),
+        completed: completed.copied(),
+        due_date: due_date.cloned(),
+        file: file.map(|s| s.to_string()),
+        assignee_id: assignee_id.copied(),
+    };
+
+    diesel::update(tasks::table.find(id))
+        .set(&update_task)
+        .get_result(connection)
+}
 
 // DELETE
 

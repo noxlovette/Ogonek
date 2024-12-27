@@ -5,4 +5,4 @@ pub mod tasks;
 
 pub use users::{User, NewUser, UserUpdate};
 pub use lessons::Lesson;
-pub use tasks::{Task, NewTask};
+pub use tasks::{Task, NewTask, UpdateTask};
