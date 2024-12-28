@@ -10,13 +10,25 @@ appenders:
     path: "logs/error.log"
     encoder:
       pattern: "{d} - {m}{n}"
-    
+  debug_log:
+    kind: file
+    path: "logs/debug.log"
+    encoder:
+      pattern: "{d} - {l} - {m}{n}"  # Include log level for debug messages
+
 root:
-  level: info
+  level: debug  # Changed from info to debug to capture debug messages
   appenders:
     - info_log
     - error_log
+    - debug_log  # Include the debug log appender
 
 loggers:
   actix_web::middleware::logger:
     level: info
+  # If you want to debug specific modules or crates:
+  my_app::my_module:
+    level: debug
+    appenders:
+      - debug_log
+    additive: false # Optional, prevents messages from being passed to parent loggers

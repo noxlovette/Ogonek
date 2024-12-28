@@ -1,5 +1,5 @@
 use actix_web::{web, Responder, HttpResponse, HttpRequest, post};
-use rust::db::tasks::{create_task, update_task};
+use rust::db::{postgres::pool::DbPool, tasks::{create_task, update_task}};
 use serde::Deserialize;
 use rust::middleware::check_sudo;
 
@@ -27,12 +27,15 @@ pub struct TaskUpdateRequest {
 }
 
 #[post("/create_task")]
-pub async fn create_task_endpoint(req: HttpRequest, user_request: web::Json<TaskCreationRequest>) -> impl Responder {
+pub async fn create_task_endpoint(req: HttpRequest, user_request: web::Json<TaskCreationRequest>, pool: web::Data<DbPool>) -> impl Responder {
     if let Err(response) = check_sudo(&req) {
         return response;
     }
     let user_request = user_request.into_inner(); // Convert Web JSON to struct
+    
+
     match create_task(
+        &pool,
         &user_request.title, 
         &user_request.content, 
         &user_request.priority, 

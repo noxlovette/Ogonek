@@ -6,9 +6,11 @@ use crate::schema::tasks;
 use diesel::prelude::*;
 use uuid::Uuid;
 use ulid::Ulid;
+use crate::db::postgres::pool::{DbPool, get_conn};
 
 // CREATE
 pub fn create_task(
+    pool: &DbPool,
     title: &str, 
     content: &str, 
     priority: &i16, 
@@ -17,7 +19,11 @@ pub fn create_task(
     file: &Option<String>, 
     assignee_id: &Uuid
 ) -> Result<Task, DieselError> {
-    let connection = &mut establish_connection();
+
+    let mut connection = get_conn(pool).map_err(|e| DieselError::DatabaseError(
+        diesel::result::DatabaseErrorKind::UnableToSendCommand,
+        Box::new(e.to_string())
+    ))?;
 
     let id = Ulid::new().to_string();
     let new_task = NewTask {
@@ -33,7 +39,7 @@ pub fn create_task(
     
     diesel::insert_into(tasks::table)
         .values(&new_task)
-        .get_result(connection)
+        .get_result(&mut connection)
 }
 
 // UPDATE
