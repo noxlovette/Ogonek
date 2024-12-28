@@ -1,29 +1,23 @@
 // src/posts/mod.rs
-use crate::models::{Task, NewTask, UpdateTask};
 use crate::db::postgres::establish_connection;
-use diesel::result::Error as DieselError;
+use crate::models::{NewTask, Task, UpdateTask};
 use crate::schema::tasks;
 use diesel::prelude::*;
-use uuid::Uuid;
+use diesel::result::Error as DieselError;
 use ulid::Ulid;
-use crate::db::postgres::pool::{DbPool, get_conn};
+use uuid::Uuid;
 
 // CREATE
 pub fn create_task(
-    pool: &DbPool,
-    title: &str, 
-    content: &str, 
-    priority: &i16, 
-    completed: &bool, 
-    due_date: &Option<chrono::DateTime<chrono::Utc>>, 
-    file: &Option<String>, 
-    assignee_id: &Uuid
+    title: &str,
+    content: &str,
+    priority: &i16,
+    completed: &bool,
+    due_date: &Option<chrono::DateTime<chrono::Utc>>,
+    file: &Option<String>,
+    assignee_id: &Uuid,
 ) -> Result<Task, DieselError> {
-
-    let mut connection = get_conn(pool).map_err(|e| DieselError::DatabaseError(
-        diesel::result::DatabaseErrorKind::UnableToSendCommand,
-        Box::new(e.to_string())
-    ))?;
+    let connection = &mut establish_connection();
 
     let id = Ulid::new().to_string();
     let new_task = NewTask {
@@ -36,22 +30,22 @@ pub fn create_task(
         file: file.as_deref(),
         assignee_id,
     };
-    
+
     diesel::insert_into(tasks::table)
         .values(&new_task)
-        .get_result(&mut connection)
+        .get_result(connection)
 }
 
 // UPDATE
 pub fn update_task(
-    id: &str, 
-    title: Option<&str>, 
-    content: Option<&str>, 
-    priority: Option<&i16>, 
-    completed: Option<&bool>, 
-    due_date: Option<&chrono::DateTime<chrono::Utc>>, 
-    file: Option<&str>, 
-    assignee_id: Option<&Uuid>
+    id: &str,
+    title: Option<&str>,
+    content: Option<&str>,
+    priority: Option<&i16>,
+    completed: Option<&bool>,
+    due_date: Option<&chrono::DateTime<chrono::Utc>>,
+    file: Option<&str>,
+    assignee_id: Option<&Uuid>,
 ) -> Result<Task, DieselError> {
     let connection = &mut establish_connection();
 
@@ -72,8 +66,6 @@ pub fn update_task(
 
 // DELETE
 
-
 // RETRIEVE SINGLE
-
 
 // RETRIEVE ALL
