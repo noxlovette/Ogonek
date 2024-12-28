@@ -1,21 +1,29 @@
-mod auth;
-mod endpoints;
-use actix_web::{middleware::Logger, App, HttpServer};
-use log4rs;
+use axum::{
+    routing::{get, post},
+    Router,
+};
 
-#[actix_web::main]
-async fn main() -> std::io::Result<()> {
-    dotenvy::dotenv().ok();
-    log4rs::init_file("log4rs.yaml", Default::default()).unwrap();
-   
+use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
-    let _ = std::env::var("JWT_SECRET").expect("JWT_SECRET must be set");
-    HttpServer::new(move || {
-        App::new()
-            .wrap(Logger::default())
-            .configure(endpoints::config)
-    })
-    .bind("localhost:8080")?
-    .run()
-    .await
+use rust::api::{authorize, protected};
+
+#[tokio::main]
+async fn main() {
+    tracing_subscriber::registry()
+        .with(
+            tracing_subscriber::EnvFilter::try_from_default_env()
+                .unwrap_or_else(|_| format!("{}=debug", env!("CARGO_CRATE_NAME")).into()),
+        )
+        .with(tracing_subscriber::fmt::layer())
+        .init();
+
+    let app = Router::new()
+        .route("/protected", get(protected))
+        .route("/authorize", post(authorize));
+
+    let listener = tokio::net::TcpListener::bind("127.0.0.1:3000")
+        .await
+        .unwrap();
+    tracing::debug!("listening on {}", listener.local_addr().unwrap());
+    axum::serve(listener, app).await.unwrap();
 }
