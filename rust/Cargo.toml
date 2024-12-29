@@ -27,6 +27,6 @@ tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 tower-http = "0.6.2"
 axum-extra = {version = "0.9.6", features = ["typed-header"] }
 async-trait = "0.1.83"
-surrealdb = "2.1.4"
+surrealdb = {version = "2.1.4", features= ['protocol-http']}
 faker_rand = "0.1.1"
 rand = "0.8.5"
