@@ -1,24 +1,20 @@
+use faker_rand::en_us::names::FirstName;
+use serde::{Deserialize, Serialize};
 use surrealdb::engine::remote::ws::Client;
-use surrealdb::engine::remote::ws::Ws;
-use surrealdb::opt::auth::Root;
+use surrealdb::opt::auth::Record;
 use surrealdb::Error;
 use surrealdb::RecordId;
 use surrealdb::Surreal;
 
-use faker_rand::en_us::names::FirstName;
-use surrealdb::opt::auth::Record;
-
-use serde::{Deserialize, Serialize};
-
 #[derive(Debug, Serialize, Deserialize)]
-struct Person {
+pub struct Person {
     name: String,
     id: RecordId,
     created_by: Option<RecordId>,
 }
 
 #[derive(Serialize, Deserialize)]
-struct Params<'a> {
+pub struct Params<'a> {
     name: &'a str,
     pass: &'a str,
 }

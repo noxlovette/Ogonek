@@ -3204,6 +3204,7 @@ dependencies = [
  "jsonwebtoken",
  "log",
  "log4rs",
+ "once_cell",
  "r2d2",
  "rand",
  "serde",

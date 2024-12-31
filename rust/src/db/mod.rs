@@ -1,6 +1,33 @@
 // this module will interact with the database directly. if there is a connection involved, it should be here
-pub mod tasks;
-pub mod users;
+pub mod auth;
+
+// initiate the DB and set it as static
+use std::sync::Arc;
+use surrealdb::{
+    engine::remote::ws::{Client, Wss},
+    opt::auth::Root,
+    Surreal,
+};
+#[derive(Clone)]
+pub struct AppState {
+    pub db: Arc<Surreal<Client>>,
+}
+
+// pub static DB: LazyLock<Surreal<Client>> = LazyLock::new(Surreal::init);
+
+pub async fn init_db() -> Result<Arc<Surreal<Client>>, Box<dyn std::error::Error>> {
+    let db: Arc<Surreal<Client>> = Arc::new(Surreal::new::<Wss>("db.noxlovette.com").await?);
+
+    db.signin(Root {
+        username: "firelight",
+        password: "firelight",
+    })
+    .await?;
+
+    db.use_ns("namespace").use_db("database").await?;
+
+    Ok(db)
+}
 
 // convert DB errors into a response
 mod error {
