@@ -1,2 +1,2 @@
-pub mod jwt_test;
 pub mod user;
+pub mod auth;

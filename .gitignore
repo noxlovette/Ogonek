@@ -17,6 +17,7 @@ students_data/
 logs/
 .idea/
 debug.log
+*.pem
 
 http:/
 

@@ -1,5 +1,4 @@
 // this module will interact with the database directly. if there is a connection involved, it should be here
-pub mod auth;
 pub mod error;
 
 // initiate the DB and set it as static

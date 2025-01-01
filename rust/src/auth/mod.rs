@@ -1,4 +1,5 @@
-use crate::keys::KEYS;
+use jsonwebtoken::{DecodingKey, EncodingKey};
+use serde::{Deserialize, Serialize};
 use async_trait::async_trait;
 use axum::{
     extract::FromRequestParts,
@@ -10,40 +11,62 @@ use axum_extra::{
     headers::{authorization::Bearer, Authorization},
     TypedHeader,
 };
-use jsonwebtoken::{decode, encode, Header, Validation};
+use jsonwebtoken::{decode, Validation};
 use serde_json::json;
-use std::fmt::Display;
+use std::sync::LazyLock;
+use dotenvy::dotenv;
 
-use crate::schemas::auth::{AuthBody, AuthError, AuthPayload, Claims};
-
-pub async fn protected(claims: Claims) -> Result<String, AuthError> {
-    // Send the protected data to the user
-    Ok(format!(
-        "Welcome to the protected area :)\nYour data:\n{claims}",
-    ))
+pub struct Keys {
+    pub encoding: EncodingKey,
+    pub decoding: DecodingKey,
 }
 
-pub async fn authorize(Json(payload): Json<AuthPayload>) -> Result<Json<AuthBody>, AuthError> {
-    // Check if the user sent the credentials
-    if payload.client_id.is_empty() || payload.client_secret.is_empty() {
-        return Err(AuthError::MissingCredentials);
+impl Keys {
+    pub fn new(private_key: &[u8], public_key: &[u8]) -> Self {
+        Self {
+            encoding: EncodingKey::from_rsa_pem(private_key).expect("Failed to create EncodingKey"),
+            decoding: DecodingKey::from_rsa_pem(public_key).expect("Failed to create DecodingKey"),
+        }
     }
-    // Here you can check the user credentials from a database
-    if payload.client_id != "foo" || payload.client_secret != "bar" {
-        return Err(AuthError::WrongCredentials);
-    }
-    let claims = Claims {
-        sub: "b@b.com".to_owned(),
-        company: "ACME".to_owned(),
-        // Mandatory expiry time as UTC timestamp
-        exp: 2000000000, // May 2033
-    };
-    // Create the authorization token
-    let token = encode(&Header::default(), &claims, &KEYS.encoding)
-        .map_err(|_| AuthError::TokenCreation)?;
+}
 
-    // Send the authorized token
-    Ok(Json(AuthBody::new(token)))
+pub static KEYS: LazyLock<Keys> = LazyLock::new(|| {
+    dotenv().ok();
+    let private_key = std::env::var("JWT_PRIVATE_KEY").expect("JWT_PRIVATE_KEY must be set");
+    let public_key = std::env::var("JWT_PUBLIC_KEY").expect("JWT_PUBLIC_KEY must be set");
+    Keys::new(private_key.as_bytes(), public_key.as_bytes())
+});
+
+
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct Claims {
+    pub name: String,
+    pub username: String,
+    pub email: String,
+    pub id: String,
+    pub exp: i64,
+}
+
+#[derive(Debug, Serialize)]
+pub struct AuthBody {
+    pub access_token: String,
+    pub token_type: String,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct AuthPayload {
+    pub username: String,
+    pub email: String,
+    pub pass: String,
+}
+
+#[derive(Debug)]
+pub enum AuthError {
+    WrongCredentials,
+    MissingCredentials,
+    TokenCreation,
+    InvalidToken,
 }
 
 #[async_trait]
@@ -83,16 +106,10 @@ impl IntoResponse for AuthError {
 }
 
 impl AuthBody {
-    fn new(access_token: String) -> Self {
+    pub fn new(access_token: String) -> Self {
         Self {
             access_token,
             token_type: "Bearer".to_string(),
         }
-    }
-}
-
-impl Display for Claims {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "Email: {}\nCompany: {}", self.sub, self.company)
     }
 }
