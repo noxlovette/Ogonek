@@ -1,5 +1,6 @@
 // this module will interact with the database directly. if there is a connection involved, it should be here
 pub mod auth;
+pub mod error;
 
 // initiate the DB and set it as static
 use std::sync::Arc;
@@ -8,51 +9,50 @@ use surrealdb::{
     opt::auth::Root,
     Surreal,
 };
+
+use std::sync::LazyLock;
+use dotenvy::dotenv;
+
+use std::fs;
+
+pub static NAMESPACE: LazyLock<String> = LazyLock::new(|| {
+    dotenv().ok();
+    std::env::var("NAMESPACE").expect("NAMESPACE must be set")
+});
+
+pub static DATABASE: LazyLock<String> = LazyLock::new(|| {
+    dotenv().ok();
+    std::env::var("DATABASE").expect("DATABASE must be set")
+});
+
+
+// this is the state that will be passed to the router. DB
 #[derive(Clone)]
 pub struct AppState {
     pub db: Arc<Surreal<Client>>,
 }
 
-// pub static DB: LazyLock<Surreal<Client>> = LazyLock::new(Surreal::init);
-
 pub async fn init_db() -> Result<Arc<Surreal<Client>>, Box<dyn std::error::Error>> {
-    let db: Arc<Surreal<Client>> = Arc::new(Surreal::new::<Wss>("db.noxlovette.com").await?);
+    dotenv().ok();
+    let username: String = std::env::var("DB_USERNAME").expect("DB USERNAME must be set");
+    let password: String = std::env::var("DB_PASSWORD").expect("DB PASSWORD must be set");
+    let url: String = std::env::var("DB_URL").expect("DB URL must be set");
+
+    let db: Arc<Surreal<Client>> = Arc::new(Surreal::new::<Wss>(url).await?);
 
     db.signin(Root {
-        username: "firelight",
-        password: "firelight",
+        username: &username,
+        password: &password,
     })
     .await?;
 
-    db.use_ns("namespace").use_db("database").await?;
+    db.use_ns(&*NAMESPACE).use_db(&*DATABASE).await?;
 
+    let auth_query = fs::read_to_string("src/db/queries/auth.surql").expect("file not found");
+
+    db.query(auth_query).await?;
+
+    tracing::info!("DB initialized");
     Ok(db)
 }
 
-// convert DB errors into a response
-mod error {
-    use axum::http::StatusCode;
-    use axum::response::IntoResponse;
-    use axum::response::Response;
-    use axum::Json;
-    use thiserror::Error;
-
-    #[derive(Error, Debug)]
-    pub enum Error {
-        #[error("database error")]
-        Db,
-    }
-
-    impl IntoResponse for Error {
-        fn into_response(self) -> Response {
-            (StatusCode::INTERNAL_SERVER_ERROR, Json(self.to_string())).into_response()
-        }
-    }
-
-    impl From<surrealdb::Error> for Error {
-        fn from(error: surrealdb::Error) -> Self {
-            eprintln!("{error}");
-            Self::Db
-        }
-    }
-}

@@ -1,6 +1,6 @@
-use axum::routing::get;
+use axum::routing::{get, post};
 use axum::Router;
-use rust::api::user::test_user_endpoint;
+use rust::api::user::create_user_endpoint;
 use rust::db::init_db;
 use rust::db::AppState;
 use rust::tools::logging::init_logging;
@@ -16,7 +16,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let app = Router::new()
         .route("/", get(root))
-        .route("/test", get(test_user_endpoint))
+        .route("/test", post(create_user_endpoint))
         .with_state(state);
 
     let listener = tokio::net::TcpListener::bind("localhost:3000").await?;
