@@ -11,7 +11,6 @@ use axum_extra::{
     headers::{authorization::Bearer, Authorization},
     TypedHeader,
 };
-use jsonwebtoken::{decode, Validation};
 use serde_json::json;
 use std::sync::LazyLock;
 use dotenvy::dotenv;
@@ -69,24 +68,30 @@ pub enum AuthError {
     InvalidToken,
 }
 
+#[derive(Debug)]
+pub struct Token(String);
+
+impl Token {
+    pub fn as_str(&self) -> &str {
+        &self.0
+    }
+}
+
 #[async_trait]
-impl<S> FromRequestParts<S> for Claims
+impl<S> FromRequestParts<S> for Token
 where
     S: Send + Sync,
 {
     type Rejection = AuthError;
 
     async fn from_request_parts(parts: &mut Parts, _state: &S) -> Result<Self, Self::Rejection> {
-        // Extract the token from the authorization header
         let TypedHeader(Authorization(bearer)) = parts
             .extract::<TypedHeader<Authorization<Bearer>>>()
             .await
             .map_err(|_| AuthError::InvalidToken)?;
-        // Decode the user data
-        let token_data = decode::<Claims>(bearer.token(), &KEYS.decoding, &Validation::default())
-            .map_err(|_| AuthError::InvalidToken)?;
 
-        Ok(token_data.claims)
+        let token = bearer.token().to_string();
+        Ok(Token(token))
     }
 }
 

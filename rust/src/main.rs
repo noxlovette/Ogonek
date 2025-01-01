@@ -17,6 +17,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .route("/", get(root))
         .route("/signup", post(rust::api::auth::signup))
         .route("/signin", post(rust::api::auth::authorize))
+        .route("/user", get(rust::api::user::fetch_user))
         .with_state(state);
 
     let listener = tokio::net::TcpListener::bind("localhost:3000").await?;
