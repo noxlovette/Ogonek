@@ -1,10 +1,11 @@
-use crate::auth::{AuthBody, AuthPayload, AuthError};
+use crate::auth::{ AuthBody, AuthPayload };
 use axum::extract::Json;
 use axum::extract::State;
-use serde::{Deserialize, Serialize};
+use axum::response::Response;
+use serde::{ Deserialize, Serialize };
 use surrealdb::opt::auth::Record;
-use crate::db::error::Error as DbError;
-use crate::db::{AppState, NAMESPACE, DATABASE};
+use crate::db::error::DbError;
+use crate::db::{ AppState, NAMESPACE, DATABASE };
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct RecordUser {
@@ -12,7 +13,7 @@ pub struct RecordUser {
     username: String,
     pass: String,
     email: String,
-    jwt: String,
+    id: String,
 }
 
 #[derive(Serialize, Deserialize)]
@@ -22,13 +23,12 @@ struct Credentials<'a> {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-pub struct PersonData {
+pub struct SignUpPayload {
     pub name: String,
     pub email: String,
     pub pass: String,
     pub username: String,
 }
-
 
 #[derive(Serialize, Deserialize)]
 struct Params<'a> {
@@ -39,21 +39,15 @@ struct Params<'a> {
 }
 
 pub async fn authorize(
-    State(state): State<AppState>,    
+    State(state): State<AppState>,
     Json(payload): Json<AuthPayload>
-
-) -> Result<Json<AuthBody>, AuthError> {
-
-    if payload.username.is_empty() || payload.pass.is_empty() {
-        return Err(AuthError::MissingCredentials);
-    }
-
+    // TODO adjust the error types to accomodate for 'not found disconnected blabla and other db errors'
+) -> Result<Response, DbError> {
     tracing::info!("Attempting sign-in for user: {:?}", payload.username);
 
     let db = &state.db;
 
-    let jwt = db
-    .signin(Record {
+    let jwt = db.signin(Record {
         access: "account",
         namespace: &*NAMESPACE,
         database: &*DATABASE,
@@ -61,23 +55,25 @@ pub async fn authorize(
             username: &payload.username,
             pass: &payload.pass,
         },
-    })
-    .await.map_err(|_| AuthError::WrongCredentials)?;
+    }).await?;
 
     let token = jwt.as_insecure_token();
 
-    dbg!(token);
-    
-    Ok(Json(AuthBody::new(token.to_owned())))
-        
-}
+    let result: Vec<AuthBody> = db.query("SELECT * FROM user WHERE id = $auth.id").await?.take(0)?;
 
+    let user = result.into_iter().next();
+
+    if let Some(user) = user {
+        Ok(user.into_response(token.to_string()))
+    } else {
+        Err(DbError::Db)
+    }
+}
 
 pub async fn signup(
     State(state): State<AppState>,
-    Json(payload): Json<PersonData>,
-) -> Result<Json<Option<RecordUser>>, DbError> {
-
+    Json(payload): Json<SignUpPayload>
+) -> Result<Response, DbError> {
     tracing::info!("Creating user: {:?}", payload);
 
     let db = &state.db;
@@ -86,31 +82,28 @@ pub async fn signup(
     let email = payload.email;
     let username = payload.username;
 
-    let jwt = db
-        .signup(Record {
-            access: "account",
-            namespace: &*NAMESPACE,
-            database: &*DATABASE,
-            params: Params {
-                name: &name,
-                pass: &pass,
-                username: &username,
-                email: &email,
-            },
-        })
-        .await?;
+    let jwt = db.signup(Record {
+        access: "account",
+        namespace: &*NAMESPACE,
+        database: &*DATABASE,
+        params: Params {
+            name: &name,
+            pass: &pass,
+            username: &username,
+            email: &email,
+        },
+    }).await?;
 
-        let token = jwt.as_insecure_token();
-        dbg!(token);
+    let token = jwt.as_insecure_token();
+    let result: Vec<AuthBody> = db.query("SELECT * FROM user WHERE id = $auth.id").await?.take(0)?;
+    let user = result.into_iter().next();
 
-    tracing::info!("User created: {:?}", jwt);
+    tracing::info!("fetched user: {:?}", user);
 
- Ok(Json(Some(RecordUser {
-        name,
-        email,
-        username,
-        pass,
-        jwt: token.to_string(),
- })))
-    
+    // If user was created successfully, return it with the token in headers
+    if let Some(user) = user {
+        Ok(user.into_response(token.to_string()))
+    } else {
+        Err(DbError::Db)
+    }
 }

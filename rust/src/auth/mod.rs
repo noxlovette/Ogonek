@@ -1,19 +1,20 @@
-use jsonwebtoken::{DecodingKey, EncodingKey};
-use serde::{Deserialize, Serialize};
+use jsonwebtoken::{ DecodingKey, EncodingKey };
+use serde::{ Deserialize, Serialize };
 use async_trait::async_trait;
 use axum::{
     extract::FromRequestParts,
-    http::{request::Parts, StatusCode},
-    response::{IntoResponse, Response},
-    Json, RequestPartsExt,
+    http::{ request::Parts, StatusCode },
+    response::{ IntoResponse, Response },
+    Json,
+    RequestPartsExt,
 };
-use axum_extra::{
-    headers::{authorization::Bearer, Authorization},
-    TypedHeader,
-};
+use axum_extra::{ headers::{ authorization::Bearer, Authorization }, TypedHeader };
 use serde_json::json;
 use std::sync::LazyLock;
 use dotenvy::dotenv;
+use thiserror::Error;
+use axum::http::{ HeaderValue, header::{ self, HeaderMap } };
+use surrealdb::sql::Thing;
 
 pub struct Keys {
     pub encoding: EncodingKey,
@@ -36,8 +37,6 @@ pub static KEYS: LazyLock<Keys> = LazyLock::new(|| {
     Keys::new(private_key.as_bytes(), public_key.as_bytes())
 });
 
-
-
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Claims {
     pub name: String,
@@ -49,8 +48,47 @@ pub struct Claims {
 
 #[derive(Debug, Serialize)]
 pub struct AuthBody {
-    pub access_token: String,
-    pub token_type: String,
+    pub name: String,
+    pub username: String,
+    pub pass: String,
+    pub email: String,
+    pub id: String,
+}
+
+impl<'de> Deserialize<'de> for AuthBody {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error> where D: serde::Deserializer<'de> {
+        #[derive(Deserialize)]
+        struct Helper {
+            name: String,
+            username: String,
+            pass: String,
+            email: String,
+            id: Thing,
+        }
+
+        let helper = Helper::deserialize(deserializer)?;
+        let id_string = format!("{}:{}", helper.id.tb, helper.id.id.to_string());
+
+        Ok(AuthBody {
+            name: helper.name,
+            username: helper.username,
+            pass: helper.pass,
+            email: helper.email,
+            id: id_string,
+        })
+    }
+}
+
+impl AuthBody {
+    pub fn into_response(self, token: String) -> Response {
+        let mut headers = HeaderMap::new();
+        headers.insert(
+            header::AUTHORIZATION,
+            HeaderValue::from_str(&format!("Bearer {}", token)).expect("Invalid Token Format")
+        );
+
+        (headers, Json(self)).into_response()
+    }
 }
 
 #[derive(Debug, Deserialize)]
@@ -60,11 +98,15 @@ pub struct AuthPayload {
     pub pass: String,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Error)]
 pub enum AuthError {
+    #[error("Wrong credentials")]
     WrongCredentials,
+    #[error("Missing credentials")]
     MissingCredentials,
+    #[error("Token creation error")]
     TokenCreation,
+    #[error("Invalid token")]
     InvalidToken,
 }
 
@@ -78,16 +120,12 @@ impl Token {
 }
 
 #[async_trait]
-impl<S> FromRequestParts<S> for Token
-where
-    S: Send + Sync,
-{
+impl<S> FromRequestParts<S> for Token where S: Send + Sync {
     type Rejection = AuthError;
 
     async fn from_request_parts(parts: &mut Parts, _state: &S) -> Result<Self, Self::Rejection> {
         let TypedHeader(Authorization(bearer)) = parts
-            .extract::<TypedHeader<Authorization<Bearer>>>()
-            .await
+            .extract::<TypedHeader<Authorization<Bearer>>>().await
             .map_err(|_| AuthError::InvalidToken)?;
 
         let token = bearer.token().to_string();
@@ -107,14 +145,5 @@ impl IntoResponse for AuthError {
             "error": error_message,
         }));
         (status, body).into_response()
-    }
-}
-
-impl AuthBody {
-    pub fn new(access_token: String) -> Self {
-        Self {
-            access_token,
-            token_type: "Bearer".to_string(),
-        }
     }
 }

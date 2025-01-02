@@ -1,12 +1,12 @@
 use axum::extract::Json;
+use axum::extract::Path;
 use axum::extract::State;
-use axum::Error;
-use serde::{Deserialize, Serialize};
-use surrealdb::error::Db;
+use serde::{ Deserialize, Serialize };
 use crate::auth::Token;
-use crate::db::error::Error as DbError;
+use crate::db::error::DbError;
 use crate::db::AppState;
-use crate::auth::AuthError;
+
+use crate::api::auth::SignUpPayload;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct UserBody {
@@ -15,37 +15,89 @@ pub struct UserBody {
     email: String,
 }
 
-impl UserBody {
-    fn new(name: String, username: String, email: String) -> Self {
-        Self {
-            name,
-            username,
-            email,
-        }
-    }
-}
-
-pub async fn fetch_user(
+pub async fn fetch_user_self(
     State(state): State<AppState>,
-    token: Token,
+    token: Token
 ) -> Result<Json<Option<UserBody>>, DbError> {
-    
-    
     tracing::info!("Attempting fetch for user");
 
     let db = &state.db;
     db.authenticate(token.as_str()).await?;
 
-    tracing::info!("Token if it worked: {:?}", token.as_str());
-
-    // The query returns a Vec<UserBody> since SurrealDB always returns an array
     let result: Vec<UserBody> = db
-        .query("SELECT name, email, username FROM user WHERE id = $auth.id")
-        .await?
-        .take(0)?; // take(0) gets the first result set
+        .query("SELECT name, email, username FROM user WHERE id = $auth.id").await?
+        .take(0)?;
 
-    // Get the first user if any exists
     let user = result.into_iter().next();
-    
+
+    tracing::info!("User fetch successful");
+
     Ok(Json(user))
 }
+
+pub async fn fetch_user(
+    State(state): State<AppState>,
+    token: Token,
+    id: Path<String>
+) -> Result<Json<Option<UserBody>>, DbError> {
+    tracing::info!("Attempting to fetch user");
+
+    let db = &state.db;
+
+    tracing::info!("token: {}", token.as_str());
+    tracing::info!("id: {}", &*id);
+
+    db.authenticate(token.as_str()).await?;
+
+    let user = db.select(("user", &*id)).await?;
+
+    tracing::info!("Fetch user successful");
+    Ok(Json(user))
+}
+
+pub async fn update_user(
+    State(state): State<AppState>,
+    token: Token,
+    id: Path<String>,
+    Json(payload): Json<SignUpPayload>
+) -> Result<Json<Option<UserBody>>, DbError> {
+    tracing::info!("Attempting update for user");
+
+    let db = &state.db;
+    db.authenticate(token.as_str()).await?;
+
+    let user = db.update(("user", &*id)).content(payload).await?;
+
+    tracing::info!("User update successful");
+
+    Ok(Json(user))
+}
+
+pub async fn delete_user(
+    State(state): State<AppState>,
+    token: Token,
+    id: Path<String>
+) -> Result<Json<Option<UserBody>>, DbError> {
+    tracing::info!("Attempting user deletion");
+
+    let db = &state.db;
+    db.authenticate(token.as_str()).await?;
+
+    let user = db.delete(("user", &*id)).await?;
+
+    Ok(Json(user))
+}
+
+pub async fn list_users(
+    State(state): State<AppState>,
+    token: Token
+) -> Result<Json<Vec<UserBody>>, DbError> {
+    let db = &state.db;
+    db.authenticate(token.as_str()).await?;
+
+    let users = db.select("user").await?;
+
+    Ok(Json(users))
+}
+
+// create user makes no sense because we have signup for this
