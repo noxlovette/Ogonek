@@ -1,12 +1,11 @@
 DEFINE TABLE  user  SCHEMAFULL
-  -- Only allow users to query their own record, including their password.
   PERMISSIONS
     FOR select, update, delete WHERE id = $auth.id;
 
 DEFINE FIELD name ON user TYPE string;
 DEFINE FIELD username ON user TYPE string;
-DEFINE FIELD email ON user TYPE string ASSERT string::is::email($value);
-DEFINE FIELD pass ON user TYPE string;
+DEFINE FIELD email ON user TYPE string ASSERT string::is::email($value) VALUE string::lowercase($value);
+DEFINE FIELD pass ON user TYPE string VALUE crypto::argon2::generate($value);
 
 DEFINE INDEX email ON user FIELDS email UNIQUE;
 DEFINE INDEX username ON user FIELDS username UNIQUE;

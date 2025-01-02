@@ -15,6 +15,14 @@ pub struct UserBody {
     email: String,
 }
 
+#[derive(Serialize, Deserialize, Debug)]
+pub struct UserUpdateBody {
+    name: Option<String>,
+    username: Option<String>,
+    email: Option<String>,
+    pass: Option<String>,
+}
+
 pub async fn fetch_user_self(
     State(state): State<AppState>,
     token: Token
@@ -51,6 +59,8 @@ pub async fn fetch_user(
 
     let user = db.select(("user", &*id)).await?;
 
+    dbg!(&user);
+
     tracing::info!("Fetch user successful");
     Ok(Json(user))
 }
@@ -84,6 +94,8 @@ pub async fn delete_user(
     db.authenticate(token.as_str()).await?;
 
     let user = db.delete(("user", &*id)).await?;
+
+    tracing::info!("Deleted");
 
     Ok(Json(user))
 }

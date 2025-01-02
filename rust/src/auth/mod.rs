@@ -10,7 +10,7 @@ use axum::{
 };
 use axum_extra::{ headers::{ authorization::Bearer, Authorization }, TypedHeader };
 use serde_json::json;
-use std::sync::LazyLock;
+use std::{ path::Display, sync::LazyLock };
 use dotenvy::dotenv;
 use thiserror::Error;
 use axum::http::{ HeaderValue, header::{ self, HeaderMap } };

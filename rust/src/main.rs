@@ -1,4 +1,4 @@
-use axum::routing::{ get, post };
+use axum::routing::{ get, post, put };
 use axum::Router;
 use rust::db::init_db;
 use rust::db::AppState;
@@ -18,7 +18,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .route("/signup", post(rust::api::auth::signup))
         .route("/signin", post(rust::api::auth::authorize))
         .route("/user", get(fetch_user_self))
-        .route("/user/:id", get(fetch_user).patch(update_user).delete(delete_user))
+        .route("/user/:id", get(fetch_user).put(update_user).delete(delete_user))
         .route("/user/all", get(list_users))
         .with_state(state);
 
