@@ -5,7 +5,7 @@ services:
       dockerfile: Dockerfile.dev
     container_name: frontend-firelight
     ports:
-      - "3100:3000" # Different external port for frontend
+      - "3100:3000" 
     volumes:
       - ./frontend:/app
 
@@ -33,41 +33,10 @@ services:
     depends_on:
       - db
 
-  nginx:
-    image: nginx:alpine
-    ports:
-      - "80:80" # Only expose Nginx to the outside world
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./nginx/conf.d:/etc/nginx/conf.d
-      - media-volume-2:/app/media # Serve media files through Nginx
-    depends_on:
-      - backend
-
   redis:
     image: redis/redis-stack:latest
-    container_name: redis-firelight
+    container_name: redis-firelight-rust
     ports:
       - "6379:6379"
       - "8003:8001"
 
-  db:
-    image: postgres
-    restart: always
-    user: postgres
-    volumes:
-      - db-data-firelight:/var/lib/postgresql/data # Separate volume for the new database
-    environment:
-      - POSTGRES_DB=firelight
-      - POSTGRES_PASSWORD=changeme
-    ports:
-      - "5435:5432" # Different external port for Postgres
-    healthcheck:
-      test: ["CMD", "pg_isready"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-volumes:
-  db-data-firelight:
-  media-volume-2: # Here you define the volume

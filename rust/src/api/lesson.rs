@@ -1,4 +1,4 @@
-use crate::auth::Token;
+// use crate::auth::Token;
 use crate::db::error::DbError;
 use crate::db::AppState;
 use crate::models::lessons::LessonBody;
@@ -8,17 +8,14 @@ use axum::extract::State;
 
 pub async fn fetch_lesson(
     State(state): State<AppState>,
-    token: Token,
+    // token: Token,
     id: Path<String>,
 ) -> Result<Json<Option<LessonBody>>, DbError> {
     tracing::info!("Attempting to fetch user");
 
     let db = &state.db;
 
-    tracing::info!("token: {}", token.as_str());
-    tracing::info!("id: {}", &*id);
-
-    db.authenticate(token.as_str()).await?;
+    // db.authenticate(token.as_str()).await?;
 
     let lesson = db.select(("lesson", &*id)).await?;
 
@@ -29,10 +26,10 @@ pub async fn fetch_lesson(
 
 pub async fn list_lessons(
     State(state): State<AppState>,
-    token: Token,
+    // token: Token,
 ) -> Result<Json<Vec<LessonBody>>, DbError> {
     let db = &state.db;
-    db.authenticate(token.as_str()).await?;
+    // db.authenticate(token.as_str()).await?;
 
     let lessons: Vec<LessonBody> = db.select("lesson").await?;
 
@@ -43,13 +40,13 @@ pub async fn list_lessons(
 
 pub async fn create_lesson(
     State(state): State<AppState>,
-    token: Token,
+    // token: Token,
     Json(payload): Json<LessonBody>,
 ) -> Result<Json<LessonBody>, DbError> {
     tracing::info!("Attempting to create lesson");
 
     let db = &state.db;
-    db.authenticate(token.as_str()).await?;
+    // db.authenticate(token.as_str()).await?;
 
     let lesson = db.create("lesson").content(payload).await?;
 
@@ -63,13 +60,13 @@ pub async fn create_lesson(
 
 pub async fn delete_lesson(
     State(state): State<AppState>,
-    token: Token,
+    // token: Token,
     id: Path<String>,
 ) -> Result<Json<LessonBody>, DbError> {
     tracing::info!("Attempting to delete lesson");
 
     let db = &state.db;
-    db.authenticate(token.as_str()).await?;
+    // db.authenticate(token.as_str()).await?;
 
     let lesson = db.delete(("lesson", &*id)).await?;
 
@@ -83,14 +80,14 @@ pub async fn delete_lesson(
 
 pub async fn update_lesson(
     State(state): State<AppState>,
-    token: Token,
+    // token: Token,
     id: Path<String>,
     Json(payload): Json<LessonBody>,
 ) -> Result<Json<LessonBody>, DbError> {
     tracing::info!("Attempting to update lesson");
 
     let db = &state.db;
-    db.authenticate(token.as_str()).await?;
+    // db.authenticate(token.as_str()).await?;
 
     let lesson = db.update(("lesson", &*id)).content(payload).await?;
 

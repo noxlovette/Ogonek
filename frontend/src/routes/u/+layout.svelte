@@ -10,10 +10,10 @@
 
 	$: setUser(data.user);
 
-	const tasks: App.Task[] = data.tasks;
+	// const tasks: App.Task[] = data.tasks;
 	const lessons: App.Lesson[] = data.lessons;
 
-	setContext('tasks', tasks);
+	// setContext('tasks', tasks);
 	setContext('lessons', lessons);
 	setContext('word', data.word);
 </script>

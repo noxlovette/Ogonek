@@ -7,7 +7,7 @@
 	import { language, translations } from '$lib/stores';
 
 	const lessons = getContext('lessons');
-	const tasks = getContext('tasks');
+	// const tasks = getContext('tasks');
 	export let hidden = false;
 
 	const topPosition = tweened(0, {
@@ -64,18 +64,6 @@
 				(lesson) =>
 					lesson.topic.toLowerCase().includes(searchTerm) || // Assuming 'topic' instead of 'title'
 					lesson.content.toLowerCase().includes(searchTerm)
-			);
-
-		// Filter and highlight tasks (if needed)
-		filteredTasks = tasks
-			.map((task) => ({
-				...task,
-				highlightedContent: highlightMatches(task.content)
-			}))
-			.filter(
-				(task) =>
-					task.title.toLowerCase().includes(searchTerm) || // Assuming tasks have 'title'
-					task.content.toLowerCase().includes(searchTerm)
 			);
 	}
 

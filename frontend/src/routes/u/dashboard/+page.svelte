@@ -12,11 +12,11 @@
 	let hidden = false;
 	const greeting = getGreeting();
 
-	let tasks: App.Task[] = getContext('tasks');
+	// let tasks: App.Task[] = getContext('tasks');
 	let lessons: App.Lesson[] = getContext('lessons');
-	let filtered = tasks.filter((task) => task.completed === false);
-	let recent_tasks = filtered.slice(0, 3);
-	let recent_lesson = lessons[0];
+	// let filtered = tasks.filter((task) => task.completed === false);
+	// let recent_tasks = filtered.slice(0, 3);
+	// let recent_lesson = lessons[0];
 </script>
 
 <svelte:head>
@@ -40,25 +40,11 @@
 			<h2 class="text-2xl">
 				{$translations.new_tasks[$language]}
 			</h2>
-			{#each recent_tasks as task}
-				<a
-					href="/u/tasks/"
-					class="px-1 py-2 inline-flex w-1/2 justify-center bg-sand-900/10 rounded-lg"
-				>
-					{task.title}
-				</a>
-			{/each}
 		</div>
 		<div class="flex flex-col items-center space-y-2">
 			<h2 class="text-2xl">
 				{$translations.new_lesson[$language]}
 			</h2>
-			<a
-				href="/u/lessons/l/{recent_lesson.id}"
-				class="px-1 py-2 inline-flex w-1/2 justify-center bg-sand-900/10 rounded-lg"
-			>
-				{formatDate(recent_lesson.manual_date || recent_lesson.created_at)}
-			</a>
 		</div>
 	</div>
 </div>
