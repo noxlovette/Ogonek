@@ -47,8 +47,6 @@ pub struct User {
     pub email: String,
     pub joined_at: Option<DateTime<Utc>>,
     pub role: Option<String>,
-    // #[serde(skip_deserializing)] // This field will be ignored during deserialization
-    // #[serde(skip_serializing_if = "Option::is_none")]
     pub pass: Option<String>,
 }
 
