@@ -9,8 +9,8 @@ use surrealdb::{
     Surreal,
 };
 
-use std::sync::LazyLock;
 use dotenvy::dotenv;
+use std::sync::LazyLock;
 
 use std::fs;
 
@@ -23,7 +23,6 @@ pub static DATABASE: LazyLock<String> = LazyLock::new(|| {
     dotenv().ok();
     std::env::var("DATABASE").expect("DATABASE must be set")
 });
-
 
 // this is the state that will be passed to the router. DB
 #[derive(Clone)]
@@ -47,11 +46,10 @@ pub async fn init_db() -> Result<Arc<Surreal<Client>>, Box<dyn std::error::Error
 
     db.use_ns(&*NAMESPACE).use_db(&*DATABASE).await?;
 
-    let auth_query = fs::read_to_string("src/db/queries/auth.surql").expect("file not found");
+    // let auth_query = fs::read_to_string("src/db/queries/auth.surql").expect("file not found");
 
-    db.query(auth_query).await?;
+    // db.query(auth_query).await?;
 
     tracing::info!("DB initialized");
     Ok(db)
 }
-

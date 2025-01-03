@@ -1,10 +1,10 @@
-use axum::routing::{ get, post, put };
+use axum::routing::{get, post};
 use axum::Router;
 use rust::db::init_db;
 use rust::db::AppState;
 use rust::tools::logging::init_logging;
 
-use rust::api::user::{ delete_user, fetch_user, fetch_user_self, list_users, update_user };
+use rust::api::user::{delete_user, fetch_user, fetch_user_self, list_users, update_user};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -18,8 +18,17 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .route("/signup", post(rust::api::auth::signup))
         .route("/signin", post(rust::api::auth::authorize))
         .route("/user", get(fetch_user_self))
-        .route("/user/:id", get(fetch_user).put(update_user).delete(delete_user))
+        .route(
+            "/user/:id",
+            get(fetch_user).put(update_user).delete(delete_user),
+        )
         .route("/user/all", get(list_users))
+        .route("/lesson/:id", get(rust::api::lesson::fetch_lesson))
+        .route("/lesson/all", get(rust::api::lesson::list_lessons))
+        .route(
+            "/lessons/bookmarked",
+            get(rust::api::bookmark::list_bookmarks),
+        )
         .with_state(state);
 
     let listener = tokio::net::TcpListener::bind("localhost:3000").await?;
