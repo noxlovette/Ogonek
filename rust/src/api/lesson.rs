@@ -40,3 +40,64 @@ pub async fn list_lessons(
 
     Ok(Json(lessons))
 }
+
+pub async fn create_lesson(
+    State(state): State<AppState>,
+    token: Token,
+    Json(payload): Json<LessonBody>,
+) -> Result<Json<LessonBody>, DbError> {
+    tracing::info!("Attempting to create lesson");
+
+    let db = &state.db;
+    db.authenticate(token.as_str()).await?;
+
+    let lesson = db.create("lesson").content(payload).await?;
+
+    tracing::info!("lesson created");
+    if let Some(lesson) = lesson {
+        Ok(Json(lesson))
+    } else {
+        Err(DbError::Db)
+    }
+}
+
+pub async fn delete_lesson(
+    State(state): State<AppState>,
+    token: Token,
+    id: Path<String>,
+) -> Result<Json<LessonBody>, DbError> {
+    tracing::info!("Attempting to delete lesson");
+
+    let db = &state.db;
+    db.authenticate(token.as_str()).await?;
+
+    let lesson = db.delete(("lesson", &*id)).await?;
+
+    tracing::info!("lesson deleted");
+    if let Some(lesson) = lesson {
+        Ok(Json(lesson))
+    } else {
+        Err(DbError::Db)
+    }
+}
+
+pub async fn update_lesson(
+    State(state): State<AppState>,
+    token: Token,
+    id: Path<String>,
+    Json(payload): Json<LessonBody>,
+) -> Result<Json<LessonBody>, DbError> {
+    tracing::info!("Attempting to update lesson");
+
+    let db = &state.db;
+    db.authenticate(token.as_str()).await?;
+
+    let lesson = db.update(("lesson", &*id)).content(payload).await?;
+
+    tracing::info!("lesson created");
+    if let Some(lesson) = lesson {
+        Ok(Json(lesson))
+    } else {
+        Err(DbError::Db)
+    }
+}

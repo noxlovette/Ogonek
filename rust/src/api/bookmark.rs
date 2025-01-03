@@ -17,14 +17,13 @@ pub struct LessonTime {
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct BookMarkBody {
-    pub id: RecordId,
+    pub id: Option<RecordId>,
     #[serde(rename = "in")]
     pub user: RecordId,
     #[serde(rename = "out")]
     pub lesson: RecordId,
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub notes: Option<String>,
-    pub added_at: DateTime<Utc>,
+    pub added_at: Option<DateTime<Utc>>,
 }
 
 pub async fn list_bookmarks(
@@ -57,32 +56,76 @@ pub async fn get_bookmark(
 
     Ok(Json(bookmark))
 }
-
+// #[axum::debug_handler]
 pub async fn create_bookmark(
-    Path(id): Path<String>,
     State(state): State<AppState>,
-    Json(payload): Json<BookMarkBody>,
     token: Token,
+    Json(payload): Json<BookMarkBody>,
 ) -> Result<Json<BookMarkBody>, DbError> {
     tracing::info!("Attempting to create bookmark");
 
     let db = &state.db;
     db.authenticate(token.as_str()).await?;
 
+    let user_id = payload.user.clone();
+    let notes = payload.notes.clone();
+    let lesson_id = payload.lesson.clone();
+
     let result: Vec<BookMarkBody> = db
         .query(
-            "RELATE user:$user_id->bookmark->lesson:$lesson_id CONTENT {
+            "RELATE $user_id->bookmark->$lesson_id CONTENT {
         notes: $notes}",
         )
-        .bind(("user_id", "1"))
-        .bind(("lesson_id", id.clone()))
-        .bind(("notes", "notes"))
+        .bind(("user_id", user_id))
+        .bind(("lesson_id", lesson_id))
+        .bind(("notes", notes))
         .await?
         .take(0)?;
 
     let bookmark = result.into_iter().next();
 
     tracing::info!("Bookmark created");
+    if let Some(bookmark) = bookmark {
+        Ok(Json(bookmark))
+    } else {
+        Err(DbError::Db)
+    }
+}
+
+pub async fn delete_bookmark(
+    State(state): State<AppState>,
+    token: Token,
+    id: Path<String>,
+) -> Result<Json<BookMarkBody>, DbError> {
+    tracing::info!("Attempting to delete bookmark");
+
+    let db = &state.db;
+    db.authenticate(token.as_str()).await?;
+
+    let lesson = db.delete(("bookmark", &*id)).await?;
+
+    tracing::info!("bookmark deleted");
+    if let Some(lesson) = lesson {
+        Ok(Json(lesson))
+    } else {
+        Err(DbError::Db)
+    }
+}
+
+pub async fn update_bookmark(
+    State(state): State<AppState>,
+    token: Token,
+    id: Path<String>,
+    Json(payload): Json<BookMarkBody>,
+) -> Result<Json<BookMarkBody>, DbError> {
+    tracing::info!("Attempting to create bookmark");
+
+    let db = &state.db;
+    db.authenticate(token.as_str()).await?;
+
+    let bookmark = db.update(("bookmark", &*id)).content(payload).await?;
+
+    tracing::info!("Bookmark updated");
     if let Some(bookmark) = bookmark {
         Ok(Json(bookmark))
     } else {

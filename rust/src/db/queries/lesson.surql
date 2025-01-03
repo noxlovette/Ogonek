@@ -12,11 +12,17 @@ DEFINE FIELD markdown
 
 DEFINE FIELD time
     ON TABLE lesson
-    TYPE object;
+    TYPE object
+    DEFAULT {
+			created_at: time::now(),
+			updated_at: time::now()
+		}
+        ;
 
 DEFINE FIELD title
     ON TABLE lesson
-    TYPE string;
+    TYPE string
+    ;
 
 DEFINE FIELD topic
     ON TABLE lesson

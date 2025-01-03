@@ -41,14 +41,14 @@ pub struct SignUpCredentials<'a> {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct User {
-    pub id: RecordId,
+    pub id: Option<RecordId>,
     pub name: String,
     pub username: String,
     pub email: String,
-    pub joined_at: DateTime<Utc>,
-    pub role: String,
-    #[serde(skip_deserializing)] // This field will be ignored during deserialization
-    #[serde(skip_serializing_if = "Option::is_none")]
+    pub joined_at: Option<DateTime<Utc>>,
+    pub role: Option<String>,
+    // #[serde(skip_deserializing)] // This field will be ignored during deserialization
+    // #[serde(skip_serializing_if = "Option::is_none")]
     pub pass: Option<String>,
 }
 

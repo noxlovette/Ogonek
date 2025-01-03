@@ -21,13 +21,23 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             "/user/:id",
             get(fetch_user).put(update_user).delete(delete_user),
         )
-        .route("/user/all", get(list_users))
-        .route("/lesson/:id", get(rust::api::lesson::fetch_lesson))
-        .route("/lesson/all", get(rust::api::lesson::list_lessons))
+        .route("/users", get(list_users))
         .route(
-            "/lessons/bookmarked",
-            get(rust::api::bookmark::list_bookmarks),
+            "/lesson/:id",
+            get(rust::api::lesson::fetch_lesson)
+                .put(rust::api::lesson::update_lesson)
+                .delete(rust::api::lesson::delete_lesson),
         )
+        .route("/lessons", get(rust::api::lesson::list_lessons))
+        .route("/bookmarks", get(rust::api::bookmark::list_bookmarks))
+        .route(
+            "/bookmark/:id",
+            get(rust::api::bookmark::get_bookmark)
+                .patch(rust::api::bookmark::update_bookmark)
+                .delete(rust::api::bookmark::delete_bookmark),
+        )
+        .route("/bookmark", post(rust::api::bookmark::create_bookmark))
+        .route("/lesson", post(rust::api::lesson::create_lesson))
         .with_state(state);
 
     let listener = tokio::net::TcpListener::bind("localhost:3000").await?;
