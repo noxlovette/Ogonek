@@ -2,7 +2,7 @@
 DEFINE TABLE OVERWRITE lesson SCHEMAFULL
     PERMISSIONS
         for select WHERE assignee = $auth.id
-        for select, update, delete WHERE created_by = $auth.id
+        for select, update, delete, create WHERE created_by = $auth.id
 
 ;
 

@@ -8,12 +8,12 @@ DEFINE FIELD name ON user TYPE string;
 DEFINE FIELD username ON user TYPE string;
 DEFINE FIELD email ON user TYPE string ASSERT string::is::email($value) VALUE string::lowercase($value);
 DEFINE FIELD pass ON user TYPE string VALUE crypto::argon2::generate($value);
-DEFINE FIELD role ON user TYPE string 
-    ASSERT $value IN ["student", "teacher"] 
-    DEFAULT "student";
+DEFINE FIELD OVERWRITE role ON user TYPE string 
+    ASSERT $value IN ["student", "teacher"]
+    DEFAULT "student"
 
 DEFINE FIELD joined_at
-    ON TABLE bookmark 
+    ON user 
     TYPE datetime
     DEFAULT time::now()
     READONLY;
@@ -28,7 +28,9 @@ DEFINE ACCESS user ON DATABASE TYPE RECORD
       name: $name,
       username: $username,
       email: $email,
-      pass: crypto::argon2::generate($pass) -- Use Argon2 to generate the hash.
+      role: $role OR "student",
+      pass: $pass,
+      joined_at: time::now()
     }
   )
   SIGNIN (
@@ -36,3 +38,4 @@ DEFINE ACCESS user ON DATABASE TYPE RECORD
     WHERE (email = $email OR username = $username)
       AND crypto::argon2::compare(pass, $pass) -- Use Argon2 to compare the hashes.
   )
+

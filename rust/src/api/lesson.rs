@@ -1,30 +1,10 @@
 use crate::auth::Token;
 use crate::db::error::DbError;
 use crate::db::AppState;
+use crate::models::lessons::LessonBody;
 use axum::extract::Json;
 use axum::extract::Path;
 use axum::extract::State;
-use chrono::{DateTime, Utc};
-use serde::{Deserialize, Serialize};
-use surrealdb::RecordId;
-
-#[derive(Serialize, Deserialize, Debug)]
-pub struct LessonTime {
-    pub custom_at: Option<DateTime<Utc>>,
-    pub created_at: DateTime<Utc>,
-    pub updated_at: DateTime<Utc>,
-}
-
-#[derive(Serialize, Deserialize, Debug)]
-pub struct LessonBody {
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub id: Option<RecordId>,
-    pub title: String,
-    pub markdown: String,
-    pub assignee: RecordId,
-    pub created_by: RecordId,
-    pub time: LessonTime,
-}
 
 pub async fn fetch_lesson(
     State(state): State<AppState>,

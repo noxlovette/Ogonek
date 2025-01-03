@@ -40,3 +40,52 @@ pub async fn list_bookmarks(
 
     Ok(Json(bookmarks))
 }
+
+pub async fn get_bookmark(
+    Path(id): Path<String>,
+    State(state): State<AppState>,
+    token: Token,
+) -> Result<Json<Option<BookMarkBody>>, DbError> {
+    tracing::info!("Attempting to fetch bookmark");
+
+    let db = &state.db;
+    db.authenticate(token.as_str()).await?;
+
+    let bookmark = db.select(("bookmark", &*id)).await?;
+
+    tracing::info!("Fetch bookmark successful");
+
+    Ok(Json(bookmark))
+}
+
+pub async fn create_bookmark(
+    Path(id): Path<String>,
+    State(state): State<AppState>,
+    Json(payload): Json<BookMarkBody>,
+    token: Token,
+) -> Result<Json<BookMarkBody>, DbError> {
+    tracing::info!("Attempting to create bookmark");
+
+    let db = &state.db;
+    db.authenticate(token.as_str()).await?;
+
+    let result: Vec<BookMarkBody> = db
+        .query(
+            "RELATE user:$user_id->bookmark->lesson:$lesson_id CONTENT {
+        notes: $notes}",
+        )
+        .bind(("user_id", "1"))
+        .bind(("lesson_id", id.clone()))
+        .bind(("notes", "notes"))
+        .await?
+        .take(0)?;
+
+    let bookmark = result.into_iter().next();
+
+    tracing::info!("Bookmark created");
+    if let Some(bookmark) = bookmark {
+        Ok(Json(bookmark))
+    } else {
+        Err(DbError::Db)
+    }
+}

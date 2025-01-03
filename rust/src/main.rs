@@ -4,7 +4,7 @@ use rust::db::init_db;
 use rust::db::AppState;
 use rust::tools::logging::init_logging;
 
-use rust::api::user::{delete_user, fetch_user, fetch_user_self, list_users, update_user};
+use rust::api::user::{delete_user, fetch_user, list_users, update_user};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -17,7 +17,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .route("/", get(root))
         .route("/signup", post(rust::api::auth::signup))
         .route("/signin", post(rust::api::auth::authorize))
-        .route("/user", get(fetch_user_self))
         .route(
             "/user/:id",
             get(fetch_user).put(update_user).delete(delete_user),

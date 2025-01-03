@@ -12,8 +12,6 @@ use surrealdb::{
 use dotenvy::dotenv;
 use std::sync::LazyLock;
 
-use std::fs;
-
 pub static NAMESPACE: LazyLock<String> = LazyLock::new(|| {
     dotenv().ok();
     std::env::var("NAMESPACE").expect("NAMESPACE must be set")
