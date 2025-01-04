@@ -1,6 +1,6 @@
-use crate::auth::Token;
+use crate::auth::jwt::Token;
 use crate::db::error::DbError;
-use crate::db::AppState;
+use crate::db::init::AppState;
 use axum::extract::Json;
 use axum::extract::Path;
 use axum::extract::State;

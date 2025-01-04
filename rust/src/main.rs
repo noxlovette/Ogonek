@@ -1,10 +1,10 @@
 use axum::routing::{get, post};
 use axum::Router;
-use rust::db::init_db;
-use rust::db::AppState;
+use rust::db::init::init_db;
+use rust::db::init::AppState;
 use rust::tools::logging::init_logging;
 
-use rust::api::user::{delete_user, fetch_user, list_users, update_user};
+// use rust::api::user::{delete_user, fetch_user, list_users, update_user};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {

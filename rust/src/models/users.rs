@@ -15,11 +15,6 @@ pub struct UserBody {
     email: String,
 }
 
-#[derive(Serialize, Deserialize)]
-pub struct Credentials<'a> {
-    pub username: &'a str,
-    pub pass: &'a str,
-}
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct SignUpPayload {
@@ -30,14 +25,7 @@ pub struct SignUpPayload {
     pub role: String,
 }
 
-#[derive(Serialize, Deserialize)]
-pub struct SignUpCredentials<'a> {
-    pub name: &'a str,
-    pub pass: &'a str,
-    pub email: &'a str,
-    pub username: &'a str,
-    pub role: &'a str,
-}
+
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct User {

@@ -1,70 +1,43 @@
-use crate::auth::{AuthError, Claims, KEYS};
-use crate::db::error::DbError;
-use crate::db::{AppState, DATABASE, NAMESPACE};
-use crate::models::users::{AuthPayload, Credentials, SignUpCredentials, SignUpPayload, User};
+use crate::auth::error::AuthError;
+use crate::auth::helpers::{generate_token, hash_password};
+use crate::db::helpers::FromQuery;
+use crate::db::init::AppState;
+use crate::models::users::{AuthPayload, SignUpPayload, User};
 use axum::extract::Json;
 use axum::extract::State;
 use axum::response::Response;
-use jsonwebtoken::{encode, Header};
-use surrealdb::opt::auth::Record;
 
 pub async fn authorize(
     State(state): State<AppState>,
     Json(payload): Json<AuthPayload>, // TODO adjust the error types to accomodate for 'not found disconnected blabla and other db errors'
-) -> Result<Response, DbError> {
+) -> Result<Response, AuthError> {
     tracing::info!("Attempting sign-in for user: {:?}", payload.username);
+
+    if payload.username.is_empty() || payload.pass.is_empty() {
+        return Err(AuthError::MissingCredentials);
+    }
 
     let db = &state.db;
 
-    let jwt = db
-        .signin(Record {
-            access: "user",
-            namespace: &*NAMESPACE,
-            database: &*DATABASE,
-            params: Credentials {
-                username: &payload.username,
-                pass: &payload.pass,
-            },
-        })
-        .await?;
+    let username = payload.username.clone();
+    let pass = payload.pass.clone();
 
-    let token = jwt.as_insecure_token();
-
-    tracing::info!("token: {:?}", token);
+    dbg!("hash", &pass);
 
     let result: Vec<User> = db
-        .query("SELECT * FROM user WHERE id = $auth.id")
+        .query("SELECT * FROM user WHERE username = $username AND crypto::argon2::compare(password, $pass)")
+        .bind(("username", username))
+        .bind(("pass", pass))
         .await?
         .take(0)?;
 
-    tracing::info!("result: {:?}", result);
+    let logged_in_user =
+        User::from_query_result(result).map_err(|_| AuthError::WrongCredentials)?;
 
-    let user = result.into_iter().next();
+    let token = generate_token(&logged_in_user)?;
 
-    if let Some(user) = user {
-        Ok(user.into_response(token.to_string()))
-    } else {
-        Err(DbError::Db)
-    }
+    Ok(logged_in_user.into_response(token))
 }
-
-use argon2::{
-    password_hash::{
-        rand_core::OsRng, Error as Argon2Error, PasswordHash, PasswordHasher, PasswordVerifier,
-        SaltString,
-    },
-    Argon2,
-};
-
-use surrealdb::sql::Value;
-
-trait FromQuery: Sized {
-    fn from_query_result(result: Vec<Self>) -> Result<Self, DbError> {
-        result.into_iter().next().ok_or(DbError::NotFound) // or whatever error type you prefer
-    }
-}
-
-impl FromQuery for User {}
 
 pub async fn signup(
     State(state): State<AppState>,
@@ -92,7 +65,7 @@ pub async fn signup(
             email = $email,
             password = $password,
             role = $role,
-            created_at = time::now();
+            joined_at = time::now();
         RETURN SELECT * FROM user WHERE username=$username;
         "#,
         )
@@ -106,68 +79,7 @@ pub async fn signup(
 
     let created_user = User::from_query_result(result).map_err(|_| AuthError::SignUpFail)?;
 
-    dbg!("user", &created_user);
-
-    let id = created_user
-        .id
-        .as_ref()
-        .map(|record_id| record_id.to_string())
-        .ok_or(AuthError::SignUpFail)?;
-
-    use std::time::{SystemTime, UNIX_EPOCH};
-    // In your signup function:
-    let exp = SystemTime::now()
-        .duration_since(UNIX_EPOCH)
-        .unwrap()
-        .as_secs() as usize
-        + (60 * 60 * 24); // 24 hours from now
-
-    let claims = Claims {
-        name,
-        username,
-        email,
-        role,
-        id,
-        exp,
-    };
-
-    dbg!("claims", &claims);
-
-    let token = encode(
-        &Header::new(jsonwebtoken::Algorithm::RS256),
-        &claims,
-        &KEYS.encoding,
-    )
-    .map_err(|e| {
-        eprintln!("Token creation error: {:?}", e); // Better error logging
-        AuthError::TokenCreation
-    })?;
-
-    dbg!("token", &token);
+    let token = generate_token(&created_user)?;
 
     Ok(created_user.into_response(token))
-}
-
-fn hash_password(pass: &str) -> Result<String, PasswordHashError> {
-    let pass_bytes = pass.as_bytes();
-
-    let salt = SaltString::generate(&mut OsRng);
-    let argon2 = Argon2::default();
-
-    let hash = argon2.hash_password(&pass_bytes, &salt)?.to_string();
-    let parsed_hash = PasswordHash::new(&hash)?;
-
-    argon2
-        .verify_password(pass_bytes, &parsed_hash)
-        .map_err(|_| PasswordHashError::VerificationError)?;
-
-    Ok(hash)
-}
-
-#[derive(Debug, thiserror::Error)]
-pub enum PasswordHashError {
-    #[error("Failed to hash password: {0}")]
-    HashingError(#[from] Argon2Error),
-    #[error("Password verification failed after hashiong")]
-    VerificationError,
 }

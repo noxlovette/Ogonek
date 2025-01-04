@@ -8,10 +8,6 @@ DEFINE FIELD name ON user TYPE string ASSERT string::len($value) >= 2;
 DEFINE FIELD username ON user TYPE string;
 DEFINE FIELD email ON user TYPE string ASSERT string::is::email($value) VALUE string::lowercase($value);
 DEFINE FIELD pass ON user TYPE string VALUE crypto::argon2::generate($value)
-PERMISSIONS
-  FOR select NONE
-  for create, update, delete FULL
-;
 DEFINE FIELD OVERWRITE role ON user TYPE string 
     ASSERT $value IN ["student", "teacher"]
     DEFAULT "student"
@@ -25,21 +21,3 @@ DEFINE FIELD joined_at
 
 DEFINE INDEX email ON user FIELDS email UNIQUE;
 DEFINE INDEX username ON user FIELDS username UNIQUE;
-
-DEFINE ACCESS user ON DATABASE TYPE RECORD
-  SIGNUP (
-    CREATE user CONTENT {
-      name: $name,
-      username: $username,
-      email: $email,
-      role: $role OR "student",
-      pass: $pass, -- HASHING HAPPENS AUTOMATICALLY ANY TIME THE PASS FIELD IS DIFFERENT
-      joined_at: time::now()
-    }
-  )
-  SIGNIN (
-    SELECT * FROM user 
-    WHERE (email = $email OR username = $username)
-      AND crypto::argon2::compare(pass, $pass) 
-  )
-

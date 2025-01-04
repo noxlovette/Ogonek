@@ -1,18 +1,9 @@
-use crate::auth::AuthError;
 use axum::http::StatusCode;
 use axum::response::IntoResponse;
 use axum::response::Response;
 use axum::Json;
 use serde_json::json;
 use thiserror::Error;
-
-#[derive(Debug, Error)]
-pub enum AppError {
-    #[error(transparent)]
-    Auth(#[from] AuthError),
-    #[error(transparent)]
-    Db(#[from] DbError), // Assuming you have a DbError type defined
-}
 
 #[derive(Error, Debug)]
 pub enum DbError {
