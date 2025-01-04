@@ -5,7 +5,7 @@ use axum_extra::{
     TypedHeader,
 };
 
-use jsonwebtoken::{decode, DecodingKey, EncodingKey, Validation};
+use jsonwebtoken::{decode, Algorithm, DecodingKey, EncodingKey, Validation};
 
 use crate::auth::error::AuthError;
 use dotenvy::dotenv;
@@ -39,10 +39,17 @@ where
         let TypedHeader(Authorization(bearer)) = parts
             .extract::<TypedHeader<Authorization<Bearer>>>()
             .await
-            .map_err(|_| AuthError::InvalidToken)?;
+            .map_err(|e| {
+                eprintln!("Token extraction error: {:?}", e);
+                AuthError::InvalidToken
+            })?;
+        let validation = Validation::new(Algorithm::RS256);
 
-        let token_data = decode::<Claims>(bearer.token(), &KEYS.decoding, &Validation::default())
-            .map_err(|_| AuthError::InvalidToken)?;
+        let token_data =
+            decode::<Claims>(bearer.token(), &KEYS.decoding, &validation).map_err(|e| {
+                eprintln!("Token extraction error: {:?}", e);
+                AuthError::InvalidToken
+            })?;
         Ok(token_data.claims)
     }
 }

@@ -12,7 +12,7 @@ pub fn generate_token(user: &User) -> Result<String, AuthError> {
     let id = user
         .id
         .as_ref()
-        .map(|record_id| record_id.to_string())
+        .map(|record_id| record_id.key().to_string())
         .ok_or(AuthError::SignUpFail)?;
 
     use std::time::{SystemTime, UNIX_EPOCH};

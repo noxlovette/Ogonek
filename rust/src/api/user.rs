@@ -1,4 +1,4 @@
-use crate::auth::jwt::Token;
+use crate::auth::jwt::Claims;
 use crate::db::error::DbError;
 use crate::db::init::AppState;
 use axum::extract::Json;
@@ -7,15 +7,25 @@ use axum::extract::State;
 
 use crate::models::users::User;
 
-pub async fn fetch_user(
+pub async fn fetch_user_self(
     State(state): State<AppState>,
-    token: Token,
-    id: Path<String>,
+    claims: Claims,
 ) -> Result<Json<Option<User>>, DbError> {
     tracing::info!("Attempting to fetch user");
 
     let db = &state.db;
-    db.authenticate(token.as_str()).await?;
+
+    let user = db.select(("user", claims.id)).await?;
+
+    Ok(Json(user))
+}
+
+pub async fn fetch_user(
+    State(state): State<AppState>,
+    id: Path<String>,
+) -> Result<Json<Option<User>>, DbError> {
+    let db = &state.db;
+
     let user = db.select(("user", &*id)).await?;
 
     Ok(Json(user))
@@ -23,14 +33,12 @@ pub async fn fetch_user(
 
 pub async fn update_user(
     State(state): State<AppState>,
-    token: Token,
     id: Path<String>,
     Json(payload): Json<User>,
 ) -> Result<Json<Option<User>>, DbError> {
     tracing::info!("Attempting update for user");
 
     let db = &state.db;
-    db.authenticate(token.as_str()).await?;
 
     let user = db.update(("user", &*id)).content(payload).await?;
 
@@ -41,13 +49,11 @@ pub async fn update_user(
 
 pub async fn delete_user(
     State(state): State<AppState>,
-    token: Token,
     id: Path<String>,
 ) -> Result<Json<Option<User>>, DbError> {
     tracing::info!("Attempting user deletion");
 
     let db = &state.db;
-    db.authenticate(token.as_str()).await?;
 
     let user = db.delete(("user", &*id)).await?;
 
@@ -56,12 +62,8 @@ pub async fn delete_user(
     Ok(Json(user))
 }
 
-pub async fn list_users(
-    State(state): State<AppState>,
-    token: Token,
-) -> Result<Json<Vec<User>>, DbError> {
+pub async fn list_users(State(state): State<AppState>) -> Result<Json<Vec<User>>, DbError> {
     let db = &state.db;
-    db.authenticate(token.as_str()).await?;
 
     let users = db.select("user").await?;
 
