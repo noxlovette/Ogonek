@@ -1,8 +1,4 @@
-DEFINE TABLE task SCHEMAFULL
-    PERMISSIONS
-        for select WHERE assignee = $auth.id
-        for select, update, delete, create WHERE created_by = $auth.id
-;
+DEFINE TABLE task SCHEMAFULL;
 
 DEFINE FIELD markdown
     ON TABLE task
@@ -18,7 +14,7 @@ DEFINE FIELD title
 
 DEFINE FIELD file
     ON TABLE task
-    TYPE string;
+    TYPE option<string>;
 
 DEFINE FIELD completed
     ON TABLE task
@@ -28,7 +24,9 @@ DEFINE FIELD completed
 DEFINE FIELD priority
     ON TABLE task
     TYPE number
-    ASSERT $value >= 1 AND $value <= 3;
+    ASSERT $value >= 1 AND $value <= 3
+    DEFAULT 1
+    ;
 
 DEFINE FIELD assignee
     ON TABLE task  

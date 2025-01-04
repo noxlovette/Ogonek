@@ -1,10 +1,5 @@
 -- lessons
-DEFINE TABLE OVERWRITE lesson SCHEMAFULL
-    PERMISSIONS
-        for select WHERE assignee = $auth.id
-        for select, update, delete, create WHERE created_by = $auth.id
-
-;
+DEFINE TABLE lesson SCHEMAFULL;
 
 DEFINE FIELD markdown
     ON TABLE lesson
