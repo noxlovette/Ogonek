@@ -1,43 +1,14 @@
 use crate::auth::error::AuthError;
+use crate::auth::helpers::verify_password;
 use crate::auth::helpers::{generate_token, hash_password};
-use crate::db::helpers::FromQuery;
 use crate::db::init::AppState;
 use crate::models::users::{AuthPayload, SignUpPayload, User};
 use axum::extract::Json;
 use axum::extract::State;
 use axum::response::Response;
-
-pub async fn authorize(
-    State(state): State<AppState>,
-    Json(payload): Json<AuthPayload>, // TODO adjust the error types to accomodate for 'not found disconnected blabla and other db errors'
-) -> Result<Response, AuthError> {
-    tracing::info!("Attempting sign-in for user: {:?}", payload.username);
-
-    if payload.username.is_empty() || payload.pass.is_empty() {
-        return Err(AuthError::MissingCredentials);
-    }
-
-    let db = &state.db;
-
-    let username = payload.username.clone();
-    let pass = payload.pass.clone();
-
-    dbg!("hash", &pass);
-
-    let result: Vec<User> = db
-        .query("SELECT * FROM user WHERE username = $username AND crypto::argon2::compare(password, $pass)")
-        .bind(("username", username))
-        .bind(("pass", pass))
-        .await?
-        .take(0)?;
-
-    let logged_in_user =
-        User::from_query_result(result).map_err(|_| AuthError::WrongCredentials)?;
-
-    let token = generate_token(&logged_in_user)?;
-
-    Ok(logged_in_user.into_response(token))
-}
+use hyper::StatusCode;
+use nanoid::nanoid;
+use validator::Validate;
 
 pub async fn signup(
     State(state): State<AppState>,
@@ -45,41 +16,93 @@ pub async fn signup(
 ) -> Result<Response, AuthError> {
     tracing::info!("Creating user");
     if payload.username.is_empty() || payload.pass.is_empty() {
-        return Err(AuthError::MissingCredentials);
+        return Err(AuthError::InvalidCredentials);
     }
+    payload.validate().map_err(|e| {
+        eprintln!("{:?}", e);
+        AuthError::InvalidCredentials
+    })?;
+
+    let SignUpPayload {
+        name,
+        username,
+        email,
+        role,
+        pass,
+    } = payload;
+
     let db = &state.db;
-    let hashed_password = hash_password(&payload.pass)?;
+    let hashed_password = hash_password(&pass)?;
+    let id = nanoid!();
 
-    // Clone the values before the query since we'll need them later for Claims
-    let name = payload.name.clone();
-    let username = payload.username.clone();
-    let email = payload.email.clone();
-    let role = payload.role.clone();
-
-    let result: Vec<User> = db
-        .query(
-            r#"
-        CREATE user SET
-            name = $name,
-            username = $username,
-            email = $email,
-            password = $password,
-            role = $role,
-            joined_at = time::now();
-        RETURN SELECT * FROM user WHERE username=$username;
+    sqlx::query!(
+        // language=PostgreSQL
+        r#"
+            INSERT INTO "user" (name, username, email, role, pass, verified, id)
+            VALUES ($1, $2, $3, $4, $5, false, $6)
         "#,
-        )
-        .bind(("name", name.clone()))
-        .bind(("username", username.clone()))
-        .bind(("email", email.clone()))
-        .bind(("password", hashed_password.clone()))
-        .bind(("role", role.clone()))
-        .await?
-        .take(0)?;
+        name,
+        username,
+        email,
+        role,
+        hashed_password,
+        id
+    )
+    .execute(db)
+    .await
+    .map_err(|e| match e {
+        sqlx::Error::Database(dbe) if dbe.constraint() == Some("user_username_key") => {
+            AuthError::Conflict("username taken".into())
+        }
+        sqlx::Error::Database(dbe) if dbe.constraint() == Some("user_email_key") => {
+            AuthError::Conflict("email already registered".into())
+        }
+        _ => e.into(),
+    })?;
 
-    let created_user = User::from_query_result(result).map_err(|_| AuthError::SignUpFail)?;
+    Ok(Response::builder()
+        .status(StatusCode::OK)
+        .body(axum::body::Body::empty())
+        .unwrap())
+}
 
-    let token = generate_token(&created_user)?;
+pub async fn authorize(
+    State(state): State<AppState>,
+    Json(payload): Json<AuthPayload>,
+) -> Result<Response, AuthError> {
+    tracing::info!("Attempting sign-in for user: {:?}", payload.username);
+    if payload.username.is_empty() || payload.pass.is_empty() {
+        return Err(AuthError::InvalidCredentials);
+    }
+    payload.validate().map_err(|e| {
+        eprintln!("{:?}", e);
+        AuthError::InvalidCredentials
+    })?;
 
-    Ok(created_user.into_response(token))
+    let user = sqlx::query_as!(
+        User,
+        r#"
+        SELECT * 
+        FROM "user" 
+        WHERE username = $1
+        "#,
+        payload.username
+    )
+    .fetch_optional(&state.db)
+    .await
+    .map_err(|e| {
+        eprintln!("{:?}", e);
+        AuthError::WrongCredentials
+    })?
+    .ok_or(AuthError::WrongCredentials)?;
+    // Verify password using argon2
+
+    dbg!(&user);
+
+    if !verify_password(&user.pass, &payload.pass)? {
+        return Err(AuthError::WrongCredentials);
+    }
+
+    let token = generate_token(&user)?;
+    Ok(user.into_response(token))
 }

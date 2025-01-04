@@ -9,12 +9,6 @@ use argon2::{
 
 pub fn generate_token(user: &User) -> Result<String, AuthError> {
     use jsonwebtoken::{encode, Header};
-    let id = user
-        .id
-        .as_ref()
-        .map(|record_id| record_id.key().to_string())
-        .ok_or(AuthError::SignUpFail)?;
-
     use std::time::{SystemTime, UNIX_EPOCH};
     // In your signup function:
     let exp = SystemTime::now()
@@ -27,8 +21,8 @@ pub fn generate_token(user: &User) -> Result<String, AuthError> {
         name: user.name.clone(),
         username: user.username.clone(),
         email: user.email.clone(),
-        role: user.role.clone().unwrap_or_default(),
-        id: id.clone(),
+        role: user.role.clone(),
+        id: user.id.clone().to_string(),
         exp,
     };
 
@@ -59,4 +53,13 @@ pub fn hash_password(pass: &str) -> Result<String, PasswordHashError> {
         .map_err(|_| PasswordHashError::VerificationError)?;
 
     Ok(hash)
+}
+
+pub fn verify_password(hash: &str, password: &str) -> Result<bool, PasswordHashError> {
+    let argon2 = Argon2::default();
+    let parsed_hash = PasswordHash::new(hash)?;
+    match argon2.verify_password(password.as_bytes(), &parsed_hash) {
+        Ok(_) => Ok(true),
+        Err(_) => Ok(false),
+    }
 }

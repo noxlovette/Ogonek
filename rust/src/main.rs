@@ -14,8 +14,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let app = Router::new()
         .nest("/auth", rust::routes::auth_routes::auth_routes())
-        .nest("/lesson", rust::routes::lesson_routes::lesson_routes())
-        .nest("/user", rust::routes::user_routes::user_routes())
+        //.nest("/lesson", rust::routes::lesson_routes::lesson_routes())
+        //.nest("/user", rust::routes::user_routes::user_routes())
         .with_state(state);
 
     let listener = tokio::net::TcpListener::bind("localhost:3000").await?;

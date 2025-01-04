@@ -3,6 +3,7 @@ use axum::response::IntoResponse;
 use axum::response::Response;
 use axum::Json;
 use serde_json::json;
+use sqlx::error::Error as SqlxError;
 use thiserror::Error;
 
 #[derive(Error, Debug)]
@@ -11,6 +12,8 @@ pub enum DbError {
     Db,
     #[error("Not Found")]
     NotFound,
+    #[error("Transaction failed")]
+    TransactionFailed,
 }
 
 impl IntoResponse for DbError {
@@ -18,6 +21,7 @@ impl IntoResponse for DbError {
         let (status, error_message) = match self {
             DbError::Db => (StatusCode::INTERNAL_SERVER_ERROR, "Database error"),
             DbError::NotFound => (StatusCode::INTERNAL_SERVER_ERROR, "Not Found"),
+            DbError::TransactionFailed => (StatusCode::INTERNAL_SERVER_ERROR, "Transaction failed"),
         };
 
         let body = Json(json!({
@@ -28,9 +32,9 @@ impl IntoResponse for DbError {
     }
 }
 
-impl From<surrealdb::Error> for DbError {
-    fn from(error: surrealdb::Error) -> Self {
-        eprintln!("{error}");
+impl From<SqlxError> for DbError {
+    fn from(error: SqlxError) -> Self {
+        eprintln!("Database error: {}", error);
         Self::Db
     }
 }

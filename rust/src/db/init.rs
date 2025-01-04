@@ -1,50 +1,21 @@
-// initiate the DB and set it as static
-use std::sync::Arc;
-use surrealdb::{
-    engine::remote::ws::{Client, Wss},
-    opt::auth::Root,
-    Surreal,
-};
-
+use anyhow::Context;
 use dotenvy::dotenv;
-use std::sync::LazyLock;
+use sqlx::postgres::PgPool;
+use sqlx::postgres::PgPoolOptions;
 
-pub static NAMESPACE: LazyLock<String> = LazyLock::new(|| {
-    dotenv().ok();
-    std::env::var("NAMESPACE").expect("NAMESPACE must be set")
-});
-
-pub static DATABASE: LazyLock<String> = LazyLock::new(|| {
-    dotenv().ok();
-    std::env::var("DATABASE").expect("DATABASE must be set")
-});
-
-// this is the state that will be passed to the router. DB
 #[derive(Clone)]
 pub struct AppState {
-    pub db: Arc<Surreal<Client>>,
+    pub db: PgPool,
 }
 
-pub async fn init_db() -> Result<Arc<Surreal<Client>>, Box<dyn std::error::Error>> {
+pub async fn init_db() -> anyhow::Result<PgPool> {
     dotenv().ok();
-    let username: String = std::env::var("DB_USERNAME").expect("DB USERNAME must be set");
-    let password: String = std::env::var("DB_PASSWORD").expect("DB PASSWORD must be set");
-    let url: String = std::env::var("DB_URL").expect("DB URL must be set");
+    let database_url = std::env::var("DATABASE_URL").expect("DATABASE_URL must be set");
+    let db = PgPoolOptions::new()
+        .max_connections(20)
+        .connect(&database_url)
+        .await
+        .context("Failed to connect to Postgres")?;
 
-    let db: Arc<Surreal<Client>> = Arc::new(Surreal::new::<Wss>(url).await?);
-
-    db.signin(Root {
-        username: &username,
-        password: &password,
-    })
-    .await?;
-
-    db.use_ns(&*NAMESPACE).use_db(&*DATABASE).await?;
-
-    // let auth_query = fs::read_to_string("src/db/queries/auth.surql").expect("file not found");
-
-    // db.query(auth_query).await?;
-
-    tracing::info!("DB initialized");
     Ok(db)
 }

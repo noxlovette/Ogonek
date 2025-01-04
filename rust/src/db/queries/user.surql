@@ -2,13 +2,12 @@
 
 DEFINE TABLE user SCHEMAFULL
 
+DEFINE FIELD id TYPE UUID
 DEFINE FIELD name ON user TYPE string ASSERT string::len($value) >= 2;
 DEFINE FIELD username ON user TYPE string;
 DEFINE FIELD email ON user TYPE string ASSERT string::is::email($value) VALUE string::lowercase($value);
 DEFINE FIELD pass ON user TYPE string VALUE crypto::argon2::generate($value)
-DEFINE FIELD OVERWRITE role ON user TYPE string 
-    ASSERT $value IN ["student", "teacher"]
-    DEFAULT "student"
+DEFINE FIELD OVERWRITE role ON user TYPE string
 
 DEFINE FIELD joined
     ON user 
