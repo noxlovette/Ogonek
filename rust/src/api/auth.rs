@@ -94,7 +94,7 @@ pub async fn authorize(
         eprintln!("{:?}", e);
         AuthError::WrongCredentials
     })?
-    .ok_or(AuthError::WrongCredentials)?;
+    .ok_or(AuthError::UserNotFound)?;
     // Verify password using argon2
 
     dbg!(&user);

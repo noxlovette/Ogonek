@@ -1,3 +1,4 @@
+use crate::db::error::DbError;
 use axum::{
     http::StatusCode,
     response::{IntoResponse, Response},
@@ -81,4 +82,11 @@ pub enum PasswordHashError {
     HashingError(#[from] Argon2Error),
     #[error("Password verification failed after hashiong")]
     VerificationError,
+}
+
+impl From<DbError> for PasswordHashError {
+    fn from(error: DbError) -> Self {
+        eprintln!("{error}");
+        Self::VerificationError
+    }
 }

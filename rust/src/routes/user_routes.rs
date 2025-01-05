@@ -9,7 +9,7 @@ pub fn user_routes() -> Router<AppState> {
         .route(
             "/u/:id",
             get(user::fetch_user)
-                .post(user::update_user)
+                .patch(user::update_user)
                 .delete(user::delete_user),
         )
         .route("/all", get(user::list_users))

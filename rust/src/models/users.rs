@@ -33,6 +33,17 @@ pub struct SignUpPayload {
     pub role: String,
 }
 
+#[derive(Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct UserUpdate {
+    pub name: Option<String>,
+    pub username: Option<String>,
+    pub email: Option<String>,
+    pub pass: Option<String>,
+    pub role: Option<String>,
+    pub verified: Option<bool>,
+}
+
 #[serde_with::serde_as]
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]

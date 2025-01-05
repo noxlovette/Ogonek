@@ -1,3 +1,4 @@
+use crate::auth::error::PasswordHashError;
 use axum::http::StatusCode;
 use axum::response::IntoResponse;
 use axum::response::Response;
@@ -36,5 +37,12 @@ impl From<SqlxError> for DbError {
     fn from(error: SqlxError) -> Self {
         eprintln!("Database error: {}", error);
         Self::Db
+    }
+}
+
+impl From<PasswordHashError> for DbError {
+    fn from(error: PasswordHashError) -> Self {
+        eprintln!("{error}");
+        Self::TransactionFailed
     }
 }
