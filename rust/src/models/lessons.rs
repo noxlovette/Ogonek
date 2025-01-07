@@ -37,3 +37,26 @@ pub struct LessonUpdate {
     pub assignee: Option<String>,
     pub created_by: Option<String>,
 }
+
+#[serde_with::serde_as]
+#[derive(Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct StudentNote {
+    pub id: String,
+    pub lesson_id: String,
+    pub user_id: String,
+    pub is_bookmarked: Option<bool>,
+    pub notes: Option<String>,
+    #[serde_as(as = "Option<Rfc3339>")]
+    pub created_at: Option<OffsetDateTime>,
+    #[serde_as(as = "Option<Rfc3339>")]
+    pub updated_at: Option<OffsetDateTime>,
+}
+
+// What the client can send (payload structure)
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct StudentNoteUpdate {
+    pub notes: Option<String>,
+    pub is_bookmarked: Option<bool>,
+}

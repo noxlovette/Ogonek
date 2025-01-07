@@ -1,4 +1,5 @@
 pub mod auth;
-// pub mod bookmark;
 pub mod lesson;
+pub mod notes;
+pub mod task;
 pub mod user;

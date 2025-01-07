@@ -9,13 +9,6 @@ use time::format_description::well_known::Rfc3339;
 use time::OffsetDateTime;
 use validator::Validate;
 
-#[derive(Deserialize, Debug)]
-pub struct UserBody {
-    name: String,
-    username: String,
-    email: String,
-}
-
 #[derive(Serialize, Deserialize, Debug, Validate)]
 #[serde(rename_all = "camelCase")]
 pub struct SignUpPayload {

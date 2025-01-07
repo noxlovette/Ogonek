@@ -1,11 +1,9 @@
 use crate::auth::jwt::Claims;
-// use crate::auth::Token;
 use crate::db::error::DbError;
 use crate::db::init::AppState;
 use crate::models::lessons::LessonBody;
 use crate::models::lessons::LessonCreateBody;
 use crate::models::lessons::LessonUpdate;
-use axum::debug_handler;
 use axum::extract::Json;
 use axum::extract::Path;
 use axum::extract::State;
@@ -29,7 +27,6 @@ pub async fn list_lessons(State(state): State<AppState>) -> Result<Json<Vec<Less
     Ok(Json(lessons))
 }
 
-#[debug_handler]
 pub async fn create_lesson(
     State(state): State<AppState>,
     claims: Claims,
@@ -63,8 +60,9 @@ pub async fn delete_lesson(
         "DELETE FROM lessons WHERE id = $1 RETURNING *",
         id
     )
-    .fetch_one(&state.db)
-    .await?;
+    .fetch_optional(&state.db)
+    .await?
+    .ok_or(DbError::NotFound)?;
 
     Ok(Json(lesson))
 }
@@ -90,8 +88,9 @@ pub async fn update_lesson(
         payload.assignee,
         id
     )
-    .fetch_one(&state.db)
-    .await?;
+    .fetch_optional(&state.db)
+    .await?
+    .ok_or(DbError::NotFound)?;
 
     Ok(Json(lesson))
 }
