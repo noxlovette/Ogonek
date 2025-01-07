@@ -7,7 +7,7 @@ pub fn user_routes() -> Router<AppState> {
     Router::new()
         .route("/self", get(user::fetch_user_self))
         .route(
-            "/u/:id",
+            "/u/{id}",
             get(user::fetch_user)
                 .patch(user::update_user)
                 .delete(user::delete_user),

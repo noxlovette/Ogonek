@@ -8,7 +8,7 @@ pub fn notes_routes() -> Router<AppState> {
     Router::new()
         .route("/", get(notes::list_student_notes))
         .route(
-            "/n/:id",
+            "/n/{id}",
             get(notes::fetch_student_note)
                 .patch(notes::upsert_student_note)
                 .delete(notes::delete_student_notes),

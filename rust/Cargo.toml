@@ -6,8 +6,8 @@ edition = "2021"
 
 [dependencies]
 # Primary Crates
-axum = { version = "0.7.9", features = ["macros"] }
-axum-extra = { version = "0.9.6", features = ["typed-header"] }
+axum = { version = "0.8.1", features = ["macros"] }
+axum-extra = { version = "0.10.0", features = ["typed-header"] }
 sqlx = { version = "0.8.2", features = [
     "runtime-tokio",
     "tls-rustls-ring",
@@ -35,7 +35,6 @@ thiserror = "2.0.9"
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 tower-http = { version = "0.6.2", features = ["full"] }
-async-trait = "0.1.83"
 surrealdb = { version = "2.1.4", features = ['protocol-http'] }
 base64 = "0.22.1"
 anyhow = "1.0.95"

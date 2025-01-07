@@ -5,6 +5,7 @@ use axum::{
 };
 use rust::db::init::{init_db, AppState};
 use rust::tools::logging::init_logging;
+use rust::tools::middleware::api_key::validate_api_key;
 use tower::ServiceBuilder;
 use tower_http::{cors::CorsLayer, timeout::TimeoutLayer, trace::TraceLayer};
 
@@ -30,6 +31,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .layer(
             ServiceBuilder::new()
                 .layer(TraceLayer::new_for_http())
+                .layer(axum::middleware::from_fn(validate_api_key))
                 .layer(TimeoutLayer::new(std::time::Duration::from_secs(10)))
                 .layer(
                     CorsLayer::new()
