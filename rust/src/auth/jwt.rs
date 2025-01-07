@@ -70,7 +70,7 @@ impl Keys {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Claims {
-    pub id: String,
+    pub sub: String,
     pub name: String,
     pub username: String,
     pub role: String,

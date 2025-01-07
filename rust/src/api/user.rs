@@ -20,7 +20,7 @@ pub async fn fetch_user_self(
         FROM "user"
         WHERE id = $1
         "#,
-        claims.id
+        claims.sub
     )
     .fetch_optional(&state.db)
     .await

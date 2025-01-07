@@ -8,6 +8,8 @@ pub fn lesson_routes() -> Router<AppState> {
         .route("/", get(lesson::list_lessons).post(lesson::create_lesson))
         .route(
             "/l/:id",
-            get(lesson::fetch_lesson).delete(lesson::delete_lesson),
+            get(lesson::fetch_lesson)
+                .patch(lesson::update_lesson)
+                .delete(lesson::delete_lesson),
         )
 }

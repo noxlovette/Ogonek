@@ -1,22 +1,39 @@
-use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
-use surrealdb::RecordId;
+use time::format_description::well_known::Rfc3339;
+use time::OffsetDateTime;
 
+#[serde_with::serde_as]
 #[derive(Serialize, Deserialize, Debug)]
-pub struct LessonTime {
-    pub custom_at: Option<DateTime<Utc>>,
-    pub created_at: Option<DateTime<Utc>>,
-    pub updated_at: Option<DateTime<Utc>>,
-}
-
-#[derive(Serialize, Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
 pub struct LessonBody {
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub id: Option<RecordId>,
+    pub id: String,
     pub title: String,
     pub topic: String,
     pub markdown: String,
-    pub assignee: RecordId,
-    pub created_by: RecordId,
-    pub time: Option<LessonTime>,
+    pub assignee: String,
+    pub created_by: String,
+    #[serde_as(as = "Rfc3339")]
+    pub created_at: OffsetDateTime,
+    #[serde_as(as = "Rfc3339")]
+    pub updated_at: OffsetDateTime,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct LessonCreateBody {
+    pub title: String,
+    pub topic: String,
+    pub markdown: String,
+    pub assignee: String,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct LessonUpdate {
+    pub id: Option<String>,
+    pub title: Option<String>,
+    pub topic: Option<String>,
+    pub markdown: Option<String>,
+    pub assignee: Option<String>,
+    pub created_by: Option<String>,
 }

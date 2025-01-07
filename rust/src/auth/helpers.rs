@@ -22,7 +22,7 @@ pub fn generate_token(user: &User) -> Result<String, AuthError> {
         username: user.username.clone(),
         email: user.email.clone(),
         role: user.role.clone(),
-        id: user.id.clone().to_string(),
+        sub: user.id.clone().to_string(),
         exp,
     };
 
