@@ -1,5 +1,3 @@
-
-
 [package]
 name = "rust"
 version = "0.1.0"
@@ -31,11 +29,12 @@ uuid = { version = "1.11.0", features = ["serde", "v4", "v7"] }
 hyper = "1.5.2"
 argon2 = "0.5.3"
 
+
 # Auxiliary Crates
 thiserror = "2.0.9"
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
-tower-http = "0.6.2"
+tower-http = { version = "0.6.2", features = ["full"] }
 async-trait = "0.1.83"
 surrealdb = { version = "2.1.4", features = ['protocol-http'] }
 base64 = "0.22.1"
@@ -46,4 +45,5 @@ once_cell = "1.20.2"
 regex = "1.11.1"
 nanoid = "0.4.0"
 time = "0.3.37"
-tower = "0.5.2"
+tower = { version = "0.5.2", features = ["full"] }
+pin-project = "1.1.8"

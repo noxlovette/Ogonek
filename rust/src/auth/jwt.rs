@@ -28,6 +28,7 @@ pub static KEYS: LazyLock<Keys> = LazyLock::new(|| {
     Keys::new(private_key.as_bytes(), public_key.as_bytes())
 });
 
+
 #[async_trait]
 impl<S> FromRequestParts<S> for Claims
 where

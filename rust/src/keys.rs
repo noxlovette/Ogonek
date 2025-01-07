@@ -1,6 +1,6 @@
 use dotenvy::dotenv;
-use std::sync::LazyLock;
 use jsonwebtoken::{DecodingKey, EncodingKey};
+use std::sync::LazyLock;
 
 pub struct Keys {
     pub encoding: EncodingKey,
