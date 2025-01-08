@@ -34,19 +34,15 @@ where
     type Rejection = AuthError;
 
     async fn from_request_parts(parts: &mut Parts, _state: &S) -> Result<Self, Self::Rejection> {
-        dbg!(&parts);
         let cookies = parts
             .extract::<TypedHeader<Cookie>>()
             .await
             .map_err(|_| AuthError::InvalidToken)?;
-
-        dbg!(&cookies);
         let refresh_token = cookies
             .get("refresh-token")
             .ok_or(AuthError::InvalidToken)?
             .to_string();
 
-        dbg!(&refresh_token);
         let validation = Validation::new(Algorithm::RS256);
         let token_data =
             decode::<RefreshClaims>(&refresh_token, &KEYS_REFRESH.decoding, &validation).map_err(

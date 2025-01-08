@@ -15,7 +15,7 @@ pub async fn fetch_user(
     let user = sqlx::query_as!(
         User,
         r#"
-        SELECT *
+        SELECT username, email, role, id, name, pass, verified
         FROM "user"
         WHERE id = $1
         "#,
@@ -41,7 +41,7 @@ pub async fn delete_user(
         r#"
         DELETE FROM "user"
         WHERE id = $1
-        RETURNING *
+        RETURNING username, email, role, id, name, pass, verified
         "#,
         claims.sub
     )
@@ -81,7 +81,7 @@ pub async fn update_user(
             role = COALESCE($5, role),
             verified = COALESCE($6, verified)
         WHERE id = $7
-        RETURNING *
+        RETURNING username, email, role, id, name, pass, verified 
         "#,
         payload.name,
         payload.username,

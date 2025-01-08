@@ -73,7 +73,7 @@ pub async fn list_teacher_students(
     let users = sqlx::query_as!(
         User,
         r#"
-        SELECT u.*
+        SELECT u.username, u.email, u.role, u.id, u.name, u.pass, u.verified
         FROM "user" u
         INNER JOIN teacher_student ts ON u.id = ts.student_id
         WHERE ts.teacher_id = $1 AND ts.status = 'active'

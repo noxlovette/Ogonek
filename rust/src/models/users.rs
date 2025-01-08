@@ -37,7 +37,6 @@ pub struct UserUpdate {
     pub verified: Option<bool>,
 }
 
-#[serde_with::serde_as]
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct User {
@@ -47,8 +46,6 @@ pub struct User {
     pub email: String,
     pub pass: String,
     pub role: String,
-    #[serde_as(as = "Rfc3339")]
-    pub joined: OffsetDateTime,
     pub verified: bool,
 }
 

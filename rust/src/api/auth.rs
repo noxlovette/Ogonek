@@ -82,7 +82,7 @@ pub async fn authorize(
     let user = sqlx::query_as!(
         User,
         r#"
-        SELECT * 
+        SELECT username, email, role, id, name, pass, verified
         FROM "user" 
         WHERE username = $1
         "#,
@@ -119,7 +119,7 @@ pub async fn refresh(
     let user = sqlx::query_as!(
         User,
         r#"
-        SELECT * 
+        SELECT username, email, role, id, name, pass, verified 
         FROM "user" 
         WHERE id = $1
         "#,
