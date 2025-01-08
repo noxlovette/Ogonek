@@ -45,4 +45,3 @@ regex = "1.11.1"
 nanoid = "0.4.0"
 time = "0.3.37"
 tower = { version = "0.5.2", features = ["full"] }
-pin-project = "1.1.8"
