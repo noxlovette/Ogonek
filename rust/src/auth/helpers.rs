@@ -1,21 +1,21 @@
 use crate::auth::error::{AuthError, PasswordHashError};
-use crate::auth::jwt::Claims;
-use crate::auth::jwt::KEYS;
+use crate::auth::jwt::{Claims, RefreshClaims};
+use crate::auth::jwt::{KEYS, KEYS_REFRESH};
 use crate::models::users::User;
 use argon2::{
     password_hash::{rand_core::OsRng, PasswordHash, PasswordHasher, PasswordVerifier, SaltString},
     Argon2,
 };
+use jsonwebtoken::{encode, Header};
+use std::time::{SystemTime, UNIX_EPOCH};
 
 pub fn generate_token(user: &User) -> Result<String, AuthError> {
-    use jsonwebtoken::{encode, Header};
-    use std::time::{SystemTime, UNIX_EPOCH};
     // In your signup function:
     let exp = SystemTime::now()
         .duration_since(UNIX_EPOCH)
         .unwrap()
         .as_secs() as usize
-        + (60 * 60 * 24); // 24 hours from now
+        + (60 * 15); // 15 minutes from now
 
     let claims = Claims {
         name: user.name.clone(),
@@ -30,6 +30,31 @@ pub fn generate_token(user: &User) -> Result<String, AuthError> {
         &Header::new(jsonwebtoken::Algorithm::RS256),
         &claims,
         &KEYS.encoding,
+    )
+    .map_err(|e| {
+        eprintln!("Token creation error: {:?}", e);
+        AuthError::TokenCreation
+    })?;
+
+    return Ok(token);
+}
+
+pub fn generate_refresh_token(user: &User) -> Result<String, AuthError> {
+    let exp = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .unwrap()
+        .as_secs() as usize
+        + (60 * 60 * 24 * 30); // 30 days from now
+
+    let claims = RefreshClaims {
+        sub: user.id.clone().to_string(),
+        exp,
+    };
+
+    let token = encode(
+        &Header::new(jsonwebtoken::Algorithm::RS256),
+        &claims,
+        &KEYS_REFRESH.encoding,
     )
     .map_err(|e| {
         eprintln!("Token creation error: {:?}", e);

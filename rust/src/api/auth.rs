@@ -1,6 +1,7 @@
 use crate::auth::error::AuthError;
 use crate::auth::helpers::verify_password;
-use crate::auth::helpers::{generate_token, hash_password};
+use crate::auth::helpers::{generate_refresh_token, generate_token, hash_password};
+use crate::auth::jwt::RefreshClaims;
 use crate::db::init::AppState;
 use crate::models::users::{AuthPayload, SignUpPayload, User};
 use axum::extract::Json;
@@ -70,7 +71,6 @@ pub async fn authorize(
     State(state): State<AppState>,
     Json(payload): Json<AuthPayload>,
 ) -> Result<Response, AuthError> {
-    tracing::info!("Attempting sign-in for user: {:?}", payload.username);
     if payload.username.is_empty() || payload.pass.is_empty() {
         return Err(AuthError::InvalidCredentials);
     }
@@ -97,12 +97,49 @@ pub async fn authorize(
     .ok_or(AuthError::UserNotFound)?;
     // Verify password using argon2
 
-    dbg!(&user);
-
     if !verify_password(&user.pass, &payload.pass)? {
         return Err(AuthError::WrongCredentials);
     }
 
     let token = generate_token(&user)?;
-    Ok(user.into_response(token))
+    let refresh_token = generate_refresh_token(&user)?;
+    Ok(user.into_response(token, refresh_token))
+}
+
+use axum::http::{
+    header::{self, HeaderMap},
+    HeaderValue,
+};
+use axum::response::IntoResponse;
+
+pub async fn refresh(
+    State(state): State<AppState>,
+    claims: RefreshClaims,
+) -> Result<Response, AuthError> {
+    let user = sqlx::query_as!(
+        User,
+        r#"
+        SELECT * 
+        FROM "user" 
+        WHERE id = $1
+        "#,
+        claims.sub
+    )
+    .fetch_optional(&state.db)
+    .await
+    .map_err(|e| {
+        eprintln!("{:?}", e);
+        AuthError::UserNotFound
+    })?
+    .ok_or(AuthError::UserNotFound)?;
+
+    let token = generate_token(&user)?;
+    Ok((
+        [(header::AUTHORIZATION, format!("Bearer {}", token))]
+            .into_iter()
+            .map(|(k, v)| (k, HeaderValue::from_str(&v).unwrap()))
+            .collect::<HeaderMap>(),
+        StatusCode::OK,
+    )
+        .into_response())
 }

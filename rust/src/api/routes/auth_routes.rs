@@ -7,4 +7,5 @@ pub fn auth_routes() -> Router<AppState> {
     Router::new()
         .route("/signup", post(auth::signup))
         .route("/signin", post(auth::authorize))
+        .route("/refresh", post(auth::refresh))
 }

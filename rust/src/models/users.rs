@@ -61,14 +61,34 @@ pub struct AuthPayload {
     pub pass: String,
 }
 
+use tower_cookies::Cookie;
+
 impl User {
-    pub fn into_response(self, token: String) -> Response {
-        let mut headers = HeaderMap::new();
-        headers.insert(
-            header::AUTHORIZATION,
-            HeaderValue::from_str(&format!("Bearer {}", token)).expect("Invalid Token Format"),
+    pub fn into_response(self, access_token: String, refresh_token: String) -> Response {
+        // Normal headers (Bearer token)
+        let mut response = (
+            [(
+                header::AUTHORIZATION,
+                HeaderValue::from_str(&format!("Bearer {}", access_token)).unwrap(),
+            )]
+            .into_iter()
+            .collect::<HeaderMap>(),
+            Json(self),
+        )
+            .into_response();
+
+        // Cookie is added via Set-Cookie header
+        let cookie = Cookie::build(("refresh-token", refresh_token))
+            .http_only(true)
+            .secure(true)
+            .path("/")
+            .build();
+
+        response.headers_mut().insert(
+            header::SET_COOKIE,
+            HeaderValue::from_str(&cookie.to_string()).unwrap(),
         );
 
-        (headers, Json(self)).into_response()
+        response
     }
 }

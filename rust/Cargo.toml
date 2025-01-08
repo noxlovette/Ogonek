@@ -35,8 +35,6 @@ thiserror = "2.0.9"
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 tower-http = { version = "0.6.2", features = ["full"] }
-surrealdb = { version = "2.1.4", features = ['protocol-http'] }
-base64 = "0.22.1"
 anyhow = "1.0.95"
 validator = { version = "0.19.0", features = ["derive"] }
 dotenvy = "0.15"
@@ -45,3 +43,4 @@ regex = "1.11.1"
 nanoid = "0.4.0"
 time = "0.3.37"
 tower = { version = "0.5.2", features = ["full"] }
+tower-cookies = "0.11.0"

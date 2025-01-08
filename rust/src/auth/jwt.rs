@@ -1,6 +1,6 @@
 use axum::{extract::FromRequestParts, http::request::Parts, RequestPartsExt};
 use axum_extra::{
-    headers::{authorization::Bearer, Authorization},
+    headers::{authorization::Bearer, Authorization, Cookie},
     TypedHeader,
 };
 
@@ -11,21 +11,54 @@ use dotenvy::dotenv;
 use serde::{Deserialize, Serialize};
 use std::sync::LazyLock;
 
-#[derive(Debug)]
-pub struct Token(String);
-
-impl Token {
-    pub fn as_str(&self) -> &str {
-        &self.0
-    }
-}
-
 pub static KEYS: LazyLock<Keys> = LazyLock::new(|| {
     dotenv().ok();
     let private_key = std::env::var("JWT_PRIVATE_KEY").expect("JWT PRIVATE KEY NOT SET");
     let public_key = std::env::var("JWT_PUBLIC_KEY").expect("JWT PUBLIC KEY NOT SET");
     Keys::new(private_key.as_bytes(), public_key.as_bytes())
 });
+
+pub static KEYS_REFRESH: LazyLock<Keys> = LazyLock::new(|| {
+    dotenv().ok();
+    let private_key =
+        std::env::var("JWT_REFRESH_PRIVATE_KEY").expect("JWT REFRESH PRIVATE KEY NOT SET");
+    let public_key =
+        std::env::var("JWT_REFRESH_PUBLIC_KEY").expect("JWT REFRESH PUBLIC KEY NOT SET");
+    Keys::new(private_key.as_bytes(), public_key.as_bytes())
+});
+
+impl<S> FromRequestParts<S> for RefreshClaims
+where
+    S: Send + Sync,
+{
+    type Rejection = AuthError;
+
+    async fn from_request_parts(parts: &mut Parts, _state: &S) -> Result<Self, Self::Rejection> {
+        dbg!(&parts);
+        let cookies = parts
+            .extract::<TypedHeader<Cookie>>()
+            .await
+            .map_err(|_| AuthError::InvalidToken)?;
+
+        dbg!(&cookies);
+        let refresh_token = cookies
+            .get("refresh-token")
+            .ok_or(AuthError::InvalidToken)?
+            .to_string();
+
+        dbg!(&refresh_token);
+        let validation = Validation::new(Algorithm::RS256);
+        let token_data =
+            decode::<RefreshClaims>(&refresh_token, &KEYS_REFRESH.decoding, &validation).map_err(
+                |e| {
+                    eprintln!("Token extraction error: {:?}", e);
+                    AuthError::InvalidToken
+                },
+            )?;
+
+        Ok(token_data.claims)
+    }
+}
 
 impl<S> FromRequestParts<S> for Claims
 where
@@ -73,5 +106,11 @@ pub struct Claims {
     pub username: String,
     pub role: String,
     pub email: String,
+    pub exp: usize,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct RefreshClaims {
+    pub sub: String,
     pub exp: usize,
 }

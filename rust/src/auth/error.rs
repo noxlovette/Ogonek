@@ -79,9 +79,16 @@ use validator::ValidationError;
 #[derive(Debug, thiserror::Error)]
 pub enum PasswordHashError {
     #[error("Failed to hash password: {0}")]
-    HashingError(#[from] Argon2Error),
+    HashingError(Argon2Error),
     #[error("Password verification failed after hashiong")]
     VerificationError,
+}
+
+impl From<Argon2Error> for PasswordHashError {
+    fn from(error: Argon2Error) -> Self {
+        eprintln!("{error}");
+        Self::HashingError(error)
+    }
 }
 
 impl From<DbError> for PasswordHashError {
