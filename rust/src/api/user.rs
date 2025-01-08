@@ -3,12 +3,11 @@ use crate::auth::jwt::Claims;
 use crate::db::error::DbError;
 use crate::db::init::AppState;
 use axum::extract::Json;
-use axum::extract::Path;
 use axum::extract::State;
 
 use crate::models::users::{User, UserUpdate};
 
-pub async fn fetch_user_self(
+pub async fn fetch_user(
     State(state): State<AppState>,
     claims: Claims,
 ) -> Result<Json<User>, DbError> {
@@ -33,35 +32,10 @@ pub async fn fetch_user_self(
     Ok(Json(user))
 }
 
-pub async fn fetch_user(
-    State(state): State<AppState>,
-    Path(id): Path<String>,
-) -> Result<Json<User>, DbError> {
-    let user = sqlx::query_as!(
-        User,
-        r#"
-        SELECT *
-        FROM "user"
-        WHERE id = $1
-        "#,
-        id
-    )
-    .fetch_optional(&state.db)
-    .await
-    .map_err(|e| {
-        eprintln!("{:?}", e);
-        DbError::Db
-    })?
-    .ok_or(DbError::NotFound)?;
-
-    Ok(Json(user))
-}
-
 pub async fn delete_user(
     State(state): State<AppState>,
-    Path(id): Path<String>,
+    claims: Claims,
 ) -> Result<Json<User>, DbError> {
-    tracing::info!("Attempting user deletion");
     let user = sqlx::query_as!(
         User,
         r#"
@@ -69,7 +43,7 @@ pub async fn delete_user(
         WHERE id = $1
         RETURNING *
         "#,
-        id
+        claims.sub
     )
     .fetch_optional(&state.db)
     .await
@@ -85,7 +59,7 @@ pub async fn delete_user(
 
 pub async fn update_user(
     State(state): State<AppState>,
-    Path(id): Path<String>,
+    claims: Claims,
     Json(payload): Json<UserUpdate>,
 ) -> Result<Json<User>, DbError> {
     tracing::info!("Attempting update for user");
@@ -115,7 +89,7 @@ pub async fn update_user(
         hashed_pass,
         payload.role,
         payload.verified,
-        id
+        claims.sub
     )
     .fetch_optional(&state.db)
     .await
@@ -127,22 +101,4 @@ pub async fn update_user(
 
     tracing::info!("User update successful");
     Ok(Json(user))
-}
-
-pub async fn list_users(State(state): State<AppState>) -> Result<Json<Vec<User>>, DbError> {
-    let users = sqlx::query_as!(
-        User,
-        r#"
-        SELECT *
-        FROM "user"
-        "#,
-    )
-    .fetch_all(&state.db)
-    .await
-    .map_err(|e| {
-        eprintln!("{:?}", e);
-        DbError::Db
-    })?;
-
-    Ok(Json(users))
 }

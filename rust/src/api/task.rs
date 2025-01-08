@@ -7,17 +7,30 @@ use axum::extract::{Json, Path, State};
 pub async fn fetch_task(
     State(state): State<AppState>,
     Path(id): Path<String>,
+    claims: Claims,
 ) -> Result<Json<Option<TaskBody>>, DbError> {
-    let task = sqlx::query_as!(TaskBody, "SELECT * FROM tasks WHERE id = $1", id)
-        .fetch_optional(&state.db)
-        .await?;
+    let task = sqlx::query_as!(
+        TaskBody,
+        "SELECT * FROM tasks WHERE id = $1 AND (assignee = $2 OR created_by = $2)",
+        id,
+        claims.sub
+    )
+    .fetch_optional(&state.db)
+    .await?;
     Ok(Json(task))
 }
 
-pub async fn list_tasks(State(state): State<AppState>) -> Result<Json<Vec<TaskBody>>, DbError> {
-    let tasks = sqlx::query_as!(TaskBody, "SELECT * FROM tasks")
-        .fetch_all(&state.db)
-        .await?;
+pub async fn list_tasks(
+    State(state): State<AppState>,
+    claims: Claims,
+) -> Result<Json<Vec<TaskBody>>, DbError> {
+    let tasks = sqlx::query_as!(
+        TaskBody,
+        "SELECT * FROM tasks WHERE (assignee = $1 OR created_by = $1)",
+        claims.sub
+    )
+    .fetch_all(&state.db)
+    .await?;
     Ok(Json(tasks))
 }
 
@@ -46,17 +59,24 @@ pub async fn create_task(
 pub async fn delete_task(
     State(state): State<AppState>,
     Path(id): Path<String>,
+    claims: Claims,
 ) -> Result<Json<TaskBody>, DbError> {
-    let task = sqlx::query_as!(TaskBody, "DELETE FROM tasks WHERE id = $1 RETURNING *", id)
-        .fetch_optional(&state.db)
-        .await?
-        .ok_or(DbError::NotFound)?;
+    let task = sqlx::query_as!(
+        TaskBody,
+        "DELETE FROM tasks WHERE id = $1 AND (assignee = $2 OR created_by = $2) RETURNING *",
+        id,
+        claims.sub
+    )
+    .fetch_optional(&state.db)
+    .await?
+    .ok_or(DbError::NotFound)?;
     Ok(Json(task))
 }
 
 pub async fn update_task(
     State(state): State<AppState>,
     Path(id): Path<String>,
+    claims: Claims,
     Json(payload): Json<TaskUpdate>,
 ) -> Result<Json<TaskBody>, DbError> {
     let task = sqlx::query_as!(
@@ -69,7 +89,7 @@ pub async fn update_task(
             completed = COALESCE($4, completed),
             due_date = COALESCE($5, due_date),
             assignee = COALESCE($6, assignee)
-         WHERE id = $7
+         WHERE id = $7 AND (assignee = $8 OR created_by = $8)
          RETURNING *",
         payload.title,
         payload.markdown,
@@ -77,7 +97,8 @@ pub async fn update_task(
         payload.completed,
         payload.due_date,
         payload.assignee,
-        id
+        id,
+        claims.sub
     )
     .fetch_optional(&state.db)
     .await?

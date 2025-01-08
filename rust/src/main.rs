@@ -13,7 +13,7 @@ use tower_http::{
     timeout::TimeoutLayer,
     trace::TraceLayer,
 };
-use tracing::{error, info, info_span};
+use tracing::{error, info_span};
 
 const REQUEST_ID_HEADER: &str = "x-request-id";
 
@@ -33,6 +33,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .nest("/user", rust::api::routes::user_routes::user_routes())
         .nest("/task", rust::api::routes::task_routes::task_routes())
         .nest("/notes", rust::api::routes::notes_routes::notes_routes())
+        .nest(
+            "/student",
+            rust::api::routes::student_routes::student_routes(),
+        )
         .fallback(handler_404)
         .with_state(state)
         .layer(

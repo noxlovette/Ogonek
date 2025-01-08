@@ -11,18 +11,31 @@ use axum::extract::State;
 pub async fn fetch_lesson(
     State(state): State<AppState>,
     Path(id): Path<String>,
+    claims: Claims,
 ) -> Result<Json<Option<LessonBody>>, DbError> {
-    let lesson = sqlx::query_as!(LessonBody, "SELECT * FROM lessons WHERE id = $1", id)
-        .fetch_optional(&state.db)
-        .await?;
+    let lesson = sqlx::query_as!(
+        LessonBody,
+        "SELECT * FROM lessons WHERE id = $1 AND (assignee = $2 OR created_by = $2)",
+        id,
+        claims.sub
+    )
+    .fetch_optional(&state.db)
+    .await?;
 
     Ok(Json(lesson))
 }
 
-pub async fn list_lessons(State(state): State<AppState>) -> Result<Json<Vec<LessonBody>>, DbError> {
-    let lessons = sqlx::query_as!(LessonBody, "SELECT * FROM lessons")
-        .fetch_all(&state.db)
-        .await?;
+pub async fn list_lessons(
+    State(state): State<AppState>,
+    claims: Claims,
+) -> Result<Json<Vec<LessonBody>>, DbError> {
+    let lessons = sqlx::query_as!(
+        LessonBody,
+        "SELECT * FROM lessons WHERE (assignee = $1 OR created_by = $1)",
+        claims.sub
+    )
+    .fetch_all(&state.db)
+    .await?;
 
     Ok(Json(lessons))
 }
@@ -54,11 +67,13 @@ pub async fn create_lesson(
 pub async fn delete_lesson(
     State(state): State<AppState>,
     Path(id): Path<String>,
+    claims: Claims,
 ) -> Result<Json<LessonBody>, DbError> {
     let lesson = sqlx::query_as!(
         LessonBody,
-        "DELETE FROM lessons WHERE id = $1 RETURNING *",
-        id
+        "DELETE FROM lessons WHERE id = $1 AND created_by = $2 RETURNING *",
+        id,
+        claims.sub
     )
     .fetch_optional(&state.db)
     .await?
@@ -70,6 +85,7 @@ pub async fn delete_lesson(
 pub async fn update_lesson(
     State(state): State<AppState>,
     Path(id): Path<String>,
+    claims: Claims,
     Json(payload): Json<LessonUpdate>,
 ) -> Result<Json<LessonBody>, DbError> {
     let lesson = sqlx::query_as!(
@@ -80,13 +96,14 @@ pub async fn update_lesson(
             topic =COALESCE($2, topic), 
             markdown = COALESCE($3, markdown),
             assignee = COALESCE($4, assignee)
-         WHERE id = $5
+         WHERE id = $5 AND created_by = $6
          RETURNING *",
         payload.title,
         payload.topic,
         payload.markdown,
         payload.assignee,
-        id
+        id,
+        claims.sub
     )
     .fetch_optional(&state.db)
     .await?
