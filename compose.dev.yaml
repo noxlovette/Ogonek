@@ -1,42 +1,53 @@
 services:
-  frontend:
+  svelte:
     build:
-      context: ./frontend
+      context: ./svelte
       dockerfile: Dockerfile.dev
-    container_name: frontend-firelight
+    container_name: svelte-fl
     ports:
-      - "3100:3000" 
+      - "5173:3000"
     volumes:
-      - ./frontend:/app
-
-    environment:
-      - NODE_ENV=development
-      - BACKEND_URL=http://backend:8000
+      - ./svelte:/app
     env_file:
-      - ./frontend/.env
+      - ./svelte/.env
     depends_on:
-      - backend
+      - axum
 
-  backend:
+  axum:
     build:
-      context: ./backend
+      context: ./axum
       dockerfile: Dockerfile.dev
-    container_name: backend-firelight
+    container_name: axum-fl
     ports:
-      - "8002:8000" # Different external port for backend
+      - "8000:8000"
     volumes:
-      - ./backend:/app
-      - media-volume-2:/app/media
+      - ./axum:/app
     env_file:
-      - ./backend/.env
-    command: python manage.py runserver 0.0.0.0:8000
+      - ./axum/.env
     depends_on:
-      - db
+      - postgres
 
   redis:
     image: redis/redis-stack:latest
-    container_name: redis-firelight-rust
+    container_name: rs-fl
     ports:
       - "6379:6379"
-      - "8003:8001"
+      - "8001:8001"
 
+  postgres:
+    image: postgres
+    container_name: pg-fl-dev
+    restart: always
+    user: postgres
+    volumes:
+      - pg-fl-dev:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD} # Use environment variable for security
+    ports:
+      - "5432:5432" # Keep this port mapping for admin access or debugging
+    healthcheck:
+      test: ["CMD", "pg_isready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
