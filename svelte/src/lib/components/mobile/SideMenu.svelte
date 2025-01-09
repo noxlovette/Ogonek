@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { self, stopPropagation } from 'svelte/legacy';
+
 	import Word from '$lib/components/Word.svelte';
 	import Lessons from '../Lessons.svelte';
 	import UsefulLInks from '../UsefulLInks.svelte';
@@ -6,7 +8,11 @@
 	import { Menu } from 'lucide-svelte';
 	import { user } from '$lib/stores';
 	import { X } from 'lucide-svelte';
-	export let isOpen = false;
+	interface Props {
+		isOpen?: boolean;
+	}
+
+	let { isOpen = $bindable(false) }: Props = $props();
 	function toggleMenu() {
 		isOpen = !isOpen;
 	}
@@ -27,12 +33,12 @@
 	class="fixed inset-0 z-40 bg-sand-900 bg-opacity-80 backdrop-blur-lg transition-all duration-300 ease-in-out md:hidden {isOpen
 		? 'pointer-events-auto opacity-100'
 		: 'pointer-events-none opacity-0'}"
-	on:click|self={toggleMenu}
-/>
+	onclick={self(toggleMenu)}
+></button>
 
 <div class="flex md:hidden">
 	<button
-		on:click|stopPropagation={toggleMenu}
+		onclick={stopPropagation(toggleMenu)}
 		class="rounded-lg bg-sand-300 px-4 py-2 transition-colors duration-300 hover:bg-gold-400 dark:bg-sand-800 dark:hover:text-sand-800"
 	>
 		<Menu class="size-8" />
@@ -48,7 +54,7 @@
 	>
 		<div class="flex items-center justify-between">
 			<h1 class="text-4xl">Firelight</h1>
-			<button on:click={toggleMenu}>
+			<button onclick={toggleMenu}>
 				<X class="size-8 opacity-65" />
 			</button>
 		</div>

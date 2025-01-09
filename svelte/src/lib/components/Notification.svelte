@@ -1,16 +1,20 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import { notification } from '$lib/stores';
 	import { onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
 
-	let timeout;
+	let timeout = $state();
 
-	$: if ($notification.message) {
-		clearTimeout(timeout);
-		timeout = setTimeout(() => {
-			notification.set({ message: null, type: null });
-		}, 2800);
-	}
+	run(() => {
+		if ($notification.message) {
+			clearTimeout(timeout);
+			timeout = setTimeout(() => {
+				notification.set({ message: null, type: null });
+			}, 2800);
+		}
+	});
 </script>
 
 {#if $notification.message}

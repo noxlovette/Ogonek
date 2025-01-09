@@ -12,7 +12,7 @@
 	let filtered = tasks.filter((task) => task.completed === false);
 	let completed = tasks.filter((task) => task.completed === true);
 
-	let completedVisible = false;
+	let completedVisible = $state(false);
 </script>
 
 <svelte:head>
@@ -35,7 +35,7 @@
 	</p>
 {/if}
 <button
-	on:click={() => (completedVisible = !completedVisible)}
+	onclick={() => (completedVisible = !completedVisible)}
 	class="text-sm font-sans text-left hover:text-sand-800"
 >
 	{#if completedVisible}

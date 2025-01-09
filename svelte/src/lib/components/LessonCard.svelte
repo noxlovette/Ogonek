@@ -1,7 +1,11 @@
 <script lang="ts">
-	export let lesson: App.Lesson;
 
 	import { formatDate } from '$lib/utils';
+	interface Props {
+		lesson: App.Lesson;
+	}
+
+	let { lesson }: Props = $props();
 
 	const formattedDate = formatDate(lesson.manual_date || lesson.created_at);
 </script>

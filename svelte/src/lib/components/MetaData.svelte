@@ -1,15 +1,25 @@
-<script>
-  export let description =
-    "BCF. Browse perfume compounds, collect them, and formulate your next favourite fragrance.";
+<script lang="ts">
 
-  export let title = "BCF";
 
-  export let keywords =
-    "perfume, formulation, fragrance, BCF, perfumers, browse, collect, formulate, ingredient, essential oil, absolute";
-  export let robots = "index, follow";
-  export let ogTitle = "BCF";
-  export let ogUrl = "https://bcfapp.app";
-  export let ogImage = "https://bcfapp.app/assets/meta/og-main.webp";
+  interface Props {
+    description?: string;
+    title?: string;
+    keywords?: string;
+    robots?: string;
+    ogTitle?: string;
+    ogUrl?: string;
+    ogImage?: string;
+  }
+
+  let {
+    description = "BCF. Browse perfume compounds, collect them, and formulate your next favourite fragrance.",
+    title = "BCF",
+    keywords = "perfume, formulation, fragrance, BCF, perfumers, browse, collect, formulate, ingredient, essential oil, absolute",
+    robots = "index, follow",
+    ogTitle = "BCF",
+    ogUrl = "https://bcfapp.app",
+    ogImage = "https://bcfapp.app/assets/meta/og-main.webp"
+  }: Props = $props();
   let ogType = "website";
 </script>
 

@@ -1,17 +1,27 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import type { PageServerData } from '../$types';
 	import { marked } from 'marked';
 	import { BookmarkMinus, BookmarkPlus } from 'lucide-svelte';
 	import { enhance } from '$app/forms';
 	import { notification } from '$lib/stores';
 
-	export let data: PageServerData;
-	export let html: string;
+	interface Props {
+		data: PageServerData;
+		html: string;
+	}
 
-	let bookmarked: boolean = data.lesson.bookmarked;
+	let { data, html = $bindable() }: Props = $props();
 
-	$: bookmarked = data.lesson.bookmarked;
-	$: html = marked.parse(data.lesson.content);
+	let bookmarked: boolean = $state(data.lesson.bookmarked);
+
+	run(() => {
+		bookmarked = data.lesson.bookmarked;
+	});
+	run(() => {
+		html = marked.parse(data.lesson.content);
+	});
 
 	const handleToggle = async ({ result, update }) => {
 		if (result.data) {
@@ -29,15 +39,15 @@
 		update();
 	};
 
-	let date;
-	$: date = new Date(data.lesson.manual_date || data.lesson.created_at);
+	let date = $derived(new Date(data.lesson.manual_date || data.lesson.created_at));
+	
 
-	let formattedDate;
-	$: formattedDate = date.toLocaleDateString('en-GB', {
+	let formattedDate = $derived(date.toLocaleDateString('en-GB', {
 		month: 'short',
 		day: 'numeric',
 		year: 'numeric'
-	});
+	}));
+	
 </script>
 
 <svelte:head>
@@ -61,7 +71,7 @@
 		<input type="hidden" name="bookmarked" value={bookmarked} />
 		<button
 			class="hover:bg-sand-900/60 hover:text-sand-100 transition-colors duration-300 rounded-lg my-8 p-2 inline-flex"
-			on:click={() => (bookmarked = !bookmarked)}
+			onclick={() => (bookmarked = !bookmarked)}
 		>
 			{#if bookmarked}
 				<BookmarkMinus class="size-8 mr-2" />

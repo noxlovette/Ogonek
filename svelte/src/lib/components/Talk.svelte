@@ -1,8 +1,8 @@
 <script>
 	import { onMount, onDestroy } from 'svelte';
 
-	let messages = [];
-	let newMessage = '';
+	let messages = $state([]);
+	let newMessage = $state('');
 	let eventSource;
 
 	onMount(() => {
@@ -48,8 +48,8 @@
 	{/each}
 	<input
 		bind:value={newMessage}
-		on:keydown={(e) => e.key === 'Enter' && sendMessage()}
+		onkeydown={(e) => e.key === 'Enter' && sendMessage()}
 		placeholder="Type your message..."
 	/>
-	<button on:click={sendMessage}>Send</button>
+	<button onclick={sendMessage}>Send</button>
 </div>

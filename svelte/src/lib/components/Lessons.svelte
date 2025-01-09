@@ -4,7 +4,7 @@
 
 	import { getContext } from 'svelte';
 
-	let lessons: App.Lesson[] = getContext('lessons') || [];
+	let lessons: App.Lesson[] = $state(getContext('lessons') || []);
 
 	if (lessons.length > 3) {
 		lessons = lessons.slice(0, 3);

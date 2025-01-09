@@ -1,12 +1,16 @@
 <script lang="ts">
-	export let task: App.Task;
 	import { CheckSquare, Download, Square } from 'lucide-svelte';
 	import { enhance } from '$app/forms';
 	import { notification } from '$lib/stores';
 	import { formatDate } from '$lib/utils';
+	interface Props {
+		task: App.Task;
+	}
+
+	let { task }: Props = $props();
 
 	let overdue = false;
-	let completed = task.completed;
+	let completed = $state(task.completed);
 	const formattedDate = formatDate(task.due_date);
 
 	function handleDownload() {
@@ -39,7 +43,7 @@
 	>
 		<h2 class="flex">{task.title}</h2>
 		<form class="flex" method="post" use:enhance action="?/completed">
-			<button on:click={() => (completed = !completed)} class="" class:overdue>
+			<button onclick={() => (completed = !completed)} class="" class:overdue>
 				{#if completed}
 					<CheckSquare class="w-6 h-6" />
 				{:else}
@@ -60,7 +64,7 @@
 		<p class:overdue class="opacity-60">Due {formattedDate}</p>
 
 		{#if task.file}
-			<button on:click={handleDownload}>
+			<button onclick={handleDownload}>
 				<Download class="w-6 h-6" />
 			</button>
 		{/if}

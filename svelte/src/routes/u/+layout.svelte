@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import Sidebar from '$lib/components/Sidebar.svelte';
 	import Rightbar from '$lib/components/Rightbar.svelte';
 	import { setUser } from '$lib/stores';
@@ -6,9 +8,16 @@
 	import { setContext } from 'svelte';
 	import BottomMenu from '$lib/components/mobile/BottomMenu.svelte';
 
-	export let data: any;
+	interface Props {
+		data: any;
+		children?: import('svelte').Snippet;
+	}
 
-	$: setUser(data.user);
+	let { data, children }: Props = $props();
+
+	run(() => {
+		setUser(data.user);
+	});
 
 	// const tasks: App.Task[] = data.tasks;
 	const lessons: App.Lesson[] = data.lessons;
@@ -22,7 +31,7 @@
 <div
 	class="flex flex-col w-full min-h-screen py-7 px-6 lg:px-12 bg-sand-100 border-l-2 border-r-2 border-sand-900/80 justify-start items-center font-medium overflow-auto"
 >
-	<slot />
+	{@render children?.()}
 	<BottomMenu />
 </div>
 <Rightbar />

@@ -5,7 +5,11 @@
 	import { Squirrel } from 'lucide-svelte';
 	import { language, translations } from '$lib/stores';
 
-	export let data: PageServerData;
+	interface Props {
+		data: PageServerData;
+	}
+
+	let { data }: Props = $props();
 	let lessons: App.Lesson[] = data.lessons;
 	let bookmarked = lessons.filter((lesson) => lesson.bookmarked);
 </script>

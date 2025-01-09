@@ -9,7 +9,7 @@
 
 	import { getContext } from 'svelte';
 
-	let hidden = false;
+	let hidden = $state(false);
 	const greeting = getGreeting();
 
 	// let tasks: App.Task[] = getContext('tasks');

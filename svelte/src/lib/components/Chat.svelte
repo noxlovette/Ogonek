@@ -1,7 +1,7 @@
 <script>
 	import { onMount, onDestroy } from 'svelte';
 
-	let messages = [];
+	let messages = $state([]);
 	let eventSource;
 
 	onMount(() => {

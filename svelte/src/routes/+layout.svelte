@@ -4,6 +4,11 @@
 	import '../app.css';
 	import { language } from '$lib/stores';
 	import { onMount } from 'svelte';
+	interface Props {
+		children?: import('svelte').Snippet;
+	}
+
+	let { children }: Props = $props();
 
 	onMount(() => {
 		language.set(localStorage.getItem('language') || 'en');
@@ -14,7 +19,7 @@
 	<div
 		class="flex flex-col min-h-screen overscroll-contain md:flex-row text-sand-900 max-w-7xl w-full mx-auto selection:bg-forest-800 selection:text-sand-100"
 	>
-		<slot />
+		{@render children?.()}
 	</div>
 	<Notification></Notification>
 	<Loader></Loader>

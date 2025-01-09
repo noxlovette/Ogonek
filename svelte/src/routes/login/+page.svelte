@@ -3,8 +3,8 @@
 	import { user, notification } from '$lib/stores';
 	import { goto } from '$app/navigation';
 
-	let username = '';
-	let password = '';
+	let username = $state('');
+	let password = $state('');
 
 	const handleLoginResult = async ({ result, update }) => {
 		if (result.status === 302) {

@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import { getContext } from 'svelte';
 	import { formatDate } from '$lib/utils';
 	import { Search, X } from 'lucide-svelte';
@@ -7,8 +9,13 @@
 	import { language, translations } from '$lib/stores';
 
 	const lessons = getContext('lessons');
-	// const tasks = getContext('tasks');
-	export let hidden = false;
+	
+	interface Props {
+		// const tasks = getContext('tasks');
+		hidden?: boolean;
+	}
+
+	let { hidden = $bindable(false) }: Props = $props();
 
 	const topPosition = tweened(0, {
 		duration: 20,
@@ -24,8 +31,8 @@
 
 		// topPosition.set(0);
 	}
-	let search = '';
-	let filteredLessons = [];
+	let search = $state('');
+	let filteredLessons = $state([]);
 	let filteredTasks = [];
 
 	function filterItems() {
@@ -67,7 +74,9 @@
 			);
 	}
 
-	$: search, filterItems();
+	run(() => {
+		search, filterItems();
+	});
 </script>
 
 <div
@@ -87,8 +96,8 @@
 			placeholder={$translations.search[$language]}
 			bind:value={search}
 			class="border-sand-900/60 pl-0 bg-sand-900/20 text-sand-900 border-2 border-l-0 focus:outline-none focus:border-sand-900 focus:bg-sand-100 placeholder:text-sand-100 focus:placeholder:text-sand-900/70 transition-colors rounded-r-full px-4 py-2 my-4"
-			on:focus={moveToTop}
-			on:blur={moveBack}
+			onfocus={moveToTop}
+			onblur={moveBack}
 		/>
 	</div>
 

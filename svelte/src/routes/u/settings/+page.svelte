@@ -21,7 +21,7 @@
 				value="en"
 				class="appearance-none w-5 h-5 border-2 border-sand-300 rounded-md checked:bg-sand-900 checked:border-sand-900 focus:outline-none focus:ring-2 focus:ring-sand-300 focus:ring-offset-2"
 				checked={$language === 'en'}
-				on:change={() => {
+				onchange={() => {
 					language.set('en');
 					localStorage.setItem('language', 'en');
 				}}
@@ -36,7 +36,7 @@
 				value="de"
 				class="appearance-none w-5 h-5 border-2 border-sand-300 rounded-md checked:bg-sand-900 checked:border-sand-900 focus:outline-none focus:ring-2 focus:ring-sand-300 focus:ring-offset-2"
 				checked={$language === 'de'}
-				on:change={() => {
+				onchange={() => {
 					language.set('de');
 					localStorage.setItem('language', 'de');
 				}}
@@ -51,7 +51,7 @@
 				value="ru"
 				class="appearance-none w-5 h-5 border-2 border-sand-300 rounded-md checked:bg-sand-900 checked:border-sand-900 focus:outline-none focus:ring-2 focus:ring-sand-300 focus:ring-offset-2"
 				checked={$language === 'ru'}
-				on:change={() => {
+				onchange={() => {
 					language.set('ru');
 					localStorage.setItem('language', 'ru');
 				}}
