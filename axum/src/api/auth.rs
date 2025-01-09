@@ -3,7 +3,7 @@ use crate::auth::helpers::verify_password;
 use crate::auth::helpers::{generate_refresh_token, generate_token, hash_password};
 use crate::auth::jwt::RefreshClaims;
 use crate::db::init::AppState;
-use crate::models::users::{AuthPayload, SignUpPayload, User};
+use crate::models::users::{AuthBody, AuthPayload, SignUpPayload, User};
 use axum::extract::Json;
 use axum::extract::State;
 use axum::response::Response;
@@ -103,19 +103,14 @@ pub async fn authorize(
 
     let token = generate_token(&user)?;
     let refresh_token = generate_refresh_token(&user)?;
-    Ok(user.into_response(token, refresh_token))
+    Ok(AuthBody::into_response(token, refresh_token))
 }
 
-use axum::http::{
-    header::{self, HeaderMap},
-    HeaderValue,
-};
-use axum::response::IntoResponse;
-
+#[axum::debug_handler]
 pub async fn refresh(
     State(state): State<AppState>,
     claims: RefreshClaims,
-) -> Result<Response, AuthError> {
+) -> Result<Json<AuthBody>, AuthError> {
     let user = sqlx::query_as!(
         User,
         r#"
@@ -134,12 +129,5 @@ pub async fn refresh(
     .ok_or(AuthError::UserNotFound)?;
 
     let token = generate_token(&user)?;
-    Ok((
-        [(header::AUTHORIZATION, format!("Bearer {}", token))]
-            .into_iter()
-            .map(|(k, v)| (k, HeaderValue::from_str(&v).unwrap()))
-            .collect::<HeaderMap>(),
-        StatusCode::OK,
-    )
-        .into_response())
+    Ok(Json(AuthBody::new(token)))
 }

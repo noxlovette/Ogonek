@@ -58,9 +58,43 @@ pub struct AuthPayload {
 
 use tower_cookies::Cookie;
 
+#[derive(Debug, Deserialize, Serialize)]
+pub struct AuthBody {
+    pub access_token: String,
+    pub token_type: String,
+}
+
+impl AuthBody {
+    pub fn new(access_token: String) -> Self {
+        Self {
+            access_token,
+            token_type: "Bearer".to_string(),
+        }
+    }
+
+    pub fn into_response(access_token: String, refresh_token: String) -> Response {
+        // Just convert the AuthBody to JSON response without Bearer header
+        let mut response = Json(AuthBody::new(access_token)).into_response();
+
+        // Set up the secure cookie for refresh token
+        let cookie = Cookie::build(("refresh-token", refresh_token))
+            .http_only(true)
+            .secure(true)
+            .path("/")
+            .build();
+
+        // Add the cookie to response headers
+        response.headers_mut().insert(
+            header::SET_COOKIE,
+            HeaderValue::from_str(&cookie.to_string()).unwrap(),
+        );
+
+        response
+    }
+}
+
 impl User {
     pub fn into_response(self, access_token: String, refresh_token: String) -> Response {
-        // Normal headers (Bearer token)
         let mut response = (
             [(
                 header::AUTHORIZATION,
