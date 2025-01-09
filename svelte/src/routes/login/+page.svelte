@@ -1,16 +1,13 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { user, notification } from '$lib/stores';
+	import { notification } from '$lib/stores';
 	import { goto } from '$app/navigation';
 
-	let username = $state('');
-	let password = $state('');
-
-	const handleLoginResult = async ({ result, update }) => {
-		if (result.status === 302) {
-			// Assuming 'location' is how the redirect URL is sent back
+	const handleLoginResult = async ({ result, update }: { result: any; update: () => void }) => {
+		console.log(result);
+		if (result.type === 'success') {
 			notification.set({ message: 'Welcome back!', type: 'success' });
-			await goto(result.location);
+			// await goto(result.data.redirectTo);
 		} else {
 			if (result.data) {
 				notification.set({
@@ -32,8 +29,7 @@
 	<form
 		method="POST"
 		use:enhance={() => handleLoginResult}
-		action="?/login"
-		class="login-form bg-sand-900 p-3 rounded-md shadow-lg flex flex-col items-center ring ring-sand-900/20"
+		class="login-form bg-sand-800 p-3 rounded-md shadow-lg flex flex-col items-center ring ring-sand-900"
 	>
 		<h1 class="font-serif text-4xl text-center mb-4 text-sand-100">Firelight</h1>
 
@@ -42,7 +38,6 @@
 			id="username"
 			name="username"
 			placeholder="Username"
-			bind:value={username}
 			required
 			class="rounded-lg bg-white border border-sand-900/20 p-1 mb-2"
 		/>
@@ -51,7 +46,6 @@
 			type="password"
 			id="password"
 			name="password"
-			bind:value={password}
 			required
 			placeholder="Password"
 			class="rounded-lg bg-white border border-sand-900/20 p-1"
@@ -59,7 +53,7 @@
 
 		<button
 			type="submit"
-			class="bg-sand-800/60 border-sand-800/80 border-2 text-sand-50 w-20 mt-5 rounded-lg p-2 text-center hover:bg-sand-200 hover:text-sand-800 transition-colors"
+			class="bg-sand-800 border-sand-900 border-2 text-sand-50 w-20 mt-5 rounded-lg p-2 text-center hover:bg-sand-900 transition-colors"
 			>Login</button
 		>
 	</form>

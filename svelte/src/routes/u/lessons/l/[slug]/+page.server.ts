@@ -2,9 +2,9 @@ import type { Actions } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { error } from '@sveltejs/kit';
 
-const BACKEND_URL = process.env.BACKEND_URL || 'http://backend:8000';
 
 export const load: PageServerLoad = async ({ params, cookies }) => {
+	const BACKEND_URL = process.env.BACKEND_URL;
 	const { slug } = params;
 	const sessionid = cookies.get('sessionid');
 	const csrfToken = cookies.get('csrftoken') || '';

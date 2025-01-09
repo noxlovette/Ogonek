@@ -67,7 +67,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 .layer(TimeoutLayer::new(std::time::Duration::from_secs(10)))
                 .layer(
                     CorsLayer::new()
-                        .allow_origin("http://localhost:3000".parse::<HeaderValue>().unwrap())
+                        .allow_origin("*".parse::<HeaderValue>().unwrap())
                         .allow_methods([
                             Method::GET,
                             Method::POST,

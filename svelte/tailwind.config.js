@@ -6,93 +6,44 @@ export default {
 	theme: {
 		extend: {
 			backgroundImage: {
-				'roses-center': "url('/beauty/roses-center-2.svg')",
-				noise: "url('/beauty/nnnoise.svg')"
+				'roses-center': "url('/beauty/roses-center-2.svg')"
 			},
 			fontFamily: {
 				// sans: ["Inter var", ...defaultTheme.fontFamily.sans],
-				garamond: ['EB Garamond', 'serif'],
 				sans: ['Montserrat', ...defaultTheme.fontFamily.sans],
 				serif: ['Lora', ...defaultTheme.fontFamily.serif],
-				playfair: ['Playfair Display', 'serif']
 			},
 			colors: {
-				// First color - 646f4b (Forest)
 				forest: {
-					50: '#F5F7F0',
-					100: '#EBEDE0',
-					200: '#E1E4D0',
-					300: '#D6DABF',
-					400: '#CBD1AF',
-					500: '#C0C89F',
-					600: '#A6AF7F',
-					700: '#8C965F',
-					800: '#737D3F',
-					900: '#59641F',
-					950: '#3F4B00'
+					50: '#F6F8F2',
+					100: '#EDF0E4',
+					200: '#DCE2CC',
+					300: '#CBD4B4',
+					400: '#BAC69C',
+					500: '#A9B884',
+					600: '#8FA066',
+					700: '#75854C',
+					800: '#5C6B32',
+					900: '#435118',
+					950: '#2A380F'
 				},
-
-				// Second color - f5e0b7 (Sand)
 				sand: {
-					50: '#FFF7E6',
-					100: '#FFEDC3',
-					200: '#FFE3A0',
-					300: '#FFD97D',
-					400: '#FFCF5A',
-					500: '#FFC537',
-					600: '#FFA200',
-					700: '#CC8200',
-					800: '#996100',
-					900: '#664100',
-					950: '#332000'
-				},
-
-				// Third color - e7a977 (Clay)
-				clay: {
-					50: '#FFEAD7',
-					100: '#FFD6B3',
-					200: '#FFC28F',
-					300: '#FFAE6B',
-					400: '#FF9A47',
-					500: '#FF8623',
-					600: '#E66A00',
-					700: '#B35200',
-					800: '#803A00',
-					900: '#4D2200',
-					950: '#1A0A00'
-				},
-
-				// Fourth color - 453a49 (Dusk)
-				dusk: {
-					50: '#F4F3F5',
-					100: '#E9E7EA',
-					200: '#DDDADF',
-					300: '#D2CDD4',
-					400: '#C6C1C9',
-					500: '#BAB5BE',
-					600: '#9A929E',
-					700: '#7A6F7E',
-					800: '#5A4C5E',
-					900: '#3A293E',
-					950: '#1A061E'
-				},
-
-				// Fifth color - a63c06 (Rust)
-				rust: {
-					50: '#FFE1D1',
-					100: '#FFC3A3',
-					200: '#FFA575',
-					300: '#FF8747',
-					400: '#FF6919',
-					500: '#FF4B00',
-					600: '#E63300',
-					700: '#B32600',
-					800: '#801A00',
-					900: '#4D0D00',
-					950: '#1A0000'
+					50: '#FDF8F0',
+					100: '#F9ECD8',
+					200: '#F2D8B1',
+					300: '#EBC48A',
+					400: '#E4B063',
+					500: '#DD9C3C',
+					600: '#C47F28',
+					700: '#A3651F',
+					800: '#824C16',
+					900: '#61330D',
+					950: '#412009'
 				}
 			}
 		}
 	},
-	plugins: []
+	plugins: [
+		require('@tailwindcss/container-queries'),
+	]
 };

@@ -1,12 +1,15 @@
 import { redirect } from '@sveltejs/kit';
 import type { LayoutServerLoad } from '../$types';
 
-const BACKEND_URL = process.env.BACKEND_URL || 'http://backend:8000';
-const VITE_API_WORD_KEY = process.env.VITE_API_WORD_KEY;
-const API_KEY_DJANGO = process.env.API_KEY_DJANGO || '';
+
+const API_WORD_KEY = process.env.VITE_API_WORD_KEY;
+const BACKEND_URL=import.meta.env.VITE_BACKEND_URL;
+const API_KEY_AXUM = process.env.VITE_API_KEY_AXUM;
+
 
 export const load: LayoutServerLoad = async () => {
-
+	// const BACKEND_URL = "http://localhost:3000";
+	console.log(API_KEY_AXUM)
 		let lessons = await fetch(`${BACKEND_URL}/lessons`).then((res) => res.json());
 
 
@@ -14,7 +17,8 @@ export const load: LayoutServerLoad = async () => {
 			method: 'GET',
 			headers: {
 				'x-rapidapi-host': 'wordsapiv1.p.rapidapi.com',
-				'x-rapidapi-key': `${VITE_API_WORD_KEY}` // Replace this with your actual RapidAPI key
+				'x-rapidapi-key': `${API_WORD_KEY}`,
+				'x-api-key': `${API_KEY_AXUM}`
 			}
 		}).then((res) => res.json());
 

@@ -1,32 +1,49 @@
 import type { Actions } from './$types';
 import { redirect, fail } from '@sveltejs/kit';
-
-const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:3000';
+import { APIClient } from '$lib/server/api';
 
 export const actions: Actions = {
-	login: async ({ request, url }) => {
+	default: async ({ request, url, cookies }) => {
 		const data = await request.formData();
 		const username = data.get('username') as string;
 		const pass = data.get('password') as string;
 
-		const response = await fetch(`${BACKEND_URL}/signin`, {
+		const api = APIClient.getInstance();
+
+		const response = await api.request('/auth/signin', {
 			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
 			body: JSON.stringify({
 				"username": username,
 				"pass": pass,
 			})
 		});
 
-		const result: App.ResponseLogin = await response.json();
-
 		if (response.ok) {
-			console.log("login successful");
-			// Check for a redirect parameter from the URL
-			const redirectTo = url.searchParams.get('redirectTo') || '/u/dashboard';
-			throw redirect(302, redirectTo);
+			const rCookies = response.headers.getSetCookie?.() || [];
+			console.log('All headers:', [...response.headers.entries()]);
+			console.log('Cookies:', rCookies);
+			const refreshToken = rCookies.find(rCookie => rCookie.startsWith('refresh-token='))?.split(';')[0];
+			
+			const accessToken = response.headers.get('authorization')?.replace('Bearer ', '');
+
+			if (refreshToken) {
+				cookies.set('refresh-token', refreshToken, {  // This cookies should come from your function parameters
+					path: '/',
+				});
+			}
+			if (accessToken) {
+				cookies.set("access-token", accessToken, {
+					path: '/',
+				});
+			}
+
+
+			// const redirectTo = url.searchParams.get('redirectTo') ?? '/u/dashboard';
+			
+			return {
+				success: true,
+				// redirectTo
+			};
 		} else {
 			return fail(400, { success: false, message: 'Login failed' });
 		}
