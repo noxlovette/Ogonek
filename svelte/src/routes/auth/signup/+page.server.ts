@@ -1,6 +1,5 @@
 import type { Actions } from './$types';
 import { redirect, fail } from '@sveltejs/kit';
-import { APIClient } from '$lib/server/api';
 
 export const actions: Actions = {
 	default: async ({ request, url }) => {
@@ -11,26 +10,21 @@ export const actions: Actions = {
 		const role = data.get('role') as string;
 		const name = data.get('name') as string;
 
-		const api = APIClient.getInstance();
-
 		try {
-
-			const response = await api.request('/auth/signup', {
+			const response = await fetch('axum/auth/signup', {
 				method: 'POST',
 				body: JSON.stringify({
-					"username": username,
-					"pass": pass,
-					"email": email,
-					"role": role,
-					"name": name
+					username,
+					pass,
+					email,
+					role,
+					name
 				})
 			});
-			
-				console.log(response);
-				throw redirect(302, '/login');
-			} catch (error) {
-				console.error(error);
-				return fail(400, { success: false, message: 'Login failed' });
-			}
+
+			throw redirect(302, '/login');
+		} catch (error) {
+			return fail(400, { success: false, message: error instanceof Error ? error.message : 'Login failed' });
 		}
-	};
+	}
+};

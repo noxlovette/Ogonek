@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Header from '$lib/components/fonts/Header.svelte';
-	import Search from '$lib/components/Search.svelte';
+	import Search from '$lib/components/UI/Search.svelte';
 	import { user, language, translations } from '$lib/stores';
 
 	import { formatDate } from '$lib/utils';

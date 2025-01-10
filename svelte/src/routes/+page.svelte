@@ -3,27 +3,30 @@
 	const greeting = getGreeting();
 </script>
 
-<div class="items-center justify-center flex h-screen">
-	<div class="flex flex-col p-6 border-l-4 border-sand-800/60 text-sand-100">
-		<h1 class="text-4xl font-bold font-serif mb-2">Good {greeting}</h1>
-		<div>
-			<p>
-				You're on <b>Firelight.</b> If you're my student, please click below. If you aren't... why aren't
-				you?
-			</p>
-			<a href="https://noxlovette.com" class="opacity-80 text-sm"> Made by Danila Volkov </a>
-		</div>
-		<div class="mt-4 space-x-2">
-			<a
-				href="/login"
-				class="bg-sand-800/60 border-sand-800/80 border-2 text-sand-50 w-20 mt-5 rounded-lg p-2 text-center hover:bg-sand-200 hover:text-sand-800 transition-colors"
-				>Log In</a
-			>
-			<a
-				href="/u/dashboard"
-				class="bg-sand-800/60 border-sand-800/80 border-2 text-sand-50 w-20 mt-5 rounded-lg p-2 text-center hover:bg-sand-200 hover:text-sand-800 transition-colors"
-				>Go to Dashboard</a
-			>
-		</div>
-	</div>
+<h1 class="xl:text-[4rem] lg:text-[3rem] font-bold max-w-5xl p-8 leading-[4rem] my-12">
+	The digital classroom you've been looking for
+</h1>
+
+<div class="grid grid-cols-2 gap-8 max-w-5xl p-8">
+	<section class="flex flex-col">
+		<h2 class="text-4xl font-serif">Teachers</h2>
+		<p>Manage your classes, create lessons, and track your students' progress all in one place.</p>
+	</section>
+
+	<section class="flex flex-col">
+		<h2 class="text-4xl font-serif">Students</h2>
+		<p>Access your lessons, complete assignments, and track your progress all in one place.</p>
+	</section>
+</div>
+<div class="mt-4 space-x-2">
+	<a
+		href="/auth/login"
+		class="bg-sand-700 border-sand-800 border-2 text-sand-50 w-20 mt-5 rounded-lg p-2 text-center hover:bg-sand-100 hover:text-sand-800 transition-colors"
+		>Log In</a
+	>
+	<a
+		href="/s/dashboard"
+		class="bg-sand-700 border-sand-800 border-2 text-sand-50 w-20 mt-5 rounded-lg p-2 text-center hover:bg-sand-100 hover:text-sand-800 transition-colors"
+		>Go to Dashboard</a
+	>
 </div>

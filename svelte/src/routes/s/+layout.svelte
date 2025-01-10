@@ -1,6 +1,6 @@
 <script lang="ts">
-	import Sidebar from '$lib/components/Sidebar.svelte';
-	import Rightbar from '$lib/components/Rightbar.svelte';
+	import Sidebar from '$lib/components/chunks/Sidebar.svelte';
+	import Rightbar from '$lib/components/chunks/Rightbar.svelte';
 	import { setContext } from 'svelte';
 	import BottomMenu from '$lib/components/mobile/BottomMenu.svelte';
 	import type { Lesson } from '$lib/types';

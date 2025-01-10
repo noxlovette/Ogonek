@@ -1,5 +1,5 @@
 <script lang="ts">
-	import TaskBox from '$lib/components/TaskBox.svelte';
+	import TaskBox from '$lib/components/task/TaskBox.svelte';
 	import { translations, language } from '$lib/stores';
 
 	import { getContext } from 'svelte';

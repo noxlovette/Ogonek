@@ -1,7 +1,7 @@
 <script lang="ts">
 	import UsefulLInks from './UsefulLInks.svelte';
 	import Word from './Word.svelte';
-	import Lessons from './Lessons.svelte';
+	import Lessons from '$lib/components/lesson/Lessons.svelte';
 	import { Send } from 'lucide-svelte';
 	import { language, translations } from '$lib/stores';
 </script>

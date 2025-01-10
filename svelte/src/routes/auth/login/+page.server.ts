@@ -1,13 +1,12 @@
 import { fail, type Actions } from '@sveltejs/kit';
-import { env } from '$env/dynamic/private';
 
 export const actions: Actions = {
-    default: async ({ request, fetch, locals, cookies }) => {
+    default: async ({ request, fetch, locals }) => {
+        const data = await request.formData();
+        const username = data.get('username') as string;
+        const pass = data.get('password') as string;
+
         try {
-            const data = await request.formData();
-            const username = data.get('username') as string;
-            const pass = data.get('password') as string; 
-                       
             const response = await fetch(`axum/auth/signin`, {
                 method: 'POST',
                 body: JSON.stringify({
@@ -16,15 +15,13 @@ export const actions: Actions = {
                 })
             });
 
-            console.log('response:', response);
             if (!response.ok) {
                 throw new Error('Login failed');
             }
 
-            const { accessToken, refreshToken } = await response.json();
+            const { accessToken } = await response.json();
             locals.accessToken = accessToken;
 
-            console.log('accessToken:', accessToken);
 
             return {
                 success: true,
@@ -33,9 +30,9 @@ export const actions: Actions = {
 
         } catch (error) {
             console.error('Signin error:', error);
-            return fail(400, { 
-                success: false, 
-                message: error instanceof Error ? error.message : 'Login failed' 
+            return fail(400, {
+                success: false,
+                message: error instanceof Error ? error.message : 'Login failed'
             });
         }
     }
