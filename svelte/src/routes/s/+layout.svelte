@@ -17,20 +17,20 @@
 
 	// setContext('tasks', tasks);
 	setContext('lessons', lessons);
-	setContext('word', data.word);
+	// setContext('word', data.word);
 </script>
 
-<div class="flex flex-row size-full">
-<Sidebar />
-<div
-	class="flex flex-col border-l-2 border-r-2 border-sand-400 justify-start items-center font-medium overflow-auto flex-1"
->
-<div class="flex flex-1 flex-col size-full p-4">
-	{@render children?.()}
-</div>
-	<BottomMenu />
-</div>
-<Rightbar />
+<div class="flex flex-row size-full py-4">
+	<Sidebar />
+	<div
+		class="flex flex-col justify-start items-center font-medium overflow-auto flex-1"
+	>
+		<div class="flex flex-1 flex-col size-full p-4">
+			{@render children?.()}
+		</div>
+		<BottomMenu />
+	</div>
+	<Rightbar />
 </div>
 
 <style lang="postcss">
@@ -64,6 +64,6 @@
 	}
 
 	:global(hr) {
-		@apply border border-sand-900/20 w-1/2 my-2;
+		@apply border border-brick-200 w-1/2 my-2;
 	}
 </style>

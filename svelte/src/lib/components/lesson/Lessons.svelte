@@ -12,7 +12,7 @@
 	}
 </script>
 
-<div class="p-2 lg:p-3 xl:p-4 border-2 flex flex-col my-4 rounded-lg border-sand-900/20">
+<div class="p-2 lg:p-3 xl:p-4 flex flex-col my-4 ring-2 ring-brick-200 rounded-lg shadow-md">
 	<h2 class=" lg:text-lg xl:text-xl">Recent</h2>
 	<ul class="">
 		{#if lessons.length === 0}
@@ -23,11 +23,11 @@
 			{/each}
 		{/if}
 	</ul>
-	<a href="/u/lessons" class="text-sand-400 text-xs lg:text-sm font-sans p-1"> View All </a>
+	<a href="/u/lessons" class="text-brick-400 text-xs lg:text-sm font-sans p-1"> View All </a>
 </div>
 
 <style>
 	a:hover {
-		@apply bg-forest-700 transition-colors duration-300 rounded-lg text-forest-100;
+		@apply transition-all duration-300 text-brick-400 translate-x-1;
 	}
 </style>

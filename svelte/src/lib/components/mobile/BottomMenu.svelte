@@ -14,11 +14,11 @@
 	import { page } from '$app/stores';
 </script>
 
-<footer class="md:hidden w-5/6 fixed bottom-2 text-sand-100 bg-sand-900 mt-auto rounded-full">
+<footer class="md:hidden w-5/6 fixed bottom-2 text-brick-100 bg-brick-900 mt-auto rounded-full">
 	<ul class="flex flex-row justify-between px-6 items-center">
 		<a
 			href="/u/tasks"
-			class={$page.url.pathname === '/u/tasks' ? 'p-2 bg-sand-100/20 rounded-full' : 'px-2 py-4'}
+			class={$page.url.pathname === '/u/tasks' ? 'p-2 bg-brick-100/20 rounded-full' : 'px-2 py-4'}
 		>
 			<ListTodo class="size-6 " />
 		</a>
@@ -26,7 +26,7 @@
 		<a
 			href="/u/lessons/bookmarked"
 			class={$page.url.pathname === '/u/lessons/bookmarked'
-				? 'p-2 bg-sand-100/20 rounded-full'
+				? 'p-2 bg-brick-100/20 rounded-full'
 				: 'px-2 py-4'}
 		>
 			<Bookmark class="size-6 " />
@@ -35,7 +35,7 @@
 		<a
 			href="/u/lessons"
 			class=" {$page.url.pathname === '/u/lessons'
-				? 'p-2 bg-sand-100/20 rounded-full'
+				? 'p-2 bg-brick-100/20 rounded-full'
 				: 'px-2 py-4'}"
 		>
 			<BookOpenText class="size-6 " />
@@ -43,7 +43,7 @@
 		<a
 			href="/u/dashboard"
 			class=" {$page.url.pathname === '/u/dashboard'
-				? 'p-2 bg-sand-100/20 rounded-full'
+				? 'p-2 bg-brick-100/20 rounded-full'
 				: 'px-2 py-4'}"
 		>
 			<House class="size-6 rounded-full  " />

@@ -30,4 +30,4 @@
 		{/each}
 	</div>
 {/if}
-<a href="/u/lessons" class="text-sm font-sans hover:text-sand-800"> View All </a>
+<a href="/u/lessons" class="text-sm font-sans hover:text-brick-800"> View All </a>

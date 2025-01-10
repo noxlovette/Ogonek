@@ -21,12 +21,12 @@
 <div class="mt-4 space-x-2">
 	<a
 		href="/auth/login"
-		class="bg-sand-700 border-sand-800 border-2 text-sand-50 w-20 mt-5 rounded-lg p-2 text-center hover:bg-sand-100 hover:text-sand-800 transition-colors"
+		class="bg-brick-700 border-brick-800 border-2 text-brick-50 w-20 mt-5 rounded-lg p-2 text-center hover:bg-brick-100 hover:text-brick-800 transition-colors"
 		>Log In</a
 	>
 	<a
 		href="/s/dashboard"
-		class="bg-sand-700 border-sand-800 border-2 text-sand-50 w-20 mt-5 rounded-lg p-2 text-center hover:bg-sand-100 hover:text-sand-800 transition-colors"
+		class="bg-brick-700 border-brick-800 border-2 text-brick-50 w-20 mt-5 rounded-lg p-2 text-center hover:bg-brick-100 hover:text-brick-800 transition-colors"
 		>Go to Dashboard</a
 	>
 </div>

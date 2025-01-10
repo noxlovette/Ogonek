@@ -1,9 +1,8 @@
 <script lang="ts">
-
 	// TODO add conditional rendering of greeting at the top right
 </script>
 
-<header class="w-full border-sand-400 border-b-2">
+<header class="w-full ring-brick-200 ring-2 rounded-lg my-2 shadow-md">
 	<div class="flex items-center justify-between w-full max-w-7xl mx-auto p-4">
 		<div class="flex items-center space-x-4">
 			<a href="/" class="text-2xl font-serif font-bold">Firelight</a>

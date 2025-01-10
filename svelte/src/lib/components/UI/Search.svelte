@@ -57,7 +57,7 @@
 
 			return slicedContent.replace(
 				regex,
-				(match) => `<mark class="bg-forest-800 text-sand-100">${match}</mark>`
+				(match) => `<mark class="bg-brick-900 text-brick-100">${match}</mark>`
 			);
 		};
 
@@ -80,19 +80,19 @@
 </script>
 
 <div class="flex flex-col w-full items-center justify-center">
-	<div class="inline-flex group caret-sand-900 focus:shadow-lg lg:text-lg xl:text-xl relative">
+	<div class="inline-flex group caret-brick-900 focus:shadow-lg lg:text-lg xl:text-xl relative">
 		<div
-			class="rounded-l-full border-sand-400 border-r-0 border-2 bg-sand-50 px-4 py-2 my-4 group-focus-within:border-forest-700 group-focus-within:bg-forest-50 transition-colors group-focus-within:text-forest-700/70"
+			class="rounded-l-full border-brick-200 border-r-0 border-2 bg-brick-50 px-4 py-2 my-4 group-focus-within:border-brick-200 group-focus-within:bg-brick-50 transition-colors group-focus-within:text-brick-400/70"
 		>
 			<Search
-				class=" size-6 lg:size-7 xl:size-8 text-sand-400 group-focus-within:text-forest-700/70"
+				class=" size-6 lg:size-7 xl:size-8 text-brick-400 group-focus-within:text-brick-400/70"
 			/>
 		</div>
 		<input
 			type="text"
 			placeholder="Search Lessons"
 			bind:value={search}
-			class="border-sand-400 pl-0 bg-sand-50 border-2 border-l-0 focus:outline-none focus:border-forest-700 focus:bg-forest-50 placeholder:text-sand-900/70 focus:placeholder:text-forest-700/70 transition-colors rounded-r-full px-4 py-2 my-4"
+			class="border-brick-200 pl-0 bg-brick-50 border-2 border-l-0 focus:outline-none focus:border-brick-200 focus:bg-brick-50 placeholder:text-brick-900/70 focus:placeholder:text-brick-400/70 transition-colors rounded-r-full px-4 py-2 my-4"
 			onfocus={moveToTop}
 			onblur={moveBack}
 		/>
@@ -103,7 +103,7 @@
 			{#each filteredLessons as lesson}
 				<a
 					href="/u/lessons/l/{lesson.id}"
-					class="flex flex-col hover:bg-sand-900/20 hover:text-sand-100 transition-colors shadow border border-sand-900/10 rounded-lg max-h-[150px] overflow-clip py-2"
+					class="flex flex-col hover:bg-brick-900/20 hover:text-brick-100 transition-colors shadow border border-brick-900/10 rounded-lg max-h-[150px] overflow-clip py-2"
 				>
 					<div class="flex flex-col py-3 px-5">
 						<h3 class="text-lg md:text-xl lg:text-2xl xl:text-3xl">

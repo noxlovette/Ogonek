@@ -39,6 +39,6 @@
 
 <style>
 	a:hover {
-		@apply bg-sand-900/60 transition-colors duration-300  text-sand-100;
+		@apply transition-all duration-300 text-brick-400 translate-x-1;
 	}
 </style>

@@ -16,6 +16,6 @@
 	{/each}
 </div>
 
-<a href="/u/lessons/bookmarked" class="text-sm font-sans p-1 hover:text-sand-800">
+<a href="/u/lessons/bookmarked" class="text-sm font-sans p-1 hover:text-brick-800">
 	{$translations.view_bookmarked[$language]}
 </a>

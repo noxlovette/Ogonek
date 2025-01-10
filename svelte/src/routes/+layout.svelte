@@ -12,9 +12,9 @@
 	let { children }: Props = $props();
 </script>
 
-<main class="bg-sand-50 overflow-auto min-h-screen antialiased w-screen h-screen">
+<main class="bg-brick-50 overflow-auto min-h-screen antialiased w-screen h-screen">
 	<div
-		class="flex flex-col overscroll-contain items-center text-sand-900 max-w-7xl mx-auto selection:bg-forest-800 selection:text-sand-100 h-full"
+		class="flex flex-col overscroll-contain font-medium items-center text-brick-700 max-w-7xl mx-auto selection:bg-brick-900 selection:text-brick-100 h-full"
 	>
 		<Header />
 		{@render children?.()}

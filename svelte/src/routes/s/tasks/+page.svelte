@@ -29,14 +29,14 @@
 		{/each}
 	</div>
 {:else}
-	<Bird class="size-32 mx-auto text-sand-900" />
+	<Bird class="size-32 mx-auto " />
 	<p>
 		{$translations.no_tasks[$language]}
 	</p>
 {/if}
 <button
 	onclick={() => (completedVisible = !completedVisible)}
-	class="text-sm font-sans text-left hover:text-sand-800"
+	class="text-sm font-sans text-left hover:text-brick-800"
 >
 	{#if completedVisible}
 		{$translations.tasks_notcompleted[$language]}

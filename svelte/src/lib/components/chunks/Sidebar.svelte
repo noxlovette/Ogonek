@@ -12,7 +12,9 @@
 	} from 'lucide-svelte';
 </script>
 
-<div class="md:flex select-none flex-col hidden md:text-lg lg:text-xl xl:text-2xl font-serif w-1/5 px-4 py-2">
+<div
+	class="md:flex select-none flex-col hidden md:text-lg lg:text-xl xl:text-2xl font-serif w-1/5 px-4 py-2 ring-2 ring-brick-200 rounded-lg shadow-md"
+>
 	<ul class="flex flex-col space-y-2 lg:space-y-3 xl:space-y-4">
 		<a href="/s/dashboard" class="lg:px-2 lg:py-4 p-1 py-2 inline-flex">
 			<House class="xl:size-8 lg:size-7 size-6 mr-2 " />
@@ -63,6 +65,6 @@
 
 <style>
 	a:hover {
-		@apply bg-forest-700 transition-colors duration-300 rounded-lg text-forest-100;
+		@apply transition-all duration-300 text-brick-400 translate-x-1;
 	}
 </style>

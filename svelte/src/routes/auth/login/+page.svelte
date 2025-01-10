@@ -25,7 +25,7 @@
 <form
 	method="POST"
 	use:enhance={() => handleLoginResult}
-	class="login-form bg-sand-50 p-8 rounded-md shadow-lg flex flex-col ring ring-sand-100 space-y-4"
+	class="login-form bg-brick-50 p-8 rounded-md shadow-lg flex flex-col ring ring-brick-100 space-y-4"
 >
 	<h1 class="text-4xl">Welcome back</h1>
 
@@ -37,7 +37,7 @@
 			name="username"
 			placeholder="Username"
 			required
-			class="rounded-lg bg-sand-50 p-2 ring-2 ring-sand-300"
+			class="rounded-lg bg-brick-50 p-2 ring-2 ring-brick-300"
 		/>
 	</div>
 
@@ -49,13 +49,13 @@
 			name="password"
 			required
 			placeholder="Password"
-			class="rounded-lg bg-sand-50 p-2 ring-2 ring-sand-300"
+			class="rounded-lg bg-brick-50 p-2 ring-2 ring-brick-300"
 		/>
 	</div>
 
 	<button
 		type="submit"
-		class="bg-sand-700 ring-2 text-sand-50 px-4 py-2 w-20 mt-5 rounded-lg ring-sand-300 text-center hover:bg-sand-600 transition-colors"
+		class="bg-brick-700 ring-2 text-brick-50 px-4 py-2 w-20 mt-5 rounded-lg ring-brick-300 text-center hover:bg-brick-600 transition-colors"
 		>Login</button
 	>
 </form>
