@@ -1,12 +1,9 @@
 <script lang="ts">
-	import { run } from 'svelte/legacy';
-
 	import Sidebar from '$lib/components/Sidebar.svelte';
 	import Rightbar from '$lib/components/Rightbar.svelte';
-	import { setUser } from '$lib/stores';
-	import { onMount } from 'svelte';
 	import { setContext } from 'svelte';
 	import BottomMenu from '$lib/components/mobile/BottomMenu.svelte';
+	import type { Lesson } from '$lib/types';
 
 	interface Props {
 		data: any;
@@ -15,12 +12,8 @@
 
 	let { data, children }: Props = $props();
 
-	run(() => {
-		setUser(data.user);
-	});
-
 	// const tasks: App.Task[] = data.tasks;
-	const lessons: App.Lesson[] = data.lessons;
+	const lessons: Lesson[] = data.lessons;
 
 	// setContext('tasks', tasks);
 	setContext('lessons', lessons);

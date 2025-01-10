@@ -106,7 +106,8 @@ pub async fn authorize(
     Ok(AuthBody::into_response(token, refresh_token))
 }
 
-#[axum::debug_handler]
+
+
 pub async fn refresh(
     State(state): State<AppState>,
     claims: RefreshClaims,

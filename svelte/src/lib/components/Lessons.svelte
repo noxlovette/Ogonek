@@ -1,10 +1,11 @@
 <script lang="ts">
 	import LessonCard from './LessonCard.svelte';
 	import { language, translations } from '$lib/stores';
+	import type { Lesson } from '$lib/types';
 
 	import { getContext } from 'svelte';
 
-	let lessons: App.Lesson[] = $state(getContext('lessons') || []);
+	let lessons: Lesson[] = $state(getContext('lessons') || []);
 
 	if (lessons.length > 3) {
 		lessons = lessons.slice(0, 3);

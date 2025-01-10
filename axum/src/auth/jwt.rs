@@ -39,7 +39,7 @@ where
             .await
             .map_err(|_| AuthError::InvalidToken)?;
         let refresh_token = cookies
-            .get("refresh-token")
+            .get("refreshToken")
             .ok_or(AuthError::InvalidToken)?
             .to_string();
 

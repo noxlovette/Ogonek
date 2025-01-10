@@ -56,13 +56,16 @@ pub struct AuthPayload {
     pub pass: String,
 }
 
-use tower_cookies::Cookie;
+use tower_cookies::{cookie::SameSite, Cookie};
 
 #[derive(Debug, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct AuthBody {
     pub access_token: String,
     pub token_type: String,
 }
+
+use std::env;
 
 impl AuthBody {
     pub fn new(access_token: String) -> Self {
@@ -77,42 +80,15 @@ impl AuthBody {
         let mut response = Json(AuthBody::new(access_token)).into_response();
 
         // Set up the secure cookie for refresh token
-        let cookie = Cookie::build(("refresh-token", refresh_token))
+        let cookie = Cookie::build(("refreshToken", refresh_token))
             .http_only(true)
-            .secure(true)
+            .secure(env::var("APP_ENV").unwrap() == "production")
+            .same_site(SameSite::Strict)
+            .max_age(time::Duration::days(30))
             .path("/")
             .build();
 
         // Add the cookie to response headers
-        response.headers_mut().insert(
-            header::SET_COOKIE,
-            HeaderValue::from_str(&cookie.to_string()).unwrap(),
-        );
-
-        response
-    }
-}
-
-impl User {
-    pub fn into_response(self, access_token: String, refresh_token: String) -> Response {
-        let mut response = (
-            [(
-                header::AUTHORIZATION,
-                HeaderValue::from_str(&format!("Bearer {}", access_token)).unwrap(),
-            )]
-            .into_iter()
-            .collect::<HeaderMap>(),
-            Json(self),
-        )
-            .into_response();
-
-        // Cookie is added via Set-Cookie header
-        let cookie = Cookie::build(("refresh-token", refresh_token))
-            .http_only(true)
-            .secure(true)
-            .path("/")
-            .build();
-
         response.headers_mut().insert(
             header::SET_COOKIE,
             HeaderValue::from_str(&cookie.to_string()).unwrap(),

@@ -59,7 +59,7 @@ impl IntoResponse for AuthError {
             AuthError::InvalidCredentials => (StatusCode::BAD_REQUEST, "Invalid credentials"),
             AuthError::SignUpFail => (StatusCode::BAD_REQUEST, "Failed to sign up"),
             AuthError::TokenCreation => (StatusCode::INTERNAL_SERVER_ERROR, "Token creation error"),
-            AuthError::InvalidToken => (StatusCode::BAD_REQUEST, "Invalid token"),
+            AuthError::InvalidToken => (StatusCode::UNAUTHORIZED, "Invalid token"),
             AuthError::EmailTaken => (StatusCode::BAD_REQUEST, "Email already taken"),
             AuthError::UsernameTaken => (StatusCode::BAD_REQUEST, "Username already taken"),
             AuthError::UserNotFound => (StatusCode::NOT_FOUND, "User not found"),

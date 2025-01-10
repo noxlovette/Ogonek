@@ -7,8 +7,7 @@
 		console.log(result);
 		if (result.type === 'success') {
 			notification.set({ message: 'Welcome back!', type: 'success' });
-			localStorage.setItem('access_token', result.data.access_token);
-			// await goto(result.data.redirectTo);
+			await goto('/s/dashboard');
 		} else {
 			if (result.data) {
 				notification.set({
