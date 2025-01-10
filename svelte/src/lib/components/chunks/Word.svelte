@@ -7,7 +7,7 @@
 
 <div class="flex flex-col p-2 lg:p-3 xl:p-4 border-2 border-sand-900/20 rounded-lg">
 	<h2 class=" lg:text-lg xl:text-xl">
-		{$translations.random_word[$language]}
+		Random Word
 	</h2>
 	<div class="p-2">
 		<h3 class="italic select-text">

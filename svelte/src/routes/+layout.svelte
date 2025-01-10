@@ -5,23 +5,20 @@
 	import { language } from '$lib/stores';
 	import { onMount } from 'svelte';
 	import Header from '$lib/components/UI/Header.svelte';
+	import Footer from '$lib/components/UI/Footer.svelte';
 	interface Props {
 		children?: import('svelte').Snippet;
 	}
-
 	let { children }: Props = $props();
-
-	onMount(() => {
-		language.set(localStorage.getItem('language') || 'en');
-	});
 </script>
 
-<main class="bg-sand-50 overflow-auto min-h-screen antialiased w-screen">
+<main class="bg-sand-50 overflow-auto min-h-screen antialiased w-screen h-screen">
 	<div
-		class="flex flex-col min-h-screen overscroll-contain items-center text-sand-900 max-w-7xl w-full mx-auto selection:bg-forest-800 selection:text-sand-100"
+		class="flex flex-col overscroll-contain items-center text-sand-900 max-w-7xl mx-auto selection:bg-forest-800 selection:text-sand-100 h-full"
 	>
 		<Header />
 		{@render children?.()}
+		<Footer />
 	</div>
 	<Notification></Notification>
 	<Loader></Loader>

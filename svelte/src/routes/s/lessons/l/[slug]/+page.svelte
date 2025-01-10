@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { run } from 'svelte/legacy';
 
-	import type { PageServerData } from '../$types';
+	import type { PageServerData } from './$types';
 	import { marked } from 'marked';
 	import { BookmarkMinus, BookmarkPlus } from 'lucide-svelte';
 	import { enhance } from '$app/forms';

@@ -1,16 +1,17 @@
 <script lang="ts">
 	import Header from '$lib/components/fonts/Header.svelte';
-	import LessonCardBig from '$lib/components/LessonCardBig.svelte';
+	import LessonCardBig from '$lib/components/lesson/LessonCardBig.svelte';
 
 	import { Squirrel } from 'lucide-svelte';
-	import { language, translations } from '$lib/stores';
+	import type { Lesson } from '$lib/types';
+	import type { PageServerData } from './$types';
 
 	interface Props {
 		data: PageServerData;
 	}
 
 	let { data }: Props = $props();
-	let lessons: App.Lesson[] = data.lessons;
+	let lessons: Lesson[] = data.lessons;
 	let bookmarked = lessons.filter((lesson) => lesson.bookmarked);
 </script>
 
@@ -20,19 +21,13 @@
 
 {#if bookmarked.length === 0}
 	<Squirrel class="size-32" />
-	<p class="text-lg mt-2">
-		{$translations.no_bookmarks[$language]}
-	</p>
+	<p class="text-lg mt-2">No Bookmarks</p>
 {:else}
-	<Header>
-		{$translations.bookmarked[$language]}
-	</Header>
+	<Header>Bookmarked</Header>
 	<div class="grid grid-cols-2 my-4 gap-4">
 		{#each bookmarked as lesson}
 			<LessonCardBig {lesson} />
 		{/each}
 	</div>
 {/if}
-<a href="/u/lessons" class="text-sm font-sans hover:text-sand-800">
-	{$translations.view_all[$language]}
-</a>
+<a href="/u/lessons" class="text-sm font-sans hover:text-sand-800"> View All </a>

@@ -73,7 +73,7 @@
 
 <style>
 	.overdue {
-		@apply text-rust-600 font-bold underline;
+		@apply text-forest-600 font-bold underline;
 	}
 
 	button.overdue {

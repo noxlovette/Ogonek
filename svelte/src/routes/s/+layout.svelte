@@ -20,14 +20,18 @@
 	setContext('word', data.word);
 </script>
 
+<div class="flex flex-row size-full">
 <Sidebar />
 <div
-	class="flex flex-col w-full min-h-screen py-7 px-6 lg:px-12 bg-sand-100 border-l-2 border-r-2 border-sand-900/80 justify-start items-center font-medium overflow-auto"
+	class="flex flex-col border-l-2 border-r-2 border-sand-400 justify-start items-center font-medium overflow-auto flex-1"
 >
+<div class="flex flex-1 flex-col size-full p-4">
 	{@render children?.()}
+</div>
 	<BottomMenu />
 </div>
 <Rightbar />
+</div>
 
 <style lang="postcss">
 	:global(.markdown h1) {

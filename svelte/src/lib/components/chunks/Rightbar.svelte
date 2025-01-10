@@ -7,7 +7,7 @@
 </script>
 
 <div
-	class="hidden select-none flex-col h-full min-h-screen text-sand-100 font-serif lg:text-xl xl:text-2xl w-1/4 px-4 pb-4 md:flex"
+	class="hidden select-none flex-col h-full font-serif lg:text-xl xl:text-2xl px-4 md:flex w-1/5"
 >
 	<a
 		href="https://t.me/noxlovette"
@@ -16,19 +16,15 @@
 	>
 		<Send class="size-6 lg:size-7 xl:size-8 mr-2 " />
 
-		{$translations.text_me[$language]}
+		Text Me
 	</a>
 	<Word></Word>
 	<Lessons></Lessons>
 	<UsefulLInks></UsefulLInks>
-	<div class="mt-auto xl:text-base text-xs">
-		<p>© 2024 Danila Volkov</p>
-		<p class="italic">For my students <span class="not-italic">💛</span></p>
-	</div>
 </div>
 
 <style>
 	a:hover {
-		@apply bg-sand-900/20 transition-colors duration-300 rounded-lg text-sand-100;
+		@apply bg-forest-700 transition-colors duration-300 rounded-lg text-forest-100;
 	}
 </style>

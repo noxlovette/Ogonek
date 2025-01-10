@@ -9,7 +9,7 @@
 	import { language, translations } from '$lib/stores';
 
 	const lessons = getContext('lessons');
-	
+
 	interface Props {
 		// const tasks = getContext('tasks');
 		hidden?: boolean;
@@ -79,23 +79,20 @@
 	});
 </script>
 
-<div
-	class="flex flex-col w-full items-center justify-center"
-	style="transform: translateY({$topPosition}px); transition: transform 0.3s;"
->
+<div class="flex flex-col w-full items-center justify-center">
 	<div class="inline-flex group caret-sand-900 focus:shadow-lg lg:text-lg xl:text-xl relative">
 		<div
-			class="rounded-l-full border-sand-900/60 border-r-0 border-2 bg-sand-900/20 px-4 py-2 my-4 group-focus-within:border-sand-900 group-focus-within:bg-sand-100 transition-colors group-focus-within:text-sand-100"
+			class="rounded-l-full border-sand-400 border-r-0 border-2 bg-sand-50 px-4 py-2 my-4 group-focus-within:border-forest-700 group-focus-within:bg-forest-50 transition-colors group-focus-within:text-forest-700/70"
 		>
 			<Search
-				class=" size-6 lg:size-7 xl:size-8 text-sand-100 group-focus-within:text-sand-900/70"
+				class=" size-6 lg:size-7 xl:size-8 text-sand-400 group-focus-within:text-forest-700/70"
 			/>
 		</div>
 		<input
 			type="text"
-			placeholder={$translations.search[$language]}
+			placeholder="Search Lessons"
 			bind:value={search}
-			class="border-sand-900/60 pl-0 bg-sand-900/20 text-sand-900 border-2 border-l-0 focus:outline-none focus:border-sand-900 focus:bg-sand-100 placeholder:text-sand-100 focus:placeholder:text-sand-900/70 transition-colors rounded-r-full px-4 py-2 my-4"
+			class="border-sand-400 pl-0 bg-sand-50 border-2 border-l-0 focus:outline-none focus:border-forest-700 focus:bg-forest-50 placeholder:text-sand-900/70 focus:placeholder:text-forest-700/70 transition-colors rounded-r-full px-4 py-2 my-4"
 			onfocus={moveToTop}
 			onblur={moveBack}
 		/>

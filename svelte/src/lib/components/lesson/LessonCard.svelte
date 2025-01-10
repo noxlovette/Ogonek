@@ -10,7 +10,7 @@
 	const formattedDate = formatDate(lesson.manual_date || lesson.created_at);
 </script>
 
-<a href="/u/lessons/l/{lesson.id}" class="px-2 py-1 flex flex-col">
+<a href="/u/lessons/l/{lesson.id}" class="px-2 py-1 flex flex-col hover:bg-forest-700 transition-colors duration-300 rounded-lg hover:text-forest-100">
 	<h3>
 		{formattedDate}
 	</h3>
@@ -18,9 +18,3 @@
 		{lesson.topic}
 	</p>
 </a>
-
-<style>
-	a:hover {
-		@apply bg-sand-900/20 transition-colors duration-300 rounded-lg text-sand-100;
-	}
-</style>
