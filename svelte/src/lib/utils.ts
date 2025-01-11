@@ -37,7 +37,7 @@ export async function ValidateAccess(jwt: string) {
 
 	const { payload } = await jwtVerify(jwt, publicKey, {
 		issuer: 'auth:auth',
-		audience: 'svelte:user:general',
+		// audience: 'svelte:user:general',
 	})
 
 	return payload

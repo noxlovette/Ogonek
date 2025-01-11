@@ -1,4 +1,5 @@
 import { fail, type Actions } from '@sveltejs/kit';
+import { ValidateAccess } from '$lib/utils';
 
 export const actions: Actions = {
     default: async ({ request, fetch, locals }) => {
@@ -15,21 +16,25 @@ export const actions: Actions = {
                 })
             });
 
-            if (!response.ok) {
-                throw new Error('Login failed');
-            }
+            
 
             const { accessToken } = await response.json();
-            locals.accessToken = accessToken;
-
+            
             console.log("locals", locals);
+            
+            const user = await ValidateAccess(accessToken);
 
-
+            console.log("user", user);
+            
+            //if (!user) {
+            //    throw new Error('Login failed');
+            // }
+            locals.accessToken = accessToken;
 
             return {
                 success: true,
                 message: 'Login successful',
-                accessToken,
+                user,
             };
 
         } catch (error) {

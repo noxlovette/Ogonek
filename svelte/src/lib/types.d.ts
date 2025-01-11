@@ -12,12 +12,9 @@ export interface Task {
 }
 
 export interface User {
-    id: string;
-    email: string;
+    name: string;
     username: string;
-    is_authenticated: boolean;
-    csrfToken: string;
-    quizlet_url: string;
+    // quizlet_url: string;
 }
 
 export interface Lesson {

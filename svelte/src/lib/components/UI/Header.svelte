@@ -1,9 +1,15 @@
 <script lang="ts">
+	import { getGreeting } from '$lib/utils';
+	import {user} from '$lib/stores';
 	// TODO add conditional rendering of greeting at the top right
 
 	import Search from './Search.svelte';
 
-	export let hidden = false;
+
+	const greeting = getGreeting();
+
+
+
 </script>
 
 <header class="w-full ring-milk-200 ring-2 rounded-lg my-2 shadow-md">
@@ -15,10 +21,14 @@
 				<a href="/t/docs" class="text-lg font-serif font-bold">Docs</a>
 			</nav>
 		</div>
-		<Search bind:hidden />
-		<div class="flex items-center space-x-4">
-			<a href="/auth/login" class="text-lg font-serif font-bold">Login</a>
-			<a href="/auth/signup" class="text-lg font-serif font-bold">Signup</a>
-		</div>
+		{#if $user.name}
+		Good {greeting}, {$user.name}
+		<Search />
+		{:else}
+			<div class="flex items-center space-x-4">
+				<a href="/auth/login" class="text-lg font-serif font-bold">Login</a>
+				<a href="/auth/signup" class="text-lg font-serif font-bold">Signup</a>
+			</div>
+		{/if}
 	</div>
 </header>

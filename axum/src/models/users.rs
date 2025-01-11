@@ -77,23 +77,35 @@ impl AuthBody {
 
     pub fn into_response(access_token: String, refresh_token: String) -> Response {
         // Just convert the AuthBody to JSON response without Bearer header
-        let mut response = Json(AuthBody::new(access_token)).into_response();
+        let mut response = Json(AuthBody::new(access_token.to_string())).into_response();
 
         // Set up the secure cookie for refresh token
-        let cookie = Cookie::build(("refreshToken", refresh_token))
-            .http_only(true)
-            .secure(env::var("APP_ENV").unwrap() == "production")
-            .same_site(SameSite::Strict)
-            .max_age(time::Duration::days(30))
-            .path("/")
-            .build();
+        let cookies = [
+            build_auth_cookie("refreshToken", refresh_token, true),
+            build_auth_cookie("accessToken", access_token, false),
+        ];
 
-        // Add the cookie to response headers
-        response.headers_mut().insert(
-            header::SET_COOKIE,
-            HeaderValue::from_str(&cookie.to_string()).unwrap(),
-        );
+        for cookie in cookies {
+            response.headers_mut().insert(
+                header::SET_COOKIE,
+                HeaderValue::from_str(&cookie.to_string()).unwrap(),
+            );
+        }
 
         response
     }
+}
+
+fn build_auth_cookie(name: &str, value: String, is_refresh: bool) -> Cookie {
+    Cookie::build((name, value))
+        .http_only(true)
+        .secure(env::var("APP_ENV").unwrap() == "production")
+        .same_site(SameSite::Strict)
+        .max_age(if is_refresh {
+            time::Duration::days(30)
+        } else {
+            time::Duration::minutes(15)
+        })
+        .path("/")
+        .build()
 }

@@ -1,14 +1,13 @@
 import { writable } from 'svelte/store';
+import type { User } from './types';
 
 export const user = writable({
-	is_authenticated: false,
 	username: '',
-	email: '',
-	quizlet_url: '',
-	client_id: ''
+	name: '',
+	// quizlet_url: '',
 });
 
-export function setUser(data) {
+export function setUser(data: User) {
 	user.update((currentState) => ({
 		...currentState,
 		...data
@@ -17,11 +16,9 @@ export function setUser(data) {
 
 export function clearUser() {
 	user.update(() => ({
-		is_authenticated: false,
 		username: '',
-		email: '',
-		quizlet_url: '',
-		client_id: ''
+		name:''
+		// quizlet_url: '',
 	}));
 }
 

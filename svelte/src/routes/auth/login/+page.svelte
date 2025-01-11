@@ -2,12 +2,14 @@
 	import { enhance } from '$app/forms';
 	import { notification } from '$lib/stores';
 	import { goto } from '$app/navigation';
-	import { ValidateAccess } from '$lib/utils';
+	import { setUser } from '$lib/stores';
 
 	const handleLoginResult = async ({ result, update }: { result: any; update: () => void }) => {
 		console.log(result);
 		if (result.type === 'success') {
-			let user = await ValidateAccess(result.data.accessToken);
+			const { name, username } = result.data.user;
+			const user = { name, username };
+			setUser(user);
 			if (!user) {
 				notification.set({ message: 'JWT Failure', type: 'error' });
 				update();

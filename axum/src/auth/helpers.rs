@@ -30,7 +30,7 @@ pub fn generate_token(user: &User) -> Result<String, AuthError> {
         iat: now,
         nbf: Some(now),
         jti:Some(Uuid::new_v4().to_string()),
-        aud:"svelte:user:general".to_string(),
+        // aud:"svelte:user:general".to_string(),
         iss:"auth:auth".to_string()
     };
 

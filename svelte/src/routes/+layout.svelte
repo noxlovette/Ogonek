@@ -21,5 +21,5 @@
 		<Footer />
 	</div>
 	<Notification></Notification>
-	<Loader></Loader>
+	
 </main>

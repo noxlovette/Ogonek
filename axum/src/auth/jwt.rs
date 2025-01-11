@@ -106,7 +106,7 @@ pub struct Claims {
     pub iat: usize,      // Issued at timestamp
     pub nbf: Option<usize>, // Optional: Not valid before timestamp
     pub jti: Option<String>, // Optional: Unique token identifier
-    pub aud: String,     // Audience
+    // pub aud: String,     // Audience
     pub iss: String,     // Issuer
 }
 

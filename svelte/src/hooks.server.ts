@@ -2,19 +2,19 @@ import { env } from '$env/dynamic/private';
 import type { Handle, HandleFetch } from '@sveltejs/kit';
 
 export const handle: Handle = async ({ event, resolve }) => {
-    // First attempt with existing token
-    const response = await resolve(event);
+    const path = event.url.pathname;
+    if (path.startsWith('/auth/login') || path.startsWith('/public')) {
+        console.log('Skipping auth check for', path);
+        return await resolve(event);
+    }
 
-    // If we hit 401 and have a refresh token cookie, let's try to refresh
+    const response = await resolve(event);
     if (response.status === 401 && event.cookies.get('refreshToken')) {
         try {
 
-            console.log('Refreshing token...');
-            // Hit your refresh endpoint
             const refreshRes = await event.fetch(`/axum/auth/refresh`);
 
             if (!refreshRes.ok) {
-                event.cookies.delete('refreshToken', { path: "/" });
                 return response;
             }
 
@@ -22,27 +22,38 @@ export const handle: Handle = async ({ event, resolve }) => {
             const { accessToken } = await refreshRes.json();
 
             console.log('Got new token:', accessToken);
-            // Set it in locals for your handleFetch to use
             event.locals.accessToken = accessToken;
-
             event.request.headers.set("Authorization", `Bearer ${accessToken || ''}`);
 
             // Retry the original request
             return await resolve(event);
         } catch (error) {
             console.error('Refresh token flow failed:', error);
-            return response;
+            return new Response(null, {
+                status: 303,
+                headers: {
+                    location: '/auth/login'
+                }
+            })
         }
+    } else if (response.status === 401) {
+        return new Response(null, {
+            status: 303,
+            headers: {
+                location: '/auth/login'
+            }
+        })
     }
 
     return response;
 };
 export const handleFetch: HandleFetch = async ({ event, request, fetch }) => {
-    console.log('Got request FETCH', request.headers);
+    console.log("locals", event.locals);
     request.headers.set("X-API-KEY", env.API_KEY_AXUM);
     request.headers.set("Content-Type", "application/json");
-    if (event.locals.accessToken) {
-        request.headers.set("Authorization", `Bearer ${event.locals.accessToken || ''}`);
+    const accessToken = event.cookies.get("accessToken");
+    if (accessToken) {
+        request.headers.set("Authorization", `Bearer ${accessToken}`);
     }
     // request.headers.set('cookie', event.request.headers.get("cookie") || '');
 
