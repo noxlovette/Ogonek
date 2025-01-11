@@ -2,10 +2,18 @@
 	import { enhance } from '$app/forms';
 	import { notification } from '$lib/stores';
 	import { goto } from '$app/navigation';
+	import { ValidateAccess } from '$lib/utils';
 
 	const handleLoginResult = async ({ result, update }: { result: any; update: () => void }) => {
 		console.log(result);
 		if (result.type === 'success') {
+			let user = await ValidateAccess(result.data.accessToken);
+			if (!user) {
+				notification.set({ message: 'JWT Failure', type: 'error' });
+				update();
+				return;
+			}
+			console.log(user);
 			notification.set({ message: 'Welcome back!', type: 'success' });
 			await goto('/s/dashboard');
 		} else {
@@ -25,7 +33,7 @@
 <form
 	method="POST"
 	use:enhance={() => handleLoginResult}
-	class="login-form bg-brick-50 p-8 rounded-md shadow-lg flex flex-col ring ring-brick-100 space-y-4"
+	class="login-form bg-brick-50 p-8 rounded-md shadow-lg flex flex-col ring ring-milk-100 space-y-4"
 >
 	<h1 class="text-4xl">Welcome back</h1>
 
@@ -37,7 +45,7 @@
 			name="username"
 			placeholder="Username"
 			required
-			class="rounded-lg bg-brick-50 p-2 ring-2 ring-brick-300"
+			class="rounded-lg bg-brick-50 p-2 ring-2 ring-milk-300"
 		/>
 	</div>
 
@@ -49,13 +57,13 @@
 			name="password"
 			required
 			placeholder="Password"
-			class="rounded-lg bg-brick-50 p-2 ring-2 ring-brick-300"
+			class="rounded-lg bg-brick-50 p-2 ring-2 ring-milk-300"
 		/>
 	</div>
 
 	<button
 		type="submit"
-		class="bg-brick-700 ring-2 text-brick-50 px-4 py-2 w-20 mt-5 rounded-lg ring-brick-300 text-center hover:bg-brick-600 transition-colors"
+		class="bg-brick-700 ring-2 text-brick-50 px-4 py-2 w-20 mt-5 rounded-lg ring-milk-300 text-center hover:bg-brick-600 transition-colors"
 		>Login</button
 	>
 </form>

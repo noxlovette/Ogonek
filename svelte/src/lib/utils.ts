@@ -23,3 +23,22 @@ export function getGreeting() {
 		return 'night';
 	}
 }
+
+
+import { importSPKI, jwtVerify } from 'jose';
+import { env } from '$env/dynamic/public';
+
+
+export async function ValidateAccess(jwt: string) {
+	const spki = env.PUBLIC_spki || '';
+	const alg = env.PUBLIC_alg || 'RS256';
+	const publicKey = await importSPKI(spki, alg)
+
+
+	const { payload } = await jwtVerify(jwt, publicKey, {
+		issuer: 'auth:auth',
+		audience: 'svelte:user:general',
+	})
+
+	return payload
+}

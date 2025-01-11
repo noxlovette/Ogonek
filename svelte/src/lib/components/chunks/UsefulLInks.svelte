@@ -3,7 +3,7 @@
 	import { language, translations } from '$lib/stores';
 </script>
 
-<div class="flex flex-col ring-2 ring-brick-200 rounded-lg shadow-md p-2 lg:p-3 xl:p-4 rounded-lg">
+<div class="flex flex-col ring-2 ring-milk-200 rounded-lg shadow-md p-2 lg:p-3 xl:p-4 rounded-lg">
 	<h2 class="lg:text-lg xl:text-xl">Useful Links</h2>
 	<a
 		href="https://forvo.com/languages/en/"

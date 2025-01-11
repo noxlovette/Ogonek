@@ -10,7 +10,7 @@
 <Header>{$translations.settings[$language]}</Header>
 
 <div
-	class="w-1/2 p-2 items-center justify-center flex flex-col my-8 border-2 py-4 border-brick-900/40 rounded-lg"
+	class="w-1/2 items-center justify-center flex flex-col  rounded-lg"
 >
 	<fieldset class="flex flex-col gap-2">
 		<legend class="text-xl mb-3">Select Language</legend>
@@ -19,7 +19,7 @@
 				type="radio"
 				name="language"
 				value="en"
-				class="appearance-none w-5 h-5 border-2 border-brick-300 rounded-md checked:bg-brick-900 checked:border-brick-900 focus:outline-none focus:ring-2 focus:ring-brick-300 focus:ring-offset-2"
+				class="appearance-none w-5 h-5 border-2 border-milk-300 rounded-md checked:bg-brick-900 checked:border-milk-900 focus:outline-none focus:ring-2 focus:ring-milk-300 focus:ring-offset-2"
 				checked={$language === 'en'}
 				onchange={() => {
 					language.set('en');
@@ -34,7 +34,7 @@
 				type="radio"
 				name="language"
 				value="de"
-				class="appearance-none w-5 h-5 border-2 border-brick-300 rounded-md checked:bg-brick-900 checked:border-brick-900 focus:outline-none focus:ring-2 focus:ring-brick-300 focus:ring-offset-2"
+				class="appearance-none w-5 h-5 border-2 border-milk-300 rounded-md checked:bg-brick-900 checked:border-milk-900 focus:outline-none focus:ring-2 focus:ring-milk-300 focus:ring-offset-2"
 				checked={$language === 'de'}
 				onchange={() => {
 					language.set('de');
@@ -49,7 +49,7 @@
 				type="radio"
 				name="language"
 				value="ru"
-				class="appearance-none w-5 h-5 border-2 border-brick-300 rounded-md checked:bg-brick-900 checked:border-brick-900 focus:outline-none focus:ring-2 focus:ring-brick-300 focus:ring-offset-2"
+				class="appearance-none w-5 h-5 border-2 border-milk-300 rounded-md checked:bg-brick-900 checked:border-milk-900 focus:outline-none focus:ring-2 focus:ring-milk-300 focus:ring-offset-2"
 				checked={$language === 'ru'}
 				onchange={() => {
 					language.set('ru');

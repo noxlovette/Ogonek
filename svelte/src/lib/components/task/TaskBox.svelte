@@ -34,7 +34,7 @@
 </script>
 
 <div
-	class="flex w-full flex-col py-2 shadow border border-brick-900/10 rounded-lg min-h-[150px]"
+	class="flex w-full flex-col py-2 shadow border border-milk-900/10 rounded-lg min-h-[150px]"
 	class:completed
 >
 	<div

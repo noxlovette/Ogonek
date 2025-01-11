@@ -22,10 +22,8 @@
 
 <div class="flex flex-row size-full py-4">
 	<Sidebar />
-	<div
-		class="flex flex-col justify-start items-center font-medium overflow-auto flex-1"
-	>
-		<div class="flex flex-1 flex-col size-full p-4">
+	<div class="flex flex-col justify-start items-center font-medium overflow-auto flex-1">
+		<div class="flex flex-1 flex-col size-full px-8 py-4">
 			{@render children?.()}
 		</div>
 		<BottomMenu />
@@ -64,6 +62,6 @@
 	}
 
 	:global(hr) {
-		@apply border border-brick-200 w-1/2 my-2;
+		@apply border border-milk-200 w-1/2 my-2;
 	}
 </style>

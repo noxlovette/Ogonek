@@ -7,15 +7,18 @@ use argon2::{
     Argon2,
 };
 use jsonwebtoken::{encode, Header};
+use uuid::Uuid;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 pub fn generate_token(user: &User) -> Result<String, AuthError> {
     // In your signup function:
-    let exp = SystemTime::now()
+    let now = SystemTime::now()
         .duration_since(UNIX_EPOCH)
         .unwrap()
-        .as_secs() as usize
-        + (60 * 15); // 15 minutes from now
+        .as_secs() as usize;
+
+    // 15 minutes from now
+    let exp = now + (60 * 15);
 
     let claims = Claims {
         name: user.name.clone(),
@@ -24,6 +27,11 @@ pub fn generate_token(user: &User) -> Result<String, AuthError> {
         role: user.role.clone(),
         sub: user.id.clone().to_string(),
         exp,
+        iat: now,
+        nbf: Some(now),
+        jti:Some(Uuid::new_v4().to_string()),
+        aud:"svelte:user:general".to_string(),
+        iss:"auth:auth".to_string()
     };
 
     let token = encode(

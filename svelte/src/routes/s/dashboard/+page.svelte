@@ -24,18 +24,17 @@
 	<title>Dashboard</title>
 </svelte:head>
 
-<div class="w-full items-center justify-center flex flex-col">
+<div class="w-full flex flex-col">
 	<Header>Recent Activity</Header>
 	<div class="grid gap-4 grid-cols-1 md:grid-cols-2 w-full my-4">
-		<div class="flex flex-col items-center space-y-2">
+		<div class="flex flex-col  space-y-2">
 			<h2 class="text-2xl">New Tasks</h2>
 		</div>
-		<div class="flex flex-col items-center space-y-2">
+		<div class="flex flex-col  space-y-2">
 			<h2 class="text-2xl">New Lessons</h2>
 		</div>
 	</div>
 </div>
-<Search bind:hidden />
 
 <style>
 	a:hover {

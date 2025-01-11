@@ -20,7 +20,7 @@
 {#if $notification.message}
 	<div
 		transition:fade
-		class="fixed bottom-2 left-2 bg-brick-900 border-2 border-brick-200 text-brick-100 text-center rounded-lg flex p-4 items-center justify-center"
+		class="fixed bottom-2 left-2 bg-brick-900 border-2 border-milk-200 text-brick-100 text-center rounded-lg flex p-4 items-center justify-center"
 	>
 		<p class=" font-bold text-xl p-2">{$notification.message}</p>
 	</div>

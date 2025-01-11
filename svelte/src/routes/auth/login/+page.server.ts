@@ -7,7 +7,7 @@ export const actions: Actions = {
         const pass = data.get('password') as string;
 
         try {
-            const response = await fetch(`axum/auth/signin`, {
+            const response = await fetch(`/axum/auth/signin`, {
                 method: 'POST',
                 body: JSON.stringify({
                     username,
@@ -22,10 +22,14 @@ export const actions: Actions = {
             const { accessToken } = await response.json();
             locals.accessToken = accessToken;
 
+            console.log("locals", locals);
+
+
 
             return {
                 success: true,
                 message: 'Login successful',
+                accessToken,
             };
 
         } catch (error) {

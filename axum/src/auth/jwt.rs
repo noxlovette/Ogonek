@@ -103,6 +103,11 @@ pub struct Claims {
     pub role: String,
     pub email: String,
     pub exp: usize,
+    pub iat: usize,      // Issued at timestamp
+    pub nbf: Option<usize>, // Optional: Not valid before timestamp
+    pub jti: Option<String>, // Optional: Unique token identifier
+    pub aud: String,     // Audience
+    pub iss: String,     // Issuer
 }
 
 #[derive(Debug, Serialize, Deserialize)]

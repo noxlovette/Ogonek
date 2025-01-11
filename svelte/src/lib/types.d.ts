@@ -24,9 +24,10 @@ export interface Lesson {
     id: string;
     manual_date?: string;
     title: string;
-    content: string;
+    markdown: string;
     created_at: string;
     updated_at: string;
     topic: string;
     bookmarked: boolean;
+    highlighted: string;
 }

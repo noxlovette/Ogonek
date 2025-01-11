@@ -11,7 +11,7 @@ export const actions: Actions = {
 		const name = data.get('name') as string;
 
 		try {
-			const response = await fetch('axum/auth/signup', {
+			const response = await fetch('/axum/auth/signup', {
 				method: 'POST',
 				body: JSON.stringify({
 					username,

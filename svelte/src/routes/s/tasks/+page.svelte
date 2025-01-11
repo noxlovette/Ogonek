@@ -23,7 +23,7 @@
 	<Header>
 		{$translations.tasks[$language]}
 	</Header>
-	<div class="grid grid-cols-1 gap-4 lg:grid-cols-2 my-4 w-full">
+	<div class="grid grid-cols-1 gap-4 lg:grid-cols-2 w-full">
 		{#each filtered as task}
 			<TaskBox {task} />
 		{/each}
