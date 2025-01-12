@@ -21,11 +21,11 @@ export interface User {
 
 export interface Lesson {
     id: string;
-    manual_date?: string;
+    manualDate?: string;
     title: string;
     markdown: string;
-    created_at: string;
-    updated_at: string;
+    createdAt: string;
+    updatedAt: string;
     topic: string;
     bookmarked: boolean;
     highlighted: string;

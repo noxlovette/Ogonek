@@ -38,6 +38,8 @@
 	"type": "module",
 	"dependencies": {
 		"@anthropic-ai/sdk": "^0.33.1",
+		"@dicebear/collection": "^9.2.2",
+		"@dicebear/core": "^9.2.2",
 		"@sveltejs/adapter-node": "^5.2.11",
 		"ioredis": "^5.4.2",
 		"jose": "^5.9.6",

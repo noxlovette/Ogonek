@@ -4,7 +4,7 @@ declare global {
 	namespace App {
 		interface Error {
 			message: string;
-			errorId: string;
+			errorId: int;
 		}
 		interface Locals {
 			accessToken?: string;
@@ -12,7 +12,7 @@ declare global {
 			user?: {
 				id: string;
 				role: string;
-			  };
+			};
 		}
 		// interface PageData {}
 		// interface PageState {}
@@ -20,4 +20,4 @@ declare global {
 	}
 }
 
-export {};
+export { };

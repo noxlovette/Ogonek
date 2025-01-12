@@ -1,5 +1,5 @@
 <script lang="ts">
-	import LessonCard from '$lib/components/lesson/LessonCard.svelte';
+	import LessonCard from '$lib/components/sidebar/groups/LessonCard.svelte';
 	import type { Lesson } from '$lib/types';
 	import Header2 from '$lib/components/typography/Header2.svelte';
 

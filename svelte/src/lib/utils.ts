@@ -1,13 +1,15 @@
-export function formatDate(unformatted: string) {
-	const date = new Date(unformatted);
+export const formatDateTime = (isoString: string): string => {
+	const date = new Date(isoString);
 
-	const formattedDate = date.toLocaleDateString('en-GB', {
-		month: 'short',
+	return new Intl.DateTimeFormat('en-US', {
+		year: 'numeric',
+		month: 'long',
 		day: 'numeric',
-		year: 'numeric'
-	});
-	return formattedDate;
-}
+		hour: 'numeric',
+		minute: 'numeric',
+		hour12: true
+	}).format(date);
+};
 
 export function getGreeting() {
 	const date = new Date();
@@ -41,4 +43,15 @@ export async function ValidateAccess(jwt: string) {
 	})
 
 	return payload
+}
+
+import { createAvatar } from '@dicebear/core';
+import { lorelei, thumbs } from '@dicebear/collection';
+
+export function getAvatar(seed: string) {
+	const avatar = createAvatar(thumbs, {
+		seed,
+	});
+
+	return avatar.toDataUri();
 }

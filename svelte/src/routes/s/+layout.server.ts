@@ -1,16 +1,16 @@
-import type { LayoutServerLoad } from '../$types';
+import type { LayoutServerLoad } from './$types';
 import { env } from '$env/dynamic/private';
 import type { Lesson } from '$lib/types';
 
 export const load: LayoutServerLoad = async ({ fetch }) => {
 
-	let lessons: Lesson[] = [];
-	try {
-		lessons = await fetch("/axum/lesson").then((res) => res.json());
-		return { lessons };
-	} catch (error) {
-		return { lessons };
-	}
+
+	const [lessons, tasks] = await Promise.all([
+		fetch("/axum/lesson").then((res) => res.json()),
+		fetch("/axum/task").then((res) => res.json()),
+	]);
+
+	return { lessons, tasks };
 
 	// let word = await fetch('https://wordsapiv1.p.rapidapi.com/words?random=true', {
 	//	method: 'GET',

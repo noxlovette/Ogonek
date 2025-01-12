@@ -2,7 +2,7 @@
 	import Sidebar from '$lib/components/sidebar/Sidebar.svelte';
 	import { setContext } from 'svelte';
 	import BottomMenu from '$lib/components/mobile/BottomMenu.svelte';
-	import type { Lesson } from '$lib/types';
+	import type { Lesson, Task } from '$lib/types';
 
 	interface Props {
 		data: any;
@@ -11,10 +11,10 @@
 
 	let { data, children }: Props = $props();
 
-	// const tasks: App.Task[] = data.tasks;
+	const tasks: Task[] = data.tasks;
 	const lessons: Lesson[] = data.lessons;
 
-	// setContext('tasks', tasks);
+	setContext('tasks', tasks);
 	setContext('lessons', lessons);
 	// setContext('word', data.word);
 
@@ -29,15 +29,14 @@
 	import { RecentLessons, UsefulLinks, WordOfTheDay } from '$lib/components/sidebar/groups';
 </script>
 
-
-	<Sidebar class="" elements={[Dashboard, Todo, Lessons, Zoom, Quizlet, Settings]} />
-	<div class="flex flex-col justify-start items-center font-medium overflow-auto flex-1">
-		<div class="flex flex-1 flex-col size-full px-8 py-4">
-			{@render children?.()}
-		</div>
-		<BottomMenu />
+<Sidebar class="" elements={[Dashboard, Todo, Lessons, Zoom, Quizlet, Settings]} />
+<div class="flex flex-col justify-start items-center font-medium overflow-auto flex-1">
+	<div class="flex flex-1 flex-col size-full px-8 py-4">
+		{@render children?.()}
 	</div>
-	<Sidebar
-		class="bg-inherit text-inherit px-0 py-0 ring-0 shadow-none"
-		elements={[UsefulLinks, WordOfTheDay, RecentLessons]}
-	></Sidebar>
+	<BottomMenu />
+</div>
+<Sidebar
+	class="bg-inherit text-inherit px-0 py-0 ring-0 shadow-none"
+	elements={[UsefulLinks, WordOfTheDay, RecentLessons]}
+></Sidebar>

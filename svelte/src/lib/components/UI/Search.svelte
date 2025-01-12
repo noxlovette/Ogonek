@@ -1,8 +1,7 @@
-<script lang="ts">	
+<script lang="ts">
 	import { getContext } from 'svelte';
-	import { formatDate } from '$lib/utils';
+	import { formatDateTime } from '$lib/utils';
 	import { Search, X } from 'lucide-svelte';
-	
 
 	import type { Lesson } from '$lib/types';
 
@@ -59,11 +58,9 @@
 <div class="flex flex-col items-center justify-center">
 	<div class="inline-flex group caret-brick-700 focus:shadow-lg relative *:p-1">
 		<div
-			class="rounded-l-full border-milk-200 border-r-0 border-2 bg-brick-50  group-focus-within:border-milk-200 group-focus-within:bg-brick-50 transition-colors group-focus-within:text-brick-400/70"
+			class="rounded-l-full border-milk-200 border-r-0 border-2 bg-brick-50 group-focus-within:border-milk-200 group-focus-within:bg-brick-50 transition-colors group-focus-within:text-brick-400/70"
 		>
-			<Search
-				class=" size-6 text-brick-400 group-focus-within:text-brick-400/70"
-			/>
+			<Search class=" size-6 text-brick-400 group-focus-within:text-brick-400/70" />
 		</div>
 		<input
 			type="text"
@@ -82,7 +79,7 @@
 				>
 					<div class="flex flex-col py-3 px-5">
 						<h3 class="text-lg md:text-xl lg:text-2xl xl:text-3xl">
-							{formatDate(lesson.manual_date || lesson.created_at)}
+							{formatDateTime(lesson.manualDate || lesson.createdAt)}
 						</h3>
 
 						<p class="opacity-80 highlighted-content text-sm md:text-base">

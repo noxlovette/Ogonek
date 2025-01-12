@@ -2,44 +2,34 @@
 	import { CheckSquare, Download, Square } from 'lucide-svelte';
 	import { enhance } from '$app/forms';
 	import { notification } from '$lib/stores';
-	import { formatDate } from '$lib/utils';
+	import { formatDateTime } from '$lib/utils';
+	import type { Task } from '$lib/types';
+	import Card from './Card.svelte';
 	interface Props {
-		task: App.Task;
+		task: Task;
 	}
 
 	let { task }: Props = $props();
 
 	let overdue = false;
 	let completed = $state(task.completed);
-	const formattedDate = formatDate(task.due_date);
+	const formattedDate = formatDateTime(task.dueDate);
 
 	function handleDownload() {
-		// Create an anchor element
 		const a = document.createElement('a');
-		a.href = task.file;
+		a.href = task.filePath;
 		a.style.display = 'none';
-
-		// Append the anchor to the body (required for Firefox)
 		document.body.appendChild(a);
-
-		// Programmatically click the anchor to trigger the download
 		a.click();
-
-		// Remove the anchor from the document
 		document.body.removeChild(a);
-
-		// Show a notification
 		notification.set({ message: 'Downloading file...', type: 'info' });
 	}
 </script>
 
-<div
-	class="flex w-full flex-col py-2 shadow border border-milk-900/10 rounded-lg min-h-[150px]"
-	class:completed
->
+<Card>
 	<div
 		id="task-header"
-		class="inline-flex py-3 px-5 space-x-8 text-lg md:text-xl lg:text-2xl xl:text-3xl justify-between items-baseline"
+		class="inline-flex space-x-8 text-lg md:text-xl lg:text-2xl xl:text-3xl justify-between items-baseline"
 	>
 		<h2 class="flex">{task.title}</h2>
 		<form class="flex" method="post" use:enhance action="?/completed">
@@ -55,21 +45,21 @@
 		</form>
 	</div>
 
-	<p class="px-5 text-sm lg:text-base">{@html task.content}</p>
+	<p class="text-sm lg:text-base">{@html task.markdown}</p>
 
 	<div
 		id="task-footer"
-		class="items-center mt-auto pt-2 px-5 text-sm inline-flex space-x-1 justify-between"
+		class="items-center mt-auto text-sm inline-flex space-x-1 justify-between"
 	>
 		<p class:overdue class="opacity-60">Due {formattedDate}</p>
 
-		{#if task.file}
+		{#if task.filePath}
 			<button onclick={handleDownload}>
 				<Download class="w-6 h-6" />
 			</button>
 		{/if}
 	</div>
-</div>
+</Card>
 
 <style>
 	.overdue {
