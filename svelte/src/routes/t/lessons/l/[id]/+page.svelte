@@ -4,7 +4,7 @@
 
 	let { data }: { data: PageData } = $props();
 
-	const { lesson } = data;
+	const { lesson, rendered } = data;
 
 	let formattedDate = formatDateTime(lesson.createdAt);
 </script>
@@ -15,10 +15,10 @@
 
 <a href="/t/lessons/l/{lesson.id}/edit" class="bg-red-200">Edit</a>
 
-<article class="flex flex-col text-lg size-full">
-	<div id="header" class="flex flex-col md:flex-row items-start justify-between">
-		<h1 class="text-4xl font-bold">{formattedDate}</h1>
+<article class="">
+	<div id="header" class="flex flex-col md:flex-row items-baseline mb-4">
+		<h1 class="text-4xl font-bold">{lesson.title}</h1>
 		<h2><span class="text-sm opacity-60 font-bold mr-1">Topic:</span> {lesson.topic}</h2>
 	</div>
-	<div class="markdown">{@html lesson.markdown}</div>
+	<div class="markdown">{@html rendered}</div>
 </article>

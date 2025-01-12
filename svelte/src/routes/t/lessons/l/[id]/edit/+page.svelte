@@ -1,22 +1,11 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import Editor from '$lib/components/Editor.svelte';
 	import type { PageData } from './$types';
-	import { Carta, MarkdownEditor } from 'carta-md';
 	import DOMPurify from 'isomorphic-dompurify';
-	import 'carta-md/default.css'; /* Default theme */
-	import { updated } from '$app/state';
-
-	const carta = new Carta({
-		sanitizer: DOMPurify.sanitize
-	});
-
 	let { data }: { data: PageData } = $props();
 	let { lesson, students } = data;
-
-	// Add form validation
 	let isSubmitting = $state(false);
-	let errors: Record<string, string> = {};
-
 	let markdown = $state(lesson.markdown);
 	$effect(() => {
 		console.log(markdown);
@@ -26,7 +15,7 @@
 <form
 	method="POST"
 	action="?/update"
-	class="space-y-4"
+	class="space-y-4 mb-4"
 	use:enhance={() => {
 		console.log('enhance');
 		isSubmitting = true;
@@ -95,14 +84,5 @@
 			</select>
 		</div>
 	</div>
-
-	<MarkdownEditor {carta} bind:value={markdown} />
 </form>
-
-<style>
-	/* Set your monospace font (Required to have the editor working correctly!) */
-	:global(.carta-font-code) {
-		font-family: '...', monospace;
-		font-size: 1.1rem;
-	}
-</style>
+<Editor bind:markdownContent={markdown} />

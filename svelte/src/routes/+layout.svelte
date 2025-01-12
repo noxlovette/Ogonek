@@ -26,7 +26,11 @@
 
 <style lang="postcss">
 	:global(.markdown h1) {
-		@apply text-2xl font-bold opacity-80;
+		@apply text-3xl font-bold opacity-80;
+	}
+
+	:global(.markdown h2) {
+		@apply text-2xl font-bold opacity-70;
 	}
 
 	:global(.markdown h2) {
@@ -46,8 +50,7 @@
 	}
 
 	:global(.markdown a) {
-		color: #737d3f;
-		text-decoration: underline;
+		@apply text-pakistan-700 underline;
 	}
 
 	:global(.markdown ul, .markdown ol) {

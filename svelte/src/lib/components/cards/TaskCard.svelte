@@ -61,7 +61,7 @@
 	</div>
 </Card>
 
-<style>
+<style lang="postcss">
 	.overdue {
 		@apply text-brick-600 font-bold underline;
 	}
