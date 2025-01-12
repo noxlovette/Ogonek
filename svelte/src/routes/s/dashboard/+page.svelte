@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Header from '$lib/components/fonts/Header.svelte';
+	import Header from '$lib/components/typography/Header.svelte';
 	import Search from '$lib/components/UI/Search.svelte';
 	import { user, language, translations } from '$lib/stores';
 

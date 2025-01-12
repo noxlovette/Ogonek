@@ -5,7 +5,7 @@
 	import { getContext } from 'svelte';
 
 	import { Bird } from 'lucide-svelte';
-	import Header from '$lib/components/fonts/Header.svelte';
+	import Header from '$lib/components/typography/Header.svelte';
 
 	let tasks: App.Task[] = getContext('tasks');
 

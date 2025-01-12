@@ -2,8 +2,6 @@
 	import Loader from '$lib/components/UI/Loader.svelte';
 	import Notification from '$lib/components/UI/Notification.svelte';
 	import '../app.css';
-	import { language } from '$lib/stores';
-	import { onMount } from 'svelte';
 	import Header from '$lib/components/UI/Header.svelte';
 	import Footer from '$lib/components/UI/Footer.svelte';
 	interface Props {
@@ -21,5 +19,4 @@
 		<Footer />
 	</div>
 	<Notification></Notification>
-	
 </main>

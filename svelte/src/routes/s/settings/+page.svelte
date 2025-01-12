@@ -1,5 +1,5 @@
 <script>
-	import Header from '$lib/components/fonts/Header.svelte';
+	import Header from '$lib/components/typography/Header.svelte';
 	import { language, translations } from '$lib/stores';
 </script>
 

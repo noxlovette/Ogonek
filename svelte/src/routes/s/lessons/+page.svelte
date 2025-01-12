@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Header from '$lib/components/fonts/Header.svelte';
+	import Header from '$lib/components/typography/Header.svelte';
 	import LessonCardBig from '$lib/components/lesson/LessonCardBig.svelte';
 	import { getContext } from 'svelte';
 	import { language, translations } from '$lib/stores';

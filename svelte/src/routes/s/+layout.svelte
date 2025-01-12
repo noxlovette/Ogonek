@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Sidebar from '$lib/components/chunks/Sidebar.svelte';
+	import Sidebar from '$lib/components/Sidebar/Sidebar.svelte';
 	import Rightbar from '$lib/components/chunks/Rightbar.svelte';
 	import { setContext } from 'svelte';
 	import BottomMenu from '$lib/components/mobile/BottomMenu.svelte';
