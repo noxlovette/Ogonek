@@ -2,7 +2,7 @@
 	import Sidebar from '$lib/components/sidebar/Sidebar.svelte';
 	import { setContext } from 'svelte';
 	import BottomMenu from '$lib/components/mobile/BottomMenu.svelte';
-	import type { Lesson } from '$lib/types';
+	import type { Lesson, Task, Student } from '$lib/types';
 
 	interface Props {
 		data: any;
@@ -11,24 +11,22 @@
 
 	let { data, children }: Props = $props();
 
-	// const tasks: App.Task[] = data.tasks;
+	const tasks: Task[] = data.tasks;
 	const lessons: Lesson[] = data.lessons;
+	const students: Student[] = data.students;
 
-	// setContext('tasks', tasks);
+	setContext('tasks', tasks);
 	setContext('lessons', lessons);
+	setContext('students', students);
 
 	import {
 		Dashboard,
 		Todo,
 		Lessons,
-		Zoom,
 		Quizlet,
 		Settings,
-
 		Students
-
 	} from '$lib/components/sidebar/elements';
-	import { RecentLessons, UsefulLinks, WordOfTheDay } from '$lib/components/sidebar/groups';
 </script>
 
 <Sidebar class="" elements={[Dashboard, Todo, Lessons, Students, Quizlet, Settings]} />

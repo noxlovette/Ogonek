@@ -1,5 +1,5 @@
 use axum::http::{
-    header::{self, HeaderMap},
+    header::{self},
     HeaderValue,
 };
 use axum::response::{IntoResponse, Response};
@@ -43,6 +43,16 @@ pub struct User {
     pub username: String,
     pub email: String,
     pub pass: String,
+    pub role: String,
+    pub verified: bool,
+}
+#[derive(Serialize, Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct Student {
+    pub id: String,
+    pub name: String,
+    pub username: String,
+    pub email: String,
     pub role: String,
     pub verified: bool,
 }

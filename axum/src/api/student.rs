@@ -2,7 +2,7 @@ use crate::auth::jwt::Claims;
 use crate::db::error::DbError;
 use crate::db::init::AppState;
 use crate::models::students::AddStudentRequest;
-use crate::models::users::User;
+use crate::models::users::Student;
 use axum::extract::Json;
 use axum::extract::State;
 use axum::http::StatusCode;
@@ -69,11 +69,11 @@ pub async fn remove_student(
 pub async fn list_teacher_students(
     claims: Claims,
     State(state): State<AppState>,
-) -> Result<Json<Vec<User>>, DbError> {
-    let users = sqlx::query_as!(
-        User,
+) -> Result<Json<Vec<Student>>, DbError> {
+    let students = sqlx::query_as!(
+        Student,
         r#"
-        SELECT u.username, u.email, u.role, u.id, u.name, u.pass, u.verified
+        SELECT u.username, u.email, u.role, u.id, u.name, u.verified
         FROM "user" u
         INNER JOIN teacher_student ts ON u.id = ts.student_id
         WHERE ts.teacher_id = $1 AND ts.status = 'active'
@@ -87,5 +87,5 @@ pub async fn list_teacher_students(
         DbError::Db
     })?;
 
-    Ok(Json(users))
+    Ok(Json(students))
 }
