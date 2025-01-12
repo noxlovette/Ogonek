@@ -29,7 +29,7 @@
 	import { RecentLessons, UsefulLinks, WordOfTheDay } from '$lib/components/sidebar/groups';
 </script>
 
-<div class="flex flex-row size-full py-4">
+
 	<Sidebar class="" elements={[Dashboard, Todo, Lessons, Zoom, Quizlet, Settings]} />
 	<div class="flex flex-col justify-start items-center font-medium overflow-auto flex-1">
 		<div class="flex flex-1 flex-col size-full px-8 py-4">
@@ -41,4 +41,3 @@
 		class="bg-inherit text-inherit px-0 py-0 ring-0 shadow-none"
 		elements={[UsefulLinks, WordOfTheDay, RecentLessons]}
 	></Sidebar>
-</div>

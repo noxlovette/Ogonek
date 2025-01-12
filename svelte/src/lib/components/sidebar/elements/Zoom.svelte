@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { Video } from 'lucide-svelte';
 	import External from './External.svelte';
+
+	// TODO ADD STUDENT OBJECT ADDRESS 
 </script>
 
 <External href="https://zoom.us">

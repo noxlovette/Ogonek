@@ -15,7 +15,9 @@
 		class="flex flex-col overscroll-contain font-medium items-center text-brick-800 max-w-7xl mx-auto selection:bg-brick-900 selection:text-brick-100 h-full"
 	>
 		<Header />
-		{@render children?.()}
+		<div class="flex flex-row size-full py-4">
+			{@render children?.()}
+		</div>
 		<Footer />
 	</div>
 	<Notification></Notification>

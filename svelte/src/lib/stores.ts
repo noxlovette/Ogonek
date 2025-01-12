@@ -4,6 +4,7 @@ import type { User } from './types';
 export const user = writable({
 	username: '',
 	name: '',
+	role: ''
 	// quizlet_url: '',
 });
 
@@ -17,7 +18,8 @@ export function setUser(data: User) {
 export function clearUser() {
 	user.update(() => ({
 		username: '',
-		name:''
+		name:'',
+		role: '',
 		// quizlet_url: '',
 	}));
 }
