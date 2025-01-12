@@ -11,38 +11,27 @@ export const handle: Handle = async ({ event, resolve }) => {
     const response = await resolve(event);
     if (response.status === 401 && event.cookies.get('refreshToken')) {
         try {
-
             const refreshRes = await event.fetch(`/axum/auth/refresh`);
-
             if (!refreshRes.ok) {
-                return response;
+                throw new Error('Failed to refresh token');
             }
 
-            // Extract and parse the new token
-            const { accessToken } = await refreshRes.json();
+            // Get ALL the Set-Cookie headers (it's an array!)
+            const setCookieHeaders = refreshRes.headers.getSetCookie();
 
-            console.log('Got new token:', accessToken);
-            event.locals.accessToken = accessToken;
-            event.request.headers.set("Authorization", `Bearer ${accessToken || ''}`);
+            // Create a new response with the copied cookies
+            const newResponse = new Response(response.body, response);
+            setCookieHeaders.forEach(cookie => {
+                newResponse.headers.append('set-cookie', cookie);
+            });
 
-            // Retry the original request
-            return await resolve(event);
+            return newResponse;
         } catch (error) {
             console.error('Refresh token flow failed:', error);
-            return new Response(null, {
-                status: 303,
-                headers: {
-                    location: '/auth/login'
-                }
-            })
+            return await resolve(event);
         }
     } else if (response.status === 401) {
-        return new Response(null, {
-            status: 303,
-            headers: {
-                location: '/auth/login'
-            }
-        })
+        return await resolve(event);
     }
 
     return response;

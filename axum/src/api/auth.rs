@@ -106,12 +106,10 @@ pub async fn authorize(
     Ok(AuthBody::into_response(token, refresh_token))
 }
 
-
-
 pub async fn refresh(
     State(state): State<AppState>,
     claims: RefreshClaims,
-) -> Result<Json<AuthBody>, AuthError> {
+) -> Result<Response, AuthError> {
     let user = sqlx::query_as!(
         User,
         r#"
@@ -130,5 +128,5 @@ pub async fn refresh(
     .ok_or(AuthError::UserNotFound)?;
 
     let token = generate_token(&user)?;
-    Ok(Json(AuthBody::new(token)))
+    Ok(AuthBody::into_refresh(token))
 }

@@ -75,6 +75,19 @@ impl AuthBody {
         }
     }
 
+    pub fn into_refresh(access_token: String) -> Response {
+        let mut response = Json(AuthBody::new(access_token.to_string())).into_response();
+
+        let cookie = build_auth_cookie("accessToken", access_token, false);
+
+        response.headers_mut().insert(
+            header::SET_COOKIE,
+            HeaderValue::from_str(&cookie.to_string()).unwrap(),
+        );
+
+        response
+    }
+
     pub fn into_response(access_token: String, refresh_token: String) -> Response {
         // Just convert the AuthBody to JSON response without Bearer header
         let mut response = Json(AuthBody::new(access_token.to_string())).into_response();
