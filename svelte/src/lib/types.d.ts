@@ -29,6 +29,7 @@ export interface Lesson {
     topic: string;
     bookmarked: boolean;
     highlighted: string;
+    assignee: string;
 }
 
 export interface Student {

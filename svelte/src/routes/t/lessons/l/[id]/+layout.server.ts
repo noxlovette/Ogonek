@@ -1,14 +1,13 @@
-import type { Actions } from '@sveltejs/kit';
-import type { PageServerLoad } from './$types';
+import type { LayoutServerLoad } from './$types';
 import { error } from '@sveltejs/kit';
 import type { Lesson } from '$lib/types';
 
 
-export const load: PageServerLoad = async ({ params, fetch }) => {
+export const load: LayoutServerLoad = async ({ params, fetch }) => {
 
-	const { slug } = params;
+	const { id } = params;
 	try {
-		const response = await fetch(`/axum/lesson/l/${slug}`);
+		const response = await fetch(`/axum/lesson/l/${id}`);
 
 		if (!response.ok) {
 			if (response.status === 403 || response.status === 401) {
