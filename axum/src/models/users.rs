@@ -98,12 +98,15 @@ impl AuthBody {
             build_auth_cookie("accessToken", access_token, false),
         ];
 
-        for cookie in cookies {
-            response.headers_mut().insert(
-                header::SET_COOKIE,
-                HeaderValue::from_str(&cookie.to_string()).unwrap(),
-            );
-        }
+        response.headers_mut().insert(
+            header::SET_COOKIE,
+            HeaderValue::from_str(&cookies[0].to_string()).unwrap(),
+        );
+
+        response.headers_mut().append(
+            header::SET_COOKIE,
+            HeaderValue::from_str(&cookies[1].to_string()).unwrap(),
+        );
 
         response
     }

@@ -3,9 +3,23 @@ import type { Handle, HandleFetch } from '@sveltejs/kit';
 
 export const handle: Handle = async ({ event, resolve }) => {
     const path = event.url.pathname;
-    if (path.startsWith('/auth/login') || path.startsWith('/public')) {
+    if (path.startsWith('/auth/login') || path.startsWith('/axum/auth/signin') || path.startsWith('/axum/auth/refresh')) {
         console.log('Skipping auth check for', path);
-        return await resolve(event);
+        let response = await resolve(event);
+        console.log('Response', response);
+        return response;
+    }
+
+    console.log('Checking auth for', path);
+    const refreshToken = event.cookies.get('refreshToken');
+    if (!refreshToken) {
+        console.log('No refresh token found');
+        return new Response ('Unauthorized', {
+            status: 303,
+            headers: {
+                location: '/auth/login',
+            },
+        });
     }
 
     const response = await resolve(event);
@@ -37,7 +51,6 @@ export const handle: Handle = async ({ event, resolve }) => {
     return response;
 };
 export const handleFetch: HandleFetch = async ({ event, request, fetch }) => {
-    console.log("locals", event.locals);
     request.headers.set("X-API-KEY", env.API_KEY_AXUM);
     request.headers.set("Content-Type", "application/json");
     const accessToken = event.cookies.get("accessToken");
