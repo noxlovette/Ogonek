@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { self, stopPropagation } from 'svelte/legacy';
 
-	import Word from '$lib/components/chunks/Word.svelte';
+	import Word from '$lib/components/Sidebar/groups/WordOfTheDay.svelte';
 	import Lessons from '../Lessons.svelte';
-	import UsefulLInks from '../chunks/UsefulLInks.svelte';
+	import UsefulLInks from '../Sidebar/groups/UsefulLinks.svelte';
 	import { goto } from '$app/navigation';
 	import { Menu } from 'lucide-svelte';
 	import { user } from '$lib/stores';

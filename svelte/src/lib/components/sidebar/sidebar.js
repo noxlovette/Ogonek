@@ -1,4 +1,5 @@
 export * from './elements/index';
+export * from './groups/index';
 export { default as Sidebar } from './Sidebar.svelte';
 // export * as icons from './icons/index';
 // export * from './aliases';

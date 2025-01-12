@@ -1,6 +1,7 @@
 <script lang="ts">
 	import LessonCard from '$lib/components/lesson/LessonCard.svelte';
 	import type { Lesson } from '$lib/types';
+	import Header2 from '$lib/components/typography/Header2.svelte';
 
 	import { getContext } from 'svelte';
 	import Group from './Group.svelte';
@@ -10,7 +11,7 @@
 </script>
 
 <Group>
-	<h2 class=" lg:text-lg xl:text-xl">Recent</h2>
+	<Header2>Recent Lessons</Header2>
 	<ul class="">
 		{#if lessons.length === 0}
 			<p>No lessons found</p>
@@ -20,5 +21,5 @@
 			{/each}
 		{/if}
 	</ul>
-	<SmallLink href="/u/lessons">View All</SmallLink>
+	<SmallLink href="/s/lessons">View All</SmallLink>
 </Group>

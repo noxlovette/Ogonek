@@ -20,3 +20,39 @@
 	</div>
 	<Notification></Notification>
 </main>
+
+
+<style lang="postcss">
+	:global(.markdown h1) {
+		@apply text-2xl font-bold opacity-80;
+	}
+
+	:global(.markdown h2) {
+		@apply text-xl font-bold opacity-60;
+	}
+
+	:global(.markdown p) {
+		@apply m-1;
+	}
+
+	:global(.markdown ul) {
+		list-style-type: disc;
+	}
+
+	:global(.markdown ol) {
+		list-style-type: decimal;
+	}
+
+	:global(.markdown a) {
+		color: #737d3f;
+		text-decoration: underline;
+	}
+
+	:global(.markdown ul, .markdown ol) {
+		@apply my-2 ml-4;
+	}
+
+	:global(hr) {
+		@apply border border-milk-200 w-1/2 my-2;
+	}
+</style>

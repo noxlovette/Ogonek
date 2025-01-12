@@ -4,3 +4,6 @@ export { default as Quizlet } from './Quizlet.svelte';
 export { default as Settings } from './Settings.svelte';
 export { default as Todo } from './Todo.svelte';
 export { default as Zoom } from './Zoom.svelte';
+export { default as Thesaurus } from './Thesaurus.svelte';
+export { default as Dictionary } from './Dictionary.svelte';
+export { default as Forvo } from './Forvo.svelte';
