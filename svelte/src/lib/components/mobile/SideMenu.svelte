@@ -1,9 +1,8 @@
 <script lang="ts">
 	import { self, stopPropagation } from 'svelte/legacy';
 
-	import Word from '$lib/components/Sidebar/groups/WordOfTheDay.svelte';
-	import Lessons from '../Lessons.svelte';
-	import UsefulLInks from '../Sidebar/groups/UsefulLinks.svelte';
+	import Word from '$lib/components/sidebar/groups/WordOfTheDay.svelte';
+	import UsefulLInks from '../sidebar/groups/UsefulLinks.svelte';
 	import { goto } from '$app/navigation';
 	import { Menu } from 'lucide-svelte';
 	import { user } from '$lib/stores';
@@ -25,7 +24,6 @@
 
 <div class="flex flex-col">
 	<Word></Word>
-	<Lessons></Lessons>
 	<UsefulLInks></UsefulLInks>
 </div>
 

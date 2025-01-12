@@ -7,8 +7,9 @@
 	const handleLoginResult = async ({ result, update }: { result: any; update: () => void }) => {
 		console.log(result);
 		if (result.type === 'success') {
-			const { name, username } = result.data.user;
-			const user = { name, username };
+			const { name, username, role } = result.data.user;
+			const user = { name, username, role };
+			localStorage.setItem('user', JSON.stringify(user));
 			setUser(user);
 			if (!user) {
 				notification.set({ message: 'JWT Failure', type: 'error' });

@@ -56,7 +56,7 @@
 	});
 </script>
 
-<div class="flex flex-col w-full items-center justify-center">
+<div class="flex flex-col items-center justify-center">
 	<div class="inline-flex group caret-brick-700 focus:shadow-lg relative *:p-1">
 		<div
 			class="rounded-l-full border-milk-200 border-r-0 border-2 bg-brick-50  group-focus-within:border-milk-200 group-focus-within:bg-brick-50 transition-colors group-focus-within:text-brick-400/70"
