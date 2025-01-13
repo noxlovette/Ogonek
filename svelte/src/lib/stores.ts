@@ -1,4 +1,4 @@
-import { writable } from 'svelte/store';
+import { writable, derived } from 'svelte/store';
 import type { User } from './types';
 
 export const user = writable({
@@ -18,7 +18,7 @@ export function setUser(data: User) {
 export function clearUser() {
 	user.update(() => ({
 		username: '',
-		name:'',
+		name: '',
 		role: '',
 		// quizlet_url: '',
 	}));
@@ -29,16 +29,26 @@ export const notification = writable({
 	type: 'none'
 });
 
-export const lesson = writable({
-	title: '',
-	description: '',
-	bookmarked: false,
-	manual_date: '',
-	content: '',
-	created_at: '',
-	updated_at: '',
-	topic: ''
-});
+
+import type { Lesson } from './types';
+const createLessonStore = () => {
+	const { subscribe, set, update } = writable<Lesson[]>([]);
+
+	return {
+		subscribe,
+		// Batch update - more performant than individual updates
+		setLessons: (lessons: Lesson[]) => set(lessons),
+
+		// Helper to add single lesson if needed
+		addLesson: (lesson: Lesson) => update(lessons => [...lessons, lesson]),
+
+		// Clear store
+		reset: () => set([])
+	};
+};
+
+export const lessonsStore = createLessonStore();
+
 
 export const language = writable('en');
 

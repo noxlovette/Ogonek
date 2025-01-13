@@ -33,6 +33,12 @@ export interface Lesson {
     assigneeName: string;
 }
 
+export interface LessonStore {
+    title: string;
+    markdown: string;
+    topic: string;
+}
+
 export interface Student {
     id: string;
     name: string;

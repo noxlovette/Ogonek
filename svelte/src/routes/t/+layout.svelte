@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Sidebar from '$lib/components/sidebar/Sidebar.svelte';
 	import { setContext } from 'svelte';
+	import { lessonsStore } from '$lib/stores';
 	import BottomMenu from '$lib/components/mobile/BottomMenu.svelte';
 	import type { Lesson, Task, Student } from '$lib/types';
 
@@ -16,6 +17,9 @@
 	let { data, children }: Props = $props();
 
 	const { tasks, lessons, students } = data;
+	console.log('lessons from layout', lessons);
+
+	lessonsStore.setLessons(lessons);
 
 	setContext('tasks', tasks);
 	setContext('lessons', lessons);

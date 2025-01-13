@@ -8,9 +8,6 @@
 	let { data }: { data: PageData } = $props();
 
 	import { fade, slide } from 'svelte/transition';
-	import Search from 'lucide-svelte/icons/search';
-	import Filter from 'lucide-svelte/icons/filter';
-	import MoreVertical from 'lucide-svelte/icons/more-vertical';
 	import { formatDateTime } from '$lib/utils';
 	import SearchBar from '$lib/components/UI/SearchBar.svelte';
 
