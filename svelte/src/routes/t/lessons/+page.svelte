@@ -3,6 +3,7 @@
 	import type { Lesson } from '$lib/types';
 	import { getContext } from 'svelte';
 	import LessonCardBig from '$lib/components/cards/LessonCardBig.svelte';
+	import NewCard from '$lib/components/cards/NewCard.svelte';
 	let { data }: { data: PageData } = $props();
 
 	const lessons: Lesson[] = getContext('lessons');
@@ -12,4 +13,5 @@
 	{#each lessons as lesson}
 		<LessonCardBig {lesson} />
 	{/each}
+	<NewCard href="?/new" />
 </div>

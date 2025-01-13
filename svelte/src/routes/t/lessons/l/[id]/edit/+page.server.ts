@@ -1,4 +1,5 @@
 import type { Actions } from "@sveltejs/kit";
+import { fail, redirect } from '@sveltejs/kit';
 
 export const actions = {
     update: async ({ request, fetch }) => {
@@ -40,5 +41,26 @@ export const actions = {
                 error: 'An error occurred while updating the lesson'
             };
         }
+    },
+    delete: async ({ request, fetch }) => {
+        const formData = await request.formData();
+        const id = formData.get('id');
+        console.log('Deleting lesson:', id);
+
+        const response = await fetch(`/axum/lesson/l/${id}`, {
+            method: 'DELETE'
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json(); // Parse error details
+            console.error('Error deleting lesson:', errorData);
+            return {
+                success: false,
+                error: errorData
+            };
+        }
+
+        redirect(303, '/t/lessons');
+
     }
 } satisfies Actions;

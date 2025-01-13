@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { user } from '$lib/stores';
 	import { formatDateTime } from '$lib/utils';
 	import type { PageData } from './$types';
 
@@ -13,12 +14,33 @@
 	<title>Lesson from {formattedDate}</title>
 </svelte:head>
 
-<a href="/t/lessons/l/{lesson.id}/edit" class="bg-red-200">Edit</a>
-
-<article class="">
-	<div id="header" class="flex flex-col md:flex-row items-baseline mb-4">
-		<h1 class="text-4xl font-bold">{lesson.title}</h1>
-		<h2><span class="text-sm opacity-60 font-bold mr-1">Topic:</span> {lesson.topic}</h2>
+<div class="flex flex-col gap-4">
+	<div class="flex items-baseline space-x-4">
+		<h1 class="text-3xl font-bold">{lesson.title}</h1>
+		<a
+			href="/t/lessons/l/{lesson.id}/edit"
+			class="px-4 py-2 bg-brick-600 text-brick-50 rounded-lg hover:bg-brick-700 focus:outline-none focus:ring-2 focus:ring-brick-500 focus:ring-offset-2 disabled:opacity-50 transition-colors"
+			>Edit</a
+		>
 	</div>
-	<div class="markdown">{@html rendered}</div>
-</article>
+	<div class="flex space-x-4">
+		<div class="space-y-2">
+			<p class="block font-medium text-milk-700">Topic</p>
+			<h3 class="min-w-48">
+				{lesson.topic}
+			</h3>
+		</div>
+		<div class="space-y-2">
+			<p class="block font-medium text-milk-700">Student</p>
+			<h3 class="min-w-48">
+				{#if lesson.assigneeName === $user.username}
+					Not Assigned
+				{:else}
+					{lesson.assigneeName}
+				{/if}
+			</h3>
+		</div>
+	</div>
+	<h3 class="text-2xl font-bold">Content</h3>
+	<div class="markdown ring-2 ring-milk-200 p-4 rounded-lg">{@html rendered}</div>
+</div>

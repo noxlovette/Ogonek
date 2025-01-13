@@ -33,40 +33,42 @@
 	};
 </script>
 
-<form
-	method="POST"
-	use:enhance={() => handleLoginResult}
-	class="login-form bg-brick-50 p-8 rounded-md shadow-lg flex flex-col ring ring-milk-100 space-y-4"
->
-	<h1 class="text-4xl">Welcome back</h1>
-
-	<div>
-		<p class="opacity-60 font-bold text-sm mb-1">Username</p>
-		<input
-			type="text"
-			id="username"
-			name="username"
-			placeholder="Username"
-			required
-			class="rounded-lg bg-brick-50 p-2 ring-2 ring-milk-300"
-		/>
-	</div>
-
-	<div>
-		<p class="opacity-60 font-bold text-sm mb-1">Password</p>
-		<input
-			type="password"
-			id="password"
-			name="password"
-			required
-			placeholder="Password"
-			class="rounded-lg bg-brick-50 p-2 ring-2 ring-milk-300"
-		/>
-	</div>
-
-	<button
-		type="submit"
-		class="bg-brick-700 ring-2 text-brick-50 px-4 py-2 w-20 mt-5 rounded-lg ring-milk-300 text-center hover:bg-brick-600 transition-colors"
-		>Login</button
+<div class="size-full items-center justify-center flex">
+	<form
+		method="POST"
+		use:enhance={() => handleLoginResult}
+		class="login-form bg-brick-50 p-8 rounded-md shadow-lg flex flex-col ring ring-milk-100  h-[500px]"
 	>
-</form>
+		<h1 class="text-4xl">Welcome back</h1>
+
+		<div class="my-4">
+			<p class="opacity-60 font-bold text-sm mb-1">Username</p>
+			<input
+				type="text"
+				id="username"
+				name="username"
+				placeholder="Username"
+				required
+				class="rounded-lg bg-brick-50 p-2 ring-2 ring-milk-300"
+			/>
+		</div>
+
+		<div>
+			<p class="opacity-60 font-bold text-sm mb-1">Password</p>
+			<input
+				type="password"
+				id="password"
+				name="password"
+				required
+				placeholder="Password"
+				class="rounded-lg bg-brick-50 p-2 ring-2 ring-milk-300"
+			/>
+		</div>
+
+		<button
+			type="submit"
+			class="bg-brick-700 ring-2 text-brick-50 px-4 py-2 w-20 mt-auto rounded-lg ring-milk-300 text-center hover:bg-brick-600 transition-colors"
+			>Login</button
+		>
+	</form>
+</div>

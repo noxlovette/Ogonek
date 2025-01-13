@@ -2,7 +2,9 @@ use crate::auth::jwt::Claims;
 use crate::db::error::DbError;
 use crate::db::init::AppState;
 use crate::models::lessons::LessonBody;
+use crate::models::lessons::LessonBodyWithStudent;
 use crate::models::lessons::LessonCreateBody;
+use crate::models::lessons::LessonCreateResponse;
 use crate::models::lessons::LessonUpdate;
 use axum::extract::Json;
 use axum::extract::Path;
@@ -12,10 +14,25 @@ pub async fn fetch_lesson(
     State(state): State<AppState>,
     Path(id): Path<String>,
     claims: Claims,
-) -> Result<Json<Option<LessonBody>>, DbError> {
+) -> Result<Json<Option<LessonBodyWithStudent>>, DbError> {
     let lesson = sqlx::query_as!(
-        LessonBody,
-        "SELECT * FROM lessons WHERE id = $1 AND (assignee = $2 OR created_by = $2)",
+        LessonBodyWithStudent,
+        r#"
+        SELECT 
+            l.id,
+            l.title,
+            l.topic,
+            l.markdown,
+            l.assignee,
+            l.created_by,
+            l.created_at,
+            l.updated_at,
+            u.name as assignee_name
+        FROM lessons l
+        LEFT JOIN "user" u ON l.assignee = u.id
+        WHERE l.id = $1 
+        AND (l.assignee = $2 OR l.created_by = $2)
+        "#,
         id,
         claims.sub
     )
@@ -44,19 +61,24 @@ pub async fn create_lesson(
     State(state): State<AppState>,
     claims: Claims,
     Json(payload): Json<LessonCreateBody>,
-) -> Result<Json<LessonBody>, DbError> {
-    dbg!(&claims);
+) -> Result<Json<LessonCreateResponse>, DbError> {
+    let mut assignee = &claims.sub;
+
+    if payload.assignee.is_some() {
+        assignee = payload.assignee.as_ref().unwrap();
+    }
+
     let lesson = sqlx::query_as!(
-        LessonBody,
+        LessonCreateResponse,
         "INSERT INTO lessons (id, title, topic, markdown, created_by, assignee) 
          VALUES ($1, $2, $3, $4, $5, $6)
-         RETURNING *",
+         RETURNING id",
         nanoid::nanoid!(),
         payload.title,
         payload.topic,
         payload.markdown,
         claims.sub,
-        payload.assignee
+        assignee
     )
     .fetch_one(&state.db)
     .await?;
