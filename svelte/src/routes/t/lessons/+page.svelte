@@ -4,11 +4,13 @@
 	import { getContext } from 'svelte';
 	import LessonCardBig from '$lib/components/cards/LessonCardBig.svelte';
 	import NewCard from '$lib/components/cards/NewCard.svelte';
+	import Header from '$lib/components/typography/Header.svelte';
 	let { data }: { data: PageData } = $props();
 
 	const lessons: Lesson[] = getContext('lessons');
 </script>
 
+<Header>Lessons</Header>
 <div class="grid grid-cols-2 gap-4">
 	{#each lessons as lesson}
 		<LessonCardBig {lesson} />

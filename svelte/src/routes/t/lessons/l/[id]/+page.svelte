@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Header from '$lib/components/typography/Header.svelte';
 	import { user } from '$lib/stores';
 	import { formatDateTime } from '$lib/utils';
 	import type { PageData } from './$types';
@@ -14,9 +15,9 @@
 	<title>Lesson from {formattedDate}</title>
 </svelte:head>
 
-<div class="flex flex-col gap-4">
+
 	<div class="flex items-baseline space-x-4">
-		<h1 class="text-3xl font-bold">{lesson.title}</h1>
+		<Header>{lesson.title}</Header>
 		<a
 			href="/t/lessons/l/{lesson.id}/edit"
 			class="px-4 py-2 bg-brick-600 text-brick-50 rounded-lg hover:bg-brick-700 focus:outline-none focus:ring-2 focus:ring-brick-500 focus:ring-offset-2 disabled:opacity-50 transition-colors"
@@ -43,4 +44,3 @@
 	</div>
 	<h3 class="text-2xl font-bold">Content</h3>
 	<div class="markdown ring-2 ring-milk-200 p-4 rounded-lg">{@html rendered}</div>
-</div>

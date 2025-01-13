@@ -1,5 +1,5 @@
 <script lang="ts">
-	
+	import Header from '$lib/components/typography/Header.svelte';
 </script>
 
-Dashboard
+<Header>Dashboard</Header>

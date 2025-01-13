@@ -4,12 +4,15 @@
 
 	import { getContext } from 'svelte';
 	import StudentCard from '$lib/components/cards/StudentCard.svelte';
+	import Header from '$lib/components/typography/Header.svelte';
 
 	let { data }: { data: PageData } = $props();
 
 	const students: Student[] = getContext('students');
 </script>
 
+
+<Header>Students</Header>
 {#if students.length === 0}
 	<div>No students</div>
 {:else}

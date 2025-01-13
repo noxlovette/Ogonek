@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import Editor from '$lib/components/Editor.svelte';
+	import Header from '$lib/components/typography/Header.svelte';
 	import type { PageData } from './$types';
 	import DOMPurify from 'isomorphic-dompurify';
 	let { data }: { data: PageData } = $props();
@@ -27,7 +28,7 @@
 	}}
 >
 	<div class="flex items-baseline space-x-4">
-		<h1 class="text-3xl font-bold">Edit Lesson</h1>
+		<Header>Edit Lesson</Header>
 		<a
 			href="."
 			class="px-4 py-2 text-milk-700 bg-milk-100 rounded-lg hover:bg-milk-200 transition-colors"
