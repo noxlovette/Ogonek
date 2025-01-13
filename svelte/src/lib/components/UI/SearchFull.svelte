@@ -4,6 +4,7 @@
 	import { Search, X } from 'lucide-svelte';
 
 	import type { Lesson } from '$lib/types';
+	import SearchBar from './SearchBar.svelte';
 
 	const lessons: Lesson[] = getContext('lessons');
 
@@ -56,19 +57,7 @@
 </script>
 
 <div class="flex flex-col items-center justify-center">
-	<div class="inline-flex group caret-brick-700 focus:shadow-lg relative *:p-1">
-		<div
-			class="rounded-l-full border-milk-200 border-r-0 border-2 bg-brick-50 group-focus-within:border-milk-200 group-focus-within:bg-brick-50 transition-colors group-focus-within:text-brick-400/70"
-		>
-			<Search class=" size-6 text-brick-400 group-focus-within:text-brick-400/70" />
-		</div>
-		<input
-			type="text"
-			placeholder="Search Lessons"
-			bind:value={search}
-			class="border-milk-200 pl-0 bg-brick-50 border-2 border-l-0 focus:outline-none focus:border-milk-200 focus:bg-brick-50 placeholder:text-brick-900/70 focus:placeholder:text-brick-400/70 transition-colors rounded-r-full"
-		/>
-	</div>
+	<SearchBar bind:search />
 
 	<div class="grid grid-cols-2 gap-4 absolute top-20 xl:w-[600px]">
 		{#if search}

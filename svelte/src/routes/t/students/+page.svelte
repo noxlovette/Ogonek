@@ -8,18 +8,16 @@
 
 	let { data }: { data: PageData } = $props();
 
-	const students: Student[] = getContext('students');
+	const { students } = data;
 </script>
-
 
 <Header>Students</Header>
 {#if students.length === 0}
 	<div>No students</div>
 {:else}
-<div class="grid grid-cols-2 gap-4">
-	
-	{#each students as student}
-	<StudentCard {student} />
-	{/each}
-</div>
+	<div class="grid grid-cols-2 gap-4">
+		{#each students as student}
+			<StudentCard {student} />
+		{/each}
+	</div>
 {/if}

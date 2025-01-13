@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { getGreeting } from '$lib/utils';
 	import { user } from '$lib/stores';
-	import Search from './Search.svelte';
+	import Search from './SearchFull.svelte';
 	const greeting = getGreeting();
 
 	let dashboard = 's';

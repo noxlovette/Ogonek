@@ -30,7 +30,7 @@ export interface Lesson {
     bookmarked: boolean;
     highlighted: string;
     assignee: string;
-    assigneeName?: string;
+    assigneeName: string;
 }
 
 export interface Student {

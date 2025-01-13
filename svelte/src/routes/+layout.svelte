@@ -12,7 +12,7 @@
 
 <main class="bg-milk-50 overflow-auto min-h-screen antialiased w-screen h-screen">
 	<div
-		class="flex flex-col overscroll-contain font-medium items-center text-brick-800 max-w-7xl mx-auto selection:bg-brick-900 selection:text-brick-100 h-full"
+		class="flex flex-col overscroll-contain font-medium items-center text-brick-800 max-w-7xl mx-auto selection:bg-pakistan-400 caret-brick-800 h-full"
 	>
 		<Header />
 		<div class="flex flex-row size-full py-4">

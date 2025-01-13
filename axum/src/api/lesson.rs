@@ -45,10 +45,24 @@ pub async fn fetch_lesson(
 pub async fn list_lessons(
     State(state): State<AppState>,
     claims: Claims,
-) -> Result<Json<Vec<LessonBody>>, DbError> {
+) -> Result<Json<Vec<LessonBodyWithStudent>>, DbError> {
     let lessons = sqlx::query_as!(
-        LessonBody,
-        "SELECT * FROM lessons WHERE (assignee = $1 OR created_by = $1)",
+        LessonBodyWithStudent,
+        r#"
+        SELECT 
+            l.id,
+            l.title,
+            l.topic,
+            l.markdown,
+            l.assignee,
+            l.created_by,
+            l.created_at,
+            l.updated_at,
+            u.name as assignee_name
+        FROM lessons l
+        LEFT JOIN "user" u ON l.assignee = u.id
+        WHERE (l.assignee = $1 OR l.created_by = $1)
+        "#,
         claims.sub
     )
     .fetch_all(&state.db)

@@ -5,15 +5,17 @@
 	import type { Lesson, Task, Student } from '$lib/types';
 
 	interface Props {
-		data: any;
+		data: {
+			tasks: Task[];
+			lessons: Lesson[];
+			students: Student[];
+		};
 		children?: import('svelte').Snippet;
 	}
 
 	let { data, children }: Props = $props();
 
-	const tasks: Task[] = data.tasks;
-	const lessons: Lesson[] = data.lessons;
-	const students: Student[] = data.students;
+	const { tasks, lessons, students } = data;
 
 	setContext('tasks', tasks);
 	setContext('lessons', lessons);
