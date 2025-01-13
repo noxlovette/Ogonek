@@ -10,6 +10,7 @@ export interface Task {
     filePath: string;
     createdBy: string;
     assignee: string;
+    assigneeName: string;
 }
 
 export interface User {
@@ -46,4 +47,19 @@ export interface Student {
     email: string;
     role: string;
     // quizlet_url: string;
+}
+
+export interface BaseTableItem {
+    id: string;
+    createdAt: string;
+    assignee: string;
+}
+
+export interface TableConfig<T extends BaseTableItem> {
+    columns: {
+        key: keyof T;
+        label: string;
+        searchable?: boolean;
+        formatter?: (value: string) => string;
+    }[];
 }

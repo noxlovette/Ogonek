@@ -1,20 +1,31 @@
 <script lang="ts">
 	import type { PageData } from './$types';
-	import { getContext } from 'svelte';
-	import type { Task } from '$lib/types';
-	import TaskCard from '$lib/components/cards/TaskCard.svelte';
+	import { user } from '$lib/stores';
+	import type { Task, TableConfig } from '$lib/types';
 	import Header from '$lib/components/typography/Header.svelte';
-	import NewCard from '$lib/components/cards/NewCard.svelte';
+	import { formatDateTime } from '$lib/utils';
+	import Table from '$lib/components/UI/Table.svelte';
 
 	let { data }: { data: PageData } = $props();
 
-	const tasks: Task[] = getContext('tasks');
+	const { tasks, students } = data;
+
+	const taskConfig: TableConfig<Task> = {
+		columns: [
+			{ key: 'title', label: 'Title' },
+			{ key: 'markdown', label: 'Topic' },
+			{
+				key: 'assigneeName',
+				label: 'Assignee',
+				formatter: (value: string) => (value === $user.name ? 'Not Assigned' : value)
+			},
+			{ key: 'createdAt', label: 'Created', formatter: (value: string) => formatDateTime(value) }
+		]
+	};
+
+	let href = $user.role === 'teacher' ? `/t/tasks/t/` : `/s/tasks/t/`;
 </script>
 
 <Header>Tasks</Header>
-<div class="grid grid-cols-2 gap-4">
-	<NewCard href="?/new" />
-	{#each tasks as task}
-		<TaskCard {task} />
-	{/each}
-</div>
+
+<Table items={tasks} config={taskConfig} {href} {students} />
