@@ -7,62 +7,60 @@ export const actions = {
         const markdown = formData.get('markdown');
         const title = formData.get('title');
         const id = formData.get('id');
-        const topic = formData.get('topic');
         const assignee = formData.get('assignee');
 
         let body = {
             id,
             title,
             markdown,
-            topic,
             assignee
         };
 
-        console.log('Updating lesson:', body);
+        console.log('Updating task:', body);
 
         try {
-            const response = await fetch(`/axum/lesson/l/${formData.get('id')}`, {
+            const response = await fetch(`/axum/task/t/${formData.get('id')}`, {
                 method: 'PATCH',
                 body: JSON.stringify(body)
             });
 
             if (!response.ok) {
                 const errorData = await response.json(); // Parse error details
-                console.error('Error updating lesson:', errorData);
+                console.error('Error updating task:', errorData);
                 return {
                     success: false,
                     error: errorData
                 };
             }
 
-            return redirect(303, `/t/lessons/l/${id}`);
+            return redirect(303, `/t/tasks/t/${id}`);
         } catch (error) {
             console.error('Fetch error:', error);
             return {
                 success: false,
-                error: 'An error occurred while updating the lesson'
+                error: 'An error occurred while updating the task'
             };
         }
     },
     delete: async ({ request, fetch }) => {
         const formData = await request.formData();
         const id = formData.get('id');
-        console.log('Deleting lesson:', id);
+        console.log('Deleting task:', id);
 
-        const response = await fetch(`/axum/lesson/l/${id}`, {
+        const response = await fetch(`/axum/task/l/${id}`, {
             method: 'DELETE'
         });
 
         if (!response.ok) {
             const errorData = await response.json(); // Parse error details
-            console.error('Error deleting lesson:', errorData);
+            console.error('Error deleting task:', errorData);
             return {
                 success: false,
                 error: errorData
             };
         }
 
-        redirect(303, '/t/lessons');
+        redirect(303, '/t/tasks');
 
     }
 } satisfies Actions;

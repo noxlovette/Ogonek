@@ -1,17 +1,35 @@
 use crate::auth::jwt::Claims;
 use crate::db::error::DbError;
 use crate::db::init::AppState;
-use crate::models::tasks::{TaskBody, TaskCreateBody, TaskUpdate};
+use crate::models::tasks::{TaskBody, TaskBodyWithStudent, TaskCreateBody, TaskUpdate};
 use axum::extract::{Json, Path, State};
 
 pub async fn fetch_task(
     State(state): State<AppState>,
     Path(id): Path<String>,
     claims: Claims,
-) -> Result<Json<Option<TaskBody>>, DbError> {
+) -> Result<Json<Option<TaskBodyWithStudent>>, DbError> {
     let task = sqlx::query_as!(
-        TaskBody,
-        "SELECT * FROM tasks WHERE id = $1 AND (assignee = $2 OR created_by = $2)",
+        TaskBodyWithStudent,
+        r#"
+        SELECT 
+            t.id,
+            t.title,
+            t.markdown,
+            t.priority,
+            t.completed,
+            t.due_date,
+            t.file_path,
+            t.assignee,
+            t.created_by,
+            t.created_at,
+            t.updated_at,
+            u.name as assignee_name
+        FROM tasks t
+        LEFT JOIN "user" u ON t.assignee = u.id
+        WHERE t.id = $1 
+        AND (t.assignee = $2 OR t.created_by = $2)
+        "#,
         id,
         claims.sub
     )
@@ -39,6 +57,12 @@ pub async fn create_task(
     claims: Claims,
     Json(payload): Json<TaskCreateBody>,
 ) -> Result<Json<TaskBody>, DbError> {
+    let mut assignee = &claims.sub;
+
+    if payload.assignee.is_some() {
+        assignee = payload.assignee.as_ref().unwrap();
+    }
+
     let task = sqlx::query_as!(
         TaskBody,
         "INSERT INTO tasks (id, title, markdown, due_date, assignee, created_by)
@@ -48,7 +72,7 @@ pub async fn create_task(
         payload.title,
         payload.markdown,
         payload.due_date,
-        payload.assignee,
+        assignee,
         claims.sub,
     )
     .fetch_one(&state.db)

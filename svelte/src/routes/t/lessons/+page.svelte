@@ -22,7 +22,7 @@
 		]
 	};
 
-	let href = $user.role === 'teacher' ? `/t/lessons/l/` : `/s/lessons/l/`;
+	let href = $user.role === 'teacher' ? `/t/lessons/l` : `/s/lessons/l`;
 </script>
 
 <Header>Lessons</Header>

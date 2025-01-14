@@ -17,7 +17,6 @@
 	let { data, children }: Props = $props();
 
 	const { tasks, lessons, students } = data;
-	console.log('lessons from layout', lessons);
 
 	lessonsStore.setLessons(lessons);
 

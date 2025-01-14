@@ -13,7 +13,7 @@
 	const taskConfig: TableConfig<Task> = {
 		columns: [
 			{ key: 'title', label: 'Title' },
-			{ key: 'markdown', label: 'Topic' },
+			{ key: 'markdown', label: 'Markdown' },
 			{
 				key: 'assigneeName',
 				label: 'Assignee',
@@ -23,7 +23,7 @@
 		]
 	};
 
-	let href = $user.role === 'teacher' ? `/t/tasks/t/` : `/s/tasks/t/`;
+	let href = $user.role === 'teacher' ? `/t/tasks/t` : `/s/tasks/t`;
 </script>
 
 <Header>Tasks</Header>

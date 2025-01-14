@@ -26,13 +26,34 @@ pub struct TaskBody {
 #[serde_with::serde_as]
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
+pub struct TaskBodyWithStudent {
+    pub id: String,
+    pub title: String,
+    pub markdown: String,
+    pub priority: i16,
+    pub completed: bool,
+    #[serde_as(as = "Rfc3339")]
+    pub created_at: OffsetDateTime,
+    #[serde_as(as = "Rfc3339")]
+    pub updated_at: OffsetDateTime,
+    #[serde_as(as = "Option<Rfc3339>")]
+    pub due_date: Option<OffsetDateTime>,
+    pub file_path: Option<String>,
+    pub created_by: String,
+    pub assignee: String,
+    pub assignee_name: String, // or whatever new field you need
+}
+
+#[serde_with::serde_as]
+#[derive(Serialize, Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
 pub struct TaskCreateBody {
     pub title: String,
     pub markdown: String,
     pub priority: Option<i16>,
     #[serde_as(as = "Option<Rfc3339>")]
     pub due_date: Option<OffsetDateTime>,
-    pub assignee: String,
+    pub assignee: Option<String>,
 }
 
 #[serde_with::serde_as]
