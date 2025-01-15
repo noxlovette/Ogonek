@@ -21,7 +21,7 @@ export const actions: Actions = {
         console.log(response);
 
         if (response.ok) {
-            return redirect(301, `/t/lessons/l/${id}`);
+            return redirect(301, `/t/lessons/l/${id}/edit`);
         }
 
     }

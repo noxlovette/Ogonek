@@ -1,8 +1,5 @@
 <script lang="ts">
 	import type { PageData } from './$types';
-	import type { Student } from '$lib/types';
-
-	import { getContext } from 'svelte';
 	import StudentCard from '$lib/components/cards/StudentCard.svelte';
 	import Header from '$lib/components/typography/Header.svelte';
 

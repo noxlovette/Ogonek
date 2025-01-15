@@ -20,7 +20,7 @@ export const actions = {
 
         console.log('Updating lesson:', body);
 
-        try {
+        
             const response = await fetch(`/axum/lesson/l/${formData.get('id')}`, {
                 method: 'PATCH',
                 body: JSON.stringify(body)
@@ -35,14 +35,9 @@ export const actions = {
                 };
             }
 
-            return redirect(303, `/t/lessons/l/${id}`);
-        } catch (error) {
-            console.error('Fetch error:', error);
-            return {
-                success: false,
-                error: 'An error occurred while updating the lesson'
-            };
-        }
+            redirect(303, `/t/lessons/l/${id}`);
+ 
+        
     },
     delete: async ({ request, fetch }) => {
         const formData = await request.formData();

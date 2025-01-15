@@ -20,7 +20,7 @@ export const actions: Actions = {
         console.log(response);
 
         if (response.ok) {
-            return redirect(301, `/t/tasks/t/${id}`);
+            return redirect(301, `/t/tasks/t/${id}/edit`);
         }
 
     }

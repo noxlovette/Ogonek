@@ -3,8 +3,9 @@
 	import LessonCardBig from '$lib/components/cards/LessonCardBig.svelte';
 	import { getContext } from 'svelte';
 	import { language, translations } from '$lib/stores';
+	import type {Lesson} from '$lib/types';
 
-	const lessons: App.Lesson[] = getContext('lessons');
+	const lessons: Lesson[] = getContext('lessons');
 </script>
 
 <Header>

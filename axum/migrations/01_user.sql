@@ -8,8 +8,8 @@ CREATE TABLE "user" (
     email VARCHAR NOT NULL,
     pass VARCHAR NOT NULL,
     role VARCHAR NOT NULL,
-    verified BOOLEAN DEFAULT false,
-    joined TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    verified BOOLEAN NOT NULL DEFAULT false,
+    joined TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT user_username_key UNIQUE (username),
     CONSTRAINT user_email_key UNIQUE (email),
     CONSTRAINT email_format CHECK (email ~* '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$')

@@ -2,12 +2,12 @@ use crate::auth::jwt::Claims;
 use crate::db::error::DbError;
 use crate::db::init::AppState;
 use crate::models::students::AddStudentRequest;
+use crate::models::students::UpdateStudentRequest;
 use crate::models::users::Student;
 use axum::extract::Json;
 use axum::extract::State;
 use axum::http::StatusCode;
 
-// does not handle the case of 'resurrection'
 pub async fn upsert_student(
     claims: Claims, // from auth middleware
     State(state): State<AppState>,
@@ -66,6 +66,32 @@ pub async fn remove_student(
     Ok(StatusCode::NO_CONTENT)
 }
 
+pub async fn modify_student(
+    claims: Claims,
+    State(state): State<AppState>,
+    Json(payload): Json<UpdateStudentRequest>,
+) -> Result<StatusCode, DbError> {
+    // Soft delete the relationship
+    sqlx::query!(
+        r#"
+        UPDATE teacher_student
+        SET markdown = $3
+        WHERE teacher_id = $1 AND student_id = $2
+        "#,
+        claims.sub,
+        payload.student_id,
+        payload.markdown
+    )
+    .execute(&state.db)
+    .await
+    .map_err(|e| {
+        eprintln!("Failed to modify student: {:?}", e);
+        DbError::Db
+    })?;
+
+    Ok(StatusCode::NO_CONTENT)
+}
+
 pub async fn list_teacher_students(
     claims: Claims,
     State(state): State<AppState>,
@@ -73,7 +99,7 @@ pub async fn list_teacher_students(
     let students = sqlx::query_as!(
         Student,
         r#"
-        SELECT u.username, u.email, u.role, u.id, u.name, u.verified
+        SELECT u.username, u.email, u.id, u.name, markdown
         FROM "user" u
         INNER JOIN teacher_student ts ON u.id = ts.student_id
         WHERE ts.teacher_id = $1 AND ts.status = 'active'

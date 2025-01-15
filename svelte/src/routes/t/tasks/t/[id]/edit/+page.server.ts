@@ -16,9 +16,6 @@ export const actions = {
             assignee
         };
 
-        console.log('Updating task:', body);
-
-        try {
             const response = await fetch(`/axum/task/t/${formData.get('id')}`, {
                 method: 'PATCH',
                 body: JSON.stringify(body)
@@ -33,21 +30,12 @@ export const actions = {
                 };
             }
 
-            return redirect(303, `/t/tasks/t/${id}`);
-        } catch (error) {
-            console.error('Fetch error:', error);
-            return {
-                success: false,
-                error: 'An error occurred while updating the task'
-            };
-        }
+            redirect(303, `/t/tasks/t/${id}`);
     },
     delete: async ({ request, fetch }) => {
         const formData = await request.formData();
         const id = formData.get('id');
-        console.log('Deleting task:', id);
-
-        const response = await fetch(`/axum/task/l/${id}`, {
+                const response = await fetch(`/axum/task/t/${id}`, {
             method: 'DELETE'
         });
 

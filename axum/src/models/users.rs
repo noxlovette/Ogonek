@@ -53,8 +53,7 @@ pub struct Student {
     pub name: String,
     pub username: String,
     pub email: String,
-    pub role: String,
-    pub verified: bool,
+    pub markdown: Option<String>,
 }
 
 #[derive(Debug, Deserialize, Validate)]
