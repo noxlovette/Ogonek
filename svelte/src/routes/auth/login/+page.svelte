@@ -5,7 +5,7 @@
 	import { setUser } from '$lib/stores';
 
 	const handleLoginResult = async ({ result, update }: { result: any; update: () => void }) => {
-		console.log(result);
+
 		if (result.type === 'success') {
 			const { name, username, role } = result.data.user;
 			const user = { name, username, role };
@@ -16,7 +16,7 @@
 				update();
 				return;
 			}
-			console.log(user);
+
 			notification.set({ message: 'Welcome back!', type: 'success' });
 			await goto('/s/dashboard');
 		} else {

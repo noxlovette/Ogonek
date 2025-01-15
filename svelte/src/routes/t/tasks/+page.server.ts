@@ -8,8 +8,6 @@ export const actions: Actions = {
             markdown: "## Try adding some content here",
         }
 
-        console.log("new triggered");
-
         const response = await fetch(`/axum/task`, {
             method: 'POST',
             body: JSON.stringify(body)
@@ -17,7 +15,7 @@ export const actions: Actions = {
 
         const { id } = await response.json();
 
-        console.log(response);
+
 
         if (response.ok) {
             return redirect(301, `/t/tasks/t/${id}/edit`);

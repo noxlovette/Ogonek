@@ -9,7 +9,6 @@ export const actions: Actions = {
             topic: "General",
         }
 
-        console.log("new triggered");
 
         const response = await fetch(`/axum/lesson`, {
             method: 'POST',
@@ -18,7 +17,6 @@ export const actions: Actions = {
 
         const { id } = await response.json();
 
-        console.log(response);
 
         if (response.ok) {
             return redirect(301, `/t/lessons/l/${id}/edit`);

@@ -6,7 +6,7 @@ use axum::response::{IntoResponse, Response};
 use axum::Json;
 use serde::{Deserialize, Serialize};
 use validator::Validate;
-
+use chrono::{DateTime, Utc};
 
 #[derive(Serialize, Deserialize, Debug, Validate)]
 #[serde(rename_all = "camelCase")]
@@ -23,6 +23,12 @@ pub struct SignUpPayload {
     #[validate(length(min = 3, max = 16))]
     pub username: String,
     pub role: String,
+}
+
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct SignUpBody {
+    pub id: String,
 }
 
 #[derive(Deserialize, Debug)]
@@ -126,4 +132,27 @@ fn build_auth_cookie(name: &str, value: String, is_refresh: bool) -> Cookie {
         })
         .path("/")
         .build()
+}
+
+
+// Simple struct to hold the invite data
+#[derive(Serialize, Deserialize)]
+pub struct InviteToken {
+   pub teacher_id: String,
+    pub created_at: DateTime<Utc>,
+}
+
+
+impl InviteToken {
+    pub fn new(teacher_id: String) -> Self {
+        Self { teacher_id,
+        created_at: Utc::now(),
+        }
+    }
+}
+
+#[derive(Deserialize)]
+pub struct BindPayload {
+   pub  student_id: String,  // Could be either the person inviting or being invited
+   pub  invite_token: String,
 }

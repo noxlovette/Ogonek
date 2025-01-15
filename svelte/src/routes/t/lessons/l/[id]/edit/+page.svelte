@@ -8,9 +8,7 @@
 	let { lesson, students } = data;
 	let isSubmitting = $state(false);
 	let markdown = $state(lesson.markdown);
-	$effect(() => {
-		console.log(markdown);
-	});
+
 </script>
 
 <form
@@ -18,10 +16,10 @@
 	action="?/update"
 	class="space-y-4 mb-4"
 	use:enhance={() => {
-		console.log('enhance');
+
 		isSubmitting = true;
 		return async ({ result, update }) => {
-			console.log(result);
+
 			isSubmitting = false;
 			update();
 		};

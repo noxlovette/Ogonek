@@ -3,18 +3,22 @@ use crate::auth::helpers::verify_password;
 use crate::auth::helpers::{generate_refresh_token, generate_token, hash_password};
 use crate::auth::jwt::RefreshClaims;
 use crate::db::init::AppState;
-use crate::models::users::{AuthBody, AuthPayload, SignUpPayload, User};
+use crate::models::users::{AuthBody, AuthPayload, SignUpPayload, User, InviteToken, BindPayload, SignUpBody};
 use axum::extract::Json;
 use axum::extract::State;
 use axum::response::Response;
 use hyper::StatusCode;
 use nanoid::nanoid;
 use validator::Validate;
+use crate::auth::jwt::Claims;
+
+use base64::{Engine as _, engine::general_purpose::URL_SAFE};
+
 
 pub async fn signup(
     State(state): State<AppState>,
     Json(payload): Json<SignUpPayload>,
-) -> Result<Response, AuthError> {
+) -> Result<Json<SignUpBody>, AuthError> {
     tracing::info!("Creating user");
     if payload.username.is_empty() || payload.pass.is_empty() {
         return Err(AuthError::InvalidCredentials);
@@ -60,11 +64,8 @@ pub async fn signup(
         }
         _ => e.into(),
     })?;
-
-    Ok(Response::builder()
-        .status(StatusCode::OK)
-        .body(axum::body::Body::empty())
-        .unwrap())
+    
+Ok(Json(SignUpBody { id }))
 }
 
 pub async fn authorize(
@@ -129,4 +130,52 @@ pub async fn refresh(
 
     let token = generate_token(&user)?;
     Ok(AuthBody::into_refresh(token))
+}
+
+
+
+// Generate invite link endpoint
+pub async fn generate_invite_link(
+    claims: Claims,
+) -> Result<Json<String>, AuthError> {
+    if claims.role != "teacher" {
+        return Err(AuthError::InvalidToken);
+    }
+
+    let token = InviteToken::new(claims.sub);
+    let encoded = URL_SAFE.encode(serde_json::to_string(&token).unwrap().as_bytes());
+    
+    Ok(Json(format!("http://localhost:5173/auth/signup?invite={}", encoded)))
+}
+
+
+// New endpoint for binding students to teachers
+pub async fn bind_student_to_teacher(
+    State(state): State<AppState>,
+    Json(payload): Json<BindPayload>,
+) -> Result<StatusCode, AuthError> {
+
+    let token: InviteToken = serde_json::from_str(
+        &String::from_utf8(
+            URL_SAFE.decode(&payload.invite_token).unwrap()
+        ).map_err(|_| AuthError::InvalidToken)?
+    ).map_err(|_| AuthError::InvalidToken)?;
+
+    sqlx::query!(
+        r#"
+        INSERT INTO teacher_student (teacher_id, student_id)
+        VALUES ($1, $2)
+        ON CONFLICT DO NOTHING 
+        "#,
+        token.teacher_id,
+        payload.student_id
+    )
+    .execute(&state.db)
+    .await
+    .map_err(|e| {
+        eprintln!("Failed to bind student: {:?}", e);
+        AuthError::InvalidCredentials
+    })?;
+
+    Ok(StatusCode::NO_CONTENT)
 }

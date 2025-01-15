@@ -44,3 +44,4 @@ nanoid = "0.4.0"
 time = "0.3.37"
 tower = { version = "0.5.2", features = ["full"] }
 tower-cookies = "0.11.0"
+base64 = "0.22.1"
