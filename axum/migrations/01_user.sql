@@ -1,6 +1,4 @@
 -- Add migration script here
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-
 CREATE TABLE "user" (
     id VARCHAR(21) PRIMARY KEY, -- 21 is nanoid's default length
     name VARCHAR NOT NULL CHECK (LENGTH(name) >= 3),

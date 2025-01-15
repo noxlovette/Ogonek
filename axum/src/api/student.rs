@@ -1,17 +1,17 @@
 use crate::auth::jwt::Claims;
 use crate::db::error::DbError;
 use crate::db::init::AppState;
-use crate::models::students::AddStudentRequest;
 use crate::models::students::UpdateStudentRequest;
-use crate::models::users::Student;
+use crate::models::students::Student;
 use axum::extract::Json;
 use axum::extract::State;
 use axum::http::StatusCode;
+use axum::extract::Path;
 
 pub async fn upsert_student(
     claims: Claims, // from auth middleware
     State(state): State<AppState>,
-    Json(payload): Json<AddStudentRequest>,
+    Path(id): Path<String>,
 ) -> Result<StatusCode, DbError> {
     // Insert the relationship
 
@@ -25,7 +25,7 @@ pub async fn upsert_student(
         ON CONFLICT (teacher_id, student_id) DO UPDATE SET status = 'active'
         "#,
         claims.sub, // teacher's ID from auth
-        payload.student_id
+        id
     )
     .execute(&state.db)
     .await
@@ -42,9 +42,9 @@ pub async fn upsert_student(
 }
 
 pub async fn remove_student(
-    claims: Claims,
     State(state): State<AppState>,
-    Json(payload): Json<AddStudentRequest>,
+    Path(id): Path<String>,
+    claims: Claims,
 ) -> Result<StatusCode, DbError> {
     // Soft delete the relationship
     sqlx::query!(
@@ -54,7 +54,7 @@ pub async fn remove_student(
         WHERE teacher_id = $1 AND student_id = $2
         "#,
         claims.sub,
-        payload.student_id
+        id
     )
     .execute(&state.db)
     .await
@@ -66,9 +66,11 @@ pub async fn remove_student(
     Ok(StatusCode::NO_CONTENT)
 }
 
-pub async fn modify_student(
+
+pub async fn update_student(
     claims: Claims,
     State(state): State<AppState>,
+    Path(id): Path<String>,
     Json(payload): Json<UpdateStudentRequest>,
 ) -> Result<StatusCode, DbError> {
     // Soft delete the relationship
@@ -79,7 +81,7 @@ pub async fn modify_student(
         WHERE teacher_id = $1 AND student_id = $2
         "#,
         claims.sub,
-        payload.student_id,
+        id,
         payload.markdown
     )
     .execute(&state.db)
@@ -92,14 +94,40 @@ pub async fn modify_student(
     Ok(StatusCode::NO_CONTENT)
 }
 
-pub async fn list_teacher_students(
+pub async fn fetch_student(
+    claims: Claims,
+    State(state): State<AppState>,
+    Path(id): Path<String>,
+) -> Result<Json<Student>, DbError> {
+    let student = sqlx::query_as!(
+        Student,
+        r#"
+        SELECT u.username, u.email, u.id, u.name, markdown
+        FROM "user" u
+        INNER JOIN teacher_student ts ON u.id = ts.student_id
+        WHERE ts.teacher_id = $1 AND student_id = $2
+        "#,
+        claims.sub,
+        id,
+    )
+    .fetch_one(&state.db)
+    .await
+    .map_err(|e| {
+        eprintln!("{:?}", e);
+        DbError::Db
+    })?;
+
+    Ok(Json(student))
+}
+
+pub async fn list_students(
     claims: Claims,
     State(state): State<AppState>,
 ) -> Result<Json<Vec<Student>>, DbError> {
     let students = sqlx::query_as!(
         Student,
         r#"
-        SELECT u.username, u.email, u.id, u.name, markdown
+        SELECT u.username, u.email, u.id, u.name, ts.markdown
         FROM "user" u
         INNER JOIN teacher_student ts ON u.id = ts.student_id
         WHERE ts.teacher_id = $1 AND ts.status = 'active'

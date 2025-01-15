@@ -5,6 +5,7 @@ use time::OffsetDateTime;
 
 #[serde_with::serde_as]
 #[derive(Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct TeacherStudent {
     pub teacher_id: String, // VARCHAR(21)
     pub student_id: String, // VARCHAR(21)
@@ -14,12 +15,22 @@ pub struct TeacherStudent {
     pub joined: OffsetDateTime,
 }
 
+#[derive(Serialize, Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct Student {
+    pub id: String,
+    pub name: String,
+    pub username: String,
+    pub email: String,
+    pub markdown: Option<String>,
+}
+
 #[derive(Deserialize)]
 pub struct AddStudentRequest {
     pub student_id: String,
 }
 
-
+#[derive(Deserialize)]
 pub struct UpdateStudentRequest {
     pub student_id: String,
     pub markdown: Option<String>,

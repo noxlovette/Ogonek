@@ -7,6 +7,7 @@ use axum::Json;
 use serde::{Deserialize, Serialize};
 use validator::Validate;
 
+
 #[derive(Serialize, Deserialize, Debug, Validate)]
 #[serde(rename_all = "camelCase")]
 pub struct SignUpPayload {
@@ -46,15 +47,7 @@ pub struct User {
     pub role: String,
     pub verified: bool,
 }
-#[derive(Serialize, Deserialize, Debug)]
-#[serde(rename_all = "camelCase")]
-pub struct Student {
-    pub id: String,
-    pub name: String,
-    pub username: String,
-    pub email: String,
-    pub markdown: Option<String>,
-}
+
 
 #[derive(Debug, Deserialize, Validate)]
 #[serde(rename_all = "camelCase")]

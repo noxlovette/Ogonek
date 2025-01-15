@@ -46,13 +46,12 @@ export interface Student {
     username: string;
     email: string;
     role: string;
-    // quizlet_url: string;
+    markdown: string;
+    joined: string;
 }
 
 export interface BaseTableItem {
     id: string;
-    createdAt: string;
-    assignee: string;
 }
 
 export interface TableConfig<T extends BaseTableItem> {
