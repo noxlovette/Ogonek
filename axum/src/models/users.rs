@@ -7,6 +7,7 @@ use axum::Json;
 use serde::{Deserialize, Serialize};
 use validator::Validate;
 use chrono::{DateTime, Utc};
+use axum_extra::extract::cookie::{Cookie, SameSite};  
 
 #[derive(Serialize, Deserialize, Debug, Validate)]
 #[serde(rename_all = "camelCase")]
@@ -64,7 +65,6 @@ pub struct AuthPayload {
     pub pass: String,
 }
 
-use tower_cookies::{cookie::SameSite, Cookie};
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -124,13 +124,14 @@ fn build_auth_cookie(name: &str, value: String, is_refresh: bool) -> Cookie {
     Cookie::build((name, value))
         .http_only(true)
         .secure(env::var("APP_ENV").unwrap() == "production")
-        .same_site(SameSite::Strict)
+        .same_site(SameSite::Lax)
         .max_age(if is_refresh {
             time::Duration::days(30)
         } else {
             time::Duration::minutes(15)
         })
         .path("/")
+        .domain("localhost")
         .build()
 }
 

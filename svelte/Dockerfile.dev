@@ -1,21 +1,28 @@
 # syntax=docker/dockerfile:1
 
-# Use the latest Bun image
-FROM oven/bun:latest
+# Use Node LTS (slim for smaller image)
+FROM node:20-slim
 
-# Set a working directory
+# Install pnpm globally
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable
+
+# Set working directory
 WORKDIR /app
 
-# Copy package files
-COPY package*.json ./
-COPY bun.lockb ./bun.lock
+# Copy package files first (for better layer caching)
+COPY pnpm-lock.yaml package.json ./
 
-RUN bun install
-RUN bun install -g nodemon chokidar
+# Install dependencies with pnpm
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
+# Development dependencies like nodemon
+RUN pnpm add -g nodemon chokidar
+
+# Copy the rest of your code
 COPY . .
 
-# Expose the port used by your app (adjust if needed)
 EXPOSE 3000
 
-CMD ["bun", "run", "dev"]
+CMD ["pnpm", "run", "dev"]

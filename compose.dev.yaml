@@ -3,26 +3,40 @@ services:
     build:
       context: ./svelte
       dockerfile: Dockerfile.dev
-    container_name: svelte-fl
+    container_name: svelte-fl-dev
     ports:
-      - "5173:3000"
+      - "5173:5173"
     volumes:
       - ./svelte:/app
+      - uploads:/app/public/media
     env_file:
       - ./svelte/.env
     depends_on:
+      - axum
+
+
+  nginx:
+    image: nginx
+    container_name: nginx-fl-dev
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - uploads:/app/public/media:ro  # assuming these are static files
+    depends_on:
+      - svelte
       - axum
 
   axum:
     build:
       context: ./axum
       dockerfile: Dockerfile.dev
-    container_name: axum-fl
-    ports:
-      - "8000:8000"
+    container_name: axum-fl-dev
     volumes:
       - ./axum:/app
       - cargo-cache:/usr/local/cargo/registry
+      - cargo-target:/app/target
     env_file:
       - ./axum/.env
     depends_on:
@@ -35,12 +49,12 @@ services:
     restart: always
     user: postgres
     volumes:
-      - pg-fl-dev:/var/lib/postgresql/data
+      - db-data:/var/lib/postgresql/data
     environment:
       - POSTGRES_DB=${DB_NAME}
-      - POSTGRES_PASSWORD=${DB_PASSWORD} # Use environment variable for security
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
     ports:
-      - "5432:5432" # Keep this port mapping for admin access or debugging
+      - "5432:5432"
     healthcheck:
       test: ["CMD", "pg_isready"]
       interval: 10s
@@ -49,4 +63,10 @@ services:
 
 volumes:
   cargo-cache:
-  pg-fl-dev:
+    name: cargo-cache-fl-dev
+  cargo-target:
+    name: cargo-target-fl-dev
+  db-data:
+    name: db-fl-data
+  uploads:
+    name: uploads-fl-dev

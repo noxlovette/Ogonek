@@ -1,0 +1,11 @@
+./axum/.dockerignore
+----------------
+debug/
+**/*.rs.bk
+.git
+.gitignore
+!.env.example
+.vscode
+.idea
+*.log
+.DS_Store

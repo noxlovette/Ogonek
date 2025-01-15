@@ -1,74 +1,87 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
-	import { notification } from '$lib/stores';
-	import { goto } from '$app/navigation';
-	import { setUser } from '$lib/stores';
+    import { goto } from '$app/navigation';
+    import { ValidateAccess } from '$lib/utils';
 
-	const handleLoginResult = async ({ result, update }: { result: any; update: () => void }) => {
+    let username = '';
+    let password = '';
+    let error = '';
+    let loading = false;
 
-		if (result.type === 'success') {
-			const { name, username, role } = result.data.user;
-			const user = { name, username, role };
-			localStorage.setItem('user', JSON.stringify(user));
-			setUser(user);
-			if (!user) {
-				notification.set({ message: 'JWT Failure', type: 'error' });
-				update();
-				return;
-			}
+    async function handleSubmit(event: SubmitEvent) {
+        event.preventDefault();
+        loading = true;
+        error = '';
 
-			notification.set({ message: 'Welcome back!', type: 'success' });
-			await goto('/s/dashboard');
-		} else {
-			if (result.data) {
-				notification.set({
-					message: result.data.message || 'Login failed',
-					type: 'error'
-				});
-			} else {
-				notification.set({ message: 'Login failed', type: 'error' });
-			}
-		}
-		update();
-	};
+        try {
+            const response = await fetch('/api/auth/signin', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+					'X-API-KEY': "oCvJe2zibUf6RC/l68hLslG3JBaRvGtCCoBfFSre+wY"
+                },
+                body: JSON.stringify({
+                    username,
+                    pass: password
+                }),
+                // Important for cookies!
+                credentials: 'include'
+            });
+
+            if (!response.ok) {
+                throw new Error('Login failed');
+            }
+
+            const { accessToken } = await response.json();
+            const user = await ValidateAccess(accessToken);
+            
+            if (!user) {
+                throw new Error('Invalid access token');
+            }
+
+            // Optional: Store user data in a store
+            // userStore.set(user);
+
+            // Redirect after successful login
+            goto('/s/dashboard');
+        } catch (err) {
+            error = err instanceof Error ? err.message : 'Login failed';
+            console.error('Signin error:', err);
+        } finally {
+            loading = false;
+        }
+    }
 </script>
 
-<div class="size-full items-center justify-center flex">
-	<form
-		method="POST"
-		use:enhance={() => handleLoginResult}
-		class="login-form bg-brick-50 p-8 rounded-md shadow-lg flex flex-col ring ring-milk-100  h-[500px]"
-	>
-		<h1 class="text-4xl">Welcome back</h1>
-
-		<div class="my-4">
-			<p class="opacity-60 font-bold text-sm mb-1">Username</p>
-			<input
-				type="text"
-				id="username"
-				name="username"
-				placeholder="Username"
-				required
-				class="rounded-lg bg-brick-50 p-2 ring-2 ring-milk-300"
-			/>
-		</div>
-
-		<div>
-			<p class="opacity-60 font-bold text-sm mb-1">Password</p>
-			<input
-				type="password"
-				id="password"
-				name="password"
-				required
-				placeholder="Password"
-				class="rounded-lg bg-brick-50 p-2 ring-2 ring-milk-300"
-			/>
-		</div>
-
-		<button
-			type="submit"
-			class="bg-brick-700 ring-2 text-brick-50 px-4 py-2 w-20 mt-auto rounded-lg ring-milk-300 text-center hover:bg-brick-600 transition-colors"
-			>Login</button
-		>
-	</form>
-</div>
+<form on:submit={handleSubmit} class="space-y-4">
+    {#if error}
+        <div class="text-red-500">{error}</div>
+    {/if}
+    
+    <div>
+        <input
+            type="text"
+            bind:value={username}
+            placeholder="Username"
+            class="w-full p-2 border rounded"
+            required
+        />
+    </div>
+    
+    <div>
+        <input
+            type="password"
+            bind:value={password}
+            placeholder="Password"
+            class="w-full p-2 border rounded"
+            required
+        />
+    </div>
+    
+    <button
+        type="submit"
+        class="w-full p-2 bg-blue-500 text-white rounded"
+        disabled={loading}
+    >
+        {loading ? 'Logging in...' : 'Login'}
+    </button>
+</form>

@@ -7,7 +7,7 @@ edition = "2021"
 [dependencies]
 # Primary Crates
 axum = { version = "0.8.1", features = ["macros"] }
-axum-extra = { version = "0.10.0", features = ["typed-header"] }
+axum-extra = { version = "0.10.0", features = ["typed-header", "cookie"] }
 sqlx = { version = "0.8.2", features = [
     "runtime-tokio",
     "tls-rustls-ring",
@@ -24,7 +24,6 @@ serde_json = "1.0"
 serde_with = { version = "2.0.0", features = ["time_0_3"] }
 jsonwebtoken = { version = "9.3.0", features = ["use_pem"] }
 log = "0.4"
-r2d2 = "0.8.10"
 uuid = { version = "1.11.0", features = ["serde", "v4", "v7"] }
 hyper = "1.5.2"
 argon2 = "0.5.3"
@@ -43,5 +42,4 @@ regex = "1.11.1"
 nanoid = "0.4.0"
 time = "0.3.37"
 tower = { version = "0.5.2", features = ["full"] }
-tower-cookies = "0.11.0"
 base64 = "0.22.1"

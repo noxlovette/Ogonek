@@ -7,7 +7,8 @@ use crate::models::users::{AuthBody, AuthPayload, SignUpPayload, User, InviteTok
 use axum::extract::Json;
 use axum::extract::State;
 use axum::response::Response;
-use hyper::StatusCode;
+use axum_extra::headers;
+use hyper::{HeaderMap, StatusCode};
 use nanoid::nanoid;
 use validator::Validate;
 use crate::auth::jwt::Claims;
@@ -64,14 +65,19 @@ pub async fn signup(
         }
         _ => e.into(),
     })?;
-    
+
 Ok(Json(SignUpBody { id }))
 }
 
 pub async fn authorize(
+    headers: HeaderMap,
     State(state): State<AppState>,
     Json(payload): Json<AuthPayload>,
 ) -> Result<Response, AuthError> {
+
+    tracing::debug!("Received host header: {:?}", headers.get("host"));
+    tracing::debug!("Received origin header: {:?}", headers.get("origin"));
+
     if payload.username.is_empty() || payload.pass.is_empty() {
         return Err(AuthError::InvalidCredentials);
     }
@@ -104,6 +110,8 @@ pub async fn authorize(
 
     let token = generate_token(&user)?;
     let refresh_token = generate_refresh_token(&user)?;
+
+    
     Ok(AuthBody::into_response(token, refresh_token))
 }
 
@@ -131,6 +139,7 @@ pub async fn refresh(
     let token = generate_token(&user)?;
     Ok(AuthBody::into_refresh(token))
 }
+
 
 
 

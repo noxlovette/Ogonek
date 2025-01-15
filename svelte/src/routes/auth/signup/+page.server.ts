@@ -2,7 +2,7 @@ import type { Actions } from './$types';
 import { redirect, fail } from '@sveltejs/kit';
 
 export const actions: Actions = {
-	default: async ({ request, url }) => {
+	default: async ({ request, url, fetch }) => {
 		const data = await request.formData();
 		const username = data.get('username') as string;
 		const pass = data.get('password') as string;
@@ -12,7 +12,6 @@ export const actions: Actions = {
 
 		const invite_token = url.searchParams.get('invite')
 
-		try {
 			const response = await fetch('/axum/auth/signup', {
 				method: 'POST',
 				body: JSON.stringify({
@@ -26,6 +25,7 @@ export const actions: Actions = {
 
 			if (invite_token) {
 				const student_id = await response.json().then((data) => data.id);
+				console.log(student_id);
 				const invite = await fetch('/axum/auth/bind', {
 					method: 'POST',
 					body: JSON.stringify({
@@ -33,16 +33,17 @@ export const actions: Actions = {
 						student_id
 					})
 				});
+
+				if (!invite.ok) {
+					return fail(400, { success: false, message: 'Failed to bind invite' });
+				
 			}
 
 			if (response.ok) {
-				return redirect(302, '/login');
+				return redirect(302, '/auth/login');
 			}
 
 			const error = await response.json();
-			return fail(400, { success: false, message: error.message });
-		} catch (error) {
-			return fail(400, { success: false, message: error instanceof Error ? error.message : 'Login failed' });
-		}
+			return fail(400, { success: false, message: error.message });		
 	}
-};
+	}} satisfies Actions;
