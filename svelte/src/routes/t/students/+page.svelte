@@ -7,6 +7,7 @@
 	import {formatDateTime} from '$lib/utils';
 	import { enhance } from '$app/forms';
 	import {notification} from '$lib/stores';
+	import type { SubmitFunction } from '@sveltejs/kit';
 
 	let { data }: { data: PageData } = $props();
 
@@ -21,35 +22,45 @@
 		]
 	};
 
-
-const handle = async ({ result, update }: { result: any; update: () => void }) => {
-
-	console.log(result)
-
-if (result.type === 'success') {
-	const { data } = result.data;
-	notification.set({ message: 'Link Generated', type: 'success' });
-	console.log(data);
-} else {
-	if (result.data) {
-		notification.set({
-			message: result.data.message || 'Generation failed',
-			type: 'error'
-		});
-	} else {
-		notification.set({ message: 'Login failed', type: 'error' });
+	interface Result {
+		type: 'success' | 'error';
+		data: string;
 	}
-}
-update();
-};
 
 	let href = '/t/students/s';
 </script>
 
 <Table config={studentConfig} {href} items={students} {students}/>
+<form
+	method="POST"
+	use:enhance={({ formElement, formData, action, cancel, submitter }) => {
+		// `formElement` is this `<form>` element
+		// `formData` is its `FormData` object that's about to be submitted
+		// `action` is the URL to which the form is posted
+		// calling `cancel()` will prevent the submission
+		// `submitter` is the `HTMLElement` that caused the form to be submitted
 
-<form method="post" class="bg-black" use:enhance={() => handle}>
-	<button type="submit" onclick={() => console.log('HELLO')}>
-		HELLO
-	</button>
+		return async ({ result, update }) => {
+			if (result.type === 'success') {
+			console.log(result)
+            const link: string = result.data.link;
+            try {
+                await navigator.clipboard.writeText(link);
+                notification.set({ message: 'Link copied to clipboard!', type: 'success' });
+            } catch (err) {
+                notification.set({ message: 'Failed to copy link', type: 'error' });
+            }
+        } else {
+            notification.set({ 
+                message: 'Failed to generate link', 
+                type: 'error' 
+            });
+        }
+		};
+	}}
+>
+
+    <button type="submit">
+        Generate & Copy Link
+    </button>
 </form>

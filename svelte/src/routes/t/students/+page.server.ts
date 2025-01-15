@@ -9,16 +9,14 @@ export const actions: Actions = {
             return fail(400, { error: 'Failed to generate invite link' });
         }
 
-        const data = await response.json();
-        console.log('Invite link:', data);
+        const link = await response.json();
         
         // If your Axum endpoint returns something like:
         // Ok(Json("https://your-app.com/signup?invite=abc123..."))
         // Then 'data' would be that URL string
 
         return { 
-            success: true,
-            data 
+            link
         };
     }
 };
