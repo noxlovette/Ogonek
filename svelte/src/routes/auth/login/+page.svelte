@@ -1,87 +1,92 @@
 <script lang="ts">
     import { goto } from '$app/navigation';
-    import { ValidateAccess } from '$lib/utils';
-
+    
     let username = '';
     let password = '';
-    let error = '';
-    let loading = false;
-
-    async function handleSubmit(event: SubmitEvent) {
-        event.preventDefault();
-        loading = true;
-        error = '';
-
-        try {
-            const response = await fetch('/api/auth/signin', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-					'X-API-KEY': "oCvJe2zibUf6RC/l68hLslG3JBaRvGtCCoBfFSre+wY"
-                },
-                body: JSON.stringify({
-                    username,
-                    pass: password
-                }),
-                // Important for cookies!
-                credentials: 'include'
-            });
-
-            if (!response.ok) {
-                throw new Error('Login failed');
-            }
-
-            const { accessToken } = await response.json();
-            const user = await ValidateAccess(accessToken);
-            
-            if (!user) {
-                throw new Error('Invalid access token');
-            }
-
-            // Optional: Store user data in a store
-            // userStore.set(user);
-
-            // Redirect after successful login
-            goto('/s/dashboard');
-        } catch (err) {
-            error = err instanceof Error ? err.message : 'Login failed';
-            console.error('Signin error:', err);
-        } finally {
-            loading = false;
-        }
+    let isLoading = false;
+    let error: string | null = null;
+  
+    async function handleLogin() {
+      isLoading = true;
+      error = null;
+  
+      try {
+        const res = await fetch('/axum/auth/signin', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            username,
+            pass: password // Matching your API's expected field name
+          })
+        });
+  
+        if (!res.ok) throw new Error('Invalid credentials');
+  
+        const { accessToken } = await res.json();
+        
+        // Store token (you might want to use a store instead)
+        localStorage.setItem('token', accessToken);
+        
+        // Optional: Validate token immediately
+        // const user = await validateAccess(accessToken);
+        // if (!user) throw new Error('Token validation failed');
+  
+        // You might want to set up a user store here
+        goto('/s/dashboard'); // or wherever you want to redirect after login
+        
+      } catch (err) {
+        error = err instanceof Error ? err.message : 'Login failed';
+      } finally {
+        isLoading = false;
+      }
     }
-</script>
-
-<form on:submit={handleSubmit} class="space-y-4">
+  </script>
+  
+  <form 
+    on:submit|preventDefault={handleLogin}
+    class="space-y-4 max-w-md mx-auto p-6"
+  >
+    <div class="space-y-2">
+      <label for="username" class="block text-sm font-medium text-gray-700">
+        Username
+      </label>
+      <input
+        id="username"
+        type="text"
+        bind:value={username}
+        class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500"
+        required
+      />
+    </div>
+  
+    <div class="space-y-2">
+      <label for="password" class="block text-sm font-medium text-gray-700">
+        Password
+      </label>
+      <input
+        id="password"
+        type="password"
+        bind:value={password}
+        class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500"
+        required
+      />
+    </div>
+  
     {#if error}
-        <div class="text-red-500">{error}</div>
+      <div class="text-red-500 text-sm">{error}</div>
     {/if}
-    
-    <div>
-        <input
-            type="text"
-            bind:value={username}
-            placeholder="Username"
-            class="w-full p-2 border rounded"
-            required
-        />
-    </div>
-    
-    <div>
-        <input
-            type="password"
-            bind:value={password}
-            placeholder="Password"
-            class="w-full p-2 border rounded"
-            required
-        />
-    </div>
-    
+  
     <button
-        type="submit"
-        class="w-full p-2 bg-blue-500 text-white rounded"
-        disabled={loading}
+      type="submit"
+      disabled={isLoading}
+      class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 
+             disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
     >
-        {loading ? 'Logging in...' : 'Login'}
+      {#if isLoading}
+        <span class="inline-block animate-spin mr-2">↻</span>
+      {/if}
+      {isLoading ? 'Signing in...' : 'Sign in'}
     </button>
-</form>
+  </form>
