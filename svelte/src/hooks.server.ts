@@ -55,8 +55,36 @@ if (event.url.pathname.startsWith('/auth/')) {
                   }
               }
           }
-      } else {
-        console.log('no access token found');
+      } else if (event.cookies.get("refreshToken")){
+          const refreshToken = event.cookies.get("refreshToken");
+          console.log('refresh token found');
+          if (!isRefreshing) {
+              isRefreshing = true;
+              try {
+                console.debug('attempting to refresh token');
+                  const refreshRes = await event.fetch("/auth/refresh", {
+                      // Adding headers to ensure proper handling
+                      headers: {
+                          'Cookie': `refreshToken=${refreshToken}`,
+                          'Accept': 'application/json'
+                      }
+                  });
+
+                  if (!refreshRes.ok) {
+                      throw new Error("Refresh failed");
+                  }
+
+                  console.log("Token refreshed successfully");
+              } catch (error) {
+                  console.error("Refresh failed:", error);
+                  throw redirect(302, '/auth/login');
+              } finally {
+                  isRefreshing = false;
+              }
+          }
+      
+    } else {
+        console.log('no access or refresh token found');
           throw redirect(302, '/auth/login');
       }
 
