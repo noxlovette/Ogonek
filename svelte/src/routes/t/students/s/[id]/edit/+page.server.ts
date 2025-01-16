@@ -6,18 +6,15 @@ export const actions = {
         const formData = await request.formData();
         const markdown = formData.get('markdown');
         const id = formData.get('id');
-
         let body = {
             markdown,
         };
-
-   
-
-        
             const response = await fetch(`/axum/student/${id}}`, {
                 method: 'PATCH',
                 body: JSON.stringify(body)
             });
+
+            console.debug('Response PAGE SERVER:', response);
 
             if (!response.ok) {
                 const errorData = await response.json(); // Parse error details
@@ -27,7 +24,6 @@ export const actions = {
                     error: errorData
                 };
             }
-
             redirect(303, `/t/students/s/${id}`);
  
         
@@ -35,8 +31,6 @@ export const actions = {
     delete: async ({ request, fetch }) => {
         const formData = await request.formData();
         const id = formData.get('id');
-   
-
         const response = await fetch(`/axum/student/${id}`, {
             method: 'DELETE'
         });

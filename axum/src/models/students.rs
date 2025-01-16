@@ -32,6 +32,6 @@ pub struct AddStudentRequest {
 
 #[derive(Deserialize)]
 pub struct UpdateStudentRequest {
-    pub student_id: String,
+    pub student_id: Option<String>,
     pub markdown: Option<String>,
 }

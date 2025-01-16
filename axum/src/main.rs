@@ -14,7 +14,6 @@ use tower_http::{
     trace::TraceLayer,
 };
 use tracing::{error, info_span};
-use axum::routing::{get, post};
 
 const REQUEST_ID_HEADER: &str = "x-request-id";
 
@@ -34,13 +33,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     .nest("/task", rust::api::routes::task_routes::task_routes())
     .nest("/notes", rust::api::routes::notes_routes::notes_routes())
     .nest("/student", rust::api::routes::student_routes::student_routes())
-    .route("/invite", post(rust::api::auth::generate_invite_link))
-    .route("/bind", post(rust::api::auth::bind_student_to_teacher))
-    .route("/signup", post(rust::api::auth::signup))
+    .nest("/auth", rust::api::routes::auth_routes::auth_routes())
+    
     .layer(axum::middleware::from_fn(validate_api_key));
 
     let app = Router::new()
-        .nest("/auth", rust::api::routes::auth_routes::auth_routes())
         .merge(protected_routes)  // Everything else with API key protection
         .fallback(handler_404)
         .with_state(state)

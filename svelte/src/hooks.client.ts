@@ -1,4 +1,4 @@
-import type { ClientInit } from "@sveltejs/kit";
+import type { ClientInit, Handle } from "@sveltejs/kit";
 import { setUser } from '$lib/stores';
 
 export const init: ClientInit = async () => {
@@ -8,3 +8,4 @@ export const init: ClientInit = async () => {
         setUser(JSON.parse(user));
     }
 };
+

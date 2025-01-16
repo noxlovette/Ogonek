@@ -7,7 +7,6 @@ use crate::models::users::{AuthBody, AuthPayload, SignUpPayload, User, InviteTok
 use axum::extract::Json;
 use axum::extract::State;
 use axum::response::Response;
-use axum_extra::headers;
 use hyper::{HeaderMap, StatusCode};
 use nanoid::nanoid;
 use validator::Validate;
@@ -154,7 +153,7 @@ pub async fn generate_invite_link(
     let token = InviteToken::new(claims.sub);
     let encoded = URL_SAFE.encode(serde_json::to_string(&token).unwrap().as_bytes());
     
-    Ok(Json(format!("http://localhost:5173/auth/signup?invite={}", encoded)))
+    Ok(Json(format!("http://localhost/auth/signup?invite={}", encoded)))
 }
 
 
