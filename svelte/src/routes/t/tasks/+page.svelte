@@ -6,7 +6,7 @@
 	import { formatDateTime } from '$lib/utils';
 	import Table from '$lib/components/UI/Table.svelte';
 	import { ButtonSubmit } from '$lib/components/UI/buttons';
-	import {enhance} from '$app/forms';
+	import { enhance } from '$app/forms';
 
 	let { data }: { data: PageData } = $props();
 
@@ -16,6 +16,12 @@
 		columns: [
 			{ key: 'title', label: 'Title' },
 			{ key: 'markdown', label: 'Markdown' },
+			{ key: 'completed', label: 'completed' },
+			{
+				key: 'dueDate',
+				label: 'Due',
+				formatter: (value: string) => (value ? formatDateTime(value) : 'No Due Date')
+			},
 			{
 				key: 'assigneeName',
 				label: 'Assignee',
