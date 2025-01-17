@@ -28,17 +28,23 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // TODO implement request signing
 
     let protected_routes = Router::new()
-    .nest("/lesson", rust::api::routes::lesson_routes::lesson_routes())
-    .nest("/user", rust::api::routes::user_routes::user_routes())
-    .nest("/task", rust::api::routes::task_routes::task_routes())
-    .nest("/notes", rust::api::routes::notes_routes::notes_routes())
-    .nest("/student", rust::api::routes::student_routes::student_routes())
-    .nest("/auth", rust::api::routes::auth_routes::auth_routes())
-    
-    .layer(axum::middleware::from_fn(validate_api_key));
+        .nest("/lesson", rust::api::routes::lesson_routes::lesson_routes())
+        .nest("/user", rust::api::routes::user_routes::user_routes())
+        .nest("/task", rust::api::routes::task_routes::task_routes())
+        .nest("/notes", rust::api::routes::notes_routes::notes_routes())
+        .nest(
+            "/student",
+            rust::api::routes::student_routes::student_routes(),
+        )
+        .nest("/auth", rust::api::routes::auth_routes::auth_routes())
+        .nest(
+            "/profile",
+            rust::api::routes::profile_routes::profile_routes(),
+        )
+        .layer(axum::middleware::from_fn(validate_api_key));
 
     let app = Router::new()
-        .merge(protected_routes)  // Everything else with API key protection
+        .merge(protected_routes) // Everything else with API key protection
         .fallback(handler_404)
         .with_state(state)
         .layer(
@@ -79,7 +85,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 ),
         );
 
-        let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await?;
+    let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await?;
 
     axum::serve(listener, app).await?;
 

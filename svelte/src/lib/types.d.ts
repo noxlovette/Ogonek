@@ -13,6 +13,13 @@ export interface Task {
     assigneeName: string;
 }
 
+export interface Profile {
+    quizletUrl: string,
+    zoomUrl: string,
+    bio: string,
+    avatarUrl: string,
+}
+
 export interface User {
     name: string;
     username: string;

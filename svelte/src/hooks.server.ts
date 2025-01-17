@@ -10,8 +10,6 @@ if (event.url.pathname.startsWith('/auth/')) {
     return resolve(event);
   }
 
-    console.log('handle hook');
-    console.log(event);
       const accessToken = event.cookies.get("accessToken");
       
       if (accessToken) {

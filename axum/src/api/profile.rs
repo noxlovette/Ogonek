@@ -5,7 +5,7 @@ use crate::models::profiles::{Profile, ProfileUpdate};
 use axum::extract::Json;
 use axum::extract::State;
 
-pub async fn update_profile(
+pub async fn upsert_profile(
     State(state): State<AppState>,
     claims: Claims,
     Json(payload): Json<ProfileUpdate>,
@@ -13,22 +13,37 @@ pub async fn update_profile(
     let profile = sqlx::query_as!(
         Profile,
         r#"
-        UPDATE profile
-        SET
-            quizlet_url = COALESCE($1, quizlet_url),
-            zoom_url = COALESCE($2, zoom_url),
-            bio = COALESCE($3, bio),
-            avatar_url = COALESCE($4, avatar_url),
-            timezone = COALESCE($5, timezone)
-        WHERE user_id = $6
+        INSERT INTO profile (
+            user_id,
+            quizlet_url,
+            zoom_url,
+            bio,
+            avatar_url,
+            timezone
+        )
+        VALUES (
+            $1, -- user_id
+            $2, -- quizlet_url
+            $3, -- zoom_url
+            $4, -- bio
+            $5, -- avatar_url
+            $6  -- timezone
+        )
+        ON CONFLICT (user_id)
+        DO UPDATE SET
+            quizlet_url = COALESCE(EXCLUDED.quizlet_url, profile.quizlet_url),
+            zoom_url = COALESCE(EXCLUDED.zoom_url, profile.zoom_url),
+            bio = COALESCE(EXCLUDED.bio, profile.bio),
+            avatar_url = COALESCE(EXCLUDED.avatar_url, profile.avatar_url),
+            timezone = COALESCE(EXCLUDED.timezone, profile.timezone)
         RETURNING *
         "#,
+        claims.sub, // $1
         payload.quizlet_url,
         payload.zoom_url,
         payload.bio,
         payload.avatar_url,
         payload.timezone,
-        claims.sub,
     )
     .fetch_one(&state.db)
     .await?;
