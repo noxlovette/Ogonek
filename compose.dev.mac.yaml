@@ -6,24 +6,12 @@ services:
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.web.address=:80"
+      
     ports:
       - "80:80"
       - "8080:8080"  # Dashboard
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-
-  minio:
-    image: minio/minio
-    volumes:
-      - uploads:/data  # Same volume approach you planned to use!
-    environment:
-      MINIO_ROOT_USER: minioadmin      # Change these!
-      MINIO_ROOT_PASSWORD: minioadmin
-    command: server --console-address ":9001" /data
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.minio.rule=Host(`minio.localhost`)"
-      - "traefik.http.services.minio.loadbalancer.server.port=9000"
 
   svelte:
     build:
@@ -35,13 +23,18 @@ services:
       - ./svelte/.svelte-kit:/app/.svelte-kit
       - ./svelte/public:/app/public
       - ./svelte/tailwind.config.js/:/app/tailwind.config.js
-      - uploads:/app/public/media
+      - ./svelte/uploads:/app/uploads
     env_file:
       - ./svelte/.env
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.svelte.rule=Host(`localhost`)"
       - "traefik.http.services.svelte.loadbalancer.server.port=5173"
+      # These upload routes should point to your static file serving
+      - "traefik.http.routers.uploads.rule=PathPrefix(`/uploads`)"
+      - "traefik.http.services.uploads.loadbalancer.server.port=5173"  # Add this
+      - "traefik.http.middlewares.uploads-strip.stripprefix.prefixes=/uploads"
+      - "traefik.http.routers.uploads.middlewares=uploads-strip"
     depends_on:
       - axum
     

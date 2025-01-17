@@ -12,19 +12,6 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
 
-  minio:
-    image: minio/minio
-    volumes:
-      - uploads:/data  # Same volume approach you planned to use!
-    environment:
-      MINIO_ROOT_USER: minioadmin      # Change these!
-      MINIO_ROOT_PASSWORD: minioadmin
-    command: server --console-address ":9001" /data
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.minio.rule=Host(`minio.localhost`)"
-      - "traefik.http.services.minio.loadbalancer.server.port=9000"
-
   svelte:
     build:
       context: ./svelte
