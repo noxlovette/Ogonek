@@ -72,8 +72,8 @@ services:
     volumes:
       - db-data:/var/lib/postgresql/data
     environment:
-      - POSTGRES_DB=${DB_NAME}
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=pg-fl-dev
+      - POSTGRES_PASSWORD=changeme
     ports:
       - "5432:5432"
     healthcheck:

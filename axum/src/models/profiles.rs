@@ -1,10 +1,21 @@
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
-struct Profile {
-    user_id: String,
-    quizlet_url: Option<String>,
-    bio: Option<String>,
-    avatar_url: Option<String>,
-    timezone: Option<String>
+pub struct Profile {
+    pub user_id: String,
+    pub quizlet_url: Option<String>,
+    pub zoom_url: Option<String>,
+    pub bio: Option<String>,
+    pub avatar_url: Option<String>,
+    pub timezone: Option<String>
+}
+
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct ProfileUpdate {
+    pub quizlet_url: Option<String>,
+    pub zoom_url: Option<String>,
+    pub bio: Option<String>,
+    pub avatar_url: Option<String>,
+    pub timezone: Option<String>
 }
