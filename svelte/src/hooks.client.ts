@@ -1,11 +1,13 @@
 import type { ClientInit, Handle } from "@sveltejs/kit";
-import { setUser } from '$lib/stores';
+import { setProfile, setUser } from '$lib/stores';
 
 export const init: ClientInit = async () => {
-    let user = localStorage.getItem("user");
+    const user = localStorage.getItem("user");
+    const profile = localStorage.getItem("profile");
 
     if (user) {
         setUser(JSON.parse(user));
+        setProfile(JSON.parse(profile));
     }
 };
 

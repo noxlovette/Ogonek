@@ -19,11 +19,11 @@ export const actions: Actions = {
       if (!response.ok) {
         throw new Error('Login failed');
       }
-   
+
       response.headers.getSetCookie().forEach(cookie => {
         const [fullCookie, ...opts] = cookie.split(';');
         const [name, value] = fullCookie.split('=');
-        
+
         // Create a more robust options parser
         const cookieOpts: Record<string, string | boolean> = {};
         opts.forEach(opt => {
@@ -31,7 +31,7 @@ export const actions: Actions = {
           // Normalize keys by removing hyphens and lowercasing
           cookieOpts[key.toLowerCase().replace(/-/g, '')] = val || true;
         });
-      
+
         cookies.set(name, value, {
           path: cookieOpts.path as string || '/',
           httpOnly: 'httponly' in cookieOpts,
@@ -39,25 +39,28 @@ export const actions: Actions = {
           sameSite: cookieOpts.samesite as 'lax' | 'strict' | 'none' || 'lax',
           domain: cookieOpts.domain as string,
           // Look for both max-age and maxage
-          maxAge: cookieOpts.maxage ? 
-            parseInt(cookieOpts.maxage as string) : 
-            cookieOpts['max-age'] ? 
-              parseInt(cookieOpts['max-age'] as string) : 
+          maxAge: cookieOpts.maxage ?
+            parseInt(cookieOpts.maxage as string) :
+            cookieOpts['max-age'] ?
+              parseInt(cookieOpts['max-age'] as string) :
               undefined
         });
       });
 
       const { accessToken } = await response.json();
       const user = await ValidateAccess(accessToken);
-      
+
       if (!user) {
         throw new Error('Login failed');
       }
+
+      const profile = await fetch('/axum/profile').then(res => res.json());
 
       return {
         success: true,
         message: 'Login successful',
         user,
+        profile
       };
 
     } catch (error) {

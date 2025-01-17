@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import { user, profile } from '$lib/stores';
 </script>
 
 <div class="items-start flex flex-row space-x-8">
@@ -13,6 +14,7 @@
 					type="email"
 					id="email"
 					name="email"
+					value={$user.email}
 					class="w-full px-3 py-2 border border-milk-200 rounded-md focus:outline-none focus:ring-2 focus:ring-brick-500"
 				/>
 			</div>
@@ -23,6 +25,7 @@
 					type="text"
 					id="username"
 					name="username"
+					value={$user.username}
 					class="w-full px-3 py-2 border border-milk-200 rounded-md focus:outline-none focus:ring-2 focus:ring-brick-500"
 				/>
 			</div>
@@ -33,6 +36,7 @@
 					type="text"
 					id="name"
 					name="name"
+					value={$user.name}
 					class="w-full px-3 py-2 border border-milk-200 rounded-md focus:outline-none focus:ring-2 focus:ring-brick-500"
 				/>
 			</div>
@@ -56,6 +60,7 @@
 					type="url"
 					id="quizlet"
 					name="quizlet"
+					value={$profile.quizletUrl}
 					class="w-full px-3 py-2 border border-milk-200 rounded-md focus:outline-none focus:ring-2 focus:ring-brick-500"
 				/>
 			</div>
@@ -66,6 +71,7 @@
 					type="url"
 					id="zoom"
 					name="zoom"
+					value={$profile.zoomUrl}
 					class="w-full px-3 py-2 border border-milk-200 rounded-md focus:outline-none focus:ring-2 focus:ring-brick-500"
 				/>
 			</div>

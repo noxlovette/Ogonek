@@ -24,7 +24,7 @@ export interface User {
     name: string;
     username: string;
     role: string;
-    // quizlet_url: string;
+    email: string;
 }
 
 export interface Lesson {

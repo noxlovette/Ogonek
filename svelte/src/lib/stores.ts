@@ -1,13 +1,26 @@
 import { writable, derived } from 'svelte/store';
-import type { User } from './types';
+import type { User, Profile } from './types';
 
 export const user = writable({
 	username: '',
 	name: '',
-	role: ''
-	// quizlet_url: '',
+	role: '',
+	email: '',
 });
 
+export const profile = writable({
+	quizletUrl: '',
+	zoomUrl: '',
+	bio: '',
+	avatarUrl: ''
+})
+
+export function setProfile(data: Profile) {
+	profile.update((currentState) => ({
+		...currentState,
+		...data
+	}));
+}
 export function setUser(data: User) {
 	user.update((currentState) => ({
 		...currentState,
@@ -20,7 +33,7 @@ export function clearUser() {
 		username: '',
 		name: '',
 		role: '',
-		// quizlet_url: '',
+		email: '',
 	}));
 }
 

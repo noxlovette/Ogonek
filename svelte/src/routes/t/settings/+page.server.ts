@@ -38,6 +38,8 @@ export const actions = {
     updateUser: async ({ request, fetch }) => {
         const formData = await request.formData();
 
+        console.log("formdata user update", formData)
+
         const body = {
             email: formData.get('email'),
             username: formData.get('username'),
