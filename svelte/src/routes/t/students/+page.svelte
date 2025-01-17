@@ -31,6 +31,7 @@
 	let href = '/t/students/s';
 </script>
 
+<Header>Students</Header>
 <Table config={studentConfig} {href} items={students} {students} />
 <form
 	method="POST"

@@ -5,6 +5,8 @@
 	import Header from '$lib/components/typography/Header.svelte';
 	import { formatDateTime } from '$lib/utils';
 	import Table from '$lib/components/UI/Table.svelte';
+	import { ButtonSubmit } from '$lib/components/UI/buttons';
+	import {enhance} from '$app/forms';
 
 	let { data }: { data: PageData } = $props();
 
@@ -29,3 +31,9 @@
 <Header>Tasks</Header>
 
 <Table items={tasks} config={taskConfig} {href} {students} />
+
+<form action="?/new" method="post" use:enhance>
+	{#if tasks.length === 0}
+		<ButtonSubmit buttonName="Add your first one!" />
+	{/if}
+</form>
