@@ -22,7 +22,7 @@ export function getGreeting() {
 	} else if (hours >= 18 && hours < 22) {
 		return 'evening 🌖';
 	} else {
-		return 'night';
+		return 'night 😴';
 	}
 }
 

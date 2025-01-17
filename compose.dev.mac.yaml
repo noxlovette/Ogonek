@@ -1,17 +1,19 @@
 services:
-  traefik:
-    image: traefik:v3.3
-    command:
-      - "--api.insecure=true"  # For dev only - gives you the dashboard
-      - "--providers.docker=true"
-      - "--providers.docker.exposedbydefault=false"
-      - "--entrypoints.web.address=:80"
-      
+  caddy:
+    image: caddy:latest
+    restart: unless-stopped 
     ports:
       - "80:80"
-      - "8080:8080"  # Dashboard
+      - "443:443"
+      - "443:443/udp"  
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - uploads:/srv/uploads
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./caddy/caddy-data:/data
+      - ./caddy/caddy-config:/config
+    depends_on:
+      - svelte
+      - axum
 
   svelte:
     build:
@@ -20,24 +22,16 @@ services:
     container_name: svelte-fl-dev
     volumes:
       - ./svelte/src:/app/src
+      - ./svelte/static:/app/static
       - ./svelte/.svelte-kit:/app/.svelte-kit
       - ./svelte/public:/app/public
       - ./svelte/tailwind.config.js/:/app/tailwind.config.js
-      - ./svelte/uploads:/app/uploads
+      - uploads:/app/uploads
     env_file:
       - ./svelte/.env
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.svelte.rule=Host(`localhost`)"
-      - "traefik.http.services.svelte.loadbalancer.server.port=5173"
-      # These upload routes should point to your static file serving
-      - "traefik.http.routers.uploads.rule=PathPrefix(`/uploads`)"
-      - "traefik.http.services.uploads.loadbalancer.server.port=5173"  # Add this
-      - "traefik.http.middlewares.uploads-strip.stripprefix.prefixes=/uploads"
-      - "traefik.http.routers.uploads.middlewares=uploads-strip"
     depends_on:
       - axum
-    
+
   axum:
     build:
       context: ./axum
@@ -49,16 +43,9 @@ services:
       - cargo-target:/app/target
     env_file:
       - ./axum/.env
-
     depends_on:
       postgres:
         condition: service_healthy
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.axum.rule=Host(`localhost`) && PathPrefix(`/axum`)"
-      - "traefik.http.services.axum.loadbalancer.server.port=3000"
-      - "traefik.http.middlewares.axum-strip.stripprefix.prefixes=/axum"
-      - "traefik.http.routers.axum.middlewares=axum-strip"
 
   postgres:
     image: postgres
@@ -87,7 +74,5 @@ volumes:
     name: db-fl-data
   uploads:
     name: uploads-fl-dev
-
-networks:
-  host:
-    external: true
+  caddy-data:
+    name: caddy-fl-dev

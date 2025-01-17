@@ -24,7 +24,7 @@ export const actions = {
                     error: errorData
                 };
             }
-            redirect(303, `/t/students/s/${id}`);
+            redirect(303, `/t/students/st/${id}`);
  
         
     },

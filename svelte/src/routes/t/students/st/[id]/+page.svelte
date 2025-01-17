@@ -1,10 +1,7 @@
 <script lang="ts">
 	import Header from '$lib/components/typography/Header.svelte';
-	import { user } from '$lib/stores';
 	import type { Student } from '$lib/types';
-	import { formatDateTime } from '$lib/utils';
 	import type { PageData } from './$types';
-
 	let { data }: { data: PageData } = $props();
 
 	const { student, rendered } : {student: Student, rendered: String} = data;
@@ -16,7 +13,7 @@
 	<div class="flex items-baseline space-x-4">
 		<Header>{student.name}</Header>
 		<a
-			href="/t/students/s/{student.id}/edit"
+			href="/t/students/st/{student.id}/edit"
 			class="px-4 py-2 bg-brick-600 text-brick-50 rounded-lg hover:bg-brick-700 focus:outline-none focus:ring-2 focus:ring-brick-500 focus:ring-offset-2 disabled:opacity-50 transition-colors"
 			>Edit</a
 		>

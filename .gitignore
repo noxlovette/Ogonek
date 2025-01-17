@@ -13,6 +13,14 @@ cargo/
 *.rs.bk
 *.pdb
 
+*.crt
+
+*.key
+
+caddy-*
+
+svelte/static/uploads/
+
 students_data/
 
 logs/

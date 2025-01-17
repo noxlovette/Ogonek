@@ -28,7 +28,7 @@
 		data: string;
 	}
 
-	let href = '/t/students/s';
+	let href = '/t/students/st';
 </script>
 
 <Header>Students</Header>

@@ -4,7 +4,6 @@
 	import Header from '$lib/components/typography/Header.svelte';
 	import type { Student } from '$lib/types';
 	import type { PageData } from './$types';
-	import DOMPurify from 'isomorphic-dompurify';
 	let { data }: { data: PageData } = $props();
 	let { student } : {student:Student} = data;
 	let isSubmitting = $state(false);
