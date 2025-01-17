@@ -4,10 +4,11 @@
 	import Header from '$lib/components/typography/Header.svelte';
 	import Table from '$lib/components/UI/Table.svelte';
 	import type { Student, TableConfig } from '$lib/types';
-	import {formatDateTime} from '$lib/utils';
+	import { formatDateTime } from '$lib/utils';
 	import { enhance } from '$app/forms';
-	import {notification} from '$lib/stores';
+	import { notification } from '$lib/stores';
 	import type { SubmitFunction } from '@sveltejs/kit';
+	import { ButtonSubmit } from '$lib/components/UI/buttons';
 
 	let { data }: { data: PageData } = $props();
 
@@ -18,7 +19,7 @@
 			{ key: 'name', label: 'Name' },
 			{ key: 'username', label: 'Username' },
 			{ key: 'email', label: 'Email' },
-			{ key: 'markdown', label: 'Markdown' },
+			{ key: 'markdown', label: 'Markdown' }
 		]
 	};
 
@@ -30,7 +31,7 @@
 	let href = '/t/students/s';
 </script>
 
-<Table config={studentConfig} {href} items={students} {students}/>
+<Table config={studentConfig} {href} items={students} {students} />
 <form
 	method="POST"
 	use:enhance={({ formElement, formData, action, cancel, submitter }) => {
@@ -42,25 +43,22 @@
 
 		return async ({ result, update }) => {
 			if (result.type === 'success') {
-			console.log(result)
-            const link: string = result.data.link;
-            try {
-                await navigator.clipboard.writeText(link);
-                notification.set({ message: 'Link copied to clipboard!', type: 'success' });
-            } catch (err) {
-                notification.set({ message: 'Failed to copy link', type: 'error' });
-            }
-        } else {
-            notification.set({ 
-                message: 'Failed to generate link', 
-                type: 'error' 
-            });
-        }
+				console.log(result);
+				const link: string = result.data.link;
+				try {
+					await navigator.clipboard.writeText(link);
+					notification.set({ message: 'Link copied to clipboard!', type: 'success' });
+				} catch (err) {
+					notification.set({ message: 'Failed to copy link', type: 'error' });
+				}
+			} else {
+				notification.set({
+					message: 'Failed to generate link',
+					type: 'error'
+				});
+			}
 		};
 	}}
 >
-
-    <button type="submit">
-        Generate & Copy Link
-    </button>
+	<ButtonSubmit buttonName="Invite Students" />
 </form>

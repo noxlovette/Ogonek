@@ -2,12 +2,12 @@
 	import { enhance } from '$app/forms';
 	import Editor from '$lib/components/Editor.svelte';
 	import Header from '$lib/components/typography/Header.svelte';
+	import { ButtonSubmit, ButtonDelete } from '$lib/components/UI/buttons/index';
 	import type { PageData } from './$types';
 	let { data }: { data: PageData } = $props();
 	let { task, students } = data;
 	let isSubmitting = $state(false);
 	let markdown = $state(task.markdown);
-
 </script>
 
 <form method="POST" action="?/update" class="space-y-4 mb-4" use:enhance>
@@ -19,21 +19,8 @@
 		>
 			Cancel
 		</a>
-		<button
-			type="submit"
-			disabled={isSubmitting}
-			class="px-4 py-2 bg-brick-600 text-brick-50 rounded-lg hover:bg-brick-700 focus:outline-none focus:ring-2 focus:ring-brick-500 focus:ring-offset-2 disabled:opacity-50 transition-colors"
-		>
-			{isSubmitting ? 'Saving...' : 'Save Changes'}
-		</button>
-		<button
-			type="submit"
-			disabled={isSubmitting}
-			class="px-4 py-2 bg-red-600 text-brick-50 rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-brick-500 focus:ring-offset-2 disabled:opacity-50 transition-colors"
-			formaction="?/delete"
-		>
-			Delete
-		</button>
+		<ButtonSubmit bind:isSubmitting />
+		<ButtonDelete bind:isSubmitting />
 	</div>
 
 	<input type="hidden" name="id" value={task.id} />
