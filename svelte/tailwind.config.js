@@ -5,9 +5,6 @@ export default {
 	content: ['./src/**/*.{html,js,svelte,ts}'],
 	theme: {
 		extend: {
-			backgroundImage: {
-				'roses-center': "url('/beauty/roses-center-2.svg')"
-			},
 			fontFamily: {
 				// sans: ["Inter var", ...defaultTheme.fontFamily.sans],
 				sans: ['Montserrat', ...defaultTheme.fontFamily.sans],
@@ -24,7 +21,7 @@ export default {
 					500: '#BD8F7F',
 					600: '#A67864',
 					700: '#8B614E',
-					800: '#5D3F32',    // More earthy brown than red
+					800: '#5D3F32',
 					900: '#3B2820',
 					950: '#291B16'
 				},
@@ -37,12 +34,12 @@ export default {
 					500: '#8BA57C',
 					600: '#698357',
 					700: '#486239',
-					800: '#1C3A13',  // Your provided color
+					800: '#1C3A13',
 					900: '#152D0E',
 					950: '#0E1F09'
 				},
 				milk: {
-					50: '#F8F7F4',     // Slightly warmer than pure white
+					50: '#F8F7F4',
 					100: '#E8E6DD',
 					200: '#D3D1CC',
 					300: '#C8C7C3',
@@ -62,7 +59,7 @@ export default {
 					400: '#87C0CD',
 					500: '#5FA3B3',
 					600: '#458799',
-					700: '#2e6171',    // Your color
+					700: '#2e6171',
 					800: '#234B57',
 					900: '#18343D',
 					950: '#0F2228'

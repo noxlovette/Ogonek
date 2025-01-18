@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { notification, clearNotification } from '$lib/stores';
 	import { fly } from 'svelte/transition';
-	import { quintOut } from 'svelte/easing';
+	import { quintOut, quintIn, quintInOut } from 'svelte/easing';
 	import { Check, AlertCircle, X } from 'lucide-svelte';
 	import type { Toast } from '$lib/types';
 	import { onDestroy } from 'svelte';
@@ -40,21 +40,21 @@
 	<div
 		transition:fly={{
 			duration: 300,
-			easing: quintOut,
+			easing: quintInOut,
 			x: 400,
 			y: 0
 		}}
-		class="fixed bottom-4 right-4 min-w-[320px] max-w-md bg-milk-50 dark:bg-milk-900
+		class="fixed bottom-4 right-4 min-w-[320px] max-w-md bg-milk-50
 			 shadow-lg rounded-lg flex items-center gap-3 p-4 border-l-4
 			 {$notification.type === 'success'
-			? 'border-l-brick-500'
+			? 'border-l-pakistan-500'
 			: $notification.type === 'error'
 				? 'border-l-red-500'
-				: 'border-l-blue-500'}"
+				: 'border-l-amber-500'}"
 	>
 		{@render icon($notification.type)}
 
-		<p class="text-milk-900 dark:text-milk-50 text-sm font-medium">
+		<p class="text-brick-700 text-sm font-medium">
 			{$notification.message}
 		</p>
 	</div>
