@@ -32,7 +32,23 @@
 		class="inline-flex space-x-8 text-lg md:text-xl lg:text-2xl xl:text-3xl justify-between items-baseline"
 	>
 		<h2 class="flex">{task.title}</h2>
-		<form class="flex" method="post" use:enhance action="?/completed">
+		<form
+			class="flex"
+			method="post"
+			use:enhance={() => {
+				return async ({ result }) => {
+					if (result.type === 'success') {
+						notification.set({ message: 'Marked as completed', type: 'success' });
+					} else {
+						notification.set({
+							message: 'Failed to mark as completed',
+							type: 'error'
+						});
+					}
+				};
+			}}
+			action="?/completed"
+		>
 			<button onclick={() => (completed = !completed)} class="" class:overdue>
 				{#if completed}
 					<CheckSquare class="w-6 h-6" />
@@ -47,10 +63,7 @@
 
 	<p class="text-sm lg:text-base">{@html task.markdown}</p>
 
-	<div
-		id="task-footer"
-		class="items-center mt-auto text-sm inline-flex space-x-1 justify-between"
-	>
+	<div id="task-footer" class="items-center mt-auto text-sm inline-flex space-x-1 justify-between">
 		<p class:overdue class="opacity-60">Due {formattedDate}</p>
 
 		{#if task.filePath}

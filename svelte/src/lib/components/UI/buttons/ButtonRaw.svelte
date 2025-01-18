@@ -2,8 +2,9 @@
 	import { Loader2 } from 'lucide-svelte';
 	let {
 		isSubmitting = $bindable(false),
+		onclick,
 		formaction = undefined,
-		type,
+		type = undefined,
 		styling = '',
 		buttonName
 	} = $props();
@@ -12,6 +13,7 @@
 <button
 	{type}
 	{formaction}
+	{onclick}
 	disabled={isSubmitting}
 	class={[
 		styling,

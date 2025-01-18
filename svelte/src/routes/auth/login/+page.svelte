@@ -10,14 +10,9 @@
 		initialProfile,
 		notification
 	} from '$lib/stores';
-	import { type User, type Profile } from '$lib/types';
+	import type { UserData } from '$lib/types';
 
 	let isSubmitting = $state(false);
-
-	interface UserData {
-		user: User;
-		profile: Profile;
-	}
 </script>
 
 <div class="max-w-md w-full space-y-8 bg-white p-8 rounded-xl shadow-lg">
@@ -35,17 +30,16 @@
 
 			return async ({ result }) => {
 				isSubmitting = false;
+				console.log(result);
 
 				if (result.type === 'success' && result.data) {
-					const { user = initialUser, profile = initialProfile } =
-						result.data as unknown as UserData;
-
+					const { user = initialUser, profile = initialProfile } = result.data;
 					setUser(user);
 					setProfile(profile);
 					localStorage.setItem('user', JSON.stringify(user));
 					localStorage.setItem('profile', JSON.stringify(profile));
 					notification.set({ message: 'Welcome home', type: 'success' });
-					goto(user.role === 'teacher' ? '/t/dashboard' : '/s/dashboard');
+					await goto(user.role === 'teacher' ? '/t/dashboard' : '/s/dashboard');
 				} else if (result.type === 'failure') {
 					notification.set({
 						message: String(result.data?.message) || "Something's off",

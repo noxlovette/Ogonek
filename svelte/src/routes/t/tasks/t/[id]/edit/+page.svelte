@@ -1,8 +1,11 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import { notification } from '$lib/stores';
 	import { Editor, H1, ButtonDelete, ButtonSubmit, Uploader } from '$lib/components';
 
 	import type { PageData } from './$types';
+	import { goto } from '$app/navigation';
+	import { updated } from '$app/state';
 
 	let { data }: { data: PageData } = $props();
 	let { task, students } = data;
@@ -18,7 +21,26 @@
 	});
 </script>
 
-<form method="POST" action="?/update" class="space-y-4 mb-4" use:enhance>
+<form
+	method="POST"
+	action="?/update"
+	class="space-y-4 mb-4"
+	use:enhance={() => {
+		isSubmitting = true;
+		return async ({ result, update }) => {
+			isSubmitting = false;
+			if (result.type === 'redirect') {
+				notification.set({ message: 'Changes saved', type: 'success' });
+				update();
+			} else {
+				notification.set({
+					message: 'Failed to save changes',
+					type: 'error'
+				});
+			}
+		};
+	}}
+>
 	<div class="flex items-baseline space-x-4">
 		<H1>Edit Task</H1>
 		<a

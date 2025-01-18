@@ -72,3 +72,8 @@ export interface TableConfig<T extends BaseTableItem> {
         formatter?: (value: string) => string;
     }[];
 }
+
+export interface UserData {
+    user: User;
+    profile: Profile;
+}

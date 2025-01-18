@@ -74,8 +74,6 @@ async function handleTokenRefresh(event) {
             throw new Error("Refresh failed");
         }
 
-        console.log("Token refreshed successfully");
-
         // After successful refresh, validate the new token
         const newAccessToken = event.cookies.get("accessToken");
         if (newAccessToken) {

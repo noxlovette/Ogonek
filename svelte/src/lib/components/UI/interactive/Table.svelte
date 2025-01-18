@@ -4,6 +4,7 @@
 	import { Search } from 'lucide-svelte';
 	import { goto } from '$app/navigation';
 	import { fade } from 'svelte/transition';
+	import { notification } from '$lib/stores';
 	import type { Student, BaseTableItem, TableConfig } from '$lib/types';
 
 	interface Props<T extends BaseTableItem> {
@@ -19,6 +20,7 @@
 	let filteredItems = $state(items);
 	let foundItems = $state(items);
 	let filterAssignee = $state('');
+	let isSubmitting = $state(false);
 
 	$effect(() => {
 		const lowercaseQuery = query.toLowerCase();
@@ -67,7 +69,26 @@
 				/>
 			</div>
 			<div class="flex flex-row items-center gap-4">
-				<form action="?/new" method="post" use:enhance>
+				<form
+					action="?/new"
+					method="post"
+					use:enhance={() => {
+						isSubmitting = true;
+
+						return async ({ result }) => {
+							isSubmitting = false;
+							if (result.type === 'redirect') {
+								notification.set({ message: 'New entry created', type: 'success' });
+								goto(result.location);
+							} else {
+								notification.set({
+									message: "Something's off",
+									type: 'error'
+								});
+							}
+						};
+					}}
+				>
 					<button class="p-1 text-brick-600 hover:text-brick-500 transition-colors">
 						<PlusCircle class="size-8" />
 					</button>

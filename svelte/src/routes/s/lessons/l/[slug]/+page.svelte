@@ -23,22 +23,6 @@
 		html = marked.parse(data.lesson.content);
 	});
 
-	const handleToggle = async ({ result, update }) => {
-		if (result.data) {
-			if (bookmarked) {
-				notification.set({ message: 'Bookmark Added', type: 'success' });
-			} else {
-				notification.set({ message: 'Bookmark Removed', type: 'success' });
-			}
-		} else {
-			notification.set({
-				message: result.data.error || 'Failed to Add Bookmark',
-				type: 'error'
-			});
-		}
-		update();
-	};
-
 	let date = $derived(new Date(data.lesson.manual_date || data.lesson.created_at));
 
 	let formattedDate = $derived(
@@ -65,21 +49,4 @@
 		</div>
 	</div>
 	<div class="markdown">{@html html}</div>
-
-	<form action="?/bookmark" use:enhance={() => handleToggle} method="post">
-		<input type="hidden" name="id" value={data.lesson.id} />
-		<input type="hidden" name="bookmarked" value={bookmarked} />
-		<button
-			class="hover:bg-brick-900/60 hover:text-brick-100 transition-colors duration-300 rounded-lg my-8 p-2 inline-flex"
-			onclick={() => (bookmarked = !bookmarked)}
-		>
-			{#if bookmarked}
-				<BookmarkMinus class="size-8 mr-2" />
-				Remove from bookmarks
-			{:else}
-				<BookmarkPlus class="size-8 mr-2" />
-				Bookmark
-			{/if}
-		</button>
-	</form>
 </article>

@@ -2,6 +2,8 @@
 	import { enhance } from '$app/forms';
 	import { Editor, ButtonDelete, ButtonSubmit, H1 } from '$lib/components';
 	import type { PageData } from './$types';
+	import { notification } from '$lib/stores';
+	import { goto } from '$app/navigation';
 	let { data }: { data: PageData } = $props();
 	let { lesson, students } = data;
 	let isSubmitting = $state(false);
@@ -13,9 +15,19 @@
 	action="?/update"
 	class="space-y-4 mb-4"
 	use:enhance={() => {
+		isSubmitting = true;
+
 		return async ({ result, update }) => {
 			isSubmitting = false;
-			update();
+			if (result.type === 'redirect') {
+				notification.set({ message: 'Changes saved', type: 'success' });
+				update();
+			} else {
+				notification.set({
+					message: 'Failed to save changes',
+					type: 'error'
+				});
+			}
 		};
 	}}
 >

@@ -58,7 +58,7 @@ export const actions = {
             };
         }
 
-        redirect(303, `/t/tasks/t/${id}`);
+        return redirect(303, `/t/tasks/t/${id}`);
     },
     delete: async ({ request, fetch }) => {
         const formData = await request.formData();

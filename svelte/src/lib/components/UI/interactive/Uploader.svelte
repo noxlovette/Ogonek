@@ -69,7 +69,7 @@
 					type: 'error'
 				});
 			} else {
-				notification.set({
+			notification.set({
 					message: 'An unknown error occurred',
 					type: 'error'
 				});

@@ -1,4 +1,17 @@
 services:
+  traefik:
+      image: traefik:v3.3
+      command:
+        - "--api.insecure=true"  # For dev only - gives you the dashboard
+        - "--providers.docker=true"
+        - "--providers.docker.exposedbydefault=false"
+        - "--entrypoints.web.address=:80"
+      ports:
+        - "80:80"
+        - "8080:8080"  # Dashboard
+      volumes:
+        - /var/run/docker.sock:/var/run/docker.sock:ro
+  
   svelte:
     build:
       context: ./svelte
@@ -10,7 +23,7 @@ services:
       - ./svelte/.svelte-kit:/app/.svelte-kit
       - ./svelte/public:/app/public
       - ./svelte/tailwind.config.js/:/app/tailwind.config.js
-      - uploads:/app/uploads
+      - uploads:/app/static/uploads
     env_file:
       - ./svelte/.env
     depends_on:
@@ -68,5 +81,4 @@ volumes:
     name: db-fl-data
   uploads:
     name: uploads-fl-dev
-  caddy-data:
-    name: caddy-fl-dev
+ 
