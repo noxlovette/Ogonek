@@ -1,27 +1,61 @@
 <script lang="ts">
-	import { run } from 'svelte/legacy';
+	import { notification, clearNotification } from '$lib/stores';
+	import { fly } from 'svelte/transition';
+	import { quintOut } from 'svelte/easing';
+	import { Check, AlertCircle, X } from 'lucide-svelte';
+	import type { Toast } from '$lib/types';
+	import { onDestroy } from 'svelte';
 
-	import { notification } from '$lib/stores';
-	import { onMount } from 'svelte';
-	import { fade } from 'svelte/transition';
+	let timeout: ReturnType<typeof setTimeout> | null = null;
 
-	let timeout = $state();
-
-	run(() => {
+	$effect(() => {
 		if ($notification.message) {
-			clearTimeout(timeout);
+			if (timeout) {
+				clearTimeout(timeout);
+			}
 			timeout = setTimeout(() => {
-				notification.set({ message: null, type: null });
+				clearNotification(); // Reset the notification store
 			}, 2800);
+		}
+	});
+
+	onDestroy(() => {
+		if (timeout) {
+			clearTimeout(timeout);
 		}
 	});
 </script>
 
+{#snippet icon(type: Toast['type'])}
+	{#if type === 'success'}
+		<Check class="w-5 h-5 text-pakistan-500" />
+	{:else if type === 'error'}
+		<X class="w-5 h-5 text-red-500" />
+	{:else}
+		<AlertCircle class="w-5 h-5 text-brick-500" />
+	{/if}
+{/snippet}
+
 {#if $notification.message}
 	<div
-		transition:fade
-		class="fixed bottom-2 left-2 bg-brick-900 border-2 border-milk-200 text-brick-100 text-center rounded-lg flex p-4 items-center justify-center"
+		transition:fly={{
+			duration: 300,
+			easing: quintOut,
+			x: 400,
+			y: 0
+		}}
+		class="fixed bottom-4 right-4 min-w-[320px] max-w-md bg-milk-50 dark:bg-milk-900
+			 shadow-lg rounded-lg flex items-center gap-3 p-4 border-l-4
+			 {$notification.type === 'success'
+			? 'border-l-brick-500'
+			: $notification.type === 'error'
+				? 'border-l-red-500'
+				: 'border-l-blue-500'}"
 	>
-		<p class=" font-bold text-xl p-2">{$notification.message}</p>
+		{@render icon($notification.type)}
+
+		<p class="text-milk-900 dark:text-milk-50 text-sm font-medium">
+			{$notification.message}
+		</p>
 	</div>
 {/if}

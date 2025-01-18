@@ -35,6 +35,9 @@
 	}
 </script>
 
+<button onclick={() => notification.set({ message: 'Hello, world!', type: 'success' })}>
+	Show Notification
+</button>
 <form
 	method="post"
 	enctype="multipart/form-data"

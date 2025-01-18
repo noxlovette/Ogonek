@@ -12,19 +12,22 @@ export interface Task {
     assignee: string;
     assigneeName: string;
 }
-
+export interface Toast {
+    message: string | null;
+    type: "success" | "error" | "info" | null;
+}
 export interface Profile {
-    quizletUrl: string,
-    zoomUrl: string,
-    bio: string,
-    avatarUrl: string,
+    quizletUrl: string | null;
+    zoomUrl: string | null;
+    bio: string | null;
+    avatarUrl: string | null;
 }
 
 export interface User {
-    name: string;
-    username: string;
-    role: string;
-    email: string;
+    name: string | null;
+    username: string | null;
+    role: string | null;
+    email: string | null;
 }
 
 export interface Lesson {
