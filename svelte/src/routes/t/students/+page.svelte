@@ -24,6 +24,8 @@
 	}
 
 	let href = '/t/students/st';
+
+	let isSubmitting = $state(false);
 </script>
 
 <H1>Students</H1>
@@ -31,6 +33,7 @@
 <form
 	method="POST"
 	use:enhance={({ formElement, formData, action, cancel, submitter }) => {
+		isSubmitting = true;
 		// `formElement` is this `<form>` element
 		// `formData` is its `FormData` object that's about to be submitted
 		// `action` is the URL to which the form is posted
@@ -38,6 +41,7 @@
 		// `submitter` is the `HTMLElement` that caused the form to be submitted
 
 		return async ({ result }) => {
+			isSubmitting = false;
 			if (result.type === 'success') {
 				const link = String(result.data?.link);
 				try {
@@ -55,5 +59,5 @@
 		};
 	}}
 >
-	<ButtonSubmit buttonName="Invite Students" />
+	<ButtonSubmit bind:isSubmitting buttonName="Invite Students" />
 </form>

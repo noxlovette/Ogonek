@@ -5,7 +5,7 @@
 
 <div class="items-start flex flex-row space-x-8">
 	<!-- User Settings -->
-	<div class="bg-milk-50 rounded-lg">
+	<div class="bg-milk-50 rounded-lg p-4">
 		<h2 class="text-2xl font-semibold text-brick-800 mb-4">User Settings</h2>
 		<form method="POST" class="space-y-4" use:enhance action="?/updateUser">
 			<div class="space-y-2">
@@ -51,7 +51,7 @@
 	</div>
 
 	<!-- Profile Settings -->
-	<div class="bg-milk-50 rounded-lg">
+	<div class="bg-milk-50 rounded-lg p-4">
 		<h2 class="text-2xl font-semibold text-brick-800 mb-4">Profile Settings</h2>
 		<form class="space-y-4" use:enhance method="POST" action="?/updateProfile">
 			<div class="space-y-2">

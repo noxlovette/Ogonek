@@ -30,18 +30,19 @@
 					.filter((column) => column.searchable !== false)
 					.some((column) => {
 						const value = item[column.key];
-						// Handle non-string values using the formatter or convert to string
+						// Safely handle non-string values using the formatter or convert to string
 						const searchableValue = column.formatter
-							? column.formatter(value).toLowerCase()
+							? String(column.formatter(value)).toLowerCase() // Ensure formatter output is a string
 							: String(value).toLowerCase();
 
 						return searchableValue.includes(lowercaseQuery);
 					}) ||
 				// Always include assignee in search (since it's part of BaseTableItem)
-				item.assignee.toLowerCase().includes(lowercaseQuery)
+				(item.assignee && item.assignee.toLowerCase().includes(lowercaseQuery))
 			);
 		});
 	});
+
 	$effect(() => {
 		filteredItems = filterAssignee
 			? foundItems.filter((items) => items.assignee === filterAssignee)

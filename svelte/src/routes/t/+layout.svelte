@@ -23,8 +23,8 @@
 </script>
 
 <Sidebar class="" elements={[Dashboard, Todo, Lessons, Students, Quizlet, Settings]} />
-<div class="flex flex-col justify-start items-center font-medium overflow-auto flex-1">
-	<div class="flex flex-1 flex-col size-full px-8 py-4 gap-4">
+
+	<div class="flex flex-col flex-1 px-8 py-4 ml-4 gap-4 rounded-lg ring-2 ring-milk-200 bg-white">
 		{@render children?.()}
 	</div>
-</div>
+

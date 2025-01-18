@@ -17,25 +17,25 @@
 	<title>Task from {formattedDate}</title>
 </svelte:head>
 
-<div class="flex items-baseline space-x-4">
-	<H1>{task.title}</H1>
-	<a
+<div class="flex items-center justify-between">
+	<div class="flex space-x-4">
+		<H1>{task.title}</H1>
+		<a
 		href="/t/tasks/t/{task.id}/edit"
 		class="px-4 py-2 bg-brick-600 text-brick-50 rounded-lg hover:bg-brick-700 focus:outline-none focus:ring-2 focus:ring-brick-500 focus:ring-offset-2 disabled:opacity-50 transition-colors"
 		>Edit</a
-	>
-</div>
-<div class="flex space-x-4">
-	<div class="space-y-2">
-		<p class="block font-medium text-milk-700">Student</p>
-		<h3 class="min-w-48">
-			{#if task.assigneeName === $user.username}
-				Not Assigned
-			{:else}
-				{task.assigneeName}
-			{/if}
-		</h3>
+		>
 	</div>
+	<div class="text-right">
+			<p class="block font-medium text-milk-700">Student</p>
+			<h3 class="">
+				{#if task.assigneeName === $user.username}
+					Not Assigned
+				{:else}
+					{task.assigneeName}
+				{/if}
+			</h3>
+		</div>
 </div>
 <H2>Content</H2>
 <div class="markdown ring-2 ring-milk-200 p-4 rounded-lg">{@html rendered}</div>
