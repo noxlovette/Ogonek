@@ -1,6 +1,6 @@
 <script lang="ts">
-	import Header from '$lib/components/typography/Header.svelte';
-	import LessonCardBig from '$lib/components/cards/LessonCardBig.svelte';
+	import Header from '$lib/components/typography/H1.svelte';
+	import LessonCardBig from '$lib/components/cards/LessonCard.svelte';
 
 	import { Squirrel } from 'lucide-svelte';
 	import type { Lesson } from '$lib/types';

@@ -1,11 +1,9 @@
 <script lang="ts">
 	import type { PageData } from './$types';
 	import type { Lesson, TableConfig } from '$lib/types';
+	import { H1, Table, ButtonSubmit } from '$lib/components';
 	import { user } from '$lib/stores';
-	import Header from '$lib/components/typography/Header.svelte';
 	import { formatDateTime } from '$lib/utils';
-	import Table from '$lib/components/UI/Table.svelte';
-	import { ButtonSubmit } from '$lib/components/UI/buttons';
 	import { enhance } from '$app/forms';
 
 	let { data }: { data: PageData } = $props();
@@ -27,7 +25,7 @@
 	let href = $user.role === 'teacher' ? `/t/lessons/l` : `/s/lessons/l`;
 </script>
 
-<Header>Lessons</Header>
+<H1>Lessons</H1>
 <Table items={lessons} config={lessonConfig} {href} {students} />
 
 <form action="?/new" method="post" use:enhance>

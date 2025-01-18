@@ -12,38 +12,37 @@ export const actions: Actions = {
 
 		const invite_token = url.searchParams.get('invite')
 
-			const response = await fetch('/axum/auth/signup', {
+		const response = await fetch('/axum/auth/signup', {
+			method: 'POST',
+			body: JSON.stringify({
+				username,
+				pass,
+				email,
+				role,
+				name
+			})
+		});
+
+		if (invite_token) {
+			const student_id = await response.json().then((data) => data.id);
+			console.log(student_id);
+			const invite = await fetch('/axum/auth/bind', {
 				method: 'POST',
 				body: JSON.stringify({
-					username,
-					pass,
-					email,
-					role,
-					name
+					invite_token,
+					student_id
 				})
 			});
 
-			if (invite_token) {
-				const student_id = await response.json().then((data) => data.id);
-				console.log(student_id);
-				const invite = await fetch('/axum/auth/bind', {
-					method: 'POST',
-					body: JSON.stringify({
-						invite_token,
-						student_id
-					})
-				});
-
-				if (!invite.ok) {
-					return fail(400, { success: false, message: 'Failed to bind invite' });
-				
+			if (!invite.ok) {
+				return fail(400, { message: 'Failed to bind invite' });
 			}
+		}
+		if (response.ok) {
+			return redirect(302, '/auth/login');
+		}
 
-			if (response.ok) {
-				return redirect(302, '/auth/login');
-			}
-
-			const error = await response.json();
-			return fail(400, { success: false, message: error.message });		
+		const { error } = await response.json();
+		return fail(400, { message: error });
 	}
-	}} satisfies Actions;
+} satisfies Actions;

@@ -54,7 +54,7 @@
 	>
 		{@render icon($notification.type)}
 
-		<p class="text-brick-700 text-sm font-medium">
+		<p class="text-brick-700 text-sm font-bold">
 			{$notification.message}
 		</p>
 	</div>

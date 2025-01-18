@@ -1,72 +1,88 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import { goto } from '$app/navigation';
-	import type { ActionData } from './$types';
-	import { setProfile, setUser, user } from '$lib/stores';
+	import { ButtonSubmit } from '$lib/components/UI';
+	import {
+		setProfile,
+		setUser,
+		user,
+		initialUser,
+		initialProfile,
+		notification
+	} from '$lib/stores';
+	import { type User, type Profile } from '$lib/types';
 
-	export let form: ActionData;
+	let isSubmitting = $state(false);
 
-	let isSubmitting = false;
+	interface UserData {
+		user: User;
+		profile: Profile;
+	}
 </script>
 
-<form
-	method="POST"
-	use:enhance={() => {
-		isSubmitting = true;
-
-		return async ({ result }) => {
-			isSubmitting = false;
-
-			if (result.type === 'success') {
-				setUser(result.data.user);
-				setProfile(result.data.profile);
-				localStorage.setItem('user', JSON.stringify(result.data.user));
-				localStorage.setItem('profile', JSON.stringify(result.data.profile));
-				goto($user.role === 'teacher' ? '/t/dashboard' : '/s/dashboard');
-			}
-		};
-	}}
-	class="space-y-4 max-w-md mx-auto p-6"
->
-	<div class="space-y-2">
-		<label for="username" class="block text-sm font-medium text-gray-700"> Username </label>
-		<input
-			id="username"
-			name="username"
-			type="text"
-			class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500"
-			required
-			autocomplete="username"
-		/>
+<div class="max-w-md w-full space-y-8 bg-white p-8 rounded-xl shadow-lg">
+	<div class="text-center">
+		<h2 class="text-3xl font-bold text-brick-600">Welcome back</h2>
+		<p class="mt-2 text-sm text-milk-600">
+			Don't have an account?
+			<a href="/auth/signup" class="font-medium text-brick-500 hover:text-brick-400">Sign up</a>
+		</p>
 	</div>
+	<form
+		method="POST"
+		use:enhance={() => {
+			isSubmitting = true;
 
-	<div class="space-y-2">
-		<label for="password" class="block text-sm font-medium text-gray-700"> Password </label>
-		<input
-			id="password"
-			name="password"
-			type="password"
-			class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500"
-			required
-			autocomplete="current-password"
-		/>
-	</div>
+			return async ({ result }) => {
+				isSubmitting = false;
 
-	{#if form?.message}
-		<div class="text-red-500 text-sm" role="alert">
-			{form.message}
-		</div>
-	{/if}
+				if (result.type === 'success' && result.data) {
+					const { user = initialUser, profile = initialProfile } =
+						result.data as unknown as UserData;
 
-	<button
-		type="submit"
-		disabled={isSubmitting}
-		class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700
-      disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+					setUser(user);
+					setProfile(profile);
+					localStorage.setItem('user', JSON.stringify(user));
+					localStorage.setItem('profile', JSON.stringify(profile));
+					notification.set({ message: 'Welcome home', type: 'success' });
+					goto(user.role === 'teacher' ? '/t/dashboard' : '/s/dashboard');
+				} else if (result.type === 'failure') {
+					notification.set({
+						message: String(result.data?.message) || "Something's off",
+						type: 'error'
+					});
+				}
+			};
+		}}
+		class="max-w-md space-y-6 mt-8"
 	>
-		{#if isSubmitting}
-			<span class="inline-block animate-spin mr-2">↻</span>
-		{/if}
-		{isSubmitting ? 'Signing in...' : 'Sign in'}
-	</button>
-</form>
+		<div class="space-y-4">
+			<div>
+				<label for="username" class="block text-sm font-medium text-milk-700"> Username </label>
+				<input
+					id="username"
+					name="username"
+					type="text"
+					class="mt-1 block w-full px-3 py-2 bg-milk-50 border border-milk-300 rounded-md shadow-sm focus:outline-none focus:ring-brick-500 focus:border-brick-500"
+					required
+					autocomplete="username"
+				/>
+			</div>
+		</div>
+		<div class="space-y-2">
+			<div>
+				<label for="password" class="block text-sm font-medium text-milk-700"> Password </label>
+				<input
+					id="password"
+					name="password"
+					type="password"
+					class="mt-1 block w-full px-3 py-2 bg-milk-50 border border-milk-300 rounded-md shadow-sm focus:outline-none focus:ring-brick-500 focus:border-brick-500"
+					required
+					autocomplete="current-password"
+				/>
+			</div>
+		</div>
+
+		<ButtonSubmit bind:isSubmitting buttonName="Login" />
+	</form>
+</div>

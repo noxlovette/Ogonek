@@ -101,7 +101,6 @@ pub async fn authorize(
         AuthError::WrongCredentials
     })?
     .ok_or(AuthError::UserNotFound)?;
-    // Verify password using argon2
 
     if !verify_password(&user.pass, &payload.pass)? {
         return Err(AuthError::WrongCredentials);

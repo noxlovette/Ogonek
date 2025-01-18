@@ -1,8 +1,7 @@
 <script lang="ts">
-	import Sidebar from '$lib/components/sidebar/Sidebar.svelte';
+	import { Dashboard, Todo, Lessons, Quizlet, Settings, Students, Sidebar } from '$lib/components';
 	import { setContext } from 'svelte';
 	import { lessonsStore } from '$lib/stores';
-	import BottomMenu from '$lib/components/mobile/BottomMenu.svelte';
 	import type { Lesson, Task, Student } from '$lib/types';
 
 	interface Props {
@@ -23,15 +22,6 @@
 	setContext('tasks', tasks);
 	setContext('lessons', lessons);
 	setContext('students', students);
-
-	import {
-		Dashboard,
-		Todo,
-		Lessons,
-		Quizlet,
-		Settings,
-		Students
-	} from '$lib/components/sidebar/elements';
 </script>
 
 <Sidebar class="" elements={[Dashboard, Todo, Lessons, Students, Quizlet, Settings]} />
@@ -39,5 +29,4 @@
 	<div class="flex flex-1 flex-col size-full px-8 py-4 gap-4">
 		{@render children?.()}
 	</div>
-	<BottomMenu />
 </div>

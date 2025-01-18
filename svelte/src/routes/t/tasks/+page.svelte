@@ -2,10 +2,8 @@
 	import type { PageData } from './$types';
 	import { user } from '$lib/stores';
 	import type { Task, TableConfig } from '$lib/types';
-	import Header from '$lib/components/typography/Header.svelte';
+	import { H1, Table, ButtonSubmit } from '$lib/components';
 	import { formatDateTime } from '$lib/utils';
-	import Table from '$lib/components/UI/Table.svelte';
-	import { ButtonSubmit } from '$lib/components/UI/buttons';
 	import { enhance } from '$app/forms';
 
 	let { data }: { data: PageData } = $props();
@@ -34,7 +32,7 @@
 	let href = $user.role === 'teacher' ? `/t/tasks/t` : `/s/tasks/t`;
 </script>
 
-<Header>Tasks</Header>
+<H1>Tasks</H1>
 
 <Table items={tasks} config={taskConfig} {href} {students} />
 

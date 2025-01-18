@@ -1,20 +1,4 @@
 services:
-  caddy:
-    image: caddy:latest
-    restart: unless-stopped 
-    ports:
-      - "80:80"
-      - "443:443"
-      - "443:443/udp"  
-    volumes:
-      - uploads:/srv/uploads
-      - ./caddy/Caddyfile:/etc/caddy/Caddyfile:ro
-      - ./caddy/caddy-data:/data
-      - ./caddy/caddy-config:/config
-    depends_on:
-      - svelte
-      - axum
-
   svelte:
     build:
       context: ./svelte
@@ -31,7 +15,11 @@ services:
       - ./svelte/.env
     depends_on:
       - axum
-
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.svelte.rule=Host(`localhost`)"
+      - "traefik.http.services.svelte.loadbalancer.server.port=5173"
+  
   axum:
     build:
       context: ./axum
@@ -46,6 +34,12 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.axum.rule=Host(`localhost`) && PathPrefix(`/axum`)"
+      - "traefik.http.services.axum.loadbalancer.server.port=3000"
+      - "traefik.http.middlewares.axum-strip.stripprefix.prefixes=/axum"
+      - "traefik.http.routers.axum.middlewares=axum-strip"
 
   postgres:
     image: postgres
@@ -60,7 +54,7 @@ services:
     ports:
       - "5432:5432"
     healthcheck:
-      test: ["CMD", "pg_isready"]
+      test: [ "CMD", "pg_isready" ]
       interval: 10s
       timeout: 5s
       retries: 5

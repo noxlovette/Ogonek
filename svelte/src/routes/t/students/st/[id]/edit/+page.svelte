@@ -1,14 +1,12 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import Editor from '$lib/components/Editor.svelte';
-	import Header from '$lib/components/typography/Header.svelte';
+	import { Editor, H1 } from '$lib/components';
 	import type { Student } from '$lib/types';
 	import type { PageData } from './$types';
 	let { data }: { data: PageData } = $props();
-	let { student } : {student:Student} = data;
+	let { student }: { student: Student } = data;
 	let isSubmitting = $state(false);
 	let markdown = $state(student.markdown);
-
 </script>
 
 <form
@@ -16,17 +14,15 @@
 	action="?/update"
 	class="space-y-4 mb-4"
 	use:enhance={() => {
-
 		isSubmitting = true;
 		return async ({ result, update }) => {
-	
 			isSubmitting = false;
 			update();
 		};
 	}}
 >
 	<div class="flex items-baseline space-x-4">
-		<Header>My Notes on {student.name}</Header>
+		<H1>My Notes on {student.name}</H1>
 		<a
 			href="."
 			class="px-4 py-2 text-milk-700 bg-milk-100 rounded-lg hover:bg-milk-200 transition-colors"
@@ -52,6 +48,5 @@
 
 	<input type="hidden" name="id" value={student.id} />
 	<input type="hidden" name="markdown" value={markdown} />
-	
 </form>
 <Editor bind:markdownContent={markdown} />

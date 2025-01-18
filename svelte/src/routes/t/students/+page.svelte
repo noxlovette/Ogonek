@@ -1,14 +1,9 @@
 <script lang="ts">
 	import type { PageData } from './$types';
-	import StudentCard from '$lib/components/cards/StudentCard.svelte';
-	import Header from '$lib/components/typography/Header.svelte';
-	import Table from '$lib/components/UI/Table.svelte';
+	import { Table, ButtonSubmit, H1 } from '$lib/components';
 	import type { Student, TableConfig } from '$lib/types';
-	import { formatDateTime } from '$lib/utils';
 	import { enhance } from '$app/forms';
 	import { notification } from '$lib/stores';
-	import type { SubmitFunction } from '@sveltejs/kit';
-	import { ButtonSubmit } from '$lib/components/UI/buttons';
 
 	let { data }: { data: PageData } = $props();
 
@@ -31,7 +26,7 @@
 	let href = '/t/students/st';
 </script>
 
-<Header>Students</Header>
+<H1>Students</H1>
 <Table config={studentConfig} {href} items={students} {students} />
 <form
 	method="POST"
@@ -42,10 +37,9 @@
 		// calling `cancel()` will prevent the submission
 		// `submitter` is the `HTMLElement` that caused the form to be submitted
 
-		return async ({ result, update }) => {
+		return async ({ result }) => {
 			if (result.type === 'success') {
-				console.log(result);
-				const link: string = result.data.link;
+				const link = String(result.data?.link);
 				try {
 					await navigator.clipboard.writeText(link);
 					notification.set({ message: 'Link copied to clipboard!', type: 'success' });

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Uploader from '$lib/components/UI/Uploader.svelte';
+	import Uploader from '$lib/components/UI/interactive/Uploader.svelte';
 	import { notification } from '$lib/stores';
 </script>
 

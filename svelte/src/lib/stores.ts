@@ -1,14 +1,14 @@
 import { writable, derived } from 'svelte/store';
 import type { User, Profile, Toast } from './types';
 
-const initialUser: User = {
+export const initialUser: User = {
 	username: '',
 	name: '',
 	role: '',
 	email: '',
 };
 
-const initialProfile: Profile = {
+export const initialProfile: Profile = {
 	quizletUrl: null,
 	zoomUrl: null,
 	bio: null,
@@ -69,3 +69,7 @@ const createLessonStore = () => {
 };
 
 export const lessonsStore = createLessonStore();
+
+
+export const isSearchOpen = writable(false)
+

@@ -1,8 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import Editor from '$lib/components/Editor.svelte';
-	import Header from '$lib/components/typography/Header.svelte';
-	import { ButtonSubmit, ButtonDelete } from '$lib/components/UI/buttons/index';
+	import { Editor, ButtonDelete, ButtonSubmit, H1 } from '$lib/components';
 	import type { PageData } from './$types';
 	let { data }: { data: PageData } = $props();
 	let { lesson, students } = data;
@@ -22,7 +20,7 @@
 	}}
 >
 	<div class="flex items-baseline space-x-4">
-		<Header>Edit Lesson</Header>
+		<H1>Edit Lesson</H1>
 		<a
 			href="."
 			class="px-4 py-2 text-milk-700 bg-milk-100 rounded-lg hover:bg-milk-200 transition-colors"

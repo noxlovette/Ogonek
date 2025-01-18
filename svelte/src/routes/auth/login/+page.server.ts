@@ -17,7 +17,9 @@ export const actions: Actions = {
       });
 
       if (!response.ok) {
-        throw new Error('Login failed');
+        const { error } = await response.json();
+        console.log(error)
+        return fail(400, { message: error })
       }
 
       response.headers.getSetCookie().forEach(cookie => {
@@ -51,7 +53,7 @@ export const actions: Actions = {
       const user = await ValidateAccess(accessToken);
 
       if (!user) {
-        throw new Error('Login failed');
+        return fail(500, { message: "Invalid Token" })
       }
 
       const profile = await fetch('/axum/profile').then(res => res.json());
@@ -66,7 +68,6 @@ export const actions: Actions = {
     } catch (error) {
       console.error('Signin error:', error);
       return fail(400, {
-        success: false,
         message: error instanceof Error ? error.message : 'Login failed'
       });
     }

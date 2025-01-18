@@ -19,7 +19,7 @@ services:
     container_name: svelte-fl-dev
     volumes:
       - ./svelte:/app
-      - uploads:/app/public/media
+      - uploads:/app/static/uploads
     env_file:
       - ./svelte/.env
     labels:
@@ -78,7 +78,3 @@ volumes:
     name: db-fl-data
   uploads:
     name: uploads-fl-dev
-
-networks:
-  host:
-    external: true

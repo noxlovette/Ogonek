@@ -1,9 +1,6 @@
 <script lang="ts">
-	import Loader from '$lib/components/UI/Loader.svelte';
-	import Notification from '$lib/components/UI/Notification.svelte';
 	import '../app.css';
-	import Header from '$lib/components/UI/Header.svelte';
-	import Footer from '$lib/components/UI/Footer.svelte';
+	import { Header, Footer, Notification } from '$lib/components';
 	interface Props {
 		children?: import('svelte').Snippet;
 	}
@@ -22,7 +19,6 @@
 	</div>
 	<Notification></Notification>
 </main>
-
 
 <style lang="postcss">
 	:global(.markdown h1) {

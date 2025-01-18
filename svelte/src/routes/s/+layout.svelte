@@ -1,7 +1,6 @@
 <script lang="ts">
-	import Sidebar from '$lib/components/sidebar/Sidebar.svelte';
+	import { Sidebar } from '$lib/components';
 	import { setContext } from 'svelte';
-	import BottomMenu from '$lib/components/mobile/BottomMenu.svelte';
 	import type { Lesson, Task } from '$lib/types';
 
 	interface Props {
@@ -34,7 +33,6 @@
 	<div class="flex flex-1 flex-col size-full px-8 py-4">
 		{@render children?.()}
 	</div>
-	<BottomMenu />
 </div>
 <Sidebar
 	class="bg-inherit text-inherit px-0 py-0 ring-0 shadow-none"

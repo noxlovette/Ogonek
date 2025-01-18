@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Header2 from '$lib/components/typography/Header2.svelte';
+	import H2 from '$lib/components/typography/H2.svelte';
 	import { Forvo, Dictionary, Thesaurus } from '$lib/components/sidebar/elements';
 	import Group from './Group.svelte';
 
@@ -7,7 +7,7 @@
 </script>
 
 <Group>
-	<Header2>Useful Links</Header2>
+	<H2>Useful Links</H2>
 
 	{#each elements as Element}
 		<Element />

@@ -1,7 +1,7 @@
 <script lang="ts">
-	import LessonCard from '$lib/components/sidebar/groups/LessonCard.svelte';
+	import LessonCard from '$lib/components/sidebar/groups/LessonLine.svelte';
 	import type { Lesson } from '$lib/types';
-	import Header2 from '$lib/components/typography/Header2.svelte';
+	import H2 from '$lib/components/typography/H2.svelte';
 
 	import { getContext } from 'svelte';
 	import Group from './Group.svelte';
@@ -11,7 +11,7 @@
 </script>
 
 <Group>
-	<Header2>Recent Lessons</Header2>
+	<H2>Recent Lessons</H2>
 	<ul class="">
 		{#if lessons.length === 0}
 			<p>No lessons found</p>

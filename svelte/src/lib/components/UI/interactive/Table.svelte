@@ -1,11 +1,10 @@
 <script lang="ts" generics="T extends BaseTableItem">
 	import { enhance } from '$app/forms';
-	import { PlusCircle, PackageX } from 'lucide-svelte';
-	import SearchBar from '$lib/components/UI/SearchBar.svelte';
+	import { PlusCircle } from 'lucide-svelte';
+	import { SearchBar } from '$lib/components/UI';
 	import { goto } from '$app/navigation';
 	import { fade } from 'svelte/transition';
 	import type { Student, BaseTableItem, TableConfig } from '$lib/types';
-	import Header2 from '../typography/Header2.svelte';
 
 	interface Props<T extends BaseTableItem> {
 		items: T[];
@@ -16,13 +15,13 @@
 
 	let { items, config, href, students = [] }: Props<T> = $props();
 
-	let searchQuery = $state('');
+	let query = $state('');
 	let filteredItems = $state(items);
 	let foundItems = $state(items);
 	let filterAssignee = $state('');
 
 	$effect(() => {
-		const lowercaseQuery = searchQuery.toLowerCase();
+		const lowercaseQuery = query.toLowerCase();
 
 		foundItems = items.filter((item) => {
 			// Search through all configured columns
@@ -54,7 +53,7 @@
 	<!-- Search & Filter Bar -->
 	<div class="flex gap-4 items-center">
 		{#if items.length !== 0}
-			<SearchBar bind:search={searchQuery} />
+			<SearchBar bind:query />
 			<div class="flex flex-row items-center gap-4">
 				<form action="?/new" method="post" use:enhance>
 					<button class="p-1 text-brick-600 hover:text-brick-500 transition-colors">

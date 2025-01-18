@@ -1,8 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import Editor from '$lib/components/Editor.svelte';
-	import Header from '$lib/components/typography/Header.svelte';
-	import { ButtonSubmit, ButtonDelete } from '$lib/components/UI/buttons/index';
+	import { Editor, H1, ButtonDelete, ButtonSubmit } from '$lib/components';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
@@ -21,7 +19,7 @@
 
 <form method="POST" action="?/update" class="space-y-4 mb-4" use:enhance>
 	<div class="flex items-baseline space-x-4">
-		<Header>Edit Task</Header>
+		<H1>Edit Task</H1>
 		<a
 			href="."
 			class="px-4 py-2 text-milk-700 bg-milk-100 rounded-lg hover:bg-milk-200 transition-colors"

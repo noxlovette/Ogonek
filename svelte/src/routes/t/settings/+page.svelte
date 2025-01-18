@@ -1,10 +1,9 @@
 <script lang="ts">
-	import Header from '$lib/components/typography/Header.svelte';
-	import SettingsPanel from '$lib/components/UI/SettingsPanel.svelte';
+	import { H1, SettingsPanel } from '$lib/components';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
 </script>
 
-<Header>Settings</Header>
+<H1>Settings</H1>
 <SettingsPanel />
