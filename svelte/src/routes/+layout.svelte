@@ -1,6 +1,7 @@
 <script lang="ts">
 	import '../app.css';
 	import { Header, Footer, Notification } from '$lib/components';
+	import SearchOverlay from '$lib/components/UI/search/SearchOverlay.svelte';
 	interface Props {
 		children?: import('svelte').Snippet;
 	}
@@ -18,6 +19,8 @@
 		<Footer />
 	</div>
 	<Notification></Notification>
+
+	<SearchOverlay></SearchOverlay>
 </main>
 
 <style lang="postcss">

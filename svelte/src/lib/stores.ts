@@ -1,5 +1,5 @@
 import { writable, derived } from 'svelte/store';
-import type { User, Profile, Toast } from './types';
+import type { User, Profile, Toast, Lesson, Task } from './types';
 
 export const initialUser: User = {
 	username: '',
@@ -51,7 +51,7 @@ export function clearNotification() {
 	}));
 }
 
-import type { Lesson } from './types';
+
 const createLessonStore = () => {
 	const { subscribe, set, update } = writable<Lesson[]>([]);
 
@@ -68,8 +68,23 @@ const createLessonStore = () => {
 	};
 };
 
-export const lessonsStore = createLessonStore();
+export const lessonStore = createLessonStore();
 
+
+const createTaskStore = () => {
+	const { subscribe, set, update } = writable<Task[]>([]);
+
+	return {
+		subscribe,
+
+		setTasks: (tasks: Task[]) => set(tasks),
+		addTask: (task: Task) => update(tasks => [...tasks, task]),
+
+		reset: () => set([])
+	}
+}
+
+export const taskStore = createTaskStore();
 
 export const isSearchOpen = writable(false)
 

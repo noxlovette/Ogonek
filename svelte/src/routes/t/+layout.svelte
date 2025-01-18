@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Dashboard, Todo, Lessons, Quizlet, Settings, Students, Sidebar } from '$lib/components';
 	import { setContext } from 'svelte';
-	import { lessonsStore } from '$lib/stores';
+	import { lessonStore, taskStore } from '$lib/stores';
 	import type { Lesson, Task, Student } from '$lib/types';
 
 	interface Props {
@@ -17,10 +17,8 @@
 
 	const { tasks, lessons, students } = data;
 
-	lessonsStore.setLessons(lessons);
-
-	setContext('tasks', tasks);
-	setContext('lessons', lessons);
+	lessonStore.setLessons(lessons);
+	taskStore.setTasks(tasks);
 	setContext('students', students);
 </script>
 

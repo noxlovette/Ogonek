@@ -1,12 +1,16 @@
 <script lang="ts">
 	import { Search } from 'lucide-svelte';
+	import { isSearchOpen } from '$lib/stores';
 
 	function handleKeydown(e: KeyboardEvent) {
 		if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
 			e.preventDefault();
+			isSearchOpen.set(true);
 			searchElement.focus();
 		}
 		if (e.key === 'Escape') {
+			isSearchOpen.set(false);
+			query = '';
 			searchElement.blur();
 		}
 		if (e.key === 'Enter') {
@@ -14,10 +18,17 @@
 		}
 	}
 
-	function handleClickOutside(e: MouseEvent) {
+	function handleClick(e: MouseEvent) {
 		if (searchElement && !searchElement.contains(e.target as Node)) {
+			query = '';
+			isSearchOpen.set(false);
 			searchElement.blur();
 		}
+	}
+
+	function handleSearchClick() {
+		isSearchOpen.set(true);
+		searchElement.focus();
 	}
 	let { query = $bindable(''), placeholder = 'Search...' } = $props();
 	let searchElement: HTMLInputElement;
@@ -32,6 +43,7 @@
 		type="text"
 		bind:value={query}
 		bind:this={searchElement}
+		onclick={handleSearchClick}
 		{placeholder}
 		class="w-full pl-10 pr-4 py-2 border rounded-full focus:ring-2 bg-brick-50 border-milk-200 focus:ring-brick-500 focus:border-transparent
         focus:placeholder:text-brick-400/70
@@ -46,4 +58,4 @@
 	</div>
 </div>
 
-<svelte:window onkeydown={handleKeydown} onclick={handleClickOutside} />
+<svelte:window onkeydown={handleKeydown} onclick={handleClick} />

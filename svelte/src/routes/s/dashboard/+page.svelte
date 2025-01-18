@@ -1,17 +1,7 @@
 <script lang="ts">
 	import Header from '$lib/components/typography/H1.svelte';
+	import {lessonStore} from '$lib/stores';
 	import { getGreeting } from '$lib/utils';
-	import { getContext } from 'svelte';
-
-	let hidden = $state(false);
-	const greeting = getGreeting();
-	import type { Lesson } from '$lib/types';
-
-	// let tasks: App.Task[] = getContext('tasks');
-	let lessons: Lesson[] = getContext('lessons');
-	// let filtered = tasks.filter((task) => task.completed === false);
-	// let recent_tasks = filtered.slice(0, 3);
-	// let recent_lesson = lessons[0];
 </script>
 
 <svelte:head>

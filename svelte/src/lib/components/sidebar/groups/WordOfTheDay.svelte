@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { getContext } from 'svelte';
 	import Group from './Group.svelte';
 	import H2 from '$lib/components/typography/H2.svelte';
 

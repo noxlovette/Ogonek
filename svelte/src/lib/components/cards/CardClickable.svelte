@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { isSearchOpen } from '$lib/stores';
+
 	let { href, children } = $props();
 </script>
 

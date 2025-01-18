@@ -44,13 +44,13 @@
 			x: 400,
 			y: 0
 		}}
-		class="fixed bottom-4 right-4 min-w-[320px] max-w-md bg-milk-50
-			 shadow-lg rounded-lg flex items-center gap-3 p-4 border-l-4
+		class="fixed top-4 right-4 min-w-[320px] max-w-md bg-milk-50
+			 shadow-lg rounded-lg flex items-center gap-3 p-4 border-2
 			 {$notification.type === 'success'
-			? 'border-l-pakistan-500'
+			? 'border-pakistan-500'
 			: $notification.type === 'error'
-				? 'border-l-red-500'
-				: 'border-l-amber-500'}"
+				? 'border-red-500'
+				: 'border-amber-500'}"
 	>
 		{@render icon($notification.type)}
 

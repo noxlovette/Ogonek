@@ -1,7 +1,7 @@
 <script lang="ts" generics="T extends BaseTableItem">
 	import { enhance } from '$app/forms';
 	import { PlusCircle } from 'lucide-svelte';
-	import { SearchBar } from '$lib/components/UI';
+	import { Search } from 'lucide-svelte';
 	import { goto } from '$app/navigation';
 	import { fade } from 'svelte/transition';
 	import type { Student, BaseTableItem, TableConfig } from '$lib/types';
@@ -53,7 +53,18 @@
 	<!-- Search & Filter Bar -->
 	<div class="flex gap-4 items-center">
 		{#if items.length !== 0}
-			<SearchBar bind:query />
+			<div class="relative flex-1">
+				<Search class="absolute left-3 top-1/2 -translate-y-1/2 text-milk-400 " />
+				<input
+					type="text"
+					bind:value={query}
+					placeholder="Search..."
+					class="w-full pl-10 pr-4 py-2 border rounded-full focus:ring-2 bg-brick-50 border-milk-200 focus:ring-brick-500 focus:border-transparent
+			focus:placeholder:text-brick-400/70
+			placeholder:text-milk-500
+			"
+				/>
+			</div>
 			<div class="flex flex-row items-center gap-4">
 				<form action="?/new" method="post" use:enhance>
 					<button class="p-1 text-brick-600 hover:text-brick-500 transition-colors">
