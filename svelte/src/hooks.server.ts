@@ -17,16 +17,15 @@ export const handle: Handle = async ({ event, resolve }) => {
     // Try to get valid user - either from current token or refreshed token
     if (accessToken) {
         try {
-            console.log("Validating token");
+
             user = await ValidateAccess(accessToken);
-            console.log("Token validated successfully", user);
         } catch (error) {
             user = await handleTokenRefresh(event);
         }
     } else if (event.cookies.get("refreshToken")) {
         user = await handleTokenRefresh(event);
     } else {
-        console.log('no access or refresh token found');
+
         throw redirect(302, '/auth/login');
     }
 

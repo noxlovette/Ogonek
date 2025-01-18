@@ -67,4 +67,5 @@ pub struct TaskUpdate {
     #[serde_as(as = "Option<Rfc3339>")]
     pub due_date: Option<OffsetDateTime>,
     pub assignee: Option<String>,
+    pub file_path: Option<String>,
 }

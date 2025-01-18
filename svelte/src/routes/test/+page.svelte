@@ -1,5 +1,4 @@
 <script lang="ts">
-	import Uploader from '$lib/components/UI/interactive/Uploader.svelte';
 	import { notification } from '$lib/stores';
 </script>
 
@@ -12,4 +11,3 @@
 <button onclick={() => notification.set({ message: 'Hello, world!', type: 'info' })}>
 	Show Info
 </button>
-<Uploader />

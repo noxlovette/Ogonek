@@ -1,10 +1,22 @@
 import type { Actions } from "@sveltejs/kit";
-import { fail, redirect, json } from '@sveltejs/kit';
-import { randomUUID } from 'crypto';
-import { writeFile } from 'fs/promises';
-import path from 'path';
-import { Readable } from 'stream';
+import { fail, redirect, error } from '@sveltejs/kit';
 
+import { Buffer } from 'node:buffer';
+
+import { createHash, randomUUID } from 'node:crypto';
+import { writeFile } from 'node:fs/promises';
+import path from 'node:path';
+import { env } from '$env/dynamic/private';
+
+const MAX_FILE_SIZE = 5 * 1024 * 1024;
+const ALLOWED_MIMES = new Set([
+    'image/jpeg',
+    'image/png',
+    'application/pdf',
+]);
+const encodeFileName = (fileName: string): string => {
+    return Buffer.from(fileName).toString('base64url');
+};
 
 export const actions = {
     update: async ({ request, fetch }) => {
@@ -67,4 +79,63 @@ export const actions = {
         redirect(303, '/t/tasks');
 
     },
+    upload: async ({ request, fetch }) => {
+        try {
+            const formData = await request.formData();
+            const file = formData.get('file');
+            const id = formData.get('id');
+
+            if (!file || !(file instanceof Blob)) {
+                return fail(400, {
+                    message: 'No file provided or invalid file type'
+                });
+            }
+
+
+            if (file.size > MAX_FILE_SIZE) {
+                return fail(400, {
+                    message: 'File too large, max 5MB allowed'
+                });
+            }
+
+
+            if (!ALLOWED_MIMES.has(file.type)) {
+                return fail(400, {
+                    message: 'Unsupported file type'
+                });
+            }
+            const fileId = randomUUID();
+            const salt = crypto.getRandomValues(new Uint8Array(16));
+            const arrayBuffer = await file.arrayBuffer();
+            const buffer = Buffer.from(arrayBuffer);
+
+            const hash = createHash('sha256')
+                .update(Buffer.concat([buffer, Buffer.from(salt)]))
+                .digest('hex');
+
+            const encodedName = encodeFileName(file.name);
+            const filePath = path.join(env.UPLOAD_DIR, encodedName);
+
+            await writeFile(filePath, buffer.toString('base64'));
+
+            let response = await fetch(`/axum/task/t/${id}`, { method: 'PATCH', body: JSON.stringify({ filePath }) })
+
+            if (!response.ok) {
+                return fail(500, { message: response.text() })
+            }
+
+            return {
+                success: true,
+                message: 'File uploaded successfully',
+                fileId,
+                originalName: file.name
+            };
+
+        } catch (err) {
+            console.error('Error uploading file:', err);
+            return error(500);
+        }
+    }
+
+
 } satisfies Actions;

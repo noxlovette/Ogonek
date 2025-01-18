@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { H1 } from '$lib/components';
+	import { H1, H2 } from '$lib/components';
 	import { user } from '$lib/stores';
 	import { formatDateTime } from '$lib/utils';
 	import type { PageData } from './$types';
@@ -9,6 +9,8 @@
 	const { task, rendered } = data;
 
 	let formattedDate = formatDateTime(task.createdAt);
+
+	console.log(task);
 </script>
 
 <svelte:head>
@@ -35,5 +37,7 @@
 		</h3>
 	</div>
 </div>
-<h3 class="text-2xl font-bold">Content</h3>
+<H2>Content</H2>
 <div class="markdown ring-2 ring-milk-200 p-4 rounded-lg">{@html rendered}</div>
+
+<a href={`/t/tasks/${encodeURIComponent(task.filePath)}`}>Download Test</a>

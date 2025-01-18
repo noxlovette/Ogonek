@@ -4,6 +4,8 @@
 	import { Upload, Loader2 } from 'lucide-svelte';
 	import { fade, scale } from 'svelte/transition';
 
+	let { id } = $props();
+
 	let isDragging = $state(false);
 	let isUploading = $state(false);
 	let fileName = $state('');
@@ -35,19 +37,11 @@
 	}
 </script>
 
-<button onclick={() => notification.set({ message: 'Hello, world!', type: 'success' })}>
-	Show Success
-</button>
-<button onclick={() => notification.set({ message: 'Hello, world!', type: 'error' })}>
-	Show Error
-</button>
-<button onclick={() => notification.set({ message: 'Hello, world!', type: 'info' })}>
-	Show Info
-</button>
 <form
 	method="post"
 	enctype="multipart/form-data"
-	class="max-w-xl mx-auto p-6"
+	action="?/upload"
+	class=""
 	use:enhance={({ formData, cancel }) => {
 		if (!formData.has('file')) {
 			cancel();
@@ -83,6 +77,7 @@
 		};
 	}}
 >
+	<input type="hidden" name="id" value={id} />
 	<!-- Upload Area -->
 	<div
 		onclick={() => fileInput.click()}

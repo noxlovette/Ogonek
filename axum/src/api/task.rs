@@ -112,8 +112,9 @@ pub async fn update_task(
             priority = COALESCE($3, priority),
             completed = COALESCE($4, completed),
             due_date = COALESCE($5, due_date),
-            assignee = COALESCE($6, assignee)
-         WHERE id = $7 AND (assignee = $8 OR created_by = $8)
+            assignee = COALESCE($6, assignee),
+            file_path = COALESCE($7, file_path)
+         WHERE id = $8 AND (assignee = $9 OR created_by = $9)
          RETURNING *",
         payload.title,
         payload.markdown,
@@ -121,6 +122,7 @@ pub async fn update_task(
         payload.completed,
         payload.due_date,
         payload.assignee,
+        payload.file_path,
         id,
         claims.sub
     )

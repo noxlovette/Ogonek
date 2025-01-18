@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { Editor, H1, ButtonDelete, ButtonSubmit } from '$lib/components';
+	import { Editor, H1, ButtonDelete, ButtonSubmit, Uploader } from '$lib/components';
+
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
@@ -33,7 +34,7 @@
 	<input type="hidden" name="id" value={task.id} />
 	<input type="hidden" name="markdown" value={markdown} />
 
-	<div class="grid grid-cols-2 gap-4">
+	<div class="grid grid-cols-3 gap-4">
 		<div class="space-y-2">
 			<label for="title" class="block font-medium text-milk-700">Title</label>
 			<input
@@ -88,3 +89,5 @@
 </form>
 
 <Editor bind:markdownContent={markdown} />
+
+<Uploader id={task.id} />
