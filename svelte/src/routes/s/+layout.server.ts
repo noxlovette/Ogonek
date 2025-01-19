@@ -1,13 +1,11 @@
 import type { LayoutServerLoad } from './$types';
 import { env } from '$env/dynamic/private';
-import type { Lesson } from '$lib/types';
+import type { Lesson, Task } from '$lib/types';
 
 export const load: LayoutServerLoad = async ({ fetch }) => {
-
-
 	const [lessons, tasks] = await Promise.all([
-		fetch("/axum/lesson").then((res) => res.json()),
-		fetch("/axum/task").then((res) => res.json()),
+		fetch("/axum/lesson").then((res) => res.json() as Promise<Lesson[]>),
+		fetch("/axum/task").then((res) => res.json() as Promise<Task[]>),
 	]);
 
 	return { lessons, tasks };

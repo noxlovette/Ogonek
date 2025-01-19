@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { PageData } from './$types';
-	import { LessonCard, H1, Clock, TeacherTaskCard } from '$lib/components';
+	import { LessonCard, H1, Clock, TaskMini } from '$lib/components';
 	import { fly } from 'svelte/transition';
 	import type { Task, Lesson } from '$lib/types';
 
@@ -24,9 +24,9 @@
 	<section class="space-y-4">
 		<h2 class="text-xl font-semibold text-milk-800">Recent Changes</h2>
 		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-			{#each tasks.slice(0, 3) as task (task.id)}
+			{#each tasks.slice(0, 2) as task (task.id)}
 				<div transition:fly={{ y: 20, duration: 300 }}>
-					<TeacherTaskCard {task} />
+					<TaskMini {task} />
 				</div>
 			{/each}
 		</div>
@@ -36,7 +36,7 @@
 	<section class="space-y-4">
 		<h2 class="text-xl font-semibold text-milk-800">Latest Lessons</h2>
 		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-			{#each lessons.slice(0, 3) as lesson (lesson.id)}
+			{#each lessons.slice(0, 2) as lesson (lesson.id)}
 				<div transition:fly={{ y: 20, duration: 300 }}>
 					<LessonCard {lesson} />
 				</div>

@@ -26,7 +26,7 @@
 	}
 </script>
 
-<Card>
+<Card gradient={false}>
 	<div
 		id="task-header"
 		class="inline-flex space-x-8 text-lg md:text-xl lg:text-2xl xl:text-3xl justify-between items-baseline"

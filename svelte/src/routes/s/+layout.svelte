@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { Sidebar } from '$lib/components';
-	import { setContext } from 'svelte';
+	import { Sidebar, WorkArea } from '$lib/components';
 	import type { Lesson, Task } from '$lib/types';
+	import { lessonStore, taskStore } from '$lib/stores';
 
 	interface Props {
 		data: any;
@@ -13,9 +13,8 @@
 	const tasks: Task[] = data.tasks;
 	const lessons: Lesson[] = data.lessons;
 
-	setContext('tasks', tasks);
-	setContext('lessons', lessons);
-	// setContext('word', data.word);
+	lessonStore.setLessons(lessons);
+	taskStore.setTasks(tasks);
 
 	import {
 		Dashboard,
@@ -29,12 +28,11 @@
 </script>
 
 <Sidebar class="" elements={[Dashboard, Todo, Lessons, Zoom, Quizlet, Settings]} />
-<div class="flex flex-col justify-start items-center font-medium overflow-auto flex-1">
-	<div class="flex flex-1 flex-col size-full px-8 py-4">
-		{@render children?.()}
-	</div>
-</div>
+<WorkArea>
+	{@render children?.()}
+</WorkArea>
 <Sidebar
-	class="bg-inherit text-inherit px-0 py-0 ring-0 shadow-none"
-	elements={[UsefulLinks, WordOfTheDay, RecentLessons]}
+	class="bg-inherit text-inherit ring-transparent shadow-none"
+	subclass="divide-transparent"
+	elements={[UsefulLinks, WordOfTheDay]}
 ></Sidebar>

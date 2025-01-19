@@ -3,6 +3,7 @@
 	import { formatDateTime } from '$lib/utils';
 	import { user } from '$lib/stores';
 	import CardClickable from './CardClickable.svelte';
+	import { H2 } from '../typography';
 	interface Props {
 		lesson: Lesson;
 	}
@@ -14,18 +15,20 @@
 </script>
 
 <CardClickable {href}>
-	<div class="flex flex-col">
-		<h3 class="text-3xl">
-			{formattedDate}
-		</h3>
+	<H2>
+		{formattedDate}
+	</H2>
 
-		<div class="flex flex-col space-y-2">
-			<h2 class="text">
-				{lesson.topic}
-			</h2>
-			<p class="opacity-30">
-				{lesson.markdown}
-			</p>
-		</div>
+	<div class="flex flex-col">
+		<h2
+			class="text-lg font-semibold
+			"
+		>
+			{lesson.topic}
+		</h2>
+
+		<p class="prose text-milk-600 text-sm/relaxed lg:text-base/relaxed">
+			{lesson.markdown}
+		</p>
 	</div>
 </CardClickable>

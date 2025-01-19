@@ -4,10 +4,20 @@
 
 <a
 	{href}
-	class="flex py-3 px-5
-	flex-col hover:bg-brick-600 hover:text-brick-50
-	transition-colors shadow-md ring-2 ring-milk-200
-	rounded-lg max-h-[150px] overflow-clip"
+	class="relative flex flex-col p-5 rounded-xl
+    bg-white
+    ring-1 ring-milk-200
+    shadow-lg shadow-milk-100
+    hover:shadow-brick-100
+    hover:ring-brick-400
+    group transition-all duration-200 ease-out
+    max-h-[150px] overflow-hidden"
 >
 	{@render children()}
+
+	<div
+		class="absolute bottom-0 left-0 right-0 h-12
+    bg-gradient-to-t from-white to-transparent
+    pointer-events-none"
+	></div>
 </a>
