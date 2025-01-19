@@ -1,5 +1,14 @@
 <script lang="ts">
-	import { Dashboard, Todo, Lessons, Quizlet, Settings, Students, Sidebar } from '$lib/components';
+	import {
+		Dashboard,
+		Todo,
+		Lessons,
+		Quizlet,
+		Settings,
+		Students,
+		Sidebar,
+		WorkArea
+	} from '$lib/components';
 	import { setContext } from 'svelte';
 	import { lessonStore, taskStore } from '$lib/stores';
 	import type { Lesson, Task, Student } from '$lib/types';
@@ -24,8 +33,6 @@
 
 <Sidebar class="" elements={[Dashboard, Todo, Lessons, Students, Quizlet, Settings]} />
 
-<div
-	class="flex flex-col flex-1 px-8 py-4 ml-4 gap-4 overflow-y-auto rounded-lg ring-2 ring-milk-200 bg-white"
->
+<WorkArea>
 	{@render children?.()}
-</div>
+</WorkArea>

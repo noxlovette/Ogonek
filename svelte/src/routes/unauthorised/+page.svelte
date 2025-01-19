@@ -4,7 +4,7 @@
 </script>
 
 <div class="flex items-center justify-center size-full">
-	<div class="max-w-2xl w-full bg-white rounded-lg shadow-lg p-8 text-center overflow-hidden">
+	<div class="max-w-2xl w-full bg-white rounded-lg shadow-md p-8 text-center overflow-hidden">
 		<!-- Main content -->
 		<div class="flex justify-center mb-6 space-x-4">
 			<Lock class="h-16 w-16 text-milk-400" />

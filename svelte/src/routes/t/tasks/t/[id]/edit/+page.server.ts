@@ -116,7 +116,7 @@ export const actions = {
             const encodedName = encodeFileName(file.name);
             const filePath = path.join(env.UPLOAD_DIR, encodedName);
 
-            await writeFile(filePath, buffer.toString('base64'));
+            await writeFile(filePath, buffer);
 
             let response = await fetch(`/axum/task/t/${id}`, { method: 'PATCH', body: JSON.stringify({ filePath }) })
 

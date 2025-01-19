@@ -9,7 +9,6 @@
 	let downloadStarted = $state(false);
 
 	onMount(() => {
-		// Start download automatically
 		const blob = new Blob([body], {
 			type: headers['Content-Type'] || 'application/octet-stream'
 		});
@@ -42,7 +41,7 @@
 </script>
 
 <div class=" flex items-center justify-center">
-	<div class="max-w-md w-full bg-white rounded-xl shadow-lg p-8 space-y-6">
+	<div class="max-w-md w-full bg-white rounded-xl shadow-md p-8 space-y-6">
 		<div class="flex items-center justify-center space-x-2">
 			<BookOpen class="w-8 h-8 text-brick-500" />
 			<h1 class="text-2xl font-bold text-milk-800">Homework Time! 📚</h1>

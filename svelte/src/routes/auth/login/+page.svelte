@@ -15,7 +15,7 @@
 	let isSubmitting = $state(false);
 </script>
 
-<div class="max-w-md w-full space-y-8 bg-white p-8 rounded-xl shadow-lg">
+<div class="max-w-md w-full space-y-8 bg-white p-8 rounded-xl shadow-md">
 	<div class="text-center">
 		<h2 class="text-3xl font-bold text-brick-600">Welcome back</h2>
 		<p class="mt-2 text-sm text-milk-600">

@@ -118,7 +118,7 @@
 		</div>
 	{:else}
 		<!-- Table -->
-		<div class="overflow-x-auto rounded-lg border">
+		<div class="overflow-x-auto rounded-lg border shadow-md">
 			<table class="w-full">
 				<thead class="bg-milk-50">
 					<tr>
