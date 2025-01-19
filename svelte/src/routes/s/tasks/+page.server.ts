@@ -1,107 +1,33 @@
 import type { Actions } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { error } from '@sveltejs/kit';
-
-const BACKEND_URL = process.env.BACKEND_URL || 'http://backend:8000';
-const API_KEY_DJANGO = process.env.API_KEY_DJANGO || '';
+import { error, fail } from '@sveltejs/kit';
 
 export const actions = {
-	completed: async ({ request, cookies }) => {
+	default: async ({ request, fetch }) => {
+		console.log("triggered completed")
 		const formData = await request.formData();
-		const sessionid = cookies.get('sessionid');
-		const csrfToken = cookies.get('csrftoken');
-
+		const id = formData.get('id')
 		let body = {
-			id: formData.get('id'),
-			completed: formData.get('completed')
+			completed: formData.get('completed'),
+			id
 		};
 
-		try {
-			const headers = {
-				Cookie: `sessionid=${sessionid}; csrftoken=${csrfToken}`,
-				'Content-Type': 'application/json',
-				'X-CSRFToken': csrfToken,
-				'X-API-Key': API_KEY_DJANGO
-			};
+		const response = await fetch(`/axum/task/t/${id}`, {
+			method: 'PATCH',
+			body: JSON.stringify(body)
+		});
 
-			// Update the task first
-			const updateResponse = await fetch(`${BACKEND_URL}/api/tasks/${formData.get('id')}/`, {
-				method: 'PATCH',
-				headers: headers,
-				body: JSON.stringify(body)
-			});
+		console.log(body)
 
-			if (!updateResponse.ok) {
-				const errorData = await updateResponse.json(); // Parse error details
-				console.error('Error updating task:', errorData);
-				return {
-					success: false,
-					error: errorData
-				};
-			}
+		const { error } = await response.json()
+		console.log(error)
 
-			// Then fetch all tasks
-			const [tasks] = await Promise.all([
-				fetch(`${BACKEND_URL}/api/tasks/`, {
-					headers: {
-						Cookie: `sessionid=${sessionid}; csrftoken=${csrfToken}`,
-						'X-API-Key': API_KEY_DJANGO
-					}
-				}).then((res) => res.json())
-			]);
-
-			return {
-				success: true,
-				message: 'Task updated successfully',
-				tasks: tasks // Return the updated list of tasks
-			};
-		} catch (error) {
-			console.error('Fetch error:', error);
-			return {
-				success: false,
-				error: 'An error occurred while updating or fetching tasks'
-			};
+		if (!response.ok) {
+			return fail(500, { message: "Something's off" })
 		}
+
+		return {
+			success: true,
+		};
 	},
-	download: async ({ request, cookies }) => {
-		const formData = await request.formData();
-		const sessionid = cookies.get('sessionid');
-		const csrfToken = cookies.get('csrftoken');
-		const url = `${formData.get('file')}`;
-
-		try {
-			const response = await fetch(url, {
-				method: 'GET',
-				headers: {
-					'Content-Type': 'application/json',
-					Cookie: `sessionid=${sessionid}; csrftoken=${csrfToken}`,
-					'X-CSRFToken': csrfToken,
-					'X-API-Key': API_KEY_DJANGO
-				}
-			});
-
-			if (!response.ok) {
-				const errorData = await response.json(); // Parse error details
-				console.error('Error downloading task:', errorData);
-				return {
-					success: false,
-					error: errorData
-				};
-			}
-
-			const blob = await response.blob();
-			return {
-				file: {
-					blob: blob,
-					name: 'roses-center.svg' // or dynamically get from headers
-				}
-			};
-		} catch (error) {
-			console.error('Fetch error:', error);
-			return {
-				success: false,
-				error: 'An error occurred while downloading the task'
-			};
-		}
-	}
 } satisfies Actions;

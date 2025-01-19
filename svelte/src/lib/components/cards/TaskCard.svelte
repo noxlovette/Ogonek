@@ -1,89 +1,94 @@
 <script lang="ts">
-	import { CheckSquare, Download, Square } from 'lucide-svelte';
-	import { enhance } from '$app/forms';
-	import { notification } from '$lib/stores';
 	import { formatDateTime } from '$lib/utils';
 	import type { Task } from '$lib/types';
-	import Card from './Card.svelte';
+	import Clickable from './CardClickable.svelte';
+	import { user, notification } from '$lib/stores';
+	import { onMount } from 'svelte';
+	import { H2 } from '../typography';
+	import { goto } from '$app/navigation';
+	import { enhance } from '$app/forms';
+	import { CheckSquare, Download, Square } from 'lucide-svelte';
+	import { parseMarkdown } from '$lib/utils';
+
+	onMount(async () => {
+		rendered = await parseMarkdown(task.markdown);
+		overdue = new Date(task.dueDate) < new Date();
+	});
+
 	interface Props {
 		task: Task;
+		interactive: boolean;
 	}
 
-	let { task }: Props = $props();
-
-	let overdue = false;
-	let completed = $state(task.completed);
+	let { task, interactive = false }: Props = $props();
+	let overdue = $state(false);
+	let rendered = $state(task.markdown);
 	const formattedDate = formatDateTime(task.dueDate);
-
-	function handleDownload() {
-		const a = document.createElement('a');
-		a.href = task.filePath;
-		a.style.display = 'none';
-		document.body.appendChild(a);
-		a.click();
-		document.body.removeChild(a);
-		notification.set({ message: 'Downloading file...', type: 'info' });
-	}
+	let completed = $state(task.completed);
+	let href = $user.role === 'teacher' ? `/t/tasks/t/${task.id}` : '/s/tasks';
+	let pointerEventsOff = interactive ? true : false;
 </script>
 
-<Card gradient={false}>
+<Clickable {href} {pointerEventsOff}>
 	<div
 		id="task-header"
 		class="inline-flex space-x-8 text-lg md:text-xl lg:text-2xl xl:text-3xl justify-between items-baseline"
 	>
-		<h2 class="flex">{task.title}</h2>
-		<form
-			class="flex"
-			method="post"
-			use:enhance={() => {
-				return async ({ result }) => {
-					if (result.type === 'success') {
-						notification.set({ message: 'Marked as completed', type: 'success' });
-					} else {
-						notification.set({
-							message: 'Failed to mark as completed',
-							type: 'error'
-						});
-					}
-				};
-			}}
-			action="?/completed"
-		>
-			<button onclick={() => (completed = !completed)} class="" class:overdue>
-				{#if completed}
-					<CheckSquare class="w-6 h-6" />
-				{:else}
-					<Square class="w-6 h-6" />
-				{/if}
-			</button>
-			<input type="hidden" name="completed" value={completed} />
-			<input type="hidden" name="id" value={task.id} />
-		</form>
+		<H2>
+			{task.title}
+		</H2>
+		{#if interactive}
+			<form
+				class="flex"
+				method="post"
+				use:enhance={() => {
+					return async ({ result }) => {
+						if (result.type === 'success') {
+							notification.set({ message: 'Marked as completed', type: 'success' });
+						} else {
+							notification.set({
+								message: 'Failed to mark as completed',
+								type: 'error'
+							});
+						}
+					};
+				}}
+			>
+				<button onclick={() => (completed = !completed)} class="pointer-events-auto" class:overdue>
+					{#if completed}
+						<CheckSquare class="w-6 h-6" />
+					{:else}
+						<Square class="w-6 h-6" />
+					{/if}
+				</button>
+				<input type="hidden" name="completed" value={completed} />
+				<input type="hidden" name="id" value={task.id} />
+			</form>
+		{/if}
 	</div>
 
-	<p class="text-sm lg:text-base">{@html task.markdown}</p>
-
-	<div id="task-footer" class="items-center mt-auto text-sm inline-flex space-x-1 justify-between">
-		<p class:overdue class="opacity-60">Due {formattedDate}</p>
-
-		{#if task.filePath}
-			<button onclick={handleDownload}>
-				<Download class="w-6 h-6" />
+	<div class="mt-auto pt-4 flex items-center justify-between text-sm/tight">
+		<p class:overdue class="text-milk-500 {overdue ? 'text-brick-500' : ''}">
+			Due {formattedDate}
+		</p>
+		{#if interactive && task.filePath}
+			<button
+				class="pointer-events-auto"
+				onclick={() => goto(`/download/${encodeURIComponent(task.filePath)}`)}
+			>
+				<Download class="size-6" />
 			</button>
 		{/if}
 	</div>
-</Card>
+
+	<p class="text-milk-600 text-sm/relaxed lg:text-base/relaxed">
+		{@html rendered}
+	</p>
+</Clickable>
 
 <style lang="postcss">
-	.overdue {
-		@apply text-brick-600 font-bold underline;
-	}
-
-	button.overdue {
-		@apply text-inherit;
-	}
-
-	.completed {
-		@apply opacity-50;
+	/* Optional: Add any component-specific styles here */
+	:global(.overdue) {
+		@apply font-medium text-red-600;
 	}
 </style>

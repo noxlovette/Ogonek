@@ -43,10 +43,10 @@
 <div class="markdown ring-2 ring-milk-200 p-4 rounded-lg">{@html rendered}</div>
 
 {#if task.filePath}
-<div>
-	<ButtonRaw
-		onclick={() => goto(`/t/tasks/${encodeURIComponent(task.filePath)}`)}
-		buttonName="Download"
-	/>
-</div>
+	<div>
+		<ButtonRaw
+			onclick={() => goto(`/download/${encodeURIComponent(task.filePath)}`)}
+			buttonName="Download"
+		/>
+	</div>
 {/if}

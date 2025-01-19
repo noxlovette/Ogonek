@@ -5,9 +5,23 @@ import { ValidateAccess } from '$lib/utils';
 
 let isRefreshing = false;
 
+const PROTECTED_PATHS = new Set([
+    '/t/',
+    '/s/',
+    '/download/'
+]);
+
+
+function isProtectedPath(path: string): boolean {
+    return PROTECTED_PATHS.has(path) ||
+        Array.from(PROTECTED_PATHS).some(prefix => path.startsWith(prefix));
+}
+
 export const handle: Handle = async ({ event, resolve }) => {
-    // Allow non-protected routes to pass through
-    if (!(/\/[ts]\//i).test(event.url.pathname)) {
+
+    const path = event.url.pathname;
+
+    if (!isProtectedPath(path)) {
         return resolve(event);
     }
 

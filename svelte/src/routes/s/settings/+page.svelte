@@ -1,4 +1,5 @@
 <script>
+	import { H1, SettingsPanel } from '$lib';
 	import Header from '$lib/components/typography/H1.svelte';
 </script>
 
@@ -6,4 +7,6 @@
 	<title>Settings</title>
 </svelte:head>
 
-<Header>Settings</Header>
+<H1>Settings</H1>
+
+<SettingsPanel />
