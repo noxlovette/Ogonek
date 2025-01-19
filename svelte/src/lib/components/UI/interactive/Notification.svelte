@@ -28,11 +28,11 @@
 
 {#snippet icon(type: Toast['type'])}
 	{#if type === 'success'}
-		<Check class="w-5 h-5 text-pakistan-500" />
+		<Check class="size-5 lg:size-7 text-pakistan-500" />
 	{:else if type === 'error'}
-		<X class="w-5 h-5 text-red-500" />
+		<X class="size-5 lg:size-7 text-red-500" />
 	{:else}
-		<AlertCircle class="w-5 h-5 text-brick-500" />
+		<AlertCircle class="size-5 lg:size-7 text-brick-500" />
 	{/if}
 {/snippet}
 
@@ -44,7 +44,7 @@
 			x: 400,
 			y: 0
 		}}
-		class="fixed top-4 right-4 min-w-[320px] max-w-md bg-milk-50
+		class="fixed top-2 right-4 min-w-[320px] xl:min-w-[500px] max-w-md bg-milk-50
 			 shadow-md rounded-lg flex items-center gap-3 p-4 border-2
 			 {$notification.type === 'success'
 			? 'border-pakistan-500'
@@ -54,7 +54,7 @@
 	>
 		{@render icon($notification.type)}
 
-		<p class="text-brick-700 text-sm font-bold">
+		<p class="text-brick-700 text-sm lg:text-base xl:text-xl font-bold">
 			{$notification.message}
 		</p>
 	</div>

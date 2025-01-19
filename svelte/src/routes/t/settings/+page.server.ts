@@ -1,4 +1,4 @@
-import { fail, type Actions } from "@sveltejs/kit";
+import { fail, redirect, type Actions } from "@sveltejs/kit";
 import { ValidateAccess } from "$lib/utils";
 import type { Profile, User, UserData } from "$lib/types";
 export const actions = {
@@ -57,5 +57,10 @@ export const actions = {
             user,
             message: "Profile updated successfully",
         };
+    },
+    logout: async (event) => {
+        event.cookies.delete('accessToken', { path: "/" })
+        event.cookies.delete('refreshToken', { path: "/" })
+        throw redirect(301, "/")
     }
 } satisfies Actions;

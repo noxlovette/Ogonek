@@ -2,7 +2,7 @@
 	import { Loader2 } from 'lucide-svelte';
 	let {
 		isSubmitting = $bindable(false),
-		onclick,
+		onclick = undefined,
 		formaction = undefined,
 		type = undefined,
 		styling = '',
