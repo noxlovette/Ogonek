@@ -99,7 +99,7 @@ pub async fn delete_task(
 
 pub async fn update_task(
     State(state): State<AppState>,
-    Path(id): Path<String>,
+    Path(id): Path<String>, 
     claims: Claims,
     Json(payload): Json<TaskUpdate>,
 ) -> Result<Json<TaskBody>, DbError> {

@@ -1,21 +1,21 @@
 <script lang="ts">
-	import Header from '$lib/components/typography/H1.svelte';
-	import LessonCardBig from '$lib/components/cards/LessonCard.svelte';
-	import { getContext } from 'svelte';
-	import type {Lesson} from '$lib/types';
+	import type { PageData } from './$types';
+	import { H2, LessonCard, H1 } from '$lib/components';
 
-	const lessons: Lesson[] = getContext('lessons');
+	let { data }: { data: PageData } = $props();
+	const { lessons } = data;
 </script>
 
-<Header>
-	Lessons
-</Header>
-<div class="grid grid-cols-2 gap-4">
-	{#each lessons as lesson}
-		<LessonCardBig {lesson} />
-	{/each}
-</div>
+<svelte:head>
+	<title>Lessons</title>
+</svelte:head>
 
-<a href="/u/lessons/bookmarked" class="text-sm font-sans p-1 hover:text-brick-800">
-	View Bookmarked
-</a>
+<H1>Lessons</H1>
+<section class="space-y-4">
+	<H2>Recent Lessons</H2>
+	<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+		{#each lessons as lesson}
+			<LessonCard {lesson} />
+		{/each}
+	</div>
+</section>
