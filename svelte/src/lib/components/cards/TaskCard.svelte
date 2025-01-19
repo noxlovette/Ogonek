@@ -72,12 +72,9 @@
 			Due {formattedDate}
 		</p>
 		{#if interactive && task.filePath}
-			<button
-				class="pointer-events-auto"
-				onclick={() => goto(`/download/${encodeURIComponent(task.filePath)}`)}
-			>
+			<a href="/download/${encodeURIComponent(task.filePath)}" class="pointer-events-auto">
 				<Download class="size-6" />
-			</button>
+			</a>
 		{/if}
 	</div>
 

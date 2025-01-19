@@ -7,8 +7,10 @@
 	let { data }: { data: PageData } = $props();
 	let { tasks, lessons }: { tasks: Task[]; lessons: Lesson[] } = data;
 
+	let pending = tasks.filter((task) => !task.completed);
+
 	$effect(() => {
-		tasks.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
+		pending.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
 		lessons.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 	});
 </script>
@@ -16,7 +18,6 @@
 <div class="space-y-4">
 	<div class="flex justify-between items-center">
 		<H1>Dashboard</H1>
-
 		<Clock />
 	</div>
 
@@ -24,7 +25,7 @@
 	<section class="space-y-4">
 		<h2 class="text-xl font-semibold text-milk-800">Recent Tasks</h2>
 		<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-			{#each tasks.slice(0, 3) as task (task.id)}
+			{#each pending.slice(0, 3) as task (task.id)}
 				<div transition:fly={{ y: 20, duration: 300 }}>
 					<TaskCard {task} />
 				</div>

@@ -40,7 +40,7 @@
 	}
 </script>
 
-<div class=" flex items-center justify-center">
+<div class=" flex items-center justify-center size-full">
 	<div class="max-w-md w-full bg-white rounded-xl shadow-md p-8 space-y-6">
 		<div class="flex items-center justify-center space-x-2">
 			<BookOpen class="w-8 h-8 text-brick-500" />

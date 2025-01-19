@@ -8,7 +8,7 @@ export const actions = {
 		const formData = await request.formData();
 		const id = formData.get('id')
 		let body = {
-			completed: formData.get('completed'),
+			completed: formData.has('completed'),
 			id
 		};
 
