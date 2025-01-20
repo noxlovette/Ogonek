@@ -45,7 +45,7 @@
 			y: -400
 		}}
 		class="fixed items-center left-1/2 -translate-x-1/2 top-20 min-w-[200px] z-50 max-w-md bg-milk-50
-			 shadow-md rounded-lg flex gap-2 p-4 ring-2
+			shadow-md rounded-lg flex gap-2 p-4 ring-2
 			 {$notification.type === 'success'
 			? 'ring-pakistan-500'
 			: $notification.type === 'error'
