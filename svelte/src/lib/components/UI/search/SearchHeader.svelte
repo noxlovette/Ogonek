@@ -33,7 +33,7 @@
 	<SearchBar bind:query />
 
 	<div
-		class="absolute top-20 left-1/2 -translate-x-1/2 w-full max-w-2xl bg-brick-50 rounded-lg shadow-xl"
+		class="absolute top-20 left-1/2 w-11/12 -translate-x-1/2 md:w-full max-w-2xl bg-brick-50 rounded-lg shadow-xl"
 	>
 		{#if query}
 			<div class="max-h-[32rem] overflow-y-auto divide-y divide-milk-200">

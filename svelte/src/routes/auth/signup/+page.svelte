@@ -2,6 +2,8 @@
 	import { enhance } from '$app/forms';
 	import { notification } from '$lib/stores';
 	import { goto } from '$app/navigation';
+	import { Loader2 } from 'lucide-svelte';
+	import ButtonSubmit from '$lib/components/UI/buttons/ButtonSubmit.svelte';
 
 	let loading = $state(false);
 	let password = $state('');
@@ -10,7 +12,7 @@
 	let isSubmitting = $state(false);
 </script>
 
-<div class="max-w-md w-full space-y-8 bg-white p-8 rounded-xl shadow-md">
+<div class="max-w-md w-11/12 space-y-8 bg-white p-8 rounded-xl shadow-md">
 	<div class="text-center">
 		<h2 class="text-3xl font-bold text-brick-600">Create Account</h2>
 		<p class="mt-2 text-sm text-milk-600">
@@ -111,29 +113,7 @@
 			</div>
 		</div>
 
-		<button
-			type="submit"
-			class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-brick-600 hover:bg-brick-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brick-500 disabled:opacity-50 disabled:cursor-not-allowed"
-			disabled={loading}
-		>
-			{#if loading}
-				<svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
-					<circle
-						class="opacity-25"
-						cx="12"
-						cy="12"
-						r="10"
-						stroke="currentColor"
-						stroke-width="4"
-					/>
-					<path
-						class="opacity-75"
-						fill="currentColor"
-						d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-					/>
-				</svg>
-			{/if}
-			{loading ? 'Creating Account...' : 'Create Account'}
-		</button>
+		
+		<ButtonSubmit bind:isSubmitting={loading} buttonName="Create Account"></ButtonSubmit>
 	</form>
 </div>

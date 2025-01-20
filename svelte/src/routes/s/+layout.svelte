@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Sidebar, WorkArea } from '$lib/components';
+	import { BottomMenu, Sidebar, WorkArea } from '$lib/components';
 	import type { Lesson, Task } from '$lib/types';
 	import { lessonStore, taskStore } from '$lib/stores';
 
@@ -36,3 +36,4 @@
 	subclass="divide-transparent"
 	elements={[UsefulLinks, WordOfTheDay]}
 ></Sidebar>
+<BottomMenu elements={[Dashboard, Todo, Lessons, Zoom, Quizlet, Settings]} />

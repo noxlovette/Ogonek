@@ -13,13 +13,12 @@
 		class="flex flex-col overscroll-contain font-medium items-center text-brick-800 max-w-7xl mx-auto selection:bg-pakistan-400 caret-brick-800 h-full"
 	>
 		<Header />
-		<div class="flex flex-row size-full  py-4">
+		<div class="flex flex-row size-full py-4">
 			{@render children?.()}
 		</div>
 		<Footer />
 	</div>
 	<Notification></Notification>
-
 	<SearchOverlay></SearchOverlay>
 </main>
 

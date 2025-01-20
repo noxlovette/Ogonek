@@ -56,7 +56,7 @@
 	<!-- Search & Filter Bar -->
 	<div class="flex gap-4 items-center">
 		{#if items.length !== 0}
-			<div class="relative flex-1">
+			<div class="hidden md:relative flex-1">
 				<Search class="absolute left-3 top-1/2 -translate-y-1/2 text-milk-400 " />
 				<input
 					type="text"
@@ -72,6 +72,7 @@
 				<form
 					action="?/new"
 					method="post"
+					class="hidden md:flex"
 					use:enhance={() => {
 						isSubmitting = true;
 
@@ -98,7 +99,7 @@
 						id="assignee"
 						name="assignee"
 						bind:value={filterAssignee}
-						class="w-full rounded-lg border-milk-200 shadow-sm focus:border-brick-500 focus:ring-brick-500"
+						class="w-full text-xs md:text-base rounded-lg border-milk-200 shadow-sm focus:border-brick-500 focus:ring-brick-500"
 					>
 						<option value="">All Students</option>
 						{#each students as student}

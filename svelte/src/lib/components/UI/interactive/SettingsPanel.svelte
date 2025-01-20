@@ -16,11 +16,8 @@
 
 	let isSubmitting = $state(false);
 </script>
-
-<!-- User Settings -->
-<div class="justify-between flex flex-col size-full">
 	<form
-		class="space-y-4 rounded-lg flex flex-col"
+		class="space-y-4"
 		method="POST"
 		use:enhance={({ formData, cancel }) => {
 			if (!formData) {
@@ -50,7 +47,7 @@
 		}}
 		action="?/update"
 	>
-		<div class="flex bg-milk-50 p-4 rounded-lg space-x-4">
+		<div class="flex flex-col md:flex-row bg-milk-50 p-4 rounded-lg space-y-4 md:space-y-0 md:space-x-4">
 			<div class="space-y-2">
 				<h2 class="text-2xl font-semibold text-brick-800 mb-4">User Settings</h2>
 				<div class="space-y-2">
@@ -114,13 +111,14 @@
 			</div>
 		</div>
 		<div>
-			<ButtonSubmit bind:isSubmitting buttonName="Update Profile" />
-		</div>
+		<ButtonSubmit bind:isSubmitting buttonName="Update Profile" />
+	</div>
 	</form>
 
 	<form
 		action="?/logout"
 		method="POST"
+		class="md:flex hidden"
 		use:enhance={() => {
 			isSubmitting = true;
 
@@ -141,6 +139,7 @@
 			};
 		}}
 	>
+	<div>
 		<ButtonRaw buttonName="Log out" />
+	</div>
 	</form>
-</div>

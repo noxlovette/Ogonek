@@ -7,5 +7,7 @@
 
 <External href="https://zoom.us">
 	<Video class="xl:size-8 lg:size-7 size-6 md:mr-2" />
-	Zoom
+	<p class="hidden md:flex">
+		Zoom
+	</p>
 </External>

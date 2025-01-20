@@ -44,13 +44,13 @@
 			x: 0,
 			y: -400
 		}}
-		class="fixed left-1/2 -translate-x-1/2 top-24 min-w-[320px] z-50 max-w-md bg-milk-50
-			 shadow-md rounded-lg flex items-center gap-3 p-4 border-2
+		class="fixed items-center left-1/2 -translate-x-1/2 top-20 min-w-[200px] z-50 max-w-md bg-milk-50
+			 shadow-md rounded-lg flex gap-2 p-4 ring-2
 			 {$notification.type === 'success'
-			? 'border-pakistan-500'
+			? 'ring-pakistan-500'
 			: $notification.type === 'error'
-				? 'border-red-500'
-				: 'border-amber-500'}"
+				? 'ring-red-500'
+				: 'ring-amber-500'}"
 	>
 		{@render icon($notification.type)}
 

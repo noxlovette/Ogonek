@@ -51,7 +51,7 @@
         "
 	/>
 	<div
-		class="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1 text-xs text-milk-400"
+		class="absolute right-3 top-1/2 -translate-y-1/2 md:flex hidden items-center gap-1 text-xs text-milk-400"
 	>
 		<kbd class="px-1.5 py-0.5 rounded bg-milk-100 border border-milk-300">{cmdKey}</kbd>
 		<kbd class="px-1.5 py-0.5 rounded bg-milk-100 border border-milk-300">K</kbd>
