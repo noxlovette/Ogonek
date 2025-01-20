@@ -11,8 +11,6 @@ export const GET: RequestHandler = async ({ cookies, fetch, locals }) => {
     }
   });
 
-
-  console.debug('Response PAGE SERVER:', response);
   response.headers.getSetCookie().forEach(cookie => {
     const [fullCookie, ...opts] = cookie.split(';');
     const [name, value] = fullCookie.split('=');

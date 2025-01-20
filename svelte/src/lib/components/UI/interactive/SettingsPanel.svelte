@@ -20,7 +20,7 @@
 </script>
 <div class="grid md:grid-cols-2 grid-cols-1 gap-4">
 	<form
-  class="container mx-auto max-w-4xl col-span-2"
+  class="container col-span-2"
   method="POST"
   use:enhance={({ formData, cancel }) => {
     if (!formData) cancel();
@@ -36,10 +36,10 @@
       if (result.type === 'success' && result.data) {
         setUser(user);
         setProfile(profile);
-        // Consider using a store instead of localStorage
         localStorage.setItem('user', JSON.stringify(user));
         localStorage.setItem('profile', JSON.stringify(profile));
-        notification.set({ message: '✨ Changes saved', type: 'success' });
+        notification.set({ message: 'Changes saved ✨', type: 'success' });
+		disabled = true;
       } else {
         notification.set({
           message: result.data?.message ?? "Yikes! Something's not right",
@@ -104,14 +104,14 @@
     </div>
 
     <!-- Update Button - Spans full width -->
-    <div class="md:col-span-2 mt-6">
+    <div class="md:col-span-2 mt-6 flex flex-row space-x-2">
       <ButtonSubmit 
         bind:isSubmitting 
         buttonName="Save Changes"
 		{disabled}
         styling="w-full md:w-auto md:float-right"
       />
-	  <button type="button" onclick={()=>{disabled = !disabled}} class="bg-milk-200 transition-colors hover:bg-milk-300 px-3 rounded-lg md:px-4 py-2">
+	  <button type="button" onclick={()=>{disabled = !disabled}} class="bg-milk-200 text-sm md:text-base transition-colors hover:bg-milk-300 px-3 rounded-lg md:px-4 py-2">
 		{disabled ? "Unlock" : "Lock"}
 	  </button>
     </div>

@@ -1,12 +1,18 @@
 import { fail, redirect, type Actions } from "@sveltejs/kit";
 import { ValidateAccess } from "$lib/utils";
-import type { Profile, User, UserData } from "$lib/types";
+import type { Profile } from "$lib/types";
 export const actions = {
     update: async ({ request, fetch }) => {
         console.debug("updateProfile");
         const formData = await request.formData();
-        const zoomUrl = formData.get('zoom');
-        const quizletUrl = formData.get('quizlet');
+        let zoomUrl = undefined;
+        let quizletUrl = undefined;
+        if (formData.has("zoom")) {
+            zoomUrl = formData.get('zoom');
+        }
+        if (formData.has('quizlet')) {
+            quizletUrl = formData.get('quizlet');
+        }
 
         if (!zoomUrl && !quizletUrl) {
             fail(400, { message: "No fields provided" });
@@ -22,7 +28,7 @@ export const actions = {
         const userBody = {
             email: formData.get('email'),
             username: formData.get('username'),
-            password: formData.get('password'),
+            name: formData.get('name'),
         };
 
         const responseProfile = await fetch("/axum/profile", {
@@ -30,6 +36,9 @@ export const actions = {
             body: JSON.stringify(profileBody),
         })
 
+
+        console.debug(profileBody);
+        console.log(userBody);
 
         const _ = await fetch("/axum/user", {
             method: "PATCH",
