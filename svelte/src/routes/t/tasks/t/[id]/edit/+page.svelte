@@ -113,6 +113,7 @@
 	</div>
 </form>
 
+<div class="flex w-full space-x-4 h-full items-end">
 <Editor bind:markdownContent={markdown} />
-
 <Uploader id={task.id} />
+</div>

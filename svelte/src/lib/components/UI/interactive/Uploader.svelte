@@ -41,7 +41,7 @@
 	method="post"
 	enctype="multipart/form-data"
 	action="?/upload"
-	class=""
+	class="h-full flex flex-col"
 	use:enhance={({ formData, cancel }) => {
 		if (!formData.has('file')) {
 			cancel();
@@ -90,7 +90,7 @@
 		aria-label="File upload area"
 		class="relative rounded-lg border-2 border-dashed p-12
 			 flex flex-col items-center justify-center
-			 cursor-pointer transition-colors duration-200
+			 cursor-pointer transition-colors duration-200 h-full
 			 {isDragging
 			? 'border-brick-700 bg-brick-100'
 			: 'border-milk-300 hover:border-milk-400 bg-milk-50'}"
