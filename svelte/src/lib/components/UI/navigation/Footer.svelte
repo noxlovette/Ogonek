@@ -1,4 +1,4 @@
-<footer class="w-full">
+<footer class="w-full hidden md:flex">
 	<div class="flex items-center justify-between w-full max-w-7xl mx-auto p-4">
 		<p>© 2025 Danila Volkov</p>
 		<p class="">For my students <span class="not-italic">💛</span></p>

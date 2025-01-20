@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Bookmark } from 'lucide-svelte';
+	import { BookOpenCheck } from 'lucide-svelte';
 	import Base from './Base.svelte';
 	import { user } from '$lib/stores';
 
@@ -7,6 +7,8 @@
 </script>
 
 <Base {href}>
-	<Bookmark class="xl:size-8 lg:size-7 size-6 mr-2" />
-	Lessons
+	<BookOpenCheck class="xl:size-8 lg:size-7 size-6 md:mr-2" />
+	<p class="hidden md:flex">
+		Lessons
+	</p>
 </Base>

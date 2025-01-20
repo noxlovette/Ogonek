@@ -4,7 +4,7 @@
 
 <a
 	href={href}
-	class="lg:px-2 lg:py-4 px-1 py-2 inline-flex transition-all hover:translate-x-1"
+	class="lg:px-2 lg:py-4 md:px-1 md:py-2 inline-flex transition-all md:hover:translate-x-1"
 >
 	{@render children()}
 </a>

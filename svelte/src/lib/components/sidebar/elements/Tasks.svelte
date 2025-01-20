@@ -7,6 +7,8 @@
 </script>
 
 <Base href={href}>
-	<ListTodo class="xl:size-8 lg:size-7 size-6 mr-2" />
-	Tasks
+	<ListTodo class="xl:size-8 lg:size-7 size-6 md:mr-2" />
+	<p class="hidden md:flex">
+		Tasks
+	</p>
 </Base>

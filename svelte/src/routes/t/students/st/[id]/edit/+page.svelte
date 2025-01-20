@@ -17,9 +17,18 @@
 	class="space-y-4 mb-4"
 	use:enhance={() => {
 		isSubmitting = true;
+
 		return async ({ result, update }) => {
 			isSubmitting = false;
-			update();
+			if (result.type === 'redirect') {
+				notification.set({ message: 'Changes saved', type: 'success' });
+				update();
+			} else {
+				notification.set({
+					message: 'Failed to save changes',
+					type: 'error'
+				});
+			}
 		};
 	}}
 >

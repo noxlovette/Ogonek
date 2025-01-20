@@ -7,7 +7,10 @@
 		Settings,
 		Students,
 		Sidebar,
-		WorkArea
+		WorkArea,
+
+		BottomMenu
+
 	} from '$lib/components';
 	import { setContext } from 'svelte';
 	import { lessonStore, taskStore } from '$lib/stores';
@@ -36,3 +39,4 @@
 <WorkArea>
 	{@render children?.()}
 </WorkArea>
+<BottomMenu elements={[Dashboard, Todo, Lessons, Students, Quizlet, Settings]} />

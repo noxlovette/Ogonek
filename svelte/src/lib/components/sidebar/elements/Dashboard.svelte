@@ -7,6 +7,8 @@
 </script>
 
 <Base {href}>
-	<House class="xl:size-8 lg:size-7 size-6 mr-2 " />
-	Dashboard
+	<House class="xl:size-8 lg:size-7 size-6 md:mr-2 " />
+	<p class="hidden md:flex">
+		Dashboard
+	</p>
 </Base>

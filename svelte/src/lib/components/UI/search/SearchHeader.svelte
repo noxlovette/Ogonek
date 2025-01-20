@@ -29,7 +29,7 @@
 	});
 </script>
 
-<div class="z-50">
+<div class="z-40">
 	<SearchBar bind:query />
 
 	<div

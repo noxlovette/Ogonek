@@ -4,7 +4,8 @@
 </script>
 
 <Base href="/t/students">
-	<UserRound class="xl:size-8 lg:size-7 size-6 mr-2" />
-
-	Students
+	<UserRound class="xl:size-8 lg:size-7 size-6 md:mr-2" />
+	<p class="hidden md:flex">
+		Students
+	</p>
 </Base>

@@ -6,6 +6,6 @@
 </script>
 
 <External href="https://zoom.us">
-	<Video class="xl:size-8 lg:size-7 size-6 mr-2" />
+	<Video class="xl:size-8 lg:size-7 size-6 md:mr-2" />
 	Zoom
 </External>
