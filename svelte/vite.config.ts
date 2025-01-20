@@ -7,13 +7,14 @@ export default defineConfig({
 		sentrySvelteKit({
 			sourceMapsUploadOptions: {
 				org: 'danila-volkov',
-				project: 'svelte-fl'
+				project: 'svelte-fl',
+				authToken: process.env.SENTRY_AUTH_TOKEN,
 			}
 		}),
 		sveltekit()
 	],
 	server: {
 		host: true,
-		port: 5173
+		port: 3000
 	}
 });

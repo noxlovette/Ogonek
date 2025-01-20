@@ -12,4 +12,5 @@ WORKDIR /app
 COPY --from=builder /app/build ./build
 COPY package.json pnpm-lock.yaml ./
 RUN corepack enable && pnpm install --frozen-lockfile --prod
+ENV ORIGIN="http://localhost:3333"
 CMD ["node", "build/index.js"]

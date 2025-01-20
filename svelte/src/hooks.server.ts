@@ -1,14 +1,16 @@
 import { sequence } from '@sveltejs/kit/hooks';
+import { dev } from '$app/environment';
 import * as Sentry from '@sentry/sveltekit';
 import { env } from '$env/dynamic/private';
 import type { Handle, HandleFetch } from '@sveltejs/kit';
 import { redirect } from '@sveltejs/kit';
 import { ValidateAccess } from '$lib/utils';
 
-if (!import.meta.env.DEV) {
+
+if (!dev) {
 	Sentry.init({
 		dsn: 'https://2d5f51ef45d12264bf0a264dbbbeeacb@o4507272574468096.ingest.de.sentry.io/4507947592777808',
-		environment: env.NODE_ENV,
+		environment: "production",
 		tracesSampleRate: 1
 	});
 }
