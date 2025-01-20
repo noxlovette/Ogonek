@@ -121,6 +121,10 @@ impl AuthBody {
 }
 
 fn build_auth_cookie(name: &str, value: String, is_refresh: bool) -> Cookie {
+
+    let base_domain = env::var("APP_DOMAIN").unwrap_or_else(|_| "localhost".to_string());
+    let domain = format!(".{}", base_domain);
+    
     Cookie::build((name, value))
         .http_only(true)
         .secure(env::var("APP_ENV").unwrap() == "production")
@@ -131,7 +135,7 @@ fn build_auth_cookie(name: &str, value: String, is_refresh: bool) -> Cookie {
             time::Duration::minutes(15)
         })
         .path("/")
-        .domain("localhost")
+        .domain(domain)
         .build()
 }
 
