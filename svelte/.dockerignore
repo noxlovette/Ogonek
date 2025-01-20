@@ -2,7 +2,6 @@
 ----------------
 node_modules
 npm-debug.log
-.svelte-kit
 coverage
 .git
 .gitignore

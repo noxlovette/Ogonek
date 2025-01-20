@@ -42,7 +42,6 @@
 		"@anthropic-ai/sdk": "^0.33.1",
 		"@dicebear/collection": "^9.2.2",
 		"@dicebear/core": "^9.2.2",
-		"@sentry/sveltekit": "^8",
 		"@sveltejs/adapter-node": "^5.2.11",
 		"ioredis": "^5.4.2",
 		"isomorphic-dompurify": "^2.20.0",

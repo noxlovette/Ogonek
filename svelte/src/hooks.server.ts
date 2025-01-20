@@ -1,19 +1,9 @@
 import { sequence } from '@sveltejs/kit/hooks';
-import { dev } from '$app/environment';
-import * as Sentry from '@sentry/sveltekit';
 import { env } from '$env/dynamic/private';
 import type { Handle, HandleFetch } from '@sveltejs/kit';
 import { redirect } from '@sveltejs/kit';
 import { ValidateAccess } from '$lib/utils';
 
-
-if (!dev) {
-	Sentry.init({
-		dsn: 'https://2d5f51ef45d12264bf0a264dbbbeeacb@o4507272574468096.ingest.de.sentry.io/4507947592777808',
-		environment: "production",
-		tracesSampleRate: 1
-	});
-}
 let isRefreshing = false;
 
 const PROTECTED_PATHS = new Set(['/t/', '/s/', '/download/']);
@@ -25,7 +15,7 @@ function isProtectedPath(path: string): boolean {
 	);
 }
 
-export const handle: Handle = sequence(Sentry.sentryHandle(), async ({ event, resolve }) => {
+export const handle: Handle = async ({ event, resolve }) => {
 	const path = event.url.pathname;
 
 	if (!isProtectedPath(path)) {
@@ -63,7 +53,7 @@ export const handle: Handle = sequence(Sentry.sentryHandle(), async ({ event, re
 
 	const response = await resolve(event);
 	return response;
-});
+};
 
 // Helper function to handle token refresh
 async function handleTokenRefresh(event) {
@@ -124,4 +114,3 @@ export const handleFetch: HandleFetch = async ({ event, request, fetch }) => {
 
 	return fetch(request);
 };
-export const handleError = Sentry.handleErrorWithSentry();

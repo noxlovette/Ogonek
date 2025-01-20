@@ -12,5 +12,7 @@ WORKDIR /app
 COPY --from=builder /app/build ./build
 COPY package.json pnpm-lock.yaml ./
 RUN corepack enable && pnpm install --frozen-lockfile --prod
-ENV ORIGIN="http://localhost:3333"
+
+# this variable can either be hardcoded here or set up in an .env file in svelte's directory
+#ENV ORIGIN="http://localhost:3333"
 CMD ["node", "build/index.js"]
