@@ -41,10 +41,27 @@ pub async fn fetch_task(
 pub async fn list_tasks(
     State(state): State<AppState>,
     claims: Claims,
-) -> Result<Json<Vec<TaskBody>>, DbError> {
+) -> Result<Json<Vec<TaskBodyWithStudent>>, DbError> {
     let tasks = sqlx::query_as!(
-        TaskBody,
-        "SELECT * FROM tasks WHERE (assignee = $1 OR created_by = $1)",
+        TaskBodyWithStudent,
+        r#"
+        SELECT 
+            t.id,
+            t.title,
+            t.markdown,
+            t.priority,
+            t.completed,
+            t.due_date,
+            t.file_path,
+            t.assignee,
+            t.created_by,
+            t.created_at,
+            t.updated_at,
+            u.name as assignee_name
+        FROM tasks t
+        LEFT JOIN "user" u ON t.assignee = u.id
+        WHERE (t.assignee = $1 OR t.created_by = $1)
+        "#,
         claims.sub
     )
     .fetch_all(&state.db)

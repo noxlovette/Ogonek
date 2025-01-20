@@ -14,7 +14,7 @@
 		columns: [
 			{ key: 'title', label: 'Title' },
 			{ key: 'markdown', label: 'Markdown' },
-			{ key: 'completed', label: 'completed' },
+			{ key: 'completed', label: 'Done', formatter: (value: boolean) => (value ? "✅" : "⌛") },
 			{
 				key: 'dueDate',
 				label: 'Due',
@@ -24,8 +24,7 @@
 				key: 'assigneeName',
 				label: 'Assignee',
 				formatter: (value: string) => (value === $user.name ? 'Not Assigned' : value)
-			},
-			{ key: 'createdAt', label: 'Created', formatter: (value: string) => formatDateTime(value) }
+			}
 		]
 	};
 
