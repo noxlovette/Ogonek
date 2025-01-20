@@ -14,7 +14,7 @@
 		columns: [
 			{ key: 'title', label: 'Title' },
 			{ key: 'markdown', label: 'Markdown' },
-			{ key: 'completed', label: 'Done', formatter: (value: boolean) => (value ? "✅" : "⌛") },
+			{ key: 'completed', label: 'Done', formatter: (value: boolean) => (value ? '✅' : '⌛') },
 			{
 				key: 'dueDate',
 				label: 'Due',

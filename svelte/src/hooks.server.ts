@@ -1,121 +1,125 @@
+import { sequence } from '@sveltejs/kit/hooks';
+import * as Sentry from '@sentry/sveltekit';
 import { env } from '$env/dynamic/private';
 import type { Handle, HandleFetch } from '@sveltejs/kit';
 import { redirect } from '@sveltejs/kit';
 import { ValidateAccess } from '$lib/utils';
 
+if (!import.meta.env.DEV) {
+	Sentry.init({
+		dsn: 'https://2d5f51ef45d12264bf0a264dbbbeeacb@o4507272574468096.ingest.de.sentry.io/4507947592777808',
+		environment: env.NODE_ENV,
+		tracesSampleRate: 1
+	});
+}
 let isRefreshing = false;
 
-const PROTECTED_PATHS = new Set([
-    '/t/',
-    '/s/',
-    '/download/'
-]);
-
+const PROTECTED_PATHS = new Set(['/t/', '/s/', '/download/']);
 
 function isProtectedPath(path: string): boolean {
-    return PROTECTED_PATHS.has(path) ||
-        Array.from(PROTECTED_PATHS).some(prefix => path.startsWith(prefix));
+	return (
+		PROTECTED_PATHS.has(path) ||
+		Array.from(PROTECTED_PATHS).some((prefix) => path.startsWith(prefix))
+	);
 }
 
-export const handle: Handle = async ({ event, resolve }) => {
+export const handle: Handle = sequence(Sentry.sentryHandle(), async ({ event, resolve }) => {
+	const path = event.url.pathname;
 
-    const path = event.url.pathname;
+	if (!isProtectedPath(path)) {
+		return resolve(event);
+	}
 
-    if (!isProtectedPath(path)) {
-        return resolve(event);
-    }
+	const accessToken = event.cookies.get('accessToken');
+	let user = null;
 
-    const accessToken = event.cookies.get("accessToken");
-    let user = null;
+	// Try to get valid user - either from current token or refreshed token
+	if (accessToken) {
+		try {
+			user = await ValidateAccess(accessToken);
+		} catch (error) {
+			user = await handleTokenRefresh(event);
+		}
+	} else if (event.cookies.get('refreshToken')) {
+		user = await handleTokenRefresh(event);
+	} else {
+		throw redirect(302, '/auth/login');
+	}
 
-    // Try to get valid user - either from current token or refreshed token
-    if (accessToken) {
-        try {
+	// Now that we have a valid user, check role permissions
+	if (user) {
+		const isTeacherRoute = /\/t\//i.test(event.url.pathname);
+		const isStudentRoute = /\/s\//i.test(event.url.pathname);
 
-            user = await ValidateAccess(accessToken);
-        } catch (error) {
-            user = await handleTokenRefresh(event);
-        }
-    } else if (event.cookies.get("refreshToken")) {
-        user = await handleTokenRefresh(event);
-    } else {
+		if (isTeacherRoute && user.role !== 'teacher') {
+			throw redirect(303, '/unauthorised');
+		}
+		if (isStudentRoute && user.role !== 'student') {
+			throw redirect(303, '/unauthorised');
+		}
+	}
 
-        throw redirect(302, '/auth/login');
-    }
-
-    // Now that we have a valid user, check role permissions
-    if (user) {
-        const isTeacherRoute = /\/t\//i.test(event.url.pathname);
-        const isStudentRoute = /\/s\//i.test(event.url.pathname);
-
-        if (isTeacherRoute && user.role !== 'teacher') {
-            throw redirect(303, '/unauthorised');
-        }
-        if (isStudentRoute && user.role !== 'student') {
-            throw redirect(303, '/unauthorised');
-        }
-    }
-
-    const response = await resolve(event);
-    return response;
-};
+	const response = await resolve(event);
+	return response;
+});
 
 // Helper function to handle token refresh
 async function handleTokenRefresh(event) {
-    if (isRefreshing) {
-        // Wait for ongoing refresh to complete
-        while (isRefreshing) {
-            await new Promise(resolve => setTimeout(resolve, 100));
-        }
-        return null;
-    }
+	if (isRefreshing) {
+		// Wait for ongoing refresh to complete
+		while (isRefreshing) {
+			await new Promise((resolve) => setTimeout(resolve, 100));
+		}
+		return null;
+	}
 
-    isRefreshing = true;
-    const refreshToken = event.cookies.get("refreshToken");
+	isRefreshing = true;
+	const refreshToken = event.cookies.get('refreshToken');
 
-    try {
-        const refreshRes = await event.fetch("/auth/refresh", {
-            headers: {
-                'Cookie': `refreshToken=${refreshToken}`,
-                'Accept': 'application/json'
-            }
-        });
+	try {
+		const refreshRes = await event.fetch('/auth/refresh', {
+			headers: {
+				Cookie: `refreshToken=${refreshToken}`,
+				Accept: 'application/json'
+			}
+		});
 
-        if (!refreshRes.ok) {
-            throw new Error("Refresh failed");
-        }
+		if (!refreshRes.ok) {
+			throw new Error('Refresh failed');
+		}
 
-        // After successful refresh, validate the new token
-        const newAccessToken = event.cookies.get("accessToken");
-        if (newAccessToken) {
-            return await ValidateAccess(newAccessToken);
-        }
-    } catch (error) {
-        console.error("Refresh failed:", error);
-        throw redirect(302, '/auth/login');
-    } finally {
-        isRefreshing = false;
-    }
+		// After successful refresh, validate the new token
+		const newAccessToken = event.cookies.get('accessToken');
+		if (newAccessToken) {
+			return await ValidateAccess(newAccessToken);
+		}
+	} catch (error) {
+		console.error('Refresh failed:', error);
+		throw redirect(302, '/auth/login');
+	} finally {
+		isRefreshing = false;
+	}
 }
 
 export const handleFetch: HandleFetch = async ({ event, request, fetch }) => {
-    const url = new URL(request.url);
+	const url = new URL(request.url);
 
-    if (url.pathname.startsWith('/axum/')) {
-        // Remove the /axum/ prefix and construct the new URL
-        const cleanPath = url.pathname.replace('/axum/', '/');
-        const newUrl = new URL(cleanPath, 'http://axum:3000');
-        request = new Request(newUrl, request);
-    }
+	if (url.pathname.startsWith('/axum/')) {
+		// Remove the /axum/ prefix and construct the new URL
+		const cleanPath = url.pathname.replace('/axum/', '/');
+		const newUrl = new URL(cleanPath, 'http://axum:3000');
+		request = new Request(newUrl, request);
+	}
 
-    // Your existing header logic
-    request.headers.set("X-API-KEY", env.API_KEY_AXUM);
-    request.headers.set("Content-Type", "application/json");
+	// Your existing header logic
+	request.headers.set('X-API-KEY', env.API_KEY_AXUM);
+	request.headers.set('Content-Type', 'application/json');
 
-    const accessToken = event.cookies.get("accessToken");
-    if (accessToken) {
-        request.headers.set("Authorization", `Bearer ${accessToken}`);
-    }
+	const accessToken = event.cookies.get('accessToken');
+	if (accessToken) {
+		request.headers.set('Authorization', `Bearer ${accessToken}`);
+	}
 
-    return fetch(request);
+	return fetch(request);
 };
+export const handleError = Sentry.handleErrorWithSentry();

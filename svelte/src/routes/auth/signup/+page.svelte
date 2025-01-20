@@ -113,7 +113,6 @@
 			</div>
 		</div>
 
-		
 		<ButtonSubmit bind:isSubmitting={loading} buttonName="Create Account"></ButtonSubmit>
 	</form>
 </div>

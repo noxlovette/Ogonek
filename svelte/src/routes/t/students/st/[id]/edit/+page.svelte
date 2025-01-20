@@ -36,30 +36,29 @@
 		<H1>{student.name}</H1>
 		<div class="flex items-center space-x-3">
 			<div class="relative">
-			  <input 
-				type="text"
-				name="telegramId"
-				value={student.telegramId}
-				placeholder="@username"
-				class="pl-10 pr-4 py-2 border border-milk-300 rounded-lg focus:ring-2 focus:ring-brick-500 focus:border-transparent"
-			  />
-			  <span class="absolute left-3 top-2.5 text-milk-400">
-				<Send ></Send>
-			  </span>
+				<input
+					type="text"
+					name="telegramId"
+					value={student.telegramId}
+					placeholder="@username"
+					class="pl-10 pr-4 py-2 border border-milk-300 rounded-lg focus:ring-2 focus:ring-brick-500 focus:border-transparent"
+				/>
+				<span class="absolute left-3 top-2.5 text-milk-400">
+					<Send></Send>
+				</span>
 			</div>
-		<a
-			href="."
-			class="px-4 py-2 text-milk-700 bg-milk-100 rounded-lg hover:bg-milk-200 transition-colors"
-		>
-			Cancel
-		</a>
-		<ButtonSubmit bind:isSubmitting></ButtonSubmit>
-		<ButtonDelete bind:isSubmitting></ButtonDelete>
-		
-	</div>
+			<a
+				href="."
+				class="px-4 py-2 text-milk-700 bg-milk-100 rounded-lg hover:bg-milk-200 transition-colors"
+			>
+				Cancel
+			</a>
+			<ButtonSubmit bind:isSubmitting></ButtonSubmit>
+			<ButtonDelete bind:isSubmitting></ButtonDelete>
+		</div>
 
-	<input type="hidden" name="id" value={student.id} />
-	<input type="hidden" name="markdown" value={markdown} />
-	
+		<input type="hidden" name="id" value={student.id} />
+		<input type="hidden" name="markdown" value={markdown} />
+	</div>
 </form>
 <Editor bind:markdownContent={markdown} />

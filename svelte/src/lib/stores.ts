@@ -5,14 +5,14 @@ export const initialUser: User = {
 	username: '',
 	name: '',
 	role: '',
-	email: '',
+	email: ''
 };
 
 export const initialProfile: Profile = {
 	quizletUrl: null,
 	zoomUrl: null,
 	bio: null,
-	avatarUrl: null,
+	avatarUrl: null
 };
 
 export const profile = writable<Profile>(initialProfile);
@@ -35,7 +35,7 @@ export function clearUser() {
 		username: '',
 		name: '',
 		role: '',
-		email: '',
+		email: ''
 	}));
 }
 
@@ -51,7 +51,6 @@ export function clearNotification() {
 	}));
 }
 
-
 const createLessonStore = () => {
 	const { subscribe, set, update } = writable<Lesson[]>([]);
 
@@ -61,7 +60,7 @@ const createLessonStore = () => {
 		setLessons: (lessons: Lesson[]) => set(lessons),
 
 		// Helper to add single lesson if needed
-		addLesson: (lesson: Lesson) => update(lessons => [...lessons, lesson]),
+		addLesson: (lesson: Lesson) => update((lessons) => [...lessons, lesson]),
 
 		// Clear store
 		reset: () => set([])
@@ -70,7 +69,6 @@ const createLessonStore = () => {
 
 export const lessonStore = createLessonStore();
 
-
 const createTaskStore = () => {
 	const { subscribe, set, update } = writable<Task[]>([]);
 
@@ -78,13 +76,12 @@ const createTaskStore = () => {
 		subscribe,
 
 		setTasks: (tasks: Task[]) => set(tasks),
-		addTask: (task: Task) => update(tasks => [...tasks, task]),
+		addTask: (task: Task) => update((tasks) => [...tasks, task]),
 
 		reset: () => set([])
-	}
-}
+	};
+};
 
 export const taskStore = createTaskStore();
 
-export const isSearchOpen = writable(false)
-
+export const isSearchOpen = writable(false);

@@ -8,7 +8,5 @@
 
 <Base {href}>
 	<House class="xl:size-8 lg:size-7 size-6 md:mr-2 " />
-	<p class="hidden md:flex">
-		Dashboard
-	</p>
+	<p class="hidden md:flex">Dashboard</p>
 </Base>

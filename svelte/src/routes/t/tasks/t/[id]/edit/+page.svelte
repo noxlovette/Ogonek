@@ -38,8 +38,6 @@
 		};
 	}}
 >
-
-
 	<div class="flex items-baseline space-x-4">
 		<H1>Edit Task</H1>
 		<a
@@ -54,7 +52,6 @@
 
 	<input type="hidden" name="id" value={task.id} />
 	<input type="hidden" name="markdown" value={markdown} />
-	
 
 	<div class="grid grid-cols-3 gap-4">
 		<div class="space-y-2">
@@ -77,10 +74,13 @@
 			>
 				<option value="">Select an assignee</option>
 				{#each students as student}
-					<option value={JSON.stringify({
-						assignee: student.id,
-						telegramId: student.telegramId
-					  })} selected={student.id === task.assignee}>
+					<option
+						value={JSON.stringify({
+							assignee: student.id,
+							telegramId: student.telegramId
+						})}
+						selected={student.id === task.assignee}
+					>
 						{student.name}
 					</option>
 				{/each}
@@ -114,6 +114,6 @@
 </form>
 
 <div class="flex w-full space-x-4 h-full items-end">
-<Editor bind:markdownContent={markdown} />
-<Uploader id={task.id} />
+	<Editor bind:markdownContent={markdown} />
+	<Uploader id={task.id} />
 </div>

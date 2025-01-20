@@ -5,7 +5,9 @@
 </script>
 
 <div class="flex p-4 text-center md:text-left md:p-6 lg:p-8 space-x-6 w-full flex-col items-center">
-	<h1 class="xl:text-[4rem] text-[3rem] font-bold leading-[3rem] md:leading-[4rem]">Welcome to firelight</h1>
+	<h1 class="xl:text-[4rem] text-[3rem] font-bold leading-[3rem] md:leading-[4rem]">
+		Welcome to firelight
+	</h1>
 	<div class="mt-8 space-x-2">
 		<a
 			href="/auth/login"

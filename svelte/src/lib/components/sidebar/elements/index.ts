@@ -7,4 +7,4 @@ export { default as Zoom } from './Zoom.svelte';
 export { default as Thesaurus } from './Thesaurus.svelte';
 export { default as Dictionary } from './Dictionary.svelte';
 export { default as Forvo } from './Forvo.svelte';
-export { default as Students } from './Students.svelte'; 
+export { default as Students } from './Students.svelte';

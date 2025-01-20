@@ -17,14 +17,13 @@
 {#if lesson}
 	<div class="flex items-baseline space-x-4">
 		<H1>{lesson.title}</H1>
-		
 	</div>
-		<div class="">
-			<p class="block font-medium text-milk-700">Topic</p>
-			<h3 class="min-w-48">
-				{lesson.topic}
-			</h3>
-		</div>
+	<div class="">
+		<p class="block font-medium text-milk-700">Topic</p>
+		<h3 class="min-w-48">
+			{lesson.topic}
+		</h3>
+	</div>
 	<div class="markdown ring-2 ring-milk-200 p-4 rounded-lg">{@html rendered}</div>
 {:else}
 	This lesson has been deleted

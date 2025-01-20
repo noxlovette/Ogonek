@@ -10,7 +10,7 @@ export const actions: Actions = {
 		const role = data.get('role') as string;
 		const name = data.get('name') as string;
 
-		const invite_token = url.searchParams.get('invite')
+		const invite_token = url.searchParams.get('invite');
 
 		const response = await fetch('/axum/auth/signup', {
 			method: 'POST',

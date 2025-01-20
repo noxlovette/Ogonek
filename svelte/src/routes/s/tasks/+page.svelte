@@ -17,7 +17,7 @@
 <!-- Active Tasks Section -->
 <section class="space-y-4">
 	<H2>Active Tasks ({filtered.length})</H2>
-	<div class="grid grid-cols-1 md:grid-cols-2  gap-4">
+	<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 		{#each filtered as task (task.id)}
 			<TaskCard {task} interactive={true} />
 		{/each}

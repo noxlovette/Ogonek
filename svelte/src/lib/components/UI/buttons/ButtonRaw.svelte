@@ -6,7 +6,7 @@
 		formaction = undefined,
 		type = undefined,
 		styling = '',
-		disabled=false,
+		disabled = false,
 		buttonName
 	} = $props();
 </script>

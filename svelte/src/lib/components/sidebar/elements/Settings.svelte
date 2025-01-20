@@ -6,9 +6,7 @@
 	let href = $user.role === 'teacher' ? '/t/settings' : '/s/settings';
 </script>
 
-<Base href={href}>
+<Base {href}>
 	<Settings class="xl:size-8 lg:size-7 size-6 md:mr-2" />
-	<p class="hidden md:flex">
-		Settings
-	</p>
+	<p class="hidden md:flex">Settings</p>
 </Base>

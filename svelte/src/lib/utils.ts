@@ -4,7 +4,7 @@ export const formatDateTime = (isoString: string): string => {
 	return new Intl.DateTimeFormat('en-GB', {
 		// year: 'numeric',
 		month: 'short',
-		day: 'numeric',
+		day: 'numeric'
 		// hour: 'numeric',
 		// minute: 'numeric',
 		// hour12: true
@@ -26,7 +26,6 @@ export function getGreeting() {
 	}
 }
 
-
 import { importSPKI, jwtVerify } from 'jose';
 import { env } from '$env/dynamic/public';
 
@@ -36,7 +35,7 @@ export async function ValidateAccess(jwt: string) {
 	const publicKey = await importSPKI(spki, alg);
 
 	const { payload } = await jwtVerify(jwt, publicKey, {
-		issuer: 'auth:auth',
+		issuer: 'auth:auth'
 	});
 
 	// Add a buffer time (e.g., 30 seconds) to refresh before actual expiry
@@ -56,7 +55,7 @@ import { lorelei, thumbs } from '@dicebear/collection';
 
 export function getAvatar(seed: string) {
 	const avatar = createAvatar(thumbs, {
-		seed,
+		seed
 	});
 
 	return avatar.toDataUri();
@@ -66,10 +65,9 @@ import { unified } from 'unified';
 import remarkParse from 'remark-parse';
 import remarkRehype from 'remark-rehype';
 import rehypeStringify from 'rehype-stringify';
-import rehypeFormat from 'rehype-format'
-import rehypeSanitize from 'rehype-sanitize'
-import remarkGfm from 'remark-gfm'
-
+import rehypeFormat from 'rehype-format';
+import rehypeSanitize from 'rehype-sanitize';
+import remarkGfm from 'remark-gfm';
 
 export async function parseMarkdown(content: string) {
 	const processor = unified()
@@ -78,7 +76,7 @@ export async function parseMarkdown(content: string) {
 		.use(remarkRehype, { allowDangerousHtml: true })
 		.use(rehypeFormat)
 		.use(rehypeSanitize)
-		.use(rehypeStringify)
+		.use(rehypeStringify);
 
 	const result = await processor.process(content);
 	return String(result);

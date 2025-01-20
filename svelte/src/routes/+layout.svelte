@@ -24,49 +24,48 @@
 
 <style lang="postcss">
 	:global(.markdown h1) {
-	   @apply text-3xl font-bold opacity-80;
+		@apply text-3xl font-bold opacity-80;
 	}
 	:global(.markdown h2) {
-	   @apply text-2xl font-bold opacity-70;
+		@apply text-2xl font-bold opacity-70;
 	}
 	:global(.markdown h3) {
-	   @apply text-xl font-bold opacity-60;
+		@apply text-xl font-bold opacity-60;
 	}
 	:global(.markdown p) {
-	   @apply m-1;
+		@apply m-1;
 	}
 	:global(.markdown ul) {
-	   list-style-type: disc;
+		list-style-type: disc;
 	}
 	:global(.markdown ol) {
-	   list-style-type: decimal;
+		list-style-type: decimal;
 	}
 	:global(.markdown a) {
-	   @apply text-pakistan-700 underline;
+		@apply text-pakistan-700 underline;
 	}
 	:global(.markdown ul, .markdown ol) {
-	   @apply my-2 ml-4;
+		@apply my-2 ml-4;
 	}
 	:global(.markdown blockquote) {
-	   @apply border-l-4 border-milk-300 pl-4 italic opacity-90 my-4;
+		@apply border-l-4 border-milk-300 pl-4 italic opacity-90 my-4;
 	}
 	:global(.markdown pre) {
-	   @apply bg-milk-100 p-4 rounded-md overflow-x-auto my-4;
+		@apply bg-milk-100 p-4 rounded-md overflow-x-auto my-4;
 	}
 	:global(.markdown code) {
-	   @apply bg-milk-50 text-sm font-mono px-1 rounded;
+		@apply bg-milk-50 text-sm font-mono px-1 rounded;
 	}
 	:global(.markdown hr) {
-	   @apply border border-milk-200 w-1/2 my-2;
+		@apply border border-milk-200 w-1/2 my-2;
 	}
 	:global(.markdown table) {
-	   @apply border-collapse border border-milk-300 w-full my-4;
+		@apply border-collapse border border-milk-300 w-full my-4;
 	}
 	:global(.markdown th) {
-	   @apply bg-milk-200 font-bold text-center border border-milk-300 px-2 py-1;
+		@apply bg-milk-200 font-bold text-center border border-milk-300 px-2 py-1;
 	}
 	:global(.markdown td) {
-	   @apply border border-milk-300 px-2 py-1 text-left;
+		@apply border border-milk-300 px-2 py-1 text-left;
 	}
-   </style>
-   
+</style>

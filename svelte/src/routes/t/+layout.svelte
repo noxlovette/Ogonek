@@ -8,9 +8,7 @@
 		Students,
 		Sidebar,
 		WorkArea,
-
 		BottomMenu
-
 	} from '$lib/components';
 	import { setContext } from 'svelte';
 	import { lessonStore, taskStore } from '$lib/stores';

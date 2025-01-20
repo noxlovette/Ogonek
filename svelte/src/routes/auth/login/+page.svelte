@@ -31,7 +31,6 @@
 			return async ({ result }) => {
 				isSubmitting = false;
 
-
 				if (result.type === 'success' && result.data) {
 					const { user = initialUser, profile = initialProfile } = result.data;
 					setUser(user);

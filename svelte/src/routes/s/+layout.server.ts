@@ -4,8 +4,8 @@ import type { Lesson, Task } from '$lib/types';
 
 export const load: LayoutServerLoad = async ({ fetch }) => {
 	const [lessons, tasks] = await Promise.all([
-		fetch("/axum/lesson").then((res) => res.json() as Promise<Lesson[]>),
-		fetch("/axum/task").then((res) => res.json() as Promise<Task[]>),
+		fetch('/axum/lesson').then((res) => res.json() as Promise<Lesson[]>),
+		fetch('/axum/task').then((res) => res.json() as Promise<Task[]>)
 	]);
 
 	return { lessons, tasks };
@@ -17,5 +17,4 @@ export const load: LayoutServerLoad = async ({ fetch }) => {
 	//		'x-rapidapi-key': `${env.API_WORD_KEY}`,
 	//	}
 	//}).then((res) => res.json());
-
 };

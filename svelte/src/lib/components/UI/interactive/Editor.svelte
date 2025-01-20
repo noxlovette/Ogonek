@@ -23,13 +23,10 @@
 			class="text-sm px-2 rounded-lg py-1 hover:bg-brick-200 transition-colors"
 			class:chosen={!preview}>Editor</button
 		>
-		<button onclick={() => (preview = true)} 
-            
-            class="text-sm px-2 rounded-lg py-1 hover:bg-brick-200 transition-colors"
-            
-            
-            class:chosen={preview}
-			>Preview</button
+		<button
+			onclick={() => (preview = true)}
+			class="text-sm px-2 rounded-lg py-1 hover:bg-brick-200 transition-colors"
+			class:chosen={preview}>Preview</button
 		>
 	</div>
 	<div class="flex h-full">
@@ -41,7 +38,7 @@
 					class="flex-1 border-milk-200
                     resize-none focus:ring-transparent border
                     shadow-sm p-4
-                    ring-0 ring-transparent rounded-lg focus:ring-none 
+                    ring-0 ring-transparent rounded-lg focus:ring-none
                     focus:border-milk-500"
 					spellcheck="false"
 				></textarea>
