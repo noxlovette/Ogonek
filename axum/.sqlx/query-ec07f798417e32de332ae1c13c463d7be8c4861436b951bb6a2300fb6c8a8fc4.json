@@ -1,0 +1,71 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        SELECT \n            l.id,\n            l.title,\n            l.topic,\n            l.markdown,\n            l.assignee,\n            l.created_by,\n            l.created_at,\n            l.updated_at,\n            u.name as assignee_name\n        FROM lessons l\n        LEFT JOIN \"user\" u ON l.assignee = u.id\n        WHERE l.id = $1 \n        AND (l.assignee = $2 OR l.created_by = $2)\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 1,
+        "name": "title",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 2,
+        "name": "topic",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 3,
+        "name": "markdown",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 4,
+        "name": "assignee",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 5,
+        "name": "created_by",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 6,
+        "name": "created_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 7,
+        "name": "updated_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 8,
+        "name": "assignee_name",
+        "type_info": "Varchar"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Text"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "ec07f798417e32de332ae1c13c463d7be8c4861436b951bb6a2300fb6c8a8fc4"
+}

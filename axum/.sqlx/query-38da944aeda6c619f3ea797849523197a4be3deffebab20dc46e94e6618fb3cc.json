@@ -1,0 +1,83 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "DELETE FROM tasks WHERE id = $1 AND (assignee = $2 OR created_by = $2) RETURNING *",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 1,
+        "name": "title",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 2,
+        "name": "markdown",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 3,
+        "name": "priority",
+        "type_info": "Int2"
+      },
+      {
+        "ordinal": 4,
+        "name": "completed",
+        "type_info": "Bool"
+      },
+      {
+        "ordinal": 5,
+        "name": "created_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 6,
+        "name": "updated_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 7,
+        "name": "due_date",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 8,
+        "name": "file_path",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 9,
+        "name": "created_by",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 10,
+        "name": "assignee",
+        "type_info": "Varchar"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Text"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      true,
+      false,
+      false
+    ]
+  },
+  "hash": "38da944aeda6c619f3ea797849523197a4be3deffebab20dc46e94e6618fb3cc"
+}

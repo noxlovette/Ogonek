@@ -1,0 +1,52 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        SELECT u.username, u.email, u.id, u.name, ts.markdown, ts.telegram_id\n        FROM \"user\" u\n        INNER JOIN teacher_student ts ON u.id = ts.student_id\n        WHERE ts.teacher_id = $1 AND ts.status = 'active'\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "username",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 1,
+        "name": "email",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 2,
+        "name": "id",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 3,
+        "name": "name",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 4,
+        "name": "markdown",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 5,
+        "name": "telegram_id",
+        "type_info": "Varchar"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      true,
+      true
+    ]
+  },
+  "hash": "91b255af879a180cb66db2ccc00d5bfa38136af3ed504ffbea94e168b7edf451"
+}

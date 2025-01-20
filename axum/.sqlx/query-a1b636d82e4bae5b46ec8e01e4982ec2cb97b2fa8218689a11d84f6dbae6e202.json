@@ -1,0 +1,52 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        SELECT * FROM profile\n        WHERE user_id = $1\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "user_id",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 1,
+        "name": "quizlet_url",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 2,
+        "name": "bio",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 3,
+        "name": "avatar_url",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 4,
+        "name": "zoom_url",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 5,
+        "name": "timezone",
+        "type_info": "Varchar"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text"
+      ]
+    },
+    "nullable": [
+      false,
+      true,
+      true,
+      true,
+      true,
+      true
+    ]
+  },
+  "hash": "a1b636d82e4bae5b46ec8e01e4982ec2cb97b2fa8218689a11d84f6dbae6e202"
+}

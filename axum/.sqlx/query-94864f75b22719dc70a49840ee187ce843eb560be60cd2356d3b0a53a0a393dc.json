@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        INSERT INTO teacher_student (teacher_id, student_id)\n        VALUES ($1, $2)\n        ON CONFLICT (teacher_id, student_id) DO UPDATE SET status = 'active'\n        ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Varchar",
+        "Varchar"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "94864f75b22719dc70a49840ee187ce843eb560be60cd2356d3b0a53a0a393dc"
+}

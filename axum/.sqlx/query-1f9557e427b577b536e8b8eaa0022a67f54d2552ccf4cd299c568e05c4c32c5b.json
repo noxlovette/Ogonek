@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        UPDATE teacher_student\n        SET status = 'inactive'\n        WHERE teacher_id = $1 AND student_id = $2\n        ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Text"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "1f9557e427b577b536e8b8eaa0022a67f54d2552ccf4cd299c568e05c4c32c5b"
+}
