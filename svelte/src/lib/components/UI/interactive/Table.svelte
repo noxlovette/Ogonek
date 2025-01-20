@@ -56,7 +56,7 @@
 	<!-- Search & Filter Bar -->
 	<div class="flex gap-4 items-center">
 		{#if items.length !== 0}
-			<div class="hidden md:relative flex-1">
+			<div class="hidden md:flex md:relative flex-1">
 				<Search class="absolute left-3 top-1/2 -translate-y-1/2 text-milk-400 " />
 				<input
 					type="text"

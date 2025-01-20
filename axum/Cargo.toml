@@ -14,6 +14,7 @@ sqlx = { version = "0.8.2", features = [
     "postgres",
     "time",
     "uuid",
+    "chrono",
 ] }
 tokio = { version = "1", features = ["full"] }
 
@@ -43,3 +44,4 @@ nanoid = "0.4.0"
 time = "0.3.37"
 tower = { version = "0.5.2", features = ["full"] }
 base64 = "0.22.1"
+csv = "1.3.1"

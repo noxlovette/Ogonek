@@ -14,7 +14,7 @@ cargo/
 *.pdb
 
 *.crt
-
+*.csv
 *.key
 
 caddy-*
