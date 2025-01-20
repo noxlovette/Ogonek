@@ -1,15 +1,14 @@
-# this shit builds our mighty containers
+# this builds our mighty containers
 services:
   traefik:
+    container_name: trfk-prod
     image: traefik:v3.3
     command:
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.web.address=:80"
-      - "--entrypoints.websecure.address=:443"
     ports:
       - "127.0.0.1:3333:80"
-      - "127.0.0.1:3334:443"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     networks:
@@ -20,19 +19,12 @@ services:
     build:
       context: ./svelte
       dockerfile: Dockerfile
-      cache_from:
-        - yourhub/svelte:latest
-      args:
-        VITE_API_URL: ${API_URL}
-    container_name: svelte-fl
+    container_name: svelte-fl-prod
     env_file:
       - ./svelte/.env.production
-    secrets:
-      - app_key
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.svelte.rule=Host(`localhost`)"
-      - "traefik.http.routers.svelte.tls=true"
     networks:
       - web
       - internal
@@ -46,16 +38,16 @@ services:
     build:
       context: ./axum
       dockerfile: Dockerfile
-      cache_from:
-        - noxlovette/amaretto:latest
       args:
         RUSTFLAGS: "-C target-cpu=native"
-    container_name: axum-fl
+    container_name: axum-fl-prod
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
     env_file:
       - ./axum/.env.production
-    secrets:
-      - db_password
-      - jwt_secret
     depends_on:
       postgres:
         condition: service_healthy
@@ -70,25 +62,23 @@ services:
         limits:
           memory: 1G
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      test: [ "CMD", "curl", "-f", "http://localhost:8000/health" ]
       interval: 30s
       timeout: 10s
       retries: 3
 
   postgres:
     image: postgres:17-alpine
-    container_name: pg-fl
+    container_name: pg-fl-prod
     restart: unless-stopped
     ports:
       - "127.0.0.1:5432:5432"
     volumes:
-      - db-data:/var/lib/postgresql/data:delegated
-    secrets:
-      - db_password
+      - db-data:/var/lib/postgresql/data
     networks:
       - internal
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "postgres"]
+      test: [ "CMD", "pg_isready", "-U", "postgres" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -99,7 +89,7 @@ services:
 
 volumes:
   db-data:
-    name: db-fl
+    name: db-fl-prod
   cargo-cache:
     name: cargo-cache-fl-prod
   cargo-target:
@@ -108,17 +98,6 @@ volumes:
 networks:
   web:
     name: web
-    driver: overlay
   internal:
     name: internal
     internal: true
-
-secrets:
-  db_password:
-    file: ./secrets/db_password.txt
-  jwt_secret:
-    file: ./secrets/jwt_secret.txt
-  app_key:
-    file: ./secrets/app_key.txt
-  traefik_auth:
-    file: ./secrets/traefik_auth.txt

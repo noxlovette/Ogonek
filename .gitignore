@@ -3,7 +3,7 @@ node_modules
 
 # Build
 /dist
-/build
+build/
 /out
 /public
 /.next
