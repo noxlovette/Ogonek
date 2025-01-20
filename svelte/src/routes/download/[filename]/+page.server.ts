@@ -11,7 +11,6 @@ export async function load({ params }) {
     try {
         const fileBuffer = await fs.readFile(filePath);
         const decodedFileName = Buffer.from(filename, 'base64').toString('utf-8');
-        console.log(decodedFileName);
 
         return {
             filename: decodedFileName,

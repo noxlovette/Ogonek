@@ -18,7 +18,6 @@ export const actions: Actions = {
 
       if (!response.ok) {
         const { error } = await response.json();
-        console.log(error)
         return fail(400, { message: error })
       }
 

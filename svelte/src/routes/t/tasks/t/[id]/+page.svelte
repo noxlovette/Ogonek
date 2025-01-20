@@ -11,8 +11,6 @@
 	const { task, rendered } = data;
 
 	let formattedDate = formatDateTime(task.createdAt);
-
-	console.log(task);
 </script>
 
 <svelte:head>

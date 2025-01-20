@@ -13,9 +13,6 @@
 			query = '';
 			searchElement.blur();
 		}
-		if (e.key === 'Enter') {
-			console.log('Search submitted:', query);
-		}
 	}
 
 	function handleClick(e: MouseEvent) {

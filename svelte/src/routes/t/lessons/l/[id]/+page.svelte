@@ -9,8 +9,6 @@
 
 	const { lesson, rendered } = data;
 
-	console.log(lesson);
-
 	let formattedDate = formatDateTime(lesson.createdAt);
 </script>
 

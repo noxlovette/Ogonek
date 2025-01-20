@@ -49,11 +49,9 @@ export const handle: Handle = async ({ event, resolve }) => {
         const isStudentRoute = /\/s\//i.test(event.url.pathname);
 
         if (isTeacherRoute && user.role !== 'teacher') {
-            console.log("unauthorised teacher access attempt");
             throw redirect(303, '/unauthorised');
         }
         if (isStudentRoute && user.role !== 'student') {
-            console.log("unauthorised student access attempt");
             throw redirect(303, '/unauthorised');
         }
     }
@@ -76,7 +74,6 @@ async function handleTokenRefresh(event) {
     const refreshToken = event.cookies.get("refreshToken");
 
     try {
-        console.debug('attempting to refresh token');
         const refreshRes = await event.fetch("/auth/refresh", {
             headers: {
                 'Cookie': `refreshToken=${refreshToken}`,

@@ -11,8 +11,7 @@ export const actions = {
             markdown,
             telegramId
         };
-        console.log(id)
-        console.log(body)
+        
             const response = await fetch(`/axum/student/${id}`, {
                 method: 'PATCH',
                 body: JSON.stringify(body)

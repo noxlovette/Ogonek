@@ -19,7 +19,6 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 			rendered
 		};
 	} catch (e) {
-		console.debug(e)
 		throw redirect(303, '/t/lessons/')
 	}
 };

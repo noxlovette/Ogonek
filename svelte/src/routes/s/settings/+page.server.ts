@@ -3,7 +3,7 @@ import { ValidateAccess } from "$lib/utils";
 import type { Profile } from "$lib/types";
 export const actions = {
     update: async ({ request, fetch }) => {
-        console.debug("updateProfile");
+
         const formData = await request.formData();
         let zoomUrl = undefined;
         let quizletUrl = undefined;
