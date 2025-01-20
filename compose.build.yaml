@@ -1,3 +1,4 @@
+# this shit builds our mighty containers
 services:
   traefik:
     image: traefik:v3.3
@@ -5,11 +6,12 @@ services:
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
     ports:
-       - "127.0.0.1:3333:80"
+      - "127.0.0.1:3333:80"
+      - "127.0.0.1:3334:443"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - letsencrypt:/letsencrypt
     networks:
       - web
     restart: unless-stopped
@@ -18,12 +20,19 @@ services:
     build:
       context: ./svelte
       dockerfile: Dockerfile
+      cache_from:
+        - yourhub/svelte:latest
+      args:
+        VITE_API_URL: ${API_URL}
     container_name: svelte-fl
-    env_file: ./svelte/.env
+    env_file:
+      - ./svelte/.env.production
+    secrets:
+      - app_key
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.svelte.rule=Host(`localhost`)"
-      - "traefik.http.services.svelte.loadbalancer.server.port=3000"
+      - "traefik.http.routers.svelte.tls=true"
     networks:
       - web
       - internal
@@ -37,11 +46,22 @@ services:
     build:
       context: ./axum
       dockerfile: Dockerfile
+      cache_from:
+        - noxlovette/amaretto:latest
+      args:
+        RUSTFLAGS: "-C target-cpu=native"
     container_name: axum-fl
-    env_file: ./axum/.env
+    env_file:
+      - ./axum/.env.production
+    secrets:
+      - db_password
+      - jwt_secret
     depends_on:
       postgres:
         condition: service_healthy
+    volumes:
+      - cargo-cache:/usr/local/cargo/registry:cached
+      - cargo-target:/app/target:cached
     networks:
       - internal
     restart: unless-stopped
@@ -49,6 +69,11 @@ services:
       resources:
         limits:
           memory: 1G
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   postgres:
     image: postgres:17-alpine
@@ -57,15 +82,13 @@ services:
     ports:
       - "127.0.0.1:5432:5432"
     volumes:
-      - db-data:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - db-data:/var/lib/postgresql/data:delegated
+    secrets:
+      - db_password
     networks:
       - internal
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "${POSTGRES_USER}"]
+      test: ["CMD", "pg_isready", "-U", "postgres"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -77,9 +100,25 @@ services:
 volumes:
   db-data:
     name: db-fl
+  cargo-cache:
+    name: cargo-cache-fl-prod
+  cargo-target:
+    name: cargo-target-fl-prod
 
 networks:
   web:
     name: web
+    driver: overlay
   internal:
     name: internal
+    internal: true
+
+secrets:
+  db_password:
+    file: ./secrets/db_password.txt
+  jwt_secret:
+    file: ./secrets/jwt_secret.txt
+  app_key:
+    file: ./secrets/app_key.txt
+  traefik_auth:
+    file: ./secrets/traefik_auth.txt

@@ -79,6 +79,3 @@ volumes:
     name: cargo-target-fl-dev
   db-data:
     name: db-fl-data
-  uploads:
-    name: uploads-fl-dev
- 
