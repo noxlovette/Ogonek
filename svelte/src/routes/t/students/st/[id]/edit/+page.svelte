@@ -1,8 +1,10 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { Editor, H1 } from '$lib/components';
+	import { ButtonSubmit, Editor, H1 } from '$lib/components';
 	import type { Student } from '$lib/types';
+	import { Send } from 'lucide-svelte';
 	import type { PageData } from './$types';
+	import ButtonDelete from '$lib/components/UI/buttons/ButtonDelete.svelte';
 	let { data }: { data: PageData } = $props();
 	let { student }: { student: Student } = data;
 	let isSubmitting = $state(false);
@@ -21,32 +23,34 @@
 		};
 	}}
 >
-	<div class="flex items-baseline space-x-4">
-		<H1>My Notes on {student.name}</H1>
+	<div class="flex items-baseline justify-between">
+		<H1>{student.name}</H1>
+		<div class="flex items-center space-x-3">
+			<div class="relative">
+			  <input 
+				type="text"
+				name="telegramId"
+				value={student.telegramId}
+				placeholder="@username"
+				class="pl-10 pr-4 py-2 border border-milk-300 rounded-lg focus:ring-2 focus:ring-brick-500 focus:border-transparent"
+			  />
+			  <span class="absolute left-3 top-2.5 text-milk-400">
+				<Send ></Send>
+			  </span>
+			</div>
 		<a
 			href="."
 			class="px-4 py-2 text-milk-700 bg-milk-100 rounded-lg hover:bg-milk-200 transition-colors"
 		>
 			Cancel
 		</a>
-		<button
-			type="submit"
-			disabled={isSubmitting}
-			class="px-4 py-2 bg-brick-600 text-brick-50 rounded-lg hover:bg-brick-700 focus:outline-none focus:ring-2 focus:ring-brick-500 focus:ring-offset-2 disabled:opacity-50 transition-colors"
-		>
-			{isSubmitting ? 'Saving...' : 'Save Changes'}
-		</button>
-		<button
-			type="submit"
-			disabled={isSubmitting}
-			class="px-4 py-2 bg-red-600 text-brick-50 rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-brick-500 focus:ring-offset-2 disabled:opacity-50 transition-colors"
-			formaction="?/delete"
-		>
-			Delete
-		</button>
+		<ButtonSubmit bind:isSubmitting></ButtonSubmit>
+		<ButtonDelete bind:isSubmitting></ButtonDelete>
+		
 	</div>
 
 	<input type="hidden" name="id" value={student.id} />
 	<input type="hidden" name="markdown" value={markdown} />
+	
 </form>
 <Editor bind:markdownContent={markdown} />

@@ -5,7 +5,6 @@ import { parseMarkdown } from '$lib/utils';
 
 
 export const load: PageServerLoad = async ({ params, fetch }) => {
-
 	const { id } = params;
 	try {
 		const response = await fetch(`/axum/lesson/l/${id}`);
@@ -14,7 +13,6 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 		}
 		const lesson: Lesson = await response.json();
 		const rendered = await parseMarkdown(lesson.markdown);
-
 
 		return {
 			lesson,

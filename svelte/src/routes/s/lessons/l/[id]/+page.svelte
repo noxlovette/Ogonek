@@ -2,13 +2,10 @@
 	import { H1 } from '$lib/components';
 	import { user } from '$lib/stores';
 	import { formatDateTime } from '$lib/utils';
-
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
-
 	const { lesson, rendered } = data;
-
 
 	let formattedDate = formatDateTime(lesson.createdAt);
 </script>

@@ -5,16 +5,18 @@ export const actions = {
     update: async ({ request, fetch }) => {
         const formData = await request.formData();
         const markdown = formData.get('markdown');
+        const telegramId = formData.get('telegramId')
         const id = formData.get('id');
         let body = {
             markdown,
+            telegramId
         };
-            const response = await fetch(`/axum/student/${id}}`, {
+        console.log(id)
+        console.log(body)
+            const response = await fetch(`/axum/student/${id}`, {
                 method: 'PATCH',
                 body: JSON.stringify(body)
             });
-
-            console.debug('Response PAGE SERVER:', response);
 
             if (!response.ok) {
                 const errorData = await response.json(); // Parse error details

@@ -58,6 +58,7 @@ export interface Student {
     role: string;
     markdown: string;
     joined: string;
+    telegramId: string;
 }
 
 export interface BaseTableItem {

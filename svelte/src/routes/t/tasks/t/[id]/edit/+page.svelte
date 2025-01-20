@@ -2,10 +2,7 @@
 	import { enhance } from '$app/forms';
 	import { notification } from '$lib/stores';
 	import { Editor, H1, ButtonDelete, ButtonSubmit, Uploader } from '$lib/components';
-
 	import type { PageData } from './$types';
-	import { goto } from '$app/navigation';
-	import { updated } from '$app/state';
 
 	let { data }: { data: PageData } = $props();
 	let { task, students } = data;
@@ -41,6 +38,8 @@
 		};
 	}}
 >
+
+
 	<div class="flex items-baseline space-x-4">
 		<H1>Edit Task</H1>
 		<a
@@ -55,6 +54,7 @@
 
 	<input type="hidden" name="id" value={task.id} />
 	<input type="hidden" name="markdown" value={markdown} />
+	
 
 	<div class="grid grid-cols-3 gap-4">
 		<div class="space-y-2">
@@ -71,13 +71,16 @@
 			<label for="assignee" class="block font-medium text-milk-700">Assignee</label>
 			<select
 				id="assignee"
-				name="assignee"
+				name="student"
 				value={task.assignee}
 				class="w-full rounded-lg border-milk-200 shadow-sm focus:border-brick-500 focus:ring-brick-500"
 			>
 				<option value="">Select an assignee</option>
 				{#each students as student}
-					<option value={student.id} selected={student.id === task.assignee}>
+					<option value={JSON.stringify({
+						assignee: student.id,
+						telegramId: student.telegramId
+					  })} selected={student.id === task.assignee}>
 						{student.name}
 					</option>
 				{/each}
