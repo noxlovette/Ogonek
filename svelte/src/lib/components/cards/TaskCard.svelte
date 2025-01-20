@@ -5,7 +5,6 @@
 	import { user, notification } from '$lib/stores';
 	import { onMount } from 'svelte';
 	import { H2 } from '../typography';
-	import { goto } from '$app/navigation';
 	import { enhance } from '$app/forms';
 	import { CheckSquare, Download, Square } from 'lucide-svelte';
 	import { parseMarkdown } from '$lib/utils';

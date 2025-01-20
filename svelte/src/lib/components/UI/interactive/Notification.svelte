@@ -44,7 +44,7 @@
 			x: 400,
 			y: 0
 		}}
-		class="fixed top-2 right-4 min-w-[320px] xl:min-w-[500px] max-w-md bg-milk-50
+		class="fixed top-2 right-4 min-w-[320px] 2xl:min-w-[500px] max-w-md bg-milk-50
 			 shadow-md rounded-lg flex items-center gap-3 p-4 border-2
 			 {$notification.type === 'success'
 			? 'border-pakistan-500'

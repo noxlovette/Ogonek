@@ -1,6 +1,5 @@
--- Add migration script here
 CREATE TABLE "user" (
-    id VARCHAR(21) PRIMARY KEY, -- 21 is nanoid's default length
+    id VARCHAR(21) PRIMARY KEY,
     name VARCHAR NOT NULL CHECK (LENGTH(name) >= 3),
     username VARCHAR NOT NULL,
     email VARCHAR NOT NULL,

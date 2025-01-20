@@ -1,5 +1,3 @@
--- Add migration script here
-
 CREATE TABLE tasks (
     id VARCHAR(21) PRIMARY KEY,
     title VARCHAR(255) NOT NULL,

@@ -3,6 +3,7 @@ CREATE TABLE teacher_student (
     student_id VARCHAR(21) REFERENCES "user"(id) ON DELETE CASCADE,
     status VARCHAR(20) DEFAULT 'active',
     markdown TEXT,
+    telegram_id VARCHAR(20),
     joined TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (teacher_id, student_id)
 );

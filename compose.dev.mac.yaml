@@ -2,7 +2,7 @@ services:
   traefik:
       image: traefik:v3.3
       command:
-        - "--api.insecure=true"  # For dev only - gives you the dashboard
+        - "--api.insecure=true"  # For dev only
         - "--providers.docker=true"
         - "--providers.docker.exposedbydefault=false"
         - "--entrypoints.web.address=:80"

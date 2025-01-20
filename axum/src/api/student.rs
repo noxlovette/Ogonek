@@ -24,7 +24,7 @@ pub async fn upsert_student(
         VALUES ($1, $2)
         ON CONFLICT (teacher_id, student_id) DO UPDATE SET status = 'active'
         "#,
-        claims.sub, // teacher's ID from auth
+        claims.sub, 
         id
     )
     .execute(&state.db)
@@ -46,7 +46,6 @@ pub async fn remove_student(
     Path(id): Path<String>,
     claims: Claims,
 ) -> Result<StatusCode, DbError> {
-    // Soft delete the relationship
     sqlx::query!(
         r#"
         UPDATE teacher_student
@@ -66,23 +65,25 @@ pub async fn remove_student(
     Ok(StatusCode::NO_CONTENT)
 }
 
-
 pub async fn update_student(
     claims: Claims,
     State(state): State<AppState>,
     Path(id): Path<String>,
     Json(payload): Json<UpdateStudentRequest>,
 ) -> Result<StatusCode, DbError> {
-    // Soft delete the relationship
+    
     sqlx::query!(
         r#"
         UPDATE teacher_student
-        SET markdown = $3
+        SET
+            markdown = COALESCE($3, markdown),
+            telegram_id = COALESCE($4, telegram_id)
         WHERE teacher_id = $1 AND student_id = $2
         "#,
         claims.sub,
         id,
-        payload.markdown
+        payload.markdown,
+        payload.telegram_id
     )
     .execute(&state.db)
     .await
@@ -102,7 +103,7 @@ pub async fn fetch_student(
     let student = sqlx::query_as!(
         Student,
         r#"
-        SELECT u.username, u.email, u.id, u.name, markdown
+        SELECT u.username, u.email, u.id, u.name, ts.markdown, ts.telegram_id
         FROM "user" u
         INNER JOIN teacher_student ts ON u.id = ts.student_id
         WHERE ts.teacher_id = $1 AND student_id = $2
@@ -127,7 +128,7 @@ pub async fn list_students(
     let students = sqlx::query_as!(
         Student,
         r#"
-        SELECT u.username, u.email, u.id, u.name, ts.markdown
+        SELECT u.username, u.email, u.id, u.name, ts.markdown, ts.telegram_id
         FROM "user" u
         INNER JOIN teacher_student ts ON u.id = ts.student_id
         WHERE ts.teacher_id = $1 AND ts.status = 'active'

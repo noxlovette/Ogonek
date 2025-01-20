@@ -1,5 +1,6 @@
 import type { Actions } from "@sveltejs/kit";
 import { fail, redirect, error } from '@sveltejs/kit';
+import { notifyTelegram } from "$lib/server/telegram";
 
 import { Buffer } from 'node:buffer';
 
@@ -21,16 +22,16 @@ const encodeFileName = (fileName: string): string => {
 export const actions = {
     update: async ({ request, fetch }) => {
         const formData = await request.formData();
-        const markdown = formData.get('markdown');
-        const title = formData.get('title');
-        const id = formData.get('id');
-        const assignee = formData.get('assignee');
-        const dueDate = formData.get('dueDate') as string;
+        const markdown = formData.get('markdown')?.toString() || '';
+        const title = formData.get('title')?.toString() || '';
+        const id = formData.get('id')?.toString() || '';
+        const dueDate = formData.get('dueDate')?.toString() || '';
         const completed = formData.has('completed');
-
-        // Handle the date conversion properly
+    
+        const assigneeData = formData.get('student')?.toString() || '{}';
+        const { assignee = '', telegramId = '' } = JSON.parse(assigneeData);
         const dueDateWithTime = dueDate && dueDate !== ''
-            ? new Date(`${dueDate}T23:59:59`).toISOString() // Need to make it ISO string for API
+            ? new Date(`${dueDate}T23:59:59`).toISOString() 
             : null;
 
 
@@ -50,12 +51,19 @@ export const actions = {
         });
 
         if (!response.ok) {
-            const errorData = await response.json(); // Parse error details
+            const errorData = await response.json(); 
             console.error('Error updating task:', errorData);
             return {
                 success: false,
                 error: errorData
             };
+        }
+
+        const message = `You have a new task on Firelight`;
+
+        const telegramResponse = await notifyTelegram(message,telegramId)
+        if (!telegramResponse.ok) {
+            return fail(400)
         }
 
         return redirect(303, `/t/tasks/t/${id}`);

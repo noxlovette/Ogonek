@@ -11,6 +11,5 @@ CREATE TABLE student_notes (
     CONSTRAINT unique_student_lesson_note UNIQUE (lesson_id, user_id)
 );
 
--- Add performance index
 CREATE INDEX idx_student_notes_lesson_user 
     ON student_notes(lesson_id, user_id);
