@@ -44,11 +44,12 @@ services:
 
   media:
     image: nginx:alpine
-    ports: "8888:80"
-    container-name: media-fl-prod
+    ports: 
+      - "8888:80"
+    container_name: media-fl-prod
     volumes:
       - uploads:/var/www/uploads
-      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
     restart: unless-stopped
 
 
