@@ -1,6 +1,6 @@
 services:
   svelte:
-    image: ghcr.io/noxlovette/fl-prod-svelte:v1.0.6
+    image: ghcr.io/noxlovette/fl-prod-svelte:latest
     container_name: svelte-fl-prod
     env_file:
       - ./.env.svelte
@@ -10,8 +10,6 @@ services:
       - web
       - internal
     restart: unless-stopped
-    volumes:
-      - uploads:/app/static/uploads
     deploy:
       resources:
         limits:
@@ -21,7 +19,7 @@ services:
         condition: service_healthy
 
   axum:
-    image: ghcr.io/noxlovette/fl-prod-axum:v1.0.3
+    image: ghcr.io/noxlovette/fl-prod-axum:latest
     container_name: axum-fl-prod
     logging:
       driver: "json-file"
@@ -41,24 +39,24 @@ services:
         limits:
           memory: 1G
 
-  media:
-    image: nginx:alpine
-    ports: 
-      - "8888:80"
-    container_name: media-fl-prod
+  upld:
+    image: ghcr.io/noxlovette/fl-prod-upld:latest
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    container_name: upld-fl-prod
     volumes:
-      - uploads:/var/www/uploads
-      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
-    restart: unless-stopped
-
+      - uploads:/app/uploads
+    env_file:
+      - ./upld.env
 
   postgres:
     image: postgres:17-alpine
     container_name: pg-fl-prod
     restart: unless-stopped
     env_file: ./.env.postgres
-    ports:
-      - "5444:5432"
     volumes:
       - db-data:/var/lib/postgresql/data
     networks:
