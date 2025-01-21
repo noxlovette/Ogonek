@@ -89,64 +89,45 @@ export const actions = {
 
 		redirect(303, '/t/tasks');
 	},
-	upload: async ({ request, fetch }) => {
+	upload: async ({ request }) => {
 		try {
 			const formData = await request.formData();
 			const file = formData.get('file');
 			const id = formData.get('id');
 
-			// Your existing validations
-			if (!file || !(file instanceof Blob)) {
-				return fail(400, { message: 'No file provided or invalid file type' });
-			}
-			if (file.size > MAX_FILE_SIZE) {
-				return fail(400, { message: 'File too large, max 5MB allowed' });
-			}
-			if (!ALLOWED_MIMES.has(file.type)) {
-				return fail(400, { message: 'Unsupported file type' });
-			}
 
-			const fileId = randomUUID();
-			const encodedName = encodeFileName(file.name);
+			console.log('FormData entries:', Array.from(formData.entries()));
 
-			// Create a new FormData for the nginx upload
-			const uploadFormData = new FormData();
-			uploadFormData.append('file', file, encodedName);
+			const newFormData = new FormData();
+			newFormData.append('file', file, file.name); // Attach the file with its filename
+			console.log('new entries:', Array.from(newFormData.entries()));
 
-			// Send to your nginx upload endpoint
-			const uploadResponse = await fetch('https://media-staging.noxlovette.com/uploads/', {
+			if (!file) throw new Error('yikes, no file');
+
+			// Straight to Axum - no extra steps
+			const uploadResponse = await fetch('http://upload-service:3001/upload', {
 				method: 'POST',
-				body: uploadFormData
+				//	headers: {
+				//		'Content-Type': 'multipart/form-data', // Ensure the server expects this
+				//	},
+				body: newFormData // Send the original FormData - Axum can handle multipart
 			});
 
 			if (!uploadResponse.ok) {
-				return fail(500, { message: 'Failed to upload to storage server' });
-			}
-
-			// Get the file URL from the upload response
-			const fileUrl = `https://media-staging.noxlovette.com/uploads/${encodedName}`;
-
-			// Update your task with the file URL instead of local path
-			let taskResponse = await fetch(`/axum/task/t/${id}`, {
-				method: 'PATCH',
-				body: JSON.stringify({ filePath: fileUrl })
-			});
-
-			if (!taskResponse.ok) {
-				return fail(500, { message: await taskResponse.text() });
+				throw new Error('upload failed fam');
 			}
 
 			return {
 				success: true,
-				message: 'File uploaded successfully',
-				fileId,
-				originalName: file.name,
-				url: fileUrl
+				message: 'uploaded successfully',
 			};
 
 		} catch (err) {
-			console.error('Error uploading file:', err);
-			return error(500);
+			console.error('💀 Upload error:', err);
+			return {
+				success: false,
+				message: err.message
+			};
 		}
 	}
 } satisfies Actions;

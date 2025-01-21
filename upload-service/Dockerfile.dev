@@ -1,0 +1,13 @@
+FROM rust:latest
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Copy your project files
+COPY . .
+
+# Build your Rust project
+RUN cargo build --release
+
+# Run the application
+CMD ["./target/release/upload-service"]

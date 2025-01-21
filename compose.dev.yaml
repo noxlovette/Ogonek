@@ -1,3 +1,5 @@
+name: fl-dev
+
 services:
   media:
     image: nginx:alpine
@@ -5,19 +7,36 @@ services:
       - "8888:80"
     container_name: media-fl-dev
     volumes:
-      - uploads:/var/www/uploads
-      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+      - uploads:/var/www/media
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
     restart: unless-stopped
+    depends_on:
+      - upload-service
+      - svelte
+
+  upload-service:
+    build:
+      context: ./upload-service
+      dockerfile: Dockerfile.dev
+    volumes:
+      - uploads:/app/uploads
+    ports:
+      - "3001:3001"
+    env_file:
+      - ./upload-service/.env
+    depends_on:
+      - svelte
+      - axum
 
   svelte:
     build:
       context: ./svelte
       dockerfile: Dockerfile.dev
     container_name: svelte-fl-dev
-    ports: -"5173:3000"
+    ports:
+      - "5173:3000"
     volumes:
       - ./svelte:/app
-      - uploads:/app/static/uploads
     env_file:
       - ./svelte/.env
     depends_on:
@@ -64,6 +83,6 @@ volumes:
   cargo-target:
     name: cargo-target-fl-dev
   db-data:
-    name: db-fl-data
+    name: db-fl-dev
   uploads:
     name: uploads-fl-dev
