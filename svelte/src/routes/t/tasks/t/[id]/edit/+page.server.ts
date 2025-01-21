@@ -95,52 +95,55 @@ export const actions = {
 			const file = formData.get('file');
 			const id = formData.get('id');
 
+			// Your existing validations
 			if (!file || !(file instanceof Blob)) {
-				return fail(400, {
-					message: 'No file provided or invalid file type'
-				});
+				return fail(400, { message: 'No file provided or invalid file type' });
 			}
-
 			if (file.size > MAX_FILE_SIZE) {
-				return fail(400, {
-					message: 'File too large, max 5MB allowed'
-				});
+				return fail(400, { message: 'File too large, max 5MB allowed' });
 			}
-
 			if (!ALLOWED_MIMES.has(file.type)) {
-				return fail(400, {
-					message: 'Unsupported file type'
-				});
+				return fail(400, { message: 'Unsupported file type' });
 			}
+
 			const fileId = randomUUID();
-			const salt = crypto.getRandomValues(new Uint8Array(16));
-			const arrayBuffer = await file.arrayBuffer();
-			const buffer = Buffer.from(arrayBuffer);
-
-			const hash = createHash('sha256')
-				.update(Buffer.concat([buffer, Buffer.from(salt)]))
-				.digest('hex');
-
 			const encodedName = encodeFileName(file.name);
-			const filePath = path.join(env.UPLOAD_DIR, encodedName);
 
-			await writeFile(filePath, buffer);
+			// Create a new FormData for the nginx upload
+			const uploadFormData = new FormData();
+			uploadFormData.append('file', file, encodedName);
 
-			let response = await fetch(`/axum/task/t/${id}`, {
-				method: 'PATCH',
-				body: JSON.stringify({ filePath })
+			// Send to your nginx upload endpoint
+			const uploadResponse = await fetch('https://media-staging.noxlovette.com/uploads/', {
+				method: 'POST',
+				body: uploadFormData
 			});
 
-			if (!response.ok) {
-				return fail(500, { message: response.text() });
+			if (!uploadResponse.ok) {
+				return fail(500, { message: 'Failed to upload to storage server' });
+			}
+
+			// Get the file URL from the upload response
+			const fileUrl = `https://media-staging.noxlovette.com/uploads/${encodedName}`;
+
+			// Update your task with the file URL instead of local path
+			let taskResponse = await fetch(`/axum/task/t/${id}`, {
+				method: 'PATCH',
+				body: JSON.stringify({ filePath: fileUrl })
+			});
+
+			if (!taskResponse.ok) {
+				return fail(500, { message: await taskResponse.text() });
 			}
 
 			return {
 				success: true,
 				message: 'File uploaded successfully',
 				fileId,
-				originalName: file.name
+				originalName: file.name,
+				url: fileUrl
 			};
+
 		} catch (err) {
 			console.error('Error uploading file:', err);
 			return error(500);

@@ -1,55 +1,44 @@
 services:
-  traefik:
-    image: traefik:v3.3
-    command:
-      - "--api.insecure=true"
-      - "--providers.docker=true"
-      - "--providers.docker.exposedbydefault=false"
-      - "--entrypoints.web.address=:80"
+  media:
+    image: nginx:alpine
     ports:
-      - "80:80"
-      - "8080:8080" 
+      - "8888:80"
+    container_name: media-fl-dev
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - uploads:/var/www/uploads
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+    restart: unless-stopped
 
   svelte:
     build:
       context: ./svelte
       dockerfile: Dockerfile.dev
     container_name: svelte-fl-dev
+    ports: -"5173:3000"
     volumes:
       - ./svelte:/app
       - uploads:/app/static/uploads
     env_file:
       - ./svelte/.env
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.svelte.rule=Host(`localhost`)"
-      - "traefik.http.services.svelte.loadbalancer.server.port=5173"
     depends_on:
       - axum
-    
+
   axum:
     build:
       context: ./axum
       dockerfile: Dockerfile.dev
     container_name: axum-fl-dev
+    ports:
+      - "8000:3000"
     volumes:
       - ./axum:/app
       - cargo-cache:/usr/local/cargo/registry
       - cargo-target:/app/target
     env_file:
       - ./axum/.env
-
     depends_on:
       postgres:
         condition: service_healthy
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.axum.rule=Host(`localhost`) && PathPrefix(`/axum`)"
-      - "traefik.http.services.axum.loadbalancer.server.port=3000"
-      - "traefik.http.middlewares.axum-strip.stripprefix.prefixes=/axum"
-      - "traefik.http.routers.axum.middlewares=axum-strip"
 
   postgres:
     image: postgres
@@ -64,7 +53,7 @@ services:
     ports:
       - "5432:5432"
     healthcheck:
-      test: ["CMD", "pg_isready"]
+      test: [ "CMD", "pg_isready" ]
       interval: 10s
       timeout: 5s
       retries: 5
