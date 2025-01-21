@@ -62,9 +62,11 @@ export const actions = {
 
 		const message = `You have a new task on Firelight`;
 
-		const telegramResponse = await notifyTelegram(message, telegramId);
-		if (!telegramResponse.ok) {
-			return fail(400);
+		if (telegramId) {
+			const telegramResponse = await notifyTelegram(message, telegramId);
+			if (!telegramResponse.ok) {
+				return fail(400);
+			}
 		}
 
 		return redirect(303, `/t/tasks/t/${id}`);
