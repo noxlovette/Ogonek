@@ -15,6 +15,7 @@ services:
       - svelte
 
   upload-service:
+    container_name: upld-fl-dev
     build:
       context: ./upload-service
       dockerfile: Dockerfile.dev

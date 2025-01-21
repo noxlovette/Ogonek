@@ -58,7 +58,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 // Helper function to handle token refresh
 async function handleTokenRefresh(event) {
 	if (isRefreshing) {
-		// Wait for ongoing refresh to complete
+
 		while (isRefreshing) {
 			await new Promise((resolve) => setTimeout(resolve, 100));
 		}
@@ -97,13 +97,20 @@ export const handleFetch: HandleFetch = async ({ event, request, fetch }) => {
 	const url = new URL(request.url);
 
 	if (url.pathname.startsWith('/axum/')) {
-		// Remove the /axum/ prefix and construct the new URL
 		const cleanPath = url.pathname.replace('/axum/', '/');
 		const newUrl = new URL(cleanPath, 'http://axum:3000');
 		request = new Request(newUrl, request);
 	}
 
-	// Your existing header logic
+	if (url.pathname.startsWith('/file-server/')) {
+		const cleanPath = url.pathname.replace('/file-server/', '/');
+		const newUrl = new URL(cleanPath, 'http://upload-service:3001');
+		request = new Request(newUrl, request);
+
+		request.headers.append('X-API-KEY', env.API_KEY_FILE);
+		return fetch(request);
+	}
+
 	request.headers.set('X-API-KEY', env.API_KEY_AXUM);
 	request.headers.set('Content-Type', 'application/json');
 

@@ -1,27 +1,7 @@
 import type { Actions } from '@sveltejs/kit';
-import { fail, redirect, error } from '@sveltejs/kit';
+import { fail, redirect } from '@sveltejs/kit';
 import { notifyTelegram } from '$lib/server/telegram';
-
-import { Buffer } from 'node:buffer';
-
-import { createHash, randomUUID } from 'node:crypto';
-import { writeFile } from 'node:fs/promises';
-import path from 'node:path';
 import { env } from '$env/dynamic/private';
-
-const MAX_FILE_SIZE = 5 * 1024 * 1024;
-const ALLOWED_MIMES = new Set([
-	'image/jpeg',
-	'image/png',
-	'application/pdf',
-	'application/zip',        // standard ZIP
-	'application/x-zip',      // older ZIP variant
-	'application/x-zip-compressed', // some systems use this
-	'multipart/x-zip'         // less common but good to support
-]);
-const encodeFileName = (fileName: string): string => {
-	return Buffer.from(fileName).toString('base64url');
-};
 
 export const actions = {
 	update: async ({ request, fetch }) => {
@@ -89,45 +69,35 @@ export const actions = {
 
 		redirect(303, '/t/tasks');
 	},
-	upload: async ({ request }) => {
+	upload: async ({ request, fetch }) => {
 		try {
 			const formData = await request.formData();
-			const file = formData.get('file');
-			const id = formData.get('id');
+			const file = formData.get('file') as File;
+			const id = formData.get('id') as string;
 
-
-			console.log('FormData entries:', Array.from(formData.entries()));
-
-			const newFormData = new FormData();
-			newFormData.append('file', file, file.name); // Attach the file with its filename
-			console.log('new entries:', Array.from(newFormData.entries()));
+			const fileFormData = new FormData();
+			fileFormData.append('file', file, file.name);
 
 			if (!file) throw new Error('yikes, no file');
 
-			// Straight to Axum - no extra steps
-			const uploadResponse = await fetch('http://upload-service:3001/upload', {
+			const uploadResponse = await fetch('/file-server/upload', {
 				method: 'POST',
-				//	headers: {
-				//		'Content-Type': 'multipart/form-data', // Ensure the server expects this
-				//	},
-				body: newFormData // Send the original FormData - Axum can handle multipart
+				body: fileFormData
 			});
 
 			if (!uploadResponse.ok) {
-				throw new Error('upload failed fam');
+				const { error } = await uploadResponse.json()
+				return fail(500, { message: error })
 			}
 
 			return {
 				success: true,
-				message: 'uploaded successfully',
+				message: 'Uploaded successfully',
 			};
 
 		} catch (err) {
 			console.error('💀 Upload error:', err);
-			return {
-				success: false,
-				message: err.message
-			};
+			return fail(500, { message: err })
 		}
 	}
 } satisfies Actions;
