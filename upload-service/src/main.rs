@@ -5,7 +5,7 @@ use axum::{
     Router,
 };
 use tower_http::cors::CorsLayer;
-use upload_service::api::file::upload_handler;
+use upload_service::api::file::{download_handler, upload_handler};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -26,6 +26,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Build our application
     let app = Router::new()
         .route("/upload", post(upload_handler))
+        .route("/download/{filename}", get(download_handler))
         .route("/health", get(health_check))
         .layer(CorsLayer::permissive()) //TODO PROD CHECK
         .layer(axum::middleware::from_fn(

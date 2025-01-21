@@ -1,3 +1,4 @@
+use axum::Json;
 use axum::{
     extract::{Multipart, Path},
     http::{header, StatusCode},
@@ -20,6 +21,8 @@ pub async fn upload_handler(mut multipart: Multipart) -> Result<impl IntoRespons
         })?;
     }
 
+    let mut unique_filename = String::new();
+
     while let Some(field) = multipart.next_field().await.map_err(|err| {
         error!("Error processing multipart field: {:?}", err);
         StatusCode::BAD_REQUEST
@@ -33,7 +36,7 @@ pub async fn upload_handler(mut multipart: Multipart) -> Result<impl IntoRespons
             .to_string();
 
         let safe_filename = sanitize_filename::sanitize(&filename);
-        let unique_filename = format!("{}-{}", uuid::Uuid::new_v4(), safe_filename);
+        unique_filename = format!("{}-{}", uuid::Uuid::new_v4(), safe_filename);
 
         let data = field.bytes().await.map_err(|err| {
             error!("Failed to read field data: {:?}", err);
@@ -55,10 +58,12 @@ pub async fn upload_handler(mut multipart: Multipart) -> Result<impl IntoRespons
         info!("Uploaded file: {}", safe_filename);
     }
 
-    Ok(StatusCode::OK)
+    Ok(Json(unique_filename))
 }
 
-pub async fn get_handler(Path(filename): Path<String>) -> Result<impl IntoResponse, StatusCode> {
+pub async fn download_handler(
+    Path(filename): Path<String>,
+) -> Result<impl IntoResponse, StatusCode> {
     let upload_path = std::env::var("UPLOAD_PATH").unwrap_or_else(|_| "./uploads".to_string());
     let file_path = PathBuf::from(&upload_path).join(&filename);
 

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import { notification } from '$lib/stores';
+	import { stripUUID } from '$lib/utils';
 	import { Editor, H1, ButtonDelete, ButtonSubmit, Uploader } from '$lib/components';
 	import type { PageData } from './$types';
 
@@ -8,13 +9,24 @@
 	let { task, students } = data;
 	let isSubmitting = $state(false);
 	let markdown = $state(task.markdown);
+	let filePath = $state(task.filePath);
+	let fileName = $state('');
 
 	let dueDate = $state(task.dueDate ? new Date(task.dueDate).toISOString().split('T')[0] : '');
+
+	if (task.filePath) {
+		fileName = stripUUID(task.filePath);
+	}
 
 	$effect(() => {
 		if (task.dueDate) {
 			dueDate = new Date(task.dueDate).toISOString().split('T')[0];
 		}
+
+		console.log('the filepath that will be saved to the server', filePath);
+
+		console.log(fileName);
+		console.log(task.filePath);
 	});
 </script>
 
@@ -52,6 +64,7 @@
 
 	<input type="hidden" name="id" value={task.id} />
 	<input type="hidden" name="markdown" value={markdown} />
+	<input type="hidden" name="filePath" value={filePath} />
 
 	<div class="grid grid-cols-3 gap-4">
 		<div class="space-y-2">
@@ -69,7 +82,6 @@
 			<select
 				id="assignee"
 				name="student"
-				value={task.assignee}
 				class="w-full rounded-lg border-milk-200 shadow-sm focus:border-brick-500 focus:ring-brick-500"
 			>
 				<option value="">Select an assignee</option>
@@ -115,5 +127,5 @@
 
 <div class="flex w-full space-x-4 h-full items-end">
 	<Editor bind:markdownContent={markdown} />
-	<Uploader id={task.id} />
+	<Uploader bind:filePath {fileName} />
 </div>

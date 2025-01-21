@@ -1,14 +1,14 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import { notification } from '$lib/stores';
-	import { Upload, Loader2 } from 'lucide-svelte';
+	import { Upload, Loader2, Check } from 'lucide-svelte';
 	import { fade, scale } from 'svelte/transition';
 
-	let { id } = $props();
+	let { filePath = $bindable(), fileName = '' } = $props();
 
 	let isDragging = $state(false);
 	let isUploading = $state(false);
-	let fileName = $state('');
+	let isSuccess = $state(false);
 	let fileInput: HTMLInputElement;
 
 	function handleDragOver(e: DragEvent) {
@@ -41,7 +41,7 @@
 	method="post"
 	enctype="multipart/form-data"
 	action="?/upload"
-	class="h-full flex flex-col"
+	class="h-full flex flex-col w-1/2"
 	use:enhance={({ formData, cancel }) => {
 		if (!formData.has('file')) {
 			cancel();
@@ -58,7 +58,9 @@
 			isUploading = false;
 
 			if (result.type === 'success') {
-				fileName = '';
+				// fileName = '';
+				filePath = result.data?.filePath;
+				isSuccess = true;
 				notification.set({
 					message: 'File uploaded successfully!',
 					type: 'success'
@@ -77,7 +79,6 @@
 		};
 	}}
 >
-	<input type="hidden" name="id" value={id} />
 	<!-- Upload Area -->
 	<div
 		onclick={() => fileInput.click()}
@@ -91,6 +92,7 @@
 		class="relative rounded-lg border-2 border-dashed p-12
 			 flex flex-col flex-1 items-center justify-center
 			 cursor-pointer transition-colors duration-200 h-full
+			 {isSuccess ? 'bg-pakistan-50 border-pakistan-700' : ''}
 			 {isDragging
 			? 'border-brick-700 bg-brick-100'
 			: 'border-milk-300 hover:border-milk-400 bg-milk-50'}"
@@ -101,6 +103,15 @@
 			<div class="flex flex-col items-center gap-3" in:scale={{ duration: 200 }}>
 				<Loader2 class="w-10 h-10 text-brick-500 animate-spin" />
 				<p class="text-milk-600">Uploading {fileName}...</p>
+			</div>
+		{:else if isSuccess}
+			<div class="flex flex-col items-center gap-3" in:fade>
+				<Check class="size-10 text-pakistan-700" />
+				<div class="text-center">
+					<p class="text-pakistan-400">
+						{fileName} has been uploaded
+					</p>
+				</div>
 			</div>
 		{:else}
 			<div class="flex flex-col items-center gap-3" in:fade>

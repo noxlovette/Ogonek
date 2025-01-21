@@ -11,6 +11,7 @@ export const actions = {
 		const id = formData.get('id')?.toString() || '';
 		const dueDate = formData.get('dueDate')?.toString() || '';
 		const completed = formData.has('completed');
+		const filePath = formData.get('filePath')?.toString() || '';
 
 		const assigneeData = formData.get('student')?.toString() || '{}';
 		const { assignee = '', telegramId = '' } = JSON.parse(assigneeData);
@@ -23,7 +24,8 @@ export const actions = {
 			markdown,
 			assignee,
 			dueDate: dueDateWithTime,
-			completed
+			completed,
+			filePath
 		};
 
 		const response = await fetch(`/axum/task/t/${formData.get('id')}`, {
@@ -73,16 +75,12 @@ export const actions = {
 		try {
 			const formData = await request.formData();
 			const file = formData.get('file') as File;
-			const id = formData.get('id') as string;
-
-			const fileFormData = new FormData();
-			fileFormData.append('file', file, file.name);
 
 			if (!file) throw new Error('yikes, no file');
 
 			const uploadResponse = await fetch('/file-server/upload', {
 				method: 'POST',
-				body: fileFormData
+				body: formData
 			});
 
 			if (!uploadResponse.ok) {
@@ -90,8 +88,11 @@ export const actions = {
 				return fail(500, { message: error })
 			}
 
+			const filePath = await uploadResponse.text();
+
 			return {
 				success: true,
+				filePath,
 				message: 'Uploaded successfully',
 			};
 

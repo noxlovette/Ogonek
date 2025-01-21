@@ -81,3 +81,7 @@ export async function parseMarkdown(content: string) {
 	const result = await processor.process(content);
 	return String(result);
 }
+
+
+
+export const stripUUID = (str: string) => str.split('-').slice(1).join('-');
