@@ -14,10 +14,6 @@
 
 	let dueDate = $state(task.dueDate ? new Date(task.dueDate).toISOString().split('T')[0] : '');
 
-	if (task.filePath) {
-		fileName = stripUUID(task.filePath);
-	}
-
 	$effect(() => {
 		if (task.dueDate) {
 			dueDate = new Date(task.dueDate).toISOString().split('T')[0];

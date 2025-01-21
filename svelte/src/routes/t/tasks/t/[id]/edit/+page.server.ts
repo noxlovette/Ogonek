@@ -88,7 +88,7 @@ export const actions = {
 				return fail(500, { message: error })
 			}
 
-			const filePath = await uploadResponse.text();
+			const filePath = (await uploadResponse.text()).replace(/^"|"$/g, '');
 
 			return {
 				success: true,

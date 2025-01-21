@@ -1,27 +1,23 @@
-// +page.server.ts
-import { env } from '$env/dynamic/private';
-import fs from 'fs/promises';
-import path from 'path';
+import { error } from '@sveltejs/kit'
 
-export async function load({ params }) {
-	const fullFilePath = decodeURIComponent(params.filename);
-	const filename = path.basename(fullFilePath);
-	const filePath = path.join(env.UPLOAD_DIR, filename);
+export async function load({ params, fetch }) {
+	const filename = params.filename.replace(/^"|"$/g, '');
 
-	try {
-		const fileBuffer = await fs.readFile(filePath);
-		const decodedFileName = Buffer.from(filename, 'base64').toString('utf-8');
-
-		return {
-			filename: decodedFileName,
-			headers: {
-				'Content-Type': 'application/octet-stream',
-				'Content-Disposition': `attachment; filename="${decodedFileName}"`
-			},
-			body: fileBuffer
-		};
-	} catch (error) {
-		console.error('Error reading file:', error);
-		throw new Error('Failed to load the requested file.');
+	if (!filename.match(/^[a-zA-Z0-9-_.]+$/)) {
+		throw error(400);
 	}
+
+	const response = await fetch(`/file-server/download/${filename}`);
+	const data = await response.arrayBuffer();
+
+	console.debug(data);
+
+	return {
+		body: data,
+		filename,
+		headers: {
+			'Content-Type': response.headers.get('Content-Type') || 'application/octet-stream',
+			'Content-Disposition': response.headers.get('Content-Disposition')
+		}
+	};
 }

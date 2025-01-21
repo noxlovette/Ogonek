@@ -84,4 +84,7 @@ export async function parseMarkdown(content: string) {
 
 
 
-export const stripUUID = (str: string) => str.split('-').slice(1).join('-');
+export const stripUUID = (str: string): string => {
+	const uuidPattern = /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}/;
+	return str.replace(uuidPattern, '').replace(/^-+/, '');
+};

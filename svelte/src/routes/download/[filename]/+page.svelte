@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { Download, ArrowLeft, BookOpen, Loader2 } from 'lucide-svelte';
+	import { stripUUID } from '$lib/utils';
 
 	let { data } = $props();
 	const { body, headers, filename } = data;
@@ -9,17 +10,19 @@
 	let downloadStarted = $state(false);
 
 	onMount(() => {
-		const blob = new Blob([body], {
-			type: headers['Content-Type'] || 'application/octet-stream'
-		});
-		const url = URL.createObjectURL(blob);
-		const a = document.createElement('a');
-		a.href = url;
-		a.download = filename;
-		a.click();
-		URL.revokeObjectURL(url);
-
-		downloadStarted = true;
+		try {
+			const blob = new Blob([body], { type: headers['Content-Type'] });
+			const url = URL.createObjectURL(blob);
+			const a = document.createElement('a');
+			a.href = url;
+			a.download = stripUUID(filename);
+			a.click();
+			URL.revokeObjectURL(url);
+			downloadStarted = true;
+		} catch (e) {
+			console.error(e);
+			isDownloading = false;
+		}
 	});
 
 	function downloadAgain() {
@@ -30,7 +33,7 @@
 		const url = URL.createObjectURL(blob);
 		const a = document.createElement('a');
 		a.href = url;
-		a.download = filename;
+		a.download = stripUUID(filename);
 		a.click();
 		URL.revokeObjectURL(url);
 	}

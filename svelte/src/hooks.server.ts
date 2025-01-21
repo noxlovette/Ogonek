@@ -3,6 +3,7 @@ import { env } from '$env/dynamic/private';
 import type { Handle, HandleFetch } from '@sveltejs/kit';
 import { redirect } from '@sveltejs/kit';
 import { ValidateAccess } from '$lib/utils';
+import type { RequestEvent } from '@sveltejs/kit';
 
 let isRefreshing = false;
 
@@ -55,8 +56,8 @@ export const handle: Handle = async ({ event, resolve }) => {
 	return response;
 };
 
-// Helper function to handle token refresh
-async function handleTokenRefresh(event) {
+
+async function handleTokenRefresh(event: RequestEvent) {
 	if (isRefreshing) {
 
 		while (isRefreshing) {

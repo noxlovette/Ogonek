@@ -84,6 +84,8 @@ pub async fn download_handler(
         .first_or_octet_stream()
         .to_string();
 
+    info!("guessed mime type");
+
     // Build response with proper headers
     let headers = [
         (header::CONTENT_TYPE, mime_type),
@@ -93,5 +95,6 @@ pub async fn download_handler(
         ),
     ];
 
+    info!("returning file {:?}", filename);
     Ok((headers, data))
 }

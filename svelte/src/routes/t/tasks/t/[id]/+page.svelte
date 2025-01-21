@@ -11,6 +11,8 @@
 	const { task, rendered } = data;
 
 	let formattedDate = formatDateTime(task.createdAt);
+
+	console.log(task.filePath);
 </script>
 
 <svelte:head>
@@ -42,9 +44,6 @@
 
 {#if task.filePath}
 	<div>
-		<ButtonRaw
-			onclick={() => goto(`/download/${encodeURIComponent(task.filePath)}`)}
-			buttonName="Download"
-		/>
+		<ButtonRaw onclick={() => goto(`/download/${task.filePath}`)} buttonName="Download" />
 	</div>
 {/if}
