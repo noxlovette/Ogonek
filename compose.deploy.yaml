@@ -1,6 +1,6 @@
 services:
   svelte:
-    image: ghcr.io/noxlovette/fl-staging-svelte:v1.0.0
+    image: ghcr.io/noxlovette/fl-prod-svelte:v1.0.2
     container_name: svelte-fl-prod
     env_file:
       - ./.env.svelte
@@ -21,7 +21,7 @@ services:
         condition: service_healthy
 
   axum:
-    image: ghcr.io/noxlovette/fl-staging-axum:v1.0.0
+    image: ghcr.io/noxlovette/fl-prod-axum:v1.0.3
     container_name: axum-fl-prod
     logging:
       driver: "json-file"
