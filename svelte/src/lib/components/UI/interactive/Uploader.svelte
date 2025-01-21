@@ -89,7 +89,7 @@
 		tabindex="0"
 		aria-label="File upload area"
 		class="relative rounded-lg border-2 border-dashed p-12
-			 flex flex-col items-center justify-center
+			 flex flex-col flex-1 items-center justify-center
 			 cursor-pointer transition-colors duration-200 h-full
 			 {isDragging
 			? 'border-brick-700 bg-brick-100'

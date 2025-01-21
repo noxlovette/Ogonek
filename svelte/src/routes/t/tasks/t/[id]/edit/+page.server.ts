@@ -10,7 +10,15 @@ import path from 'node:path';
 import { env } from '$env/dynamic/private';
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
-const ALLOWED_MIMES = new Set(['image/jpeg', 'image/png', 'application/pdf']);
+const ALLOWED_MIMES = new Set([
+	'image/jpeg',
+	'image/png',
+	'application/pdf',
+	'application/zip',        // standard ZIP
+	'application/x-zip',      // older ZIP variant
+	'application/x-zip-compressed', // some systems use this
+	'multipart/x-zip'         // less common but good to support
+]);
 const encodeFileName = (fileName: string): string => {
 	return Buffer.from(fileName).toString('base64url');
 };
