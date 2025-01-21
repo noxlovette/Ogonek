@@ -1,19 +1,20 @@
 use crate::auth::error::AuthError;
 use crate::auth::helpers::verify_password;
 use crate::auth::helpers::{generate_refresh_token, generate_token, hash_password};
+use crate::auth::jwt::Claims;
 use crate::auth::jwt::RefreshClaims;
 use crate::db::init::AppState;
-use crate::models::users::{AuthBody, AuthPayload, SignUpPayload, User, InviteToken, BindPayload, SignUpBody};
+use crate::models::users::{
+    AuthBody, AuthPayload, BindPayload, InviteToken, SignUpBody, SignUpPayload, User,
+};
 use axum::extract::Json;
 use axum::extract::State;
 use axum::response::Response;
 use hyper::{HeaderMap, StatusCode};
 use nanoid::nanoid;
 use validator::Validate;
-use crate::auth::jwt::Claims;
 
-use base64::{Engine as _, engine::general_purpose::URL_SAFE};
-
+use base64::{engine::general_purpose::URL_SAFE, Engine as _};
 
 pub async fn signup(
     State(state): State<AppState>,
@@ -65,7 +66,7 @@ pub async fn signup(
         _ => e.into(),
     })?;
 
-Ok(Json(SignUpBody { id }))
+    Ok(Json(SignUpBody { id }))
 }
 
 pub async fn authorize(
@@ -73,7 +74,6 @@ pub async fn authorize(
     State(state): State<AppState>,
     Json(payload): Json<AuthPayload>,
 ) -> Result<Response, AuthError> {
-
     tracing::debug!("Received host header: {:?}", headers.get("host"));
     tracing::debug!("Received origin header: {:?}", headers.get("origin"));
 
@@ -109,7 +109,6 @@ pub async fn authorize(
     let token = generate_token(&user)?;
     let refresh_token = generate_refresh_token(&user)?;
 
-    
     Ok(AuthBody::into_response(token, refresh_token))
 }
 
@@ -138,35 +137,37 @@ pub async fn refresh(
     Ok(AuthBody::into_refresh(token))
 }
 
-
-
-
 // Generate invite link endpoint
-pub async fn generate_invite_link(
-    claims: Claims,
-) -> Result<Json<String>, AuthError> {
+pub async fn generate_invite_link(claims: Claims) -> Result<Json<String>, AuthError> {
     if claims.role != "teacher" {
         return Err(AuthError::InvalidToken);
     }
 
+    // Get frontend URL from env with a fallback
+    let frontend_url = std::env::var("FRONTEND_URL")
+        .unwrap_or_else(|_| "http://localhost".to_string())
+        .trim_end_matches('/') // Remove trailing slash if present
+        .to_string();
+
     let token = InviteToken::new(claims.sub);
     let encoded = URL_SAFE.encode(serde_json::to_string(&token).unwrap().as_bytes());
-    
-    Ok(Json(format!("http://localhost/auth/signup?invite={}", encoded)))
-}
 
+    Ok(Json(format!(
+        "{}/auth/signup?invite={}",
+        frontend_url, encoded
+    )))
+}
 
 // New endpoint for binding students to teachers
 pub async fn bind_student_to_teacher(
     State(state): State<AppState>,
     Json(payload): Json<BindPayload>,
 ) -> Result<StatusCode, AuthError> {
-
     let token: InviteToken = serde_json::from_str(
-        &String::from_utf8(
-            URL_SAFE.decode(&payload.invite_token).unwrap()
-        ).map_err(|_| AuthError::InvalidToken)?
-    ).map_err(|_| AuthError::InvalidToken)?;
+        &String::from_utf8(URL_SAFE.decode(&payload.invite_token).unwrap())
+            .map_err(|_| AuthError::InvalidToken)?,
+    )
+    .map_err(|_| AuthError::InvalidToken)?;
 
     sqlx::query!(
         r#"
