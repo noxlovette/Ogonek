@@ -21,7 +21,7 @@
 			isSubmitting = false;
 			if (result.type === 'redirect') {
 				notification.set({ message: 'Changes saved', type: 'success' });
-				update();
+				goto(result.location, {replaceState:true})
 			} else {
 				notification.set({
 					message: 'Failed to save changes',

@@ -8,12 +8,12 @@
 	let { children }: Props = $props();
 </script>
 
-<main class="bg-milk-50 overflow-auto min-h-screen antialiased w-screen h-screen">
+<main class="bg-milk-50 overflow-auto antialiased w-screen min-h-screen">
 	<div
-		class="flex flex-col overscroll-contain font-medium items-center text-brick-800 max-w-7xl mx-auto selection:bg-pakistan-400 caret-brick-800 h-full"
+		class="flex flex-col font-medium items-center text-brick-800 max-w-7xl mx-auto selection:bg-pakistan-400 caret-brick-800 min-h-full"
 	>
 		<Header />
-		<div class="flex flex-row size-full py-4">
+		<div id="main" class="flex flex-row w-full py-4">
 			{@render children?.()}
 		</div>
 		<Footer />
@@ -23,6 +23,10 @@
 </main>
 
 <style lang="postcss">
+	main {
+		-webkit-overflow-scrolling: touch;
+	}
+
 	:global(.markdown h1) {
 		@apply text-3xl font-bold opacity-80;
 	}

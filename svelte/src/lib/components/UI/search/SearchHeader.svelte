@@ -18,7 +18,7 @@
 		const lowercaseQuery = query.toLowerCase();
 
 		filteredLessons = $lessonStore.filter((lesson) =>
-			[lesson.title, lesson.topic, lesson.assigneeName].some((field) =>
+			[lesson.title, lesson.topic, lesson.assigneeName, lesson.markdown].some((field) =>
 				field.toLowerCase().includes(lowercaseQuery)
 			)
 		);
@@ -53,7 +53,7 @@
 						<h2 class="text-sm font-medium text-milk-500 mb-3">Tasks</h2>
 						<div class="space-y-2">
 							{#each filteredTasks as task}
-								<TaskCard {task} />
+								<TaskCard interactive={false} {task} />
 							{/each}
 						</div>
 					</section>

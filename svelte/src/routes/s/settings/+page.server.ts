@@ -27,7 +27,8 @@ export const actions = {
 		const userBody = {
 			email: formData.get('email'),
 			username: formData.get('username'),
-			password: formData.get('password')
+			name: formData.get('name')
+
 		};
 
 		const responseProfile = await fetch('/axum/profile', {

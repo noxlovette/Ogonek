@@ -3,17 +3,13 @@
 	import { user } from '$lib/stores';
 	import Search from '../search/SearchHeader.svelte';
 	const greeting = getGreeting();
-
-	let dashboard = 's';
-	if ($user.role === 'teacher') {
-		dashboard = 't';
-	}
+	const href = $state($user.role === "teacher" ? "/t/dashboard" : "/s/dashboard")
 </script>
 
 <header class="md:w-full ring-milk-200 ring-2 rounded-lg my-2 shadow-md items-baseline w-11/12">
 	<div class="flex justify-between items-center w-full max-w-7xl mx-auto px-4 py-3">
 		<div class="flex md:w-1/6 w-full">
-			<a href="/" class="text-2xl font-serif font-bold">Firelight</a>
+			<a {href} class="text-2xl font-serif font-bold">Firelight</a>
 		</div>
 		{#if $user.name}
 			<Search />

@@ -1,4 +1,4 @@
-import { writable, derived } from 'svelte/store';
+import { writable } from 'svelte/store';
 import type { User, Profile, Toast, Lesson, Task } from './types';
 
 export const initialUser: User = {
@@ -85,3 +85,6 @@ const createTaskStore = () => {
 export const taskStore = createTaskStore();
 
 export const isSearchOpen = writable(false);
+
+export const tableQuery = writable("");
+

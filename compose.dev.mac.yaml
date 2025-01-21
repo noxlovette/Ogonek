@@ -31,7 +31,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.svelte.rule=Host(`localhost`)"
-      - "traefik.http.services.svelte.loadbalancer.server.port=5173"
+      - "traefik.http.services.svelte.loadbalancer.server.port=3000"
   
   axum:
     build:
@@ -79,3 +79,5 @@ volumes:
     name: cargo-target-fl-dev
   db-data:
     name: db-fl-data
+  uploads:
+    name: uploads-fl-dev

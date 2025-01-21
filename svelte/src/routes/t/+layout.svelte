@@ -33,7 +33,6 @@
 </script>
 
 <Sidebar class="" elements={[Dashboard, Todo, Lessons, Students, Quizlet, Settings]} />
-
 <WorkArea>
 	{@render children?.()}
 </WorkArea>

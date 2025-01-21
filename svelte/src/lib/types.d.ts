@@ -70,7 +70,7 @@ export interface TableConfig<T extends BaseTableItem> {
 		key: keyof T;
 		label: string;
 		searchable?: boolean;
-		formatter?: (value: string) => string;
+		formatter?: (value: T[keyof T]) => string;
 	}[];
 }
 
