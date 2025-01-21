@@ -7,20 +7,19 @@
 	}
 	let { children }: Props = $props();
 </script>
-
-<main class="bg-milk-50 overflow-auto antialiased w-screen min-h-screen">
+<main class="bg-milk-50 overflow-auto antialiased w-screen h-screen">
 	<div
-		class="flex flex-col font-medium items-center text-brick-800 max-w-7xl mx-auto selection:bg-pakistan-400 caret-brick-800 min-h-full"
+	  class="flex flex-col font-medium items-center text-brick-800 max-w-7xl mx-auto selection:bg-pakistan-400 caret-brick-800 h-full"
 	>
-		<Header />
-		<div id="main" class="flex flex-row w-full py-4">
-			{@render children?.()}
-		</div>
-		<Footer />
+	  <Header />
+	  <div id="main" class="flex flex-row w-full py-4 flex-1">
+		{@render children?.()}
+	  </div>
+	  <Footer />
 	</div>
-	<Notification></Notification>
-	<SearchOverlay></SearchOverlay>
-</main>
+	<Notification />
+	<SearchOverlay />
+  </main>
 
 <style lang="postcss">
 	main {

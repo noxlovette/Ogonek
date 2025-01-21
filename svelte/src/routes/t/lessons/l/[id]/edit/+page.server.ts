@@ -32,7 +32,7 @@ export const actions = {
 			};
 		}
 
-		redirect(303, `/t/lessons/l/${id}`);
+		redirect(303, `/t/lessons/`);
 	},
 	delete: async ({ request, fetch }) => {
 		const formData = await request.formData();

@@ -4,6 +4,10 @@
 
 	let { data }: { data: PageData } = $props();
 	const { lessons } = data;
+
+	$effect(() => {
+		lessons.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+	});
 </script>
 
 <svelte:head>

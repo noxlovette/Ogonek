@@ -14,12 +14,7 @@
 		overdue = new Date(task.dueDate) < new Date();
 	});
 
-	interface Props {
-		task: Task;
-		interactive: boolean;
-	}
-
-	let { task, interactive = false }: Props = $props();
+	let { task, interactive = false } = $props();
 	let overdue = $state(false);
 	let rendered = $state(task.markdown);
 	const formattedDate = formatDateTime(task.dueDate);

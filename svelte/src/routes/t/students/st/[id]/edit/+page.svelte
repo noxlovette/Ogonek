@@ -4,6 +4,7 @@
 	import type { Student } from '$lib/types';
 	import { Send } from 'lucide-svelte';
 	import type { PageData } from './$types';
+	import { notification } from '$lib/stores';
 	import ButtonDelete from '$lib/components/UI/buttons/ButtonDelete.svelte';
 	let { data }: { data: PageData } = $props();
 	let { student }: { student: Student } = data;

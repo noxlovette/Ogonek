@@ -12,7 +12,7 @@
       hover:shadow-brick-100
       hover:ring-brick-400
       group transition-all duration-200 ease-out
-      max-h-[150px] overflow-hidden"
+      h-[150px] overflow-hidden"
 >
 	{@render children()}
 

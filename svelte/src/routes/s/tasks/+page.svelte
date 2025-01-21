@@ -6,9 +6,14 @@
 	let { data }: { data: PageData } = $props();
 	const { tasks } = data;
 
-	let filtered = tasks.filter((task) => !task.completed);
+	let pending = tasks.filter((task) => !task.completed);
 	let completed = tasks.filter((task) => task.completed);
 	let completedVisible = $state(false);
+
+	$effect(() => {
+		pending.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
+		completed.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+	});
 </script>
 
 <svelte:head>
@@ -16,9 +21,9 @@
 </svelte:head>
 <!-- Active Tasks Section -->
 <section class="space-y-4">
-	<H2>Active Tasks ({filtered.length})</H2>
+	<H2>Active Tasks ({pending.length})</H2>
 	<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-		{#each filtered as task (task.id)}
+		{#each pending as task (task.id)}
 			<TaskCard {task} interactive={true} />
 		{/each}
 	</div>

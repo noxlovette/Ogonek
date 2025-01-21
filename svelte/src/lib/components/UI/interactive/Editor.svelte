@@ -15,7 +15,8 @@
 	});
 </script>
 
-<div class="w-full h-full flex flex-col gap-4">
+<div class="flex flex-col gap-4 h-full">
+	<!-- Added h-full here -->
 	<div id="header" class="flex space-x-4">
 		<h1 class="text-2xl font-bold">Markdown</h1>
 		<button
@@ -29,27 +30,25 @@
 			class:chosen={preview}>Preview</button
 		>
 	</div>
-	<div class="flex h-full">
+	<div class="flex flex-1">
+		<!-- Changed size-full to flex-1 -->
 		{#if !preview}
 			<!-- Editor -->
-			<div class="flex flex-col size-full">
+			<div class="flex flex-col w-full">
+				<!-- Changed size-full to w-full -->
 				<textarea
 					bind:value={markdownContent}
-					class="flex-1 border-milk-200
-                    resize-none focus:ring-transparent border
-                    shadow-sm p-4
-                    ring-0 ring-transparent rounded-lg focus:ring-none
-                    focus:border-milk-500"
+					class="w-full h-full min-h-[400px] border-milk-200
+			  resize-none focus:ring-transparent border
+			  shadow-sm p-4
+			  ring-0 ring-transparent rounded-lg focus:ring-none
+			  focus:border-milk-500"
 					spellcheck="false"
 				></textarea>
 			</div>
-
-			<!-- Preview -->
 		{:else}
-			<div class="flex flex-col">
-				<div class="border p-4 rounded-lg overflow-y-auto markdown">
-					{@html htmlContent}
-				</div>
+			<div class="border p-4 w-full rounded-lg markdown">
+				{@html htmlContent}
 			</div>
 		{/if}
 	</div>
