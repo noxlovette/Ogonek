@@ -1,24 +1,11 @@
 name: fl-dev
 
 services:
-  media:
-    image: nginx:alpine
-    ports:
-      - "8888:80"
-    container_name: media-fl-dev
-    volumes:
-      - uploads:/var/www/media
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-    restart: unless-stopped
-    depends_on:
-      - upload-service
-      - svelte
-
   upload-service:
     container_name: upld-fl-dev
     build:
       context: ./upload-service
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile
     volumes:
       - uploads:/app/uploads
     ports:

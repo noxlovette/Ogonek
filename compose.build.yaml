@@ -1,15 +1,12 @@
+name: fl-build
+
 services:
   svelte:
     build:
       context: ./svelte
       dockerfile: Dockerfile
-    container_name: svelte-fl-prod
     env_file:
       - ./svelte/.env.production
-    restart: unless-stopped
-    depends_on:
-      postgres:
-        condition: service_healthy
 
   axum:
     build:
@@ -17,20 +14,12 @@ services:
       dockerfile: Dockerfile
       args:
         RUSTFLAGS: "-C target-cpu=native"
-    container_name: axum-fl-prod
     env_file:
       - ./axum/.env.production
-    volumes:
-      - cargo-cache:/usr/local/cargo/registry:cached
-      - cargo-target:/app/target:cached
-    restart: unless-stopped
-    deploy:
-      resources:
-        limits:
-          memory: 1G
 
-volumes:
-  cargo-cache:
-    name: cargo-cache-fl-prod
-  cargo-target:
-    name: cargo-target-fl-prod
+  upld:
+    build:
+      context: ./upload-service
+      dockerfile: Dockerfile
+    env_file:
+      - ./upload-service/.env

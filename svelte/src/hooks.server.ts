@@ -99,13 +99,13 @@ export const handleFetch: HandleFetch = async ({ event, request, fetch }) => {
 
 	if (url.pathname.startsWith('/axum/')) {
 		const cleanPath = url.pathname.replace('/axum/', '/');
-		const newUrl = new URL(cleanPath, 'http://axum:3000');
+		const newUrl = new URL(cleanPath, env.BACKEND_URL);
 		request = new Request(newUrl, request);
 	}
 
 	if (url.pathname.startsWith('/file-server/')) {
 		const cleanPath = url.pathname.replace('/file-server/', '/');
-		const newUrl = new URL(cleanPath, 'http://upload-service:3001');
+		const newUrl = new URL(cleanPath, env.UPLOAD_URL);
 		request = new Request(newUrl, request);
 
 		request.headers.append('X-API-KEY', env.API_KEY_FILE);

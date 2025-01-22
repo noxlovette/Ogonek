@@ -1,16 +1,14 @@
-# Stage 1: Build the application
-FROM node:23-slim AS builder
+FROM node:23-alpine AS builder
 WORKDIR /app
 COPY package.json pnpm-lock.yaml ./
 RUN corepack enable && pnpm install
 COPY . .
 RUN pnpm build
-# Stage 2: Production image
-FROM node:23-slim
+
+FROM node:23-alpine
 WORKDIR /app
 COPY --from=builder /app/build ./build
 COPY package.json pnpm-lock.yaml ./
-RUN corepack enable && pnpm install --frozen-lockfile --prod
-# this variable can either be hardcoded here or set up in an .env file in svelte's directory
-#ENV ORIGIN="http://localhost:3333"
+RUN corepack enable && pnpm install --prod && \
+    rm -rf /root/.pnpm-store
 CMD ["node", "build/index.js"]

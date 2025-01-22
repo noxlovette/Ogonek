@@ -42,7 +42,8 @@ export const actions = {
 			};
 		}
 
-		const message = `You have a new task on Firelight`;
+		const message = `You have a new task: "${title}"\\. You can view it on [Firelight](https://staging\\.noxlovette\\.com/s/tasks)\\.`;
+
 
 		if (telegramId) {
 			const telegramResponse = await notifyTelegram(message, telegramId);
