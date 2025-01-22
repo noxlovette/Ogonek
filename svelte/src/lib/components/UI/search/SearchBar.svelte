@@ -42,7 +42,7 @@
 		bind:this={searchElement}
 		onclick={handleSearchClick}
 		{placeholder}
-		class="w-full pl-10 pr-4 py-2 border rounded-full focus:ring-2 bg-brick-50 border-milk-200 focus:ring-brick-500 focus:border-transparent
+		class="w-full pl-10 pr-4 py-2 border rounded-full focus:ring-2 bg-brick-50 dark:bg-milk-950 border-milk-200 dark:border-milk-900 focus:ring-brick-500 focus:border-transparent
         focus:placeholder:text-brick-400/70
         placeholder:text-milk-500
         "

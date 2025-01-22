@@ -6,7 +6,9 @@
 	let href = $user.role === 'teacher' ? '/t/tasks' : '/s/tasks';
 </script>
 
-<header class="md:w-full ring-milk-200 ring-2 rounded-lg my-2 shadow-md items-baseline w-11/12">
+<header
+	class="md:w-full ring-milk-200 dark:ring-milk-900 ring-2 rounded-lg my-2 shadow-md items-baseline w-11/12"
+>
 	<div class="flex justify-between items-center w-full max-w-7xl mx-auto px-4 py-3">
 		<div class="flex md:w-1/6 w-full">
 			<a {href} class="text-2xl font-serif font-bold">Firelight</a>
