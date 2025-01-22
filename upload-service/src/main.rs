@@ -1,8 +1,5 @@
 use axum::{
-    http::StatusCode,
-    response::IntoResponse,
-    routing::{get, post},
-    Router,
+    extract::DefaultBodyLimit, http::StatusCode, response::IntoResponse, routing::{get, post}, Router
 };
 use tower_http::cors::CorsLayer;
 use upload_service::api::file::{download_handler, upload_handler};
@@ -29,6 +26,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .route("/download/{filename}", get(download_handler))
         .route("/health", get(health_check))
         .layer(CorsLayer::permissive()) //TODO PROD CHECK
+        .layer(DefaultBodyLimit::max(10 * 1024 * 1024))
         .layer(axum::middleware::from_fn(
             upload_service::api::key::validate_api_key,
         ));

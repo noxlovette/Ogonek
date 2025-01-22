@@ -5,7 +5,7 @@ services:
     container_name: upld-fl-dev
     build:
       context: ./upload-service
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     volumes:
       - uploads:/app/uploads
     ports:

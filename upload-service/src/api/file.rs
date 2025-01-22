@@ -6,14 +6,12 @@ use axum::{
 };
 use std::path::PathBuf;
 use tokio::fs;
+use tokio::io::AsyncWriteExt;
 use tracing::error;
 use tracing::info;
 
-const MAX_FILE_SIZE: u64 = 10 * 1024 * 1024;
-
 pub async fn upload_handler(mut multipart: Multipart) -> Result<impl IntoResponse, StatusCode> {
     let upload_path = std::env::var("UPLOAD_PATH").unwrap_or_else(|_| "./uploads".to_string());
-
     if !PathBuf::from(&upload_path).exists() {
         fs::create_dir_all(&upload_path).await.map_err(|err| {
             error!("Failed to create upload directory: {:?}", err);
@@ -23,7 +21,7 @@ pub async fn upload_handler(mut multipart: Multipart) -> Result<impl IntoRespons
 
     let mut unique_filename = String::new();
 
-    while let Some(field) = multipart.next_field().await.map_err(|err| {
+    while let Some(mut field) = multipart.next_field().await.map_err(|err| {
         error!("Error processing multipart field: {:?}", err);
         StatusCode::BAD_REQUEST
     })? {
@@ -34,30 +32,33 @@ pub async fn upload_handler(mut multipart: Multipart) -> Result<impl IntoRespons
                 StatusCode::BAD_REQUEST
             })?
             .to_string();
-
-        let safe_filename = sanitize_filename::sanitize(&filename);
+        let safe_filename = filename
+            .trim()
+            .to_lowercase()
+            .replace(' ', "-")
+            .chars()
+            .filter(|c| c.is_alphanumeric() || *c == '-' || *c == '.')
+            .collect::<String>();
         unique_filename = format!("{}-{}", uuid::Uuid::new_v4(), safe_filename);
 
-        let data = field.bytes().await.map_err(|err| {
-            error!("Failed to read field data: {:?}", err);
-            StatusCode::INTERNAL_SERVER_ERROR
-        })?;
-
-        if data.len() as u64 > MAX_FILE_SIZE {
-            error!("Payload too large:");
-            return Err(StatusCode::PAYLOAD_TOO_LARGE);
-        }
-
         let file_path = PathBuf::from(&upload_path).join(&unique_filename);
-
-        fs::write(&file_path, &data).await.map_err(|err| {
-            error!("Failed to write file {:?}: {:?}", file_path, err);
+        let mut file = tokio::fs::File::create(&file_path).await.map_err(|err| {
+            error!("Failed to create file: {:?}", err);
             StatusCode::INTERNAL_SERVER_ERROR
         })?;
+
+        while let Some(chunk) = field.chunk().await.map_err(|err| {
+            error!("Failed to read chunk: {:?}", err);
+            StatusCode::INTERNAL_SERVER_ERROR
+        })? {
+            file.write_all(&chunk).await.map_err(|err| {
+                error!("Failed to write chunk: {:?}", err);
+                StatusCode::INTERNAL_SERVER_ERROR
+            })?;
+        }
 
         info!("Uploaded file: {}", safe_filename);
     }
-
     Ok(Json(unique_filename))
 }
 
@@ -98,3 +99,5 @@ pub async fn download_handler(
     info!("returning file {:?}", filename);
     Ok((headers, data))
 }
+
+//TODO ADD METHOD TRANSFORMER
