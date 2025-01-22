@@ -66,7 +66,7 @@
 			Due {formattedDate}
 		</p>
 		{#if interactive && task.filePath}
-			<a href="/download/${encodeURIComponent(task.filePath)}" class="pointer-events-auto">
+			<a href="/download/{task.filePath}" class="pointer-events-auto">
 				<Download class="size-6" />
 			</a>
 		{/if}

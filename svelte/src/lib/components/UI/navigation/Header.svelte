@@ -3,7 +3,7 @@
 	import { user } from '$lib/stores';
 	import Search from '../search/SearchHeader.svelte';
 	const greeting = getGreeting();
-	const href = $state($user.role === 'teacher' ? '/t/dashboard' : '/s/dashboard');
+	let href = $user.role === 'teacher' ? '/t/tasks' : '/s/tasks';
 </script>
 
 <header class="md:w-full ring-milk-200 ring-2 rounded-lg my-2 shadow-md items-baseline w-11/12">
