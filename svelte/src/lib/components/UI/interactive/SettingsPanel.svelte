@@ -41,7 +41,7 @@
 					localStorage.setItem('profile', JSON.stringify(profile));
 					notification.set({ message: 'Changes saved ✨', type: 'success' });
 					disabled = true;
-				} else {
+				} else if (result.type === 'failure') {
 					notification.set({
 						message: result.data?.message ?? "Yikes! Something's not right",
 						type: 'error'
@@ -83,7 +83,6 @@
 			<!-- Profile Settings Section -->
 			<div class="space-y-4">
 				<h2 class="text-2xl font-bold text-brick-800 dark:text-milk-100">Profile Settings</h2>
-
 				{#each ['quizlet', 'zoom'] as field}
 					<div class="space-y-2">
 						<label

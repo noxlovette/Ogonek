@@ -4,17 +4,21 @@ import type { Profile } from '$lib/types';
 export const actions = {
 	update: async ({ request, fetch }) => {
 		const formData = await request.formData();
-		let zoomUrl = undefined;
-		let quizletUrl = undefined;
-		if (formData.has('zoom')) {
-			zoomUrl = formData.get('zoom');
-		}
-		if (formData.has('quizlet')) {
-			quizletUrl = formData.get('quizlet');
+		const validateZoom = (url: string) => {
+			if (!url) return false;
+			return /^https?:\/\/(?:[a-z0-9-]+\.)?zoom\.us\/j\/\d{9,11}(?:\?pwd=[a-zA-Z0-9]+)?$/.test(url);
+		};
+
+		const validateQuizlet = (url: string) => {
+			if (!url) return false;
+			return /^https?:\/\/quizlet\.com\/.*$/.test(url);
+		};
+		if (!validateZoom(formData.get('zoom') as string)) {
+			return fail(400, { message: 'Please enter a Zoom Room URL' });
 		}
 
-		if (!zoomUrl && !quizletUrl) {
-			fail(400, { message: 'No fields provided' });
+		if (!validateQuizlet(formData.get('quizlet') as string)) {
+			return fail(400, { message: 'Please enter a valid Quizlet URL' });
 		}
 
 		const profileBody = {
@@ -30,24 +34,29 @@ export const actions = {
 			name: formData.get('name')
 		};
 
-		const responseProfile = await fetch('/axum/profile', {
-			method: 'PATCH',
-			body: JSON.stringify(profileBody)
-		});
+		const validateEmail = (email: string) => {
+			if (!email) return false;
+			return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email);
+		};
 
-		const _ = await fetch('/axum/user', {
-			method: 'PATCH',
-			body: JSON.stringify(userBody)
-		});
-
-		const responseRefresh = await fetch('/auth/refresh');
-		if (!responseRefresh.ok) {
-			return fail(500, { message: "Something's wrong" });
+		if (!validateEmail(formData.get('email') as string)) {
+			return fail(400, { message: 'Invalid Email' });
 		}
+		const [profileRes, _, refreshRes] = await Promise.all([
+			fetch('/axum/profile', {
+				method: 'PATCH',
+				body: JSON.stringify(profileBody)
+			}),
+			fetch('/axum/user', {
+				method: 'PATCH',
+				body: JSON.stringify(userBody)
+			}),
+			fetch('/auth/refresh')
+		]);
 
-		const profile: Profile = await responseProfile.json();
+		const profile: Profile = await profileRes.json();
 
-		const { accessToken } = await responseRefresh.json();
+		const { accessToken } = await refreshRes.json();
 		const user = await ValidateAccess(accessToken);
 
 		if (!user) {
