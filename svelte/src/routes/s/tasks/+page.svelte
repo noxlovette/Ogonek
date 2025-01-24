@@ -49,10 +49,7 @@
 	</button>
 
 	{#if completedVisible}
-		<div
-			transition:slide={{ duration: 300 }}
-			class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-		>
+		<div transition:slide={{ duration: 300 }} class="grid grid-cols-1 md:grid-cols-2 gap-6">
 			{#each completed as task (task.id)}
 				<TaskCard {task} interactive />
 			{/each}

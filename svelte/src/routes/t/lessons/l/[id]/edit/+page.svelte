@@ -52,8 +52,10 @@
 				id="title"
 				type="text"
 				name="title"
+				class="w-full px-4 py-2 border dark:focus:ring-milk-700 dark:focus:border-milk-800 dark:border-milk-800 dark:focus:outline-none dark:focus:ring-2 disabled:text-milk-500 border-milk-200 rounded-lg
+            dark:bg-milk-950 focus:outline-none focus:ring-2 focus:ring-brick-500
+                   transition duration-200"
 				value={lesson.title}
-				class="w-full rounded-lg border-milk-200 shadow-sm focus:border-brick-500 focus:ring-brick-500"
 			/>
 		</div>
 
@@ -64,7 +66,9 @@
 				type="text"
 				name="topic"
 				value={lesson.topic}
-				class="w-full rounded-lg border-milk-200 shadow-sm focus:border-brick-500 focus:ring-brick-500"
+				class="w-full px-4 py-2 border dark:focus:ring-milk-700 dark:focus:border-milk-800 dark:border-milk-800 dark:focus:outline-none dark:focus:ring-2 disabled:text-milk-500 border-milk-200 rounded-lg
+            dark:bg-milk-950 focus:outline-none focus:ring-2 focus:ring-brick-500
+                   transition duration-200"
 			/>
 		</div>
 		<div class="space-y-2">

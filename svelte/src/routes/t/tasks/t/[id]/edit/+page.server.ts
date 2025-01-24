@@ -46,7 +46,7 @@ export const actions = {
 
 		if (telegramId) {
 			const telegramResponse = await notifyTelegram(message, telegramId);
-			if (!telegramResponse.ok) {
+			if (!telegramResponse.status === 404 || !telegramResponse.status === 200) {
 				return fail(400);
 			}
 		}

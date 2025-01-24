@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import { notification } from '$lib/stores';
-	import { stripUUID } from '$lib/utils';
 	import { Editor, H1, ButtonDelete, ButtonSubmit, Uploader } from '$lib/components';
 	import type { PageData } from './$types';
 
@@ -70,7 +69,9 @@
 				type="text"
 				name="title"
 				value={task.title}
-				class="w-full rounded-lg border-milk-200 shadow-sm focus:border-brick-500 focus:ring-brick-500"
+				class="w-full px-4 py-2 border dark:focus:ring-milk-700 dark:focus:border-milk-800 dark:border-milk-800 dark:focus:outline-none dark:focus:ring-2 disabled:text-milk-500 border-milk-200 rounded-lg
+            dark:bg-milk-950 focus:outline-none focus:ring-2 focus:ring-brick-500
+                   transition duration-200"
 			/>
 		</div>
 		<div class="space-y-2">
@@ -78,7 +79,9 @@
 			<select
 				id="assignee"
 				name="student"
-				class="w-full rounded-lg border-milk-200 shadow-sm focus:border-brick-500 focus:ring-brick-500"
+				class="w-full px-4 py-2 border dark:focus:ring-milk-700 dark:focus:border-milk-800 dark:border-milk-800 dark:focus:outline-none dark:focus:ring-2 disabled:text-milk-500 border-milk-200 rounded-lg
+            dark:bg-milk-950 focus:outline-none focus:ring-2 focus:ring-brick-500
+                   transition duration-200"
 			>
 				<option value="">Select an assignee</option>
 				{#each students as student}
@@ -101,7 +104,9 @@
 				type="date"
 				name="dueDate"
 				bind:value={dueDate}
-				class="w-full rounded-lg border-milk-200 shadow-sm focus:border-brick-500 focus:ring-brick-500"
+				class="w-full px-4 py-2 border dark:focus:ring-milk-700 dark:focus:border-milk-800 dark:border-milk-800 dark:focus:outline-none dark:focus:ring-2 disabled:text-milk-500 border-milk-200 rounded-lg
+            dark:bg-milk-950 focus:outline-none focus:ring-2 focus:ring-brick-500
+                   transition duration-200"
 			/>
 		</div>
 		<div class="space-y-2 flex items-center">

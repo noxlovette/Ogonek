@@ -41,7 +41,7 @@ export async function notifyTelegram(message: string, addressee: string): Promis
 					message: 'Failed to send message',
 					error: data.description
 				}),
-				{ status: response.status }
+				{ status: 404 }
 			);
 		}
 

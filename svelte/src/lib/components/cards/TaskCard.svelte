@@ -1,22 +1,18 @@
 <script lang="ts">
 	import { formatDateTime } from '$lib/utils';
-	import type { Task } from '$lib/types';
 	import Clickable from './CardClickable.svelte';
 	import { user, notification } from '$lib/stores';
 	import { onMount } from 'svelte';
 	import { H2 } from '../typography';
 	import { enhance } from '$app/forms';
 	import { CheckSquare, Download, Loader2, Square } from 'lucide-svelte';
-	import { goto } from '$app/navigation';
 	import { parseMarkdown } from '$lib/utils';
 
 	onMount(async () => {
 		rendered = await parseMarkdown(task.markdown);
 		overdue = new Date(task.dueDate) < new Date();
 	});
-
-	let isDownloading = $state(false);
-
+	let isPreloading = $state(false);
 	let { task, interactive = false } = $props();
 	let overdue = $state(false);
 	let rendered = $state(task.markdown);
@@ -69,19 +65,17 @@
 			Due {formattedDate}
 		</p>
 		{#if interactive && task.filePath}
-			<button
+			<a
 				class="pointer-events-auto"
-				onclick={() => {
-					goto(`/download/${task.filePath}`);
-					isDownloading = true;
-				}}
+				href="/download/{task.filePath}"
+				onclick={() => (isPreloading = true)}
 			>
-				{#if !isDownloading}
+				{#if !isPreloading}
 					<Download class="size-6" />
 				{:else}
-					<Loader2 class="size-6 animate-spin" />
+					<Loader2 class="animate-spin" />
 				{/if}
-			</button>
+			</a>
 		{/if}
 	</div>
 

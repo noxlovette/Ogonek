@@ -40,14 +40,14 @@
 					bind:value={markdownContent}
 					class="w-full h-full min-h-[400px] border-milk-200
 			  resize-none focus:ring-transparent border
-			  shadow-sm p-4
+			  shadow-sm p-4 dark:bg-milk-950 dark:border-milk-900
 			  ring-0 ring-transparent rounded-lg focus:ring-none
 			  focus:border-milk-500"
 					spellcheck="false"
 				></textarea>
 			</div>
 		{:else}
-			<div class="border p-4 w-full rounded-lg markdown">
+			<div class="border p-4 border-milk-200 dark:border-milk-900 w-full rounded-lg markdown">
 				{@html htmlContent}
 			</div>
 		{/if}

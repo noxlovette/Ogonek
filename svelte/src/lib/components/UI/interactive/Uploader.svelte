@@ -95,7 +95,7 @@
 			 {isSuccess ? 'bg-pakistan-50 border-pakistan-700' : ''}
 			 {isDragging
 			? 'border-brick-700 bg-brick-100'
-			: 'border-milk-300 hover:border-milk-400 bg-milk-50'}"
+			: 'border-milk-300 hover:border-milk-400 bg-milk-50 dark:bg-milk-900 dark:border-milk-800 dark:hover:border-milk-700'}"
 	>
 		<input bind:this={fileInput} type="file" name="file" onchange={handleChange} class="hidden" />
 
