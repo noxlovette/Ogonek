@@ -42,8 +42,7 @@ export const actions = {
 			};
 		}
 
-		const message = `You have a new task: "${title}"\\. You can view it on [Firelight](https://staging\\.noxlovette\\.com/s/tasks)\\.`;
-
+		const message = `You have a new task: "${title}"\\. You can view it on [Firelight](https://firelight\\.noxlovette\\.com/s/tasks)\\.`;
 
 		if (telegramId) {
 			const telegramResponse = await notifyTelegram(message, telegramId);
@@ -85,8 +84,8 @@ export const actions = {
 			});
 
 			if (!uploadResponse.ok) {
-				const { error } = await uploadResponse.json()
-				return fail(500, { message: error })
+				const { error } = await uploadResponse.json();
+				return fail(500, { message: error });
 			}
 
 			const filePath = (await uploadResponse.text()).replace(/^"|"$/g, '');
@@ -94,12 +93,11 @@ export const actions = {
 			return {
 				success: true,
 				filePath,
-				message: 'Uploaded successfully',
+				message: 'Uploaded successfully'
 			};
-
 		} catch (err) {
 			console.error('💀 Upload error:', err);
-			return fail(500, { message: err })
+			return fail(500, { message: err });
 		}
 	}
 } satisfies Actions;

@@ -24,7 +24,9 @@
 			{lesson.topic}
 		</h3>
 	</div>
-	<div class="markdown ring-2 ring-milk-200 p-4 rounded-lg">{@html rendered}</div>
+	<div class="markdown ring-2 dark:ring-milk-900 ring-milk-200 p-4 rounded-lg">
+		{@html rendered}
+	</div>
 {:else}
 	This lesson has been deleted
 {/if}

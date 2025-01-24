@@ -4,13 +4,13 @@ import type { Profile } from '$lib/types';
 export const actions = {
 	update: async ({ request, fetch }) => {
 		const formData = await request.formData();
-		let zoomUrl = undefined;
-		let quizletUrl = undefined;
+		let zoomUrl = 'https://zoom.us/';
+		let quizletUrl = 'https://quizlet.com/';
 		if (formData.has('zoom')) {
-			zoomUrl = formData.get('zoom');
+			zoomUrl = formData.get('zoom') as string;
 		}
 		if (formData.has('quizlet')) {
-			quizletUrl = formData.get('quizlet');
+			quizletUrl = formData.get('quizlet') as string;
 		}
 
 		if (!zoomUrl && !quizletUrl) {
@@ -28,7 +28,6 @@ export const actions = {
 			email: formData.get('email'),
 			username: formData.get('username'),
 			name: formData.get('name')
-
 		};
 
 		const responseProfile = await fetch('/axum/profile', {

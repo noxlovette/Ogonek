@@ -9,7 +9,7 @@
 </script>
 
 <main
-	class="bg-milk-50 dark:bg-milk-950 text-brick-800 dark:text-brick-100 overflow-auto antialiased w-screen h-screen"
+	class="bg-milk-50 dark:bg-milk-950 text-brick-800 dark:text-milk-100 overflow-auto antialiased w-screen h-screen"
 >
 	<div
 		class="flex flex-col font-medium items-center max-w-7xl mx-auto selection:bg-pakistan-400 caret-brick-800 h-full"

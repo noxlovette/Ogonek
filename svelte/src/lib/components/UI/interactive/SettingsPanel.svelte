@@ -51,14 +51,19 @@
 		}}
 		action="?/update"
 	>
-		<div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-milk-50 p-6 rounded-xl shadow">
+		<div
+			class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-milk-50 dark:bg-milk-900 p-6 rounded-xl shadow"
+		>
 			<!-- User Settings Section -->
 			<div class="space-y-4">
-				<h2 class="text-2xl font-bold text-brick-800">User Settings</h2>
+				<h2 class="text-2xl font-bold text-brick-800 dark:text-milk-100">User Settings</h2>
 
 				{#each ['email', 'username', 'name'] as field}
 					<div class="space-y-2">
-						<label for={field} class="block text-sm font-medium text-brick-700 capitalize">
+						<label
+							for={field}
+							class="block text-sm font-medium text-brick-700 dark:text-milk-100 capitalize"
+						>
 							{field}
 						</label>
 						<input
@@ -68,7 +73,7 @@
 							name={field}
 							value={$user[field]}
 							class="w-full px-4 py-2 border disabled:text-milk-500 border-milk-200 rounded-lg
-                   focus:outline-none focus:ring-2 focus:ring-brick-500
+            dark:bg-milk-950 focus:outline-none focus:ring-2 focus:ring-brick-500
                    transition duration-200"
 						/>
 					</div>
@@ -77,11 +82,14 @@
 
 			<!-- Profile Settings Section -->
 			<div class="space-y-4">
-				<h2 class="text-2xl font-bold text-brick-800">Profile Settings</h2>
+				<h2 class="text-2xl font-bold text-brick-800 dark:text-milk-100">Profile Settings</h2>
 
 				{#each ['quizlet', 'zoom'] as field}
 					<div class="space-y-2">
-						<label for={field} class="block text-sm font-medium text-brick-700 capitalize">
+						<label
+							for={field}
+							class="block text-sm font-medium text-brick-700 dark:text-milk-100 capitalize"
+						>
 							{field} URL
 						</label>
 						<input
@@ -92,7 +100,7 @@
 							value={$profile[`${field}Url`]}
 							class="w-full px-4 py-2 border disabled:text-milk-500 border-milk-200 rounded-lg
                    focus:outline-none focus:ring-2 focus:ring-brick-500
-                   transition duration-200"
+                   transition duration-200 dark:bg-milk-950"
 						/>
 					</div>
 				{/each}
@@ -111,7 +119,7 @@
 					onclick={() => {
 						disabled = !disabled;
 					}}
-					class="bg-milk-200 text-sm md:text-base transition-colors hover:bg-milk-300 px-3 rounded-lg md:px-4 py-2"
+					class="bg-milk-200 dark:bg-milk-800 text-sm md:text-base transition-colors hover:bg-milk-300 px-3 rounded-lg md:px-4 py-2"
 				>
 					{disabled ? 'Unlock' : 'Lock'}
 				</button>
@@ -119,7 +127,9 @@
 		</div>
 	</form>
 
-	<section class="flex flex-col space-y-2 bg-milk-50 rounded-lg shadow p-4 justify-between">
+	<section
+		class="flex flex-col space-y-2 bg-milk-50 dark:bg-milk-900 rounded-lg shadow p-4 justify-between"
+	>
 		<H2>Telegram</H2>
 		<p class="align-top">
 			Click the button below and type in "/start" to the bot if you want to receive notifications
@@ -157,7 +167,7 @@
 			};
 		}}
 	>
-		<section class="flex flex-col bg-milk-50 rounded-lg shadow p-4">
+		<section class="flex flex-col bg-milk-50 dark:bg-milk-900 rounded-lg shadow p-4">
 			<div class="flex-none">
 				<H2>Log Out</H2>
 			</div>

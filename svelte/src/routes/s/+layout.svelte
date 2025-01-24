@@ -32,8 +32,8 @@
 	{@render children?.()}
 </WorkArea>
 <Sidebar
-	class="bg-inherit text-inherit ring-transparent shadow-none"
-	subclass="divide-transparent"
+	class="bg-inherit text-inherit ring-transparent shadow-none dark:bg-inherit dark:ring-transparent"
+	subclass="divide-transparent dark:divide-transparent"
 	elements={[UsefulLinks, WordOfTheDay]}
 ></Sidebar>
 <BottomMenu elements={[Dashboard, Todo, Lessons, Zoom, Quizlet, Settings]} />

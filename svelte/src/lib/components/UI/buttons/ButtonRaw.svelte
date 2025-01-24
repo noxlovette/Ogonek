@@ -18,7 +18,7 @@
 	disabled={isSubmitting || disabled}
 	class={[
 		styling,
-		'md:px-4 py-2 px-3 text-sm md:text-base flex justify-center items-center bg-brick-600 text-brick-50 rounded-lg hover:bg-brick-700 focus:outline-none focus:ring-2 focus:ring-brick-500 focus:ring-offset-2 transition-all disabled:cursor-not-allowed disabled:opacity-50'
+		'md:px-4 py-2 px-3 text-sm md:text-base flex justify-center items-center bg-brick-600 text-brick-50 dark:bg-brick-800 dark:text-brick-100 rounded-lg hover:bg-brick-700 focus:outline-none focus:ring-2 focus:ring-brick-500 focus:ring-offset-2 transition-all disabled:cursor-not-allowed disabled:opacity-50'
 	]}
 >
 	{#if isSubmitting}
