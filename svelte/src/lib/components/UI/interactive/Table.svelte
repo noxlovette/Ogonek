@@ -102,14 +102,16 @@
 	<div class="flex gap-4 items-center">
 		{#if items.length !== 0}
 			<div class="hidden md:flex md:relative flex-1">
-				<Search class="absolute left-3 top-1/2 -translate-y-1/2 text-milk-400" />
+				<Search class="absolute left-3 top-1/2 -translate-y-1/2 text-milk-400 dark:text-milk-700" />
 				<input
 					type="text"
 					bind:value={$tableQuery}
 					placeholder="Search..."
-					class="w-full pl-10 {$tableQuery
-						? 'pr-10'
-						: 'pr-4'} py-2 border rounded-full focus:ring-2 bg-brick-50 border-milk-200 focus:ring-brick-500 focus:border-transparent focus:placeholder:text-brick-400/70 placeholder:text-milk-500 transition-all duration-200"
+					class="w-full pl-10 {$tableQuery ? 'pr-10' : 'pr-4'}
+						w-full pl-10 pr-4 py-2 border rounded-full focus:ring-2 bg-brick-50 dark:bg-milk-950 border-milk-200 dark:border-milk-900 dark:focus:ring-milk-700 dark:focus:placeholder:text-milk-700 focus:ring-brick-500 focus:border-transparent
+        focus:placeholder:text-brick-400/70
+        placeholder:text-milk-500
+        "
 				/>
 				{#if $tableQuery}
 					<button
@@ -142,7 +144,9 @@
 						};
 					}}
 				>
-					<button class="p-1 text-brick-600 hover:text-brick-500 transition-colors">
+					<button
+						class="p-1 dark:text-milk-700 dark:hover:text-milk-600 text-brick-600 hover:text-brick-500 transition-colors"
+					>
 						<PlusCircle class="size-8" />
 					</button>
 				</form>
@@ -151,7 +155,7 @@
 						id="assignee"
 						name="assignee"
 						bind:value={filterAssignee}
-						class="w-full text-xs md:text-base rounded-lg border-milk-200 shadow-sm focus:border-brick-500 focus:ring-brick-500"
+						class="w-full text-xs md:text-base dark:bg-milk-950 rounded-lg dark:border-milk-900 dark:focus:ring-milk-700 border-milk-200 shadow-sm dark:focus:border-milk-800 focus:border-brick-500 focus:ring-brick-500"
 					>
 						<option value="">All Students</option>
 						{#each students as student}
@@ -171,9 +175,9 @@
 		</div>
 	{:else}
 		<!-- Table -->
-		<div class="overflow-x-auto rounded-lg border shadow-md">
+		<div class="overflow-x-auto rounded-lg border shadow-md dark:border-milk-800">
 			<table class="w-full">
-				<thead class="bg-milk-50">
+				<thead class="bg-milk-50 dark:bg-milk-900">
 					<tr>
 						{#each config.columns as column}
 							<th
@@ -192,11 +196,11 @@
 						{/each}
 					</tr>
 				</thead>
-				<tbody class="divide-y divide-milk-200 bg-white">
+				<tbody class="divide-y divide-milk-200 bg-white dark:bg-milk-950">
 					{#each filteredItems as item (item.id)}
 						<tr
 							onclick={() => goto(`${href}/${item.id}`)}
-							class="hover:bg-milk-50 cursor-pointer transition-colors"
+							class="hover:bg-milk-50 dark:hover:bg-milk-800 cursor-pointer transition-colors"
 							in:fade={{ duration: 200 }}
 						>
 							{#each config.columns as column}

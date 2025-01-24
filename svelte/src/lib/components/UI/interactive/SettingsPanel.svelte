@@ -72,7 +72,7 @@
 							{disabled}
 							name={field}
 							value={$user[field]}
-							class="w-full px-4 py-2 border disabled:text-milk-500 border-milk-200 rounded-lg
+							class="w-full px-4 py-2 border dark:focus:ring-milk-700 dark:focus:border-milk-800 dark:border-milk-800 dark:focus:outline-none dark:focus:ring-2 disabled:text-milk-500 border-milk-200 rounded-lg
             dark:bg-milk-950 focus:outline-none focus:ring-2 focus:ring-brick-500
                    transition duration-200"
 						/>
@@ -98,9 +98,9 @@
 							id={field}
 							name={field}
 							value={$profile[`${field}Url`]}
-							class="w-full px-4 py-2 border disabled:text-milk-500 border-milk-200 rounded-lg
-                   focus:outline-none focus:ring-2 focus:ring-brick-500
-                   transition duration-200 dark:bg-milk-950"
+							class="w-full px-4 py-2 border dark:focus:ring-milk-700 dark:focus:border-milk-800 dark:border-milk-800 dark:focus:outline-none dark:focus:ring-2 disabled:text-milk-500 border-milk-200 rounded-lg
+            dark:bg-milk-950 focus:outline-none focus:ring-2 focus:ring-brick-500
+                   transition duration-200"
 						/>
 					</div>
 				{/each}
@@ -119,7 +119,7 @@
 					onclick={() => {
 						disabled = !disabled;
 					}}
-					class="bg-milk-200 dark:bg-milk-800 text-sm md:text-base transition-colors hover:bg-milk-300 px-3 rounded-lg md:px-4 py-2"
+					class="bg-milk-200 dark:bg-milk-800 text-sm md:text-base transition-colors dark:hover:bg-milk-700 hover:bg-milk-300 px-3 rounded-lg md:px-4 py-2"
 				>
 					{disabled ? 'Unlock' : 'Lock'}
 				</button>

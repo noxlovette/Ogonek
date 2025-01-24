@@ -6,13 +6,16 @@
 	import { onMount } from 'svelte';
 	import { H2 } from '../typography';
 	import { enhance } from '$app/forms';
-	import { CheckSquare, Download, Square } from 'lucide-svelte';
+	import { CheckSquare, Download, Loader2, Square } from 'lucide-svelte';
+	import { goto } from '$app/navigation';
 	import { parseMarkdown } from '$lib/utils';
 
 	onMount(async () => {
 		rendered = await parseMarkdown(task.markdown);
 		overdue = new Date(task.dueDate) < new Date();
 	});
+
+	let isDownloading = $state(false);
 
 	let { task, interactive = false } = $props();
 	let overdue = $state(false);
@@ -66,9 +69,19 @@
 			Due {formattedDate}
 		</p>
 		{#if interactive && task.filePath}
-			<a href="/download/{task.filePath}" class="pointer-events-auto">
-				<Download class="size-6" />
-			</a>
+			<button
+				class="pointer-events-auto"
+				onclick={() => {
+					goto(`/download/${task.filePath}`);
+					isDownloading = true;
+				}}
+			>
+				{#if !isDownloading}
+					<Download class="size-6" />
+				{:else}
+					<Loader2 class="size-6 animate-spin" />
+				{/if}
+			</button>
 		{/if}
 	</div>
 
