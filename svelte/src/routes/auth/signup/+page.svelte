@@ -127,13 +127,10 @@
 			</div>
 		</div>
 
-		<div class="cf-turnstile my-4" data-sitekey="0x4AAAAAAA6Es9VtsFFGCAbw"></div>
-
 		<ButtonSubmit bind:isSubmitting={loading} buttonName="Create Account"></ButtonSubmit>
 	</form>
 </div>
 
 <svelte:head>
 	<title>Signup</title>
-	<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </svelte:head>

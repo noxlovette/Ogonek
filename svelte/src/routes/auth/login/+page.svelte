@@ -86,13 +86,10 @@
 			</div>
 		</div>
 
-		<div class="cf-turnstile my-4" data-sitekey="0x4AAAAAAA6Es9VtsFFGCAbw"></div>
-
 		<ButtonSubmit bind:isSubmitting buttonName="Login" />
 	</form>
 </div>
 
 <svelte:head>
 	<title>Login</title>
-	<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </svelte:head>

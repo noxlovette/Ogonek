@@ -3,25 +3,6 @@ import { ValidateAccess } from '$lib/utils';
 import { env } from '$env/dynamic/private';
 import { parseCookieOptions } from '$lib/utils';
 
-const turnstileVerify = async (turnstileToken: string) => {
-	const response = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/x-www-form-urlencoded'
-		},
-		body: new URLSearchParams({
-			secret: env.CLOUDFLARE_SECRET,
-			response: turnstileToken
-		})
-	});
-
-	if (!response.ok) {
-		throw new Error(`Turnstile verification failed: ${response.status}`);
-	}
-
-	return response.json();
-};
-
 export const actions: Actions = {
 	default: async ({ request, fetch, cookies }) => {
 		try {
@@ -29,25 +10,9 @@ export const actions: Actions = {
 			const username = data.get('username') as string;
 			const pass = data.get('password') as string;
 
-			const turnstileToken = data.get('cf-turnstile-response') as string;
-
-			if (!turnstileToken) {
-				return fail(400, {
-					message: 'Please complete the CAPTCHA verification'
-				});
-			}
-
 			if (!username || !pass) {
 				return fail(400, {
 					message: 'Missing required fields'
-				});
-			}
-
-			const turnstileResponse = await turnstileVerify(turnstileToken);
-
-			if (!turnstileResponse.success) {
-				return fail(400, {
-					message: 'Turnstile verification failed'
 				});
 			}
 
