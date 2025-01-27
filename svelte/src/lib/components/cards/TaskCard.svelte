@@ -18,11 +18,10 @@
 	let rendered = $state(task.markdown);
 	const formattedDate = formatDateTime(task.dueDate);
 	let completed = $state(task.completed);
-	let href = $user.role === 'teacher' ? `/t/tasks/t/${task.id}` : '/s/tasks';
-	let pointerEventsOff = interactive ? true : false;
+	let href = $user.role === 'teacher' ? `/t/tasks/t/${task.id}` : `/s/tasks/${task.id}`;
 </script>
 
-<Clickable {href} {pointerEventsOff}>
+<Clickable {href}>
 	<div
 		id="task-header"
 		class="inline-flex space-x-8 text-lg md:text-xl lg:text-2xl xl:text-3xl justify-between items-baseline"
@@ -37,7 +36,8 @@
 				use:enhance={() => {
 					return async ({ result }) => {
 						if (result.type === 'success') {
-							notification.set({ message: 'Marked as completed', type: 'success' });
+							const message = completed ? 'Marked As Completed' : 'Not Completed';
+							notification.set({ message, type: 'success' });
 						} else {
 							notification.set({
 								message: 'Failed to mark as completed',

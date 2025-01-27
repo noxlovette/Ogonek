@@ -3,7 +3,7 @@
 	import { user } from '$lib/stores';
 	import Search from '../search/SearchHeader.svelte';
 	const greeting = getGreeting();
-	let href = $user.role === 'teacher' ? '/t/tasks' : '/s/tasks';
+	let href = $user.role === 'teacher' ? '/t/dashboard' : '/s/dashboard';
 </script>
 
 <header

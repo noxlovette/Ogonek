@@ -1,10 +1,9 @@
 <script lang="ts">
-	let { href, children, pointerEventsOff = false } = $props();
+	let { href, children } = $props();
 </script>
 
 <a
 	{href}
-	class:pointer-events-none={pointerEventsOff}
 	class="relative flex flex-col p-5 rounded-xl
       bg-white
       dark:bg-milk-950

@@ -1,6 +1,5 @@
 <script>
 	import { H1, SettingsPanel } from '$lib';
-	import Header from '$lib/components/typography/H1.svelte';
 </script>
 
 <svelte:head>

@@ -39,7 +39,7 @@
 </script>
 
 <div
-	class="{props.class} fixed flex items-center left-1/2 -translate-x-1/2 bottom-3 w-11/12 bg-brick-600 backdrop-blur-lg text-brick-50 md:hidden px-2 py-4 ring-2 ring-milk-200 rounded-2xl shadow-xl z-10"
+	class="{props.class} fixed flex items-center left-1/2 -translate-x-1/2 bottom-3 w-11/12 bg-brick-600 backdrop-blur-lg text-brick-50 dark:text-inherit dark:bg-milk-900 md:hidden px-2 py-4 ring-2 ring-milk-200 dark:ring-milk-900 rounded-2xl shadow-xl z-10"
 >
 	<ul class="{props.subclass} flex w-full justify-around items-end">
 		{#each props.elements as Element, i}

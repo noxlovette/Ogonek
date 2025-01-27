@@ -3,12 +3,7 @@
 	import type { Lesson, Task } from '$lib/types';
 	import { lessonStore, taskStore } from '$lib/stores';
 
-	interface Props {
-		data: any;
-		children?: import('svelte').Snippet;
-	}
-
-	let { data, children }: Props = $props();
+	let { data, children } = $props();
 
 	const tasks: Task[] = data.tasks;
 	const lessons: Lesson[] = data.lessons;
@@ -24,7 +19,7 @@
 		Quizlet,
 		Settings
 	} from '$lib/components/sidebar/elements';
-	import { RecentLessons, UsefulLinks, WordOfTheDay } from '$lib/components/sidebar/groups';
+	import { UsefulLinks, WordOfTheDay } from '$lib/components/sidebar/groups';
 </script>
 
 <Sidebar class="" elements={[Dashboard, Todo, Lessons, Zoom, Quizlet, Settings]} />
@@ -32,7 +27,7 @@
 	{@render children?.()}
 </WorkArea>
 <Sidebar
-	class="bg-inherit text-inherit ring-transparent shadow-none dark:bg-inherit dark:ring-transparent"
+	class="bg-inherit text-inherit ring-transparent shadow-none dark:bg-milk-950 dark:ring-transparent"
 	subclass="divide-transparent dark:divide-transparent"
 	elements={[UsefulLinks, WordOfTheDay]}
 ></Sidebar>

@@ -1,19 +1,62 @@
 import { fail, type Actions } from '@sveltejs/kit';
 import { ValidateAccess } from '$lib/utils';
+import { env } from '$env/dynamic/private';
+import { parseCookieOptions } from '$lib/utils';
+
+const turnstileVerify = async (turnstileToken: string) => {
+	const response = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/x-www-form-urlencoded'
+		},
+		body: new URLSearchParams({
+			secret: env.CLOUDFLARE_SECRET,
+			response: turnstileToken
+		})
+	});
+
+	if (!response.ok) {
+		throw new Error(`Turnstile verification failed: ${response.status}`);
+	}
+
+	return response.json();
+};
 
 export const actions: Actions = {
 	default: async ({ request, fetch, cookies }) => {
-		const data = await request.formData();
-		const username = data.get('username') as string;
-		const pass = data.get('password') as string;
-
 		try {
+			const data = await request.formData();
+			const username = data.get('username') as string;
+			const pass = data.get('password') as string;
+
+			const turnstileToken = data.get('cf-turnstile-response') as string;
+
+			if (!turnstileToken) {
+				return fail(400, {
+					message: 'Please complete the CAPTCHA verification'
+				});
+			}
+
+			if (!username || !pass) {
+				return fail(400, {
+					message: 'Missing required fields'
+				});
+			}
+
+			const turnstileResponse = await turnstileVerify(turnstileToken);
+
+			if (!turnstileResponse.success) {
+				return fail(400, {
+					message: 'Turnstile verification failed'
+				});
+			}
+
 			const response = await fetch('/axum/auth/signin', {
 				method: 'POST',
-				body: JSON.stringify({
-					username,
-					pass
-				})
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({ username, pass })
 			});
 
 			if (!response.ok) {
@@ -21,41 +64,32 @@ export const actions: Actions = {
 				return fail(400, { message: error });
 			}
 
+			// Handle cookies
 			response.headers.getSetCookie().forEach((cookie) => {
 				const [fullCookie, ...opts] = cookie.split(';');
 				const [name, value] = fullCookie.split('=');
 
-				// Create a more robust options parser
-				const cookieOpts: Record<string, string | boolean> = {};
-				opts.forEach((opt) => {
-					const [key, val] = opt.trim().split('=');
-					// Normalize keys by removing hyphens and lowercasing
-					cookieOpts[key.toLowerCase().replace(/-/g, '')] = val || true;
-				});
-
-				cookies.set(name, value, {
-					path: (cookieOpts.path as string) || '/',
-					httpOnly: 'httponly' in cookieOpts,
-					secure: 'secure' in cookieOpts,
-					sameSite: (cookieOpts.samesite as 'lax' | 'strict' | 'none') || 'lax',
-					domain: cookieOpts.domain as string,
-					// Look for both max-age and maxage
-					maxAge: cookieOpts.maxage
-						? parseInt(cookieOpts.maxage as string)
-						: cookieOpts['max-age']
-							? parseInt(cookieOpts['max-age'] as string)
-							: undefined
-				});
+				const cookieOptions = parseCookieOptions(opts);
+				cookies.set(name, value, cookieOptions);
 			});
 
 			const { accessToken } = await response.json();
 			const user = await ValidateAccess(accessToken);
 
 			if (!user) {
-				return fail(500, { message: 'Invalid Token' });
+				return fail(401, {
+					message: 'Invalid access token'
+				});
 			}
 
-			const profile = await fetch('/axum/profile').then((res) => res.json());
+			const profileResponse = await fetch('/axum/profile');
+			if (!profileResponse.ok) {
+				return fail(500, {
+					message: 'Failed to fetch profile'
+				});
+			}
+
+			const profile = await profileResponse.json();
 
 			return {
 				success: true,
@@ -65,8 +99,8 @@ export const actions: Actions = {
 			};
 		} catch (error) {
 			console.error('Signin error:', error);
-			return fail(400, {
-				message: error instanceof Error ? error.message : 'Login failed'
+			return fail(500, {
+				message: error instanceof Error ? error.message : 'Internal server error'
 			});
 		}
 	}

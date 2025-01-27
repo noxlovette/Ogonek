@@ -1,5 +1,4 @@
 import type { LayoutServerLoad } from './$types';
-import { env } from '$env/dynamic/private';
 import type { Lesson, Task } from '$lib/types';
 
 export const load: LayoutServerLoad = async ({ fetch }) => {

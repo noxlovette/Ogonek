@@ -82,9 +82,42 @@ export async function parseMarkdown(content: string) {
 	return String(result);
 }
 
-
-
 export const stripUUID = (str: string): string => {
 	const uuidPattern = /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}/;
 	return str.replace(uuidPattern, '').replace(/^-+/, '');
+};
+
+import type { CookieOptions } from './types';
+
+export const parseCookieOptions = (opts: string[]): CookieOptions => {
+	const options: CookieOptions = {};
+
+	opts.forEach((opt) => {
+		const [key, val] = opt.trim().split('=');
+		const normalizedKey = key.toLowerCase().replace(/-/g, '');
+
+		switch (normalizedKey) {
+			case 'path':
+				options.path = val || '/';
+				break;
+			case 'httponly':
+				options.httpOnly = true;
+				break;
+			case 'secure':
+				options.secure = true;
+				break;
+			case 'samesite':
+				options.sameSite = val as 'lax' | 'strict' | 'none';
+				break;
+			case 'domain':
+				options.domain = val;
+				break;
+			case 'maxage':
+			case 'max-age':
+				options.maxAge = val ? parseInt(val) : undefined;
+				break;
+		}
+	});
+
+	return options;
 };
