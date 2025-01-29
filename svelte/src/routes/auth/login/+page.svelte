@@ -2,14 +2,7 @@
 	import { enhance } from '$app/forms';
 	import { goto } from '$app/navigation';
 	import { ButtonSubmit } from '$lib/components/UI';
-	import {
-		setProfile,
-		setUser,
-		user,
-		initialUser,
-		initialProfile,
-		notification
-	} from '$lib/stores';
+	import { setProfile, setUser, initialUser, initialProfile, notification } from '$lib/stores';
 	import type { UserData } from '$lib/types';
 
 	let isSubmitting = $state(false);
@@ -38,7 +31,8 @@
 				isSubmitting = false;
 
 				if (result.type === 'success' && result.data) {
-					const { user = initialUser, profile = initialProfile } = result.data;
+					const { user = initialUser, profile = initialProfile } =
+						result.data as unknown as UserData;
 					setUser(user);
 					setProfile(profile);
 					localStorage.setItem('user', JSON.stringify(user));
@@ -86,10 +80,13 @@
 			</div>
 		</div>
 
+		<div class="cf-turnstile my-4" data-sitekey="0x4AAAAAAA6Es9VtsFFGCAbw"></div>
+
 		<ButtonSubmit bind:isSubmitting buttonName="Login" />
 	</form>
 </div>
 
 <svelte:head>
 	<title>Login</title>
+	<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </svelte:head>

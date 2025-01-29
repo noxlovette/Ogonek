@@ -22,7 +22,7 @@
 	import { UsefulLinks, WordOfTheDay } from '$lib/components/sidebar/groups';
 </script>
 
-<Sidebar class="" elements={[Dashboard, Todo, Lessons, Zoom, Quizlet, Settings]} />
+<Sidebar class="text-stone-50" elements={[Dashboard, Todo, Lessons, Zoom, Quizlet, Settings]} />
 <WorkArea>
 	{@render children?.()}
 </WorkArea>

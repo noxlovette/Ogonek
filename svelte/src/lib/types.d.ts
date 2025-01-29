@@ -78,12 +78,3 @@ export interface UserData {
 	user: User;
 	profile: Profile;
 }
-
-export interface CookieOptions {
-	path?: string;
-	httpOnly?: boolean;
-	secure?: boolean;
-	sameSite?: 'lax' | 'strict' | 'none';
-	domain?: string;
-	maxAge?: number;
-}

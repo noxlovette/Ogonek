@@ -2,6 +2,7 @@
 	import { getGreeting } from '$lib/utils';
 	import { user } from '$lib/stores';
 	import Search from '../search/SearchHeader.svelte';
+	import ThemeToggler from '../interactive/ThemeToggler.svelte';
 	const greeting = getGreeting();
 	let href = $user.role === 'teacher' ? '/t/dashboard' : '/s/dashboard';
 </script>
@@ -13,17 +14,21 @@
 		<div class="flex md:w-1/6 w-full">
 			<a {href} class="text-2xl font-serif font-bold">Firelight</a>
 		</div>
+
 		{#if $user.name}
 			<Search />
+
 			<div class="md:flex hidden space-x-4 items-center min-w-fit w-1/6">
 				<p class="flex-shrink text-sm">
 					{$user.name}, good {greeting}
 				</p>
+				<ThemeToggler />
 			</div>
 		{:else}
-			<div class="flex items-center space-x-2 md:space-x-4 md:w-1/6">
+			<div class="flex items-center space-x-2 md:space-x-4 min-w-fit md:w-1/6">
 				<a href="/auth/login" class="md:text-lg text-sm font-serif font-bold">Login</a>
 				<a href="/auth/signup" class="md:text-lg text-sm font-serif font-bold">Signup</a>
+				<ThemeToggler />
 			</div>
 		{/if}
 	</div>

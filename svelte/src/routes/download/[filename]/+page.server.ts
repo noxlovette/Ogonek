@@ -1,4 +1,4 @@
-import { error } from '@sveltejs/kit'
+import { error } from '@sveltejs/kit';
 
 export async function load({ params, fetch }) {
 	const filename = params.filename.replace(/^"|"$/g, '');

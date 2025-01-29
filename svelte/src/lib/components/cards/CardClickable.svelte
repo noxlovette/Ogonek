@@ -11,9 +11,11 @@
       dark:ring-milk-900
       shadow-lg shadow-milk-100
       dark:shadow-milk-900
+      dark:shadow-none
+      hover:dark:shadow-sm
       hover:shadow-brick-100
-      dark:hover:shadow-brick-800
-      dark:hover:ring-brick-800
+      dark:hover:shadow-brick-500
+      dark:hover:ring-brick-500
       hover:ring-brick-400
       group transition-all duration-200 ease-out
       h-[150px] overflow-hidden"

@@ -56,10 +56,8 @@ export const handle: Handle = async ({ event, resolve }) => {
 	return response;
 };
 
-
 async function handleTokenRefresh(event: RequestEvent) {
 	if (isRefreshing) {
-
 		while (isRefreshing) {
 			await new Promise((resolve) => setTimeout(resolve, 100));
 		}

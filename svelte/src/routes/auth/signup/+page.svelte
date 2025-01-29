@@ -16,10 +16,13 @@
 	class="max-w-md flex flex-col space-y-6 items-center justify-center dark:bg-milk-900 bg-white p-9 rounded-xl shadow-md w-11/12"
 >
 	<div class="text-center">
-		<h2 class="text-3xl font-bold text-brick-600">Create Account</h2>
+		<h2 class="text-3xl font-bold text-brick-600 dark:text-milk-100">Create Account</h2>
 		<p class="mt-2 text-sm text-milk-600">
 			Already have an account?
-			<a href="/auth/login" class="font-medium text-brick-500 hover:text-brick-400">Sign in</a>
+			<a
+				href="/auth/login"
+				class="font-medium dark:text-milk-100 text-brick-500 hover:text-brick-400">Sign in</a
+			>
 		</p>
 	</div>
 
@@ -126,11 +129,12 @@
 				{/if}
 			</div>
 		</div>
-
+		<div class="cf-turnstile my-4" data-sitekey="0x4AAAAAAA6Es9VtsFFGCAbw"></div>
 		<ButtonSubmit bind:isSubmitting={loading} buttonName="Create Account"></ButtonSubmit>
 	</form>
 </div>
 
 <svelte:head>
 	<title>Signup</title>
+	<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </svelte:head>

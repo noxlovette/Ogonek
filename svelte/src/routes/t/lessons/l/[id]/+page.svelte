@@ -20,7 +20,7 @@
 	<div class="flex items-baseline space-x-4">
 		<H1>{lesson.title}</H1>
 		<button
-		onclick={()=> goto(`/t/lessons/l/${lesson.id}/edit`, {replaceState:true})}
+			onclick={() => goto(`/t/lessons/l/${lesson.id}/edit`, { replaceState: true })}
 			class="px-4 py-2 bg-brick-600 text-brick-50 rounded-lg hover:bg-brick-700 focus:outline-none focus:ring-2 focus:ring-brick-500 focus:ring-offset-2 disabled:opacity-50 transition-colors"
 			>Edit</button
 		>
@@ -44,7 +44,9 @@
 		</div>
 	</div>
 	<h3 class="text-2xl font-bold">Content</h3>
-	<div class="markdown ring-2 ring-milk-200 p-4 rounded-lg">{@html rendered}</div>
+	<div class="markdown ring-2 ring-milk-200 dark:ring-milk-900 p-4 rounded-lg">
+		{@html rendered}
+	</div>
 {:else}
 	This lesson has been deleted
 {/if}

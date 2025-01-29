@@ -74,4 +74,10 @@
 	:global(.markdown td) {
 		@apply border border-milk-300 px-2 py-1 text-left;
 	}
+
+	* {
+		transition:
+			background-color 0.3s ease,
+			color 0.3s ease;
+	}
 </style>

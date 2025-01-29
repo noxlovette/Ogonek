@@ -77,7 +77,9 @@
 				id="assignee"
 				name="assignee"
 				value={lesson.assignee}
-				class="w-full rounded-lg border-milk-200 shadow-sm focus:border-brick-500 focus:ring-brick-500"
+				class="w-full rounded-lg border-milk-200 shadow-sm focus:border-brick-500 focus:ring-brick-500
+				dark:bg-milk-950
+				"
 			>
 				<option value="">Select an assignee</option>
 				{#each students as student}

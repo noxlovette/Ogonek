@@ -39,6 +39,7 @@
 				<textarea
 					bind:value={markdownContent}
 					class="w-full h-full min-h-[400px] border-milk-200
+					dark:ring-milk-900
 			  resize-none focus:ring-transparent border
 			  shadow-sm p-4 dark:bg-milk-950 dark:border-milk-900
 			  ring-0 ring-transparent rounded-lg focus:ring-none

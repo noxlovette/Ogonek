@@ -38,7 +38,7 @@
 	</div>
 </div>
 <H2>Content</H2>
-<div class="markdown ring-2 ring-milk-200 p-4 rounded-lg">{@html rendered}</div>
+<div class="markdown ring-2 ring-milk-200 dark:ring-milk-900 p-4 rounded-lg">{@html rendered}</div>
 
 {#if task.filePath}
 	<div>

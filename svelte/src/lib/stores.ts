@@ -86,5 +86,4 @@ export const taskStore = createTaskStore();
 
 export const isSearchOpen = writable(false);
 
-export const tableQuery = writable("");
-
+export const tableQuery = writable('');
