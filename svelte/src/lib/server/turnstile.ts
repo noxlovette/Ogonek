@@ -11,8 +11,9 @@ export const turnstileVerify = async (turnstileToken: string) => {
 			response: turnstileToken
 		})
 	});
+
 	if (!response.ok) {
 		throw new Error(`Turnstile verification failed: ${response.status}`);
 	}
-	return response.json();
+	return response;
 };

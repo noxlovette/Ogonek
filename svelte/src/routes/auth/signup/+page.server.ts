@@ -16,7 +16,6 @@ export const actions: Actions = {
 		const email = data.get('email') as string;
 		const role = data.get('role') as string;
 		const name = data.get('name') as string;
-		const turnstileToken = data.get('cf-turnstile-response');
 		const invite_token = url.searchParams.get('invite');
 
 		// Validate email
@@ -29,13 +28,18 @@ export const actions: Actions = {
 			return fail(400, { message: 'Passwords do not match' });
 		}
 
+		const turnstileToken = data.get('cf-turnstile-response') as string;
 		if (!turnstileToken) {
-			return fail(400, { message: 'Please complete the CAPTCHA verification' });
+			return fail(400, {
+				message: 'Please complete the CAPTCHA verification'
+			});
 		}
 
-		const turnstileResponse = await turnstileVerify(turnstileToken as string);
-		if (!turnstileResponse.success) {
-			return fail(400, { message: 'CAPTCHA verification failed. Please try again' });
+		const turnstileResponse = await turnstileVerify(turnstileToken);
+		if (!turnstileResponse.ok) {
+			return fail(400, {
+				message: 'Turnstile verification failed'
+			});
 		}
 
 		const response = await fetch('/axum/auth/signup', {

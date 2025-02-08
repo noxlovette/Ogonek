@@ -1,7 +1,5 @@
 import { fail, type Actions } from '@sveltejs/kit';
-import { ValidateAccess } from '$lib/utils';
-import { turnstileVerify } from '$lib/server/turnstile';
-import { parseCookieOptions } from '$lib/server/cookies';
+import { turnstileVerify, parseCookieOptions, ValidateAccess } from '$lib/server';
 
 export const actions: Actions = {
 	default: async ({ request, fetch, cookies }) => {
@@ -24,7 +22,7 @@ export const actions: Actions = {
 			}
 
 			const turnstileResponse = await turnstileVerify(turnstileToken);
-			if (!turnstileResponse.success) {
+			if (!turnstileResponse.ok) {
 				return fail(400, {
 					message: 'Turnstile verification failed'
 				});
