@@ -12,12 +12,12 @@
 	class="max-w-md flex flex-col space-y-6 items-center justify-center dark:bg-milk-900 bg-white p-9 rounded-xl shadow-md w-11/12"
 >
 	<div class="text-center">
-		<h2 class="text-3xl font-bold text-brick-600 dark:text-milk-200">Welcome back</h2>
+		<h2 class="text-3xl font-bold text-cacao-600 dark:text-milk-200">Welcome back</h2>
 		<p class="mt-2 text-sm text-milk-600">
 			Don't have an account?
 			<a
 				href="/auth/signup"
-				class="font-medium text-brick-500 dark:text-milk-50 dark:hover:text-milk-200 hover:text-brick-400"
+				class="font-medium text-cacao-500 dark:text-milk-50 dark:hover:text-milk-200 hover:text-cacao-400"
 				>Sign up</a
 			>
 		</p>
@@ -57,7 +57,7 @@
 					name="username"
 					type="text"
 					class="w-full px-4 py-2 border dark:focus:ring-milk-700 dark:focus:border-milk-800 dark:border-milk-800 dark:focus:outline-none dark:focus:ring-2 disabled:text-milk-500 border-milk-200 rounded-lg
-            dark:bg-milk-950 focus:outline-none focus:ring-2 focus:ring-brick-500
+            dark:bg-milk-950 focus:outline-none focus:ring-2 focus:ring-cacao-500
                    transition duration-200"
 					required
 					autocomplete="username"
@@ -72,7 +72,7 @@
 					name="password"
 					type="password"
 					class="w-full px-4 py-2 border dark:focus:ring-milk-700 dark:focus:border-milk-800 dark:border-milk-800 dark:focus:outline-none dark:focus:ring-2 disabled:text-milk-500 border-milk-200 rounded-lg
-            dark:bg-milk-950 focus:outline-none focus:ring-2 focus:ring-brick-500
+            dark:bg-milk-950 focus:outline-none focus:ring-2 focus:ring-cacao-500
                    transition duration-200"
 					required
 					autocomplete="current-password"

@@ -24,7 +24,7 @@ services:
     ports:
       - "5173:3000"
     volumes:
-      - ./svelte:/app
+      - ./svelte/src:/app/src
     env_file:
       - ./svelte/.env
     depends_on:
@@ -58,9 +58,9 @@ services:
       - POSTGRES_DB=pg-fl-dev
       - POSTGRES_PASSWORD=changeme
     ports:
-      - "5432:5432"
+      - "5433:5432"
     healthcheck:
-      test: [ "CMD", "pg_isready" ]
+      test: ["CMD", "pg_isready"]
       interval: 10s
       timeout: 5s
       retries: 5

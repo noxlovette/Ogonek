@@ -42,7 +42,7 @@
 					name="telegramId"
 					value={student.telegramId}
 					placeholder="@username"
-					class="pl-10 pr-4 py-2 border border-milk-300 rounded-lg focus:ring-2 focus:ring-brick-500 focus:border-transparent"
+					class="pl-10 pr-4 py-2 border border-milk-300 rounded-lg focus:ring-2 focus:ring-cacao-500 focus:border-transparent"
 				/>
 				<span class="absolute left-3 top-2.5 text-milk-400">
 					<Send></Send>

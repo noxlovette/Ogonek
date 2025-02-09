@@ -1,8 +1,7 @@
-import { sequence } from '@sveltejs/kit/hooks';
 import { env } from '$env/dynamic/private';
 import type { Handle, HandleFetch } from '@sveltejs/kit';
 import { redirect } from '@sveltejs/kit';
-import { ValidateAccess } from '$lib/utils';
+import { ValidateAccess } from '$lib/server';
 import type { RequestEvent } from '@sveltejs/kit';
 
 let isRefreshing = false;

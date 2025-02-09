@@ -108,8 +108,8 @@
 					bind:value={$tableQuery}
 					placeholder="Search..."
 					class="w-full pl-10 {$tableQuery ? 'pr-10' : 'pr-4'}
-						w-full pl-10 pr-4 py-2 border rounded-full focus:ring-2 bg-brick-50 dark:bg-milk-950 border-milk-200 dark:border-milk-900 dark:focus:ring-milk-700 dark:focus:placeholder:text-milk-700 focus:ring-brick-500 focus:border-transparent
-        focus:placeholder:text-brick-400/70
+						w-full pl-10 pr-4 py-2 border rounded-full focus:ring-2 bg-cacao-50 dark:bg-milk-950 border-milk-200 dark:border-milk-900 dark:focus:ring-milk-700 dark:focus:placeholder:text-milk-700 focus:ring-cacao-500 focus:border-transparent
+        focus:placeholder:text-cacao-400/70
         placeholder:text-milk-500
         "
 				/>
@@ -145,7 +145,7 @@
 					}}
 				>
 					<button
-						class="p-1 dark:text-milk-700 dark:hover:text-milk-600 text-brick-600 hover:text-brick-500 transition-colors"
+						class="p-1 dark:text-milk-700 dark:hover:text-milk-600 text-cacao-600 hover:text-cacao-500 transition-colors"
 					>
 						<PlusCircle class="size-8" />
 					</button>
@@ -155,7 +155,7 @@
 						id="assignee"
 						name="assignee"
 						bind:value={filterAssignee}
-						class="w-full text-xs md:text-base dark:bg-milk-950 rounded-lg dark:border-milk-900 dark:focus:ring-milk-700 border-milk-200 shadow-sm dark:focus:border-milk-800 focus:border-brick-500 focus:ring-brick-500"
+						class="w-full text-xs md:text-base dark:bg-milk-950 rounded-lg dark:border-milk-900 dark:focus:ring-milk-700 border-milk-200 shadow-sm dark:focus:border-milk-800 focus:border-cacao-500 focus:ring-cacao-500"
 					>
 						<option value="">All Students</option>
 						{#each students as student}
@@ -175,7 +175,7 @@
 		</div>
 	{:else}
 		<!-- Table -->
-		<div class="overflow-x-auto rounded-lg border shadow-md dark:border-milk-800">
+		<div class="overflow-x-auto rounded-lg border shadow-md border-milk-200 dark:border-milk-800">
 			<table class="w-full">
 				<thead class="bg-milk-50 dark:bg-milk-900">
 					<tr>

@@ -21,12 +21,12 @@
 		<h1 class="text-2xl font-bold">Markdown</h1>
 		<button
 			onclick={() => (preview = false)}
-			class="text-sm px-2 rounded-lg py-1 hover:bg-brick-200 transition-colors"
+			class="text-sm px-2 rounded-lg py-1 hover:bg-cacao-200 transition-colors"
 			class:chosen={!preview}>Editor</button
 		>
 		<button
 			onclick={() => (preview = true)}
-			class="text-sm px-2 rounded-lg py-1 hover:bg-brick-200 transition-colors"
+			class="text-sm px-2 rounded-lg py-1 hover:bg-cacao-200 transition-colors"
 			class:chosen={preview}>Preview</button
 		>
 	</div>
@@ -54,9 +54,3 @@
 		{/if}
 	</div>
 </div>
-
-<style lang="postcss">
-	.chosen {
-		@apply bg-brick-600 text-milk-50 hover:bg-brick-600;
-	}
-</style>

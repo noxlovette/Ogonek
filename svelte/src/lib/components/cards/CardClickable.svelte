@@ -13,10 +13,10 @@
       dark:shadow-milk-900
       dark:shadow-none
       hover:dark:shadow-sm
-      hover:shadow-brick-100
-      dark:hover:shadow-brick-500
-      dark:hover:ring-brick-500
-      hover:ring-brick-400
+      hover:shadow-cacao-100
+      dark:hover:shadow-cacao-500
+      dark:hover:ring-cacao-500
+      hover:ring-cacao-400
       group transition-all duration-200 ease-out
       h-[150px] overflow-hidden"
 >

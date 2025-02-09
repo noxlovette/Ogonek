@@ -38,10 +38,10 @@
 	aria-label="Toggle theme"
 >
 	{#if theme === 'light'}
-		<Sun class="w-5 h-5 text-brick-500" />
+		<Sun class="w-5 h-5 text-cacao-500" />
 	{:else if theme === 'dark'}
-		<Moon class="w-5 h-5 text-brick-500" />
+		<Moon class="w-5 h-5 text-cacao-500" />
 	{:else}
-		<Monitor class="w-5 h-5 text-brick-500" />
+		<Monitor class="w-5 h-5 text-cacao-500" />
 	{/if}
 </button>

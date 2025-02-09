@@ -14,7 +14,7 @@
 
 <a
 	{href}
-	class="px-2 py-1 flex flex-col transition-all duration-300 rounded-lg hover:text-brick-400 hover:translate-x-1"
+	class="px-2 py-1 flex flex-col transition-all duration-300 rounded-lg hover:text-cacao-400 hover:translate-x-1"
 >
 	<h3>
 		{formattedDate}

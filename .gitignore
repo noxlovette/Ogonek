@@ -44,7 +44,7 @@ bun.lockb
 .vercel
 .svelte-kit
 /build
-.npmrc
+data
 
 # OS
 .DS_Store

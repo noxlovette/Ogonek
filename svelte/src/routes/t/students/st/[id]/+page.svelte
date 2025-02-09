@@ -14,7 +14,7 @@
 	<H1>{student.name}</H1>
 	<a
 		href="/t/students/st/{student.id}/edit"
-		class="px-4 py-2 bg-brick-600 text-brick-50 rounded-lg hover:bg-brick-700 focus:outline-none focus:ring-2 focus:ring-brick-500 focus:ring-offset-2 disabled:opacity-50 transition-colors"
+		class="px-4 py-2 bg-cacao-600 text-cacao-50 rounded-lg hover:bg-cacao-700 focus:outline-none focus:ring-2 focus:ring-cacao-500 focus:ring-offset-2 disabled:opacity-50 transition-colors"
 		>Edit</a
 	>
 </div>

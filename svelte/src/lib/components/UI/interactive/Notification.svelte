@@ -37,7 +37,7 @@
 		/>
 	{:else}
 		<AlertCircle
-			class="size-5 lg:size-6 p-1 bg-milk-100 dark:bg-inherit dark:ring-1 dark:ring-milk-900  text-brick-700 rounded-full"
+			class="size-5 lg:size-6 p-1 bg-milk-100 dark:bg-inherit dark:ring-1 dark:ring-milk-900  text-cacao-700 rounded-full"
 		/>
 	{/if}
 {/snippet}

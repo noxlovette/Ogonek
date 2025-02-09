@@ -32,7 +32,7 @@
 	setContext('students', students);
 </script>
 
-<Sidebar class="text-brick-50" elements={[Dashboard, Todo, Lessons, Students, Quizlet, Settings]} />
+<Sidebar class="text-cacao-50" elements={[Dashboard, Todo, Lessons, Students, Quizlet, Settings]} />
 <WorkArea>
 	{@render children?.()}
 </WorkArea>

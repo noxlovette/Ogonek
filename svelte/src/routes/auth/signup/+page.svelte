@@ -16,12 +16,12 @@
 	class="max-w-md flex flex-col space-y-6 items-center justify-center dark:bg-milk-900 bg-white p-9 rounded-xl shadow-md w-11/12"
 >
 	<div class="text-center">
-		<h2 class="text-3xl font-bold text-brick-600 dark:text-milk-100">Create Account</h2>
+		<h2 class="text-3xl font-bold text-cacao-600 dark:text-milk-100">Create Account</h2>
 		<p class="mt-2 text-sm text-milk-600">
 			Already have an account?
 			<a
 				href="/auth/login"
-				class="font-medium dark:text-milk-100 text-brick-500 hover:text-brick-400">Sign in</a
+				class="font-medium dark:text-milk-100 text-cacao-500 hover:text-cacao-400">Sign in</a
 			>
 		</p>
 	</div>
@@ -54,7 +54,7 @@
 					name="name"
 					required
 					class="w-full px-4 py-2 border dark:focus:ring-milk-700 dark:focus:border-milk-800 dark:border-milk-800 dark:focus:outline-none dark:focus:ring-2 disabled:text-milk-500 border-milk-200 rounded-lg
-            dark:bg-milk-950 focus:outline-none focus:ring-2 focus:ring-brick-500
+            dark:bg-milk-950 focus:outline-none focus:ring-2 focus:ring-cacao-500
                    transition duration-200"
 				/>
 			</div>
@@ -66,7 +66,7 @@
 					name="username"
 					required
 					class="w-full px-4 py-2 border dark:focus:ring-milk-700 dark:focus:border-milk-800 dark:border-milk-800 dark:focus:outline-none dark:focus:ring-2 disabled:text-milk-500 border-milk-200 rounded-lg
-            dark:bg-milk-950 focus:outline-none focus:ring-2 focus:ring-brick-500
+            dark:bg-milk-950 focus:outline-none focus:ring-2 focus:ring-cacao-500
                    transition duration-200"
 				/>
 			</div>
@@ -77,7 +77,7 @@
 					name="role"
 					required
 					class="w-full px-4 py-2 border dark:focus:ring-milk-700 dark:focus:border-milk-800 dark:border-milk-800 dark:focus:outline-none dark:focus:ring-2 disabled:text-milk-500 border-milk-200 rounded-lg
-            dark:bg-milk-950 focus:outline-none focus:ring-2 focus:ring-brick-500
+            dark:bg-milk-950 focus:outline-none focus:ring-2 focus:ring-cacao-500
                    transition duration-200"
 				>
 					<option value="">Select a role</option>
@@ -93,7 +93,7 @@
 					name="email"
 					required
 					class="w-full px-4 py-2 border dark:focus:ring-milk-700 dark:focus:border-milk-800 dark:border-milk-800 dark:focus:outline-none dark:focus:ring-2 disabled:text-milk-500 border-milk-200 rounded-lg
-            dark:bg-milk-950 focus:outline-none focus:ring-2 focus:ring-brick-500
+            dark:bg-milk-950 focus:outline-none focus:ring-2 focus:ring-cacao-500
                    transition duration-200"
 				/>
 			</div>
@@ -106,7 +106,7 @@
 					bind:value={password}
 					required
 					class="w-full px-4 py-2 border dark:focus:ring-milk-700 dark:focus:border-milk-800 dark:border-milk-800 dark:focus:outline-none dark:focus:ring-2 disabled:text-milk-500 border-milk-200 rounded-lg
-            dark:bg-milk-950 focus:outline-none focus:ring-2 focus:ring-brick-500
+            dark:bg-milk-950 focus:outline-none focus:ring-2 focus:ring-cacao-500
                    transition duration-200"
 				/>
 			</div>
@@ -121,7 +121,7 @@
 					bind:value={confirmPassword}
 					required
 					class="w-full px-4 py-2 border dark:focus:ring-milk-700 dark:focus:border-milk-800 dark:border-milk-800 dark:focus:outline-none dark:focus:ring-2 disabled:text-milk-500 border-milk-200 rounded-lg
-            dark:bg-milk-950 focus:outline-none focus:ring-2 focus:ring-brick-500
+            dark:bg-milk-950 focus:outline-none focus:ring-2 focus:ring-cacao-500
                    transition duration-200"
 				/>
 				{#if !passwordMatch}

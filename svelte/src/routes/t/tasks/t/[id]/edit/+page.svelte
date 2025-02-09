@@ -70,7 +70,7 @@
 				name="title"
 				value={task.title}
 				class="w-full px-4 py-2 border dark:focus:ring-milk-700 dark:focus:border-milk-800 dark:border-milk-800 dark:focus:outline-none dark:focus:ring-2 disabled:text-milk-500 border-milk-200 rounded-lg
-            dark:bg-milk-950 focus:outline-none focus:ring-2 focus:ring-brick-500
+            dark:bg-milk-950 focus:outline-none focus:ring-2 focus:ring-cacao-500
                    transition duration-200"
 			/>
 		</div>
@@ -80,7 +80,7 @@
 				id="assignee"
 				name="student"
 				class="w-full px-4 py-2 border dark:focus:ring-milk-700 dark:focus:border-milk-800 dark:border-milk-800 dark:focus:outline-none dark:focus:ring-2 disabled:text-milk-500 border-milk-200 rounded-lg
-            dark:bg-milk-950 focus:outline-none focus:ring-2 focus:ring-brick-500
+            dark:bg-milk-950 focus:outline-none focus:ring-2 focus:ring-cacao-500
                    transition duration-200"
 			>
 				<option value="">Select an assignee</option>
@@ -105,7 +105,7 @@
 				name="dueDate"
 				bind:value={dueDate}
 				class="w-full px-4 py-2 border dark:focus:ring-milk-700 dark:focus:border-milk-800 dark:border-milk-800 dark:focus:outline-none dark:focus:ring-2 disabled:text-milk-500 border-milk-200 rounded-lg
-            dark:bg-milk-950 focus:outline-none focus:ring-2 focus:ring-brick-500
+            dark:bg-milk-950 focus:outline-none focus:ring-2 focus:ring-cacao-500
                    transition duration-200"
 			/>
 		</div>
@@ -114,11 +114,11 @@
 				<input type="checkbox" name="completed" checked={task.completed} class="sr-only peer" />
 				<div
 					class="w-11 h-6 bg-milk-200 peer-focus:outline-none peer-focus:ring-4
-					   peer-focus:ring-brick-300 rounded-full peer
+					   peer-focus:ring-cacao-300 rounded-full peer
 					   peer-checked:after:translate-x-full peer-checked:after:border-white
 					   after:content-[''] after:absolute after:top-[2px] after:left-[2px]
 					   after:bg-white after:border-milk-300 after:border after:rounded-full
-					   after:h-5 after:w-5 after:transition-all peer-checked:bg-brick-600"
+					   after:h-5 after:w-5 after:transition-all peer-checked:bg-cacao-600"
 				></div>
 				<span class="ml-3 text-sm font-medium text-milk-700">Completed</span>
 			</label>

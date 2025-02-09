@@ -9,7 +9,7 @@
 	>
 	<a
 		href="/"
-		class="rounded-lg text-center text-xl font-bold px-4 py-2 bg-brick-400 hover:bg-brick-500 transition-colors mt-4"
+		class="rounded-lg text-center text-xl font-bold px-4 py-2 bg-cacao-400 hover:bg-cacao-500 transition-colors mt-4"
 		>Go back to dashboard</a
 	>
 </div>

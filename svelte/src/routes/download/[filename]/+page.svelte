@@ -46,19 +46,19 @@
 <div class=" flex items-center justify-center size-full">
 	<div class="max-w-md w-full dark:bg-milk-900 bg-white rounded-xl shadow-md p-8 space-y-6">
 		<div class="flex items-center justify-center space-x-2">
-			<BookOpen class="w-8 h-8 dark:text-milk-700 text-brick-500" />
+			<BookOpen class="w-8 h-8 dark:text-milk-700 text-cacao-500" />
 			<h1 class="text-2xl font-bold text-milk-800 dark:text-inherit">Homework Time! 📚</h1>
 		</div>
 
 		<div class="space-y-4">
 			{#if isDownloading}
 				<div class="flex flex-col items-center space-y-3">
-					<Loader2 class="w-8 h-8 text-brick-500 animate-spin dark:text-brick-700" />
+					<Loader2 class="w-8 h-8 text-cacao-500 animate-spin dark:text-cacao-700" />
 					<p class="text-milk-600">Getting your homework ready...</p>
 				</div>
 			{:else}
 				<div class="flex flex-col items-center space-y-3">
-					<Download class="w-8 h-8 text-brick-500 dark:text-brick-800" />
+					<Download class="w-8 h-8 text-cacao-500 dark:text-cacao-800" />
 					<p class="text-milk-600">
 						{downloadStarted ? 'Almost there! 🚀' : 'Ready to download! 🎉'}
 					</p>
@@ -67,7 +67,7 @@
 
 			<button
 				onclick={downloadAgain}
-				class="w-full bg-brick-500 hover:bg-brick-600 dark:bg-milk-800 dark:hover:bg-milk-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2"
+				class="w-full bg-cacao-500 hover:bg-cacao-600 dark:bg-milk-800 dark:hover:bg-milk-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2"
 			>
 				<Download class="w-4 h-4" />
 				<span>Download Again</span>

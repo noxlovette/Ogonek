@@ -94,14 +94,14 @@
 			 cursor-pointer transition-colors duration-200 h-full
 			 {isSuccess ? 'bg-pakistan-50 border-pakistan-700' : ''}
 			 {isDragging
-			? 'border-brick-700 bg-brick-100'
+			? 'border-cacao-700 bg-cacao-100'
 			: 'border-milk-300 hover:border-milk-400 bg-milk-50 dark:bg-milk-900 dark:border-milk-800 dark:hover:border-milk-700'}"
 	>
 		<input bind:this={fileInput} type="file" name="file" onchange={handleChange} class="hidden" />
 
 		{#if isUploading}
 			<div class="flex flex-col items-center gap-3" in:scale={{ duration: 200 }}>
-				<Loader2 class="w-10 h-10 text-brick-500 animate-spin" />
+				<Loader2 class="w-10 h-10 text-cacao-500 animate-spin" />
 				<p class="text-milk-600">Uploading {fileName}...</p>
 			</div>
 		{:else if isSuccess}
@@ -115,7 +115,7 @@
 			</div>
 		{:else}
 			<div class="flex flex-col items-center gap-3" in:fade>
-				<Upload class="w-10 h-10 {fileName ? 'text-brick-500' : 'text-milk-400'}" />
+				<Upload class="w-10 h-10 {fileName ? 'text-cacao-500' : 'text-milk-400'}" />
 				<div class="text-center">
 					<p class="text-milk-600">
 						{fileName || 'Drag and drop your file here, or click to select'}
@@ -134,7 +134,7 @@
 			 transition-colors duration-200
 			 {isUploading || !fileName
 			? 'bg-milk-200 text-milk-500 cursor-not-allowed'
-			: 'bg-brick-500 text-white hover:bg-brick-600'}"
+			: 'bg-cacao-500 text-white hover:bg-cacao-600'}"
 	>
 		{#if isUploading}
 			<Loader2 class="w-4 h-4 animate-spin" />

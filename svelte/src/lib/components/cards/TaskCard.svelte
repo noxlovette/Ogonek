@@ -61,7 +61,7 @@
 	</div>
 
 	<div class="mt-auto pt-4 flex items-center justify-between text-sm/tight">
-		<p class:overdue class="text-milk-500 {overdue ? 'text-brick-500' : ''}">
+		<p class:overdue class="text-milk-500 {overdue ? 'text-cacao-500' : ''}">
 			Due {formattedDate}
 		</p>
 		{#if interactive && task.filePath}
@@ -83,10 +83,3 @@
 		{@html rendered}
 	</p>
 </Clickable>
-
-<style lang="postcss">
-	/* Optional: Add any component-specific styles here */
-	:global(.overdue) {
-		@apply font-medium text-red-600;
-	}
-</style>

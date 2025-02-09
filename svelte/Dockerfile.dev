@@ -1,26 +1,19 @@
 # syntax=docker/dockerfile:1
 
-# Use Node LTS (slim for smaller image)
-FROM node:20-slim
+FROM node:23-slim
 
-# Install pnpm globally
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
 
-# Set working directory
 WORKDIR /app
 
-# Copy package files first (for better layer caching)
 COPY pnpm-lock.yaml package.json ./
 
-# Install dependencies with pnpm
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
-# Development dependencies like nodemon
 RUN pnpm add -g nodemon chokidar
 
-# Copy the rest of your code
 COPY . .
 
 EXPOSE 3000

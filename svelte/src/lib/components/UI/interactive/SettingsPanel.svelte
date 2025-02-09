@@ -56,13 +56,13 @@
 		>
 			<!-- User Settings Section -->
 			<div class="space-y-4">
-				<h2 class="text-2xl font-bold text-brick-800 dark:text-milk-100">User Settings</h2>
+				<h2 class="text-2xl font-bold text-cacao-800 dark:text-milk-100">User Settings</h2>
 
 				{#each ['email', 'username', 'name'] as field}
 					<div class="space-y-2">
 						<label
 							for={field}
-							class="block text-sm font-medium text-brick-700 dark:text-milk-100 capitalize"
+							class="block text-sm font-medium text-cacao-700 dark:text-milk-100 capitalize"
 						>
 							{field}
 						</label>
@@ -73,7 +73,7 @@
 							name={field}
 							value={$user[field]}
 							class="w-full px-4 py-2 border dark:focus:ring-milk-700 dark:focus:border-milk-800 dark:border-milk-800 dark:focus:outline-none dark:focus:ring-2 disabled:text-milk-500 border-milk-200 rounded-lg
-            dark:bg-milk-950 focus:outline-none focus:ring-2 focus:ring-brick-500
+            dark:bg-milk-950 focus:outline-none focus:ring-2 focus:ring-cacao-500
                    transition duration-200"
 						/>
 					</div>
@@ -82,12 +82,12 @@
 
 			<!-- Profile Settings Section -->
 			<div class="space-y-4">
-				<h2 class="text-2xl font-bold text-brick-800 dark:text-milk-100">Profile Settings</h2>
+				<h2 class="text-2xl font-bold text-cacao-800 dark:text-milk-100">Profile Settings</h2>
 				{#each ['quizlet', 'zoom'] as field}
 					<div class="space-y-2">
 						<label
 							for={field}
-							class="block text-sm font-medium text-brick-700 dark:text-milk-100 capitalize"
+							class="block text-sm font-medium text-cacao-700 dark:text-milk-100 capitalize"
 						>
 							{field} URL
 						</label>
@@ -98,7 +98,7 @@
 							name={field}
 							value={$profile[`${field}Url`]}
 							class="w-full px-4 py-2 border dark:focus:ring-milk-700 dark:focus:border-milk-800 dark:border-milk-800 dark:focus:outline-none dark:focus:ring-2 disabled:text-milk-500 border-milk-200 rounded-lg
-            dark:bg-milk-950 focus:outline-none focus:ring-2 focus:ring-brick-500
+            dark:bg-milk-950 focus:outline-none focus:ring-2 focus:ring-cacao-500
                    transition duration-200"
 						/>
 					</div>

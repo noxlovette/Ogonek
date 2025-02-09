@@ -11,20 +11,20 @@ export const actions: Actions = {
 	default: async ({ request, url, fetch }) => {
 		const data = await request.formData();
 		const username = data.get('username') as string;
-		const password = data.get('password') as string;
+		const pass = data.get('password') as string;
 		const confirmPassword = data.get('confirmPassword') as string;
 		const email = data.get('email') as string;
 		const role = data.get('role') as string;
 		const name = data.get('name') as string;
 		const invite_token = url.searchParams.get('invite');
 
-		// Validate email
+
 		if (!isValidEmail(email)) {
 			return fail(400, { message: 'Invalid email address' });
 		}
 
-		// Validate password match
-		if (password !== confirmPassword) {
+
+		if (pass !== confirmPassword) {
 			return fail(400, { message: 'Passwords do not match' });
 		}
 
@@ -44,7 +44,7 @@ export const actions: Actions = {
 
 		const response = await fetch('/axum/auth/signup', {
 			method: 'POST',
-			body: JSON.stringify({ username, password, email, role, name })
+			body: JSON.stringify({ username, pass, email, role, name })
 		});
 
 		if (invite_token) {
