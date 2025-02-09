@@ -10,9 +10,7 @@
 	});
 </script>
 
-<svelte:head>
-	<title>Lessons</title>
-</svelte:head>
+
 
 <H1>Lessons</H1>
 <section class="space-y-4">

@@ -5,3 +5,7 @@
 </script>
 
 {@render children()}
+
+<svelte:head>
+	<title>Lesson</title>
+</svelte:head>

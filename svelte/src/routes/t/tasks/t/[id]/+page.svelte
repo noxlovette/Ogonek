@@ -14,7 +14,7 @@
 </script>
 
 <svelte:head>
-	<title>Task from {formattedDate}</title>
+	<title>Task From {formattedDate}</title>
 </svelte:head>
 
 <div class="flex items-center justify-between">

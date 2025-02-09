@@ -7,7 +7,8 @@
 </script>
 
 <svelte:head>
-	<title>Firelight</title>
+	<title>Lessons</title>
 </svelte:head>
 
 {@render children?.()}
+

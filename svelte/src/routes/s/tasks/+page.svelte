@@ -19,7 +19,7 @@
 <svelte:head>
 	<title>Tasks</title>
 </svelte:head>
-<!-- Active Tasks Section -->
+
 <section class="space-y-4">
 	<H2>Active Tasks ({pending.length})</H2>
 	<div class="grid grid-cols-1 md:grid-cols-2 gap-4">

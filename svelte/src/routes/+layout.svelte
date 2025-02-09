@@ -23,3 +23,7 @@
 	<Notification />
 	<SearchOverlay />
 </main>
+
+<svelte:head>
+	<title>Firelight</title>
+</svelte:head>

@@ -87,3 +87,8 @@
 		</p>
 	</div>
 </div>
+
+
+<svelte:head>
+	<title>Download | Firelight</title>
+</svelte:head>

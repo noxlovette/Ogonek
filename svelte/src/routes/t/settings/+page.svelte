@@ -7,3 +7,7 @@
 
 <H1>Settings</H1>
 <SettingsPanel />
+
+<svelte:head>
+	<title>Settings</title>
+</svelte:head>

@@ -56,3 +56,8 @@
 >
 	<ButtonSubmit bind:isSubmitting buttonName="Invite Students" />
 </form>
+
+
+<svelte:head>
+	<title>Students</title>
+</svelte:head>

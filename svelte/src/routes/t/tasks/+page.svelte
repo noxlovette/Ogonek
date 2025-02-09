@@ -40,3 +40,7 @@
 		<ButtonSubmit buttonName="Add your first one!" />
 	{/if}
 </form>
+
+<svelte:head>
+	<title>Tasks</title>
+</svelte:head>

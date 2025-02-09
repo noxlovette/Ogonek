@@ -37,3 +37,7 @@
 	{@render children?.()}
 </WorkArea>
 <BottomMenu elements={[Dashboard, Todo, Lessons, Students, Quizlet, Settings]} />
+
+<svelte:head>
+	<title>Tasks</title>
+</svelte:head>

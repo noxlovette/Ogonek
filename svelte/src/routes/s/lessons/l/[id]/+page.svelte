@@ -11,7 +11,7 @@
 </script>
 
 <svelte:head>
-	<title>Lesson from {formattedDate}</title>
+	<title>Lesson From {formattedDate}</title>
 </svelte:head>
 
 {#if lesson}

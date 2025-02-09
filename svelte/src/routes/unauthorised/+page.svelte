@@ -31,3 +31,7 @@
 		</button>
 	</div>
 </div>
+
+<svelte:head>
+	<title>Unauthorised</title>
+</svelte:head>

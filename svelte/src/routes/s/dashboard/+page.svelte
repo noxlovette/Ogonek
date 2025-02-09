@@ -45,3 +45,7 @@
 		</div>
 	</section>
 </div>
+
+<svelte:head>
+	<title>Dashboard | Firelight</title>
+</svelte:head>
