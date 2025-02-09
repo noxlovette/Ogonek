@@ -1,5 +1,5 @@
 import { fail, redirect, type Actions } from '@sveltejs/kit';
-import { ValidateAccess } from '$lib/utils';
+import { ValidateAccess } from '$lib/server';
 import type { Profile } from '$lib/types';
 export const actions = {
 	update: async ({ request, fetch }) => {

@@ -1,5 +1,5 @@
 <script>
-	import { H1, SettingsPanel } from '$lib';
+	import { H1, SettingsPanel } from '$lib/components';
 </script>
 
 <svelte:head>
@@ -9,4 +9,3 @@
 <H1>Settings</H1>
 
 <SettingsPanel />
-

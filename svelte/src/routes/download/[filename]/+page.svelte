@@ -20,7 +20,6 @@
 			URL.revokeObjectURL(url);
 			downloadStarted = true;
 		} catch (e) {
-			console.error(e);
 			isDownloading = false;
 		}
 	});
@@ -87,7 +86,6 @@
 		</p>
 	</div>
 </div>
-
 
 <svelte:head>
 	<title>Download | Firelight</title>

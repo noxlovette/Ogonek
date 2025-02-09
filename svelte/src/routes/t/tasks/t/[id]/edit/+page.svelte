@@ -17,11 +17,6 @@
 		if (task.dueDate) {
 			dueDate = new Date(task.dueDate).toISOString().split('T')[0];
 		}
-
-		console.log('the filepath that will be saved to the server', filePath);
-
-		console.log(fileName);
-		console.log(task.filePath);
 	});
 </script>
 
