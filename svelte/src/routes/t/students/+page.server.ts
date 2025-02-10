@@ -11,10 +11,6 @@ export const actions: Actions = {
 
 		const link = await response.json();
 
-		// If your Axum endpoint returns something like:
-		// Ok(Json("https://your-app.com/signup?invite=abc123..."))
-		// Then 'data' would be that URL string
-
 		return {
 			link
 		};

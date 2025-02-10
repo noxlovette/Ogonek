@@ -42,7 +42,6 @@ pub async fn signup(
     let id = nanoid!();
 
     sqlx::query!(
-        // language=PostgreSQL
         r#"
             INSERT INTO "user" (name, username, email, role, pass, verified, id)
             VALUES ($1, $2, $3, $4, $5, false, $6)
@@ -74,8 +73,6 @@ pub async fn authorize(
     State(state): State<AppState>,
     Json(payload): Json<AuthPayload>,
 ) -> Result<Response, AuthError> {
-    tracing::debug!("Received host header: {:?}", headers.get("host"));
-    tracing::debug!("Received origin header: {:?}", headers.get("origin"));
 
     if payload.username.is_empty() || payload.pass.is_empty() {
         return Err(AuthError::InvalidCredentials);

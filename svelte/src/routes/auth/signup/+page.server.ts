@@ -23,6 +23,10 @@ export const actions: Actions = {
 			return fail(400, { message: 'Invalid email address' });
 		}
 
+		if (name.length < 3 || name.length > 16) {
+    return fail(400, { message: 'Name should be between 3 and 16 characters' });
+}
+
 
 		if (pass !== confirmPassword) {
 			return fail(400, { message: 'Passwords do not match' });
