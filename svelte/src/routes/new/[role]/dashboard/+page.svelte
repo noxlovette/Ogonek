@@ -21,11 +21,11 @@
 		<Clock />
 	</div>
 
-	<!-- Recent Tasks -->
+
 	<section class="space-y-4">
 		<h2 class="text-xl font-semibold text-milk-800">Recent Tasks</h2>
-		<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-			{#each pending.slice(0, 3) as task (task.id)}
+		<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+			{#each pending.slice(0, 6) as task (task.id)}
 				<div transition:fly={{ y: 20, duration: 300 }}>
 					<TaskCard {task} />
 				</div>
@@ -33,11 +33,11 @@
 		</div>
 	</section>
 
-	<!-- Latest Lessons -->
+
 	<section class="space-y-4">
 		<h2 class="text-xl font-semibold text-milk-800">Latest Lessons</h2>
-		<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-			{#each lessons.slice(0, 3) as lesson (lesson.id)}
+		<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+			{#each lessons.slice(0, 6) as lesson (lesson.id)}
 				<div transition:fly={{ y: 20, duration: 300 }}>
 					<LessonCard {lesson} />
 				</div>
