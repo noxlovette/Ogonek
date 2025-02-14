@@ -28,10 +28,6 @@ export const handle: Handle = sequence(
     const path = event.url.pathname;
     const role = event.params.role;
 
-    if (role !== "t" && role !== "s") {
-      redirect(301, "/unauthorised");
-    }
-
     if (!isProtectedPath(path)) {
       return resolve(event);
     }
