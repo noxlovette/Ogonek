@@ -1,140 +1,163 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
-	import { notification } from '$lib/stores';
-	import { goto } from '$app/navigation';
-	import { Loader2 } from 'lucide-svelte';
-	import ButtonSubmit from '$lib/components/UI/buttons/ButtonSubmit.svelte';
+  import { enhance } from "$app/forms";
+  import { notification } from "$lib/stores";
+  import { goto } from "$app/navigation";
+  import { Loader2 } from "lucide-svelte";
+  import ButtonSubmit from "$lib/components/UI/buttons/ButtonSubmit.svelte";
 
-	let loading = $state(false);
-	let password = $state('');
-	let confirmPassword = $state('');
-	let passwordMatch = $state(true);
-	let isSubmitting = $state(false);
+  let loading = $state(false);
+  let password = $state("");
+  let confirmPassword = $state("");
+  let passwordMatch = $state(true);
+  let isSubmitting = $state(false);
 </script>
 
 <div
-	class="max-w-md flex flex-col space-y-6 items-center justify-center dark:bg-milk-900 bg-white p-9 rounded-xl shadow-md w-11/12"
+  class="dark:bg-milk-900 flex w-11/12 max-w-md flex-col items-center justify-center space-y-6 rounded-xl bg-white p-9 shadow-md"
 >
-	<div class="text-center">
-		<h2 class="text-3xl font-bold text-cacao-600 dark:text-milk-100">Create Account</h2>
-		<p class="mt-2 text-sm text-milk-600">
-			Already have an account?
-			<a
-				href="/auth/login"
-				class="font-medium dark:text-milk-100 text-cacao-500 hover:text-cacao-400">Sign in</a
-			>
-		</p>
-	</div>
+  <div class="text-center">
+    <h2 class="text-cacao-600 dark:text-milk-100 text-3xl font-bold">
+      Create Account
+    </h2>
+    <p class="text-milk-600 mt-2 text-sm">
+      Already have an account?
+      <a
+        href="/auth/login"
+        class="dark:text-milk-100 text-cacao-500 hover:text-cacao-400 font-medium"
+        >Sign in</a
+      >
+    </p>
+  </div>
 
-	<form
-		method="post"
-		class="space-y-4 w items-center justify-center flex flex-col"
-		use:enhance={() => {
-			isSubmitting = true;
+  <form
+    method="post"
+    class="w flex flex-col items-center justify-center space-y-4"
+    use:enhance={() => {
+      isSubmitting = true;
 
-			return async ({ result }) => {
-				isSubmitting = false;
-				if (result.type === 'redirect') {
-					notification.set({ message: 'Welcome on board', type: 'success' });
-					goto(result.location);
-				} else if (result.type === 'failure') {
-					notification.set({
-						message: String(result.data?.message) || "Something's off",
-						type: 'error'
-					});
-				}
-			};
-		}}
-	>
-		<div class="space-y-4">
-			<div>
-				<label for="name" class="block text-sm font-medium text-milk-700">Full Name</label>
-				<input
-					type="text"
-					name="name"
-					required
-					class="w-full px-4 py-2 border dark:focus:ring-milk-700 dark:focus:border-milk-800 dark:border-milk-800 dark:focus:outline-none dark:focus:ring-2 disabled:text-milk-500 border-milk-200 rounded-lg
-            dark:bg-milk-950 focus:outline-none focus:ring-2 focus:ring-cacao-500
-                   transition duration-200"
-				/>
-			</div>
+      return async ({ result }) => {
+        isSubmitting = false;
+        if (result.type === "redirect") {
+          notification.set({ message: "Welcome on board", type: "success" });
+          goto(result.location);
+        } else if (result.type === "failure") {
+          notification.set({
+            message: String(result.data?.message) || "Something's off",
+            type: "error",
+          });
+        }
+      };
+    }}
+  >
+    <div class="space-y-4">
+      <div>
+        <label for="name" class="text-milk-700 block text-sm font-medium"
+          >Full Name</label
+        >
+        <input
+          type="text"
+          name="name"
+          required
+          class="dark:focus:ring-milk-700 dark:focus:border-milk-800 dark:border-milk-800 disabled:text-milk-500 border-milk-200 dark:bg-milk-950 focus:ring-cacao-500 w-full rounded-lg border px-4 py-2
+            transition duration-200 focus:ring-2 focus:outline-none
+                   dark:focus:ring-2 dark:focus:outline-none"
+        />
+      </div>
 
-			<div>
-				<label for="username" class="block text-sm font-medium text-milk-700">Username</label>
-				<input
-					type="text"
-					name="username"
-					required
-					class="w-full px-4 py-2 border dark:focus:ring-milk-700 dark:focus:border-milk-800 dark:border-milk-800 dark:focus:outline-none dark:focus:ring-2 disabled:text-milk-500 border-milk-200 rounded-lg
-            dark:bg-milk-950 focus:outline-none focus:ring-2 focus:ring-cacao-500
-                   transition duration-200"
-				/>
-			</div>
+      <div>
+        <label for="username" class="text-milk-700 block text-sm font-medium"
+          >Username</label
+        >
+        <input
+          type="text"
+          name="username"
+          required
+          class="dark:focus:ring-milk-700 dark:focus:border-milk-800 dark:border-milk-800 disabled:text-milk-500 border-milk-200 dark:bg-milk-950 focus:ring-cacao-500 w-full rounded-lg border px-4 py-2
+            transition duration-200 focus:ring-2 focus:outline-none
+                   dark:focus:ring-2 dark:focus:outline-none"
+        />
+      </div>
 
-			<div>
-				<label for="role" class="block text-sm font-medium text-milk-700">Role</label>
-				<select
-					name="role"
-					required
-					class="w-full px-4 py-2 border dark:focus:ring-milk-700 dark:focus:border-milk-800 dark:border-milk-800 dark:focus:outline-none dark:focus:ring-2 disabled:text-milk-500 border-milk-200 rounded-lg
-            dark:bg-milk-950 focus:outline-none focus:ring-2 focus:ring-cacao-500
-                   transition duration-200"
-				>
-					<option value="">Select a role</option>
-					<option value="teacher">Teacher</option>
-					<option value="student">Student</option>
-				</select>
-			</div>
+      <div>
+        <label for="role" class="text-milk-700 block text-sm font-medium"
+          >Role</label
+        >
+        <select
+          name="role"
+          required
+          class="dark:focus:ring-milk-700 dark:focus:border-milk-800 dark:border-milk-800 disabled:text-milk-500 border-milk-200 dark:bg-milk-950 focus:ring-cacao-500 w-full rounded-lg border px-4 py-2
+            transition duration-200 focus:ring-2 focus:outline-none
+                   dark:focus:ring-2 dark:focus:outline-none"
+        >
+          <option value="">Select a role</option>
+          <option value="teacher">Teacher</option>
+          <option value="student">Student</option>
+        </select>
+      </div>
 
-			<div>
-				<label for="email" class="block text-sm font-medium text-milk-700">Email</label>
-				<input
-					type="email"
-					name="email"
-					required
-					class="w-full px-4 py-2 border dark:focus:ring-milk-700 dark:focus:border-milk-800 dark:border-milk-800 dark:focus:outline-none dark:focus:ring-2 disabled:text-milk-500 border-milk-200 rounded-lg
-            dark:bg-milk-950 focus:outline-none focus:ring-2 focus:ring-cacao-500
-                   transition duration-200"
-				/>
-			</div>
+      <div>
+        <label for="email" class="text-milk-700 block text-sm font-medium"
+          >Email</label
+        >
+        <input
+          type="email"
+          name="email"
+          required
+          class="dark:focus:ring-milk-700 dark:focus:border-milk-800 dark:border-milk-800 disabled:text-milk-500 border-milk-200 dark:bg-milk-950 focus:ring-cacao-500 w-full rounded-lg border px-4 py-2
+            transition duration-200 focus:ring-2 focus:outline-none
+                   dark:focus:ring-2 dark:focus:outline-none"
+        />
+      </div>
 
-			<div>
-				<label for="password" class="block text-sm font-medium text-milk-700">Password</label>
-				<input
-					type="password"
-					name="password"
-					bind:value={password}
-					required
-					class="w-full px-4 py-2 border dark:focus:ring-milk-700 dark:focus:border-milk-800 dark:border-milk-800 dark:focus:outline-none dark:focus:ring-2 disabled:text-milk-500 border-milk-200 rounded-lg
-            dark:bg-milk-950 focus:outline-none focus:ring-2 focus:ring-cacao-500
-                   transition duration-200"
-				/>
-			</div>
+      <div>
+        <label for="password" class="text-milk-700 block text-sm font-medium"
+          >Password</label
+        >
+        <input
+          type="password"
+          name="password"
+          bind:value={password}
+          required
+          class="dark:focus:ring-milk-700 dark:focus:border-milk-800 dark:border-milk-800 disabled:text-milk-500 border-milk-200 dark:bg-milk-950 focus:ring-cacao-500 w-full rounded-lg border px-4 py-2
+            transition duration-200 focus:ring-2 focus:outline-none
+                   dark:focus:ring-2 dark:focus:outline-none"
+        />
+      </div>
 
-			<div>
-				<label for="confirmPassword" class="block text-sm font-medium text-milk-700"
-					>Confirm Password</label
-				>
-				<input
-					type="password"
-					name="confirmPassword"
-					bind:value={confirmPassword}
-					required
-					class="w-full px-4 py-2 border dark:focus:ring-milk-700 dark:focus:border-milk-800 dark:border-milk-800 dark:focus:outline-none dark:focus:ring-2 disabled:text-milk-500 border-milk-200 rounded-lg
-            dark:bg-milk-950 focus:outline-none focus:ring-2 focus:ring-cacao-500
-                   transition duration-200"
-				/>
-				{#if !passwordMatch}
-					<p class="mt-1 text-sm text-red-600">Passwords don't match</p>
-				{/if}
-			</div>
-		</div>
-		<div class="cf-turnstile my-4" data-sitekey="0x4AAAAAAA6Es9VtsFFGCAbw"></div>
-		<ButtonSubmit bind:isSubmitting={loading} buttonName="Create Account"></ButtonSubmit>
-	</form>
+      <div>
+        <label
+          for="confirmPassword"
+          class="text-milk-700 block text-sm font-medium"
+          >Confirm Password</label
+        >
+        <input
+          type="password"
+          name="confirmPassword"
+          bind:value={confirmPassword}
+          required
+          class="dark:focus:ring-milk-700 dark:focus:border-milk-800 dark:border-milk-800 disabled:text-milk-500 border-milk-200 dark:bg-milk-950 focus:ring-cacao-500 w-full rounded-lg border px-4 py-2
+            transition duration-200 focus:ring-2 focus:outline-none
+                   dark:focus:ring-2 dark:focus:outline-none"
+        />
+        {#if !passwordMatch}
+          <p class="mt-1 text-sm text-red-600">Passwords don't match</p>
+        {/if}
+      </div>
+    </div>
+    <div
+      class="cf-turnstile my-4"
+      data-sitekey="0x4AAAAAAA6Es9VtsFFGCAbw"
+    ></div>
+    <ButtonSubmit bind:isSubmitting={loading} buttonName="Create Account"
+    ></ButtonSubmit>
+  </form>
 </div>
 
 <svelte:head>
-	<title>Signup</title>
-	<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+  <title>Signup</title>
+  <script
+    src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+    async
+    defer
+  ></script>
 </svelte:head>
