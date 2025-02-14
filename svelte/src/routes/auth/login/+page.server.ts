@@ -41,7 +41,7 @@ export const actions: Actions = {
 				return fail(400, { message: error });
 			}
 
-			// Handle cookies
+
 			response.headers.getSetCookie().forEach((cookie) => {
 				const [fullCookie, ...opts] = cookie.split(';');
 				const [name, value] = fullCookie.split('=');

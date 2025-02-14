@@ -1,5 +1,5 @@
 import { writable } from 'svelte/store';
-import type { Lesson, Task } from '$lib/types';
+import type { Lesson, Student, Task } from '$lib/types';
 
 const createLessonStore = () => {
 	const { subscribe, set, update } = writable<Lesson[]>([]);
@@ -12,7 +12,7 @@ const createLessonStore = () => {
 	};
 };
 
-export const lessonStore = createLessonStore();
+
 
 const createTaskStore = () => {
 	const { subscribe, set, update } = writable<Task[]>([]);
@@ -25,7 +25,20 @@ const createTaskStore = () => {
 	};
 };
 
+
+const createStudentStore = () => {
+	const { subscribe, set, update } = writable<Student[]>([]);
+
+	return {
+		subscribe,
+		setStudents: (students: Student[]) => set(students),
+		addStudent: (student: Student) => update((students) => [...students, student]),
+		reset: () => set([])
+	};
+};
 export const taskStore = createTaskStore();
+export const lessonStore = createLessonStore();
+export const studentStore= createStudentStore();
 
 export const isSearchOpen = writable(false);
 
