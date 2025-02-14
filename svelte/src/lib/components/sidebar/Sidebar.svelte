@@ -1,21 +1,21 @@
 <script lang="ts">
-	let props = $props();
+  let props = $props();
 </script>
 
 <div
-	class={[
-		props.class,
-		'md:flex hidden h-max flex-shrink-0 bg-cacao-600 dark:bg-milk-900 flex-col md:text-lg lg:text-xl xl:text-2xl font-serif w-1/5 px-4 py-2 ring-2 dark:ring-milk-900 ring-milk-200 rounded-lg shadow-md'
-	]}
+  class={[
+    props.class,
+    "bg-cacao-600 dark:bg-milk-900 dark:ring-milk-900 ring-milk-200 hidden h-max w-1/5 flex-shrink-0 flex-col rounded-lg px-4 py-2 font-serif ring-2 shadow-md md:flex md:text-lg lg:text-xl xl:text-2xl",
+  ]}
 >
-	<ul
-		class={[
-			props.subclass,
-			'flex flex-col space-y-2 lg:space-y-3 xl:space-y-4 divide-y-2 divide-cacao-400 dark:divide-milk-600'
-		]}
-	>
-		{#each props.elements as Element}
-			<Element />
-		{/each}
-	</ul>
+  <ul
+    class={[
+      props.subclass,
+      "divide-cacao-400 dark:divide-milk-600 flex flex-col space-y-2 divide-y-2 lg:space-y-3 xl:space-y-4",
+    ]}
+  >
+    {#each props.elements as Element}
+      <Element />
+    {/each}
+  </ul>
 </div>
