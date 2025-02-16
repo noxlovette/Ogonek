@@ -1,6 +1,6 @@
 {
   "name": "firelight",
-  "version": "1.0.0",
+  "version": "1.0.19",
   "private": true,
   "scripts": {
     "dev": "vite dev",

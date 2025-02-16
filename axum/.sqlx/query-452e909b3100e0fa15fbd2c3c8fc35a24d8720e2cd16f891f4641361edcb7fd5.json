@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "\n        SELECT \n            l.id,\n            l.title,\n            l.topic,\n            l.markdown,\n            l.assignee,\n            l.created_by,\n            l.created_at,\n            l.updated_at,\n            u.name as assignee_name\n        FROM lessons l\n        LEFT JOIN \"user\" u ON l.assignee = u.id\n        WHERE (l.assignee = $1 OR l.created_by = $1)\n        ",
+  "query": "\n        SELECT \n            l.id,\n            l.title,\n            l.topic,\n            l.markdown,\n            l.assignee,\n            l.created_by,\n            l.created_at,\n            l.updated_at,\n            u.name as assignee_name\n        FROM lessons l\n        LEFT JOIN \"user\" u ON l.assignee = u.id\n        WHERE (l.assignee = $1 OR l.created_by = $1)\n        ORDER BY l.created_at DESC\n        ",
   "describe": {
     "columns": [
       {
@@ -66,5 +66,5 @@
       false
     ]
   },
-  "hash": "ea7ba5ff37cb7271ffce05e59e8570e9b5682b8b210e2b799e007d318463ee1a"
+  "hash": "452e909b3100e0fa15fbd2c3c8fc35a24d8720e2cd16f891f4641361edcb7fd5"
 }
