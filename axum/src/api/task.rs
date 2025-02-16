@@ -61,13 +61,16 @@ pub async fn list_tasks(
         FROM tasks t
         LEFT JOIN "user" u ON t.assignee = u.id
         WHERE (t.assignee = $1 OR t.created_by = $1)
+        ORDER BY t.due_date DESC NULLS LAST
         "#,
         claims.sub
     )
     .fetch_all(&state.db)
     .await?;
+    
     Ok(Json(tasks))
 }
+
 
 pub async fn create_task(
     State(state): State<AppState>,

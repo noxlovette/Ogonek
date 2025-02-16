@@ -41,7 +41,6 @@ pub async fn fetch_lesson(
 
     Ok(Json(lesson))
 }
-
 pub async fn list_lessons(
     State(state): State<AppState>,
     claims: Claims,
@@ -62,6 +61,7 @@ pub async fn list_lessons(
         FROM lessons l
         LEFT JOIN "user" u ON l.assignee = u.id
         WHERE (l.assignee = $1 OR l.created_by = $1)
+        ORDER BY l.created_at DESC
         "#,
         claims.sub
     )
@@ -70,6 +70,7 @@ pub async fn list_lessons(
 
     Ok(Json(lessons))
 }
+
 
 pub async fn create_lesson(
     State(state): State<AppState>,
