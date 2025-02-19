@@ -1,5 +1,4 @@
 <script lang="ts">
-  import type { PageData } from "./$types";
   import { user } from "$lib/stores";
   import type { Task, TableConfig } from "$lib/types";
   import { H1, Table, ButtonSubmit, TaskCard, H2 } from "$lib/components";
@@ -7,10 +6,12 @@
   import { enhance } from "$app/forms";
   import { page } from "$app/state";
   import { slide } from "svelte/transition";
+  import {notification} from "$lib/stores";
 
   let { data } = $props();
 
   let role = $derived(page.params.role);
+  let isSubmitting=$state(false);
   const { tasks, students } = data;
 
   const taskConfig: TableConfig<Task> = {
@@ -67,11 +68,35 @@
 {:else}
   <section class="space-y-4">
     <H2>Active Tasks ({pending.length})</H2>
+    {#if pending.length > 0}
     <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
       {#each pending as task (task.id)}
         <TaskCard {task} interactive={true} />
       {/each}
     </div>
+    {:else}
+    <form method="POST" action="?/requestHW"
+    use:enhance={() => {
+      isSubmitting = true;
+
+      return async ({ result }) => {
+        if (result.type === "success") {
+          notification.set({ message: "Notified", type: "success" });
+          
+        } else {
+          notification.set({
+            message: "Failed to Notify",
+            type: "error",
+          });
+        }
+        isSubmitting = false;
+      };
+    }}
+    >
+      <input type="hidden" value={$user.username} name="username" />
+      <ButtonSubmit buttonName="I Want More" bind:isSubmitting />
+    </form>
+    {/if}
   </section>
 
   <!-- Completed Tasks Toggle & Section -->

@@ -30,6 +30,13 @@ services:
     depends_on:
       - axum
 
+  redis:
+    image: redis/redis-stack:latest
+    container_name: redis-fl-dev
+    ports:
+      - "6379:6379"
+      - "8003:8001"
+
   axum:
     build:
       context: ./axum

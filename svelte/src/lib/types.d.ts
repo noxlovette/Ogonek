@@ -78,3 +78,12 @@ export interface UserData {
   user: User;
   profile: Profile;
 }
+
+export interface Word {
+  word: string;
+  results: WordResult[];
+}
+
+export interface WordResult {
+  definition: string;
+}

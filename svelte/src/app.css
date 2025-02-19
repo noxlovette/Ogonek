@@ -2,9 +2,16 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+@layer base {
+  button {
+    cursor: pointer;
+  }
+}
+
 @theme {
-  --font-sans: "Montserrat", system-ui, -apple-system, BlinkMacSystemFont,
-    "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  --font-sans:
+    "Montserrat", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
   --font-serif: "Lora", system-ui, -apple-system;
 
   --color-cacao-50: oklch(0.98 0.002 35);

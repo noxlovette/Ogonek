@@ -16,6 +16,8 @@
   import { lessonStore, studentStore, taskStore } from "$lib/stores";
 
   import { page } from "$app/state";
+    import { setContext } from "svelte";
+    import type { Word } from "$lib/types";
 
   let { data, children } = $props();
   const role = $derived(page.params.role);
@@ -26,11 +28,12 @@
     elements = [Dashboard, Todo, Lessons, Students, Quizlet, Settings];
   }
 
-  const { tasks, lessons, students } = data;
+  const { tasks, lessons, students, word } = data;
 
   lessonStore.setLessons(lessons);
   taskStore.setTasks(tasks);
   studentStore.setStudents(students);
+  setContext<Word>("word", word);
 </script>
 
 <Sidebar class="text-cacao-50" {elements} />

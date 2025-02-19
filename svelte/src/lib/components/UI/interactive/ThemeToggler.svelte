@@ -1,11 +1,9 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { Sun, Moon, Monitor } from "lucide-svelte";
-
-  // Theme state: 'light', 'dark', or 'auto'
+    import { notification } from "$lib/stores";
   let theme = $state("auto");
 
-  // Function to apply theme based on user selection or system preference
   function applyTheme(mode: string) {
     if (mode === "auto") {
       const systemPrefersDark = window.matchMedia(
@@ -17,16 +15,16 @@
     }
   }
 
-  // Load theme from localStorage or system preference
   onMount(() => {
     const storedTheme = localStorage.getItem("theme");
     theme = storedTheme || "auto";
     applyTheme(theme);
   });
 
-  // Cycle between light → dark → auto
   function toggleTheme() {
     theme = theme === "light" ? "dark" : theme === "dark" ? "auto" : "light";
+    notification.set({message: theme, type: "info"})
+
     localStorage.setItem("theme", theme);
     applyTheme(theme);
   }

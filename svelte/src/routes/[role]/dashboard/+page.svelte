@@ -9,16 +9,6 @@
 
   let pending = tasks.filter((task) => !task.completed);
 
-  $effect(() => {
-    pending.sort(
-      (a, b) =>
-        new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
-    );
-    lessons.sort(
-      (a, b) =>
-        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-    );
-  });
 </script>
 
 <div class="space-y-4">

@@ -10,18 +10,13 @@
   <h1
     class="text-[3rem] leading-[3rem] font-bold md:leading-[4rem] xl:text-[4rem]"
   >
-    Welcome to firelight
+    Welcome to Firelight
   </h1>
   <div class="mt-8 space-x-2">
     <a
       href="/auth/login"
       class="bg-cacao-600 dark:bg-milk-900 dark:border-milk-700 dark:hover:bg-milk-600 dark:hover:text-milk-50 border-milk-200 text-cacao-50 hover:bg-cacao-100 hover:text-cacao-800 mt-5 w-20 rounded-lg border-2 px-3 py-2 text-center text-sm transition-colors md:px-4 md:py-2 md:text-base"
       >Log In</a
-    >
-    <a
-      {href}
-      class="bg-cacao-600 border-milk-200 dark:border-milk-700 dark:bg-milk-900 dark:hover:bg-milk-600 dark:hover:text-milk-50 text-cacao-50 hover:bg-cacao-100 hover:text-cacao-800 mt-5 w-20 rounded-lg border-2 px-3 py-2 text-center text-sm transition-colors md:px-4 md:py-2 md:text-base"
-      >Go to Dashboard</a
     >
   </div>
 </div>

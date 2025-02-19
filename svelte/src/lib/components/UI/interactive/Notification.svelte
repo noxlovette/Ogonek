@@ -50,8 +50,8 @@
       x: 0,
       y: 100,
     }}
-    class="dark:bg-milk-950 bg-milk-50 fixed bottom-5 left-1/2 z-50 flex max-w-md min-w-[200px] -translate-x-1/2
-			items-center gap-6 rounded-full px-4 py-2 ring-1 shadow-md {$notification.type ===
+    class="dark:bg-milk-950 bg-milk-50 fixed bottom-5 left-1/2 z-50 flex max-w-md -translate-x-1/2
+			items-center gap-3 rounded-full px-4 py-2 ring-1 shadow-md {$notification.type ===
     'success'
       ? 'ring-pakistan-700'
       : $notification.type === 'error'
@@ -62,7 +62,7 @@
 
     <p
       class="text-milk-800 flex text-sm
-
+capitalize
 		font-bold dark:text-inherit
 		"
     >

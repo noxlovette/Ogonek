@@ -1,11 +1,10 @@
 <script lang="ts">
   import Group from "./Group.svelte";
-  import H2 from "$lib/components/typography/H2.svelte";
+  import {H2} from "$lib/components";
+  import { getContext } from 'svelte';
+  import type { Word } from "$lib/types";
 
-  const word = {
-    word: "Loading...",
-    results: [],
-  };
+  const word = getContext<Word>("word");
 </script>
 
 <Group>
@@ -13,5 +12,10 @@
   <h3 class="italic select-text">
     {word.word}
   </h3>
-  <p class="text-xs select-text lg:text-base">No definition found</p>
+  <p class="text-xs select-text lg:text-base">
+    {#if word.results}
+    {word.results[0].definition}
+  {:else}
+    No definition found
+  {/if}</p>
 </Group>

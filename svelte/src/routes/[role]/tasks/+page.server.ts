@@ -1,4 +1,6 @@
-import { redirect, type Actions } from "@sveltejs/kit";
+import { env } from "$env/dynamic/private";
+import { notifyTelegram } from "$lib/server";
+import { fail, redirect, type Actions } from "@sveltejs/kit";
 
 export const actions: Actions = {
   new: async ({ fetch }) => {
@@ -16,6 +18,20 @@ export const actions: Actions = {
 
     if (response.ok) {
       return redirect(301, `/t/tasks/t/${id}/edit`);
+    }
+  },
+  requestHW: async ({ request }) => {
+    const formData = await request.formData();
+    const username = formData.get("username");
+
+    const message = `${username} needs homework`;
+
+    const telegramResponse = await notifyTelegram(
+      message,
+      env.TELEGRAM_CHAT_ID,
+    );
+    if (telegramResponse.status !== 200) {
+      return fail(400);
     }
   },
 };
