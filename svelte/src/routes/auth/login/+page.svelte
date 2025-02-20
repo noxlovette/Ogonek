@@ -2,6 +2,7 @@
   import { enhance } from "$app/forms";
   import { goto } from "$app/navigation";
   import { ButtonSubmit } from "$lib/components/UI";
+  import Turnstile from "$lib/components/Turnstile.svelte";
   import {
     setProfile,
     setUser,
@@ -92,10 +93,7 @@
       </div>
     </div>
 
-    <div
-      class="cf-turnstile my-4"
-      data-sitekey="0x4AAAAAAA6Es9VtsFFGCAbw"
-    ></div>
+    <Turnstile />
 
     <ButtonSubmit bind:isSubmitting buttonName="Login" />
   </form>
@@ -103,9 +101,4 @@
 
 <svelte:head>
   <title>Login</title>
-  <script
-    src="https://challenges.cloudflare.com/turnstile/v0/api.js"
-    async
-    defer
-  ></script>
 </svelte:head>

@@ -4,6 +4,8 @@
   import { goto } from "$app/navigation";
   import { Loader2 } from "lucide-svelte";
   import ButtonSubmit from "$lib/components/UI/buttons/ButtonSubmit.svelte";
+  import Turnstile from "$lib/components/Turnstile.svelte";
+  import { hydrate } from "svelte";
 
   let loading = $state(false);
   let password = $state("");
@@ -144,10 +146,7 @@
         {/if}
       </div>
     </div>
-    <div
-      class="cf-turnstile my-4"
-      data-sitekey="0x4AAAAAAA6Es9VtsFFGCAbw"
-    ></div>
+    <Turnstile />
     <ButtonSubmit bind:isSubmitting={loading} buttonName="Create Account"
     ></ButtonSubmit>
   </form>
@@ -155,9 +154,4 @@
 
 <svelte:head>
   <title>Signup</title>
-  <script
-    src="https://challenges.cloudflare.com/turnstile/v0/api.js"
-    async
-    defer
-  ></script>
 </svelte:head>

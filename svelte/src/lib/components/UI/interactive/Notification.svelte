@@ -62,8 +62,8 @@
 
     <p
       class="text-milk-800 flex text-sm
-capitalize
-		font-bold dark:text-inherit
+font-bold
+		capitalize dark:text-inherit
 		"
     >
       {$notification.message}

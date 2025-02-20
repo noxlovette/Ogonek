@@ -36,6 +36,7 @@
       <form
         class="flex"
         method="post"
+        action="?/completed"
         use:enhance={() => {
           return async ({ result }) => {
             if (result.type === "success") {
@@ -73,19 +74,6 @@
     <p class:overdue class="text-milk-500 {overdue ? 'text-cacao-500' : ''}">
       Due {formattedDate}
     </p>
-    {#if interactive && task.filePath}
-      <a
-        class="pointer-events-auto"
-        href="/download/{task.filePath}"
-        onclick={() => (isPreloading = true)}
-      >
-        {#if !isPreloading}
-          <Download class="size-6" />
-        {:else}
-          <Loader2 class="animate-spin" />
-        {/if}
-      </a>
-    {/if}
   </div>
 
   <p class="text-milk-600 text-sm/relaxed lg:text-base/relaxed">

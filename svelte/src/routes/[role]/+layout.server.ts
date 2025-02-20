@@ -9,23 +9,25 @@ export const load: LayoutServerLoad = async ({ fetch }) => {
     fetch("/axum/task").then((res) => res.json() as Promise<Task[]>),
   ]);
 
-  let word;
-  const cachedWord = await redis.get("wordAPI");
-
-  if (cachedWord) {
-    word = await JSON.parse(cachedWord);
-  } else {
-    word = await fetch("https://wordsapiv1.p.rapidapi.com/words?random=true", {
-      method: "GET",
-      headers: {
-        "x-rapidapi-host": "wordsapiv1.p.rapidapi.com",
-        "x-rapidapi-key": env.API_WORD_KEY,
-      },
-    }).then((res) => res.json());
-    await redis.set("wordAPI", JSON.stringify(word), "EX", 60 * 60 * 24);
-  }
-
-  console.log(word);
+  const word = redis.get("wordAPI").then(async (cachedWord) => {
+    if (cachedWord) {
+      return JSON.parse(cachedWord);
+    } else {
+      const response = await fetch(
+        "https://wordsapiv1.p.rapidapi.com/words?random=true",
+        {
+          method: "GET",
+          headers: {
+            "x-rapidapi-host": "wordsapiv1.p.rapidapi.com",
+            "x-rapidapi-key": env.API_WORD_KEY,
+          },
+        },
+      );
+      const word = await response.json();
+      await redis.set("wordAPI", JSON.stringify(word), "EX", 60 * 60 * 24);
+      return word;
+    }
+  });
 
   return {
     students,

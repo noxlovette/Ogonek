@@ -205,7 +205,9 @@
             {/each}
           </tr>
         </thead>
-        <tbody class="divide-milk-200 dark:bg-milk-950 divide-y bg-white">
+        <tbody
+          class="divide-milk-200 dark:divide-milk-800 dark:bg-milk-950 divide-y bg-white"
+        >
           {#each filteredItems as item (item.id)}
             <tr
               onclick={() => goto(`${href}/${item.id}`)}

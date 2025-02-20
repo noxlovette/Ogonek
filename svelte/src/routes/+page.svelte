@@ -5,13 +5,16 @@
 </script>
 
 <div
-  class="flex w-full flex-col items-center space-x-6 p-4 text-center md:p-6 md:text-left lg:p-8"
+  class="flex w-full flex-col items-center space-y-4 p-4 text-center md:p-6 md:text-left lg:p-8"
 >
   <h1
     class="text-[3rem] leading-[3rem] font-bold md:leading-[4rem] xl:text-[4rem]"
   >
     Welcome to Firelight
   </h1>
+  <h2 class="text-xl">
+    See your homework, revisit previous lessons. One place for your English
+  </h2>
   <div class="mt-8 space-x-2">
     <a
       href="/auth/login"

@@ -9,13 +9,13 @@
   import { Download, Loader2, CheckSquare, Square } from "lucide-svelte";
 
   let { data } = $props();
-  const { task, rendered } = data;
+  const { rendered } = data;
 
   let role = $derived(page.params.role);
   let overdue = $state(false);
-  let completed = $state(task.completed);
+  let completed = $state(data.task.completed);
 
-  let formattedDate = formatDateTime(task.createdAt);
+  let formattedDate = formatDateTime(data.task.createdAt);
   let isPreloading = $state(false);
 </script>
 
@@ -26,9 +26,9 @@
 {#if role === "t"}
   <div class="flex items-center justify-between">
     <div class="flex space-x-4">
-      <H1>{task.title}</H1>
+      <H1>{data.task.title}</H1>
       <a
-        href="/t/tasks/t/{task.id}/edit"
+        href="/t/tasks/t/{data.task.id}/edit"
         class="bg-cacao-600 text-cacao-50 hover:bg-cacao-700 focus:ring-cacao-500 rounded-lg px-4 py-2 transition-colors focus:ring-2 focus:ring-offset-2 focus:outline-none disabled:opacity-50"
         >Edit</a
       >
@@ -36,10 +36,10 @@
     <div class="text-right">
       <p class="text-milk-700 block font-medium">Student</p>
       <h3 class="">
-        {#if task.assigneeName === $user.username}
+        {#if data.task.assigneeName === $user.username}
           Not Assigned
         {:else}
-          {task.assigneeName}
+          {data.task.assigneeName}
         {/if}
       </h3>
     </div>
@@ -49,67 +49,70 @@
     {@html rendered}
   </div>
 
-  {#if task.filePath}
+  {#if data.task.filePath}
     <div>
       <ButtonRaw
-        onclick={() => goto(`/download/${task.filePath}`)}
+        onclick={() => goto(`/download/${data.task.filePath}`)}
         buttonName="Download"
       />
     </div>
   {/if}
 {:else}
   <div class="flex items-baseline justify-between">
-    <div class="flex items-baseline space-x-4">
-      <H1>{task.title}</H1>
-
-      {#if task.filePath}
-        <a
-          href="/download/{task.filePath}"
-          onclick={() => (isPreloading = true)}
-        >
-          {#if !isPreloading}
-            <Download class="size-6" />
-          {:else}
-            <Loader2 class="animate-spin" />
-          {/if}
-        </a>
-      {/if}
-      <form
-        class="flex"
-        method="post"
-        use:enhance={() => {
-          return async ({ result }) => {
-            if (result.type === "success") {
-              const message = completed
-                ? "Marked As Completed"
-                : "Not Completed";
-              notification.set({ message, type: "success" });
-            } else {
-              notification.set({
-                message: "Failed to mark as completed",
-                type: "error",
-              });
-            }
-          };
-        }}
-      >
-        <button
-          onclick={() => (completed = !completed)}
-          class="pointer-events-auto"
-          class:overdue
-        >
-          {#if completed}
-            <CheckSquare class="h-6 w-6" />
-          {:else}
-            <Square class="h-6 w-6" />
-          {/if}
-        </button>
-        <input type="hidden" name="completed" value={completed} />
-        <input type="hidden" name="id" value={task.id} />
-      </form>
-    </div>
+    <H1>{data.task.title}</H1>
   </div>
+
   <div class="markdown ring-milk-200 dark:ring-milk-900 rounded-lg p-4 ring-2">
     {@html rendered}
+  </div>
+  <div class="flex space-x-3">
+    {#if data.task.filePath}
+      <a
+        href="/download/{data.task.filePath}"
+        onclick={() => (isPreloading = true)}
+        class="dark:hover:bg-milk-900 ring-milk-200 dark:ring-milk-800 dark:hover:ring-milk-950 bg-cacao-600 text-cacao-50 dark:bg-milk-800 dark:text-cacao-100 hover:bg-cacao-700 focus:ring-cacao-500 flex items-center justify-center rounded-lg px-3 py-2 text-sm ring-2 transition-all focus:ring-2 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:space-x-2 md:px-4 md:text-base"
+      >
+        {#if !isPreloading}
+          <Download class="size-6" />
+          <p class="hidden md:block">Download</p>
+        {:else}
+          <Loader2 class="animate-spin" />
+          <p class="hidden md:block">On it...</p>
+        {/if}
+      </a>
+    {/if}
+    <form
+      class="flex"
+      method="post"
+      use:enhance={() => {
+        return async ({ result }) => {
+          if (result.type === "success") {
+            const message = completed ? "Marked As Completed" : "Not Completed";
+            notification.set({ message, type: "success" });
+          } else {
+            notification.set({
+              message: "Failed to mark as completed",
+              type: "error",
+            });
+          }
+        };
+      }}
+    >
+      <button
+        onclick={() => (completed = !completed)}
+        class="dark:hover:bg-milk-900 ring-milk-200 dark:ring-milk-800 dark:hover:ring-milk-950 bg-cacao-600 text-cacao-50 dark:bg-milk-800 dark:text-cacao-100 hover:bg-cacao-700 focus:ring-cacao-500 flex items-center justify-center rounded-lg px-3 py-2 text-sm ring-2 transition-all focus:ring-2 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:space-x-2 md:px-4 md:text-base"
+        class:overdue
+      >
+        {#if completed}
+          <CheckSquare class="h-6 w-6" />
+          <p class="hidden md:block">Completed</p>
+        {:else}
+          <Square class="h-6 w-6" />
+          <p class="hidden md:block">Mark as Completed</p>
+        {/if}
+      </button>
+      <input type="hidden" name="completed" value={completed} />
+      <input type="hidden" name="id" value={data.task.id} />
+    </form>
   </div>
 {/if}

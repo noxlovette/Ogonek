@@ -7,18 +7,15 @@ export async function load({ params, fetch }) {
     throw error(400);
   }
 
-  const response = await fetch(`/file-server/download/${filename}`);
-  const data = await response.arrayBuffer();
-
-  console.debug(data);
+  const response = fetch(`/file-server/download/${filename}`);
 
   return {
-    body: data,
+    body: response.then((res) => res.arrayBuffer()), // Promise stays unresolved initially
     filename,
-    headers: {
+    headers: response.then((res) => ({
       "Content-Type":
-        response.headers.get("Content-Type") || "application/octet-stream",
-      "Content-Disposition": response.headers.get("Content-Disposition"),
-    },
+        res.headers.get("Content-Type") || "application/octet-stream",
+      "Content-Disposition": res.headers.get("Content-Disposition"),
+    })),
   };
 }

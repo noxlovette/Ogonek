@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { Sun, Moon, Monitor } from "lucide-svelte";
-    import { notification } from "$lib/stores";
+  import { notification } from "$lib/stores";
   let theme = $state("auto");
 
   function applyTheme(mode: string) {
@@ -23,7 +23,7 @@
 
   function toggleTheme() {
     theme = theme === "light" ? "dark" : theme === "dark" ? "auto" : "light";
-    notification.set({message: theme, type: "info"})
+    notification.set({ message: theme, type: "info" });
 
     localStorage.setItem("theme", theme);
     applyTheme(theme);

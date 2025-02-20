@@ -8,7 +8,6 @@
   let { tasks, lessons }: { tasks: Task[]; lessons: Lesson[] } = data;
 
   let pending = tasks.filter((task) => !task.completed);
-
 </script>
 
 <div class="space-y-4">
@@ -20,6 +19,9 @@
   <section class="space-y-4">
     <h2 class="text-milk-800 text-xl font-semibold">Recent Tasks</h2>
     <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+      {#if pending.length < 1}
+        No Tasks
+      {/if}
       {#each pending.slice(0, 6) as task (task.id)}
         <div transition:fly={{ y: 20, duration: 300 }}>
           <TaskCard {task} />
@@ -31,6 +33,9 @@
   <section class="space-y-4">
     <h2 class="text-milk-800 text-xl font-semibold">Latest Lessons</h2>
     <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+      {#if lessons.length < 1}
+        No Lessons
+      {/if}
       {#each lessons.slice(0, 6) as lesson (lesson.id)}
         <div transition:fly={{ y: 20, duration: 300 }}>
           <LessonCard {lesson} />

@@ -16,8 +16,8 @@
   import { lessonStore, studentStore, taskStore } from "$lib/stores";
 
   import { page } from "$app/state";
-    import { setContext } from "svelte";
-    import type { Word } from "$lib/types";
+  import { setContext } from "svelte";
+  import type { Word } from "$lib/types";
 
   let { data, children } = $props();
   const role = $derived(page.params.role);
@@ -33,7 +33,7 @@
   lessonStore.setLessons(lessons);
   taskStore.setTasks(tasks);
   studentStore.setStudents(students);
-  setContext<Word>("word", word);
+  setContext<Promise<Word>>("word", word);
 </script>
 
 <Sidebar class="text-cacao-50" {elements} />

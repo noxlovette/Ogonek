@@ -1,40 +1,37 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { Download, ArrowLeft, BookOpen, Loader2 } from "lucide-svelte";
+  import {
+    Download,
+    ArrowLeft,
+    BookOpen,
+    Loader2,
+    FileCheck,
+  } from "lucide-svelte";
   import { stripUUID } from "$lib/utils";
 
   let { data } = $props();
-  const { body, headers, filename } = data;
+  const { filename } = data;
+  let body: ArrayBuffer | undefined = $state();
 
-  let isDownloading = $state(true);
-  let downloadStarted = $state(false);
+  onMount(async () => {
+    body = await data.body;
+  });
 
-  onMount(() => {
-    try {
-      const blob = new Blob([body], { type: headers["Content-Type"] });
+  $effect(() => {
+    if (body?.byteLength) download();
+  });
+  function download() {
+    if (body) {
+      const blob = new Blob([body], {
+        type: "application/octet-stream",
+      });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
       a.download = stripUUID(filename);
       a.click();
       URL.revokeObjectURL(url);
-      downloadStarted = true;
-    } catch (e) {
-      isDownloading = false;
     }
-  });
-
-  function downloadAgain() {
-    isDownloading = true;
-    const blob = new Blob([body], {
-      type: headers["Content-Type"] || "application/octet-stream",
-    });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = stripUUID(filename);
-    a.click();
-    URL.revokeObjectURL(url);
   }
 
   function goBack() {
@@ -42,36 +39,36 @@
   }
 </script>
 
-<div class=" flex size-full items-center justify-center">
+<div class="flex size-full h-max justify-center md:items-center">
   <div
-    class="dark:bg-milk-900 w-full max-w-md space-y-6 rounded-xl bg-white p-8 shadow-md"
+    class="dark:bg-milk-900 max-w-md space-y-6 rounded-xl bg-white p-6 shadow-md md:w-full md:p-8"
   >
     <div class="flex items-center justify-center space-x-2">
       <BookOpen class="dark:text-milk-700 text-cacao-500 h-8 w-8" />
       <h1 class="text-milk-800 text-2xl font-bold dark:text-inherit">
-        Homework Time! 📚
+        Homework Time!
       </h1>
     </div>
 
     <div class="space-y-4">
-      {#if isDownloading}
-        <div class="flex flex-col items-center space-y-3">
+      {#await data.body}
+        <div class="flex items-center justify-center space-x-3">
           <Loader2
-            class="text-cacao-500 dark:text-cacao-700 h-8 w-8 animate-spin"
+            class="text-cacao-500 dark:text-milk-200 h-8 w-8 animate-spin"
           />
-          <p class="text-milk-600">Getting your homework ready...</p>
+          <p class="text-milk-600">Loading...</p>
         </div>
-      {:else}
-        <div class="flex flex-col items-center space-y-3">
-          <Download class="text-cacao-500 dark:text-cacao-800 h-8 w-8" />
-          <p class="text-milk-600">
-            {downloadStarted ? "Almost there! 🚀" : "Ready to download! 🎉"}
-          </p>
+      {:then body}
+        <div class="flex items-center justify-center space-x-3">
+          <FileCheck class="text-cacao-500 dark:text-milk-200 h-8 w-8" />
+          <p class="text-milk-600 dark:text-milk-100">Enjoy!</p>
         </div>
-      {/if}
+      {:catch error}
+        <p>Something went wrong: {error.message}</p>
+      {/await}
 
       <button
-        onclick={downloadAgain}
+        onclick={download}
         class="bg-cacao-500 hover:bg-cacao-600 dark:bg-milk-800 dark:hover:bg-milk-700 flex w-full items-center justify-center space-x-2 rounded-lg px-4 py-2 font-medium text-white transition-colors duration-200"
       >
         <Download class="h-4 w-4" />
@@ -86,10 +83,6 @@
         <span>Go Back</span>
       </button>
     </div>
-
-    <p class="text-milk-500 text-center text-sm">
-      Pro tip: Your teacher won't believe how fast you did this! 😉
-    </p>
   </div>
 </div>
 
