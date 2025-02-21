@@ -27,35 +27,34 @@ export const handle: Handle = sequence(
     const path = event.url.pathname;
     const role = event.params.role;
 
+    if (path === "/") {
+      const user = await getUserFromToken(event);
+      if (user) {
+        if (user.role === "student") {
+          throw redirect(303, "/s/dashboard");
+        } else if (user.role === "teacher") {
+          throw redirect(303, "/t/dashboard");
+        }
+      }
+    }
+
     if (!isProtectedPath(path)) {
       return resolve(event);
     }
 
-    const accessToken = event.cookies.get("accessToken");
-    let user = null;
-
-    if (accessToken) {
-      try {
-        user = await ValidateAccess(accessToken);
-      } catch (error) {
-        user = await handleTokenRefresh(event);
-      }
-    } else if (event.cookies.get("refreshToken")) {
-      user = await handleTokenRefresh(event);
-    } else {
+    const user = await getUserFromToken(event);
+    if (!user) {
       throw redirect(302, "/auth/login");
     }
 
-    if (user) {
-      const isTeacherRoute = role === "t";
-      const isStudentRoute = role === "s";
+    const isTeacherRoute = role === "t";
+    const isStudentRoute = role === "s";
 
-      if (isTeacherRoute && user.role !== "teacher") {
-        throw redirect(303, "/unauthorised");
-      }
-      if (isStudentRoute && user.role !== "student") {
-        throw redirect(303, "/unauthorised");
-      }
+    if (isTeacherRoute && user.role !== "teacher") {
+      throw redirect(303, "/unauthorised");
+    }
+    if (isStudentRoute && user.role !== "student") {
+      throw redirect(303, "/unauthorised");
     }
 
     const response = await resolve(event);
@@ -96,6 +95,23 @@ async function handleTokenRefresh(event: RequestEvent) {
   } finally {
     isRefreshing = false;
   }
+}
+
+async function getUserFromToken(event: RequestEvent) {
+  const accessToken = event.cookies.get("accessToken");
+  let user = null;
+
+  if (accessToken) {
+    try {
+      user = await ValidateAccess(accessToken);
+    } catch (error) {
+      user = await handleTokenRefresh(event);
+    }
+  } else if (event.cookies.get("refreshToken")) {
+    user = await handleTokenRefresh(event);
+  }
+
+  return user;
 }
 
 export const handleFetch: HandleFetch = async ({ event, request, fetch }) => {
