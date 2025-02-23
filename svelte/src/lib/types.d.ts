@@ -87,3 +87,28 @@ export interface Word {
 export interface WordResult {
   definition: string;
 }
+
+export interface Deck {
+  id: string;
+  name: string;
+  description?: string;
+  shared: boolean;
+  created_by: string;
+  created_at: string;
+}
+
+export interface Card {
+  id: string;
+  front: string;
+  back: string;
+  media_url?: string;
+  deck_id: string;
+  created_at: string;
+}
+
+export interface DeckWithCards {
+  deck: Deck;
+  cards: Card[];
+  dueToday: number;
+  totalReviewed: number;
+}

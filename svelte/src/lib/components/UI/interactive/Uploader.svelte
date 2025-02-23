@@ -93,7 +93,7 @@
     class="relative flex h-full flex-1 cursor-pointer
 			 flex-col items-center justify-center rounded-lg border-2
 			 border-dashed p-12 transition-colors duration-200
-			 {isSuccess ? 'bg-green-50 border-green-700' : ''}
+			 {isSuccess ? 'border-green-700 bg-green-50' : ''}
 			 {isDragging
       ? 'border-cacao-700 bg-cacao-100'
       : 'border-milk-300 hover:border-milk-400 bg-milk-50 dark:bg-milk-900 dark:border-milk-800 dark:hover:border-milk-700'}"
@@ -116,7 +116,7 @@
       </div>
     {:else if isSuccess}
       <div class="flex flex-col items-center gap-3" in:fade>
-        <Check class="text-green-700 size-10" />
+        <Check class="size-10 text-green-700" />
         <div class="text-center">
           <p class="text-green-400">
             {fileName} has been uploaded

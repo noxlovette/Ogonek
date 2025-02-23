@@ -1,9 +1,9 @@
 <script lang="ts">
   import { WholeWord } from "lucide-svelte";
   import Base from "./Base.svelte";
-  import {user} from "$lib/stores"
+  import { user } from "$lib/stores";
 
-  let href = $user.role === "teacher" ? "/t/dashboard" : "/s/dashboard";
+  let href = $user.role === "teacher" ? "/t/words" : "/s/words";
 </script>
 
 <Base {href}>

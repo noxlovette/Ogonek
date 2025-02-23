@@ -142,4 +142,24 @@
   .chosen {
     @apply bg-cacao-600 text-milk-50 hover:bg-cacao-600;
   }
+
+  .rotate-y-180 {
+    transform: rotateY(180deg);
+  }
+
+  .flip-container {
+    perspective: 1000px;
+    transform-style: preserve-3d;
+  }
+
+  /* Hide backface of cards */
+  .backface-hidden {
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+
+  /* Smooth flip transition */
+  .flip-transition {
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
 }

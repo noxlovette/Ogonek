@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { H1, H2, ButtonRaw } from "$lib/components";
+  import { H1, ButtonRaw } from "$lib/components";
   import { user } from "$lib/stores";
   import { formatDateTime } from "$lib/utils";
   import { goto } from "$app/navigation";
@@ -7,6 +7,7 @@
   import { notification } from "$lib/stores";
   import { enhance } from "$app/forms";
   import { Download, Loader2, CheckSquare, Square } from "lucide-svelte";
+  import ButtonEdit from "$lib/components/UI/buttons/ButtonEdit.svelte";
 
   let { data } = $props();
   const { rendered } = data;
@@ -27,11 +28,7 @@
   <div class="flex items-center justify-between">
     <div class="flex space-x-4">
       <H1>{data.task.title}</H1>
-      <a
-        href="/t/tasks/t/{data.task.id}/edit"
-        class="bg-cacao-600 text-cacao-50 hover:bg-cacao-700 focus:ring-cacao-500 rounded-lg px-4 py-2 transition-colors focus:ring-2 focus:ring-offset-2 focus:outline-none disabled:opacity-50"
-        >Edit</a
-      >
+      <ButtonEdit href="/t/tasks/t/{data.task.id}/edit" />
     </div>
     <div class="text-right">
       <p class="text-milk-700 block font-medium">Student</p>

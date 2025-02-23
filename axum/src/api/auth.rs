@@ -10,7 +10,7 @@ use crate::models::users::{
 use axum::extract::Json;
 use axum::extract::State;
 use axum::response::Response;
-use hyper::{HeaderMap, StatusCode};
+use hyper::StatusCode;
 use nanoid::nanoid;
 use validator::Validate;
 

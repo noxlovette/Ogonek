@@ -2,7 +2,7 @@
   import { enhance } from "$app/forms";
   import { goto } from "$app/navigation";
   import { ButtonSubmit } from "$lib/components/UI";
-  import {Turnstile} from "$lib/components";
+  import { Turnstile } from "$lib/components";
   import {
     setProfile,
     setUser,

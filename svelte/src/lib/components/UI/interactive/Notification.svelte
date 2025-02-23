@@ -29,7 +29,7 @@
 {#snippet icon(type: Toast["type"])}
   {#if type === "success"}
     <Check
-      class="bg-milk-100 dark:ring-milk-900 text-green-700 size-5 rounded-full p-1 lg:size-6 dark:bg-inherit dark:ring-1"
+      class="bg-milk-100 dark:ring-milk-900 size-5 rounded-full p-1 text-green-700 lg:size-6 dark:bg-inherit dark:ring-1"
     />
   {:else if type === "error"}
     <X

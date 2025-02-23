@@ -17,9 +17,7 @@
   </div>
 
   <section class="space-y-4">
-    <H3>
-      Recent Tasks
-    </H3>
+    <H3>Recent Tasks</H3>
     <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
       {#if pending.length < 1}
         No Tasks
@@ -33,9 +31,7 @@
   </section>
 
   <section class="space-y-4">
-    <H3>
-      Latest Lessons
-    </H3>
+    <H3>Latest Lessons</H3>
     <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
       {#if lessons.length < 1}
         No Lessons

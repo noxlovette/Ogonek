@@ -2,8 +2,7 @@
   import { enhance } from "$app/forms";
   import { notification } from "$lib/stores";
   import { goto } from "$app/navigation";
-  import {Turnstile, ButtonSubmit} from "$lib/components"
-
+  import { Turnstile, ButtonSubmit } from "$lib/components";
 
   let loading = $state(false);
   let password = $state("");

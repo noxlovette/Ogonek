@@ -1,4 +1,3 @@
-use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use time::format_description::well_known::Rfc3339;
 use time::OffsetDateTime;
@@ -37,7 +36,9 @@ pub struct CardUpdate {
 #[serde(rename_all = "camelCase")]
 pub struct DeckWithCards {
     pub deck: DeckBody,
-    pub cards: Vec<CardBody>
+    pub cards: Vec<CardBody>,
+    pub due_today: Option<i64>,
+    pub total_reviewed: Option<i64>,
 }
 
 #[derive(Deserialize, Debug)]
