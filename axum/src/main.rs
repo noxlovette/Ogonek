@@ -41,6 +41,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             "/profile",
             rust::api::routes::profile_routes::profile_routes(),
         )
+        .nest(
+            "/deck",
+            rust::api::routes::deck_routes::deck_routes(),
+        )
         .layer(axum::middleware::from_fn(validate_api_key));
 
     let app = Router::new()

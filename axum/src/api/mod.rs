@@ -6,3 +6,6 @@ pub mod student;
 pub mod task;
 pub mod user;
 pub mod profile;
+pub mod decks;
+pub mod learning;
+pub mod error;

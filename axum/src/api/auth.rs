@@ -69,7 +69,6 @@ pub async fn signup(
 }
 
 pub async fn authorize(
-    headers: HeaderMap,
     State(state): State<AppState>,
     Json(payload): Json<AuthPayload>,
 ) -> Result<Response, AuthError> {
