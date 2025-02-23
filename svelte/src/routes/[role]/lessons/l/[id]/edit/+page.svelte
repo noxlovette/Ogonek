@@ -1,6 +1,12 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
-  import { Editor, ButtonDelete, ButtonSubmit, H1 } from "$lib/components";
+  import {
+    Editor,
+    ButtonDelete,
+    ButtonSubmit,
+    H1,
+    ButtonCancel,
+  } from "$lib/components";
   import type { PageData } from "./$types";
   import { notification } from "$lib/stores";
   import { goto } from "$app/navigation";
@@ -33,12 +39,7 @@
 >
   <div class="flex items-baseline space-x-4">
     <H1>Edit Lesson</H1>
-    <a
-      href="."
-      class="text-milk-700 bg-milk-100 hover:bg-milk-200 rounded-lg px-4 py-2 transition-colors"
-    >
-      Cancel
-    </a>
+    <ButtonCancel />
     <ButtonSubmit />
     <ButtonDelete />
   </div>

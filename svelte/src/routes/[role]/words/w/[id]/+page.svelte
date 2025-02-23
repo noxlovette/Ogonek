@@ -101,7 +101,7 @@
 
     <div class="flex gap-2">
       <ButtonEdit href="{deck.id}/edit" />
-      <ButtonEdit text="Start Learn" href="{deck.id}/learn" />
+      <ButtonEdit text="Start Learn" href="../learn" />
     </div>
   </div>
 </div>

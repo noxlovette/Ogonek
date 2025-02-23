@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { H1, ButtonRaw } from "$lib/components";
+  import { H1, ButtonRaw, ButtonEdit } from "$lib/components";
   import { user } from "$lib/stores";
   import { formatDateTime } from "$lib/utils";
   import { goto } from "$app/navigation";
@@ -7,7 +7,6 @@
   import { notification } from "$lib/stores";
   import { enhance } from "$app/forms";
   import { Download, Loader2, CheckSquare, Square } from "lucide-svelte";
-  import ButtonEdit from "$lib/components/UI/buttons/ButtonEdit.svelte";
 
   let { data } = $props();
   const { rendered } = data;

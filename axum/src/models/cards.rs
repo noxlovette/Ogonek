@@ -81,8 +81,8 @@ use validator::Validate;
 
 #[derive(Debug, Serialize, Deserialize, Clone, Validate)]
 #[serde(rename_all = "camelCase")]
-pub struct CardProgress {
-    pub id: String,  // nanoid
+pub struct CardProgressWithFields {
+    pub id: String,
     pub user_id: String,
     pub card_id: String,
     #[validate(range(min = 0))]
@@ -93,6 +93,24 @@ pub struct CardProgress {
     pub ease_factor: f64,
     #[validate(range(min = 1))]
     pub interval: i32,
+    pub front: String,
+    pub back: String
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone, Validate)]
+#[serde(rename_all = "camelCase")]
+pub struct CardProgress {
+    pub id: String,
+    pub user_id: String,
+    pub card_id: String,
+    #[validate(range(min = 0))]
+    pub review_count: i32,
+    pub last_reviewed: Option<OffsetDateTime>,
+    pub due_date: Option<OffsetDateTime>,
+    #[validate(range(min = 1.3, max = 5.0))]
+    pub ease_factor: f64,
+    #[validate(range(min = 1))]
+    pub interval: i32
 }
 
 #[derive(Debug, Deserialize, Validate)]

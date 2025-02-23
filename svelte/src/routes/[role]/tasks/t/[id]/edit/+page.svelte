@@ -3,6 +3,7 @@
   import { notification } from "$lib/stores";
   import {
     Editor,
+    ButtonCancel,
     H1,
     ButtonDelete,
     ButtonSubmit,
@@ -50,12 +51,7 @@
 >
   <div class="flex items-baseline space-x-4">
     <H1>Edit Task</H1>
-    <a
-      href="."
-      class="text-milk-700 bg-milk-100 hover:bg-milk-200 rounded-lg px-4 py-2 transition-colors"
-    >
-      Cancel
-    </a>
+    <ButtonCancel />
     <ButtonSubmit bind:isSubmitting />
     <ButtonDelete bind:isSubmitting />
   </div>

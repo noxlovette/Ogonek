@@ -98,12 +98,12 @@ export interface Deck {
 }
 
 export interface Card {
-  id: string;
+  id?: string;
   front: string;
   back: string;
   media_url?: string;
   deck_id: string;
-  created_at: string;
+  created_at?: string;
 }
 
 export interface DeckWithCards {
@@ -111,4 +111,16 @@ export interface DeckWithCards {
   cards: Card[];
   dueToday: number;
   totalReviewed: number;
+}
+export interface CardProgress {
+  id: string;
+  card_id: string;
+  user_id: string;
+  review_count: number;
+  last_reviewed: string | null;
+  due_date: string;
+  ease_factor: number;
+  interval: number;
+  front: string;
+  back: string;
 }

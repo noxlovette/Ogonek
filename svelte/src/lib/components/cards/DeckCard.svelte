@@ -12,7 +12,9 @@
   let { deck }: Props = $props();
 
   let href =
-    $user.role === "teacher" ? `/t/words/${deck.id}` : `/s/words/${deck.id}`;
+    $user.role === "teacher"
+      ? `/t/words/w/${deck.id}`
+      : `/s/words/w/${deck.id}`;
 </script>
 
 <CardClickable {href}>

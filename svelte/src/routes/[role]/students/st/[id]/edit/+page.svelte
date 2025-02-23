@@ -1,6 +1,6 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
-  import { ButtonSubmit, Editor, H1 } from "$lib/components";
+  import { ButtonCancel, ButtonSubmit, Editor, H1 } from "$lib/components";
   import type { Student } from "$lib/types";
   import { Send } from "lucide-svelte";
   import type { PageData } from "./$types";
@@ -48,12 +48,8 @@
           <Send></Send>
         </span>
       </div>
-      <a
-        href="."
-        class="text-milk-700 bg-milk-100 hover:bg-milk-200 rounded-lg px-4 py-2 transition-colors"
-      >
-        Cancel
-      </a>
+
+      <ButtonCancel />
       <ButtonSubmit bind:isSubmitting></ButtonSubmit>
       <ButtonDelete bind:isSubmitting></ButtonDelete>
     </div>

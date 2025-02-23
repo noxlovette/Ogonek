@@ -2,7 +2,7 @@ use axum::extract::{Json, State, Path};
 use crate::auth::jwt::Claims;
 use crate::db::error::DbError;
 use crate::db::init::AppState;
-use crate::models::cards::{CardProgress, ReviewPayload};
+use crate::models::cards::{CardProgress, CardProgressWithFields, ReviewPayload};
 use crate::api::error::APIError;
 use axum::http::StatusCode;
 use time::{OffsetDateTime, Duration};
@@ -33,13 +33,19 @@ pub async fn create_card_progress(
 pub async fn fetch_due_cards(
     State(state): State<AppState>,
     claims: Claims
-) -> Result<Json<Vec<CardProgress>>, DbError> {
+) -> Result<Json<Vec<CardProgressWithFields>>, DbError> {
     let progress_list = sqlx::query_as!(
-        CardProgress,
+        CardProgressWithFields,
         r#"
-        SELECT *
-        FROM card_progress
-        WHERE user_id = $1 AND (due_date <= CURRENT_TIMESTAMP OR review_count = 0)
+        SELECT 
+            cp.*,
+            c.front,
+            c.back
+        FROM card_progress cp
+        JOIN cards c ON c.id = cp.card_id
+        WHERE cp.user_id = $1 
+            AND (cp.due_date <= CURRENT_TIMESTAMP OR cp.review_count = 0)
+        ORDER BY cp.due_date ASC
         "#,
         claims.sub,
     )
@@ -61,8 +67,8 @@ pub async fn update_card_progress(
     let current_progress = sqlx::query_as!(
         CardProgress,
         r#"
-        SELECT * FROM card_progress
-        WHERE user_id = $1 AND card_id = $2
+        SELECT cp.* FROM card_progress cp
+        WHERE cp.user_id = $1 AND cp.id = $2
         "#,
         claims.sub,
         card_id
