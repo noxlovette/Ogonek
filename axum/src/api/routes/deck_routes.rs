@@ -10,7 +10,8 @@ pub fn deck_routes() -> Router<AppState> {
             "/{deck_id}",
             get(decks::fetch_deck)
                 .patch(decks::update_deck)
-                .delete(decks::delete_deck),
+                .delete(decks::delete_deck)
+                .post(learning::reset_deck_progress)
         )
         .route(
             "/learn/{card_id}",

@@ -94,14 +94,8 @@ pub struct CardProgress {
     pub interval: i32,
 }
 
-#[derive(Debug, Deserialize)]
-pub struct CardProgressCreate {
-    pub card_id: String,
-}
-
 #[derive(Debug, Deserialize, Validate)]
 pub struct ReviewPayload {
-    pub card_id: String,
     #[validate(range(min = 0, max = 5))]
     pub quality: i32,
 }

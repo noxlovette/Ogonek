@@ -1,8 +1,8 @@
-use axum::extract::{Json, State};
+use axum::extract::{Json, State, Path};
 use crate::auth::jwt::Claims;
 use crate::db::error::DbError;
 use crate::db::init::AppState;
-use crate::models::cards::{CardProgress, CardProgressCreate, ReviewPayload};
+use crate::models::cards::{CardProgress, ReviewPayload};
 use crate::api::error::APIError;
 use axum::http::StatusCode;
 use time::{OffsetDateTime, Duration};
@@ -11,7 +11,7 @@ use crate::tools::sm2::SM2Calculator;
 pub async fn create_card_progress(
     State(state): State<AppState>,
     claims: Claims,
-    Json(payload): Json<CardProgressCreate>,
+    Path(card_id): Path<String>,
 ) -> Result<Json<CardProgress>, DbError> {
     let cp = sqlx::query_as!(
         CardProgress,
@@ -22,7 +22,7 @@ pub async fn create_card_progress(
         "#,
         nanoid::nanoid!(),
         claims.sub,
-        payload.card_id,
+        card_id,
     )
     .fetch_one(&state.db)
     .await?;
@@ -32,7 +32,7 @@ pub async fn create_card_progress(
 
 pub async fn fetch_due_cards(
     State(state): State<AppState>,
-    claims: Claims,
+    claims: Claims
 ) -> Result<Json<Vec<CardProgress>>, DbError> {
     let progress_list = sqlx::query_as!(
         CardProgress,
@@ -52,6 +52,7 @@ pub async fn fetch_due_cards(
 pub async fn update_card_progress(
     State(state): State<AppState>,
     claims: Claims,
+    Path(card_id): Path<String>,
     Json(payload): Json<ReviewPayload>,
 ) -> Result<StatusCode, APIError> {
     let calculator = SM2Calculator::default();
@@ -64,7 +65,7 @@ pub async fn update_card_progress(
         WHERE user_id = $1 AND card_id = $2
         "#,
         claims.sub,
-        payload.card_id
+        card_id
     )
     .fetch_one(&state.db)
     .await
@@ -98,10 +99,62 @@ pub async fn update_card_progress(
         now,
         new_due_date,
         claims.sub,
-        payload.card_id
+        card_id
     )
     .execute(&state.db)
     .await?;
 
+    Ok(StatusCode::OK)
+}
+
+pub async fn reset_deck_progress(
+    State(state): State<AppState>,
+    claims: Claims,
+    Path(deck_id): Path<String>,
+) -> Result<StatusCode, APIError> {
+    let mut tx = state.db.begin().await?;
+
+    // Fixed query with proper column alias
+    let deck_exists = sqlx::query!(
+        r#"
+        SELECT 1 as "exists!: bool" FROM decks d
+        LEFT JOIN teacher_student ts
+            ON (ts.teacher_id = d.created_by AND ts.student_id = $1)
+            OR (ts.student_id = d.created_by AND ts.teacher_id = $1)
+        WHERE d.id = $2 AND (d.created_by = $1 OR (d.shared = TRUE AND ts.teacher_id IS NOT NULL))
+        "#,
+        claims.sub,
+        deck_id
+    )
+    .fetch_optional(&mut *tx)
+    .await?
+    .is_some();
+
+    if !deck_exists {
+        return Err(APIError::NotFound("Deck not found".into()));
+    }
+
+    sqlx::query!(
+        r#"
+        UPDATE card_progress cp
+        SET 
+            review_count = 0,
+            ease_factor = 2.5,
+            interval = 1,
+            last_reviewed = NULL,
+            due_date = CURRENT_TIMESTAMP
+        FROM cards c
+        WHERE cp.card_id = c.id 
+        AND c.deck_id = $1
+        AND cp.user_id = $2
+        "#,
+        deck_id,
+        claims.sub
+    )
+    .execute(&mut *tx)
+    .await?;
+
+    tx.commit().await?;
+    
     Ok(StatusCode::OK)
 }
