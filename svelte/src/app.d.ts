@@ -14,6 +14,13 @@ declare global {
       refreshToken?: string;
       user?: JWTPayload;
     }
+    interface Window {
+      turnstile: {
+        render: (element: HTMLElement, options: any) => string;
+        remove: (widgetId: string) => void;
+        reset: (widgetId: string) => void;
+      };
+    }
     // interface PageData {}
     // interface PageState {}
     // interface Platform {}

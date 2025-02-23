@@ -37,82 +37,94 @@
   --color-milk-800: oklch(0.337 0.01 40.162);
   --color-milk-900: oklch(0.247 0.01 39.946);
   --color-milk-950: oklch(0.157 0.009 39.731);
-
-  --color-pakistan-50: oklch(96% 0.02 140);
-  --color-pakistan-100: oklch(92% 0.04 140);
-  --color-pakistan-200: oklch(86% 0.06 140);
-  --color-pakistan-300: oklch(79% 0.08 140);
-  --color-pakistan-400: oklch(73% 0.1 140);
-  --color-pakistan-500: oklch(66% 0.12 140);
-  --color-pakistan-600: oklch(52% 0.12 140);
-  --color-pakistan-700: oklch(38% 0.12 140);
-  --color-pakistan-800: oklch(26% 0.11 140);
-  --color-pakistan-900: oklch(18% 0.1 140);
-  --color-pakistan-950: oklch(12% 0.08 140);
 }
 
 @layer components {
   .markdown {
+    /* Headings with better visual hierarchy and consistent spacing */
+    h1,
+    h2,
+    h3 {
+      @apply font-semibold tracking-tight;
+    }
+
     h1 {
-      @apply text-3xl font-bold opacity-80;
+      @apply text-milk-900 dark:text-milk-50 mt-8 mb-4 text-4xl font-bold;
     }
 
     h2 {
-      @apply text-2xl font-bold opacity-70;
+      @apply text-milk-800 dark:text-milk-100 mt-6 mb-3 text-2xl font-semibold;
     }
 
     h3 {
-      @apply text-xl font-bold opacity-60;
+      @apply text-milk-700 dark:text-milk-200 mt-4 mb-2 text-xl font-medium;
     }
 
+    /* Improved paragraph spacing and readability */
     p {
-      @apply m-1;
+      @apply text-milk-700 dark:text-milk-300 mb-4 leading-relaxed;
     }
 
-    ul {
-      @apply my-2 ml-4 list-disc;
-    }
-
+    /* Enhanced lists with better spacing and bullets */
+    ul,
     ol {
-      @apply my-2 ml-4 list-decimal;
+      @apply my-4 ml-6 list-decimal space-y-2;
     }
 
+    li {
+      @apply text-milk-700 dark:text-milk-300 list-disc;
+    }
+
+    /* Modern link styling with hover effects */
     a {
-      @apply text-pakistan-700 underline;
+      @apply text-cacao-600 dark:text-cacao-400 hover:text-cacao-700 dark:hover:text-cacao-300 hover:decoration-cacao-700 dark:hover:decoration-cacao-300 underline decoration-2 underline-offset-2 transition-colors duration-200;
     }
 
+    /* Prettier blockquotes */
     blockquote {
-      @apply border-milk-300 my-4 border-l-4 pl-4 italic opacity-90;
+      @apply border-cacao-400 dark:border-cacao-600 bg-milk-50 dark:bg-milk-800/50 text-milk-700 dark:text-milk-300 my-6 rounded-r-lg border-l-4 py-2 pl-4 italic;
     }
 
+    /* Code blocks with better contrast and syntax highlighting support */
     pre {
-      @apply bg-milk-100 my-4 overflow-x-auto rounded-md p-4;
+      @apply bg-milk-900 dark:bg-milk-950 text-milk-100 dark:text-milk-50 my-6 overflow-x-auto rounded-lg p-4;
     }
 
     code {
-      @apply bg-milk-50 rounded px-1 font-mono text-sm;
+      @apply bg-milk-100 dark:bg-milk-800 text-milk-900 dark:text-milk-50 rounded px-1.5 py-0.5 font-mono text-sm;
     }
 
+    /* Thematic break with style */
     hr {
-      @apply border-milk-200 my-2 w-1/2 border;
+      @apply border-milk-200 dark:border-milk-700 my-8 w-full border-t-2;
     }
 
+    /* Modern table design */
     table {
-      @apply border-milk-300 my-4 w-full border-collapse border;
+      @apply my-6 w-full border-collapse;
     }
 
     th {
-      @apply bg-milk-200 border-milk-300 border px-2 py-1 text-center font-bold;
+      @apply bg-milk-100 dark:bg-milk-800 text-milk-900 dark:text-milk-50 border-milk-300 dark:border-milk-600 border-b-2 px-4 py-2 text-left font-medium;
     }
 
     td {
-      @apply border-milk-300 border px-2 py-1 text-left;
+      @apply border-milk-200 dark:border-milk-700 text-milk-700 dark:text-milk-300 border-b px-4 py-2;
     }
 
+    /* Additional useful elements */
+    img {
+      @apply my-6 h-auto max-w-full rounded-lg;
+    }
+
+    /* Task lists for GitHub-style markdown */
+    input[type="checkbox"] {
+      @apply accent-cacao-500 dark:accent-cacao-400 mr-2;
+    }
+
+    /* Smooth transitions for dark mode */
     * {
-      transition:
-        background-color 0.3s ease,
-        color 0.3s ease;
+      @apply transition-colors duration-200;
     }
   }
 }
