@@ -3,7 +3,7 @@
     Dashboard,
     Todo,
     Lessons,
-    Quizlet,
+    Words,
     Settings,
     Students,
     Zoom,
@@ -22,10 +22,10 @@
   let { data, children } = $props();
   const role = $derived(page.params.role);
 
-  let elements = $state([Dashboard, Todo, Lessons, Zoom, Quizlet, Settings]);
+  let elements = $state([Dashboard, Todo, Lessons, Zoom, Words, Settings]);
 
   if (role === "t") {
-    elements = [Dashboard, Todo, Lessons, Students, Quizlet, Settings];
+    elements = [Dashboard, Todo, Lessons, Students, Words, Settings];
   }
 
   const { tasks, lessons, students, word } = data;

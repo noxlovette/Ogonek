@@ -44,8 +44,7 @@
       </h3>
     </div>
   </div>
-  <H2>Content</H2>
-  <div class="markdown ring-milk-200 dark:ring-milk-900 rounded-lg p-4 ring-2">
+  <div class="markdown">
     {@html rendered}
   </div>
 

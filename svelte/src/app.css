@@ -41,6 +41,11 @@
 
 @layer components {
   .markdown {
+    @apply max-w-prose;
+
+    > *:first-child {
+      @apply mt-0;
+    }
     /* Headings with better visual hierarchy and consistent spacing */
     h1,
     h2,
@@ -68,7 +73,7 @@
     /* Enhanced lists with better spacing and bullets */
     ul,
     ol {
-      @apply my-4 ml-6 list-decimal space-y-2;
+      @apply my-2 ml-6 list-decimal space-y-2;
     }
 
     li {
@@ -82,7 +87,7 @@
 
     /* Prettier blockquotes */
     blockquote {
-      @apply border-cacao-400 dark:border-cacao-600 bg-milk-50 dark:bg-milk-800/50 text-milk-700 dark:text-milk-300 my-6 rounded-r-lg border-l-4 py-2 pl-4 italic;
+      @apply border-cacao-400 dark:border-cacao-600 bg-milk-50 dark:bg-milk-800/50 text-milk-700 dark:text-milk-300 my-4 rounded-r-lg border-l-4 py-2 pl-4 italic;
     }
 
     /* Code blocks with better contrast and syntax highlighting support */

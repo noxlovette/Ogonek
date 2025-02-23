@@ -2,10 +2,8 @@
   import { enhance } from "$app/forms";
   import { notification } from "$lib/stores";
   import { goto } from "$app/navigation";
-  import { Loader2 } from "lucide-svelte";
-  import ButtonSubmit from "$lib/components/UI/buttons/ButtonSubmit.svelte";
-  import Turnstile from "$lib/components/Turnstile.svelte";
-  import { hydrate } from "svelte";
+  import {Turnstile, ButtonSubmit} from "$lib/components"
+
 
   let loading = $state(false);
   let password = $state("");

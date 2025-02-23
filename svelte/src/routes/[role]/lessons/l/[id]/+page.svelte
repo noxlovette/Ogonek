@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { H1 } from "$lib/components";
+  import { H1, H2 } from "$lib/components";
   import { user } from "$lib/stores";
   import { formatDateTime } from "$lib/utils";
   import type { PageData } from "./$types";
@@ -39,8 +39,7 @@
       </h3>
     </div>
   </div>
-  <h3 class="text-2xl font-bold">Content</h3>
-  <div class="markdown ring-milk-200 dark:ring-milk-900 rounded-lg p-4 ring-2">
+  <div class="markdown">
     {@html data.rendered}
   </div>
 {:else}
@@ -48,12 +47,14 @@
     <H1>Lesson From {formattedDate}</H1>
   </div>
   <div class="">
-    <p class="text-milk-700 block font-medium">Topic</p>
-    <h3 class="min-w-48">
-      {data.lesson.topic}
-    </h3>
+
+      <H2>
+
+        {data.lesson.topic}
+      </H2>
+
   </div>
-  <div class="markdown dark:ring-milk-900 ring-milk-200 rounded-lg p-4 ring-2">
+  <div class="markdown">
     {@html data.rendered}
   </div>
 {/if}
