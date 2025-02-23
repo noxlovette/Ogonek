@@ -20,7 +20,7 @@
     {name}
     type="text"
     bind:value
-    class="{styling} focus:border-cocoa-500 focus:ring-cocoa-500"
+    class="{styling} focus:border-cacao-500 focus:ring-cacao-500"
     {placeholder}
   />
 {:else if type === "textarea"}
@@ -28,7 +28,7 @@
     {name}
     rows="5"
     bind:value
-    class="{styling} focus:border-cocoa-500 focus:ring-cocoa-500"
+    class="{styling} focus:border-cacao-500 focus:ring-cacao-500"
     {placeholder}
   ></textarea>
 {:else if type === "number"}
@@ -37,7 +37,7 @@
     {placeholder}
     {name}
     bind:value
-    class="{styling} focus:border-cocoa-500 focus:ring-cocoa-500"
+    class="{styling} focus:border-cacao-500 focus:ring-cacao-500"
   />
 {:else if type === "password"}
   <input
@@ -45,7 +45,7 @@
     {placeholder}
     {name}
     bind:value
-    class="{styling} focus:border-cocoa-500 focus:ring-cocoa-500"
+    class="{styling} focus:border-cacao-500 focus:ring-cacao-500"
   />
 {:else if type === "email"}
   <input
@@ -53,6 +53,6 @@
     {placeholder}
     {name}
     bind:value
-    class="{styling} focus:border-cocoa-500 focus:ring-cocoa-500"
+    class="{styling} focus:border-cacao-500 focus:ring-cacao-500"
   />
 {/if}

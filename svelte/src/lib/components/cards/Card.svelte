@@ -9,7 +9,7 @@
     flex-col overflow-hidden
     rounded-xl
     bg-white
-    p-5 ring-1 shadow-lg transition-all
+    p-5 shadow-lg ring-1 transition-all
     duration-200 ease-out`,
   ]}
 >

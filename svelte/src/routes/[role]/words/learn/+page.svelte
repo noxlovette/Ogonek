@@ -1,18 +1,26 @@
 <script lang="ts">
-  import { page } from "$app/state";
-  import { goto } from "$app/navigation";
-  import type { CardProgress } from "$lib/types";
   import { fade, slide } from "svelte/transition";
   import { quintOut } from "svelte/easing";
   import { enhance } from "$app/forms";
   import { notification } from "$lib/stores/notification.js";
+  import { Anchor } from "$lib/components";
 
   let { data } = $props();
 
-  let currentCard = $derived(
-    data.cards.find((c) => c.id === page.url.searchParams.get("cardId")) ||
-      data.cards[0],
-  );
+  let currentIndex = $state(0);
+  let currentCard = $derived(data.cards[currentIndex]);
+
+  let isComplete = $state(data.cards.length === 0); // Add this state
+
+  function nextCard() {
+    if (currentIndex < data.cards.length - 1) {
+      currentIndex++;
+      showAnswer = false;
+    } else {
+      // We've reached the end - show success state
+      isComplete = true;
+    }
+  }
 
   let showAnswer = $state(false);
 
@@ -25,35 +33,25 @@
     { quality: 5, label: "Easy ⚡" },
   ];
 
-  function getNextCard(currentCardId: string): CardProgress | undefined {
-    const currentIndex = data.cards.findIndex((c) => c.id === currentCardId);
-    return data.cards[currentIndex + 1];
-  }
-
   function handleFormSuccess() {
-    const nextCard = getNextCard(currentCard.id);
-    if (nextCard) {
-      const params = new URLSearchParams();
-      params.set("cardId", nextCard.id);
-      goto(`?${params.toString()}`);
-    } else {
-      goto("");
-    }
+    nextCard();
   }
 </script>
 
 <div class="mx-auto w-full max-w-4xl p-6">
-  {#if data.cards.length === 0}
-    <div class="py-12 text-center" in:fade>
+  {#if isComplete || data.cards.length === 0}
+    <div class="space-y-4 py-12 text-center" in:fade>
       <h2 class=" mb-4 text-2xl font-bold">🎉 All caught up!</h2>
       <p class="">No cards due for review right now.</p>
+
+      <Anchor href=".">Return to the Words Page</Anchor>
     </div>
   {:else if currentCard}
     <div class="space-y-6" in:fade>
       <!-- Progress bar -->
       <div class="bg-milk-200 h-2.5 w-full rounded-full">
         <div
-          class="bg-cocoa-600 h-2.5 rounded-full transition-all duration-300"
+          class="bg-cacao-600 h-2.5 rounded-full transition-all duration-300"
           style="width: {((data.cards.indexOf(currentCard) + 1) /
             data.cards.length) *
             100}%"
@@ -84,7 +82,7 @@
         <div class="mt-8">
           {#if !showAnswer}
             <button
-              class="bg-cocoa-600 hover:bg-cocoa-700 w-full rounded-lg px-6 py-3 text-white transition"
+              class="bg-cacao-600 text-cacao-50 hover:bg-cacao-700 rounded-lg px-6 py-3 transition"
               onclick={() => (showAnswer = !showAnswer)}
             >
               Show Answer
@@ -99,13 +97,15 @@
                     handleFormSuccess();
                   } else if (result.type === "failure") {
                     notification.set({
-                      message: result.data?.message || "Something's Off",
+                      message:
+                        String(result.data?.message) || "Something's Off",
                       type: "error",
                     });
                   }
                 };
               }}
             >
+              <input type="hidden" bind:value={currentCard.id} name="cardId" />
               {#each qualityButtons as { quality, label }}
                 <button
                   class="bg-milk-100 hover:bg-milk-200 min-w-[150px] flex-1 rounded-lg px-4 py-2 transition"

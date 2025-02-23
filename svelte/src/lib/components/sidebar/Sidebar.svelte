@@ -5,7 +5,7 @@
 <div
   class={[
     props.class,
-    "bg-cacao-600 dark:bg-milk-900 dark:ring-milk-900 ring-milk-200 hidden h-max w-1/5 flex-shrink-0 flex-col rounded-lg px-4 py-2 font-serif ring-2 shadow-md md:flex md:text-lg lg:text-xl xl:text-2xl",
+    "bg-cacao-600 dark:bg-milk-900 dark:ring-milk-900 ring-milk-200 hidden h-max w-1/5 flex-shrink-0 flex-col rounded-lg px-4 py-2 font-serif shadow-md ring-2 md:flex md:text-lg lg:text-xl xl:text-2xl",
   ]}
 >
   <ul

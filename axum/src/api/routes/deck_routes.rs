@@ -1,6 +1,6 @@
 use crate::api::{decks, learning};
 use crate::db::init::AppState;
-use axum::routing::{get, post};
+use axum::routing::{get, post, patch};
 use axum::Router;
 
 pub fn deck_routes() -> Router<AppState> {
@@ -14,9 +14,12 @@ pub fn deck_routes() -> Router<AppState> {
                 .post(learning::reset_deck_progress)
         )
         .route(
-            "/learn/{card_id}",
-                post(learning::create_card_progress)
-                    .patch(learning::update_card_progress)
+            "/learn/init/{deck_id}",
+            post(learning::init_deck_learning)
+        )
+        .route(
+            "/learn/{card_id}"
+                    , patch(learning::update_card_progress)
                 
         )
         .route(

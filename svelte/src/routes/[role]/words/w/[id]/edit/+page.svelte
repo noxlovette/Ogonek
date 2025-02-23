@@ -6,10 +6,12 @@
     Input,
     ButtonCancel,
     H1,
+    FlashCardEdit,
+    ButtonDelete,
   } from "$lib/components";
   import { notification } from "$lib/stores";
   import { enhance } from "$app/forms";
-  import { Trash2, Plus } from "lucide-svelte";
+  import { Plus } from "lucide-svelte";
 
   let isSubmitting = $state(false);
 
@@ -74,15 +76,13 @@
 
   <!-- Main Container -->
   <div class="flex gap-4">
-    <div
-      class="bg-milk-50 dark:bg-milk-900 flex-1 space-y-6 rounded-xl p-6 shadow-sm"
-    >
+    <div class="dark:bg-milk-900 flex-1 space-y-6 rounded-xl p-6 shadow-sm">
       <div class="flex items-center justify-between">
         <h2 class="text-xl font-semibold">Flashcards</h2>
         <button
           type="button"
           onclick={addCard}
-          class="bg-cocoa-500 hover:bg-cocoa-600 inline-flex items-center rounded-lg px-4 py-2 text-white transition-colors"
+          class="text-cacao-50 bg-cacao-600 hover:bg-cacao-700 inline-flex items-center rounded-lg px-4 py-2 transition-colors"
         >
           <Plus class="mr-2 h-4 w-4" />
           Add Card
@@ -91,57 +91,12 @@
 
       <div class="space-y-4">
         {#each updatedCards as card, index}
-          <div class="dark:bg-milk-800 rounded-lg bg-white p-4 shadow-sm">
-            <div class="mb-4 flex justify-end">
-              <button
-                type="button"
-                onclick={() => removeCard(index)}
-                class="rounded-full bg-red-500 p-2 text-white transition hover:bg-red-600 focus:ring-2 focus:ring-red-400"
-                title="Remove card"
-              >
-                <Trash2 class="h-5 w-5" />
-              </button>
-            </div>
-
-            <div class="grid gap-4 md:grid-cols-2">
-              <!-- Front of card -->
-              <div>
-                <Label>Front</Label>
-                <Input
-                  name={`cards[${index}][front]`}
-                  type="textarea"
-                  bind:value={card.front}
-                  placeholder="Question or prompt"
-                />
-              </div>
-
-              <!-- Back of card -->
-              <div>
-                <Label>Back</Label>
-                <Input
-                  name={`cards[${index}][back]`}
-                  type="textarea"
-                  bind:value={card.back}
-                  placeholder="Answer or explanation"
-                />
-              </div>
-
-              <!-- Media URL (optional) -->
-              <div class="md:col-span-2">
-                <Label>Media URL (optional)</Label>
-                <Input
-                  name={`cards[${index}][media_url]`}
-                  bind:value={card.media_url}
-                  placeholder="https://example.com/image.jpg"
-                />
-              </div>
-            </div>
-          </div>
+          <FlashCardEdit {card} {index} {removeCard} />
         {/each}
       </div>
     </div>
 
-    <div class="bg-milk-50 dark:bg-milk-900 w-1/4 rounded-xl p-4 shadow-sm">
+    <div class="dark:bg-milk-900 w-1/4 rounded-xl p-4 shadow-sm">
       <Label>Deck Name</Label>
       <Input
         name="name"
@@ -165,7 +120,7 @@
             type="checkbox"
             name="shared"
             bind:checked={deck.shared}
-            class="border-milk-300 text-cocoa-600 focus:ring-cocoa-500 h-4 w-4 rounded"
+            class="border-milk-300 text-cacao-600 focus:ring-cacao-500 h-4 w-4 rounded"
           />
           <span class="text-milk-700 dark:text-milk-300 text-sm">
             Share with connected students/teachers
@@ -178,5 +133,6 @@
   <div class="flex justify-end space-x-4">
     <ButtonCancel />
     <ButtonSubmit></ButtonSubmit>
+    <ButtonDelete></ButtonDelete>
   </div>
 </form>

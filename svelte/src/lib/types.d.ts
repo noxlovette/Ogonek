@@ -98,7 +98,7 @@ export interface Deck {
 }
 
 export interface Card {
-  id?: string;
+  id: string;
   front: string;
   back: string;
   media_url?: string;

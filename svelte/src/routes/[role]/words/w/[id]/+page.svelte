@@ -1,6 +1,10 @@
 <script lang="ts">
+  import { enhance } from "$app/forms";
   import { MetaData, ButtonEdit, Label } from "$lib/components";
   import H1 from "$lib/components/typography/H1.svelte";
+  import ButtonSubmit from "$lib/components/UI/buttons/ButtonSubmit.svelte";
+  import { notification } from "$lib/stores";
+  let isSubmitting = $state(true);
 
   let { data } = $props();
   let { deck, cards } = data;
@@ -27,9 +31,7 @@
 {/if}
 
 <div class="grid w-full grid-cols-1 gap-8 lg:grid-cols-3">
-  <div
-    class="col-span-2 space-y-6 rounded-lg bg-white p-6 shadow-sm dark:bg-stone-800"
-  >
+  <div class="col-span-2 space-y-6 rounded-lg">
     <div class="flex items-center justify-between">
       <h2 class="text-xl font-semibold">Flashcards</h2>
       <span class="text-sm text-stone-500">{cards.length} cards</span>
@@ -101,7 +103,30 @@
 
     <div class="flex gap-2">
       <ButtonEdit href="{deck.id}/edit" />
-      <ButtonEdit text="Start Learn" href="../learn" />
+      <form
+        method="POST"
+        use:enhance={() => {
+          isSubmitting = true;
+
+          return async ({ result, update }) => {
+            isSubmitting = false;
+            if (result.type === "success") {
+              notification.set({
+                message: "Added to Routine",
+                type: "success",
+              });
+              update();
+            } else if (result.type === "failure") {
+              notification.set({
+                message: String(result.data?.message),
+                type: "error",
+              });
+            }
+          };
+        }}
+      >
+        <ButtonSubmit buttonName="Add to Routine"></ButtonSubmit>
+      </form>
     </div>
   </div>
 </div>

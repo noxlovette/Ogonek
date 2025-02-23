@@ -75,6 +75,6 @@ export const actions = {
       );
     }
 
-    return redirect(301, ".");
+    return redirect(301, "../../");
   },
 } satisfies Actions;

@@ -8,26 +8,71 @@ use axum::http::StatusCode;
 use time::{OffsetDateTime, Duration};
 use crate::tools::sm2::SM2Calculator;
 
-pub async fn create_card_progress(
+pub async fn init_deck_learning(
     State(state): State<AppState>,
     claims: Claims,
-    Path(card_id): Path<String>,
-) -> Result<Json<CardProgress>, DbError> {
-    let cp = sqlx::query_as!(
-        CardProgress,
+    Path(deck_id): Path<String>,
+) -> Result<Json<Vec<CardProgress>>, APIError> {
+    let _deck = sqlx::query!(
         r#"
-        INSERT INTO card_progress (id, user_id, card_id, review_count, due_date, ease_factor, interval)
-        VALUES ($1, $2, $3, 0, CURRENT_TIMESTAMP, 2.5, 1)
-        RETURNING *
+        SELECT d.* FROM decks d
+        LEFT JOIN teacher_student ts
+            ON (ts.teacher_id = d.created_by AND ts.student_id = $1)
+            OR (ts.student_id = d.created_by AND ts.teacher_id = $1)
+        WHERE d.id = $2 
+        AND (d.created_by = $1 OR (d.shared = TRUE AND ts.teacher_id IS NOT NULL))
         "#,
-        nanoid::nanoid!(),
         claims.sub,
-        card_id,
+        deck_id
     )
-    .fetch_one(&state.db)
+    .fetch_optional(&state.db)
+    .await?
+    .ok_or_else(|| APIError::NotFound("Deck not found or access denied".into()))?;
+
+    let mut tx = state.db.begin().await?;
+
+    let cards = sqlx::query!(
+        r#"
+        SELECT c.id FROM cards c
+        LEFT JOIN card_progress cp 
+            ON cp.card_id = c.id 
+            AND cp.user_id = $1
+        WHERE c.deck_id = $2 
+        AND cp.id IS NULL
+        "#,
+        claims.sub,
+        deck_id
+    )
+    .fetch_all(&mut *tx)
     .await?;
 
-    Ok(Json(cp))
+    if cards.is_empty() {
+        return Ok(Json(vec![]));
+    }
+
+    let mut progress_entries = Vec::with_capacity(cards.len());
+    for card in cards {
+        let progress = sqlx::query_as!(
+            CardProgress,
+            r#"
+            INSERT INTO card_progress 
+                (id, user_id, card_id, review_count, due_date, ease_factor, interval)
+            VALUES 
+                ($1, $2, $3, 0, CURRENT_TIMESTAMP, 2.5, 1)
+            RETURNING *
+            "#,
+            nanoid::nanoid!(),
+            claims.sub,
+            card.id,
+        )
+        .fetch_one(&mut *tx)
+        .await?;
+
+        progress_entries.push(progress);
+    }
+    tx.commit().await?;
+
+    Ok(Json(progress_entries))
 }
 
 pub async fn fetch_due_cards(
@@ -97,7 +142,7 @@ pub async fn update_card_progress(
             interval = $3,
             last_reviewed = $4,
             due_date = $5
-        WHERE user_id = $6 AND card_id = $7
+        WHERE user_id = $6 AND id = $7
         "#,
         new_review_count,
         new_ease,

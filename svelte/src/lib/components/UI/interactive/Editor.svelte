@@ -45,7 +45,7 @@
 					focus:ring-none
 			  focus:border-milk-500 h-full min-h-[400px]
 			  w-full resize-none rounded-lg border
-			  p-4 ring-0 shadow-sm ring-transparent
+			  p-4 shadow-sm ring-0 ring-transparent
 			  focus:ring-transparent"
           spellcheck="false"
         ></textarea>

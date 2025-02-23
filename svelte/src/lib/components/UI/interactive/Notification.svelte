@@ -51,7 +51,7 @@
       y: 100,
     }}
     class="dark:bg-milk-950 bg-milk-50 fixed bottom-5 left-1/2 z-50 flex max-w-md -translate-x-1/2
-			items-center gap-3 rounded-full px-4 py-2 ring-1 shadow-md {$notification.type ===
+			items-center gap-3 rounded-full px-4 py-2 shadow-md ring-1 {$notification.type ===
     'success'
       ? 'ring-green-700'
       : $notification.type === 'error'

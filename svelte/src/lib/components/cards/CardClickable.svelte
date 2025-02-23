@@ -16,8 +16,8 @@
       rounded-xl
       bg-white
       p-5
-      ring-1
-      shadow-lg transition-all duration-200 ease-out
+      shadow-lg
+      ring-1 transition-all duration-200 ease-out
       dark:shadow-none hover:dark:shadow-sm"
 >
   {@render children()}

@@ -1,5 +1,5 @@
 <script lang="ts">
-  let { text = "cancel" } = $props();
+  let { text = "Cancel" } = $props();
 </script>
 
 <a

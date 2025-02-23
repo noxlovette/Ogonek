@@ -1,9 +1,8 @@
 <script lang="ts">
+  import Anchor from "./Anchor.svelte";
   let { href = "/", text = "Edit" } = $props();
 </script>
 
-<a
-  {href}
-  class="bg-cacao-600 text-cacao-50 hover:bg-cacao-700 focus:ring-cacao-500 rounded-lg px-4 py-2 transition-colors focus:ring-2 focus:ring-offset-2 focus:outline-none disabled:opacity-50"
-  >{text}</a
->
+<Anchor {href}>
+  {text}
+</Anchor>
