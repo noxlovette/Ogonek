@@ -6,6 +6,7 @@
     ButtonSubmit,
     H1,
     ButtonCancel,
+    AssigneeSelector,
   } from "$lib/components";
   import type { PageData } from "./$types";
   import { notification } from "$lib/stores";
@@ -72,26 +73,7 @@
                    dark:focus:ring dark:focus:outline-none"
       />
     </div>
-    <div class="space-y-2">
-      <label for="assignee" class="text-milk-700 block font-medium"
-        >Assignee</label
-      >
-      <select
-        id="assignee"
-        name="assignee"
-        value={lesson.assignee}
-        class="border-milk-200 focus:border-cacao-500 focus:ring-cacao-500 dark:bg-milk-950 w-full rounded-lg
-				shadow-sm
-				"
-      >
-        <option value="">Select an assignee</option>
-        {#each students as student}
-          <option value={student.id} selected={student.id === lesson.assignee}>
-            {student.name}
-          </option>
-        {/each}
-      </select>
-    </div>
+    <AssigneeSelector item={lesson} />
   </div>
 </form>
 <Editor bind:markdownContent={markdown} />

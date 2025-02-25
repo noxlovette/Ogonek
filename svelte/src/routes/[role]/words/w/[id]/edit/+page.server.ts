@@ -8,7 +8,10 @@ export const actions = {
     const { id } = params;
     const name = formData.get("name");
     const description = formData.get("description");
-    const shared = formData.get("shared") === "on";
+    const visibility = formData.get("visibility");
+
+    const assigneeData = formData.get("student")?.toString() || "{}";
+    const { assignee = "", telegramId = "" } = JSON.parse(assigneeData);
 
     const cards = [];
     let index = 0;
@@ -40,7 +43,8 @@ export const actions = {
       deck: {
         name,
         description,
-        shared,
+        visibility,
+        assignee,
       },
       cards,
     };

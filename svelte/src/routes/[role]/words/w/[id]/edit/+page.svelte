@@ -8,10 +8,14 @@
     H1,
     FlashCardEdit,
     ButtonDelete,
+    AssigneeSelector,
+    ButtonRaw,
   } from "$lib/components";
   import { notification } from "$lib/stores";
   import { enhance } from "$app/forms";
-  import { Plus } from "lucide-svelte";
+  import { page } from "$app/state";
+
+  const role = page.params.role;
 
   let isSubmitting = $state(false);
 
@@ -24,7 +28,7 @@
     updatedCards = [
       ...updatedCards,
       {
-        id: undefined,
+        id: "",
         deck_id: deck.id,
         front: "",
         back: "",
@@ -74,19 +78,10 @@
 >
   <input type="hidden" value={deck.id} name="id" />
 
-  <!-- Main Container -->
   <div class="flex gap-4">
     <div class="dark:bg-milk-900 flex-1 space-y-6 rounded-xl p-6 shadow-sm">
       <div class="flex items-center justify-between">
         <h2 class="text-xl font-semibold">Flashcards</h2>
-        <button
-          type="button"
-          onclick={addCard}
-          class="text-cacao-50 bg-cacao-600 hover:bg-cacao-700 inline-flex items-center rounded-lg px-4 py-2 transition-colors"
-        >
-          <Plus class="mr-2 h-4 w-4" />
-          Add Card
-        </button>
       </div>
 
       <div class="space-y-4">
@@ -94,6 +89,7 @@
           <FlashCardEdit {card} {index} {removeCard} />
         {/each}
       </div>
+      <ButtonRaw onclick={addCard} type="button" buttonName="Add Card +" />
     </div>
 
     <div class="dark:bg-milk-900 w-1/4 rounded-xl p-4 shadow-sm">
@@ -113,20 +109,23 @@
         value={deck.description}
       />
 
-      <Label>Sharing</Label>
-      <div class="mt-2">
-        <label class="flex items-center space-x-2">
-          <input
-            type="checkbox"
-            name="shared"
-            bind:checked={deck.shared}
-            class="border-milk-300 text-cacao-600 focus:ring-cacao-500 h-4 w-4 rounded"
-          />
-          <span class="text-milk-700 dark:text-milk-300 text-sm">
-            Share with connected students/teachers
-          </span>
-        </label>
-      </div>
+      {#if role === "t"}
+        <AssigneeSelector item={deck} />
+      {/if}
+      <Label>Visibility</Label>
+      <select
+        name="role"
+        required
+        class="dark:focus:ring-milk-700 dark:focus:border-milk-800 dark:border-milk-800 disabled:text-milk-500 border-milk-200 dark:bg-milk-950 focus:ring-cacao-500 w-full rounded-lg border px-4 py-2
+            transition duration-200 focus:ring focus:outline-none
+                   dark:focus:ring dark:focus:outline-none"
+      >
+        <option value="">Public</option>
+        <option value="teacher">Private</option>
+        {#if role === "t"}
+          <option value="student">Shared</option>
+        {/if}
+      </select>
     </div>
   </div>
 

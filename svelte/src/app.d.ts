@@ -8,7 +8,7 @@ declare global {
     interface Error {
       message: string;
       errorId?: number;
-      status?: number;
+      code?: number;
     }
 
     interface Locals {

@@ -3,13 +3,7 @@
 >
   <div class="mx-auto flex w-full max-w-7xl items-center justify-between px-4">
     <div class="flex flex-col gap-1 text-sm">
-      <p class="flex items-center">
-        © 2025 Danila Volkov
-        <span
-          class="bg-cocoa-100 text-cocoa-800 dark:bg-cocoa-800 dark:text-cocoa-100 ml-2 rounded-full px-2 py-0.5 text-xs"
-          >v1.2.3</span
-        >
-      </p>
+      <p class="flex items-center">© 2025 Danila Volkov</p>
       <div class="text-milk-500 flex gap-3">
         <a href="/privacy" class="hover:text-cocoa-500 transition-colors"
           >Privacy</a
@@ -25,7 +19,7 @@
       <p class="text-sm">For my students <span class="not-italic">💛</span></p>
       <div class="text-milk-500 flex gap-3">
         <a
-          href="https://github.com/yourusername"
+          href="https://github.com/noxlovette"
           aria-label="GitHub"
           class="hover:text-cocoa-500 transition-colors"
         >
@@ -45,7 +39,7 @@
           >
         </a>
         <a
-          href="https://t.me/yourusername"
+          href="https://t.me/noxlovette"
           aria-label="Telegram"
           class="hover:text-cocoa-500 transition-colors"
         >

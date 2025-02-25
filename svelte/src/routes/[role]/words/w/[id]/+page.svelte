@@ -22,14 +22,6 @@
 <MetaData title="{deck.name} | Flashcards" robots="noindex, nofollow" />
 <H1>{deck.name}</H1>
 
-{#if deck.shared}
-  <span
-    class="rounded-full bg-stone-100 px-2 py-1 text-xs font-medium text-stone-700 dark:bg-stone-700 dark:text-stone-100"
-  >
-    Shared
-  </span>
-{/if}
-
 <div class="grid w-full grid-cols-1 gap-8 lg:grid-cols-3">
   <div class="col-span-2 space-y-6 rounded-lg">
     <div class="flex items-center justify-between">
@@ -50,24 +42,6 @@
       <p class="mt-2 text-lg">
         {deck.description || "No description available"}
       </p>
-    </div>
-
-    <div class="rounded-lg bg-white p-4 shadow-sm dark:bg-stone-800">
-      <Label>Progress</Label>
-      <div class="mt-4 space-y-2">
-        <div class="flex justify-between">
-          <span>Due today</span>
-          <span class="text-cacao-600 dark:text-cacao-400 font-medium">
-            {data.dueToday ?? 0}
-          </span>
-        </div>
-        <div class="flex justify-between">
-          <span>Total reviewed</span>
-          <span class="font-medium">
-            {data.totalReviewed ?? 0}
-          </span>
-        </div>
-      </div>
     </div>
 
     <div class="flex gap-2">

@@ -92,7 +92,8 @@ export interface Deck {
   id: string;
   name: string;
   description?: string;
-  shared: boolean;
+  assignee: string;
+  visibility: "public" | "private" | "assigned";
   created_by: string;
   created_at: string;
 }

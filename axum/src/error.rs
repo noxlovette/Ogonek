@@ -101,8 +101,6 @@ impl IntoResponse for AppError {
 }
 
 
-// Add these implementations to src/error.rs
-
 // Convert from AuthError
 impl From<crate::auth::error::AuthError> for AppError {
     fn from(err: crate::auth::error::AuthError) -> Self {
@@ -135,7 +133,7 @@ impl From<crate::db::error::DbError> for AppError {
 
 // Convert from PasswordHashError
 impl From<crate::auth::error::PasswordHashError> for AppError {
-    fn from(err: crate::auth::error::PasswordHashError) -> Self {
+    fn from(_err: crate::auth::error::PasswordHashError) -> Self {
         Self::PasswordHash
     }
 }
