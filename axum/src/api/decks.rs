@@ -1,29 +1,37 @@
 use crate::auth::jwt::Claims;
-use crate::db::error::DbError;
 use crate::db::init::AppState;
 use crate::models::cards::{DeckBody, DeckCreateBody, CardBody, DeckWithCards, DeckWithCardsUpdate};
 use axum::extract::Json;
 use axum::extract::Path;
 use axum::extract::State;
+use super::error::APIError;
 
 
 pub async fn create_deck(
     State(state): State<AppState>,
     claims: Claims,
     Json(payload): Json<DeckCreateBody>,
-) -> Result<Json<DeckBody>, DbError> {
+) -> Result<Json<DeckBody>, APIError> {
+
+    let visibility = if payload.assignee.is_some() {
+        payload.visibility.unwrap_or("assigned".to_string())
+    } else {
+        payload.visibility.unwrap_or("private".to_string())
+    };
+
     let deck = sqlx::query_as!(
         DeckBody,
         r#"
-        INSERT INTO decks (id, created_by, name, description, shared)
-        VALUES ($1, $2, $3, $4, $5)
+        INSERT INTO decks (id, created_by, name, description, visibility, assignee)
+        VALUES ($1, $2, $3, $4, $5, $6)
         RETURNING *
         "#,
         nanoid::nanoid!(),
         claims.sub,
         payload.name,
         payload.description,
-        payload.shared
+        visibility,
+        payload.assignee
     )
     .fetch_one(&state.db)
     .await?;
@@ -35,46 +43,15 @@ pub async fn fetch_deck(
     State(state): State<AppState>,
     claims: Claims,
     Path(deck_id): Path<String>,
-) -> Result<Json<Option<DeckWithCards>>, DbError> {
+) -> Result<Json<Option<DeckWithCards>>, APIError> {
     let result = sqlx::query!(
         r#"
-        WITH deck_access AS (
-            SELECT d.* FROM decks d 
-            WHERE d.id = $1 AND d.created_by = $2
-            
-            UNION ALL
-            
-            SELECT d.* FROM decks d
-            JOIN teacher_student ts ON 
-                (ts.teacher_id = d.created_by AND ts.student_id = $2)
-                OR (ts.student_id = d.created_by AND ts.teacher_id = $2)
-            WHERE d.id = $1 AND d.shared = TRUE
-            LIMIT 1
-        ),
-        review_stats AS (
-            SELECT 
-                COUNT(DISTINCT cp.card_id) FILTER (
-                    WHERE cp.due_date <= CURRENT_TIMESTAMP 
-                    OR cp.review_count = 0
-                ) as due_today,
-                COUNT(DISTINCT cp.card_id) FILTER (
-                    WHERE cp.review_count > 0
-                ) as total_reviewed
-            FROM deck_access d
-            JOIN cards c ON c.deck_id = d.id
-            LEFT JOIN card_progress cp ON cp.card_id = c.id AND cp.user_id = $2
+        SELECT * FROM decks 
+        WHERE id = $1 AND (
+            created_by = $2
+            OR assignee = $2
+            OR visibility = 'public'
         )
-        SELECT 
-            d.id,
-            d.name,
-            d.description,
-            d.created_by,
-            d.shared,
-            d.created_at,
-            COALESCE(rs.due_today, 0) as due_today,
-            COALESCE(rs.total_reviewed, 0) as total_reviewed
-        FROM deck_access d
-        CROSS JOIN review_stats rs
         "#,
         deck_id,
         claims.sub
@@ -98,41 +75,33 @@ pub async fn fetch_deck(
 
             Ok(Json(Some(DeckWithCards {
                 deck: DeckBody {
-                    id: deck_data.id.unwrap_or_default(),
-                    name: deck_data.name.unwrap_or_default(),
+                    id: deck_data.id,
+                    name: deck_data.name,
                     description: deck_data.description,
-                    created_by: deck_data.created_by.unwrap_or_default(),
-                    shared: deck_data.shared.unwrap_or_default(),
-                    created_at: deck_data.created_at.unwrap(),
+                    visibility: deck_data.visibility,
+                    created_by: deck_data.created_by,
+                    assignee: deck_data.assignee,
+                    created_at: deck_data.created_at,
                 },
-                cards,
-                due_today: deck_data.due_today,
-                total_reviewed: deck_data.total_reviewed,
+                cards
             })))
         },
         None => Ok(Json(None))
     }
 }
-
 pub async fn fetch_deck_list(
     State(state): State<AppState>,
     claims: Claims,
-) -> Result<Json<Vec<DeckBody>>, DbError> {
+) -> Result<Json<Vec<DeckBody>>, APIError> {
     let decks = sqlx::query_as!(
         DeckBody,
         r#"
-        SELECT d.id, d.name, 
-               d.description, 
-               d.shared, 
-               d.created_by, 
-               d.created_at
-        FROM decks d
-        LEFT JOIN teacher_student ts
-            ON (ts.teacher_id = d.created_by AND ts.student_id = $1)
-            OR (ts.student_id = d.created_by AND ts.teacher_id = $1)
-        WHERE d.created_by = $1 OR (d.shared = TRUE AND ts.teacher_id IS NOT NULL)
-
-        ORDER BY d.created_at DESC
+        SELECT id, name, description, visibility, assignee, created_by, created_at
+        FROM decks
+        WHERE created_by = $1 
+           OR assignee = $1
+           OR visibility = 'public'
+        ORDER BY created_at DESC
         "#,
         claims.sub
     )
@@ -148,7 +117,7 @@ pub async fn update_deck(
     claims: Claims,
     Path(deck_id): Path<String>,
     Json(payload): Json<DeckWithCardsUpdate>,
-) -> Result<Json<DeckWithCards>, DbError> {
+) -> Result<Json<DeckWithCards>, APIError> {
     // Step 1: Update the deck
     let deck = sqlx::query_as!(
         DeckBody,
@@ -156,12 +125,14 @@ pub async fn update_deck(
          SET 
             name = COALESCE($1, name),
             description = COALESCE($2, description), 
-            shared = COALESCE($3, shared)
-         WHERE id = $4 AND created_by = $5
+            visibility = COALESCE($3, visibility),
+            assignee = COALESCE($4, assignee)
+         WHERE id = $5 AND created_by = $6
          RETURNING *",
         payload.deck.name,
         payload.deck.description,
-        payload.deck.shared,
+        payload.deck.visibility,
+        payload.deck.assignee,
         deck_id,
         claims.sub
     )
@@ -223,7 +194,7 @@ pub async fn update_deck(
     .fetch_all(&state.db)
     .await?;
 
-    Ok(Json(DeckWithCards { deck, cards: updated_cards, due_today: None, total_reviewed: None }))
+    Ok(Json(DeckWithCards { deck, cards: updated_cards }))
 }
 
 
@@ -231,13 +202,13 @@ pub async fn delete_deck(
     State(state): State<AppState>,
     claims: Claims,
     Path(deck_id): Path<String>,
-) -> Result<Json<DeckBody>, DbError> {
+) -> Result<Json<DeckBody>, APIError> {
     let deck = sqlx::query_as!(
         DeckBody,
         r#"
         DELETE FROM decks
         WHERE id = $1 AND created_by = $2
-        RETURNING *
+        RETURNING id, name, description, created_by, visibility, assignee, created_at
         "#,
         deck_id,
         claims.sub
@@ -247,3 +218,4 @@ pub async fn delete_deck(
 
     Ok(Json(deck))
 }
+

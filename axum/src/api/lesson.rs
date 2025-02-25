@@ -1,5 +1,4 @@
 use crate::auth::jwt::Claims;
-use crate::db::error::DbError;
 use crate::db::init::AppState;
 use crate::models::lessons::LessonBody;
 use crate::models::lessons::LessonBodyWithStudent;
@@ -9,12 +8,13 @@ use crate::models::lessons::LessonUpdate;
 use axum::extract::Json;
 use axum::extract::Path;
 use axum::extract::State;
+use super::error::APIError;
 
 pub async fn fetch_lesson(
     State(state): State<AppState>,
     Path(id): Path<String>,
     claims: Claims,
-) -> Result<Json<Option<LessonBodyWithStudent>>, DbError> {
+) -> Result<Json<Option<LessonBodyWithStudent>>, APIError> {
     let lesson = sqlx::query_as!(
         LessonBodyWithStudent,
         r#"
@@ -44,7 +44,7 @@ pub async fn fetch_lesson(
 pub async fn list_lessons(
     State(state): State<AppState>,
     claims: Claims,
-) -> Result<Json<Vec<LessonBodyWithStudent>>, DbError> {
+) -> Result<Json<Vec<LessonBodyWithStudent>>, APIError> {
     let lessons = sqlx::query_as!(
         LessonBodyWithStudent,
         r#"
@@ -76,7 +76,7 @@ pub async fn create_lesson(
     State(state): State<AppState>,
     claims: Claims,
     Json(payload): Json<LessonCreateBody>,
-) -> Result<Json<LessonCreateResponse>, DbError> {
+) -> Result<Json<LessonCreateResponse>, APIError> {
     let mut assignee = &claims.sub;
 
     if payload.assignee.is_some() {
@@ -105,7 +105,7 @@ pub async fn delete_lesson(
     State(state): State<AppState>,
     Path(id): Path<String>,
     claims: Claims,
-) -> Result<Json<LessonBody>, DbError> {
+) -> Result<Json<LessonBody>, APIError> {
     let lesson = sqlx::query_as!(
         LessonBody,
         "DELETE FROM lessons WHERE id = $1 AND created_by = $2 RETURNING *",
@@ -114,7 +114,7 @@ pub async fn delete_lesson(
     )
     .fetch_optional(&state.db)
     .await?
-    .ok_or(DbError::NotFound)?;
+    .ok_or_else(||APIError::NotFound("Lesson Not Found".into()))?;
 
     Ok(Json(lesson))
 }
@@ -124,7 +124,7 @@ pub async fn update_lesson(
     Path(id): Path<String>,
     claims: Claims,
     Json(payload): Json<LessonUpdate>,
-) -> Result<Json<LessonBody>, DbError> {
+) -> Result<Json<LessonBody>, APIError> {
     let lesson = sqlx::query_as!(
         LessonBody,
         "UPDATE lessons 
@@ -144,7 +144,7 @@ pub async fn update_lesson(
     )
     .fetch_optional(&state.db)
     .await?
-    .ok_or(DbError::NotFound)?;
+    .ok_or_else(||APIError::NotFound("Lesson Not Found".into()))?;
 
     Ok(Json(lesson))
 }

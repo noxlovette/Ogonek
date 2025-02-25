@@ -114,7 +114,7 @@
           class="w-full pl-10 {$tableQuery ? 'pr-10' : 'pr-4'}
 						bg-cacao-50 dark:bg-milk-950 border-milk-200 dark:border-milk-900 dark:focus:ring-milk-700 dark:focus:placeholder:text-milk-700 focus:ring-cacao-500 focus:placeholder:text-cacao-400/70 placeholder:text-milk-500 w-full rounded-full border py-2 pr-4 pl-10
         focus:border-transparent
-        focus:ring-2
+        focus:ring
         "
         />
         {#if $tableQuery}

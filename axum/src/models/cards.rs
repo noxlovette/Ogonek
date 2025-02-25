@@ -37,8 +37,6 @@ pub struct CardUpdate {
 pub struct DeckWithCards {
     pub deck: DeckBody,
     pub cards: Vec<CardBody>,
-    pub due_today: Option<i64>,
-    pub total_reviewed: Option<i64>,
 }
 
 #[derive(Deserialize, Debug)]
@@ -55,7 +53,8 @@ pub struct DeckBody {
     pub id: String,
     pub name: String,
     pub description: Option<String>,
-    pub shared: bool,
+    pub visibility: String,
+    pub assignee: Option<String>,
     pub created_by: String,
     #[serde_as(as = "Rfc3339")]
     pub created_at: OffsetDateTime,
@@ -66,7 +65,8 @@ pub struct DeckBody {
 pub struct DeckCreateBody {
     pub name: String,
     pub description: Option<String>,
-    pub shared: Option<bool>,
+    pub visibility: Option<String>,
+    pub assignee: Option<String>
 }
 
 #[derive(Deserialize, Debug)]
@@ -74,7 +74,8 @@ pub struct DeckCreateBody {
 pub struct DeckUpdate {
     pub name: Option<String>,
     pub description: Option<String>,
-    pub shared: Option<bool>
+    pub visibility: Option<String>,
+    pub assignee: Option<String>
 }
 
 use validator::Validate;

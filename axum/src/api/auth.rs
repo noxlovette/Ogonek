@@ -4,6 +4,7 @@ use crate::auth::helpers::{generate_refresh_token, generate_token, hash_password
 use crate::auth::jwt::Claims;
 use crate::auth::jwt::RefreshClaims;
 use crate::db::init::AppState;
+use crate::api::error::APIError;
 use crate::models::users::{
     AuthBody, AuthPayload, BindPayload, InviteToken, SignUpBody, SignUpPayload, User,
 };
@@ -19,14 +20,14 @@ use base64::{engine::general_purpose::URL_SAFE, Engine as _};
 pub async fn signup(
     State(state): State<AppState>,
     Json(payload): Json<SignUpPayload>,
-) -> Result<Json<SignUpBody>, AuthError> {
+) -> Result<Json<SignUpBody>, APIError> {
     tracing::info!("Creating user");
     if payload.username.is_empty() || payload.pass.is_empty() {
-        return Err(AuthError::InvalidCredentials);
+        return Err(APIError::InvalidCredentials);
     }
     payload.validate().map_err(|e| {
         eprintln!("{:?}", e);
-        AuthError::InvalidCredentials
+        APIError::InvalidCredentials
     })?;
 
     let SignUpPayload {
@@ -57,12 +58,12 @@ pub async fn signup(
     .await
     .map_err(|e| match e {
         sqlx::Error::Database(dbe) if dbe.constraint() == Some("user_username_key") => {
-            AuthError::Conflict("username taken".into())
+            APIError::AlreadyExists("Username already taken".into())
         }
         sqlx::Error::Database(dbe) if dbe.constraint() == Some("user_email_key") => {
-            AuthError::Conflict("email already registered".into())
+            APIError::AlreadyExists("Email already registered".into())
         }
-        _ => e.into(),
+        _ => APIError::Database(e),
     })?;
 
     Ok(Json(SignUpBody { id }))
@@ -71,14 +72,14 @@ pub async fn signup(
 pub async fn authorize(
     State(state): State<AppState>,
     Json(payload): Json<AuthPayload>,
-) -> Result<Response, AuthError> {
+) -> Result<Response, APIError> {
 
     if payload.username.is_empty() || payload.pass.is_empty() {
-        return Err(AuthError::InvalidCredentials);
+        return Err(APIError::InvalidCredentials);
     }
     payload.validate().map_err(|e| {
         eprintln!("{:?}", e);
-        AuthError::InvalidCredentials
+        APIError::InvalidCredentials
     })?;
 
     let user = sqlx::query_as!(
@@ -96,10 +97,10 @@ pub async fn authorize(
         eprintln!("{:?}", e);
         AuthError::WrongCredentials
     })?
-    .ok_or(AuthError::UserNotFound)?;
+    .ok_or_else(|| APIError::NotFound("User not found".into()))?;
 
     if !verify_password(&user.pass, &payload.pass)? {
-        return Err(AuthError::WrongCredentials);
+        return Err(APIError::AuthenticationFailed);
     }
 
     let token = generate_token(&user)?;
@@ -111,7 +112,7 @@ pub async fn authorize(
 pub async fn refresh(
     State(state): State<AppState>,
     claims: RefreshClaims,
-) -> Result<Response, AuthError> {
+) -> Result<Response, APIError> {
     let user = sqlx::query_as!(
         User,
         r#"
@@ -125,7 +126,7 @@ pub async fn refresh(
     .await
     .map_err(|e| {
         eprintln!("{:?}", e);
-        AuthError::UserNotFound
+        APIError::NotFound("User not Found".into())
     })?
     .ok_or(AuthError::UserNotFound)?;
 
@@ -133,7 +134,6 @@ pub async fn refresh(
     Ok(AuthBody::into_refresh(token))
 }
 
-// Generate invite link endpoint
 pub async fn generate_invite_link(claims: Claims) -> Result<Json<String>, AuthError> {
     if claims.role != "teacher" {
         return Err(AuthError::InvalidToken);

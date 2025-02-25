@@ -20,7 +20,7 @@
   tabindex="0"
 >
   <div
-    class="ring-cacao-200 dark:ring-milk-800 absolute inset-0 h-full w-full rounded-lg bg-white p-4 shadow-sm ring-2 backface-hidden dark:bg-stone-800 {flippedCards.has(
+    class="ring-cacao-200 dark:ring-milk-800 absolute inset-0 h-full w-full rounded-lg bg-white p-4 shadow-sm ring backface-hidden dark:bg-stone-800 {flippedCards.has(
       card.id,
     )
       ? 'opacity-0'
@@ -39,7 +39,7 @@
   </div>
 
   <div
-    class="bg-cacao-50 ring-cacao-500 dark:ring-milk-800 dark:bg-cacao-900 absolute inset-0 h-full w-full rounded-lg p-4 shadow-sm ring-2 backface-hidden {flippedCards.has(
+    class="bg-cacao-50 ring-cacao-500 dark:ring-milk-800 dark:bg-cacao-900 absolute inset-0 h-full w-full rounded-lg p-4 shadow-sm ring backface-hidden {flippedCards.has(
       card.id,
     )
       ? 'opacity-100'

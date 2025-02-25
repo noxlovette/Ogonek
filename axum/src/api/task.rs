@@ -1,5 +1,5 @@
 use crate::auth::jwt::Claims;
-use crate::db::error::DbError;
+use super::error::APIError;
 use crate::db::init::AppState;
 use crate::models::tasks::{TaskBody, TaskBodyWithStudent, TaskCreateBody, TaskUpdate};
 use axum::extract::{Json, Path, State};
@@ -8,7 +8,7 @@ pub async fn fetch_task(
     State(state): State<AppState>,
     Path(id): Path<String>,
     claims: Claims,
-) -> Result<Json<Option<TaskBodyWithStudent>>, DbError> {
+) -> Result<Json<Option<TaskBodyWithStudent>>, APIError> {
     let task = sqlx::query_as!(
         TaskBodyWithStudent,
         r#"
@@ -41,7 +41,7 @@ pub async fn fetch_task(
 pub async fn list_tasks(
     State(state): State<AppState>,
     claims: Claims,
-) -> Result<Json<Vec<TaskBodyWithStudent>>, DbError> {
+) -> Result<Json<Vec<TaskBodyWithStudent>>, APIError> {
     let tasks = sqlx::query_as!(
         TaskBodyWithStudent,
         r#"
@@ -76,7 +76,7 @@ pub async fn create_task(
     State(state): State<AppState>,
     claims: Claims,
     Json(payload): Json<TaskCreateBody>,
-) -> Result<Json<TaskBody>, DbError> {
+) -> Result<Json<TaskBody>, APIError> {
     let mut assignee = &claims.sub;
 
     if payload.assignee.is_some() {
@@ -104,7 +104,7 @@ pub async fn delete_task(
     State(state): State<AppState>,
     Path(id): Path<String>,
     claims: Claims,
-) -> Result<Json<TaskBody>, DbError> {
+) -> Result<Json<TaskBody>, APIError> {
     let task = sqlx::query_as!(
         TaskBody,
         "DELETE FROM tasks WHERE id = $1 AND (assignee = $2 OR created_by = $2) RETURNING *",
@@ -112,8 +112,10 @@ pub async fn delete_task(
         claims.sub
     )
     .fetch_optional(&state.db)
-    .await?
-    .ok_or(DbError::NotFound)?;
+    .await
+    .map_err(APIError::Database)?
+    .ok_or_else(|| APIError::NotFound("Task not found".into()))?;
+
     Ok(Json(task))
 }
 
@@ -122,7 +124,7 @@ pub async fn update_task(
     Path(id): Path<String>, 
     claims: Claims,
     Json(payload): Json<TaskUpdate>,
-) -> Result<Json<TaskBody>, DbError> {
+) -> Result<Json<TaskBody>, APIError> {
     let task = sqlx::query_as!(
         TaskBody,
         "UPDATE tasks
@@ -147,7 +149,9 @@ pub async fn update_task(
         claims.sub
     )
     .fetch_optional(&state.db)
-    .await?
-    .ok_or(DbError::NotFound)?;
+    .await
+    .map_err(APIError::Database)?
+    .ok_or_else(|| APIError::NotFound("Task not found".into()))?;
+
     Ok(Json(task))
 }

@@ -1,5 +1,5 @@
 use crate::auth::jwt::Claims;
-use crate::db::error::DbError;
+use super::error::APIError;
 use crate::db::init::AppState;
 use crate::models::students::UpdateStudentRequest;
 use crate::models::students::Student;
@@ -12,7 +12,7 @@ pub async fn upsert_student(
     claims: Claims, // from auth middleware
     State(state): State<AppState>,
     Path(id): Path<String>,
-) -> Result<StatusCode, DbError> {
+) -> Result<StatusCode, APIError> {
     // Insert the relationship
 
     if claims.role != "teacher" {
@@ -29,14 +29,14 @@ pub async fn upsert_student(
     )
     .execute(&state.db)
     .await
-    .map_err(|e| {
-        eprintln!("Failed to upsert student: {:?}", e);
-        // You might want to handle unique constraint violations separately
-        if e.to_string().contains("unique constraint") {
-            return DbError::AlreadyExists;
+    .map_err(|e| match e {
+        sqlx::Error::Database(dbe) if dbe.constraint() == Some("unique constraint") => {
+            APIError::AlreadyExists("Already Exists".into())
         }
-        DbError::Db
-    })?;
+        _ => APIError::Database(e),
+    }
+    )?;
+
 
     Ok(StatusCode::CREATED)
 }
@@ -45,7 +45,7 @@ pub async fn remove_student(
     State(state): State<AppState>,
     Path(id): Path<String>,
     claims: Claims,
-) -> Result<StatusCode, DbError> {
+) -> Result<StatusCode, APIError> {
     sqlx::query!(
         r#"
         UPDATE teacher_student
@@ -56,11 +56,7 @@ pub async fn remove_student(
         id
     )
     .execute(&state.db)
-    .await
-    .map_err(|e| {
-        eprintln!("Failed to remove student: {:?}", e);
-        DbError::Db
-    })?;
+    .await?;
 
     Ok(StatusCode::NO_CONTENT)
 }
@@ -70,7 +66,7 @@ pub async fn update_student(
     State(state): State<AppState>,
     Path(id): Path<String>,
     Json(payload): Json<UpdateStudentRequest>,
-) -> Result<StatusCode, DbError> {
+) -> Result<StatusCode, APIError> {
     
     sqlx::query!(
         r#"
@@ -86,11 +82,7 @@ pub async fn update_student(
         payload.telegram_id
     )
     .execute(&state.db)
-    .await
-    .map_err(|e| {
-        eprintln!("Failed to modify student: {:?}", e);
-        DbError::Db
-    })?;
+    .await?;
 
     Ok(StatusCode::NO_CONTENT)
 }
@@ -99,7 +91,7 @@ pub async fn fetch_student(
     claims: Claims,
     State(state): State<AppState>,
     Path(id): Path<String>,
-) -> Result<Json<Student>, DbError> {
+) -> Result<Json<Student>, APIError> {
     let student = sqlx::query_as!(
         Student,
         r#"
@@ -112,11 +104,7 @@ pub async fn fetch_student(
         id,
     )
     .fetch_one(&state.db)
-    .await
-    .map_err(|e| {
-        eprintln!("{:?}", e);
-        DbError::Db
-    })?;
+    .await?;
 
     Ok(Json(student))
 }
@@ -124,7 +112,7 @@ pub async fn fetch_student(
 pub async fn list_students(
     claims: Claims,
     State(state): State<AppState>,
-) -> Result<Json<Vec<Student>>, DbError> {
+) -> Result<Json<Vec<Student>>, APIError> {
     let students = sqlx::query_as!(
         Student,
         r#"
@@ -136,11 +124,7 @@ pub async fn list_students(
         claims.sub
     )
     .fetch_all(&state.db)
-    .await
-    .map_err(|e| {
-        eprintln!("{:?}", e);
-        DbError::Db
-    })?;
+    .await?;
 
     Ok(Json(students))
 }

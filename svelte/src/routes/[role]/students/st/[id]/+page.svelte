@@ -25,7 +25,7 @@
 </div>
 <h3 class="text-2xl font-bold">Notes</h3>
 {#if student.markdown}
-  <div class="markdown ring-milk-200 rounded-lg p-4 ring-2">
+  <div class="markdown ring-milk-200 rounded-lg p-4 ring">
     {@html rendered}
   </div>
 {:else}

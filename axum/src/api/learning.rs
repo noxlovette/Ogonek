@@ -1,9 +1,8 @@
 use axum::extract::{Json, State, Path};
 use crate::auth::jwt::Claims;
-use crate::db::error::DbError;
 use crate::db::init::AppState;
 use crate::models::cards::{CardProgress, CardProgressWithFields, ReviewPayload};
-use crate::api::error::APIError;
+use super::error::APIError;
 use axum::http::StatusCode;
 use time::{OffsetDateTime, Duration};
 use crate::tools::sm2::SM2Calculator;
@@ -15,15 +14,15 @@ pub async fn init_deck_learning(
 ) -> Result<Json<Vec<CardProgress>>, APIError> {
     let _deck = sqlx::query!(
         r#"
-        SELECT d.* FROM decks d
-        LEFT JOIN teacher_student ts
-            ON (ts.teacher_id = d.created_by AND ts.student_id = $1)
-            OR (ts.student_id = d.created_by AND ts.teacher_id = $1)
-        WHERE d.id = $2 
-        AND (d.created_by = $1 OR (d.shared = TRUE AND ts.teacher_id IS NOT NULL))
+        SELECT * FROM decks
+        WHERE id = $1 AND (
+            created_by = $2
+            OR assignee = $2
+            OR visibility = 'public'
+        )
         "#,
-        claims.sub,
-        deck_id
+        deck_id,
+        claims.sub
     )
     .fetch_optional(&state.db)
     .await?
@@ -78,7 +77,7 @@ pub async fn init_deck_learning(
 pub async fn fetch_due_cards(
     State(state): State<AppState>,
     claims: Claims
-) -> Result<Json<Vec<CardProgressWithFields>>, DbError> {
+) -> Result<Json<Vec<CardProgressWithFields>>, APIError> {
     let progress_list = sqlx::query_as!(
         CardProgressWithFields,
         r#"
@@ -165,17 +164,17 @@ pub async fn reset_deck_progress(
 ) -> Result<StatusCode, APIError> {
     let mut tx = state.db.begin().await?;
 
-    // Fixed query with proper column alias
     let deck_exists = sqlx::query!(
         r#"
-        SELECT 1 as "exists!: bool" FROM decks d
-        LEFT JOIN teacher_student ts
-            ON (ts.teacher_id = d.created_by AND ts.student_id = $1)
-            OR (ts.student_id = d.created_by AND ts.teacher_id = $1)
-        WHERE d.id = $2 AND (d.created_by = $1 OR (d.shared = TRUE AND ts.teacher_id IS NOT NULL))
+        SELECT 1 as "exists!: bool" FROM decks
+        WHERE id = $1 AND (
+            created_by = $2
+            OR assignee = $2
+            OR visibility = 'public'
+        )
         "#,
-        claims.sub,
-        deck_id
+        deck_id,
+        claims.sub
     )
     .fetch_optional(&mut *tx)
     .await?
