@@ -6,14 +6,16 @@
     Thesaurus,
   } from "$lib/components/sidebar/elements";
   import Group from "./Group.svelte";
+  import { sidebar } from "$lib/stores";
 
   let elements = [Forvo, Dictionary, Thesaurus];
 </script>
 
 <Group>
   <H2>Useful Links</H2>
-
-  {#each elements as Element}
-    <Element />
-  {/each}
+  <div class={$sidebar ? "flex-row py-2" : "flex-col"}>
+    {#each elements as Element}
+      <Element />
+    {/each}
+  </div>
 </Group>

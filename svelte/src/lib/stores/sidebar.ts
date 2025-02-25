@@ -25,3 +25,4 @@ const createSidebarStore = () => {
 };
 
 export const sidebar = createSidebarStore();
+export const rightbar = createSidebarStore();

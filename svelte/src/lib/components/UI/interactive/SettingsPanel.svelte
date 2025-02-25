@@ -79,7 +79,7 @@
     action="?/update"
   >
     <div
-      class="bg-milk-50 border-milk-100 dark:border-milk-800 dark:bg-milk-900 rounded-xl border p-6 shadow-md transition-all"
+      class="bg-milk-50 border-milk-100 dark:border-milk-800 dark:bg-milk-950 rounded-xl border p-6 shadow-md transition-all"
     >
       <div
         class="border-milk-200 dark:border-milk-700 mb-6 flex items-center justify-between border-b pb-4"

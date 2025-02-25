@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { sidebar } from "$lib/stores";
+
   let { children } = $props();
 </script>
 

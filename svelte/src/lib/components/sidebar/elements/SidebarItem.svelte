@@ -1,11 +1,16 @@
 <script lang="ts">
   import { sidebar } from "$lib/stores/sidebar";
 
-  let { Icon, href = "/", name } = $props();
+  let { Icon, href = "/", name, external = false } = $props();
+
+  const target = $derived(external === true ? "_blank" : undefined);
+  const rel = $derived(external === true ? "noopener noreferrer" : undefined);
 </script>
 
 <a
   {href}
+  {target}
+  {rel}
   class={`
      inline-flex items-center font-serif transition-all
      ${

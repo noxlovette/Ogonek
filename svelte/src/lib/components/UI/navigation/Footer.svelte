@@ -1,14 +1,19 @@
 <footer
-  class="border-milk-200 dark:border-milk-800 hidden w-full border-t py-3 md:flex"
+  class="ring-milk-200 dark:ring-milk-900 my-2 w-11/12 items-baseline rounded-lg shadow-md ring md:w-full"
 >
-  <div class="mx-auto flex w-full max-w-7xl items-center justify-between px-4">
+  <div
+    class="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-3"
+  >
     <div class="flex flex-col gap-1 text-sm">
       <p class="flex items-center">© 2025 Danila Volkov</p>
       <div class="text-milk-500 flex gap-3">
-        <a href="/privacy" class="hover:text-cocoa-500 transition-colors"
-          >Privacy</a
+        <a
+          href="/paperwork/privacy"
+          class="hover:text-cocoa-500 transition-colors">Privacy</a
         >
-        <a href="/terms" class="hover:text-cocoa-500 transition-colors">Terms</a
+        <a
+          href="/paperwork/terms"
+          class="hover:text-cocoa-500 transition-colors">Terms</a
         >
         <a href="/contact" class="hover:text-cocoa-500 transition-colors"
           >Contact</a
