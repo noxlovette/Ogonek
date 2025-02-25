@@ -10,7 +10,6 @@
   } from "$lib/components";
   import type { PageData } from "./$types";
   import { notification } from "$lib/stores";
-  import { goto } from "$app/navigation";
   let { data }: { data: PageData } = $props();
   let { lesson, students } = data;
   let isSubmitting = $state(false);

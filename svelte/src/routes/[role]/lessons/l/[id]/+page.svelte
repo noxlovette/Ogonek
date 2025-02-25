@@ -3,7 +3,6 @@
   import { user } from "$lib/stores";
   import { formatDateTime } from "$lib/utils";
   import type { PageData } from "./$types";
-  import { goto } from "$app/navigation";
   import { page } from "$app/state";
 
   let { data }: { data: PageData } = $props();
@@ -14,7 +13,7 @@
 {#if page.params.role === "t"}
   <div class="flex items-baseline space-x-4">
     <H1>{data.lesson.title}</H1>
-    <ButtonEdit href="/t/lessons/l/${data.lesson.id}/edit" />
+    <ButtonEdit href="/t/lessons/l/{data.lesson.id}/edit" />
   </div>
   <div class="flex space-x-4">
     <div class="space-y-2">

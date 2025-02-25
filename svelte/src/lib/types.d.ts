@@ -28,6 +28,7 @@ export interface User {
   username: string | null;
   role: string | null;
   email: string | null;
+  sub: string | null;
 }
 
 export interface Lesson {

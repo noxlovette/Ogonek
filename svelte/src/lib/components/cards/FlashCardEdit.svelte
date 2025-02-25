@@ -16,7 +16,7 @@
 </script>
 
 <div
-  class="group border-milk-200 hover:border-milk-300 dark:border-milk-700 dark:bg-milk-800 dark:hover:border-milk-600 relative rounded-lg border bg-white p-3 shadow-sm transition-all"
+  class="group border-milk-200 hover:border-milk-300 dark:border-milk-800 dark:bg-milk-900 dark:hover:border-milk-600 relative rounded-lg border bg-white p-3 shadow-sm transition-all"
   transition:fade
 >
   <button

@@ -9,7 +9,7 @@
     ButtonSubmit,
   } from "$lib/components";
 
-  import { notification } from "$lib/stores";
+  import { notification, user } from "$lib/stores";
 
   let isSubmitting = $state(false);
   let { data } = $props();
@@ -30,7 +30,9 @@
 <div class="mb-6 flex flex-wrap items-center justify-between gap-4">
   <H1>{deck.name}</H1>
   <div class="flex gap-2">
-    <ButtonEdit href="{deck.id}/edit" />
+    {#if $user.sub !== deck.created_by}
+      <ButtonEdit href="{deck.id}/edit" />
+    {/if}
     <form
       method="POST"
       use:enhance={() => {
