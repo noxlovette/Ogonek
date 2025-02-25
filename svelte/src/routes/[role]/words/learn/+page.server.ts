@@ -1,14 +1,5 @@
-import type { CardProgress } from "$lib/types";
 import { fail } from "@sveltejs/kit";
-import type { Actions, PageServerLoad } from "./$types";
-export const load: PageServerLoad = async ({ fetch }) => {
-  const response = await fetch("/axum/deck/learn");
-  const cards: CardProgress[] = await response.json();
-
-  return {
-    cards,
-  };
-};
+import type { Actions } from "./$types";
 
 export const actions: Actions = {
   default: async ({ fetch, request }) => {

@@ -14,7 +14,7 @@
         clearTimeout(timeout);
       }
       timeout = setTimeout(() => {
-        clearNotification(); // Reset the notification store
+        clearNotification();
       }, 2800);
     }
   });

@@ -4,25 +4,30 @@
   import { enhance } from "$app/forms";
   import { notification } from "$lib/stores/notification.js";
   import { Anchor } from "$lib/components";
+  import { invalidate } from "$app/navigation";
 
   let { data } = $props();
 
   let currentIndex = $state(0);
   let currentCard = $derived(data.cards[currentIndex]);
 
-  let isComplete = $state(data.cards.length === 0); // Add this state
+  let isComplete = $state(data.cards.length === 0);
+  let showAnswer = $state(false);
 
-  function nextCard() {
+  const nextCard = async () => {
     if (currentIndex < data.cards.length - 1) {
       currentIndex++;
       showAnswer = false;
+    } else if ((currentIndex = data.cards.length) && data.cards.length > 1) {
+      invalidate("learn:complete");
+      currentIndex = 0;
+      showAnswer = false;
     } else {
-      // We've reached the end - show success state
       isComplete = true;
     }
-  }
+  };
 
-  let showAnswer = $state(false);
+  $inspect(data.cards);
 
   const qualityButtons = [
     { quality: 0, label: "Blackout 💀" },
@@ -51,7 +56,7 @@
       <!-- Progress bar -->
       <div class="bg-milk-200 h-2.5 w-full rounded-full">
         <div
-          class="bg-cacao-600 h-2.5 rounded-full transition-all duration-300"
+          class="h-2.5 rounded-full bg-green-500 transition-all duration-300"
           style="width: {((data.cards.indexOf(currentCard) + 1) /
             data.cards.length) *
             100}%"

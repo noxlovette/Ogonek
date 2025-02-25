@@ -1,6 +1,6 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
-  import { MetaData, ButtonEdit, Label } from "$lib/components";
+  import { MetaData, ButtonEdit, Label, WordCard } from "$lib/components";
   import H1 from "$lib/components/typography/H1.svelte";
   import ButtonSubmit from "$lib/components/UI/buttons/ButtonSubmit.svelte";
   import { notification } from "$lib/stores";
@@ -39,38 +39,7 @@
 
     <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
       {#each cards as card (card.id)}
-        <div
-          class="relative h-48 cursor-pointer"
-          onclick={() => toggleCard(card.id)}
-          onkeydown={(e) => e.key === "Enter" && toggleCard(card.id)}
-          role="button"
-          tabindex="0"
-        >
-          {#if !flippedCards.has(card.id)}
-            <div
-              class="absolute inset-0 h-full w-full rounded-lg bg-white p-4 shadow-sm dark:bg-stone-800"
-            >
-              <div class="flex h-full items-center justify-center">
-                <p class="text-center break-words">{card.front}</p>
-                {#if card.media_url}
-                  <img
-                    src={card.media_url}
-                    alt="Card media"
-                    class="absolute top-2 right-2 h-8 w-8 rounded object-cover"
-                  />
-                {/if}
-              </div>
-            </div>
-          {:else}
-            <div
-              class="bg-cacao-50 dark:bg-cacao-900 absolute inset-0 h-full w-full rounded-lg p-4 shadow-sm"
-            >
-              <div class="flex h-full items-center justify-center">
-                <p class="text-center break-words">{card.back}</p>
-              </div>
-            </div>
-          {/if}
-        </div>
+        <WordCard bind:flippedCards {card} {toggleCard} />
       {/each}
     </div>
   </div>

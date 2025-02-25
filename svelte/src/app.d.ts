@@ -7,12 +7,20 @@ declare global {
   namespace App {
     interface Error {
       message: string;
-      errorId?: int;
+      errorId?: number;
+      status?: number;
     }
+
     interface Locals {
       accessToken?: string;
       refreshToken?: string;
-      user?: JWTPayload;
+      user?: JWTPayload & {
+        sub: string;
+        name?: string;
+        role: string;
+        email?: string;
+        verified: boolean;
+      };
     }
     interface Window {
       turnstile: {
