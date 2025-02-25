@@ -17,9 +17,9 @@
 
   <button
     onclick={() => sidebar.toggle()}
-    class="bg-cacao-500 dark:bg-milk-800 dark:text-milk-200 hover:bg-cacao-400 dark:hover:bg-milk-700 absolute top-4
-            -left-3 z-10 rounded-full p-1 text-white
-            shadow-md transition-colors"
+    class="bg-cacao-500 dark:bg-milk-800 dark:text-milk-200 hover:bg-cacao-400 dark:hover:bg-milk-700 absolute top-4 -left-3 z-10
+            hidden rounded-full p-1 text-white shadow-md
+            transition-colors md:block"
     aria-label={$sidebar ? "Expand sidebar" : "Collapse sidebar"}
   >
     {#if $sidebar}

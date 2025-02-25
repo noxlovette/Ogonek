@@ -26,7 +26,7 @@
     </div>
   {:else}
     <Icon class="size-6 md:mr-2 lg:size-7 xl:size-8" />
-    <p>
+    <p class="hidden md:block">
       {name}
     </p>
   {/if}

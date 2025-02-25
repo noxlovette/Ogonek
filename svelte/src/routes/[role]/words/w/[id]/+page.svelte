@@ -13,7 +13,9 @@
 
   let isSubmitting = $state(false);
   let { data } = $props();
-  let { deck, cards } = data;
+
+  let cards = $derived(data.cards);
+  let deck = $derived(data.deck);
   let flippedCards = $state(new Set<string>());
 
   const toggleCard = (cardId: string) => {
