@@ -12,7 +12,7 @@
   } = $props();
 
   const styling =
-    "mt-2 w-full rounded-md p-3 text-lg shadow-sm dark:border-stone-700 dark:bg-stone-900";
+    "mt-2 w-full rounded-md p-3 text-lg shadow-sm dark:border-milk-700 dark:bg-milk-900";
 </script>
 
 {#if type === "text"}

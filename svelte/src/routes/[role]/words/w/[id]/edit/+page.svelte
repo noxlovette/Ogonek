@@ -114,16 +114,16 @@
       {/if}
       <Label>Visibility</Label>
       <select
-        name="role"
-        required
+        name="visibility"
+        value={deck.visibility}
         class="dark:focus:ring-milk-700 dark:focus:border-milk-800 dark:border-milk-800 disabled:text-milk-500 border-milk-200 dark:bg-milk-950 focus:ring-cacao-500 w-full rounded-lg border px-4 py-2
             transition duration-200 focus:ring focus:outline-none
                    dark:focus:ring dark:focus:outline-none"
       >
-        <option value="">Public</option>
-        <option value="teacher">Private</option>
+        <option value="public">Public</option>
+        <option value="private">Private</option>
         {#if role === "t"}
-          <option value="student">Shared</option>
+          <option value="assigned">Assign</option>
         {/if}
       </select>
     </div>

@@ -1,11 +1,17 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
-  import { MetaData, ButtonEdit, Label, WordCard } from "$lib/components";
-  import H1 from "$lib/components/typography/H1.svelte";
-  import ButtonSubmit from "$lib/components/UI/buttons/ButtonSubmit.svelte";
-  import { notification } from "$lib/stores";
-  let isSubmitting = $state(true);
+  import {
+    MetaData,
+    ButtonEdit,
+    Label,
+    WordCard,
+    H1,
+    ButtonSubmit,
+  } from "$lib/components";
 
+  import { notification } from "$lib/stores";
+
+  let isSubmitting = $state(false);
   let { data } = $props();
   let { deck, cards } = data;
   let flippedCards = $state(new Set<string>());
@@ -20,56 +26,97 @@
 </script>
 
 <MetaData title="{deck.name} | Flashcards" robots="noindex, nofollow" />
-<H1>{deck.name}</H1>
 
-<div class="grid w-full grid-cols-1 gap-8 lg:grid-cols-3">
-  <div class="col-span-2 space-y-6 rounded-lg">
-    <div class="flex items-center justify-between">
+<div class="mb-6 flex flex-wrap items-center justify-between gap-4">
+  <H1>{deck.name}</H1>
+  <div class="flex gap-2">
+    <ButtonEdit href="{deck.id}/edit" />
+    <form
+      method="POST"
+      use:enhance={() => {
+        isSubmitting = true;
+        return async ({ result, update }) => {
+          isSubmitting = false;
+          if (result.type === "success") {
+            notification.set({
+              message: "Added to Routine",
+              type: "success",
+            });
+            update();
+          } else if (result.type === "failure") {
+            notification.set({
+              message: String(result.data?.message),
+              type: "error",
+            });
+          }
+        };
+      }}
+    >
+      <ButtonSubmit buttonName="Add to Routine" bind:isSubmitting
+      ></ButtonSubmit>
+    </form>
+  </div>
+</div>
+
+<div class="grid gap-8 lg:grid-cols-3">
+  <!-- Main content area - Flashcards -->
+  <div class="space-y-6 lg:col-span-2">
+    <div
+      class="dark:bg-milk-900 flex items-center justify-between rounded-lg bg-white p-4 shadow-sm"
+    >
       <h2 class="text-xl font-semibold">Flashcards</h2>
-      <span class="text-sm text-stone-500">{cards.length} cards</span>
+      <span
+        class="bg-milk-100 dark:bg-milk-700 text-milk-600 dark:text-milk-300 rounded-full px-3 py-1 text-sm font-medium"
+      >
+        {cards.length}
+        {cards.length === 1 ? "card" : "cards"}
+      </span>
     </div>
 
-    <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+    <div class="grid gap-4 sm:grid-cols-1 md:grid-cols-2">
       {#each cards as card (card.id)}
         <WordCard bind:flippedCards {card} {toggleCard} />
       {/each}
     </div>
+
+    {#if cards.length === 0}
+      <div
+        class="border-milk-200 dark:border-milk-700 flex h-40 flex-col items-center justify-center rounded-lg border-2 border-dashed p-6 text-center"
+      >
+        <p class="text-milk-500 dark:text-milk-400 text-lg">
+          No flashcards available
+        </p>
+        <p class="text-milk-400 dark:text-milk-500 mt-2 text-sm">
+          Add some cards by editing this deck
+        </p>
+      </div>
+    {/if}
   </div>
 
-  <div class="col-span-2 flex h-full flex-col space-y-4 md:col-span-1">
-    <div class="rounded-lg bg-white p-4 shadow-sm dark:bg-stone-800">
+  <!-- Sidebar - Deck Info -->
+  <div class="flex flex-col space-y-4">
+    <div class="dark:bg-milk-900 rounded-lg bg-white p-6 shadow-sm">
       <Label>Description</Label>
-      <p class="mt-2 text-lg">
-        {deck.description || "No description available"}
-      </p>
-    </div>
+      {#if deck.description}
+        <p class="mt-2 text-lg">{deck.description}</p>
+      {:else}
+        <p class="text-milk-500 dark:text-milk-400 mt-2 italic">
+          No description available
+        </p>
+      {/if}
 
-    <div class="flex gap-2">
-      <ButtonEdit href="{deck.id}/edit" />
-      <form
-        method="POST"
-        use:enhance={() => {
-          isSubmitting = true;
-
-          return async ({ result, update }) => {
-            isSubmitting = false;
-            if (result.type === "success") {
-              notification.set({
-                message: "Added to Routine",
-                type: "success",
-              });
-              update();
-            } else if (result.type === "failure") {
-              notification.set({
-                message: String(result.data?.message),
-                type: "error",
-              });
-            }
-          };
-        }}
-      >
-        <ButtonSubmit buttonName="Add to Routine"></ButtonSubmit>
-      </form>
+      {#if deck.visibility}
+        <div class="border-milk-100 dark:border-milk-700 mt-4 border-t pt-4">
+          <Label>Visibility</Label>
+          <div class="mt-2 flex items-center gap-2">
+            <span
+              class="bg-milk-100 dark:bg-milk-700 text-milk-600 dark:text-milk-300 rounded-full px-3 py-1 text-sm font-medium capitalize"
+            >
+              {deck.visibility}
+            </span>
+          </div>
+        </div>
+      {/if}
     </div>
   </div>
 </div>

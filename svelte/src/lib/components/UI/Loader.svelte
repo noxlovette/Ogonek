@@ -1,16 +1,15 @@
 <script>
   import { fade } from "svelte/transition";
-
-  import { navigating } from "$app/stores";
+  import { Loader2 } from "lucide-svelte";
+  import { navigating } from "$app/state";
 </script>
 
-{#if $navigating}
+{#if navigating.to}
   <div
-    class="bg-cacao-900 bg-opacity-50 fixed top-0 left-0 z-30 flex h-full w-full items-center justify-center backdrop-blur select-none"
+    class="dark:bg-milk-900/80 dark:ring-milk-800 fixed right-10 bottom-10 z-30 flex items-center space-x-3 rounded-lg px-4 py-2 shadow-lg ring backdrop-blur-md transition-all duration-300"
     transition:fade={{ duration: 300 }}
   >
-    <div class="text-cacao-100 font-serif text-4xl">
-      Firelight is loading...
-    </div>
+    <Loader2 class="h-6 w-6 animate-spin text-white"></Loader2>
+    <p class="text-sm font-medium text-white italic">Loading...</p>
   </div>
 {/if}

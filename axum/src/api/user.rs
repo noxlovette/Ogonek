@@ -64,7 +64,6 @@ pub async fn update_user(
 ) -> Result<Json<User>, APIError> { 
     tracing::info!("Attempting update for user");
 
-    // Password hashing now uses APIError
     let hashed_pass = match payload.pass {
         Some(ref pass) => {
             Some(hash_password(pass).map_err(|_| APIError::PasswordHash)?)
@@ -72,7 +71,6 @@ pub async fn update_user(
         None => None,
     };
 
-    // Update the user
     let user = sqlx::query_as!(
         User,
         r#"
