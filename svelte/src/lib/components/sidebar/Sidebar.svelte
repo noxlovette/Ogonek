@@ -1,21 +1,30 @@
 <script lang="ts">
-  let props = $props();
+  import { sidebar } from "$lib/stores";
+  let { elements }: { elements: ConstructorOfATypedSvelteComponent[] } =
+    $props();
 </script>
 
 <div
-  class={[
-    props.class,
-    "bg-cacao-600 dark:bg-milk-900 dark:ring-milk-900 ring-milk-200 hidden h-max w-1/5 flex-shrink-0 flex-col rounded-lg px-4 py-2 font-serif ring-2 shadow-md md:flex md:text-lg lg:text-xl xl:text-2xl",
-  ]}
+  class={`
+   bg-cacao-600 text-cacao-50 dark:bg-milk-900 dark:ring-milk-900 ring-milk-200 relative
+   my-2 h-max flex-shrink-0 flex-col rounded-lg shadow-md ring
+   transition-all ease-in-out
+   ${$sidebar ? "w-24" : "w-1/5"}
+   hidden md:flex md:text-lg lg:text-xl xl:text-2xl
+ `}
 >
-  <ul
-    class={[
-      props.subclass,
-      "divide-cacao-400 dark:divide-milk-600 flex flex-col space-y-2 divide-y-2 lg:space-y-3 xl:space-y-4",
-    ]}
-  >
-    {#each props.elements as Element}
-      <Element />
-    {/each}
-  </ul>
+  <!-- Toggle Button (Absolute Positioned) -->
+
+  <div class="w-full overflow-hidden py-4">
+    <ul
+      class={`
+       flex flex-col 
+       ${$sidebar ? "items-center space-y-6" : "divide-cacao-400 dark:divide-milk-600/80 space-y-2 divide-y-2 divide-dashed px-4 lg:space-y-3 xl:space-y-4"}
+     `}
+    >
+      {#each elements as Element}
+        <Element />
+      {/each}
+    </ul>
+  </div>
 </div>

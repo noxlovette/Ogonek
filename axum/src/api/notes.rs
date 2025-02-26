@@ -1,5 +1,5 @@
 use crate::auth::jwt::Claims;
-use crate::db::error::DbError;
+use super::error::APIError;
 use crate::db::init::AppState;
 use crate::models::lessons::{StudentNote, StudentNoteUpdate};
 use axum::extract::Json;
@@ -12,7 +12,7 @@ pub async fn upsert_student_note(
     claims: Claims,
     Path(lesson_id): Path<String>,
     Json(payload): Json<StudentNoteUpdate>,
-) -> Result<Json<StudentNote>, DbError> {
+) -> Result<Json<StudentNote>, APIError> {
     let note = sqlx::query_as!(
         StudentNote,
         r#"
@@ -41,7 +41,7 @@ pub async fn fetch_student_note(
     State(state): State<AppState>,
     claims: Claims,
     Path(lesson_id): Path<String>,
-) -> Result<Json<Option<StudentNote>>, DbError> {
+) -> Result<Json<Option<StudentNote>>, APIError> {
     let note = sqlx::query_as!(
         StudentNote,
         r#"
@@ -60,7 +60,7 @@ pub async fn fetch_student_note(
 pub async fn list_student_notes(
     State(state): State<AppState>,
     claims: Claims,
-) -> Result<Json<Vec<StudentNote>>, DbError> {
+) -> Result<Json<Vec<StudentNote>>, APIError> {
     let notes = sqlx::query_as!(
         StudentNote,
         r#"
@@ -79,7 +79,7 @@ pub async fn delete_student_notes(
     State(state): State<AppState>,
     claims: Claims,
     Path(lesson_id): Path<String>,
-) -> Result<Json<StudentNote>, DbError> {
+) -> Result<Json<StudentNote>, APIError> {
     let note = sqlx::query_as!(
         StudentNote,
         r#"

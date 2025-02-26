@@ -3,10 +3,12 @@
   import { notification } from "$lib/stores";
   import {
     Editor,
+    ButtonCancel,
     H1,
     ButtonDelete,
     ButtonSubmit,
     Uploader,
+    AssigneeSelector,
   } from "$lib/components";
   import type { PageData } from "./$types";
 
@@ -39,10 +41,15 @@
       if (result.type === "redirect") {
         notification.set({ message: "Changes saved", type: "success" });
         update();
+      } else if (result.type === "error") {
+        notification.set({
+          message: result.error.message,
+          type: "error",
+        });
       } else {
         notification.set({
-          message: "Failed to save changes",
-          type: "error",
+          message: "Failure",
+          type: "info",
         });
       }
     };
@@ -50,12 +57,7 @@
 >
   <div class="flex items-baseline space-x-4">
     <H1>Edit Task</H1>
-    <a
-      href="."
-      class="text-milk-700 bg-milk-100 hover:bg-milk-200 rounded-lg px-4 py-2 transition-colors"
-    >
-      Cancel
-    </a>
+    <ButtonCancel />
     <ButtonSubmit bind:isSubmitting />
     <ButtonDelete bind:isSubmitting />
   </div>
@@ -73,35 +75,11 @@
         name="title"
         value={task.title}
         class="dark:focus:ring-milk-700 dark:focus:border-milk-800 dark:border-milk-800 disabled:text-milk-500 border-milk-200 dark:bg-milk-950 focus:ring-cacao-500 w-full rounded-lg border px-4 py-2
-            transition duration-200 focus:ring-2 focus:outline-none
-                   dark:focus:ring-2 dark:focus:outline-none"
+            transition duration-200 focus:ring focus:outline-none
+                   dark:focus:ring dark:focus:outline-none"
       />
     </div>
-    <div class="space-y-2">
-      <label for="assignee" class="text-milk-700 block font-medium"
-        >Assignee</label
-      >
-      <select
-        id="assignee"
-        name="student"
-        class="dark:focus:ring-milk-700 dark:focus:border-milk-800 dark:border-milk-800 disabled:text-milk-500 border-milk-200 dark:bg-milk-950 focus:ring-cacao-500 w-full rounded-lg border px-4 py-2
-            transition duration-200 focus:ring-2 focus:outline-none
-                   dark:focus:ring-2 dark:focus:outline-none"
-      >
-        <option value="">Select an assignee</option>
-        {#each students as student}
-          <option
-            value={JSON.stringify({
-              assignee: student.id,
-              telegramId: student.telegramId,
-            })}
-            selected={student.id === task.assignee}
-          >
-            {student.name}
-          </option>
-        {/each}
-      </select>
-    </div>
+    <AssigneeSelector item={task} />
     <div class="space-y-2">
       <label for="dueDate" class="text-milk-700 block font-medium"
         >Due Date</label
@@ -112,8 +90,8 @@
         name="dueDate"
         bind:value={dueDate}
         class="dark:focus:ring-milk-700 dark:focus:border-milk-800 dark:border-milk-800 disabled:text-milk-500 border-milk-200 dark:bg-milk-950 focus:ring-cacao-500 w-full rounded-lg border px-4 py-2
-            transition duration-200 focus:ring-2 focus:outline-none
-                   dark:focus:ring-2 dark:focus:outline-none"
+            transition duration-200 focus:ring focus:outline-none
+                   dark:focus:ring dark:focus:outline-none"
       />
     </div>
     <div class="flex items-center space-y-2">

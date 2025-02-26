@@ -1,6 +1,6 @@
 import { notifyTelegram } from "$lib/server/telegram";
 import type { Actions } from "@sveltejs/kit";
-import { fail, redirect } from "@sveltejs/kit";
+import { error, fail, redirect } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async ({ params }) => {
@@ -42,12 +42,9 @@ export const actions = {
     });
 
     if (!response.ok) {
-      const errorData = await response.json();
-      console.error("Error updating task:", errorData);
-      return {
-        success: false,
-        error: errorData,
-      };
+      const errorData: App.Error = await response.json();
+      const { code, message } = errorData;
+      return error(code || 400, message);
     }
 
     const message = `You have a new task: "${title}"\\. You can view it on [Firelight](https://firelight\\.noxlovette\\.com/s/tasks)\\.`;

@@ -8,15 +8,12 @@ use sqlx::types::chrono::{DateTime as SQLxDateTime, Utc as SQLxUtc};
 
 #[derive(Debug, Deserialize)]
 struct OldLesson {
-    id: String,
     title: String,
     content: String,
     created_at: SQLxDateTime<SQLxUtc>,
     updated_at: SQLxDateTime<SQLxUtc>,
     manual_date: Option<SQLxDateTime<SQLxUtc>>, 
-    category: String,
     topic: String,
-    assignee: String,
 }
 
 async fn migrate_lessons(

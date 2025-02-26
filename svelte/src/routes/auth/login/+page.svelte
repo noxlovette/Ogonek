@@ -2,7 +2,7 @@
   import { enhance } from "$app/forms";
   import { goto } from "$app/navigation";
   import { ButtonSubmit } from "$lib/components/UI";
-  import Turnstile from "$lib/components/Turnstile.svelte";
+  import { Turnstile } from "$lib/components";
   import {
     setProfile,
     setUser,
@@ -68,8 +68,8 @@
           name="username"
           type="text"
           class="dark:focus:ring-milk-700 dark:focus:border-milk-800 dark:border-milk-800 disabled:text-milk-500 border-milk-200 dark:bg-milk-950 focus:ring-cacao-500 w-full rounded-lg border px-4 py-2
-            transition duration-200 focus:ring-2 focus:outline-none
-                   dark:focus:ring-2 dark:focus:outline-none"
+            transition duration-200 focus:ring focus:outline-none
+                   dark:focus:ring dark:focus:outline-none"
           required
           autocomplete="username"
         />
@@ -85,8 +85,8 @@
           name="password"
           type="password"
           class="dark:focus:ring-milk-700 dark:focus:border-milk-800 dark:border-milk-800 disabled:text-milk-500 border-milk-200 dark:bg-milk-950 focus:ring-cacao-500 w-full rounded-lg border px-4 py-2
-            transition duration-200 focus:ring-2 focus:outline-none
-                   dark:focus:ring-2 dark:focus:outline-none"
+            transition duration-200 focus:ring focus:outline-none
+                   dark:focus:ring dark:focus:outline-none"
           required
           autocomplete="current-password"
         />

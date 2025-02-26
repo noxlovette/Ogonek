@@ -1,6 +1,6 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
-  import { ButtonSubmit, Editor, H1 } from "$lib/components";
+  import { ButtonCancel, ButtonSubmit, Editor, H1 } from "$lib/components";
   import type { Student } from "$lib/types";
   import { Send } from "lucide-svelte";
   import type { PageData } from "./$types";
@@ -42,18 +42,14 @@
           name="telegramId"
           value={student.telegramId}
           placeholder="@username"
-          class="border-milk-300 focus:ring-cacao-500 rounded-lg border py-2 pr-4 pl-10 focus:border-transparent focus:ring-2"
+          class="border-milk-300 focus:ring-cacao-500 rounded-lg border py-2 pr-4 pl-10 focus:border-transparent focus:ring"
         />
         <span class="text-milk-400 absolute top-2.5 left-3">
           <Send></Send>
         </span>
       </div>
-      <a
-        href="."
-        class="text-milk-700 bg-milk-100 hover:bg-milk-200 rounded-lg px-4 py-2 transition-colors"
-      >
-        Cancel
-      </a>
+
+      <ButtonCancel />
       <ButtonSubmit bind:isSubmitting></ButtonSubmit>
       <ButtonDelete bind:isSubmitting></ButtonDelete>
     </div>

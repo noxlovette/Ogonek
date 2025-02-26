@@ -1,5 +1,5 @@
 use crate::auth::jwt::Claims;
-use crate::db::error::DbError;
+use super::error::APIError;
 use crate::db::init::AppState;
 use crate::models::profiles::{Profile, ProfileUpdate};
 use axum::extract::Json;
@@ -9,7 +9,7 @@ pub async fn upsert_profile(
     State(state): State<AppState>,
     claims: Claims,
     Json(payload): Json<ProfileUpdate>,
-) -> Result<Json<Profile>, DbError> {
+) -> Result<Json<Profile>, APIError> {
     let profile = sqlx::query_as!(
         Profile,
         r#"
@@ -54,7 +54,7 @@ pub async fn upsert_profile(
 pub async fn fetch_profile(
     State(state): State<AppState>,
     claims: Claims,
-) -> Result<Json<Option<Profile>>, DbError> {
+) -> Result<Json<Option<Profile>>, APIError> {
     let profile = sqlx::query_as!(
         Profile,
         r#"

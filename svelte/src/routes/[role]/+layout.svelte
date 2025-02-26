@@ -3,7 +3,7 @@
     Dashboard,
     Todo,
     Lessons,
-    Quizlet,
+    Words,
     Settings,
     Students,
     Zoom,
@@ -12,6 +12,7 @@
     BottomMenu,
     UsefulLinks,
     WordOfTheDay,
+    Rightbar,
   } from "$lib/components";
   import { lessonStore, studentStore, taskStore } from "$lib/stores";
 
@@ -20,12 +21,12 @@
   import type { Word } from "$lib/types";
 
   let { data, children } = $props();
-  const role = $derived(page.params.role);
+  const role = page.params.role;
 
-  let elements = $state([Dashboard, Todo, Lessons, Zoom, Quizlet, Settings]);
+  let elements = $state([Dashboard, Todo, Lessons, Zoom, Words, Settings]);
 
   if (role === "t") {
-    elements = [Dashboard, Todo, Lessons, Students, Quizlet, Settings];
+    elements = [Dashboard, Todo, Lessons, Students, Words, Settings];
   }
 
   const { tasks, lessons, students, word } = data;
@@ -36,16 +37,12 @@
   setContext<Promise<Word>>("word", word);
 </script>
 
-<Sidebar class="text-cacao-50" {elements} />
+<Sidebar {elements} />
 <WorkArea>
   {@render children?.()}
 </WorkArea>
 {#if role !== "t"}
-  <Sidebar
-    class="dark:bg-milk-950 bg-inherit text-inherit shadow-none ring-transparent dark:ring-transparent"
-    subclass="divide-transparent dark:divide-transparent"
-    elements={[UsefulLinks, WordOfTheDay]}
-  ></Sidebar>
+  <Rightbar elements={[UsefulLinks, WordOfTheDay]}></Rightbar>
 {/if}
 <BottomMenu {elements} />
 

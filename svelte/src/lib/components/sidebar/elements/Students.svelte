@@ -1,9 +1,6 @@
 <script lang="ts">
   import { UserRound } from "lucide-svelte";
-  import Base from "./Base.svelte";
+  import SidebarItem from "./SidebarItem.svelte";
 </script>
 
-<Base href="/t/students">
-  <UserRound class="size-6 md:mr-2 lg:size-7 xl:size-8" />
-  <p class="hidden md:flex">Students</p>
-</Base>
+<SidebarItem href="/t/students" Icon={UserRound} name="Students" />

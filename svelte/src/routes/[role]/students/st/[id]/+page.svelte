@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { H1 } from "$lib/components";
+  import { ButtonEdit, H1 } from "$lib/components";
   import type { Student } from "$lib/types";
   import type { PageData } from "./$types";
   let { data }: { data: PageData } = $props();
@@ -12,11 +12,8 @@
 </svelte:head>
 <div class="flex items-baseline space-x-4">
   <H1>{student.name}</H1>
-  <a
-    href="/t/students/st/{student.id}/edit"
-    class="bg-cacao-600 text-cacao-50 hover:bg-cacao-700 focus:ring-cacao-500 rounded-lg px-4 py-2 transition-colors focus:ring-2 focus:ring-offset-2 focus:outline-none disabled:opacity-50"
-    >Edit</a
-  >
+
+  <ButtonEdit href="/t/students/st/{student.id}/edit" />
 </div>
 <div class="flex space-x-4">
   <div class="space-y-2">
@@ -28,7 +25,7 @@
 </div>
 <h3 class="text-2xl font-bold">Notes</h3>
 {#if student.markdown}
-  <div class="markdown ring-milk-200 rounded-lg p-4 ring-2">
+  <div class="markdown ring-milk-200 rounded-lg p-4 ring">
     {@html rendered}
   </div>
 {:else}

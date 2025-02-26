@@ -1,9 +1,8 @@
 <script lang="ts">
-  import { H1 } from "$lib/components";
+  import { ButtonEdit, H1, H2 } from "$lib/components";
   import { user } from "$lib/stores";
   import { formatDateTime } from "$lib/utils";
   import type { PageData } from "./$types";
-  import { goto } from "$app/navigation";
   import { page } from "$app/state";
 
   let { data }: { data: PageData } = $props();
@@ -14,12 +13,7 @@
 {#if page.params.role === "t"}
   <div class="flex items-baseline space-x-4">
     <H1>{data.lesson.title}</H1>
-    <button
-      onclick={() =>
-        goto(`/t/lessons/l/${data.lesson.id}/edit`, { replaceState: true })}
-      class="bg-cacao-600 text-cacao-50 hover:bg-cacao-700 focus:ring-cacao-500 rounded-lg px-4 py-2 transition-colors focus:ring-2 focus:ring-offset-2 focus:outline-none disabled:opacity-50"
-      >Edit</button
-    >
+    <ButtonEdit href="/t/lessons/l/{data.lesson.id}/edit" />
   </div>
   <div class="flex space-x-4">
     <div class="space-y-2">
@@ -39,8 +33,7 @@
       </h3>
     </div>
   </div>
-  <h3 class="text-2xl font-bold">Content</h3>
-  <div class="markdown ring-milk-200 dark:ring-milk-900 rounded-lg p-4 ring-2">
+  <div class="markdown">
     {@html data.rendered}
   </div>
 {:else}
@@ -48,12 +41,11 @@
     <H1>Lesson From {formattedDate}</H1>
   </div>
   <div class="">
-    <p class="text-milk-700 block font-medium">Topic</p>
-    <h3 class="min-w-48">
+    <H2>
       {data.lesson.topic}
-    </h3>
+    </H2>
   </div>
-  <div class="markdown dark:ring-milk-900 ring-milk-200 rounded-lg p-4 ring-2">
+  <div class="markdown">
     {@html data.rendered}
   </div>
 {/if}

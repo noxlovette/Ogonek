@@ -8,7 +8,6 @@ use sqlx::types::chrono::{DateTime as SQLxDateTime, Utc as SQLxUtc};
 
 #[derive(Debug, Deserialize)]
 struct OldTask {
-   id: String,
    title: String, 
    content: String,
    priority: i16,
@@ -16,8 +15,6 @@ struct OldTask {
    created_at: SQLxDateTime<SQLxUtc>,
    updated_at: SQLxDateTime<SQLxUtc>,
    due_date: Option<SQLxDateTime<SQLxUtc>>,
-   file: Option<String>,
-   assignee: String
 }
 
 async fn migrate_tasks(

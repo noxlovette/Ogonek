@@ -5,3 +5,4 @@ pub mod task_routes;
 pub mod user_routes;
 pub mod student_routes;
 pub mod profile_routes;
+pub mod deck_routes;

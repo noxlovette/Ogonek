@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { PageData } from "./$types";
-  import { LessonCard, H1, Clock, TaskCard } from "$lib/components";
+  import { LessonCard, H1, Clock, TaskCard, H3 } from "$lib/components";
   import { fly } from "svelte/transition";
   import type { Task, Lesson } from "$lib/types";
 
@@ -17,7 +17,7 @@
   </div>
 
   <section class="space-y-4">
-    <h2 class="text-milk-800 text-xl font-semibold">Recent Tasks</h2>
+    <H3>Recent Tasks</H3>
     <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
       {#if pending.length < 1}
         No Tasks
@@ -31,7 +31,7 @@
   </section>
 
   <section class="space-y-4">
-    <h2 class="text-milk-800 text-xl font-semibold">Latest Lessons</h2>
+    <H3>Latest Lessons</H3>
     <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
       {#if lessons.length < 1}
         No Lessons

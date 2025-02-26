@@ -2,10 +2,7 @@
   import { enhance } from "$app/forms";
   import { notification } from "$lib/stores";
   import { goto } from "$app/navigation";
-  import { Loader2 } from "lucide-svelte";
-  import ButtonSubmit from "$lib/components/UI/buttons/ButtonSubmit.svelte";
-  import Turnstile from "$lib/components/Turnstile.svelte";
-  import { hydrate } from "svelte";
+  import { Turnstile, ButtonSubmit } from "$lib/components";
 
   let loading = $state(false);
   let password = $state("");
@@ -61,8 +58,8 @@
           name="name"
           required
           class="dark:focus:ring-milk-700 dark:focus:border-milk-800 dark:border-milk-800 disabled:text-milk-500 border-milk-200 dark:bg-milk-950 focus:ring-cacao-500 w-full rounded-lg border px-4 py-2
-            transition duration-200 focus:ring-2 focus:outline-none
-                   dark:focus:ring-2 dark:focus:outline-none"
+            transition duration-200 focus:ring focus:outline-none
+                   dark:focus:ring dark:focus:outline-none"
         />
       </div>
 
@@ -75,8 +72,8 @@
           name="username"
           required
           class="dark:focus:ring-milk-700 dark:focus:border-milk-800 dark:border-milk-800 disabled:text-milk-500 border-milk-200 dark:bg-milk-950 focus:ring-cacao-500 w-full rounded-lg border px-4 py-2
-            transition duration-200 focus:ring-2 focus:outline-none
-                   dark:focus:ring-2 dark:focus:outline-none"
+            transition duration-200 focus:ring focus:outline-none
+                   dark:focus:ring dark:focus:outline-none"
         />
       </div>
 
@@ -88,8 +85,8 @@
           name="role"
           required
           class="dark:focus:ring-milk-700 dark:focus:border-milk-800 dark:border-milk-800 disabled:text-milk-500 border-milk-200 dark:bg-milk-950 focus:ring-cacao-500 w-full rounded-lg border px-4 py-2
-            transition duration-200 focus:ring-2 focus:outline-none
-                   dark:focus:ring-2 dark:focus:outline-none"
+            transition duration-200 focus:ring focus:outline-none
+                   dark:focus:ring dark:focus:outline-none"
         >
           <option value="">Select a role</option>
           <option value="teacher">Teacher</option>
@@ -106,8 +103,8 @@
           name="email"
           required
           class="dark:focus:ring-milk-700 dark:focus:border-milk-800 dark:border-milk-800 disabled:text-milk-500 border-milk-200 dark:bg-milk-950 focus:ring-cacao-500 w-full rounded-lg border px-4 py-2
-            transition duration-200 focus:ring-2 focus:outline-none
-                   dark:focus:ring-2 dark:focus:outline-none"
+            transition duration-200 focus:ring focus:outline-none
+                   dark:focus:ring dark:focus:outline-none"
         />
       </div>
 
@@ -121,8 +118,8 @@
           bind:value={password}
           required
           class="dark:focus:ring-milk-700 dark:focus:border-milk-800 dark:border-milk-800 disabled:text-milk-500 border-milk-200 dark:bg-milk-950 focus:ring-cacao-500 w-full rounded-lg border px-4 py-2
-            transition duration-200 focus:ring-2 focus:outline-none
-                   dark:focus:ring-2 dark:focus:outline-none"
+            transition duration-200 focus:ring focus:outline-none
+                   dark:focus:ring dark:focus:outline-none"
         />
       </div>
 
@@ -138,8 +135,8 @@
           bind:value={confirmPassword}
           required
           class="dark:focus:ring-milk-700 dark:focus:border-milk-800 dark:border-milk-800 disabled:text-milk-500 border-milk-200 dark:bg-milk-950 focus:ring-cacao-500 w-full rounded-lg border px-4 py-2
-            transition duration-200 focus:ring-2 focus:outline-none
-                   dark:focus:ring-2 dark:focus:outline-none"
+            transition duration-200 focus:ring focus:outline-none
+                   dark:focus:ring dark:focus:outline-none"
         />
         {#if !passwordMatch}
           <p class="mt-1 text-sm text-red-600">Passwords don't match</p>

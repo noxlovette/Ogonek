@@ -44,6 +44,7 @@ export const actions = {
     if (!validateEmail(formData.get("email") as string)) {
       return fail(400, { message: "Invalid Email" });
     }
+
     const [profileRes, _, refreshRes] = await Promise.all([
       fetch("/axum/profile", {
         method: "PATCH",

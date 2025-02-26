@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        DELETE FROM cards\n        WHERE deck_id = $1 AND id NOT IN (\n            SELECT UNNEST($2::text[])\n        )\n        ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Text",
+        "TextArray"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "9e624e1dcd978f9fd18812f19faabc5f43cfa8797995556d7c1c6ab4ce7f259c"
+}

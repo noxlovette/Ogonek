@@ -1,7 +1,7 @@
 use crate::auth::helpers::hash_password;
 use crate::auth::jwt::Claims;
-use crate::db::error::DbError;
 use crate::db::init::AppState;
+use super::error::APIError;
 use axum::extract::Json;
 use axum::extract::State;
 
@@ -10,7 +10,7 @@ use crate::models::users::{User, UserUpdate};
 pub async fn fetch_user(
     State(state): State<AppState>,
     claims: Claims,
-) -> Result<Json<User>, DbError> {
+) -> Result<Json<User>, APIError> { 
     tracing::info!("Attempting to fetch user");
     let user = sqlx::query_as!(
         User,
@@ -24,10 +24,10 @@ pub async fn fetch_user(
     .fetch_optional(&state.db)
     .await
     .map_err(|e| {
-        eprintln!("{:?}", e);
-        DbError::Db
+        tracing::error!("Database error when fetching user: {:?}", e);
+        APIError::Database(e)
     })?
-    .ok_or(DbError::NotFound)?;
+    .ok_or_else(|| APIError::NotFound("User not found".into()))?;
 
     Ok(Json(user))
 }
@@ -35,7 +35,7 @@ pub async fn fetch_user(
 pub async fn delete_user(
     State(state): State<AppState>,
     claims: Claims,
-) -> Result<Json<User>, DbError> {
+) -> Result<Json<User>, APIError> { 
     let user = sqlx::query_as!(
         User,
         r#"
@@ -48,12 +48,12 @@ pub async fn delete_user(
     .fetch_optional(&state.db)
     .await
     .map_err(|e| {
-        eprintln!("{:?}", e);
-        DbError::Db
+        tracing::error!("Database error when deleting user: {:?}", e);
+        APIError::Database(e)
     })?
-    .ok_or(DbError::NotFound)?;
+    .ok_or_else(|| APIError::NotFound("User not found".into()))?;
 
-    tracing::info!("Deleted");
+    tracing::info!("User deleted successfully");
     Ok(Json(user))
 }
 
@@ -61,11 +61,13 @@ pub async fn update_user(
     State(state): State<AppState>,
     claims: Claims,
     Json(payload): Json<UserUpdate>,
-) -> Result<Json<User>, DbError> {
+) -> Result<Json<User>, APIError> { 
     tracing::info!("Attempting update for user");
 
     let hashed_pass = match payload.pass {
-        Some(ref pass) => Some(hash_password(pass)?),
+        Some(ref pass) => {
+            Some(hash_password(pass).map_err(|_| APIError::PasswordHash)?)
+        },
         None => None,
     };
 
@@ -94,10 +96,21 @@ pub async fn update_user(
     .fetch_optional(&state.db)
     .await
     .map_err(|e| {
-        eprintln!("{:?}", e);
-        DbError::Db
+        // Handle specific constraint violations for better error messages
+        if let sqlx::Error::Database(dbe) = &e {
+            if let Some(constraint) = dbe.constraint() {
+                if constraint == "user_username_key" {
+                    return APIError::AlreadyExists("Username already taken".into());
+                }
+                if constraint == "user_email_key" {
+                    return APIError::AlreadyExists("Email already taken".into());
+                }
+            }
+        }
+        tracing::error!("Database error when updating user: {:?}", e);
+        APIError::Database(e)
     })?
-    .ok_or(DbError::NotFound)?;
+    .ok_or_else(|| APIError::NotFound("User not found".into()))?;
 
     tracing::info!("User update successful");
     Ok(Json(user))

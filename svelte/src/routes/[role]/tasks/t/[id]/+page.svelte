@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { H1, H2, ButtonRaw } from "$lib/components";
+  import { H1, ButtonRaw, ButtonEdit } from "$lib/components";
   import { user } from "$lib/stores";
   import { formatDateTime } from "$lib/utils";
   import { goto } from "$app/navigation";
@@ -27,11 +27,7 @@
   <div class="flex items-center justify-between">
     <div class="flex space-x-4">
       <H1>{data.task.title}</H1>
-      <a
-        href="/t/tasks/t/{data.task.id}/edit"
-        class="bg-cacao-600 text-cacao-50 hover:bg-cacao-700 focus:ring-cacao-500 rounded-lg px-4 py-2 transition-colors focus:ring-2 focus:ring-offset-2 focus:outline-none disabled:opacity-50"
-        >Edit</a
-      >
+      <ButtonEdit href="/t/tasks/t/{data.task.id}/edit" />
     </div>
     <div class="text-right">
       <p class="text-milk-700 block font-medium">Student</p>
@@ -44,8 +40,7 @@
       </h3>
     </div>
   </div>
-  <H2>Content</H2>
-  <div class="markdown ring-milk-200 dark:ring-milk-900 rounded-lg p-4 ring-2">
+  <div class="markdown">
     {@html rendered}
   </div>
 
@@ -62,7 +57,7 @@
     <H1>{data.task.title}</H1>
   </div>
 
-  <div class="markdown ring-milk-200 dark:ring-milk-900 rounded-lg p-4 ring-2">
+  <div class="markdown ring-milk-200 dark:ring-milk-900 rounded-lg p-4 ring">
     {@html rendered}
   </div>
   <div class="flex space-x-3">
@@ -70,7 +65,7 @@
       <a
         href="/download/{data.task.filePath}"
         onclick={() => (isPreloading = true)}
-        class="dark:hover:bg-milk-900 ring-milk-200 dark:ring-milk-800 dark:hover:ring-milk-950 bg-cacao-600 text-cacao-50 dark:bg-milk-800 dark:text-cacao-100 hover:bg-cacao-700 focus:ring-cacao-500 flex items-center justify-center rounded-lg px-3 py-2 text-sm ring-2 transition-all focus:ring-2 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:space-x-2 md:px-4 md:text-base"
+        class="dark:hover:bg-milk-900 ring-milk-200 dark:ring-milk-800 dark:hover:ring-milk-950 bg-cacao-600 text-cacao-50 dark:bg-milk-800 dark:text-cacao-100 hover:bg-cacao-700 focus:ring-cacao-500 flex items-center justify-center rounded-lg px-3 py-2 text-sm ring transition-all focus:ring focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:space-x-2 md:px-4 md:text-base"
       >
         {#if !isPreloading}
           <Download class="size-6" />
@@ -100,7 +95,7 @@
     >
       <button
         onclick={() => (completed = !completed)}
-        class="dark:hover:bg-milk-900 ring-milk-200 dark:ring-milk-800 dark:hover:ring-milk-950 bg-cacao-600 text-cacao-50 dark:bg-milk-800 dark:text-cacao-100 hover:bg-cacao-700 focus:ring-cacao-500 flex items-center justify-center rounded-lg px-3 py-2 text-sm ring-2 transition-all focus:ring-2 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:space-x-2 md:px-4 md:text-base"
+        class="dark:hover:bg-milk-900 ring-milk-200 dark:ring-milk-800 dark:hover:ring-milk-950 bg-cacao-600 text-cacao-50 dark:bg-milk-800 dark:text-cacao-100 hover:bg-cacao-700 focus:ring-cacao-500 flex items-center justify-center rounded-lg px-3 py-2 text-sm ring transition-all focus:ring focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:space-x-2 md:px-4 md:text-base"
         class:overdue
       >
         {#if completed}

@@ -1,0 +1,24 @@
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  button {
+    cursor: pointer;
+  }
+}
+
+@layer components {
+  .overdue {
+    @apply font-medium text-red-600;
+  }
+
+  .chosen {
+    @apply bg-cacao-600 text-milk-50 hover:bg-cacao-600;
+  }
+
+  .backface-hidden {
+    backface-visibility: hidden;
+  }
+  .rotate-y-180 {
+    transform: rotateY(180deg);
+  }
+}
