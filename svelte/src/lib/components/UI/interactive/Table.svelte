@@ -1,116 +1,53 @@
 <script lang="ts" generics="T extends BaseTableItem">
   import { enhance } from "$app/forms";
-  import {
-    PlusCircle,
-    X,
-    Search,
-    ArrowUp,
-    ArrowDown,
-    Filter,
-  } from "lucide-svelte";
+  import { PlusCircle, X, Search } from "lucide-svelte";
   import { goto } from "$app/navigation";
-  import { fade, fly } from "svelte/transition";
-  import { notification, tableQuery } from "$lib/stores";
+  import { fade } from "svelte/transition";
+  import {
+    notification,
+    searchTerm,
+    pageSize,
+    currentPage,
+    assigneeStore,
+  } from "$lib/stores";
   import type { Student, BaseTableItem, TableConfig } from "$lib/types";
+  import { page } from "$app/state";
 
   interface Props<T extends BaseTableItem> {
     items: T[];
     config: TableConfig<T>;
     href: string;
     students: Student[];
+    total: number;
   }
 
-  let { items, config, href, students = [] }: Props<T> = $props();
+  let {
+    items = $bindable([]),
+    config,
+    href,
+    students = [],
+    total = items.length,
+  }: Props<T> = $props();
 
-  let filteredItems = $state(items);
-  let foundItems = $state(items);
-  let filterAssignee = $state("");
   let isSubmitting = $state(false);
-  let showMobileFilters = $state(false);
-  let showEmptyMessage = $derived(
-    filteredItems.length === 0 && items.length > 0,
+
+  // Just one simple derived value
+  const isEmptySearch = $derived(
+    items.length === 0 && page.url.searchParams.has("search"),
   );
 
   $effect(() => {
-    const lowercaseQuery = $tableQuery.toLowerCase();
-
-    foundItems = items.filter((item) => {
-      // Search through all configured columns
-      const matchesColumn = config.columns
-        .filter((column) => column.searchable !== false)
-        .some((column) => {
-          const value = item[column.key];
-          // Safely handle non-string values using the formatter or convert to string
-          const searchableValue = column.formatter
-            ? String(column.formatter(value)).toLowerCase()
-            : String(value).toLowerCase();
-
-          return searchableValue.includes(lowercaseQuery);
-        });
-
-      // Check for 'assignee' existence and match
-      const matchesAssignee =
-        "assignee" in item &&
-        typeof item.assignee === "string" &&
-        item.assignee.toLowerCase().includes(lowercaseQuery);
-
-      return matchesColumn || matchesAssignee;
+    goto(`?search=${$searchTerm}&page_size=${$pageSize}&page=${$currentPage}`, {
+      noScroll: true,
+      keepFocus: true,
     });
   });
-
-  $effect(() => {
-    filteredItems = filterAssignee
-      ? foundItems.filter(
-          (item) => "assignee" in item && item.assignee === filterAssignee,
-        )
-      : foundItems;
-  });
-
-  let sortField: keyof T = $state("id"); // Default sorting field
-  let sortDirection = $state("desc"); // 'asc' or 'desc'
-
-  function sortByColumn(field: keyof T) {
-    if (sortField === field) {
-      // Toggle sort direction
-      sortDirection = sortDirection === "asc" ? "desc" : "asc";
-    } else {
-      // Set new sort field
-      sortField = field;
-      sortDirection = "asc";
-    }
-
-    // Apply sorting to items
-    filteredItems = [...filteredItems].sort((a, b) => {
-      const aValue = a[sortField];
-      const bValue = b[sortField];
-
-      // Handle null/undefined gracefully
-      if (aValue == null) return sortDirection === "asc" ? -1 : 1;
-      if (bValue == null) return sortDirection === "asc" ? 1 : -1;
-
-      if (typeof aValue === "string" && typeof bValue === "string") {
-        return sortDirection === "asc"
-          ? aValue.localeCompare(bValue)
-          : bValue.localeCompare(aValue);
-      }
-
-      if (typeof aValue === "number" && typeof bValue === "number") {
-        return sortDirection === "asc" ? aValue - bValue : bValue - aValue;
-      }
-
-      if (aValue instanceof Date && bValue instanceof Date) {
-        return sortDirection === "asc"
-          ? new Date(aValue).getTime() - new Date(bValue).getTime()
-          : new Date(bValue).getTime() - new Date(aValue).getTime();
-      }
-
-      return 0; // Default to no sorting
-    });
-  }
 
   function resetFilters() {
-    $tableQuery = "";
-    filterAssignee = "";
+    searchTerm.reset();
+    pageSize.reset();
+    currentPage.reset();
+    assigneeStore.reset();
   }
 </script>
 
@@ -128,13 +65,13 @@
           />
           <input
             type="text"
-            bind:value={$tableQuery}
+            bind:value={$searchTerm}
             placeholder="Search..."
             class="border-milk-200 placeholder:text-milk-400 focus:border-cacao-400 focus:ring-cacao-500/20 dark:border-milk-800 dark:bg-milk-950 dark:placeholder:text-milk-600 dark:focus:border-cacao-500 dark:focus:ring-cacao-500/30 w-full rounded-full border bg-white py-2.5 pr-10 pl-10 shadow-sm focus:ring-2 focus:outline-none"
           />
-          {#if $tableQuery}
+          {#if $searchTerm}
             <button
-              onclick={() => ($tableQuery = "")}
+              onclick={() => searchTerm.reset()}
               class="text-milk-400 hover:bg-milk-100 hover:text-milk-700 dark:hover:bg-milk-800 dark:hover:text-milk-300 absolute top-1/2 right-3 -translate-y-1/2 rounded-full p-1 transition-colors duration-200"
               aria-label="Clear search"
             >
@@ -142,15 +79,6 @@
             </button>
           {/if}
         </div>
-
-        <!-- Filter icon for mobile -->
-        <button
-          class="border-milk-200 text-milk-600 hover:bg-milk-50 dark:border-milk-800 dark:bg-milk-900 dark:text-milk-400 dark:hover:bg-milk-800 inline-flex items-center justify-center rounded-full border bg-white p-2.5 shadow-sm md:hidden"
-          onclick={() => (showMobileFilters = !showMobileFilters)}
-          aria-label="Toggle filters"
-        >
-          <Filter size={18} />
-        </button>
       </div>
 
       <!-- Controls for desktop -->
@@ -160,14 +88,12 @@
             <select
               id="assignee"
               name="assignee"
-              bind:value={filterAssignee}
+              bind:value={$assigneeStore}
               class="border-milk-200 focus:border-cacao-500 focus:ring-cacao-500/20 dark:border-milk-800 dark:bg-milk-950 dark:focus:border-cacao-500 dark:focus:ring-cacao-500/30 w-full appearance-none rounded-lg border bg-white py-2 pr-10 pl-4 text-sm shadow-sm focus:ring-2 focus:outline-none"
             >
               <option value="">All Students</option>
               {#each students as student}
-                <option value={student.id}>
-                  {student.name}
-                </option>
+                <option value={student.id}>{student.name}</option>
               {/each}
             </select>
             <div
@@ -192,7 +118,6 @@
           method="post"
           use:enhance={() => {
             isSubmitting = true;
-
             return async ({ result }) => {
               isSubmitting = false;
               if (result.type === "redirect") {
@@ -213,7 +138,6 @@
           <button
             class="bg-cacao-500 hover:bg-cacao-600 focus:ring-cacao-500 dark:bg-cacao-600 dark:hover:bg-cacao-700 dark:focus:ring-offset-milk-900 inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 font-medium text-white shadow-sm transition-colors focus:ring-2 focus:ring-offset-2 focus:outline-none disabled:opacity-50"
             disabled={isSubmitting}
-            aria-label="Create new item"
           >
             <PlusCircle class="size-5" />
             <span>New</span>
@@ -223,62 +147,12 @@
     {/if}
   </div>
 
-  <!-- Mobile filters (collapsible) -->
-  {#if showMobileFilters}
-    <div class="md:hidden" in:fly={{ y: -20, duration: 200 }}>
-      <div
-        class="border-milk-200 dark:border-milk-800 dark:bg-milk-900 rounded-lg border bg-white p-4 shadow-sm"
-      >
-        <h3 class="text-milk-700 dark:text-milk-300 mb-3 font-medium">
-          Filters
-        </h3>
-        <div class="space-y-3">
-          {#if students.length > 0}
-            <div>
-              <label
-                for="mobile-assignee"
-                class="text-milk-600 dark:text-milk-400 block text-sm"
-                >Student</label
-              >
-              <select
-                id="mobile-assignee"
-                name="assignee"
-                bind:value={filterAssignee}
-                class="border-milk-200 focus:border-cacao-500 focus:ring-cacao-500/20 dark:border-milk-800 dark:bg-milk-950 dark:focus:border-cacao-500 dark:focus:ring-cacao-500/30 mt-1 w-full rounded-lg border bg-white py-2 pl-3 text-sm shadow-sm focus:ring-2 focus:outline-none"
-              >
-                <option value="">All Students</option>
-                {#each students as student}
-                  <option value={student.id}>
-                    {student.name}
-                  </option>
-                {/each}
-              </select>
-            </div>
-          {/if}
-          <div class="flex justify-between pt-2">
-            <button
-              onclick={() => resetFilters()}
-              class="text-milk-600 hover:text-milk-800 dark:text-milk-400 dark:hover:text-milk-200 text-sm"
-            >
-              Reset filters
-            </button>
-            <button
-              onclick={() => (showMobileFilters = false)}
-              class="bg-cacao-500 hover:bg-cacao-600 dark:bg-cacao-600 dark:hover:bg-cacao-700 rounded-lg px-3 py-1.5 text-sm font-medium text-white shadow-sm transition-colors"
-            >
-              Apply
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  {/if}
-
   <!-- Table Container -->
   <div
     class="border-milk-200 dark:border-milk-800 dark:bg-milk-950 overflow-hidden rounded-xl border bg-white shadow-md"
   >
-    {#if items.length === 0}
+    {#if items.length === 0 && !isEmptySearch}
+      <!-- Empty state -->
       <div class="flex flex-col items-center justify-center p-8 text-center">
         <div class="bg-milk-100 dark:bg-milk-800 mb-4 rounded-full p-4">
           <svg
@@ -334,7 +208,8 @@
           </button>
         </form>
       </div>
-    {:else if showEmptyMessage}
+    {:else if isEmptySearch}
+      <!-- No search results -->
       <div class="flex flex-col items-center justify-center p-8 text-center">
         <div class="bg-milk-100 dark:bg-milk-800 mb-4 rounded-full p-4">
           <svg
@@ -375,28 +250,18 @@
               {#each config.columns as column}
                 <th
                   class="text-milk-700 dark:text-milk-300 px-6 py-4 text-left text-sm font-medium whitespace-nowrap"
-                  onclick={() => sortByColumn(column.key)}
                 >
                   <div
                     class="hover:text-cacao-600 dark:hover:text-cacao-400 inline-flex cursor-pointer items-center gap-1.5"
                   >
                     {column.label}
-                    {#if sortField === column.key}
-                      <span class="text-cacao-500 dark:text-cacao-400">
-                        {#if sortDirection === "asc"}
-                          <ArrowUp size={16} />
-                        {:else}
-                          <ArrowDown size={16} />
-                        {/if}
-                      </span>
-                    {/if}
                   </div>
                 </th>
               {/each}
             </tr>
           </thead>
           <tbody class="divide-milk-200 dark:divide-milk-800 divide-y">
-            {#each filteredItems as item (item.id)}
+            {#each items as item (item.id)}
               <tr
                 onclick={() => goto(`${href}/${item.id}`)}
                 class="group hover:bg-cacao-50/30 dark:hover:bg-cacao-900/10 cursor-pointer transition-colors"
@@ -423,46 +288,13 @@
       >
         <div>
           Showing <span class="text-milk-700 dark:text-milk-300 font-medium"
-            >{filteredItems.length}</span
+            >{items.length}</span
           >
           of
           <span class="text-milk-700 dark:text-milk-300 font-medium"
-            >{items.length}</span
+            >{total}</span
           > results
         </div>
-
-        <!-- Mobile create button -->
-        <form
-          action="?/new"
-          method="post"
-          class="md:hidden"
-          use:enhance={() => {
-            isSubmitting = true;
-            return async ({ result }) => {
-              isSubmitting = false;
-              if (result.type === "redirect") {
-                notification.set({
-                  message: "New entry created",
-                  type: "success",
-                });
-                goto(result.location);
-              } else {
-                notification.set({
-                  message: "Something's off",
-                  type: "error",
-                });
-              }
-            };
-          }}
-        >
-          <button
-            class="bg-cacao-500 hover:bg-cacao-600 focus:ring-cacao-500 dark:bg-cacao-600 dark:hover:bg-cacao-700 dark:focus:ring-offset-milk-900 inline-flex items-center justify-center rounded-lg px-3 py-1.5 text-sm font-medium text-white shadow-sm transition-colors focus:ring-2 focus:ring-offset-2 focus:outline-none disabled:opacity-50"
-            disabled={isSubmitting}
-          >
-            <PlusCircle class="mr-1.5 h-4 w-4" />
-            New
-          </button>
-        </form>
       </div>
     {/if}
   </div>

@@ -126,3 +126,10 @@ export interface CardProgress {
   front: string;
   back: string;
 }
+
+export interface PaginatedResponse<T> {
+  data: Vec<T>;
+  total: number;
+  page: number;
+  per_page: number;
+}

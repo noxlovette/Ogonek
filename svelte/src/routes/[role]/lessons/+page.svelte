@@ -1,5 +1,4 @@
 <script lang="ts">
-  import type { PageData } from "./$types";
   import { H1, Table, ButtonSubmit, H2, LessonCard } from "$lib/components";
   import { enhance } from "$app/forms";
   import { page } from "$app/state";
@@ -7,12 +6,14 @@
   import { formatDateTime } from "$lib/utils";
   import { user } from "$lib/stores";
 
-  let { data }: { data: PageData } = $props();
-  let { lessons, students } = data;
+  let { data } = $props();
+  let { students } = $derived(data);
+  let { data: lessons, total } = $derived(data.lessonsPaginated);
 
-  let href = $user.role === "teacher" ? `/t/lessons/l` : `/s/lessons/l`;
+  let role = page.params.role;
+  let href = role === "t" ? "/t/lessons/l" : `/s/lessons/l`;
 
-  let role = $derived(page.params.role);
+  $inspect(data.lessonsPaginated.total);
 
   const lessonConfig: TableConfig<Lesson> = {
     columns: [
@@ -21,13 +22,14 @@
       {
         key: "assigneeName",
         label: "Assignee",
-        formatter: (value: string) =>
-          value === $user.name ? "Not Assigned" : value,
+        formatter: (value: string | boolean | undefined) =>
+          value === $user.name ? "Not Assigned" : String(value),
       },
       {
         key: "createdAt",
         label: "Created",
-        formatter: (value: string) => formatDateTime(value),
+        formatter: (value: string | boolean | undefined) =>
+          formatDateTime(String(value)),
       },
     ],
   };
@@ -36,7 +38,13 @@
 <H1>Lessons</H1>
 
 {#if role === "t"}
-  <Table items={lessons} config={lessonConfig} {href} {students} />
+  <Table
+    bind:items={data.lessonsPaginated.data}
+    config={lessonConfig}
+    {href}
+    {total}
+    {students}
+  />
 
   <form action="?/new" method="post" use:enhance>
     {#if lessons.length === 0}

@@ -29,12 +29,10 @@
     elements = [Dashboard, Todo, Lessons, Students, Words, Settings];
   }
 
-  const { tasks, lessons, students, word } = data;
-
-  lessonStore.setLessons(lessons);
-  taskStore.setTasks(tasks);
-  studentStore.setStudents(students);
-  setContext<Promise<Word>>("word", word);
+  lessonStore.setLessons(data.lessons);
+  taskStore.setTasks(data.tasks);
+  studentStore.setStudents(data.students);
+  setContext<Promise<Word>>("word", data.word);
 </script>
 
 <Sidebar {elements} />
