@@ -36,13 +36,6 @@
     items.length === 0 && page.url.searchParams.has("search"),
   );
 
-  $effect(() => {
-    goto(`?search=${$searchTerm}&page_size=${$pageSize}&page=${$currentPage}`, {
-      noScroll: true,
-      keepFocus: true,
-    });
-  });
-
   function resetFilters() {
     searchTerm.reset();
     pageSize.reset();
@@ -56,31 +49,30 @@
   <div
     class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between"
   >
-    {#if items.length !== 0}
-      <div class="flex flex-1 items-center gap-3">
-        <div class="relative flex-1">
-          <Search
-            class="text-milk-400 dark:text-milk-600 absolute top-1/2 left-3 -translate-y-1/2"
-            size={18}
-          />
-          <input
-            type="text"
-            bind:value={$searchTerm}
-            placeholder="Search..."
-            class="border-milk-200 placeholder:text-milk-400 focus:border-cacao-400 focus:ring-cacao-500/20 dark:border-milk-800 dark:bg-milk-950 dark:placeholder:text-milk-600 dark:focus:border-cacao-500 dark:focus:ring-cacao-500/30 w-full rounded-full border bg-white py-2.5 pr-10 pl-10 shadow-sm focus:ring-2 focus:outline-none"
-          />
-          {#if $searchTerm}
-            <button
-              onclick={() => searchTerm.reset()}
-              class="text-milk-400 hover:bg-milk-100 hover:text-milk-700 dark:hover:bg-milk-800 dark:hover:text-milk-300 absolute top-1/2 right-3 -translate-y-1/2 rounded-full p-1 transition-colors duration-200"
-              aria-label="Clear search"
-            >
-              <X size={16} />
-            </button>
-          {/if}
-        </div>
+    <div class="flex flex-1 items-center gap-3">
+      <div class="relative flex-1">
+        <Search
+          class="text-milk-400 dark:text-milk-600 absolute top-1/2 left-3 -translate-y-1/2"
+          size={18}
+        />
+        <input
+          type="text"
+          bind:value={$searchTerm}
+          placeholder="Search..."
+          class="border-milk-200 placeholder:text-milk-400 focus:border-cacao-400 focus:ring-cacao-500/20 dark:border-milk-800 dark:bg-milk-950 dark:placeholder:text-milk-600 dark:focus:border-cacao-500 dark:focus:ring-cacao-500/30 w-full rounded-full border bg-white py-2.5 pr-10 pl-10 shadow-sm focus:ring-2 focus:outline-none"
+        />
+        {#if $searchTerm}
+          <button
+            onclick={() => searchTerm.reset()}
+            class="text-milk-400 hover:bg-milk-100 hover:text-milk-700 dark:hover:bg-milk-800 dark:hover:text-milk-300 absolute top-1/2 right-3 -translate-y-1/2 rounded-full p-1 transition-colors duration-200"
+            aria-label="Clear search"
+          >
+            <X size={16} />
+          </button>
+        {/if}
       </div>
-
+    </div>
+    {#if items.length !== 0}
       <!-- Controls for desktop -->
       <div class="hidden items-center gap-3 md:flex">
         {#if students.length > 0}
@@ -264,12 +256,12 @@
             {#each items as item (item.id)}
               <tr
                 onclick={() => goto(`${href}/${item.id}`)}
-                class="group hover:bg-cacao-50/30 dark:hover:bg-cacao-900/10 cursor-pointer transition-colors"
-                in:fade={{ duration: 200 }}
+                class="group hover:bg-cacao-50/30 dark:hover:bg-cacao-900/10 cursor-pointer transition-all duration-300 ease-in-out"
+                in:fade|global={{ duration: 300, delay: 50 }}
               >
-                {#each config.columns as column}
+                {#each config.columns as column, i}
                   <td
-                    class="text-milk-600 group-hover:text-milk-900 dark:text-milk-400 dark:group-hover:text-milk-200 px-6 py-4 text-sm"
+                    class="text-milk-600 group-hover:text-milk-900 dark:text-milk-400 dark:group-hover:text-milk-200 px-6 py-4 text-sm transition-all duration-200 ease-in-out"
                   >
                     {column.formatter
                       ? column.formatter(item[column.key])

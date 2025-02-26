@@ -77,15 +77,20 @@ pub async fn list_tasks(
     }
     
     // Add priority filter if provided
-    if let Some(priority) = params.priority {
+    if let Some(priority) = &params.priority {
         query_builder.push(" AND t.priority = ");
         query_builder.push_bind(priority);
     }
     
     // Add completed filter if provided
-    if let Some(completed) = params.completed {
+    if let Some(completed) = &params.completed {
         query_builder.push(" AND t.completed = ");
         query_builder.push_bind(completed);
+    }
+
+    if let Some(assignee) = &params.assignee {
+        query_builder.push(" AND t.assignee = ");
+        query_builder.push_bind(assignee);
     }
     
     // Add ordering - tasks typically ordered by due date
@@ -121,14 +126,19 @@ pub async fn list_tasks(
         count_query_builder.push(")");
     }
     
-    if let Some(priority) = params.priority {
+    if let Some(priority) = &params.priority {
         count_query_builder.push(" AND t.priority = ");
         count_query_builder.push_bind(priority);
     }
     
-    if let Some(completed) = params.completed {
+    if let Some(completed) = &params.completed {
         count_query_builder.push(" AND t.completed = ");
         count_query_builder.push_bind(completed);
+    }
+
+    if let Some(assignee) = &params.assignee {
+        count_query_builder.push(" AND t.assignee = ");
+        count_query_builder.push_bind(assignee);
     }
     
     let count: i64 = count_query_builder

@@ -11,6 +11,7 @@ pub struct TaskPaginationParams {
     pub search: Option<String>,
     pub priority: Option<i32>,
     pub completed: Option<bool>,
+    pub assignee: Option<String>,
 }
 
 impl TaskPaginationParams {

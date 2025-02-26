@@ -66,6 +66,10 @@ export interface BaseTableItem {
   id: string;
 }
 
+export interface IdResponse {
+  id: string;
+}
+
 export interface TableConfig<T extends BaseTableItem> {
   columns: {
     key: keyof T;

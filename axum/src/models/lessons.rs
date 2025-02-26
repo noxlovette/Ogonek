@@ -8,7 +8,7 @@ pub struct PaginationParams {
     pub page: Option<i64>,
     pub per_page: Option<i64>,
     pub search: Option<String>,
-    pub topic: Option<String>,
+    pub assignee: Option<String>,
 }
 
 impl PaginationParams {

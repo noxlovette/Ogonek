@@ -1,6 +1,34 @@
 import { env } from "$env/dynamic/private";
 import { notifyTelegram } from "$lib/server";
+import type { IdResponse, PaginatedResponse, Task } from "$lib/types";
 import { fail, redirect, type Actions } from "@sveltejs/kit";
+import type { PageServerLoad } from "./$types";
+
+export const load: PageServerLoad = async ({ fetch, url }) => {
+  const page = url.searchParams.get("page") || "1";
+  const per_page = url.searchParams.get("per_page") || "50";
+  const search = url.searchParams.get("search") || "";
+  const assignee = url.searchParams.get("assignee") || "";
+  const completed = url.searchParams.get("completed");
+
+  const params = new URLSearchParams();
+  params.append("page", page);
+  params.append("per_page", per_page);
+
+  if (search) params.append("search", search);
+  if (assignee) params.append("assignee", assignee);
+  if (completed) params.append("completed", completed);
+
+  const apiUrl = `/axum/task?${params.toString()}`;
+
+  const tasksPaginated = await fetch(apiUrl).then(
+    (res) => res.json() as Promise<PaginatedResponse<Task>>,
+  );
+
+  return {
+    tasksPaginated,
+  };
+};
 
 export const actions: Actions = {
   new: async ({ fetch }) => {
@@ -14,7 +42,7 @@ export const actions: Actions = {
       body: JSON.stringify(body),
     });
 
-    const { id } = await response.json();
+    const { id } = (await response.json()) as IdResponse;
 
     if (response.ok) {
       return redirect(301, `/t/tasks/t/${id}/edit`);
@@ -42,7 +70,7 @@ export const actions: Actions = {
       completed,
       id,
     };
-    console.log(formData.has("completed"));
+
     const response = await fetch(`/axum/task/t/${id}`, {
       method: "PATCH",
       body: JSON.stringify(body),

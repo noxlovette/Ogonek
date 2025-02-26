@@ -49,5 +49,6 @@ export const currentPage = createPageStore();
 export const searchTerm = createSearchTermStore();
 export const assigneeStore = createAssigneeStore();
 export const pageSize = createPageSize();
+export const completedStore = writable(false);
 
 export const isLoading = writable(false);

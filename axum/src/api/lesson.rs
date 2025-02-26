@@ -67,10 +67,10 @@ pub async fn list_lessons(
         query_builder.push(")");
     }
 
-    // Add topic filter if provided
-    if let Some(topic) = &params.topic {
-        query_builder.push(" AND l.topic = ");
-        query_builder.push_bind(topic);
+    // search by assignee if provided
+    if let Some(assignee) = &params.assignee {
+        query_builder.push(" AND l.assignee = ");
+        query_builder.push_bind(assignee);
     }
 
     // ordering
@@ -105,9 +105,9 @@ pub async fn list_lessons(
         count_query_builder.push(")");
     }
     
-    if let Some(topic) = &params.topic {
-        count_query_builder.push(" AND l.topic = ");
-        count_query_builder.push_bind(topic);
+    if let Some(assignee) = &params.assignee {
+        count_query_builder.push(" AND l.assignee = ");
+        count_query_builder.push_bind(assignee);
     }
     
     let count: i64 = count_query_builder

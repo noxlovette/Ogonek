@@ -4,7 +4,14 @@
   import { page } from "$app/state";
   import type { TableConfig, Lesson } from "$lib/types";
   import { formatDateTime } from "$lib/utils";
-  import { user } from "$lib/stores";
+  import {
+    user,
+    searchTerm,
+    pageSize,
+    currentPage,
+    assigneeStore,
+  } from "$lib/stores";
+  import { goto } from "$app/navigation";
 
   let { data } = $props();
   let { students } = $derived(data);
@@ -12,8 +19,6 @@
 
   let role = page.params.role;
   let href = role === "t" ? "/t/lessons/l" : `/s/lessons/l`;
-
-  $inspect(data.lessonsPaginated.total);
 
   const lessonConfig: TableConfig<Lesson> = {
     columns: [
@@ -33,6 +38,16 @@
       },
     ],
   };
+
+  $effect(() => {
+    goto(
+      `?search=${$searchTerm}&page_size=${$pageSize}&page=${$currentPage}&assignee=${$assigneeStore}`,
+      {
+        noScroll: true,
+        keepFocus: true,
+      },
+    );
+  });
 </script>
 
 <H1>Lessons</H1>
