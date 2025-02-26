@@ -1,8 +1,9 @@
 use crate::auth::jwt::Claims;
 use super::error::APIError;
 use crate::db::init::AppState;
-use crate::models::tasks::{TaskBody, TaskBodyWithStudent, TaskCreateBody, TaskUpdate};
-use axum::extract::{Json, Path, State};
+use crate::models::tasks::{TaskBody, TaskBodyWithStudent, TaskCreateBody, TaskUpdate, TaskPaginationParams};
+use crate::models::meta::PaginatedResponse;
+use axum::extract::{Json, Path, State, Query};
 
 pub async fn fetch_task(
     State(state): State<AppState>,
@@ -41,11 +42,10 @@ pub async fn fetch_task(
 pub async fn list_tasks(
     State(state): State<AppState>,
     claims: Claims,
-) -> Result<Json<Vec<TaskBodyWithStudent>>, APIError> {
-    let tasks = sqlx::query_as!(
-        TaskBodyWithStudent,
-        r#"
-        SELECT 
+    Query(params): Query<TaskPaginationParams>,
+) -> Result<Json<PaginatedResponse<TaskBodyWithStudent>>, APIError> {
+    let mut query_builder = sqlx::QueryBuilder::new(
+        "SELECT 
             t.id,
             t.title,
             t.markdown,
@@ -59,16 +59,90 @@ pub async fn list_tasks(
             t.updated_at,
             u.name as assignee_name
         FROM tasks t
-        LEFT JOIN "user" u ON t.assignee = u.id
-        WHERE (t.assignee = $1 OR t.created_by = $1)
-        ORDER BY t.due_date DESC NULLS LAST
-        "#,
-        claims.sub
-    )
-    .fetch_all(&state.db)
-    .await?;
+        LEFT JOIN \"user\" u ON t.assignee = u.id
+        WHERE (t.assignee = ");
     
-    Ok(Json(tasks))
+    query_builder.push_bind(&claims.sub);
+    query_builder.push(" OR t.created_by = ");
+    query_builder.push_bind(&claims.sub);
+    query_builder.push(")");
+    
+    // Add search filter if provided
+    if let Some(search) = &params.search {
+        query_builder.push(" AND (t.title ILIKE ");
+        query_builder.push_bind(format!("%{}%", search));
+        query_builder.push(" OR t.markdown ILIKE ");
+        query_builder.push_bind(format!("%{}%", search));
+        query_builder.push(")");
+    }
+    
+    // Add priority filter if provided
+    if let Some(priority) = params.priority {
+        query_builder.push(" AND t.priority = ");
+        query_builder.push_bind(priority);
+    }
+    
+    // Add completed filter if provided
+    if let Some(completed) = params.completed {
+        query_builder.push(" AND t.completed = ");
+        query_builder.push_bind(completed);
+    }
+    
+    // Add ordering - tasks typically ordered by due date
+    query_builder.push(" ORDER BY t.due_date ASC NULLS LAST");
+    
+    // Add limit and offset
+    query_builder.push(" LIMIT ");
+    query_builder.push_bind(params.limit());
+    query_builder.push(" OFFSET ");
+    query_builder.push_bind(params.offset());
+    
+    // Execute the query
+    let tasks = query_builder
+        .build_query_as::<TaskBodyWithStudent>()
+        .fetch_all(&state.db)
+        .await?;
+    
+    // Count query - build a similar query without LIMIT/OFFSET but with COUNT
+    let mut count_query_builder = sqlx::QueryBuilder::new(
+        "SELECT COUNT(*) FROM tasks t WHERE (t.assignee = ");
+    
+    count_query_builder.push_bind(&claims.sub);
+    count_query_builder.push(" OR t.created_by = ");
+    count_query_builder.push_bind(&claims.sub);
+    count_query_builder.push(")");
+    
+    // Add the same filters as the main query
+    if let Some(search) = &params.search {
+        count_query_builder.push(" AND (t.title ILIKE ");
+        count_query_builder.push_bind(format!("%{}%", search));
+        count_query_builder.push(" OR t.markdown ILIKE ");
+        count_query_builder.push_bind(format!("%{}%", search));
+        count_query_builder.push(")");
+    }
+    
+    if let Some(priority) = params.priority {
+        count_query_builder.push(" AND t.priority = ");
+        count_query_builder.push_bind(priority);
+    }
+    
+    if let Some(completed) = params.completed {
+        count_query_builder.push(" AND t.completed = ");
+        count_query_builder.push_bind(completed);
+    }
+    
+    let count: i64 = count_query_builder
+        .build_query_scalar()
+        .fetch_one(&state.db)
+        .await?;
+    
+    // Return paginated response
+    Ok(Json(PaginatedResponse {
+        data: tasks,
+        total: count,
+        page: params.page(),
+        per_page: params.limit(),
+    }))
 }
 
 

@@ -1,14 +1,13 @@
 use crate::auth::jwt::Claims;
 use crate::db::init::AppState;
-use crate::models::lessons::LessonBody;
-use crate::models::lessons::LessonBodyWithStudent;
-use crate::models::lessons::LessonCreateBody;
-use crate::models::lessons::LessonCreateResponse;
-use crate::models::lessons::LessonUpdate;
-use axum::extract::Json;
+use crate::models::lessons::{LessonBody, LessonBodyWithStudent, LessonCreateBody, LessonCreateResponse, LessonUpdate, PaginationParams};
+use axum::extract::{Json, Query};
 use axum::extract::Path;
 use axum::extract::State;
 use super::error::APIError;
+use crate::models::meta::PaginatedResponse;
+
+
 
 pub async fn fetch_lesson(
     State(state): State<AppState>,
@@ -43,32 +42,86 @@ pub async fn fetch_lesson(
 }
 pub async fn list_lessons(
     State(state): State<AppState>,
+    Query(params): Query<PaginationParams>,
     claims: Claims,
-) -> Result<Json<Vec<LessonBodyWithStudent>>, APIError> {
-    let lessons = sqlx::query_as!(
-        LessonBodyWithStudent,
-        r#"
-        SELECT 
-            l.id,
-            l.title,
-            l.topic,
-            l.markdown,
-            l.assignee,
-            l.created_by,
-            l.created_at,
-            l.updated_at,
-            u.name as assignee_name
-        FROM lessons l
-        LEFT JOIN "user" u ON l.assignee = u.id
-        WHERE (l.assignee = $1 OR l.created_by = $1)
-        ORDER BY l.created_at DESC
-        "#,
-        claims.sub
-    )
-    .fetch_all(&state.db)
-    .await?;
+) -> Result<Json<PaginatedResponse<LessonBodyWithStudent>>, APIError> {
 
-    Ok(Json(lessons))
+    let mut query_builder = sqlx::QueryBuilder::new(
+        "SELECT l.id, l.title, l.topic, l.markdown, l.assignee, l.created_by, l.created_at, l.updated_at, u.name as assignee_name 
+         FROM lessons l 
+         LEFT JOIN \"user\" u ON l.assignee = u.id 
+         WHERE (l.assignee = ");
+
+    query_builder.push_bind(&claims.sub);
+    query_builder.push(" OR l.created_by = ");
+    query_builder.push_bind(&claims.sub);
+    query_builder.push(")");
+
+    if let Some(search) = &params.search {
+        query_builder.push(" AND (l.title ILIKE ");
+        query_builder.push_bind(format!("%{}%", search));
+        query_builder.push(" OR l.topic ILIKE ");
+        query_builder.push_bind(format!("%{}%", search));
+        query_builder.push(" OR l.markdown ILIKE ");
+        query_builder.push_bind(format!("%{}%", search));
+        query_builder.push(")");
+    }
+
+    // Add topic filter if provided
+    if let Some(topic) = &params.topic {
+        query_builder.push(" AND l.topic = ");
+        query_builder.push_bind(topic);
+    }
+
+    // ordering
+    query_builder.push(" ORDER BY l.created_at DESC");
+
+    query_builder.push(" LIMIT ");
+    query_builder.push_bind(params.limit());
+    query_builder.push(" OFFSET ");
+    query_builder.push_bind(params.offset());
+
+    let lessons = query_builder
+        .build_query_as::<LessonBodyWithStudent>()
+        .fetch_all(&state.db)
+        .await?;
+    // Count query - build a similar query without LIMIT/OFFSET but with COUNT
+    let mut count_query_builder = sqlx::QueryBuilder::new(
+        "SELECT COUNT(*) FROM lessons l WHERE (l.assignee = ");
+    
+    count_query_builder.push_bind(&claims.sub);
+    count_query_builder.push(" OR l.created_by = ");
+    count_query_builder.push_bind(&claims.sub);
+    count_query_builder.push(")");
+    
+    // Add the same filters as the main query
+    if let Some(search) = &params.search {
+        count_query_builder.push(" AND (l.title ILIKE ");
+        count_query_builder.push_bind(format!("%{}%", search));
+        count_query_builder.push(" OR l.topic ILIKE ");
+        count_query_builder.push_bind(format!("%{}%", search));
+        count_query_builder.push(" OR l.markdown ILIKE ");
+        count_query_builder.push_bind(format!("%{}%", search));
+        count_query_builder.push(")");
+    }
+    
+    if let Some(topic) = &params.topic {
+        count_query_builder.push(" AND l.topic = ");
+        count_query_builder.push_bind(topic);
+    }
+    
+    let count: i64 = count_query_builder
+        .build_query_scalar()
+        .fetch_one(&state.db)
+        .await?;
+    
+    // Return paginated response
+    Ok(Json(PaginatedResponse {
+        data: lessons,
+        total: count,
+        page: params.page(),
+        per_page: params.limit(),
+    }))
 }
 
 

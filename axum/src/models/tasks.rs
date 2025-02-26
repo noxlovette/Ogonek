@@ -1,7 +1,32 @@
 use serde::{Deserialize, Serialize};
 use serde_with::serde_as;
+use sqlx::prelude::FromRow;
 use time::format_description::well_known::Rfc3339;
 use time::OffsetDateTime;
+
+#[derive(Debug, Deserialize)]
+pub struct TaskPaginationParams {
+    pub page: Option<i64>,
+    pub per_page: Option<i64>,
+    pub search: Option<String>,
+    pub priority: Option<i32>,
+    pub completed: Option<bool>,
+}
+
+impl TaskPaginationParams {
+    pub fn limit(&self) -> i64 {
+        self.per_page.unwrap_or(50).min(100).max(1)
+    }
+    
+    pub fn offset(&self) -> i64 {
+        let page = self.page.unwrap_or(1).max(1);
+        (page - 1) * self.limit()
+    }
+    
+    pub fn page(&self) -> i64 {
+        self.page.unwrap_or(1).max(1)
+    }
+}
 
 #[serde_with::serde_as]
 #[derive(Serialize, Deserialize, Debug)]
@@ -24,7 +49,7 @@ pub struct TaskBody {
 }
 
 #[serde_with::serde_as]
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, FromRow)]
 #[serde(rename_all = "camelCase")]
 pub struct TaskBodyWithStudent {
     pub id: String,
