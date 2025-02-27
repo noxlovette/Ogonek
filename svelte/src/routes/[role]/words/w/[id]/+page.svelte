@@ -32,7 +32,7 @@
 <div class="mb-6 flex flex-wrap items-center justify-between gap-4">
   <H1>{deck.name}</H1>
   <div class="flex gap-2">
-    {#if $user.sub !== deck.created_by}
+    {#if $user.sub === deck.created_by}
       <ButtonEdit href="{deck.id}/edit" />
     {/if}
     <form

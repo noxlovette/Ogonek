@@ -20,7 +20,6 @@
   let { data } = $props();
   let { deck, cards } = data;
   let updatedCards = $state([...cards]);
-  let confirmDelete = $state(false);
 
   function addCard() {
     updatedCards = [
@@ -143,14 +142,7 @@
           <div
             class="border-milk-200 dark:border-milk-800 mt-8 flex justify-between border-t pt-6"
           >
-            <button
-              type="button"
-              class="dark:bg-milk-900 dark:focus:ring-offset-milk-900 inline-flex items-center rounded-lg border border-red-200 bg-white px-4 py-2 text-sm font-medium text-red-600 shadow-sm transition hover:bg-red-50 focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:outline-none dark:border-red-900 dark:text-red-400 dark:hover:bg-red-900/20"
-              onclick={() => (confirmDelete = true)}
-            >
-              <Trash2 class="mr-2 h-4 w-4" />
-              Delete Deck
-            </button>
+            <ButtonDelete />
 
             <ButtonSubmit bind:isSubmitting></ButtonSubmit>
           </div>
@@ -208,33 +200,3 @@
     </div>
   </div>
 </form>
-
-{#if confirmDelete}
-  <div
-    class="bg-milk-950/50 fixed inset-0 z-50 flex items-center justify-center p-4"
-  >
-    <div
-      class="dark:bg-milk-900 w-full max-w-md rounded-xl bg-white p-6 shadow-xl"
-    >
-      <h3 class="text-milk-800 dark:text-milk-200 text-xl font-semibold">
-        Delete Deck
-      </h3>
-      <p class="text-milk-600 dark:text-milk-400 mt-2">
-        Are you sure you want to delete <span
-          class="text-milk-800 dark:text-milk-200 font-medium"
-          >"{deck.name}"</span
-        >? This action cannot be undone.
-      </p>
-      <div class="mt-6 flex justify-end gap-3">
-        <button
-          type="button"
-          class="border-milk-200 text-milk-700 hover:bg-milk-50 focus:ring-cacao-500 dark:border-milk-800 dark:bg-milk-900 dark:text-milk-300 dark:hover:bg-milk-800 dark:focus:ring-offset-milk-900 rounded-lg border bg-white px-4 py-2 text-sm font-medium shadow-sm transition focus:ring-2 focus:ring-offset-2 focus:outline-none"
-          onclick={() => (confirmDelete = false)}
-        >
-          Cancel
-        </button>
-        <ButtonDelete />
-      </div>
-    </div>
-  </div>
-{/if}

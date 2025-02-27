@@ -13,7 +13,7 @@
   import type { PageData } from "./$types";
 
   let { data }: { data: PageData } = $props();
-  let { task, students } = data;
+  let { task } = data;
   let isSubmitting = $state(false);
   let markdown = $state(task.markdown);
   let filePath = $state(task.filePath);
@@ -62,7 +62,7 @@
     <ButtonDelete bind:isSubmitting />
   </div>
 
-  <input type="hidden" name="id" value={task.id} />
+  <input type="hidden" name="initialAssignee" value={task.assignee} />
   <input type="hidden" name="markdown" value={markdown} />
   <input type="hidden" name="filePath" value={filePath} />
 

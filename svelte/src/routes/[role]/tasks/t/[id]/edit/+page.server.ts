@@ -10,17 +10,20 @@ export const load: PageServerLoad = async ({ params }) => {
 };
 
 export const actions = {
-  update: async ({ request, fetch }) => {
+  update: async ({ request, fetch, params }) => {
+    const id = params.id;
+
     const formData = await request.formData();
     const markdown = formData.get("markdown")?.toString() || "";
     const title = formData.get("title")?.toString() || "";
-    const id = formData.get("id")?.toString() || "";
     const dueDate = formData.get("dueDate")?.toString() || "";
     const completed = formData.has("completed");
     const filePath = formData.get("filePath")?.toString() || "";
 
     const assigneeData = formData.get("student")?.toString() || "{}";
     const { assignee = "", telegramId = "" } = JSON.parse(assigneeData);
+    const initialAssignee = formData.get("initialAssignee")?.toString() || "";
+
     const dueDateWithTime =
       dueDate && dueDate !== ""
         ? new Date(`${dueDate}T23:59:59`).toISOString()
@@ -36,7 +39,7 @@ export const actions = {
       filePath,
     };
 
-    const response = await fetch(`/axum/task/t/${formData.get("id")}`, {
+    const response = await fetch(`/axum/task/t/${id}`, {
       method: "PATCH",
       body: JSON.stringify(body),
     });
@@ -49,7 +52,7 @@ export const actions = {
 
     const message = `You have a new task: "${title}"\\. You can view it on [Firelight](https://firelight\\.noxlovette\\.com/s/tasks)\\.`;
 
-    if (telegramId) {
+    if (telegramId && initialAssignee !== assignee) {
       const telegramResponse = await notifyTelegram(message, telegramId);
       if (telegramResponse.status !== 404 && telegramResponse.status !== 200) {
         return fail(400);
@@ -58,9 +61,8 @@ export const actions = {
 
     return redirect(303, `/t/tasks/t/${id}`);
   },
-  delete: async ({ request, fetch }) => {
-    const formData = await request.formData();
-    const id = formData.get("id");
+  delete: async ({ fetch, params }) => {
+    const id = params.id;
     const response = await fetch(`/axum/task/t/${id}`, {
       method: "DELETE",
     });
