@@ -16,8 +16,8 @@ export const load: LayoutServerLoad = async ({ fetch, params }) => {
     }
 
     const deckComposite: DeckWithCards = await response.json();
-    const { deck, cards, totalReviewed, dueToday } = deckComposite;
-    return { deck, cards, totalReviewed, dueToday };
+    const { deck, cards, isSubscribed } = deckComposite;
+    return { deck, cards, isSubscribed };
   } catch (err: any) {
     return error(500, err);
   }

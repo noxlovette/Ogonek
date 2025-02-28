@@ -18,6 +18,8 @@
   let deck = $derived(data.deck);
   let flippedCards = $state(new Set<string>());
 
+  let isSubscribed = $state(data.isSubscribed);
+
   const toggleCard = (cardId: string) => {
     flippedCards = new Set(
       flippedCards.has(cardId)
@@ -32,7 +34,7 @@
 <div class="mb-6 flex flex-wrap items-center justify-between gap-4">
   <H1>{deck.name}</H1>
   <div class="flex gap-2">
-    {#if $user.sub === deck.created_by}
+    {#if $user.sub === deck.createdBy}
       <ButtonEdit href="{deck.id}/edit" />
     {/if}
     <form
@@ -42,11 +44,20 @@
         return async ({ result, update }) => {
           isSubmitting = false;
           if (result.type === "success") {
-            notification.set({
-              message: "Added to Routine",
-              type: "success",
-            });
-            update();
+            if (isSubscribed) {
+              isSubscribed = false;
+              notification.set({
+                message: "Unsubscribed!",
+                type: "success",
+              });
+              update();
+            } else {
+              isSubscribed = true;
+              notification.set({
+                message: "Subscribed!",
+                type: "success",
+              });
+            }
           } else if (result.type === "failure") {
             notification.set({
               message: String(result.data?.message),
@@ -56,7 +67,10 @@
         };
       }}
     >
-      <ButtonSubmit buttonName="Add to Routine" bind:isSubmitting
+      <input type="hidden" name="isSubscribed" value={isSubscribed} />
+      <ButtonSubmit
+        buttonName={isSubscribed ? "Unsubscribe" : "Subscribe"}
+        bind:isSubmitting
       ></ButtonSubmit>
     </form>
   </div>

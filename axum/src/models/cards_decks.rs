@@ -34,6 +34,14 @@ pub struct CardUpdate {
 
 #[derive(Deserialize, Serialize, Debug)]
 #[serde(rename_all = "camelCase")]
+pub struct DeckWithCardsAndSubscription {
+    pub deck: DeckBody,
+    pub cards: Vec<CardBody>,
+    pub is_subscribed: bool,
+}
+
+#[derive(Deserialize, Serialize, Debug)]
+#[serde(rename_all = "camelCase")]
 pub struct DeckWithCards {
     pub deck: DeckBody,
     pub cards: Vec<CardBody>,

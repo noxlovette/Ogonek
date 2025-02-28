@@ -1,9 +1,10 @@
 use crate::auth::jwt::Claims;
 use crate::db::init::AppState;
-use crate::models::cards_decks::{DeckBody, DeckCreateBody, CardBody, DeckWithCards, DeckWithCardsUpdate};
+use crate::models::cards_decks::{DeckBody, DeckCreateBody, CardBody, DeckWithCards, DeckWithCardsAndSubscription, DeckWithCardsUpdate};
 use axum::extract::Json;
 use axum::extract::Path;
 use axum::extract::State;
+use axum::http::StatusCode;
 use super::error::APIError;
 
 
@@ -24,7 +25,7 @@ pub async fn create_deck(
         r#"
         INSERT INTO decks (id, created_by, name, description, visibility, assignee)
         VALUES ($1, $2, $3, $4, $5, $6)
-        RETURNING *
+        RETURNING id, name, description, visibility, assignee, created_by, created_at
         "#,
         nanoid::nanoid!(),
         claims.sub,
@@ -43,10 +44,10 @@ pub async fn fetch_deck(
     State(state): State<AppState>,
     claims: Claims,
     Path(deck_id): Path<String>,
-) -> Result<Json<Option<DeckWithCards>>, APIError> {
+) -> Result<Json<Option<DeckWithCardsAndSubscription>>, APIError> {
     let result = sqlx::query!(
         r#"
-        SELECT * FROM decks 
+        SELECT id, name, description, visibility, assignee, created_by, created_at FROM decks 
         WHERE id = $1 AND (
             created_by = $2
             OR assignee = $2
@@ -58,6 +59,20 @@ pub async fn fetch_deck(
     )
     .fetch_optional(&state.db)
     .await?;
+
+    let is_subscribed = sqlx::query!(
+        r#"
+        SELECT EXISTS(
+            SELECT 1 FROM deck_subscriptions 
+            WHERE deck_id = $1 AND user_id = $2
+        ) as "is_subscribed!"
+        "#,
+        deck_id,
+        claims.sub
+    )
+    .fetch_one(&state.db)
+    .await?
+    .is_subscribed;
 
     match result {
         Some(deck_data) => {
@@ -73,7 +88,7 @@ pub async fn fetch_deck(
             .fetch_all(&state.db)
             .await?;
 
-            Ok(Json(Some(DeckWithCards {
+            Ok(Json(Some(DeckWithCardsAndSubscription {
                 deck: DeckBody {
                     id: deck_data.id,
                     name: deck_data.name,
@@ -83,7 +98,8 @@ pub async fn fetch_deck(
                     assignee: deck_data.assignee,
                     created_at: deck_data.created_at,
                 },
-                cards
+                cards,
+                is_subscribed
             })))
         },
         None => Ok(Json(None))
@@ -128,7 +144,7 @@ pub async fn update_deck(
             visibility = COALESCE($3, visibility),
             assignee = COALESCE($4, assignee)
          WHERE id = $5 AND created_by = $6
-         RETURNING *",
+         RETURNING id, name, description, visibility, assignee, created_by, created_at",
         payload.deck.name,
         payload.deck.description,
         payload.deck.visibility,
@@ -219,3 +235,116 @@ pub async fn delete_deck(
     Ok(Json(deck))
 }
 
+pub async fn subscribe_to_deck(
+    State(state): State<AppState>,
+    claims: Claims,
+    Path(deck_id): Path<String>,
+
+) -> Result<StatusCode, APIError> {
+    let deck_exists = sqlx::query!(
+        r#"
+        SELECT id FROM decks
+        WHERE id = $1 AND (
+            created_by = $2
+            OR assignee = $2
+            OR visibility = 'public'
+        )
+        "#,
+        deck_id,
+        claims.sub
+    )
+    .fetch_optional(&state.db)
+    .await?
+    .is_some();
+
+    if !deck_exists {
+        return Err(APIError::NotFound("Deck not found or access denied".into()));
+    }
+
+    sqlx::query!(
+        r#"
+        INSERT INTO deck_subscriptions (deck_id, user_id)
+        VALUES ($1, $2)
+        ON CONFLICT (deck_id, user_id) DO NOTHING
+        "#,
+        deck_id,
+        claims.sub
+    )
+    .execute(&state.db)
+    .await?;
+
+    // Initialize card progress for all existing cards in the deck
+    let mut tx = state.db.begin().await?;
+    
+    let cards = sqlx::query!(
+        r#"
+        SELECT c.id FROM cards c
+        LEFT JOIN card_progress cp 
+            ON cp.card_id = c.id 
+            AND cp.user_id = $1
+        WHERE c.deck_id = $2 
+        AND cp.id IS NULL
+        "#,
+        claims.sub,
+        deck_id
+    )
+    .fetch_all(&mut *tx)
+    .await?;
+
+    for card in cards {
+        sqlx::query!(
+            r#"
+            INSERT INTO card_progress 
+                (id, user_id, card_id, review_count, due_date, ease_factor, interval)
+            VALUES 
+                ($1, $2, $3, 0, CURRENT_TIMESTAMP, 2.5, 1)
+            ON CONFLICT (user_id, card_id) DO NOTHING
+            "#,
+            nanoid::nanoid!(),
+            claims.sub,
+            card.id,
+        )
+        .execute(&mut *tx)
+        .await?;
+    }
+    
+    tx.commit().await?;
+
+    Ok(StatusCode::OK)
+}
+
+
+pub async fn unsubscribe_from_deck(
+    State(state): State<AppState>,
+    claims: Claims,
+    Path(deck_id): Path<String>,
+) -> Result<StatusCode, APIError> {
+    // Remove subscription
+    sqlx::query!(
+        r#"
+        DELETE FROM deck_subscriptions
+        WHERE deck_id = $1 AND user_id = $2
+        "#,
+        deck_id,
+        claims.sub
+    )
+    .execute(&state.db)
+    .await?;
+
+    // Optionally, you can also clean up card progress
+    sqlx::query!(
+        r#"
+        DELETE FROM card_progress cp
+        USING cards c
+        WHERE cp.card_id = c.id
+        AND c.deck_id = $1
+        AND cp.user_id = $2
+        "#,
+        deck_id,
+        claims.sub
+    )
+    .execute(&state.db)
+    .await?;
+
+    Ok(StatusCode::NO_CONTENT)
+}

@@ -10,7 +10,7 @@
     ButtonDelete,
     AssigneeSelector,
   } from "$lib/components";
-  import { notification } from "$lib/stores";
+  import { notification, user } from "$lib/stores";
   import { enhance } from "$app/forms";
   import { page } from "$app/state";
   import { Plus, Trash2 } from "lucide-svelte";

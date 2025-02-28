@@ -3,6 +3,7 @@ import { writable } from "svelte/store";
 
 export const initialUser: User = {
   username: "",
+  sub: "",
   name: "",
   role: "",
   email: "",
@@ -33,6 +34,7 @@ export function setUser(data: User) {
 export function clearUser() {
   user.update(() => ({
     username: "",
+    sub: "",
     name: "",
     role: "",
     email: "",

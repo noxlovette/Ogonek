@@ -14,8 +14,8 @@ pub fn deck_routes() -> Router<AppState> {
                 .post(learning::reset_deck_progress)
         )
         .route(
-            "/learn/init/{deck_id}",
-            post(learning::init_deck_learning)
+            "/learn/subscribe/{deck_id}",
+            post(decks::subscribe_to_deck).delete(decks::unsubscribe_from_deck)
         )
         .route(
             "/learn/{card_id}"

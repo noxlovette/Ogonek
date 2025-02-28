@@ -99,33 +99,32 @@ export interface Deck {
   description?: string;
   assignee: string;
   visibility: "public" | "private" | "assigned";
-  created_by: string;
-  created_at: string;
+  createdBy: string;
+  createdAt: string;
 }
 
 export interface Card {
   id: string;
   front: string;
   back: string;
-  media_url?: string;
-  deck_id: string;
-  created_at?: string;
+  mediaUrl?: string;
+  deckId: string;
+  createdAt?: string;
 }
 
 export interface DeckWithCards {
   deck: Deck;
   cards: Card[];
-  dueToday: number;
-  totalReviewed: number;
+  isSubscribed: boolean;
 }
 export interface CardProgress {
   id: string;
-  card_id: string;
-  user_id: string;
-  review_count: number;
-  last_reviewed: string | null;
-  due_date: string;
-  ease_factor: number;
+  cardId: string;
+  userId: string;
+  reviewCount: number;
+  lastReviewed: string | null;
+  dueDate: string;
+  easeFactor: number;
   interval: number;
   front: string;
   back: string;
@@ -135,5 +134,5 @@ export interface PaginatedResponse<T> {
   data: Vec<T>;
   total: number;
   page: number;
-  per_page: number;
+  perPage: number;
 }

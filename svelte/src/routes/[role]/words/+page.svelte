@@ -129,5 +129,5 @@
     {/if}
   </div>
 {:else}
-  <Table></Table>
+  <div>table here</div>
 {/if}
