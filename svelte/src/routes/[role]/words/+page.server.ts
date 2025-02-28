@@ -12,7 +12,7 @@ export const load: PageServerLoad = async ({ fetch }) => {
 };
 
 export const actions: Actions = {
-  default: async ({ fetch }) => {
+  new: async ({ fetch }) => {
     const body = {
       name: "New Deck",
       description: "Blablablabla",

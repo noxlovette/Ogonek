@@ -114,7 +114,7 @@
       class="bg-milk-200 dark:bg-milk-700 h-2.5 w-full overflow-hidden rounded-full"
     >
       <div
-        class="bg-cacao-500 dark:bg-cacao-400 h-2.5 rounded-full transition-all duration-300"
+        class="bg-cacao-600 dark:bg-cacao-600 h-2.5 rounded-full transition-all duration-300"
         style="width: {((data.cards.indexOf(currentCard) + 1) /
           data.cards.length) *
           100}%"
@@ -123,7 +123,7 @@
 
     <!-- Card container -->
     <div
-      class="dark:bg-milk-800 flex min-h-[350px] flex-col rounded-xl bg-white p-8 shadow-sm transition-all hover:shadow-md"
+      class="dark:bg-milk-900 flex min-h-[350px] flex-col rounded-xl bg-white p-8 shadow-sm transition-all hover:shadow-md"
       in:slide={{ duration: 300, easing: quintOut }}
     >
       <div class="flex-grow">
@@ -159,7 +159,7 @@
       <div class="mt-8 flex justify-center">
         {#if !showAnswer}
           <button
-            class="bg-cacao-600 hover:bg-cacao-700 dark:bg-cacao-500 dark:hover:bg-cacao-600 flex items-center justify-center rounded-lg px-6 py-3 font-medium text-white transition"
+            class="bg-cacao-600 hover:bg-cacao-700 text-cacao-50 flex items-center justify-center rounded-lg px-6 py-3 font-medium transition"
             onclick={() => (showAnswer = !showAnswer)}
           >
             <svg

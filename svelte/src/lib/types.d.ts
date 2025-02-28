@@ -33,14 +33,11 @@ export interface User {
 
 export interface Lesson {
   id: string;
-  manualDate?: string;
   title: string;
   markdown: string;
   createdAt: string;
   updatedAt: string;
   topic: string;
-  bookmarked: boolean;
-  highlighted: string;
   assignee: string;
   assigneeName: string;
 }

@@ -7,7 +7,7 @@
 
 <div
   id="pagination"
-  class="border-cocoa-400 dark:border-cocoa-900 flex h-full items-center space-x-4 rounded-lg border-2 bg-white p-2 shadow-sm transition-all duration-300 dark:bg-stone-900"
+  class="border-cocoa-400 dark:border-cocoa-900 dark:bg-milk-900 flex h-full items-center space-x-4 rounded-lg border-2 bg-white p-2 shadow-sm transition-all duration-300"
 >
   <button
     id="prevPage"
