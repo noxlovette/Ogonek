@@ -51,7 +51,7 @@
 
       <ButtonCancel />
       <ButtonSubmit bind:isSubmitting></ButtonSubmit>
-      <ButtonDelete bind:isSubmitting></ButtonDelete>
+      <ButtonDelete text={student.name} title="Student"></ButtonDelete>
     </div>
 
     <input type="hidden" name="id" value={student.id} />

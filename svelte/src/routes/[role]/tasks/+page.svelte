@@ -79,7 +79,14 @@
 
 <H1>Tasks</H1>
 {#if role === "t"}
-  <Table items={tasks} config={taskConfig} {href} {students} {total} />
+  <Table
+    items={tasks}
+    config={taskConfig}
+    {href}
+    {students}
+    {total}
+    showComplete={true}
+  />
   <form action="?/new" method="post" use:enhance>
     {#if tasks.length === 0}
       <ButtonSubmit buttonName="Add your first one!" />

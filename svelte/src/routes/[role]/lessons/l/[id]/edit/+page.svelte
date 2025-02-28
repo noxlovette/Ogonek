@@ -41,7 +41,7 @@
     <H1>Edit Lesson</H1>
     <ButtonCancel />
     <ButtonSubmit />
-    <ButtonDelete />
+    <ButtonDelete text={lesson.title} title="Lesson" />
   </div>
 
   <input type="hidden" name="id" value={lesson.id} />

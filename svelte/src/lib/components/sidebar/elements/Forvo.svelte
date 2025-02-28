@@ -5,7 +5,7 @@
 
 <SidebarItem
   external={true}
-  href="https://dictionary.cambridge.org/"
+  href="https://forvo.com/"
   Icon={AudioLines}
   name="Pron"
 />

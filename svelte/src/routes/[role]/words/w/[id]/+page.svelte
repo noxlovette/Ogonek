@@ -39,6 +39,7 @@
     {/if}
     <form
       method="POST"
+      action="?/subscribe"
       use:enhance={() => {
         isSubmitting = true;
         return async ({ result, update }) => {
@@ -136,5 +137,38 @@
         </div>
       {/if}
     </div>
+    <form
+      method="POST"
+      action="?/share"
+      use:enhance={() => {
+        isSubmitting = true;
+
+        return async ({ result }) => {
+          isSubmitting = false;
+          if (result.type === "success") {
+            const link = String(result.data?.link);
+            try {
+              await navigator.clipboard.writeText(link);
+              notification.set({
+                message: "Link copied to clipboard!",
+                type: "success",
+              });
+            } catch (err) {
+              notification.set({
+                message: "Failed to copy link",
+                type: "error",
+              });
+            }
+          } else {
+            notification.set({
+              message: "Failed to generate link",
+              type: "error",
+            });
+          }
+        };
+      }}
+    >
+      <ButtonSubmit bind:isSubmitting buttonName="Share Deck" />
+    </form>
   </div>
 </div>

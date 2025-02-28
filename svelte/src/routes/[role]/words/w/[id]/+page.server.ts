@@ -1,8 +1,9 @@
+import { env } from "$env/dynamic/private";
 import { fail } from "@sveltejs/kit";
 import type { Actions } from "./$types";
 
 export const actions = {
-  default: async ({ fetch, params, request }) => {
+  subscribe: async ({ fetch, params, request }) => {
     const { id } = params;
 
     const formData = await request.formData();
@@ -21,5 +22,12 @@ export const actions = {
     }
 
     return { success: true };
+  },
+  share: async ({ params }) => {
+    const { id } = params;
+
+    const link = `${env.ORIGIN}/s/words/w/${id}`;
+
+    return { link };
   },
 } satisfies Actions;

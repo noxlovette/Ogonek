@@ -26,10 +26,10 @@
       ...updatedCards,
       {
         id: "",
-        deck_id: deck.id,
+        deckId: deck.id,
         front: "",
         back: "",
-        media_url: undefined,
+        mediaUrl: undefined,
       },
     ];
   }
@@ -137,16 +137,6 @@
             <span>Add Another Card</span>
           </button>
         {/if}
-
-        {#if updatedCards.length > 0}
-          <div
-            class="border-milk-200 dark:border-milk-800 mt-8 flex justify-between border-t pt-6"
-          >
-            <ButtonDelete />
-
-            <ButtonSubmit bind:isSubmitting></ButtonSubmit>
-          </div>
-        {/if}
       </div>
     </div>
     <div class="lg:col-span-1">
@@ -175,26 +165,25 @@
 
         {#if role === "t"}
           <AssigneeSelector item={deck} />
-        {/if}
 
-        <div>
-          <Label>Visibility</Label>
-          <select
-            name="visibility"
-            value={deck.visibility}
-            class="border-milk-200 focus:ring-cacao-500 disabled:text-milk-500 dark:border-milk-800 dark:bg-milk-950 dark:focus:border-milk-800 dark:focus:ring-milk-700 w-full rounded-lg border bg-white px-4 py-2 transition duration-200 focus:ring focus:outline-none dark:focus:ring dark:focus:outline-none"
-          >
-            <option value="public">Public</option>
-            <option value="private">Private</option>
-            {#if role === "t"}
-              <option value="assigned">Assigned Only</option>
-            {/if}
-          </select>
-        </div>
+          <div>
+            <Label>Visibility</Label>
+            <select
+              name="visibility"
+              value={deck.visibility}
+              class="border-milk-200 focus:ring-cacao-500 disabled:text-milk-500 dark:border-milk-800 dark:bg-milk-950 dark:focus:border-milk-800 dark:focus:ring-milk-700 w-full rounded-lg border bg-white px-4 py-2 transition duration-200 focus:ring focus:outline-none dark:focus:ring dark:focus:outline-none"
+            >
+              <option value="private">Private</option>
+              <option value="public">Public</option>
+              <option value="assigned">Assigned</option>
+            </select>
+          </div>
+        {/if}
 
         <div class="flex flex-col gap-3 pt-4">
           <ButtonSubmit {isSubmitting}></ButtonSubmit>
           <ButtonCancel />
+          <ButtonDelete text={deck.name} title="Deck" />
         </div>
       </div>
     </div>

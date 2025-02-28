@@ -9,16 +9,19 @@
     pageSize,
     currentPage,
     assigneeStore,
+    completedStore,
   } from "$lib/stores";
   import type { Student, BaseTableItem, TableConfig } from "$lib/types";
   import { page } from "$app/state";
+  import { ButtonRaw } from "../buttons";
 
   interface Props<T extends BaseTableItem> {
     items: T[];
     config: TableConfig<T>;
     href: string;
-    students: Student[];
-    total: number;
+    students?: Student[];
+    total?: number;
+    showComplete?: boolean;
   }
 
   let {
@@ -27,6 +30,7 @@
     href,
     students = [],
     total = items.length,
+    showComplete = false,
   }: Props<T> = $props();
 
   let isSubmitting = $state(false);
@@ -49,7 +53,7 @@
   <div
     class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between"
   >
-    <div class="flex flex-1 items-center gap-3">
+    <div class="flex flex-grow items-center gap-3">
       <div class="relative flex-1">
         <Search
           class="text-milk-400 dark:text-milk-600 absolute top-1/2 left-3 -translate-y-1/2"
@@ -73,7 +77,6 @@
       </div>
     </div>
     {#if items.length !== 0}
-      <!-- Controls for desktop -->
       <div class="hidden items-center gap-3 md:flex">
         {#if students.length > 0}
           <div class="relative min-w-40">
@@ -136,6 +139,14 @@
           </button>
         </form>
       </div>
+    {/if}
+    {#if showComplete}
+      <ButtonRaw
+        buttonName={$completedStore === true
+          ? "Hide Completed"
+          : "Show Completed"}
+        onclick={() => completedStore.set(!$completedStore)}
+      ></ButtonRaw>
     {/if}
   </div>
 

@@ -59,7 +59,7 @@
     <H1>Edit Task</H1>
     <ButtonCancel />
     <ButtonSubmit bind:isSubmitting />
-    <ButtonDelete bind:isSubmitting />
+    <ButtonDelete text={task.title} title="Task" />
   </div>
 
   <input type="hidden" name="initialAssignee" value={task.assignee} />
