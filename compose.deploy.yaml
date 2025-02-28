@@ -1,6 +1,6 @@
 services:
   svelte:
-    image: ghcr.io/noxlovette/fl-prod-svelte:v1.0.9
+    image: ghcr.io/noxlovette/fl-prod-svelte:v1.1.2
     container_name: svelte-fl-prod
     env_file:
       - ./.env.svelte
@@ -17,9 +17,15 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+  redis:
+    image: redis/redis-stack-server:latest
+    container_name: redis-fl-prod
+    networks:
+      - web
+      - internal
 
   axum:
-    image: ghcr.io/noxlovette/fl-prod-axum:v1.0.4
+    image: ghcr.io/noxlovette/fl-prod-axum:v1.1.2
     container_name: axum-fl-prod
     logging:
       driver: "json-file"
