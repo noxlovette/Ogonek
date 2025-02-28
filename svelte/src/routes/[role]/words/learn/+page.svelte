@@ -5,12 +5,11 @@
   import { notification } from "$lib/stores/notification.js";
   import { Anchor } from "$lib/components";
   import { invalidate } from "$app/navigation";
-  import { shuffleArray } from "$lib/utils";
 
   let { data } = $props();
 
   let currentIndex = $state(0);
-  let currentCard = $derived(shuffleArray(data.cards)[currentIndex]);
+  let currentCard = $derived(data.cards[currentIndex]);
 
   let isComplete = $state(data.cards.length === 0);
   let showAnswer = $state(false);
@@ -27,8 +26,6 @@
       isComplete = true;
     }
   };
-
-  $inspect(data.cards);
 
   const qualityButtons = [
     {
