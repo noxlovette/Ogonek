@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "UPDATE decks \n         SET \n            name = COALESCE($1, name),\n            description = COALESCE($2, description), \n            visibility = COALESCE($3, visibility),\n            assignee = COALESCE($4, assignee)\n         WHERE id = $5 AND created_by = $6\n         RETURNING *",
+  "query": "\n        SELECT id, name, description, visibility, assignee, created_by, created_at FROM decks \n        WHERE id = $1 AND (\n            created_by = $2\n            OR assignee = $2\n            OR visibility = 'public'\n        )\n        ",
   "describe": {
     "columns": [
       {
@@ -20,31 +20,27 @@
       },
       {
         "ordinal": 3,
-        "name": "created_by",
-        "type_info": "Varchar"
-      },
-      {
-        "ordinal": 4,
-        "name": "created_at",
-        "type_info": "Timestamptz"
-      },
-      {
-        "ordinal": 5,
         "name": "visibility",
         "type_info": "Varchar"
       },
       {
-        "ordinal": 6,
+        "ordinal": 4,
         "name": "assignee",
         "type_info": "Varchar"
+      },
+      {
+        "ordinal": 5,
+        "name": "created_by",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 6,
+        "name": "created_at",
+        "type_info": "Timestamptz"
       }
     ],
     "parameters": {
       "Left": [
-        "Varchar",
-        "Text",
-        "Varchar",
-        "Varchar",
         "Text",
         "Text"
       ]
@@ -54,10 +50,10 @@
       false,
       true,
       false,
+      true,
       false,
-      false,
-      true
+      false
     ]
   },
-  "hash": "ac49593368707e863a0c4acea6f671bd0c00a61e411bcd03d65a0556387800a6"
+  "hash": "01bd3e9aea5f8b62bbd88d90dd6cb46454677b0eb8f3ee0acd3c078ccced5e89"
 }

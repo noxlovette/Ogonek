@@ -1,0 +1,23 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        SELECT id FROM decks\n        WHERE id = $1 AND (\n            created_by = $2\n            OR assignee = $2\n            OR visibility = 'public'\n        )\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Varchar"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Text"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "935e23df9a98661defece46d6a0fb442f8c784406cee411255bbf3d76ee00bce"
+}

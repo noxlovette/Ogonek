@@ -37,6 +37,11 @@
         "ordinal": 6,
         "name": "assignee",
         "type_info": "Varchar"
+      },
+      {
+        "ordinal": 7,
+        "name": "subscribers",
+        "type_info": "TextArray"
       }
     ],
     "parameters": {
@@ -52,6 +57,7 @@
       false,
       false,
       false,
+      true,
       true
     ]
   },

@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        DELETE FROM card_progress cp\n        USING cards c\n        WHERE cp.card_id = c.id\n        AND c.deck_id = $1\n        AND cp.user_id = $2\n        ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Text"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "9b1efa285287caaa1482ca0ac27cf2ff5a9fa9379908a6bc1a8e18cc4a0716f4"
+}
