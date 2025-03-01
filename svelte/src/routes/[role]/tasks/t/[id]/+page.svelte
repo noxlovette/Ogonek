@@ -59,8 +59,8 @@
   {#if data.task.filePath}
     <div>
       <UniButton
-        Icon={Pencil}
-        onclick={() => goto(`/download/${data.task.filePath}`)}
+        Icon={Download}
+        href="/download/{data.task.filePath}"
         variant="outline">Download</UniButton
       >
     </div>

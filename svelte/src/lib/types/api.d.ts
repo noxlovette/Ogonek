@@ -26,6 +26,5 @@ export interface AuthResponse {
 export type EmptyResponse = Record<string, never>;
 
 export interface UploadResponse {
-  data: string;
-  success: boolean;
+  filePath: string;
 }

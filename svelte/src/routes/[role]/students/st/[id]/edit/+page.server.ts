@@ -19,7 +19,7 @@ export const actions = {
 
     if (!response.ok) {
       const errorData = await response.json(); // Parse error details
-      console.error("Error updating student:", errorData);
+
       return {
         success: false,
         error: errorData,

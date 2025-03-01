@@ -99,11 +99,13 @@ export const actions = {
       return fail(uploadResult.status, { message: uploadResult.message });
     }
 
-    let { data } = uploadResult;
+    console.log(uploadResult);
+
+    let { filePath } = uploadResult.data;
 
     return {
       success: true,
-      filePath: data,
+      filePath,
       message: "Uploaded successfully",
     };
   },
