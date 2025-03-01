@@ -1,5 +1,6 @@
-import type { Lesson, PaginatedResponse } from "$lib/types";
-import { redirect, type Actions } from "@sveltejs/kit";
+import { handleApiResponse, isSuccessResponse } from "$lib/server";
+import type { Lesson, NewResponse, PaginatedResponse } from "$lib/types";
+import { fail, redirect, type Actions } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async ({ fetch, url }) => {
@@ -39,7 +40,13 @@ export const actions: Actions = {
       body: JSON.stringify(body),
     });
 
-    const { id } = await response.json();
+    const newResult = await handleApiResponse<NewResponse>(response);
+
+    if (!isSuccessResponse(newResult)) {
+      return fail(newResult.status, { message: newResult.message });
+    }
+
+    const { id } = newResult.data;
 
     if (response.ok) {
       return redirect(301, `/t/lessons/l/${id}/edit`);

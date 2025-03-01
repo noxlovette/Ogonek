@@ -1,6 +1,8 @@
-import type { Task } from "$lib/types";
+import { handleApiResponse, isSuccessResponse } from "$lib/server";
+import type { EmptyResponse, Task } from "$lib/types";
 import { parseMarkdown } from "$lib/utils";
-import { redirect } from "@sveltejs/kit";
+import type { Actions } from "@sveltejs/kit";
+import { fail, redirect } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async ({ params, fetch }) => {
@@ -24,9 +26,6 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
   }
 };
 
-import type { Actions } from "@sveltejs/kit";
-import { fail } from "@sveltejs/kit";
-
 export const actions = {
   default: async ({ request, fetch }) => {
     const formData = await request.formData();
@@ -36,16 +35,15 @@ export const actions = {
       completed,
       id,
     };
-    console.log(formData.has("completed"));
+
     const response = await fetch(`/axum/task/t/${id}`, {
       method: "PATCH",
       body: JSON.stringify(body),
     });
 
-    const { error } = await response.json();
-
-    if (!response.ok) {
-      return fail(500, { message: error || "Something's off" });
+    const editResult = await handleApiResponse<EmptyResponse>(response);
+    if (!isSuccessResponse(editResult)) {
+      return fail(editResult.status, { message: editResult.message });
     }
 
     return {

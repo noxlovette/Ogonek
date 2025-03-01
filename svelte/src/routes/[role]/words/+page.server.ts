@@ -1,5 +1,6 @@
-import type { Deck } from "$lib/types";
-import { redirect, type Actions } from "@sveltejs/kit";
+import { handleApiResponse, isSuccessResponse } from "$lib/server";
+import type { Deck, NewResponse } from "$lib/types";
+import { fail, redirect, type Actions } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async ({ fetch }) => {
@@ -24,10 +25,14 @@ export const actions: Actions = {
       body: JSON.stringify(body),
     });
 
-    const { id } = await response.json();
+    const newResult = await handleApiResponse<NewResponse>(response);
 
-    if (response.ok) {
-      return redirect(301, `words/w/${id}/edit`);
+    if (!isSuccessResponse(newResult)) {
+      return fail(newResult.status, { message: newResult.message });
     }
+
+    const { id } = newResult.data;
+
+    return redirect(301, `words/w/${id}/edit`);
   },
 };

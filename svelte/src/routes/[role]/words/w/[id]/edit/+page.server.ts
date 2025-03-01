@@ -1,4 +1,6 @@
-import { error, fail, redirect } from "@sveltejs/kit";
+import { handleApiResponse, isSuccessResponse } from "$lib/server";
+import type { EmptyResponse } from "$lib/types";
+import { fail, redirect } from "@sveltejs/kit";
 import type { Actions } from "./$types";
 
 export const actions = {
@@ -54,11 +56,10 @@ export const actions = {
       body: JSON.stringify(body),
     });
 
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => null);
-      return fail(response.status, {
-        message: errorData?.message || "Failed to update deck",
-      });
+    const editResult = await handleApiResponse<EmptyResponse>(response);
+
+    if (!isSuccessResponse(editResult)) {
+      return fail(editResult.status, { message: editResult.message });
     }
 
     return redirect(301, ".");
@@ -71,12 +72,10 @@ export const actions = {
       method: "DELETE",
     });
 
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => null);
-      throw error(
-        response.status,
-        errorData?.message || "Failed to delete the deck",
-      );
+    const deleteResult = await handleApiResponse<EmptyResponse>(response);
+
+    if (!isSuccessResponse(deleteResult)) {
+      return fail(deleteResult.status, { message: deleteResult.message });
     }
 
     return redirect(301, "../../");

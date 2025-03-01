@@ -1,8 +1,11 @@
 import {
+  handleApiResponse,
+  isSuccessResponse,
   parseCookieOptions,
   turnstileVerify,
   ValidateAccess,
 } from "$lib/server";
+import type { AuthResponse, Profile, User } from "$lib/types";
 import { fail, type Actions } from "@sveltejs/kit";
 
 export const actions: Actions = {
@@ -11,8 +14,8 @@ export const actions: Actions = {
       const data = await request.formData();
       const username = data.get("username") as string;
       const pass = data.get("password") as string;
-
       const turnstileToken = data.get("cf-turnstile-response") as string;
+
       if (!turnstileToken) {
         return fail(400, {
           message: "Please complete the CAPTCHA verification",
@@ -32,29 +35,29 @@ export const actions: Actions = {
         });
       }
 
+      // Login API call with typed response handling
       const response = await fetch("/axum/auth/signin", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
         body: JSON.stringify({ username, pass }),
       });
 
-      if (!response.ok) {
-        const { error } = await response.json();
-        return fail(400, { message: error });
+      const authResult = await handleApiResponse<AuthResponse>(response);
+
+      if (!isSuccessResponse(authResult)) {
+        return fail(authResult.status, { message: authResult.message });
       }
 
+      // Handle cookies from response
       response.headers.getSetCookie().forEach((cookie) => {
         const [fullCookie, ...opts] = cookie.split(";");
         const [name, value] = fullCookie.split("=");
-
         const cookieOptions = parseCookieOptions(opts);
         cookies.set(name, value, cookieOptions);
       });
 
-      const { accessToken } = await response.json();
-      const user = await ValidateAccess(accessToken);
+      // Validate the access token
+      const { accessToken } = authResult.data;
+      const user = (await ValidateAccess(accessToken)) as User;
 
       if (!user) {
         return fail(401, {
@@ -62,20 +65,19 @@ export const actions: Actions = {
         });
       }
 
+      // Fetch user profile with typed response handling
       const profileResponse = await fetch("/axum/profile");
-      if (!profileResponse.ok) {
-        return fail(500, {
-          message: "Failed to fetch profile",
-        });
-      }
+      const profileResult = await handleApiResponse<Profile>(profileResponse);
 
-      const profile = await profileResponse.json();
+      if (!isSuccessResponse(profileResult)) {
+        return fail(profileResult.status, { message: profileResult.message });
+      }
 
       return {
         success: true,
         message: "Login successful",
         user,
-        profile,
+        profile: profileResult.data,
       };
     } catch (error) {
       console.error("Signin error:", error);

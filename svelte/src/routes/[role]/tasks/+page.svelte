@@ -1,6 +1,6 @@
 <script lang="ts">
   import { user } from "$lib/stores";
-  import type { Task, TableConfig } from "$lib/types";
+  import type { Task, TableConfig } from "$lib/types/index.js";
   import { H1, Table, TaskCard, H2, UniButton } from "$lib/components";
   import { formatDateTime } from "$lib/utils";
   import { enhance } from "$app/forms";
@@ -30,19 +30,21 @@
       {
         key: "completed",
         label: "Done",
-        formatter: (value: boolean) => (value ? "✅" : "⌛"),
+        formatter: (value: unknown): string => (value ? "✅" : "⌛"), // Explicitly return string
       },
       {
         key: "dueDate",
         label: "Due",
-        formatter: (value: string) =>
-          value ? formatDateTime(value) : "No Due Date",
+        formatter: (value: unknown): string =>
+          value ? formatDateTime(value as string) : "No Due Date", // Explicitly return string
       },
       {
         key: "assigneeName",
         label: "Assignee",
-        formatter: (value: string) =>
-          value === $user.name ? "Not Assigned" : value,
+        formatter: (value: unknown): string =>
+          (value as string) === $user.name
+            ? "You"
+            : (value as string) || "Not Assigned", // Handle null/undefined
       },
     ],
   };

@@ -10,10 +10,10 @@ export const initialUser: User = {
 };
 
 export const initialProfile: Profile = {
-  quizletUrl: null,
-  zoomUrl: null,
-  bio: null,
-  avatarUrl: null,
+  quizletUrl: "",
+  zoomUrl: "",
+  bio: "",
+  avatarUrl: "",
 };
 
 export const profile = writable<Profile>(initialProfile);

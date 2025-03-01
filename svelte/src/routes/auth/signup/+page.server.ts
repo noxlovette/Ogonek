@@ -1,12 +1,12 @@
-import { turnstileVerify } from "$lib/server/turnstile";
+import {
+  handleApiResponse,
+  isSuccessResponse,
+  turnstileVerify,
+} from "$lib/server";
+import type { SignupResponse } from "$lib/types";
+import { isValidEmail } from "$lib/utils";
 import { fail, redirect } from "@sveltejs/kit";
 import type { Actions } from "./$types";
-
-function isValidEmail(email: string): boolean {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
-}
-
 export const actions: Actions = {
   default: async ({ request, url, fetch }) => {
     const data = await request.formData();
@@ -18,27 +18,26 @@ export const actions: Actions = {
     const name = data.get("name") as string;
     const invite_token = url.searchParams.get("invite");
 
+    // Validation checks
     if (!isValidEmail(email)) {
       return fail(400, { message: "Invalid email address" });
     }
-
     if (name.length < 3 || name.length > 16) {
       return fail(400, {
         message: "Name should be between 3 and 16 characters",
       });
     }
-
     if (pass !== confirmPassword) {
       return fail(400, { message: "Passwords do not match" });
     }
 
+    // Turnstile verification
     const turnstileToken = data.get("cf-turnstile-response") as string;
     if (!turnstileToken) {
       return fail(400, {
         message: "Please complete the CAPTCHA verification",
       });
     }
-
     const turnstileResponse = await turnstileVerify(turnstileToken);
     if (!turnstileResponse.ok) {
       return fail(400, {
@@ -46,28 +45,34 @@ export const actions: Actions = {
       });
     }
 
+    // Signup API call
     const response = await fetch("/axum/auth/signup", {
       method: "POST",
       body: JSON.stringify({ username, pass, email, role, name }),
     });
 
+    const result = await handleApiResponse<SignupResponse>(response);
+
+    if (!isSuccessResponse(result)) {
+      return fail(result.status, { message: result.message });
+    }
+
     if (invite_token) {
-      const student_id = await response.json().then((data) => data.id);
-      const invite = await fetch("/axum/auth/bind", {
+      const studentId = result.data.id;
+
+      const inviteResponse = await fetch("/axum/auth/bind", {
         method: "POST",
-        body: JSON.stringify({ invite_token, student_id }),
+        body: JSON.stringify({ invite_token, student_id: studentId }),
       });
 
-      if (!invite.ok) {
-        return fail(400, { message: "Failed to bind invite" });
+      const inviteResult = await handleApiResponse(inviteResponse);
+
+      if (!isSuccessResponse(inviteResult)) {
+        return fail(inviteResult.status, { message: inviteResult.message });
       }
     }
 
-    if (response.ok) {
-      return redirect(302, "/auth/login");
-    }
-
-    const { error } = await response.json();
-    return fail(400, { message: error });
+    // Success - redirect to login
+    return redirect(302, "/auth/login");
   },
 } satisfies Actions;

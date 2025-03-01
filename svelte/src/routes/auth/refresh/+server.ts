@@ -1,4 +1,5 @@
 import { env } from "$env/dynamic/private";
+import type { AuthResponse } from "$lib/types";
 import { json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
 
@@ -38,7 +39,7 @@ export const GET: RequestHandler = async ({ cookies, fetch, locals }) => {
     });
   });
 
-  const { accessToken } = await response.json();
+  const { accessToken } = (await response.json()) as AuthResponse;
 
   // Return the response
   return json({ success: true, accessToken });

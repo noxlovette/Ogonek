@@ -18,7 +18,7 @@
 
   import { page } from "$app/state";
   import { setContext } from "svelte";
-  import type { Word } from "$lib/types";
+  import type { Word } from "$lib/types/index.js";
 
   let { data, children } = $props();
   const role = page.params.role;

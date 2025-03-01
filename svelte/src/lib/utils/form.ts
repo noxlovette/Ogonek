@@ -1,7 +1,39 @@
-// lib/utils/enhanceForm.ts
 import { goto } from "$app/navigation";
 import { isLoading } from "$lib/stores";
 import { notification } from "$lib/stores/notification";
+import type { SubmitFunction } from "@sveltejs/kit";
+
+// Define custom action result types that extend SvelteKit's built-in types
+type ActionResultSuccess = {
+  type: "success";
+  status: number;
+  data?: Record<string, any>;
+};
+
+type ActionResultRedirect = {
+  type: "redirect";
+  status: number;
+  location: string;
+};
+
+type ActionResultFailure = {
+  type: "failure";
+  status: number;
+  data?: Record<string, any>;
+};
+
+type ActionResultError = {
+  type: "error";
+  status?: number;
+  error?: Error;
+};
+
+// Combined custom ActionResult type
+type CustomActionResult =
+  | ActionResultSuccess
+  | ActionResultRedirect
+  | ActionResultFailure
+  | ActionResultError;
 
 type MessageConfig = {
   success?: string;
@@ -12,10 +44,10 @@ type MessageConfig = {
 };
 
 type HandlerConfig = {
-  success?: (result: any) => Promise<void> | void;
-  redirect?: (result: any) => Promise<void> | void;
-  failure?: (result: any) => Promise<void> | void;
-  error?: (result: any) => Promise<void> | void;
+  success?: (result: ActionResultSuccess) => Promise<void> | void;
+  redirect?: (result: ActionResultRedirect) => Promise<void> | void;
+  failure?: (result: ActionResultFailure) => Promise<void> | void;
+  error?: (result: ActionResultError) => Promise<void> | void;
 };
 
 type EnhanceConfig = {
@@ -25,7 +57,9 @@ type EnhanceConfig = {
   shouldUpdate?: boolean;
 };
 
-export function enhanceForm(config: EnhanceConfig = {}) {
+type SubmitFunctionArgs = Parameters<SubmitFunction>[0];
+
+export function enhanceForm(config: EnhanceConfig = {}): SubmitFunction {
   const {
     messages = {},
     handlers = {},
@@ -33,11 +67,23 @@ export function enhanceForm(config: EnhanceConfig = {}) {
     shouldUpdate = true,
   } = config;
 
-  return ({ formElement, formData, action, cancel, submitter }) => {
+  return ({
+    formElement,
+    formData,
+    action,
+    cancel,
+    submitter,
+  }: SubmitFunctionArgs) => {
     // Start loading
     isLoading.true();
 
-    return async ({ result, update }) => {
+    return async ({
+      result,
+      update,
+    }: {
+      result: CustomActionResult;
+      update: () => void;
+    }) => {
       // End loading regardless of result
       isLoading.false();
 
@@ -61,7 +107,6 @@ export function enhanceForm(config: EnhanceConfig = {}) {
               type: "success",
             });
           }
-
           // Call success handler if provided
           if (handlers.success) {
             await handlers.success(result);
@@ -76,19 +121,16 @@ export function enhanceForm(config: EnhanceConfig = {}) {
               type: "success",
             });
           }
-
           // Call redirect handler if provided
           if (handlers.redirect) {
             await handlers.redirect(result);
           }
-
           // Update the form if requested
           if (shouldUpdate) {
             update();
           }
-
           // Navigate if requested
-          if (navigate === true && result.location) {
+          if (navigate === true) {
             await goto(result.location);
           } else if (typeof navigate === "string") {
             await goto(navigate);
@@ -101,7 +143,6 @@ export function enhanceForm(config: EnhanceConfig = {}) {
             message: messages.failure || getErrorMessage(),
             type: "error",
           });
-
           // Call failure handler if provided
           if (handlers.failure) {
             await handlers.failure(result);
@@ -114,7 +155,6 @@ export function enhanceForm(config: EnhanceConfig = {}) {
             message: messages.error || getErrorMessage(),
             type: "error",
           });
-
           // Call error handler if provided
           if (handlers.error) {
             await handlers.error(result);

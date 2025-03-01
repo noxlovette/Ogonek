@@ -216,17 +216,15 @@
         },
         handlers: {
           redirect: async (result) => {
-            if (result.data) {
-              clearUser();
-              localStorage.removeItem("user");
-              localStorage.removeItem("profile");
-              assigneeStore.reset();
-              pageSize.reset();
-              currentPage.reset();
-              searchTerm.reset();
-              notification.set({ message: "Bye!", type: "success" });
-              goto(result.location);
-            }
+            clearUser();
+            localStorage.removeItem("user");
+            localStorage.removeItem("profile");
+            assigneeStore.reset();
+            pageSize.reset();
+            currentPage.reset();
+            searchTerm.reset();
+            notification.set({ message: "Bye!", type: "success" });
+            goto(result.location);
           },
         },
       })}

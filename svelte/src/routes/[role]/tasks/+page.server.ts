@@ -1,6 +1,15 @@
 import { env } from "$env/dynamic/private";
-import { notifyTelegram } from "$lib/server";
-import type { IdResponse, PaginatedResponse, Task } from "$lib/types";
+import {
+  handleApiResponse,
+  isSuccessResponse,
+  notifyTelegram,
+} from "$lib/server";
+import type {
+  EmptyResponse,
+  NewResponse,
+  PaginatedResponse,
+  Task,
+} from "$lib/types";
 import { fail, redirect, type Actions } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 
@@ -42,7 +51,13 @@ export const actions: Actions = {
       body: JSON.stringify(body),
     });
 
-    const { id } = (await response.json()) as IdResponse;
+    const newResult = await handleApiResponse<NewResponse>(response);
+
+    if (!isSuccessResponse(newResult)) {
+      return fail(newResult.status, { message: newResult.message });
+    }
+
+    const { id } = newResult.data;
 
     if (response.ok) {
       return redirect(301, `/t/tasks/t/${id}/edit`);
@@ -76,10 +91,9 @@ export const actions: Actions = {
       body: JSON.stringify(body),
     });
 
-    const { error } = await response.json();
-
-    if (!response.ok) {
-      return fail(500, { message: error || "Something's off" });
+    const editResult = await handleApiResponse<EmptyResponse>(response);
+    if (!isSuccessResponse(editResult)) {
+      return fail(editResult.status, { message: editResult.message });
     }
 
     return {

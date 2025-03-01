@@ -1,4 +1,6 @@
 import { env } from "$env/dynamic/private";
+import { handleApiResponse, isSuccessResponse } from "$lib/server";
+import type { EmptyResponse } from "$lib/types";
 import { fail } from "@sveltejs/kit";
 import type { Actions } from "./$types";
 
@@ -14,11 +16,10 @@ export const actions = {
       method: isSubscribed ? "DELETE" : "POST",
     });
 
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => null);
-      return fail(response.status, {
-        message: errorData?.message || "Failed to update deck",
-      });
+    const editResult = await handleApiResponse<EmptyResponse>(response);
+
+    if (!isSuccessResponse(editResult)) {
+      return fail(editResult.status, { message: editResult.message });
     }
 
     return { success: true };

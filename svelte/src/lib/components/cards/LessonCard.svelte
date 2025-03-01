@@ -15,7 +15,7 @@
 
   let { lesson }: Props = $props();
   let rendered = $state(lesson.markdown);
-  const formattedDate = formatDateTime(lesson.manualDate || lesson.createdAt);
+  const formattedDate = formatDateTime(lesson.createdAt);
   let href =
     $user.role === "teacher"
       ? `/t/lessons/l/${lesson.id}`

@@ -2,7 +2,7 @@
   import { H1, Table, H2, LessonCard, UniButton } from "$lib/components";
   import { enhance } from "$app/forms";
   import { page } from "$app/state";
-  import type { TableConfig, Lesson } from "$lib/types";
+  import type { TableConfig, Lesson } from "$lib/types/index.js";
   import { formatDateTime } from "$lib/utils";
   import {
     user,

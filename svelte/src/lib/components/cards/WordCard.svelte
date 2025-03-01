@@ -47,10 +47,10 @@
         {card.front}
       </p>
 
-      {#if card.media_url}
+      {#if card.mediaUrl}
         <div class="absolute top-2 right-2">
           <img
-            src={card.media_url}
+            src={card.mediaUrl}
             alt="Card media"
             class="h-10 w-10 rounded-md object-cover shadow-sm"
           />

@@ -1,5 +1,9 @@
-import { ValidateAccess } from "$lib/server";
-import type { Profile } from "$lib/types";
+import {
+  ValidateAccess,
+  handleApiResponse,
+  isSuccessResponse,
+} from "$lib/server";
+import type { AuthResponse, Profile, User } from "$lib/types";
 import { fail, redirect, type Actions } from "@sveltejs/kit";
 export const actions = {
   update: async ({ request, fetch }) => {
@@ -57,10 +61,19 @@ export const actions = {
       fetch("/auth/refresh"),
     ]);
 
-    const profile: Profile = await profileRes.json();
+    const profileResult = await handleApiResponse<Profile>(profileRes);
+    if (!isSuccessResponse(profileResult)) {
+      return fail(profileResult.status, { message: profileResult.message });
+    }
 
-    const { accessToken } = await refreshRes.json();
-    const user = await ValidateAccess(accessToken);
+    const authResult = await handleApiResponse<AuthResponse>(refreshRes);
+
+    if (!isSuccessResponse(authResult)) {
+      return fail(authResult.status, { message: authResult.message });
+    }
+
+    const { accessToken } = authResult.data;
+    const user = (await ValidateAccess(accessToken)) as User;
 
     if (!user) {
       return fail(500, { message: "Invalid Token" });
@@ -68,7 +81,7 @@ export const actions = {
 
     return {
       success: true,
-      profile,
+      profile: profileResult.data,
       user,
       message: "Profile updated successfully",
     };

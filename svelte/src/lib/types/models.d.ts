@@ -2,7 +2,7 @@ export interface Task {
   id: string;
   title: string;
   markdown: string;
-  priority: int;
+  priority: number;
   createdAt: string;
   updatedAt: string;
   dueDate: string;

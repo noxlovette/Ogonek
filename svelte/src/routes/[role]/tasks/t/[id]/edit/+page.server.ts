@@ -1,4 +1,6 @@
+import { handleApiResponse, isSuccessResponse } from "$lib/server";
 import { notifyTelegram } from "$lib/server/telegram";
+import type { UploadResponse } from "$lib/types";
 import type { Actions } from "@sveltejs/kit";
 import { error, fail, redirect } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
@@ -79,32 +81,29 @@ export const actions = {
     redirect(303, "/t/tasks");
   },
   upload: async ({ request, fetch }) => {
-    try {
-      const formData = await request.formData();
-      const file = formData.get("file") as File;
+    const formData = await request.formData();
+    const file = formData.get("file") as File;
 
-      if (!file) throw new Error("yikes, no file");
+    if (!file) throw new Error("yikes, no file");
 
-      const uploadResponse = await fetch("/file-server/upload", {
-        method: "POST",
-        body: formData,
-      });
+    const response = await fetch("/file-server/upload", {
+      method: "POST",
+      body: formData,
+    });
 
-      if (!uploadResponse.ok) {
-        const { error } = await uploadResponse.json();
-        return fail(500, { message: error });
-      }
+    const uploadResult = await handleApiResponse<UploadResponse>(response);
 
-      const filePath = (await uploadResponse.text()).replace(/^"|"$/g, "");
-
-      return {
-        success: true,
-        filePath,
-        message: "Uploaded successfully",
-      };
-    } catch (err) {
-      console.error("💀 Upload error:", err);
-      return fail(500, { message: err });
+    if (!isSuccessResponse(uploadResult)) {
+      return fail(uploadResult.status, { message: uploadResult.message });
     }
+
+    let { filePath } = uploadResult.data;
+    filePath.replace(/^"|"$/g, "");
+
+    return {
+      success: true,
+      filePath,
+      message: "Uploaded successfully",
+    };
   },
 } satisfies Actions;

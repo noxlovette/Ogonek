@@ -12,7 +12,7 @@
   }: { card: Card; index: number; removeCard: (index: number) => void } =
     $props();
 
-  let showMediaInput = $state(!!card.media_url);
+  let showMediaInput = $state(!!card.mediaUrl);
 </script>
 
 <div
@@ -69,7 +69,7 @@
       <input
         type="url"
         name={`cards[${index}][media_url]`}
-        bind:value={card.media_url}
+        bind:value={card.mediaUrl}
         placeholder="https://example.com/image.jpg"
         class="border-milk-300 placeholder:text-milk-400 focus:border-cocoa-500 focus:ring-cocoa-500 dark:border-milk-600 dark:placeholder:text-milk-500 w-full rounded-md border bg-transparent px-3 py-1.5 text-sm focus:ring-1 focus:outline-none"
       />

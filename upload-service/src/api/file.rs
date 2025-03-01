@@ -9,6 +9,7 @@ use tokio::fs;
 use tokio::io::AsyncWriteExt;
 use tracing::error;
 use tracing::info;
+use serde_json;
 
 pub async fn upload_handler(mut multipart: Multipart) -> Result<impl IntoResponse, StatusCode> {
     let upload_path = std::env::var("UPLOAD_PATH").unwrap_or_else(|_| "./uploads".to_string());
@@ -59,7 +60,7 @@ pub async fn upload_handler(mut multipart: Multipart) -> Result<impl IntoRespons
 
         info!("Uploaded file: {}", safe_filename);
     }
-    Ok(Json(unique_filename))
+    Ok(Json(serde_json::json!({ "filePath": unique_filename })))
 }
 
 pub async fn download_handler(
