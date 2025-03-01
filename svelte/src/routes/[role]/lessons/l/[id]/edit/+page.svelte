@@ -1,15 +1,9 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
-  import {
-    Editor,
-    ButtonDelete,
-    ButtonSubmit,
-    H1,
-    ButtonCancel,
-    AssigneeSelector,
-  } from "$lib/components";
+  import { Editor, H1, AssigneeSelector, UniButton } from "$lib/components";
   import type { PageData } from "./$types";
   import { notification } from "$lib/stores";
+  import { Ban, Check, Trash2 } from "lucide-svelte";
   let { data }: { data: PageData } = $props();
   let { lesson, students } = data;
   let isSubmitting = $state(false);
@@ -39,9 +33,11 @@
 >
   <div class="flex items-baseline space-x-4">
     <H1>Edit Lesson</H1>
-    <ButtonCancel />
-    <ButtonSubmit />
-    <ButtonDelete text={lesson.title} title="Lesson" />
+    <UniButton variant="secondary" Icon={Ban} href=".">Cancel</UniButton>
+    <UniButton variant="primary" Icon={Check}>Save</UniButton>
+    <UniButton variant="danger" Icon={Trash2} formaction="?/delete"
+      >Delete</UniButton
+    >
   </div>
 
   <input type="hidden" name="id" value={lesson.id} />

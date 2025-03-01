@@ -32,9 +32,9 @@
   <div class="grid gap-3 md:grid-cols-2">
     <!-- Front -->
     <div class="space-y-1.5">
-      <Label>Front</Label>
       <Input
         type="textarea"
+        labelName="front"
         name={`cards[${index}][front]`}
         bind:value={card.front}
         placeholder="Question or prompt"
@@ -43,8 +43,8 @@
 
     <!-- Back -->
     <div class="space-y-1.5">
-      <Label>Back</Label>
       <Input
+        labelName="back"
         type="textarea"
         name={`cards[${index}][back]`}
         bind:value={card.back}

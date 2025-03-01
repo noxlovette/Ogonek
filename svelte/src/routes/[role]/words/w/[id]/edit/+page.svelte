@@ -2,18 +2,19 @@
   import {
     MetaData,
     Label,
-    ButtonSubmit,
     Input,
-    ButtonCancel,
     H1,
     FlashCardEdit,
-    ButtonDelete,
     AssigneeSelector,
+    CSV,
   } from "$lib/components";
-  import { notification, user } from "$lib/stores";
+  import { notification } from "$lib/stores";
   import { enhance } from "$app/forms";
   import { page } from "$app/state";
-  import { Plus, Trash2 } from "lucide-svelte";
+  import { Plus, Upload, UploadCloud, Ban, Check, Trash2 } from "lucide-svelte";
+  import UniButton from "$lib/components/UI/UniButton.svelte";
+
+  let showImportModal = $state(false);
 
   const role = page.params.role;
   let isSubmitting = $state(false);
@@ -144,8 +145,8 @@
         class="dark:bg-milk-900 sticky top-6 space-y-6 rounded-xl bg-white p-5 shadow-sm"
       >
         <div>
-          <Label>Deck Name</Label>
           <Input
+            labelName="Deck Name"
             name="name"
             type="text"
             placeholder="Give your deck a name"
@@ -154,13 +155,21 @@
         </div>
 
         <div>
-          <Label>Description</Label>
           <Input
             name="description"
             placeholder="What's this deck about?"
             type="textarea"
             value={deck.description}
           />
+        </div>
+
+        <div>
+          <UniButton
+            type="button"
+            onclick={() => (showImportModal = true)}
+            Icon={UploadCloud}
+            variant="outline">Import</UniButton
+          >
         </div>
 
         {#if role === "t"}
@@ -181,11 +190,16 @@
         {/if}
 
         <div class="flex flex-col gap-3 pt-4">
-          <ButtonSubmit {isSubmitting}></ButtonSubmit>
-          <ButtonCancel />
-          <ButtonDelete text={deck.name} title="Deck" />
+          <UniButton variant="secondary" Icon={Ban} href=".">Cancel</UniButton>
+          <UniButton variant="primary" Icon={Check}>Save</UniButton>
+          <UniButton variant="danger" Icon={Trash2} formaction="?/delete">
+            Delete</UniButton
+          >
         </div>
       </div>
     </div>
   </div>
 </form>
+{#if showImportModal}
+  <CSV bind:updatedCards bind:showImportModal {deck} />
+{/if}

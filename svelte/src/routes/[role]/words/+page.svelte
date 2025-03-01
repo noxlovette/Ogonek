@@ -1,19 +1,13 @@
 <script lang="ts">
   import type { PageData } from "./$types";
-  import {
-    H1,
-    H2,
-    DeckCard,
-    Anchor,
-    ButtonSubmit,
-    Table,
-  } from "$lib/components";
+  import { H1, H2, DeckCard, Anchor, Table, UniButton } from "$lib/components";
   import { enhance } from "$app/forms";
   import { notification } from "$lib/stores";
   import { fade } from "svelte/transition";
   import { page } from "$app/state";
   import type { TableConfig, Deck } from "$lib/types";
   import { formatDateTime } from "$lib/utils";
+  import { PlusCircle } from "lucide-svelte";
 
   let { data }: { data: PageData } = $props();
   let { decks, students } = $derived(data);
@@ -131,7 +125,12 @@
           };
         }}
       >
-        <ButtonSubmit buttonName="New Deck +"></ButtonSubmit>
+        <UniButton
+          Icon={PlusCircle}
+          type="submit"
+          variant="outline"
+          iconPosition="right">New Deck</UniButton
+        >
       </form>
     </div>
 

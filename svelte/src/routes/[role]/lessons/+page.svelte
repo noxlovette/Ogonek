@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { H1, Table, ButtonSubmit, H2, LessonCard } from "$lib/components";
+  import { H1, Table, H2, LessonCard, UniButton } from "$lib/components";
   import { enhance } from "$app/forms";
   import { page } from "$app/state";
   import type { TableConfig, Lesson } from "$lib/types";
@@ -12,6 +12,7 @@
     assigneeStore,
   } from "$lib/stores";
   import { goto } from "$app/navigation";
+  import { PlusCircle } from "lucide-svelte";
 
   let { data } = $props();
   let { students } = $derived(data);
@@ -63,7 +64,9 @@
 
   <form action="?/new" method="post" use:enhance>
     {#if lessons.length === 0}
-      <ButtonSubmit buttonName="Add your first one!" />
+      <UniButton type="submit" variant="primary" Icon={PlusCircle}
+        >Add your first one</UniButton
+      >
     {/if}
   </form>
 {:else}

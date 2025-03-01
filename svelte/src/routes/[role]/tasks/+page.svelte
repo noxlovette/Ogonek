@@ -1,7 +1,7 @@
 <script lang="ts">
   import { user } from "$lib/stores";
   import type { Task, TableConfig } from "$lib/types";
-  import { H1, Table, ButtonSubmit, TaskCard, H2 } from "$lib/components";
+  import { H1, Table, TaskCard, H2, UniButton } from "$lib/components";
   import { formatDateTime } from "$lib/utils";
   import { enhance } from "$app/forms";
   import { page } from "$app/state";
@@ -14,6 +14,7 @@
     currentPage,
     assigneeStore,
   } from "$lib/stores";
+  import { PlusCircle } from "lucide-svelte";
 
   let { data } = $props();
   const { students } = data;
@@ -89,7 +90,10 @@
   />
   <form action="?/new" method="post" use:enhance>
     {#if tasks.length === 0}
-      <ButtonSubmit buttonName="Add your first one!" />
+      <UniButton type="submit" variant="ghost" Icon={PlusCircle}
+        >Add your first one</UniButton
+      >
+      >
     {/if}
   </form>
 {:else}

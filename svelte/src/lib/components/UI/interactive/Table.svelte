@@ -141,12 +141,9 @@
       </div>
     {/if}
     {#if showComplete}
-      <ButtonRaw
-        buttonName={$completedStore === true
-          ? "Hide Completed"
-          : "Show Completed"}
-        onclick={() => completedStore.set(!$completedStore)}
-      ></ButtonRaw>
+      <ButtonRaw onclick={() => completedStore.set(!$completedStore)}>
+        {$completedStore === true ? "Hide Completed" : "Show Completed"}
+      </ButtonRaw>
     {/if}
   </div>
 

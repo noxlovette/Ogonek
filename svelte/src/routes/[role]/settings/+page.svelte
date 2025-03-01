@@ -1,5 +1,5 @@
 <script>
-  import { H1, ButtonSubmit, ButtonRaw, H2 } from "$lib/components";
+  import { H1, H2 } from "$lib/components";
   import { enhance } from "$app/forms";
   import { goto } from "$app/navigation";
   import {
@@ -15,7 +15,10 @@
     pageSize,
     searchTerm,
     currentPage,
+    isLoading,
   } from "$lib/stores";
+  import UniButton from "$lib/components/UI/UniButton.svelte";
+  import { Check, LogOut } from "lucide-svelte";
 
   let isSubmitting = $state(false);
   let disabled = $state(true);
@@ -58,12 +61,10 @@
     method="POST"
     use:enhance={({ formData, cancel }) => {
       if (!formData) cancel();
-      isSubmitting = true;
+      isLoading.true();
 
       return async ({ result }) => {
-        isSubmitting = false;
-
-        // Destructure with nullish coalescing for safer fallbacks
+        isLoading.false();
 
         if (result.type === "success" && result.data) {
           const { user, profile } = result.data ?? {
@@ -171,12 +172,7 @@
 
       <!-- Save Button - Spans full width -->
       <div class="mt-8 flex">
-        <ButtonSubmit
-          bind:isSubmitting
-          buttonName="Save Changes"
-          {disabled}
-          styling="w-full bg-cacao-600 hover:bg-cacao-700 dark:bg-cacao-600 dark:hover:bg-cacao-700 text-white font-medium py-2.5"
-        />
+        <UniButton Icon={Check} type="submit" variant="primary">Save</UniButton>
       </div>
     </div>
   </form>
@@ -272,10 +268,12 @@
           truth."
         </p>
 
-        <ButtonRaw
-          styling="bg-red-600 hover:bg-red-700 text-white font-medium w-full py-2.5 flex items-center justify-center gap-2"
-          buttonName="Log out"
-        />
+        <UniButton
+          variant="danger"
+          type="submit"
+          Icon={LogOut}
+          formaction="?/logout">Log Out</UniButton
+        >
       </section>
     </form>
   </div>

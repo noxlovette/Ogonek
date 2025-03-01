@@ -1,9 +1,10 @@
 <script lang="ts">
   import type { PageData } from "./$types";
-  import { Table, ButtonSubmit, H1 } from "$lib/components";
+  import { Table, H1, UniButton } from "$lib/components";
   import type { Student, TableConfig } from "$lib/types";
   import { enhance } from "$app/forms";
   import { notification } from "$lib/stores";
+  import { PersonStanding } from "lucide-svelte";
 
   let { data }: { data: PageData } = $props();
 
@@ -57,7 +58,9 @@
     };
   }}
 >
-  <ButtonSubmit bind:isSubmitting buttonName="Invite Students" />
+  <UniButton type="submit" variant="ghost" Icon={PersonStanding}
+    >Invite Students</UniButton
+  >
 </form>
 
 <svelte:head>

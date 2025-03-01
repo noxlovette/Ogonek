@@ -1,8 +1,8 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
   import { goto } from "$app/navigation";
-  import { ButtonSubmit } from "$lib/components/UI";
-  import { Turnstile } from "$lib/components";
+
+  import { Turnstile, UniButton } from "$lib/components";
   import {
     setProfile,
     setUser,
@@ -11,6 +11,7 @@
     notification,
   } from "$lib/stores";
   import type { UserData } from "$lib/types";
+  import { DoorOpen } from "lucide-svelte";
 
   let isSubmitting = $state(false);
 </script>
@@ -95,7 +96,7 @@
 
     <Turnstile />
 
-    <ButtonSubmit bind:isSubmitting buttonName="Login" />
+    <UniButton Icon={DoorOpen} type="submit" variant="primary">Login</UniButton>
   </form>
 </div>
 

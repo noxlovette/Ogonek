@@ -51,4 +51,21 @@ export const assigneeStore = createAssigneeStore();
 export const pageSize = createPageSize();
 export const completedStore = writable(false);
 
-export const isLoading = writable(false);
+function createLoadingStore() {
+  const { subscribe, set } = writable(false);
+
+  return {
+    subscribe,
+    true: () => set(true),
+    false: () => set(false),
+    toggle: () => {
+      let currentValue;
+      subscribe((value) => {
+        currentValue = value;
+      })();
+      set(!currentValue);
+    },
+  };
+}
+
+export const isLoading = createLoadingStore();

@@ -6,10 +6,11 @@
     Label,
     WordCard,
     H1,
-    ButtonSubmit,
+    UniButton,
   } from "$lib/components";
 
   import { notification, user } from "$lib/stores";
+  import { SubscriptIcon } from "lucide-svelte";
 
   let isSubmitting = $state(false);
   let { data } = $props();
@@ -69,10 +70,10 @@
       }}
     >
       <input type="hidden" name="isSubscribed" value={isSubscribed} />
-      <ButtonSubmit
-        buttonName={isSubscribed ? "Unsubscribe" : "Subscribe"}
-        bind:isSubmitting
-      ></ButtonSubmit>
+
+      <UniButton Icon={SubscriptIcon} type="submit" variant="outline">
+        {isSubscribed ? "Unsubscribe" : "Subscribe"}
+      </UniButton>
     </form>
   </div>
 </div>
@@ -168,7 +169,9 @@
         };
       }}
     >
-      <ButtonSubmit bind:isSubmitting buttonName="Share Deck" />
+      <UniButton Icon={SubscriptIcon} type="submit" variant="ghost">
+        Share Deck
+      </UniButton>
     </form>
   </div>
 </div>

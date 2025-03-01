@@ -2,9 +2,9 @@
   import { enhance } from "$app/forms";
   import { notification } from "$lib/stores";
   import { goto } from "$app/navigation";
-  import { Turnstile, ButtonSubmit } from "$lib/components";
+  import { Turnstile, UniButton } from "$lib/components";
+  import { DoorOpen } from "lucide-svelte";
 
-  let loading = $state(false);
   let password = $state("");
   let confirmPassword = $state("");
   let passwordMatch = $state(true);
@@ -144,8 +144,9 @@
       </div>
     </div>
     <Turnstile />
-    <ButtonSubmit bind:isSubmitting={loading} buttonName="Create Account"
-    ></ButtonSubmit>
+    <UniButton Icon={DoorOpen} type="submit" variant="primary"
+      >Create Account</UniButton
+    >
   </form>
 </div>
 

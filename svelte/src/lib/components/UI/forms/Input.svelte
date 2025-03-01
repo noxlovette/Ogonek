@@ -1,13 +1,17 @@
 <script lang="ts">
+  import Label from "$lib/components/typography/Label.svelte";
+
   let {
     placeholder = "Edit here",
     name = "name",
+    labelName = name,
     value = $bindable(),
     type = "text",
   }: {
     placeholder: string;
     name: string;
     value: string | number | boolean | undefined;
+    labelName?: string;
     type?: "text" | "number" | "textarea" | "password" | "email" | "checkbox";
   } = $props();
 
@@ -15,6 +19,7 @@
     "mt-2 w-full rounded-md p-3 text-lg shadow-sm dark:border-milk-700 dark:bg-milk-950";
 </script>
 
+<Label>{labelName}</Label>
 {#if type === "text"}
   <input
     {name}

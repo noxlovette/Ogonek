@@ -1,12 +1,11 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
   import { notification } from "$lib/stores";
+  import { Ban, Trash2, Check } from "lucide-svelte";
   import {
     Editor,
-    ButtonCancel,
     H1,
-    ButtonDelete,
-    ButtonSubmit,
+    UniButton,
     Uploader,
     AssigneeSelector,
   } from "$lib/components";
@@ -57,9 +56,11 @@
 >
   <div class="flex items-baseline space-x-4">
     <H1>Edit Task</H1>
-    <ButtonCancel />
-    <ButtonSubmit bind:isSubmitting />
-    <ButtonDelete text={task.title} title="Task" />
+    <UniButton variant="secondary" Icon={Ban} href=".">Cancel</UniButton>
+    <UniButton variant="primary" Icon={Check}>Save</UniButton>
+    <UniButton variant="danger" Icon={Trash2} formaction="?/delete"
+      >Delete</UniButton
+    >
   </div>
 
   <input type="hidden" name="initialAssignee" value={task.assignee} />

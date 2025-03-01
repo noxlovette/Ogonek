@@ -1,11 +1,11 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
-  import { ButtonCancel, ButtonSubmit, Editor, H1 } from "$lib/components";
+  import { Editor, H1, UniButton } from "$lib/components";
   import type { Student } from "$lib/types";
-  import { Send } from "lucide-svelte";
+  import { Ban, Check, Send, Trash2 } from "lucide-svelte";
   import type { PageData } from "./$types";
   import { notification } from "$lib/stores";
-  import ButtonDelete from "$lib/components/UI/buttons/ButtonDelete.svelte";
+
   let { data }: { data: PageData } = $props();
   let { student }: { student: Student } = data;
   let isSubmitting = $state(false);
@@ -49,9 +49,11 @@
         </span>
       </div>
 
-      <ButtonCancel />
-      <ButtonSubmit bind:isSubmitting></ButtonSubmit>
-      <ButtonDelete text={student.name} title="Student"></ButtonDelete>
+      <UniButton variant="secondary" Icon={Ban}>Cancel</UniButton>
+      <UniButton variant="primary" Icon={Check}>Save</UniButton>
+      <UniButton variant="danger" formaction="?/delete" Icon={Trash2}
+        >Delete</UniButton
+      >
     </div>
 
     <input type="hidden" name="id" value={student.id} />
