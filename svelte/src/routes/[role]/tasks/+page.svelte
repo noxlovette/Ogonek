@@ -6,6 +6,7 @@
   import { enhance } from "$app/forms";
   import { page } from "$app/state";
   import { goto } from "$app/navigation";
+  import { enhanceForm } from "$lib/utils";
   import {
     notification,
     completedStore,
@@ -59,7 +60,7 @@
   });
 
   function toggleCompletedTasks() {
-    completedStore.set($completedStore === true ? false : true);
+    completedStore.toggle();
   }
 
   // Fun phrases for the button
@@ -162,24 +163,14 @@
         <form
           method="POST"
           action="?/requestHW"
-          use:enhance={() => {
-            isSubmitting = true;
-            return async ({ result }) => {
-              if (result.type === "success") {
-                notification.set({
-                  message: "Your teacher has been notified!",
-                  type: "success",
-                });
-              } else {
-                notification.set({
-                  message: "Failed to Notify",
-                  type: "error",
-                });
-              }
-              isSubmitting = false;
-            };
-          }}
           class="w-full max-w-xs"
+          use:enhance={enhanceForm({
+            messages: {
+              success: "Teacher Notified",
+              error: "Error",
+              failure: "Something's off",
+            },
+          })}
         >
           <input type="hidden" value={$user.username} name="username" />
           <button

@@ -1,16 +1,10 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
-  import {
-    MetaData,
-    ButtonEdit,
-    Label,
-    WordCard,
-    H1,
-    UniButton,
-  } from "$lib/components";
+  import { Label, WordCard, H1, UniButton } from "$lib/components";
 
   import { notification, user } from "$lib/stores";
-  import { SubscriptIcon } from "lucide-svelte";
+  import { Pencil, SubscriptIcon } from "lucide-svelte";
+  import { enhanceForm } from "$lib/utils";
 
   let isSubmitting = $state(false);
   let { data } = $props();
@@ -30,44 +24,33 @@
   };
 </script>
 
-<MetaData title="{deck.name} | Flashcards" robots="noindex, nofollow" />
+<svelte:head>
+  title="{deck.name} | Flashcards"
+</svelte:head>
 
 <div class="mb-6 flex flex-wrap items-center justify-between gap-4">
   <H1>{deck.name}</H1>
   <div class="flex gap-2">
     {#if $user.sub === deck.createdBy}
-      <ButtonEdit href="{deck.id}/edit" />
+      <UniButton variant="outline" href="{deck.id}/edit" Icon={Pencil}
+        >Edit</UniButton
+      >
     {/if}
     <form
       method="POST"
       action="?/subscribe"
-      use:enhance={() => {
-        isSubmitting = true;
-        return async ({ result, update }) => {
-          isSubmitting = false;
-          if (result.type === "success") {
-            if (isSubscribed) {
-              isSubscribed = false;
-              notification.set({
-                message: "Unsubscribed!",
-                type: "success",
-              });
-              update();
-            } else {
-              isSubscribed = true;
-              notification.set({
-                message: "Subscribed!",
-                type: "success",
-              });
-            }
-          } else if (result.type === "failure") {
-            notification.set({
-              message: String(result.data?.message),
-              type: "error",
-            });
-          }
-        };
-      }}
+      use:enhance={enhanceForm({
+        messages: {
+          success: isSubscribed ? "Unsubscribed!" : "Subscribed!",
+          failure: "Failed to update deck",
+          error: "An error occurred",
+        },
+        handlers: {
+          success: async () => {
+            isSubscribed = !isSubscribed;
+          },
+        },
+      })}
     >
       <input type="hidden" name="isSubscribed" value={isSubscribed} />
 

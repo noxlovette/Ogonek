@@ -1,12 +1,19 @@
 <script lang="ts">
-  import { H1, ButtonRaw, ButtonEdit } from "$lib/components";
+  import { H1, UniButton } from "$lib/components";
   import { user } from "$lib/stores";
   import { formatDateTime } from "$lib/utils";
   import { goto } from "$app/navigation";
   import { page } from "$app/state";
-  import { notification } from "$lib/stores";
+
   import { enhance } from "$app/forms";
-  import { Download, Loader2, CheckSquare, Square } from "lucide-svelte";
+  import {
+    Download,
+    Loader2,
+    CheckSquare,
+    Square,
+    Pencil,
+  } from "lucide-svelte";
+  import { enhanceForm } from "$lib/utils";
 
   let { data } = $props();
   const { rendered } = data;
@@ -27,7 +34,12 @@
   <div class="flex items-center justify-between">
     <div class="flex space-x-4">
       <H1>{data.task.title}</H1>
-      <ButtonEdit href="/t/tasks/t/{data.task.id}/edit" />
+
+      <UniButton
+        Icon={Pencil}
+        href="/t/tasks/t/{data.task.id}/edit"
+        variant="outline">Edit</UniButton
+      >
     </div>
     <div class="text-right">
       <p class="text-milk-700 block font-medium">Student</p>
@@ -46,10 +58,11 @@
 
   {#if data.task.filePath}
     <div>
-      <ButtonRaw
+      <UniButton
+        Icon={Pencil}
         onclick={() => goto(`/download/${data.task.filePath}`)}
-        buttonName="Download"
-      />
+        variant="outline">Download</UniButton
+      >
     </div>
   {/if}
 {:else}
@@ -79,19 +92,12 @@
     <form
       class="flex"
       method="post"
-      use:enhance={() => {
-        return async ({ result }) => {
-          if (result.type === "success") {
-            const message = completed ? "Marked As Completed" : "Not Completed";
-            notification.set({ message, type: "success" });
-          } else {
-            notification.set({
-              message: "Failed to mark as completed",
-              type: "error",
-            });
-          }
-        };
-      }}
+      use:enhance={enhanceForm({
+        messages: {
+          success: completed ? "Marked As Completed" : "Not Completed",
+          defaultError: "Failed to mark as completed",
+        },
+      })}
     >
       <button
         onclick={() => (completed = !completed)}

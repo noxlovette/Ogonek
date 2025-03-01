@@ -5,6 +5,7 @@
   import { enhance } from "$app/forms";
   import { notification } from "$lib/stores";
   import { PersonStanding } from "lucide-svelte";
+  import { enhanceForm } from "$lib/utils";
 
   let { data }: { data: PageData } = $props();
 
@@ -25,20 +26,18 @@
   }
 
   let href = "/t/students/st";
-
-  let isSubmitting = $state(false);
 </script>
 
 <H1>Students</H1>
 <Table config={studentConfig} {href} items={students} {students} />
 <form
   method="POST"
-  use:enhance={() => {
-    isSubmitting = true;
-
-    return async ({ result }) => {
-      isSubmitting = false;
-      if (result.type === "success") {
+  use:enhance={enhanceForm({
+    messages: {
+      failure: "Failed to generate link",
+    },
+    handlers: {
+      success: async (result) => {
         const link = String(result.data?.link);
         try {
           await navigator.clipboard.writeText(link);
@@ -49,14 +48,9 @@
         } catch (err) {
           notification.set({ message: "Failed to copy link", type: "error" });
         }
-      } else {
-        notification.set({
-          message: "Failed to generate link",
-          type: "error",
-        });
-      }
-    };
-  }}
+      },
+    },
+  })}
 >
   <UniButton type="submit" variant="ghost" Icon={PersonStanding}
     >Invite Students</UniButton

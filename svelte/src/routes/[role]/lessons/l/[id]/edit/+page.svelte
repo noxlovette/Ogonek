@@ -3,10 +3,11 @@
   import { Editor, H1, AssigneeSelector, UniButton } from "$lib/components";
   import type { PageData } from "./$types";
   import { notification } from "$lib/stores";
+  import { enhanceForm } from "$lib/utils";
   import { Ban, Check, Trash2 } from "lucide-svelte";
   let { data }: { data: PageData } = $props();
-  let { lesson, students } = data;
-  let isSubmitting = $state(false);
+  let { lesson } = data;
+
   let markdown = $state(lesson.markdown);
 </script>
 
@@ -14,22 +15,13 @@
   method="POST"
   action="?/update"
   class="mb-4 space-y-4"
-  use:enhance={() => {
-    isSubmitting = true;
-
-    return async ({ result, update }) => {
-      isSubmitting = false;
-      if (result.type === "redirect") {
-        notification.set({ message: "Changes saved", type: "success" });
-        update();
-      } else {
-        notification.set({
-          message: "Failed to save changes",
-          type: "error",
-        });
-      }
-    };
-  }}
+  use:enhance={enhanceForm({
+    messages: {
+      redirect: "Changes Saved",
+      defaultError: "Failed to save changes",
+    },
+    navigate: true,
+  })}
 >
   <div class="flex items-baseline space-x-4">
     <H1>Edit Lesson</H1>

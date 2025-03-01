@@ -2,7 +2,7 @@
   import { enhance } from "$app/forms";
   import { goto } from "$app/navigation";
 
-  import { Turnstile, UniButton } from "$lib/components";
+  import { Input, Turnstile, UniButton } from "$lib/components";
   import {
     setProfile,
     setUser,
@@ -11,6 +11,7 @@
     notification,
   } from "$lib/stores";
   import type { UserData } from "$lib/types";
+  import { enhanceForm } from "$lib/utils";
   import { DoorOpen } from "lucide-svelte";
 
   let isSubmitting = $state(false);
@@ -34,69 +35,39 @@
   </div>
   <form
     method="POST"
-    use:enhance={() => {
-      isSubmitting = true;
-
-      return async ({ result }) => {
-        isSubmitting = false;
-
-        if (result.type === "success" && result.data) {
-          const { user = initialUser, profile = initialProfile } =
-            result.data as unknown as UserData;
-          setUser(user);
-          setProfile(profile);
-          localStorage.setItem("user", JSON.stringify(user));
-          localStorage.setItem("profile", JSON.stringify(profile));
-          notification.set({ message: "Welcome home", type: "success" });
-          await goto(user.role === "teacher" ? "/t/dashboard" : "/s/dashboard");
-        } else if (result.type === "failure") {
-          notification.set({
-            message: String(result.data?.message) || "Something's off",
-            type: "error",
-          });
-        }
-      };
-    }}
     class="w flex flex-col items-center justify-center space-y-4"
+    use:enhance={enhanceForm({
+      messages: {
+        failure: "Something's off",
+      },
+      handlers: {
+        success: async (result) => {
+          if (result.data) {
+            const { user = initialUser, profile = initialProfile } =
+              result.data;
+            setUser(user);
+            setProfile(profile);
+            localStorage.setItem("user", JSON.stringify(user));
+            localStorage.setItem("profile", JSON.stringify(profile));
+            notification.set({ message: "Welcome home", type: "success" });
+            await goto(
+              user.role === "teacher" ? "/t/dashboard" : "/s/dashboard",
+            );
+          }
+        },
+      },
+    })}
   >
     <div class="">
-      <div>
-        <label for="username" class="text-milk-700 block text-sm font-medium">
-          Username
-        </label>
-        <input
-          id="username"
-          name="username"
-          type="text"
-          class="dark:focus:ring-milk-700 dark:focus:border-milk-800 dark:border-milk-800 disabled:text-milk-500 border-milk-200 dark:bg-milk-950 focus:ring-cacao-500 w-full rounded-lg border px-4 py-2
-            transition duration-200 focus:ring focus:outline-none
-                   dark:focus:ring dark:focus:outline-none"
-          required
-          autocomplete="username"
-        />
-      </div>
+      <Input name="username" placeholder="Username" value="" />
     </div>
     <div class="">
-      <div>
-        <label for="password" class="text-milk-700 block text-sm font-medium">
-          Password
-        </label>
-        <input
-          id="password"
-          name="password"
-          type="password"
-          class="dark:focus:ring-milk-700 dark:focus:border-milk-800 dark:border-milk-800 disabled:text-milk-500 border-milk-200 dark:bg-milk-950 focus:ring-cacao-500 w-full rounded-lg border px-4 py-2
-            transition duration-200 focus:ring focus:outline-none
-                   dark:focus:ring dark:focus:outline-none"
-          required
-          autocomplete="current-password"
-        />
-      </div>
+      <Input name="password" placeholder="Password" value="" type="password" />
     </div>
-
     <Turnstile />
-
-    <UniButton Icon={DoorOpen} type="submit" variant="primary">Login</UniButton>
+    <UniButton Icon={DoorOpen} type="submit" variant="primary" fullWidth={true}
+      >Login</UniButton
+    >
   </form>
 </div>
 

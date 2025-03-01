@@ -1,12 +1,13 @@
 <script lang="ts">
   import { formatDateTime } from "$lib/utils";
   import Clickable from "./CardClickable.svelte";
-  import { user, notification } from "$lib/stores";
+  import { user } from "$lib/stores";
   import { onMount } from "svelte";
   import { H2 } from "../typography";
   import { enhance } from "$app/forms";
-  import { CheckSquare, Download, Loader2, Square } from "lucide-svelte";
+  import { CheckSquare, Square } from "lucide-svelte";
   import { parseMarkdown } from "$lib/utils";
+  import { enhanceForm } from "$lib/utils";
 
   onMount(async () => {
     rendered = await parseMarkdown(task.markdown);
@@ -37,21 +38,12 @@
         class="flex"
         method="post"
         action="?/completed"
-        use:enhance={() => {
-          return async ({ result }) => {
-            if (result.type === "success") {
-              const message = completed
-                ? "Marked As Completed"
-                : "Not Completed";
-              notification.set({ message, type: "success" });
-            } else {
-              notification.set({
-                message: "Failed to mark as completed",
-                type: "error",
-              });
-            }
-          };
-        }}
+        use:enhance={enhanceForm({
+          messages: {
+            success: completed ? "Marked As Completed" : "Not Completed",
+            defaultError: "Failed to mark as completed",
+          },
+        })}
       >
         <button
           onclick={() => (completed = !completed)}

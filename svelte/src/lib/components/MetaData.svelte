@@ -10,13 +10,13 @@
   }
 
   let {
-    description = "BCF. Browse perfume compounds, collect them, and formulate your next favourite fragrance.",
-    title = "BCF",
-    keywords = "perfume, formulation, fragrance, BCF, perfumers, browse, collect, formulate, ingredient, essential oil, absolute",
+    description = "Firelight. The digital classroom for private teachers.",
+    title = "Firelight",
+    keywords = "education, teach, English, classroom management, teaching, learning",
     robots = "index, follow",
-    ogTitle = "BCF",
-    ogUrl = "https://bcfapp.app",
-    ogImage = "https://bcfapp.app/assets/meta/og-main.webp",
+    ogTitle = "Firelight",
+    ogUrl = "https://firelight.noxlovette.com",
+    ogImage = "https://firelight.noxlovette.com/images/og.png",
   }: Props = $props();
   let ogType = "website";
 </script>
@@ -39,11 +39,20 @@
     {
       "@context": "http://schema.org",
       "@type": "WebApplication",
-      "name": "BCF",
-      "url": "https://bcfapp.app",
-      "description": "BCF. Browse perfume compounds, collect them, and formulate your next favourite fragrance.",
-      "applicationCategory": "LifestyleApplication",
-      "operatingSystem": "All"
+      "name": "Firelight",
+      "url": "https://firelight.noxlovette.com",
+      "description": "Firelight. The digital classroom for private teachers.",
+      "applicationCategory": "EducationalApplication",
+      "operatingSystem": "All",
+      // "screenshot": "https://firelight.noxlovette.com/static/images/screenshot.jpg",
+      "featureList": "Flashcards, Scheduling, Lesson Notes, Student Progress Tracking",
+      "softwareVersion": "1.1.3",
+      "author": {
+        "@type": "Organization",
+        "name": "NoxLovette",
+        "url": "https://noxlovette.com"
+      },
+      "datePublished": "2024-12-17"
     }
   </script>
 </svelte:head>

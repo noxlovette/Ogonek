@@ -2,7 +2,6 @@
 import { goto } from "$app/navigation";
 import { isLoading } from "$lib/stores";
 import { notification } from "$lib/stores/notification";
-import type { SubmitFunction } from "@sveltejs/kit";
 
 type MessageConfig = {
   success?: string;
@@ -23,18 +22,18 @@ type EnhanceConfig = {
   messages?: MessageConfig;
   handlers?: HandlerConfig;
   navigate?: boolean | string;
-  update?: boolean;
+  shouldUpdate?: boolean;
 };
 
-export function enhanceForm(config: EnhanceConfig = {}): SubmitFunction {
+export function enhanceForm(config: EnhanceConfig = {}) {
   const {
     messages = {},
     handlers = {},
     navigate = false,
-    update: shouldUpdate = false,
+    shouldUpdate = true,
   } = config;
 
-  return () => {
+  return ({ formElement, formData, action, cancel, submitter }) => {
     // Start loading
     isLoading.true();
 

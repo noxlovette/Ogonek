@@ -2,6 +2,7 @@
   import { enhance } from "$app/forms";
   import { notification } from "$lib/stores";
   import { Ban, Trash2, Check } from "lucide-svelte";
+  import { enhanceForm } from "$lib/utils";
   import {
     Editor,
     H1,
@@ -33,33 +34,24 @@
   method="POST"
   action="?/update"
   class="mb-4 space-y-4"
-  use:enhance={() => {
-    isSubmitting = true;
-    return async ({ result, update }) => {
-      isSubmitting = false;
-      if (result.type === "redirect") {
-        notification.set({ message: "Changes saved", type: "success" });
-        update();
-      } else if (result.type === "error") {
-        notification.set({
-          message: result.error.message,
-          type: "error",
-        });
-      } else {
-        notification.set({
-          message: "Failure",
-          type: "info",
-        });
-      }
-    };
-  }}
+  use:enhance={enhanceForm({
+    messages: {
+      redirect: "Changes Saved",
+      error: "Error",
+      failure: "Something's off",
+    },
+  })}
 >
   <div class="flex items-baseline space-x-4">
     <H1>Edit Task</H1>
     <UniButton variant="secondary" Icon={Ban} href=".">Cancel</UniButton>
     <UniButton variant="primary" Icon={Check}>Save</UniButton>
-    <UniButton variant="danger" Icon={Trash2} formaction="?/delete"
-      >Delete</UniButton
+    <UniButton
+      variant="danger"
+      Icon={Trash2}
+      formaction="?/delete"
+      confirmText={task.title}
+      confirmTitle="task">Delete</UniButton
     >
   </div>
 

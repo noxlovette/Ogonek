@@ -1,8 +1,9 @@
 <script lang="ts">
-  import { ButtonEdit, H1, H2 } from "$lib/components";
+  import { UniButton, H1, H2 } from "$lib/components";
   import { user } from "$lib/stores";
   import { formatDateTime } from "$lib/utils";
   import type { PageData } from "./$types";
+  import { Pencil } from "lucide-svelte";
   import { page } from "$app/state";
 
   let { data }: { data: PageData } = $props();
@@ -13,7 +14,11 @@
 {#if page.params.role === "t"}
   <div class="flex items-baseline space-x-4">
     <H1>{data.lesson.title}</H1>
-    <ButtonEdit href="/t/lessons/l/{data.lesson.id}/edit" />
+    <UniButton
+      Icon={Pencil}
+      href="/t/lessons/l/{data.lesson.id}/edit"
+      variant="outline">Edit</UniButton
+    >
   </div>
   <div class="flex space-x-4">
     <div class="space-y-2">

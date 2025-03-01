@@ -4,6 +4,7 @@
   import { goto } from "$app/navigation";
   import { Turnstile, UniButton } from "$lib/components";
   import { DoorOpen } from "lucide-svelte";
+  import { enhanceForm } from "$lib/utils";
 
   let password = $state("");
   let confirmPassword = $state("");
@@ -31,22 +32,13 @@
   <form
     method="post"
     class="w flex flex-col items-center justify-center space-y-4"
-    use:enhance={() => {
-      isSubmitting = true;
-
-      return async ({ result }) => {
-        isSubmitting = false;
-        if (result.type === "redirect") {
-          notification.set({ message: "Welcome on board", type: "success" });
-          goto(result.location);
-        } else if (result.type === "failure") {
-          notification.set({
-            message: String(result.data?.message) || "Something's off",
-            type: "error",
-          });
-        }
-      };
-    }}
+    use:enhance={enhanceForm({
+      messages: {
+        redirect: "Welcome on board",
+        defaultError: "Signup Failed",
+      },
+      navigate: true,
+    })}
   >
     <div class="space-y-4">
       <div>

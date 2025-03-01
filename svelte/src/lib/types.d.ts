@@ -21,6 +21,7 @@ export interface Profile {
   zoomUrl: string | null;
   bio: string | null;
   avatarUrl: string | null;
+  [key: string]: string | undefined;
 }
 
 export interface User {
@@ -29,6 +30,7 @@ export interface User {
   role: string | null;
   email: string | null;
   sub: string | null;
+  [key: string]: string | undefined;
 }
 
 export interface Lesson {

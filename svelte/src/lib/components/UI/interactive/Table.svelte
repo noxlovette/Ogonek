@@ -1,8 +1,9 @@
 <script lang="ts" generics="T extends BaseTableItem">
   import { enhance } from "$app/forms";
-  import { PlusCircle, X, Search } from "lucide-svelte";
+  import { PlusCircle, X, Search, LucideEye } from "lucide-svelte";
   import { goto } from "$app/navigation";
   import { fade } from "svelte/transition";
+  import { enhanceForm } from "$lib/utils";
   import {
     notification,
     searchTerm,
@@ -13,7 +14,7 @@
   } from "$lib/stores";
   import type { Student, BaseTableItem, TableConfig } from "$lib/types";
   import { page } from "$app/state";
-  import { ButtonRaw } from "../buttons";
+  import UniButton from "../UniButton.svelte";
 
   interface Props<T extends BaseTableItem> {
     items: T[];
@@ -111,39 +112,32 @@
         <form
           action="?/new"
           method="post"
-          use:enhance={() => {
-            isSubmitting = true;
-            return async ({ result }) => {
-              isSubmitting = false;
-              if (result.type === "redirect") {
-                notification.set({
-                  message: "New entry created",
-                  type: "success",
-                });
-                goto(result.location);
-              } else {
-                notification.set({
-                  message: "Something's off",
-                  type: "error",
-                });
-              }
-            };
-          }}
+          use:enhance={enhanceForm({
+            messages: {
+              redirect: "New Entity Created",
+              defaultError: "Something's off",
+            },
+            navigate: true,
+          })}
         >
-          <button
-            class="bg-cacao-500 hover:bg-cacao-600 focus:ring-cacao-500 dark:bg-cacao-600 dark:hover:bg-cacao-700 dark:focus:ring-offset-milk-900 inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 font-medium text-white shadow-sm transition-colors focus:ring-2 focus:ring-offset-2 focus:outline-none disabled:opacity-50"
-            disabled={isSubmitting}
+          <UniButton
+            Icon={PlusCircle}
+            iconPosition="right"
+            type="submit"
+            variant="primary">New</UniButton
           >
-            <PlusCircle class="size-5" />
-            <span>New</span>
-          </button>
         </form>
       </div>
     {/if}
     {#if showComplete}
-      <ButtonRaw onclick={() => completedStore.set(!$completedStore)}>
-        {$completedStore === true ? "Hide Completed" : "Show Completed"}
-      </ButtonRaw>
+      <UniButton
+        Icon={LucideEye}
+        variant="outline"
+        onclick={() => completedStore.toggle()}
+        >{$completedStore === true
+          ? "Hide Completed"
+          : "Show Completed"}</UniButton
+      >
     {/if}
   </div>
 
@@ -180,32 +174,20 @@
           action="?/new"
           method="post"
           class="mt-6"
-          use:enhance={() => {
-            isSubmitting = true;
-            return async ({ result }) => {
-              isSubmitting = false;
-              if (result.type === "redirect") {
-                notification.set({
-                  message: "New entry created",
-                  type: "success",
-                });
-                goto(result.location);
-              } else {
-                notification.set({
-                  message: "Something's off",
-                  type: "error",
-                });
-              }
-            };
-          }}
+          use:enhance={enhanceForm({
+            messages: {
+              redirect: "New Entity Created",
+              defaultError: "Something's off",
+            },
+            navigate: true,
+          })}
         >
-          <button
-            class="bg-cacao-500 hover:bg-cacao-600 focus:ring-cacao-500 dark:bg-cacao-600 dark:hover:bg-cacao-700 dark:focus:ring-offset-milk-900 inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 font-medium text-white shadow-sm transition-colors focus:ring-2 focus:ring-offset-2 focus:outline-none disabled:opacity-50"
-            disabled={isSubmitting}
+          <UniButton
+            Icon={PlusCircle}
+            iconPosition="right"
+            type="submit"
+            variant="primary">New</UniButton
           >
-            <PlusCircle class="size-5" />
-            <span>Create new</span>
-          </button>
         </form>
       </div>
     {:else if isEmptySearch}

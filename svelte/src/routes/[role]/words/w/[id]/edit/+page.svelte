@@ -1,6 +1,5 @@
 <script lang="ts">
   import {
-    MetaData,
     Label,
     Input,
     H1,
@@ -8,10 +7,11 @@
     AssigneeSelector,
     CSV,
   } from "$lib/components";
-  import { notification } from "$lib/stores";
+
+  import { enhanceForm } from "$lib/utils";
   import { enhance } from "$app/forms";
   import { page } from "$app/state";
-  import { Plus, Upload, UploadCloud, Ban, Check, Trash2 } from "lucide-svelte";
+  import { Plus, UploadCloud, Ban, Check, Trash2 } from "lucide-svelte";
   import UniButton from "$lib/components/UI/UniButton.svelte";
 
   let showImportModal = $state(false);
@@ -40,7 +40,9 @@
   }
 </script>
 
-<MetaData title={`Edit ${deck.name} | Flashcards`} robots="noindex, nofollow" />
+<svelte:head>
+  title={`Edit ${deck.name} | Flashcards`}
+</svelte:head>
 
 <div class="flex items-center justify-between">
   <H1>{deck.name}</H1>
@@ -58,29 +60,13 @@
   method="POST"
   action="?/update"
   class="space-y-8"
-  use:enhance={() => {
-    isSubmitting = true;
-    return async ({ result, update }) => {
-      isSubmitting = false;
-      if (result.type === "redirect") {
-        notification.set({
-          message: "Deck updated successfully",
-          type: "success",
-        });
-        update();
-      } else if (result.type === "failure") {
-        notification.set({
-          message: String(result.data?.message) || "Failed to update deck",
-          type: "error",
-        });
-      } else if (result.type === "error") {
-        notification.set({
-          message: String(result.error?.message) || "An error occurred",
-          type: "error",
-        });
-      }
-    };
-  }}
+  use:enhance={enhanceForm({
+    messages: {
+      redirect: "Deck updated successfully",
+      failure: "Failed to update deck",
+      error: "An error occurred",
+    },
+  })}
 >
   <input type="hidden" value={deck.id} name="id" />
 
@@ -192,7 +178,13 @@
         <div class="flex flex-col gap-3 pt-4">
           <UniButton variant="secondary" Icon={Ban} href=".">Cancel</UniButton>
           <UniButton variant="primary" Icon={Check}>Save</UniButton>
-          <UniButton variant="danger" Icon={Trash2} formaction="?/delete">
+          <UniButton
+            variant="danger"
+            Icon={Trash2}
+            formaction="?/delete"
+            confirmText={deck.name}
+            confirmTitle="deck"
+          >
             Delete</UniButton
           >
         </div>

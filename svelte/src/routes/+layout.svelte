@@ -1,12 +1,14 @@
 <script lang="ts">
   import "../app.css";
-  import { Header, Footer, Notification } from "$lib/components";
+  import { Header, Footer, Notification, MetaData } from "$lib/components";
   import SearchOverlay from "$lib/components/UI/search/SearchOverlay.svelte";
   interface Props {
     children?: import("svelte").Snippet;
   }
   let { children }: Props = $props();
 </script>
+
+<MetaData />
 
 <main
   class="bg-milk-50 dark:bg-milk-950 text-cacao-800 dark:text-milk-100 h-screen w-screen overflow-auto antialiased"

@@ -1,7 +1,8 @@
 <script lang="ts">
-  import { ButtonEdit, H1 } from "$lib/components";
+  import { H1, UniButton } from "$lib/components";
   import type { Student } from "$lib/types";
   import type { PageData } from "./$types";
+  import { Pencil } from "lucide-svelte";
   let { data }: { data: PageData } = $props();
 
   const { student, rendered }: { student: Student; rendered: String } = data;
@@ -13,7 +14,11 @@
 <div class="flex items-baseline space-x-4">
   <H1>{student.name}</H1>
 
-  <ButtonEdit href="/t/students/st/{student.id}/edit" />
+  <UniButton
+    Icon={Pencil}
+    href="/t/students/st/{student.id}/edit"
+    variant="outline">Edit</UniButton
+  >
 </div>
 <div class="flex space-x-4">
   <div class="space-y-2">

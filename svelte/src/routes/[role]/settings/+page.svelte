@@ -2,6 +2,7 @@
   import { H1, H2 } from "$lib/components";
   import { enhance } from "$app/forms";
   import { goto } from "$app/navigation";
+  import { enhanceForm } from "$lib/utils";
   import {
     user,
     profile,
@@ -15,12 +16,10 @@
     pageSize,
     searchTerm,
     currentPage,
-    isLoading,
   } from "$lib/stores";
   import UniButton from "$lib/components/UI/UniButton.svelte";
   import { Check, LogOut } from "lucide-svelte";
 
-  let isSubmitting = $state(false);
   let disabled = $state(true);
 
   // Animation helper
@@ -28,9 +27,9 @@
     {
       title: "User Settings",
       fields: [
-        { id: "name", label: "Name", type: "text" },
-        { id: "username", label: "Username", type: "text" },
-        { id: "email", label: "Email", type: "email" },
+        { id: "name", label: "Name", type: "text", storeKey: "" },
+        { id: "username", label: "Username", type: "text", storeKey: "" },
+        { id: "email", label: "Email", type: "email", storeKey: "" },
       ],
     },
     {
@@ -59,32 +58,27 @@
   <form
     class="col-span-1 md:col-span-2 lg:col-span-2"
     method="POST"
-    use:enhance={({ formData, cancel }) => {
-      if (!formData) cancel();
-      isLoading.true();
-
-      return async ({ result }) => {
-        isLoading.false();
-
-        if (result.type === "success" && result.data) {
-          const { user, profile } = result.data ?? {
-            user: initialUser,
-            profile: initialProfile,
-          };
-          setUser(user);
-          setProfile(profile);
-          localStorage.setItem("user", JSON.stringify(user));
-          localStorage.setItem("profile", JSON.stringify(profile));
-          notification.set({ message: "Changes saved ✨", type: "success" });
-          disabled = true;
-        } else if (result.type === "failure") {
-          notification.set({
-            message: result.data?.message ?? "Yikes! Something's not right",
-            type: "error",
-          });
-        }
-      };
-    }}
+    use:enhance={enhanceForm({
+      messages: {
+        failure: "Something's off",
+      },
+      handlers: {
+        success: async (result) => {
+          if (result.data) {
+            const { user, profile } = result.data ?? {
+              user: initialUser,
+              profile: initialProfile,
+            };
+            setUser(user);
+            setProfile(profile);
+            localStorage.setItem("user", JSON.stringify(user));
+            localStorage.setItem("profile", JSON.stringify(profile));
+            notification.set({ message: "Changes saved ✨", type: "success" });
+            disabled = true;
+          }
+        },
+      },
+    })}
     action="?/update"
   >
     <div
@@ -216,29 +210,26 @@
     <form
       action="?/logout"
       method="POST"
-      use:enhance={() => {
-        isSubmitting = true;
-
-        return async ({ result }) => {
-          isSubmitting = false;
-          if (result.type === "redirect") {
-            clearUser();
-            localStorage.removeItem("user");
-            localStorage.removeItem("profile");
-            assigneeStore.reset();
-            pageSize.reset();
-            currentPage.reset();
-            searchTerm.reset();
-            notification.set({ message: "Bye!", type: "success" });
-            goto(result.location);
-          } else if (result.type === "failure") {
-            notification.set({
-              message: String(result.data?.message) || "Something's off",
-              type: "error",
-            });
-          }
-        };
-      }}
+      use:enhance={enhanceForm({
+        messages: {
+          failure: "Something's off",
+        },
+        handlers: {
+          redirect: async (result) => {
+            if (result.data) {
+              clearUser();
+              localStorage.removeItem("user");
+              localStorage.removeItem("profile");
+              assigneeStore.reset();
+              pageSize.reset();
+              currentPage.reset();
+              searchTerm.reset();
+              notification.set({ message: "Bye!", type: "success" });
+              goto(result.location);
+            }
+          },
+        },
+      })}
     >
       <section
         class="bg-milk-50 border-milk-100 dark:border-milk-800 dark:bg-milk-900 rounded-xl border p-6 shadow-md transition-all"

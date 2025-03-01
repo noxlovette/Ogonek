@@ -1,13 +1,13 @@
 <script lang="ts">
   import type { PageData } from "./$types";
-  import { H1, H2, DeckCard, Anchor, Table, UniButton } from "$lib/components";
+  import { H1, H2, DeckCard, Table, UniButton } from "$lib/components";
   import { enhance } from "$app/forms";
-  import { notification } from "$lib/stores";
+  import { enhanceForm } from "$lib/utils";
   import { fade } from "svelte/transition";
   import { page } from "$app/state";
   import type { TableConfig, Deck } from "$lib/types";
   import { formatDateTime } from "$lib/utils";
-  import { PlusCircle } from "lucide-svelte";
+  import { ArrowBigRight, PlusCircle } from "lucide-svelte";
 
   let { data }: { data: PageData } = $props();
   let { decks, students } = $derived(data);
@@ -70,7 +70,13 @@
           Time for some learning!
         </p>
       </div>
-      <Anchor href="words/learn">Start Review →</Anchor>
+
+      <UniButton
+        variant="primary"
+        Icon={ArrowBigRight}
+        iconPosition="right"
+        href="words/learn">Start Review</UniButton
+      >
     </div>
   {:else}
     <div class="py-8 text-center" in:fade={{ duration: 300 }}>
@@ -108,22 +114,13 @@
       <form
         method="POST"
         class="mt-3 sm:mt-0"
-        use:enhance={() => {
-          return async ({ result, update }) => {
-            if (result.type === "redirect") {
-              notification.set({
-                message: "Created New Deck",
-                type: "success",
-              });
-              update();
-            } else if (result.type === "failure") {
-              notification.set({
-                message: String(result.data?.message),
-                type: "error",
-              });
-            }
-          };
-        }}
+        use:enhance={enhanceForm({
+          messages: {
+            redirect: "New Deck Created",
+            defaultError: "Something's off",
+          },
+          navigate: true,
+        })}
       >
         <UniButton
           Icon={PlusCircle}

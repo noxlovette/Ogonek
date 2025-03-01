@@ -4,11 +4,9 @@
   import type { Student } from "$lib/types";
   import { Ban, Check, Send, Trash2 } from "lucide-svelte";
   import type { PageData } from "./$types";
-  import { notification } from "$lib/stores";
-
+  import { enhanceForm } from "$lib/utils";
   let { data }: { data: PageData } = $props();
   let { student }: { student: Student } = data;
-  let isSubmitting = $state(false);
   let markdown = $state(student.markdown);
 </script>
 
@@ -16,22 +14,13 @@
   method="POST"
   action="?/update"
   class="mb-4 space-y-4"
-  use:enhance={() => {
-    isSubmitting = true;
-
-    return async ({ result, update }) => {
-      isSubmitting = false;
-      if (result.type === "redirect") {
-        notification.set({ message: "Changes saved", type: "success" });
-        update();
-      } else {
-        notification.set({
-          message: "Failed to save changes",
-          type: "error",
-        });
-      }
-    };
-  }}
+  use:enhance={enhanceForm({
+    messages: {
+      redirect: "Changes Saved",
+      error: "Error",
+      failure: "Something's off",
+    },
+  })}
 >
   <div class="flex items-baseline justify-between">
     <H1>{student.name}</H1>

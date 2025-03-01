@@ -2,9 +2,10 @@
   import { fade, slide } from "svelte/transition";
   import { quintOut } from "svelte/easing";
   import { enhance } from "$app/forms";
-  import { notification } from "$lib/stores/notification.js";
-  import { Anchor } from "$lib/components";
   import { invalidate } from "$app/navigation";
+  import { enhanceForm } from "$lib/utils";
+  import UniButton from "$lib/components/UI/UniButton.svelte";
+  import { Home } from "lucide-svelte";
 
   let { data } = $props();
 
@@ -59,10 +60,6 @@
       color: "ring-cacao-500 hover:bg-cacao-600 ring-2",
     },
   ];
-
-  function handleFormSuccess() {
-    nextCard();
-  }
 </script>
 
 {#if isComplete || data.cards.length === 0}
@@ -91,7 +88,10 @@
         You've reviewed all your due cards. Come back later for new cards to
         review.
       </p>
-      <Anchor href=".">Return to the Words Page</Anchor>
+
+      <UniButton href="." Icon={Home} variant="primary"
+        >Return to the Words page</UniButton
+      >
     </div>
   </div>
 {:else if currentCard}
@@ -179,18 +179,16 @@
           <form
             method="POST"
             class="grid w-full grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-6"
-            use:enhance={() => {
-              return async ({ result }) => {
-                if (result.type === "success") {
-                  handleFormSuccess();
-                } else if (result.type === "failure") {
-                  notification.set({
-                    message: String(result.data?.message) || "Something's Off",
-                    type: "error",
-                  });
-                }
-              };
-            }}
+            use:enhance={enhanceForm({
+              messages: {
+                failure: "Something's off",
+              },
+              handlers: {
+                success: async () => {
+                  nextCard;
+                },
+              },
+            })}
           >
             <input type="hidden" bind:value={currentCard.id} name="cardId" />
             {#each qualityButtons as { quality, label, color }}

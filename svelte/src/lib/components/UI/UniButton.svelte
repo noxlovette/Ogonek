@@ -23,7 +23,7 @@
     formaction?: string | undefined;
     styling?: string;
     Icon: ConstructorOfATypedSvelteComponent | undefined;
-    iconPosition?: string;
+    iconPosition?: "left" | "right";
     fullWidth?: boolean;
     rounded?: boolean;
     confirmText?: string | undefined;

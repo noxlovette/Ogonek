@@ -49,7 +49,24 @@ export const currentPage = createPageStore();
 export const searchTerm = createSearchTermStore();
 export const assigneeStore = createAssigneeStore();
 export const pageSize = createPageSize();
-export const completedStore = writable(false);
+export const completedStore = createCompleted();
+
+function createCompleted() {
+  const { subscribe, set } = writable(false);
+
+  return {
+    subscribe,
+    true: () => set(true),
+    false: () => set(false),
+    toggle: () => {
+      let currentValue;
+      subscribe((value) => {
+        currentValue = value;
+      })();
+      set(!currentValue);
+    },
+  };
+}
 
 function createLoadingStore() {
   const { subscribe, set } = writable(false);
