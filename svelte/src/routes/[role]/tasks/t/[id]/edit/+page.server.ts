@@ -41,6 +41,8 @@ export const actions = {
       filePath,
     };
 
+    console.log(filePath);
+
     const response = await fetch(`/axum/task/t/${id}`, {
       method: "PATCH",
       body: JSON.stringify(body),
@@ -70,8 +72,8 @@ export const actions = {
     });
 
     if (!response.ok) {
-      const errorData = await response.json(); // Parse error details
-      console.error("Error deleting task:", errorData);
+      const errorData = await response.json();
+
       return {
         success: false,
         error: errorData,
@@ -97,12 +99,11 @@ export const actions = {
       return fail(uploadResult.status, { message: uploadResult.message });
     }
 
-    let { filePath } = uploadResult.data;
-    filePath.replace(/^"|"$/g, "");
+    let { data } = uploadResult;
 
     return {
       success: true,
-      filePath,
+      filePath: data,
       message: "Uploaded successfully",
     };
   },

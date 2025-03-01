@@ -1,6 +1,12 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
-  import { Editor, H1, AssigneeSelector, UniButton } from "$lib/components";
+  import {
+    Editor,
+    H1,
+    AssigneeSelector,
+    UniButton,
+    Label,
+  } from "$lib/components";
   import type { PageData } from "./$types";
   import { notification } from "$lib/stores";
   import { enhanceForm } from "$lib/utils";
@@ -26,9 +32,13 @@
   <div class="flex items-baseline space-x-4">
     <H1>Edit Lesson</H1>
     <UniButton variant="secondary" Icon={Ban} href=".">Cancel</UniButton>
-    <UniButton variant="primary" Icon={Check}>Save</UniButton>
-    <UniButton variant="danger" Icon={Trash2} formaction="?/delete"
-      >Delete</UniButton
+    <UniButton variant="primary" type="submit" Icon={Check}>Save</UniButton>
+    <UniButton
+      variant="danger"
+      formaction="?/delete"
+      Icon={Trash2}
+      confirmText={lesson.title}
+      confirmTitle="Delete Lesson">Delete</UniButton
     >
   </div>
 
@@ -36,7 +46,7 @@
   <input type="hidden" name="markdown" value={markdown} />
   <div class="flex space-x-4">
     <div class="space-y-2">
-      <label for="title" class="text-milk-700 block font-medium">Title</label>
+      <Label>Title</Label>
       <input
         id="title"
         type="text"
@@ -49,7 +59,7 @@
     </div>
 
     <div class="space-y-2">
-      <label for="topic" class="text-milk-700 block font-medium">Topic</label>
+      <Label>Topic</Label>
       <input
         id="topic"
         type="text"

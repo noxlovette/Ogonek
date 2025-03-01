@@ -8,11 +8,6 @@
       isSearchOpen.set(true);
       searchElement.focus();
     }
-    if (e.key === "Escape") {
-      isSearchOpen.set(false);
-      query = "";
-      searchElement.blur();
-    }
   }
 
   function handleClick(e: MouseEvent) {

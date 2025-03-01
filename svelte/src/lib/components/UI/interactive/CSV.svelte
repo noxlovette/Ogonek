@@ -11,8 +11,7 @@
   let {
     deck,
     updatedCards = $bindable([]),
-    showImportModal = $bindable(false),
-  }: { deck: Deck; updatedCards: Card[]; showImportModal: boolean } = $props();
+  }: { deck: Deck; updatedCards: Card[] } = $props();
 
   let fileInput: HTMLInputElement | null = $state(null);
   let importFrontColumn = $state("");
@@ -22,13 +21,13 @@
   let selectedFile: File | null = $state(null);
 
   function closeImportModal() {
-    showImportModal = false;
     importFrontColumn = "";
     importBackColumn = "";
     csvHeaders = [];
     csvPreview = [];
     selectedFile = null;
     if (fileInput) fileInput.value = "";
+    history.back();
   }
 
   function handleFileSelect(e: Event) {

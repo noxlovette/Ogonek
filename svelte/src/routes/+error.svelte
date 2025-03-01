@@ -4,21 +4,20 @@
   import { backOut } from "svelte/easing";
 
   // Determine error category for custom messaging
-  const is404 = $derived(page.status === 404);
-  const is500 = $derived(page.status >= 500);
+  const is404 = page.status === 404;
+  const is500 = page.status >= 500;
 
-  // Custom messages based on error type
-  const errorTitle = $derived(() => {
-    if (is404) return "Page Not Found";
-    if (is500) return "Server Error";
-    return `Error ${page.status}`;
-  });
+  const errorTitle = is404
+    ? "Page Not Found"
+    : is500
+      ? "Server Error"
+      : `Error ${page.status}`;
 
-  const errorMessage = $derived(() => {
-    if (is404) return "We couldn't find the page you're looking for.";
-    if (is500) return "Something went wrong on our end.";
-    return page.error?.message || "An unexpected error occurred.";
-  });
+  const errorMessage = is404
+    ? "We couldn't find the page you're looking for."
+    : is500
+      ? "Something went wrong on our end."
+      : page.error?.message || "An unexpected error occurred.";
 
   // For fun error facts (randomly selected)
   const errorFacts = [
@@ -39,7 +38,6 @@
   <div
     class="w-full max-w-md overflow-hidden rounded-xl bg-white shadow-lg dark:bg-stone-800"
   >
-    <!-- Error GIF/Animation -->
     <div
       class="bg-milk-100 border-milk-200 flex w-full justify-center border-b p-6 dark:border-stone-600 dark:bg-stone-700"
     >
@@ -111,7 +109,7 @@
           href="/"
           class="bg-cacao-500 hover:bg-cacao-600 rounded-lg px-4 py-2.5 text-center font-medium text-white shadow-sm transition-colors"
         >
-          Back to Dashboard
+          Back to Home Page
         </a>
         <a
           href="https://t.me/noxlovette"

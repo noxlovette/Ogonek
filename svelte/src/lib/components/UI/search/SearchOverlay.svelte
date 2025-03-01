@@ -1,6 +1,7 @@
 <script lang="ts">
   import { fade } from "svelte/transition";
   import { isSearchOpen } from "$lib/stores";
+  import { page } from "$app/state";
 
   function close() {
     isSearchOpen.set(false);

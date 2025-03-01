@@ -166,7 +166,12 @@
 
       <!-- Save Button - Spans full width -->
       <div class="mt-8 flex">
-        <UniButton Icon={Check} type="submit" variant="primary">Save</UniButton>
+        <UniButton
+          Icon={Check}
+          type="submit"
+          variant="primary"
+          disable={disabled}>Save</UniButton
+        >
       </div>
     </div>
   </form>

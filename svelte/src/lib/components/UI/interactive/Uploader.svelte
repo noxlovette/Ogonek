@@ -58,11 +58,12 @@
       isUploading = false;
 
       if (result.type === "success") {
-        // fileName = '';
+        console.log(result);
         filePath = result.data?.filePath;
+        console.log(filePath);
         isSuccess = true;
         notification.set({
-          message: "File uploaded successfully!",
+          message: "File uploaded successfully??!",
           type: "success",
         });
       } else if (result.type === "failure") {

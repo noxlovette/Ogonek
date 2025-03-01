@@ -13,11 +13,24 @@
   import { page } from "$app/state";
   import { Plus, UploadCloud, Ban, Check, Trash2 } from "lucide-svelte";
   import UniButton from "$lib/components/UI/UniButton.svelte";
+  import { pushState } from "$app/navigation";
+  import { onMount } from "svelte";
 
-  let showImportModal = $state(false);
+  onMount(() => {
+    if (updatedCards.length > 0) {
+      const lastCard = document.querySelector(".space-y-4 > :last-child");
+      if (lastCard) {
+        lastCard.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+  });
+  function showImportModal() {
+    pushState("import", {
+      showImportModal: true,
+    });
+  }
 
   const role = page.params.role;
-  let isSubmitting = $state(false);
   let { data } = $props();
   let { deck, cards } = data;
   let updatedCards = $state([...cards]);
@@ -41,7 +54,7 @@
 </script>
 
 <svelte:head>
-  title={`Edit ${deck.name} | Flashcards`}
+  <title>{`Edit ${deck.name} | Flashcards`}</title>
 </svelte:head>
 
 <div class="flex items-center justify-between">
@@ -152,7 +165,7 @@
         <div>
           <UniButton
             type="button"
-            onclick={() => (showImportModal = true)}
+            onclick={showImportModal}
             Icon={UploadCloud}
             variant="outline">Import</UniButton
           >
@@ -177,13 +190,15 @@
 
         <div class="flex flex-col gap-3 pt-4">
           <UniButton variant="secondary" Icon={Ban} href=".">Cancel</UniButton>
-          <UniButton variant="primary" Icon={Check}>Save</UniButton>
+          <UniButton variant="primary" type="submit" Icon={Check}
+            >Save</UniButton
+          >
           <UniButton
             variant="danger"
             Icon={Trash2}
             formaction="?/delete"
             confirmText={deck.name}
-            confirmTitle="deck"
+            confirmTitle="Delete Deck"
           >
             Delete</UniButton
           >
@@ -192,6 +207,6 @@
     </div>
   </div>
 </form>
-{#if showImportModal}
-  <CSV bind:updatedCards bind:showImportModal {deck} />
+{#if page.state.showImportModal}
+  <CSV bind:updatedCards {deck} />
 {/if}

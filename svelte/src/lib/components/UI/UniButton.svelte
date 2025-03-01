@@ -22,6 +22,7 @@
     href?: string | undefined;
     formaction?: string | undefined;
     styling?: string;
+    disable?: boolean;
     Icon: ConstructorOfATypedSvelteComponent | undefined;
     iconPosition?: "left" | "right";
     fullWidth?: boolean;
@@ -40,6 +41,7 @@
     href = undefined,
     formaction = undefined,
     styling = "",
+    disable = false,
     Icon = undefined,
     iconPosition = "left",
     fullWidth = false,
@@ -52,8 +54,16 @@
   }: Props = $props();
 
   const isLink = $derived(!!href);
-  let isDisabled = $derived($isLoading);
+  let disabled = $derived($isLoading || disable);
   let showConfirmDialog = $state(false);
+
+  // Simple function to handle showing the confirmation dialog for danger buttons
+  function handleClick(event) {
+    if (variant === "danger" && (confirmText || confirmTitle)) {
+      event.preventDefault();
+      showConfirmDialog = true;
+    }
+  }
 
   const sizeClasses = {
     xs: "px-2 py-1 text-xs",
@@ -103,7 +113,7 @@
 </script>
 
 {#if isLink}
-  <a {href} class={allClasses} aria-disabled={isDisabled}>
+  <a {href} class={allClasses} aria-disabled={disabled}>
     {#if $isLoading}
       <Loader2 class="mr-2 size-4 animate-spin" />
     {:else if Icon && iconPosition === "left"}
@@ -123,9 +133,9 @@
   <button
     {type}
     {formaction}
-    disabled={isDisabled}
+    {disabled}
     class={allClasses}
-    {onclick}
+    onclick={variant === "danger" ? handleClick : onclick}
   >
     {#if $isLoading}
       <Loader2 class="mr-2 size-4 animate-spin" />
@@ -155,21 +165,21 @@
         {confirmTitle || "Confirm"}
       </h3>
       <p class="text-milk-600 dark:text-milk-400 mt-2">
-        Are you sure you want to {confirmText || "continue"}? This action cannot
-        be undone.
+        Are you sure you want to {"delete " + confirmText || "continue"}? This
+        action cannot be undone.
       </p>
       <div class="mt-6 flex justify-end gap-3">
         <button
           type="button"
           class="text-milk-700 from-milk-50 to-milk-100 hover:to-milk-200 ring-milk-300 rounded-lg bg-gradient-to-bl px-3 py-2 text-center ring transition-colors"
-          {onclick}
+          onclick={() => (showConfirmDialog = false)}
         >
           Cancel
         </button>
         <button
-          type="button"
+          type="submit"
           class="rounded-lg bg-gradient-to-br from-red-500 to-red-600 px-3 py-2 text-center text-white ring transition-colors hover:from-red-500 hover:to-red-700 focus:ring focus:ring-red-400 focus:ring-offset-2 focus:outline-none dark:from-red-500 dark:to-red-600 dark:hover:from-red-500 dark:hover:to-red-700"
-          formaction="?/delete"
+          {formaction}
         >
           Confirm
         </button>

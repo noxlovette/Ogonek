@@ -30,7 +30,10 @@ declare global {
       };
     }
     // interface PageData {}
-    // interface PageState {}
+    interface PageState {
+      showImportModal?: boolean;
+      searchOverlay?: boolean;
+    }
     // interface Platform {}
   }
 }

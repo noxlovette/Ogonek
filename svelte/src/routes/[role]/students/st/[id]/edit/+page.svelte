@@ -39,9 +39,13 @@
       </div>
 
       <UniButton variant="secondary" Icon={Ban}>Cancel</UniButton>
-      <UniButton variant="primary" Icon={Check}>Save</UniButton>
-      <UniButton variant="danger" formaction="?/delete" Icon={Trash2}
-        >Delete</UniButton
+      <UniButton variant="primary" type="submit" Icon={Check}>Save</UniButton>
+      <UniButton
+        variant="danger"
+        formaction="?/delete"
+        confirmText={student.name}
+        confirmTitle="Delete Student"
+        Icon={Trash2}>Delete</UniButton
       >
     </div>
 

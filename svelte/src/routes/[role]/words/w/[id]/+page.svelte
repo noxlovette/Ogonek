@@ -3,7 +3,13 @@
   import { Label, WordCard, H1, UniButton } from "$lib/components";
 
   import { notification, user } from "$lib/stores";
-  import { Pencil, SubscriptIcon } from "lucide-svelte";
+  import {
+    GraduationCap,
+    Pencil,
+    Shapes,
+    Share,
+    SubscriptIcon,
+  } from "lucide-svelte";
   import { enhanceForm } from "$lib/utils";
 
   let isSubmitting = $state(false);
@@ -25,12 +31,15 @@
 </script>
 
 <svelte:head>
-  title="{deck.name} | Flashcards"
+  <title>{deck.name} | Flashcards</title>
 </svelte:head>
 
 <div class="mb-6 flex flex-wrap items-center justify-between gap-4">
   <H1>{deck.name}</H1>
   <div class="flex gap-2">
+    <UniButton Icon={Share} type="submit" variant="outline">
+      Share Deck
+    </UniButton>
     {#if $user.sub === deck.createdBy}
       <UniButton variant="outline" href="{deck.id}/edit" Icon={Pencil}
         >Edit</UniButton
@@ -54,7 +63,7 @@
     >
       <input type="hidden" name="isSubscribed" value={isSubscribed} />
 
-      <UniButton Icon={SubscriptIcon} type="submit" variant="outline">
+      <UniButton Icon={Shapes} type="submit" variant="outline">
         {isSubscribed ? "Unsubscribe" : "Subscribe"}
       </UniButton>
     </form>
@@ -151,10 +160,6 @@
           }
         };
       }}
-    >
-      <UniButton Icon={SubscriptIcon} type="submit" variant="ghost">
-        Share Deck
-      </UniButton>
-    </form>
+    ></form>
   </div>
 </div>
