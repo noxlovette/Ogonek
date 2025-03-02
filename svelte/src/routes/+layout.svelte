@@ -34,5 +34,5 @@
 </main>
 
 <svelte:head>
-  <title>Firelight</title>
+  <title>Ogonek</title>
 </svelte:head>

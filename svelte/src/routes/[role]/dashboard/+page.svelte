@@ -46,5 +46,5 @@
 </div>
 
 <svelte:head>
-  <title>Dashboard | Firelight</title>
+  <title>Dashboard | Ogonek</title>
 </svelte:head>

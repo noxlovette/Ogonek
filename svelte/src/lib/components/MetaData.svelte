@@ -10,13 +10,13 @@
   }
 
   let {
-    description = "Firelight. The digital classroom for private teachers.",
-    title = "Firelight",
+    description = "Ogonek. The digital classroom for private teachers.",
+    title = "Ogonek",
     keywords = "education, teach, English, classroom management, teaching, learning",
     robots = "index, follow",
-    ogTitle = "Firelight",
-    ogUrl = "https://firelight.noxlovette.com",
-    ogImage = "https://firelight.noxlovette.com/images/og.png",
+    ogTitle = "Ogonek",
+    ogUrl = "https://ogonek.noxlovette.com",
+    ogImage = "https://ogonek.noxlovette.com/images/og.png",
   }: Props = $props();
   let ogType = "website";
 </script>
@@ -39,12 +39,12 @@
     {
       "@context": "http://schema.org",
       "@type": "WebApplication",
-      "name": "Firelight",
-      "url": "https://firelight.noxlovette.com",
-      "description": "Firelight. The digital classroom for private teachers.",
+      "name": "Ogonek",
+      "url": "https://Ogonek.noxlovette.com",
+      "description": "Ogonek. The digital classroom for private teachers.",
       "applicationCategory": "EducationalApplication",
       "operatingSystem": "All",
-      // "screenshot": "https://firelight.noxlovette.com/static/images/screenshot.jpg",
+      // "screenshot": "https://Ogonek.noxlovette.com/static/images/screenshot.jpg",
       "featureList": "Flashcards, Scheduling, Lesson Notes, Student Progress Tracking",
       "softwareVersion": "1.1.3",
       "author": {

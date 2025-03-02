@@ -14,7 +14,7 @@
     class="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-3"
   >
     <div class="flex w-full md:w-1/6">
-      <a {href} class="font-serif text-2xl font-bold">Firelight</a>
+      <a {href} class="font-serif text-2xl font-bold">Ogonek</a>
     </div>
 
     {#if $user.name}

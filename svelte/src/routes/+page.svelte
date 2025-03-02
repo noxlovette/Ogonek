@@ -10,7 +10,7 @@
   <h1
     class="text-[3rem] leading-[3rem] font-bold md:leading-[4rem] xl:text-[4rem]"
   >
-    Welcome to Firelight
+    Welcome to Ogonek
   </h1>
   <h2 class="text-xl">
     See your homework, revisit previous lessons. One place for your English

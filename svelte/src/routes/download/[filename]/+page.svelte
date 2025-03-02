@@ -88,5 +88,5 @@
 </div>
 
 <svelte:head>
-  <title>Download | Firelight</title>
+  <title>Download | Ogonek</title>
 </svelte:head>

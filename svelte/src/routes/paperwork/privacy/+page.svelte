@@ -3,7 +3,7 @@
 </script>
 
 <svelte:head>
-  <title>Privacy | Firelight</title>
+  <title>Privacy | Ogonek</title>
 </svelte:head>
 
 <div class="markdown">

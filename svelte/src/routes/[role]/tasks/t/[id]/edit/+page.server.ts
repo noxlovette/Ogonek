@@ -54,7 +54,7 @@ export const actions = {
       return error(code || 400, message);
     }
 
-    const message = `You have a new task: "${title}"\\. You can view it on [Firelight](https://firelight\\.noxlovette\\.com/s/tasks)\\.`;
+    const message = `You have a new task: "${title}"\\. You can view it on [Ogonek](https://Ogonek\\.noxlovette\\.com/s/tasks)\\.`;
 
     if (telegramId && initialAssignee !== assignee) {
       const telegramResponse = await notifyTelegram(message, telegramId);
