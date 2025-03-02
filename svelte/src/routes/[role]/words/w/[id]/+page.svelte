@@ -1,14 +1,15 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
   import { Label, WordCard, H1, UniButton } from "$lib/components";
+  import { invalidate } from "$app/navigation";
 
   import { notification, user } from "$lib/stores";
   import {
-    GraduationCap,
     Pencil,
     Shapes,
     Share,
-    SubscriptIcon,
+    UserRoundMinus,
+    UserRoundPlus,
   } from "lucide-svelte";
   import { enhanceForm } from "$lib/utils";
 
@@ -37,9 +38,36 @@
 <div class="mb-6 flex flex-wrap items-center justify-between gap-4">
   <H1>{deck.name}</H1>
   <div class="flex gap-2">
-    <UniButton Icon={Share} type="submit" variant="outline">
-      Share Deck
-    </UniButton>
+    <form
+      method="POST"
+      action="?/share"
+      use:enhance={enhanceForm({
+        messages: {
+          failure: "Failed to generate link",
+        },
+        handlers: {
+          success: async (result) => {
+            const link = String(result.data?.link);
+            try {
+              await navigator.clipboard.writeText(link);
+              notification.set({
+                message: "Link copied to clipboard!",
+                type: "success",
+              });
+            } catch (err) {
+              notification.set({
+                message: "Failed to copy link",
+                type: "error",
+              });
+            }
+          },
+        },
+      })}
+    >
+      <UniButton Icon={Share} type="submit" variant="outline">
+        Share Deck
+      </UniButton>
+    </form>
     {#if $user.sub === deck.createdBy}
       <UniButton variant="outline" href="{deck.id}/edit" Icon={Pencil}
         >Edit</UniButton
@@ -57,13 +85,18 @@
         handlers: {
           success: async () => {
             isSubscribed = !isSubscribed;
+            invalidate("learn:subscribe");
           },
         },
       })}
     >
       <input type="hidden" name="isSubscribed" value={isSubscribed} />
 
-      <UniButton Icon={Shapes} type="submit" variant="outline">
+      <UniButton
+        Icon={isSubscribed === true ? UserRoundMinus : UserRoundPlus}
+        type="submit"
+        variant="outline"
+      >
         {isSubscribed ? "Unsubscribe" : "Subscribe"}
       </UniButton>
     </form>

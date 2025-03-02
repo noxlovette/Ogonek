@@ -13,7 +13,7 @@ import type {
 import { fail, redirect, type Actions } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 
-export const load: PageServerLoad = async ({ fetch, url }) => {
+export const load: PageServerLoad = async ({ fetch, url, depends }) => {
   const page = url.searchParams.get("page") || "1";
   const per_page = url.searchParams.get("per_page") || "50";
   const search = url.searchParams.get("search") || "";
@@ -34,6 +34,7 @@ export const load: PageServerLoad = async ({ fetch, url }) => {
     (res) => res.json() as Promise<PaginatedResponse<Task>>,
   );
 
+  depends("tasks:completed");
   return {
     tasksPaginated,
   };

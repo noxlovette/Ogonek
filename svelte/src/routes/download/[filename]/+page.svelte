@@ -8,6 +8,8 @@
     FileCheck,
   } from "lucide-svelte";
   import { stripUUID } from "$lib/utils";
+  import { afterNavigate, goto } from "$app/navigation";
+  import { navigating } from "$app/state";
 
   let { data } = $props();
   const { filename } = data;
@@ -33,7 +35,6 @@
       URL.revokeObjectURL(url);
     }
   }
-
   function goBack() {
     window.history.back();
   }

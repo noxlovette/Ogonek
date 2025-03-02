@@ -8,14 +8,13 @@
   import { goto } from "$app/navigation";
   import { enhanceForm } from "$lib/utils";
   import {
-    notification,
     completedStore,
     searchTerm,
     pageSize,
     currentPage,
     assigneeStore,
   } from "$lib/stores";
-  import { PlusCircle } from "lucide-svelte";
+  import { Eye, EyeClosed, PlusCircle, Search } from "lucide-svelte";
 
   let { data } = $props();
   const { students } = data;
@@ -103,23 +102,20 @@
   <section class="space-y-4">
     <div class="flex items-center justify-between">
       <H2>Active Tasks ({tasks.length})</H2>
-      <button
+
+      <UniButton
         type="button"
-        class="bg-cacao-50 text-cacao-700 hover:bg-cacao-100 dark:bg-cacao-900/30 dark:text-cacao-300 dark:hover:bg-cacao-800/50 inline-flex items-center rounded-lg
-               px-4 py-2 text-sm
-               font-medium shadow-sm transition-colors"
         onclick={toggleCompletedTasks}
+        variant="primary"
+        Icon={$completedStore === true ? EyeClosed : Eye}
       >
         {$completedStore === true ? "Hide Completed" : "Show Completed"}
-        <span class="ml-2">
-          {$completedStore === true ? "👁️" : "🔍"}
-        </span>
-      </button>
+      </UniButton>
     </div>
 
     {#if tasks.length > 0}
       <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-        {#each data.tasks as task (task.id)}
+        {#each tasks as task (task.id)}
           <TaskCard {task} interactive={true} />
         {/each}
       </div>

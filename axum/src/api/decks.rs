@@ -310,7 +310,7 @@ pub async fn subscribe_to_deck(
     
     tx.commit().await?;
 
-    Ok(StatusCode::OK)
+    Ok(StatusCode::NO_CONTENT)
 }
 
 

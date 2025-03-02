@@ -8,7 +8,6 @@
     Label,
   } from "$lib/components";
   import type { PageData } from "./$types";
-  import { notification } from "$lib/stores";
   import { enhanceForm } from "$lib/utils";
   import { Ban, Check, Trash2 } from "lucide-svelte";
   let { data }: { data: PageData } = $props();
@@ -26,7 +25,6 @@
       redirect: "Changes Saved",
       defaultError: "Failed to save changes",
     },
-    navigate: true,
   })}
 >
   <div class="flex items-baseline space-x-4">

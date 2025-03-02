@@ -27,7 +27,7 @@
     csvPreview = [];
     selectedFile = null;
     if (fileInput) fileInput.value = "";
-    history.back();
+    window.history.back();
   }
 
   function handleFileSelect(e: Event) {

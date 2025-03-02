@@ -63,8 +63,8 @@ export function enhanceForm(config: EnhanceConfig = {}): SubmitFunction {
   const {
     messages = {},
     handlers = {},
-    navigate = true,
-    shouldUpdate = false,
+    navigate = false,
+    shouldUpdate = true,
   } = config;
 
   return ({

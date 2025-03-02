@@ -8,6 +8,7 @@
   import { CheckSquare, Square } from "lucide-svelte";
   import { parseMarkdown } from "$lib/utils";
   import { enhanceForm } from "$lib/utils";
+  import { invalidate } from "$app/navigation";
 
   onMount(async () => {
     rendered = await parseMarkdown(task.markdown);
@@ -28,7 +29,7 @@
 <Clickable {href}>
   <div
     id="task-header"
-    class="inline-flex items-baseline justify-between space-x-8 text-lg md:text-xl lg:text-2xl xl:text-3xl"
+    class="flex items-baseline justify-between text-lg md:text-xl lg:text-2xl xl:text-3xl"
   >
     <H2>
       {task.title}
@@ -40,8 +41,13 @@
         action="?/completed"
         use:enhance={enhanceForm({
           messages: {
-            success: completed ? "Marked As Completed" : "Not Completed",
+            success: completed ? "Not Completed" : "Marked As Completed",
             defaultError: "Failed to mark as completed",
+          },
+          handlers: {
+            success: async () => {
+              invalidate("tasks:completed");
+            },
           },
         })}
       >

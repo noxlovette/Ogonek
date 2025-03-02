@@ -1,3 +1,4 @@
+// hooks.client.ts
 import { env } from "$env/dynamic/public";
 import { setProfile, setUser } from "$lib/stores";
 import * as Sentry from "@sentry/sveltekit";
@@ -16,8 +17,10 @@ export const init: ClientInit = async () => {
   if (user) {
     setUser(JSON.parse(user));
   }
+
   if (profile) {
     setProfile(JSON.parse(profile));
   }
 };
+
 export const handleError = Sentry.handleErrorWithSentry();

@@ -1,6 +1,6 @@
 <!-- Unauthorized.svelte -->
 <script>
-  import { DoorClosed, Lock, ShieldAlert, ArrowLeft } from "lucide-svelte";
+  import { Lock, ArrowLeft } from "lucide-svelte";
 </script>
 
 <div class="flex size-full items-center justify-center">
