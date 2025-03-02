@@ -17,10 +17,12 @@
 
   const nextCard = async () => {
     if (currentIndex < data.cards.length - 1) {
+      console.debug("not invalidated");
       currentIndex++;
       showAnswer = false;
     } else if ((currentIndex = data.cards.length) && data.cards.length > 1) {
       invalidate("learn:complete");
+      console.debug("invalidation");
       currentIndex = 0;
       showAnswer = false;
     } else {
@@ -185,12 +187,12 @@
               },
               handlers: {
                 success: async () => {
-                  nextCard;
+                  nextCard();
                 },
               },
             })}
           >
-            <input type="hidden" bind:value={currentCard.id} name="cardId" />
+            <input type="hidden" value={currentCard.id} name="cardId" />
             {#each qualityButtons as { quality, label, color }}
               <button
                 class={`rounded-lg px-3 py-2 text-sm font-medium transition ${color}`}
