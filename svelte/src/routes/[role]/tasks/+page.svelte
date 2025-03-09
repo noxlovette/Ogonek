@@ -122,7 +122,7 @@
     {:else}
       <div class="flex flex-col items-center justify-center py-12 text-center">
         <div class="relative">
-          <div class="bg-milk-100 dark:bg-milk-800 mb-6 rounded-full p-8">
+          <div class="mb-6 rounded-full bg-stone-100 p-8 dark:bg-stone-800">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               class="text-cacao-400 dark:text-cacao-300 h-16 w-16"
@@ -142,18 +142,18 @@
           <!-- Fun thought bubble animation -->
           <div class="absolute -top-3 -right-2 animate-bounce">
             <div
-              class="bg-cacao-100 dark:bg-cacao-800 dark:text-milk-200 text-milk-800 rounded-full p-2 text-xs shadow-md"
+              class="bg-cacao-100 dark:bg-cacao-800 rounded-full p-2 text-xs text-stone-800 shadow-md dark:text-stone-200"
             >
               <span>🤔</span>
             </div>
           </div>
         </div>
 
-        <h3 class="text-milk-800 dark:text-milk-200 mb-2 text-2xl font-bold">
+        <h3 class="mb-2 text-2xl font-bold text-stone-800 dark:text-stone-200">
           Task Inbox Zero!
         </h3>
 
-        <p class="text-milk-600 dark:text-milk-400 mb-6 max-w-md">
+        <p class="mb-6 max-w-md text-stone-600 dark:text-stone-400">
           Wow, you've completed all your tasks! Time to either celebrate or ask
           for more challenges.
         </p>

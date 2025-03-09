@@ -15,7 +15,7 @@
      inline-flex items-center font-serif transition-all
      ${
        $sidebar
-         ? "hover:bg-cacao-500 dark:hover:bg-milk-800 justify-center rounded-full p-2"
+         ? "hover:bg-cacao-500 justify-center rounded-full p-2 dark:hover:bg-stone-800"
          : "md:px-1 md:py-2 md:hover:translate-x-1 lg:px-2 lg:py-4"
      }
    `}

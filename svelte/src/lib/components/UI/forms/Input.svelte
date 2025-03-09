@@ -6,17 +6,26 @@
     name = "name",
     labelName = name,
     value = $bindable(),
+    disabled = $bindable(),
     type = "text",
   }: {
     placeholder: string;
     name: string;
     value: string | number | boolean | undefined;
     labelName?: string;
-    type?: "text" | "number" | "textarea" | "password" | "email" | "checkbox";
+    disabled?: boolean;
+    type?:
+      | "text"
+      | "number"
+      | "textarea"
+      | "password"
+      | "email"
+      | "checkbox"
+      | string;
   } = $props();
 
   const styling =
-    "mt-2 w-full rounded-md p-3 text-lg shadow-sm dark:border-milk-700 dark:bg-milk-950";
+    "mt-2 w-full rounded-md p-3 text-lg shadow-sm dark:border-stone-700 dark:bg-stone-950 disabled:text-stone-500 ring ring-stone-200 dark:ring-stone-800";
 </script>
 
 <Label>{labelName}</Label>
@@ -25,6 +34,7 @@
     {name}
     type="text"
     bind:value
+    {disabled}
     class="{styling} focus:border-cacao-500 focus:ring-cacao-500"
     {placeholder}
   />
@@ -33,6 +43,7 @@
     {name}
     rows="5"
     bind:value
+    {disabled}
     class="{styling} focus:border-cacao-500 focus:ring-cacao-500"
     {placeholder}
   ></textarea>
@@ -41,6 +52,7 @@
     type="number"
     {placeholder}
     {name}
+    {disabled}
     bind:value
     class="{styling} focus:border-cacao-500 focus:ring-cacao-500"
   />
@@ -50,6 +62,7 @@
     {placeholder}
     {name}
     bind:value
+    {disabled}
     class="{styling} focus:border-cacao-500 focus:ring-cacao-500"
   />
 {:else if type === "email"}
@@ -58,6 +71,7 @@
     {placeholder}
     {name}
     bind:value
+    {disabled}
     class="{styling} focus:border-cacao-500 focus:ring-cacao-500"
   />
 {/if}

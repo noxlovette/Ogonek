@@ -41,18 +41,18 @@
         <!-- Changed size-full to w-full -->
         <textarea
           bind:value={markdownContent}
-          class="border-milk-200 dark:ring-milk-900 dark:bg-milk-950 dark:border-milk-900
-					focus:ring-none
-			  focus:border-milk-500 h-full min-h-[400px]
-			  w-full resize-none rounded-lg border
+          class="focus:ring-none h-full min-h-[400px] w-full
+					resize-none
+			  rounded-lg border border-stone-200
 			  p-4 shadow-sm ring-0 ring-transparent
-			  focus:ring-transparent"
+			  focus:border-stone-500 focus:ring-transparent dark:border-stone-900 dark:bg-stone-950
+			  dark:ring-stone-900"
           spellcheck="false"
         ></textarea>
       </div>
     {:else}
       <div
-        class="border-milk-200 dark:border-milk-900 markdown w-full rounded-lg border p-4"
+        class="markdown w-full rounded-lg border border-stone-200 p-4 dark:border-stone-900"
       >
         {@html htmlContent}
       </div>

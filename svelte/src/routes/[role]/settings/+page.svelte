@@ -1,5 +1,5 @@
 <script>
-  import { H1, H2 } from "$lib/components";
+  import { H1, H2, H3, Input, UniButton } from "$lib/components";
   import { enhance } from "$app/forms";
   import { goto } from "$app/navigation";
   import { enhanceForm } from "$lib/utils";
@@ -17,12 +17,11 @@
     searchTerm,
     currentPage,
   } from "$lib/stores";
-  import UniButton from "$lib/components/UI/UniButton.svelte";
-  import { Check, LogOut } from "lucide-svelte";
+
+  import { Check, LogOut, Key } from "lucide-svelte";
 
   let disabled = $state(true);
 
-  // Animation helper
   const fieldGroups = [
     {
       title: "User Settings",
@@ -35,13 +34,7 @@
     {
       title: "Profile Settings",
       fields: [
-        {
-          id: "quizlet",
-          label: "Quizlet URL",
-          type: "url",
-          storeKey: "quizletUrl",
-        },
-        { id: "zoom", label: "Zoom URL", type: "url", storeKey: "zoomUrl" },
+        { id: "zoom", label: "Zoom URL", type: "text", storeKey: "zoomUrl" },
       ],
     },
   ];
@@ -82,82 +75,43 @@
     action="?/update"
   >
     <div
-      class="bg-milk-50 border-milk-100 dark:border-milk-800 dark:bg-milk-950 rounded-xl border p-6 shadow-md transition-all"
+      class="rounded-xl border border-stone-100 bg-stone-50 p-6 shadow-md transition-all dark:border-stone-800 dark:bg-stone-950"
     >
       <div
-        class="border-milk-200 dark:border-milk-700 mb-6 flex items-center justify-between border-b pb-4"
+        class="mb-6 flex items-center justify-between border-b border-stone-200 pb-4 dark:border-stone-700"
       >
-        <h2 class="text-cacao-800 dark:text-milk-100 text-2xl font-bold">
-          Account Settings
-        </h2>
+        <H2>Account Settings</H2>
 
-        <button
-          type="button"
+        <UniButton
+          Icon={Key}
+          variant="ghost"
           onclick={() => {
             disabled = !disabled;
           }}
-          class={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all duration-200
-            ${
-              disabled
-                ? "bg-cacao-100 text-cacao-700 hover:bg-cacao-200 dark:text-cacao-300 dark:bg-milk-800 dark:hover:bg-milk-700"
-                : "bg-cacao-500 hover:bg-cacao-600 dark:bg-cacao-600 dark:hover:bg-cacao-700 text-white"
-            }`}
+          type="button"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-4 w-4"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d={disabled
-                ? "M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"
-                : "M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z"}
-            />
-          </svg>
           {disabled ? "Edit Profile" : "Editing..."}
-        </button>
+        </UniButton>
       </div>
 
       <!-- Fields Grid -->
       <div class="grid grid-cols-1 gap-x-8 gap-y-6 md:grid-cols-2">
         {#each fieldGroups as group, i}
           <div>
-            <h3
-              class="text-cacao-700 dark:text-milk-200 mb-4 text-sm font-medium tracking-wider uppercase"
-            >
+            <H3>
               {group.title}
-            </h3>
-            <div class="space-y-5">
+            </H3>
+            <div class="mt-4 space-y-5">
               {#each group.fields as field}
-                <div class="space-y-2">
-                  <label
-                    for={field.id}
-                    class="text-milk-700 dark:text-milk-300 block text-sm font-medium"
-                  >
-                    {field.label}
-                  </label>
-                  <div class="relative">
-                    <input
-                      type={field.type}
-                      id={field.id}
-                      name={field.id}
-                      {disabled}
-                      value={field.storeKey
-                        ? $profile[field.storeKey]
-                        : $user[field.id]}
-                      class="border-milk-300 focus:ring-cacao-500 disabled:bg-milk-100 text-milk-900 dark:text-milk-100 dark:border-milk-700
-                      dark:bg-milk-800 dark:disabled:bg-milk-900
-                      w-full rounded-lg bg-white px-4 py-2.5
-                      transition duration-200 focus:border-transparent
-                      focus:ring-2 disabled:cursor-not-allowed"
-                    />
-                  </div>
-                </div>
+                <Input
+                  type={field.type}
+                  placeholder={field.label}
+                  name={field.id}
+                  bind:disabled
+                  value={field.storeKey
+                    ? $profile[field.storeKey]
+                    : $user[field.id]}
+                />
               {/each}
             </div>
           </div>
@@ -180,7 +134,7 @@
   <div class="grid grid-cols-1 gap-6">
     <!-- Telegram Section -->
     <section
-      class="bg-milk-50 border-milk-100 dark:border-milk-800 dark:bg-milk-900 rounded-xl border p-6 shadow-md transition-all"
+      class="rounded-xl border border-stone-100 bg-stone-50 p-6 shadow-md transition-all dark:border-stone-800 dark:bg-stone-900"
     >
       <div class="mb-3 flex items-center gap-3">
         <div class="rounded-full bg-cyan-100 p-2 dark:bg-cyan-900">
@@ -198,7 +152,7 @@
         <H2>Telegram Notifications</H2>
       </div>
 
-      <p class="text-milk-700 dark:text-milk-300 mb-4 text-sm">
+      <p class="mb-4 text-sm text-stone-700 dark:text-stone-300">
         Connect with our Telegram bot to receive instant notifications for new
         tasks, due dates, and other important updates.
       </p>
@@ -235,7 +189,7 @@
       })}
     >
       <section
-        class="bg-milk-50 border-milk-100 dark:border-milk-800 dark:bg-milk-900 rounded-xl border p-6 shadow-md transition-all"
+        class="rounded-xl border border-stone-100 bg-stone-50 p-6 shadow-md transition-all dark:border-stone-800 dark:bg-stone-900"
       >
         <div class="mb-3 flex items-center gap-3">
           <div class="rounded-full bg-red-100 p-2 dark:bg-red-900/50">
@@ -257,7 +211,7 @@
           <H2>Account</H2>
         </div>
 
-        <p class="text-milk-700 dark:text-milk-300 mb-4 text-sm">
+        <p class="mb-4 text-sm text-stone-700 dark:text-stone-300">
           "I didn't say it was gonna be easy, Neo. I just said it would be the
           truth."
         </p>

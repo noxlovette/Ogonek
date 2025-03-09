@@ -3,7 +3,6 @@
     "Montserrat", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
     Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
   --font-serif: "Lora", system-ui, -apple-system;
-
   --color-cacao-50: oklch(0.98 0.002 35);
   --color-cacao-100: oklch(0.94 0.015 35);
   --color-cacao-200: oklch(0.89 0.035 35);
@@ -15,16 +14,15 @@
   --color-cacao-800: oklch(0.36 0.075 35);
   --color-cacao-900: oklch(0.25 0.065 35);
   --color-cacao-950: oklch(0.18 0.045 35);
-
-  --color-milk-50: oklch(0.98 0.004 41.785);
-  --color-milk-100: oklch(0.911 0.015 41.669);
-  --color-milk-200: oklch(0.837 0.019 41.454);
-  --color-milk-300: oklch(0.787 0.016 41.239);
-  --color-milk-400: oklch(0.697 0.014 41.023);
-  --color-milk-500: oklch(0.607 0.012 40.808);
-  --color-milk-600: oklch(0.517 0.012 40.592);
-  --color-milk-700: oklch(0.427 0.011 40.377);
-  --color-milk-800: oklch(0.337 0.01 40.162);
-  --color-milk-900: oklch(0.247 0.01 39.946);
-  --color-milk-950: oklch(0.157 0.009 39.731);
+  --color-stone-50: oklch(0.98 0.002 40);
+  --color-stone-100: oklch(0.95 0.004 40);
+  --color-stone-200: oklch(0.9 0.006 40);
+  --color-stone-300: oklch(0.8 0.008 40);
+  --color-stone-400: oklch(0.7 0.007 40);
+  --color-stone-500: oklch(0.6 0.006 40);
+  --color-stone-600: oklch(0.5 0.005 40);
+  --color-stone-700: oklch(0.4 0.004 40);
+  --color-stone-800: oklch(0.3 0.003 40);
+  --color-stone-900: oklch(0.2 0.002 40);
+  --color-stone-950: oklch(0.1 0.001 40);
 }

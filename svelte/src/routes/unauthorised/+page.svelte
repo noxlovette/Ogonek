@@ -9,20 +9,20 @@
   >
     <!-- Main content -->
     <div class="mb-6 flex justify-center space-x-4">
-      <Lock class="text-milk-400 h-16 w-16" />
+      <Lock class="h-16 w-16 text-stone-400" />
     </div>
 
-    <h1 class="text-milk-800 mb-4 text-4xl font-bold">
+    <h1 class="mb-4 text-4xl font-bold text-stone-800">
       Woah there, partner! 🤠
     </h1>
 
-    <p class="text-milk-600 mb-6 text-xl">
+    <p class="mb-6 text-xl text-stone-600">
       Looks like you're trying to sneak into the VIP section without a backstage
       pass!
     </p>
 
-    <div class="bg-milk-50 mb-8 rounded-lg p-4">
-      <p class="text-milk-500 italic">
+    <div class="mb-8 rounded-lg bg-stone-50 p-4">
+      <p class="text-stone-500 italic">
         "HTTP 403: The bouncer said no. Maybe try bringing cookies next time?
         🍪"
       </p>

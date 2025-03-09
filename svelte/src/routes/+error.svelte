@@ -39,7 +39,7 @@
     class="w-full max-w-md overflow-hidden rounded-xl bg-white shadow-lg dark:bg-stone-800"
   >
     <div
-      class="bg-milk-100 border-milk-200 flex w-full justify-center border-b p-6 dark:border-stone-600 dark:bg-stone-700"
+      class="flex w-full justify-center border-b border-stone-200 bg-stone-100 p-6 dark:border-stone-600 dark:bg-stone-700"
     >
       <div in:fly={{ y: -20, duration: 400, delay: 200, easing: backOut }}>
         {#if is404}
@@ -73,14 +73,14 @@
         <h1 class="text-cacao-600 dark:text-cacao-400 text-2xl font-bold">
           {errorTitle}
         </h1>
-        <p class="text-milk-600 dark:text-milk-400 mt-2">
+        <p class="mt-2 text-stone-600 dark:text-stone-400">
           {errorMessage}
         </p>
       </div>
 
       <!-- Fun error fact -->
       <div
-        class="bg-milk-50 text-milk-700 dark:text-milk-300 mb-6 rounded-lg p-4 text-sm dark:bg-stone-700"
+        class="mb-6 rounded-lg bg-stone-50 p-4 text-sm text-stone-700 dark:bg-stone-700 dark:text-stone-300"
         in:fly={{ y: 20, duration: 400, delay: 400 }}
       >
         <p class="flex items-start">
@@ -113,7 +113,7 @@
         </a>
         <a
           href="https://t.me/noxlovette"
-          class="text-milk-600 dark:text-milk-400 hover:text-cacao-500 dark:hover:text-cacao-400 text-center text-sm font-medium transition-colors"
+          class="hover:text-cacao-500 dark:hover:text-cacao-400 text-center text-sm font-medium text-stone-600 transition-colors dark:text-stone-400"
         >
           Need help? Contact Support
         </a>

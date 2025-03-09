@@ -22,13 +22,13 @@
   </div>
   <div class="flex space-x-4">
     <div class="space-y-2">
-      <p class="text-milk-700 block font-medium">Topic</p>
+      <p class="block font-medium text-stone-700">Topic</p>
       <h3 class="min-w-48">
         {data.lesson.topic}
       </h3>
     </div>
     <div class="space-y-2">
-      <p class="text-milk-700 block font-medium">Student</p>
+      <p class="block font-medium text-stone-700">Student</p>
       <h3 class="min-w-48">
         {#if data.lesson.assigneeName === $user.username}
           Not Assigned

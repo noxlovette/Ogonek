@@ -49,7 +49,6 @@
               invalidate("tasks:completed");
             },
           },
-          
         })}
       >
         <button
@@ -70,12 +69,12 @@
   </div>
 
   <div class="mt-auto flex items-center justify-between pt-4 text-sm/tight">
-    <p class:overdue class="text-milk-500 {overdue ? 'text-cacao-500' : ''}">
+    <p class:overdue class="text-stone-500 {overdue ? 'text-cacao-500' : ''}">
       Due {formattedDate}
     </p>
   </div>
 
-  <p class="text-milk-600 text-sm/relaxed lg:text-base/relaxed">
+  <p class="text-sm/relaxed text-stone-600 lg:text-base/relaxed">
     {@html rendered}
   </p>
 </Clickable>

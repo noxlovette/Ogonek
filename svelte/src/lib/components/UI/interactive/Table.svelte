@@ -57,19 +57,19 @@
     <div class="flex flex-grow items-center gap-3">
       <div class="relative flex-1">
         <Search
-          class="text-milk-400 dark:text-milk-600 absolute top-1/2 left-3 -translate-y-1/2"
+          class="absolute top-1/2 left-3 -translate-y-1/2 text-stone-400 dark:text-stone-600"
           size={18}
         />
         <input
           type="text"
           bind:value={$searchTerm}
           placeholder="Search..."
-          class="border-milk-200 placeholder:text-milk-400 focus:border-cacao-400 focus:ring-cacao-500/20 dark:border-milk-800 dark:bg-milk-950 dark:placeholder:text-milk-600 dark:focus:border-cacao-500 dark:focus:ring-cacao-500/30 w-full rounded-full border bg-white py-2.5 pr-10 pl-10 shadow-sm focus:ring-2 focus:outline-none"
+          class="focus:border-cacao-400 focus:ring-cacao-500/20 dark:focus:border-cacao-500 dark:focus:ring-cacao-500/30 w-full rounded-full border border-stone-200 bg-white py-2.5 pr-10 pl-10 shadow-sm placeholder:text-stone-400 focus:ring-2 focus:outline-none dark:border-stone-800 dark:bg-stone-950 dark:placeholder:text-stone-600"
         />
         {#if $searchTerm}
           <button
             onclick={() => searchTerm.reset()}
-            class="text-milk-400 hover:bg-milk-100 hover:text-milk-700 dark:hover:bg-milk-800 dark:hover:text-milk-300 absolute top-1/2 right-3 -translate-y-1/2 rounded-full p-1 transition-colors duration-200"
+            class="absolute top-1/2 right-3 -translate-y-1/2 rounded-full p-1 text-stone-400 transition-colors duration-200 hover:bg-stone-100 hover:text-stone-700 dark:hover:bg-stone-800 dark:hover:text-stone-300"
             aria-label="Clear search"
           >
             <X size={16} />
@@ -85,7 +85,7 @@
               id="assignee"
               name="assignee"
               bind:value={$assigneeStore}
-              class="border-milk-200 focus:border-cacao-500 focus:ring-cacao-500/20 dark:border-milk-800 dark:bg-milk-950 dark:focus:border-cacao-500 dark:focus:ring-cacao-500/30 w-full appearance-none rounded-lg border bg-white py-2 pr-10 pl-4 text-sm shadow-sm focus:ring-2 focus:outline-none"
+              class="focus:border-cacao-500 focus:ring-cacao-500/20 dark:focus:border-cacao-500 dark:focus:ring-cacao-500/30 w-full appearance-none rounded-lg border border-stone-200 bg-white py-2 pr-10 pl-4 text-sm shadow-sm focus:ring-2 focus:outline-none dark:border-stone-800 dark:bg-stone-950"
             >
               <option value="">All Students</option>
               {#each students as student}
@@ -93,7 +93,7 @@
               {/each}
             </select>
             <div
-              class="text-milk-500 pointer-events-none absolute inset-y-0 right-0 flex items-center px-2"
+              class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-stone-500"
             >
               <svg class="h-4 w-4 fill-current" viewBox="0 0 20 20">
                 <path
@@ -143,15 +143,15 @@
 
   <!-- Table Container -->
   <div
-    class="border-milk-200 dark:border-milk-800 dark:bg-milk-950 overflow-hidden rounded-xl border bg-white shadow-md"
+    class="overflow-hidden rounded-xl border border-stone-200 bg-white shadow-md dark:border-stone-800 dark:bg-stone-950"
   >
     {#if items.length === 0 && !isEmptySearch}
       <!-- Empty state -->
       <div class="flex flex-col items-center justify-center p-8 text-center">
-        <div class="bg-milk-100 dark:bg-milk-800 mb-4 rounded-full p-4">
+        <div class="mb-4 rounded-full bg-stone-100 p-4 dark:bg-stone-800">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="text-milk-500 dark:text-milk-400 h-8 w-8"
+            class="h-8 w-8 text-stone-500 dark:text-stone-400"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -164,10 +164,10 @@
             />
           </svg>
         </div>
-        <h3 class="text-milk-700 dark:text-milk-300 text-lg font-medium">
+        <h3 class="text-lg font-medium text-stone-700 dark:text-stone-300">
           Nothing here yet
         </h3>
-        <p class="text-milk-500 dark:text-milk-400 mt-1 max-w-md">
+        <p class="mt-1 max-w-md text-stone-500 dark:text-stone-400">
           Looks like tumbleweeds in here... 🌵
         </p>
         <form
@@ -193,10 +193,10 @@
     {:else if isEmptySearch}
       <!-- No search results -->
       <div class="flex flex-col items-center justify-center p-8 text-center">
-        <div class="bg-milk-100 dark:bg-milk-800 mb-4 rounded-full p-4">
+        <div class="mb-4 rounded-full bg-stone-100 p-4 dark:bg-stone-800">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="text-milk-500 dark:text-milk-400 h-8 w-8"
+            class="h-8 w-8 text-stone-500 dark:text-stone-400"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -209,15 +209,15 @@
             />
           </svg>
         </div>
-        <h3 class="text-milk-700 dark:text-milk-300 text-lg font-medium">
+        <h3 class="text-lg font-medium text-stone-700 dark:text-stone-300">
           No results found
         </h3>
-        <p class="text-milk-500 dark:text-milk-400 mt-1 max-w-md">
+        <p class="mt-1 max-w-md text-stone-500 dark:text-stone-400">
           Try adjusting your search or filters to find what you're looking for.
         </p>
         <button
           onclick={() => resetFilters()}
-          class="border-milk-300 text-milk-700 hover:bg-milk-50 focus:ring-cacao-500 dark:border-milk-700 dark:bg-milk-800 dark:text-milk-300 dark:hover:bg-milk-700 dark:focus:ring-offset-milk-900 mt-6 inline-flex items-center justify-center rounded-lg border bg-white px-4 py-2 text-sm font-medium shadow-sm transition-colors focus:ring-2 focus:ring-offset-2 focus:outline-none"
+          class="focus:ring-cacao-500 mt-6 inline-flex items-center justify-center rounded-lg border border-stone-300 bg-white px-4 py-2 text-sm font-medium text-stone-700 shadow-sm transition-colors hover:bg-stone-50 focus:ring-2 focus:ring-offset-2 focus:outline-none dark:border-stone-700 dark:bg-stone-800 dark:text-stone-300 dark:hover:bg-stone-700 dark:focus:ring-offset-stone-900"
         >
           Clear filters
         </button>
@@ -227,11 +227,11 @@
         <table class="w-full table-auto">
           <thead>
             <tr
-              class="border-milk-200 bg-milk-50 dark:border-milk-700 dark:bg-milk-900 border-b"
+              class="border-b border-stone-200 bg-stone-50 dark:border-stone-700 dark:bg-stone-900"
             >
               {#each config.columns as column}
                 <th
-                  class="text-milk-700 dark:text-milk-300 px-6 py-4 text-left text-sm font-medium whitespace-nowrap"
+                  class="px-6 py-4 text-left text-sm font-medium whitespace-nowrap text-stone-700 dark:text-stone-300"
                 >
                   <div
                     class="hover:text-cacao-600 dark:hover:text-cacao-400 inline-flex cursor-pointer items-center gap-1.5"
@@ -242,7 +242,7 @@
               {/each}
             </tr>
           </thead>
-          <tbody class="divide-milk-200 dark:divide-milk-800 divide-y">
+          <tbody class="divide-y divide-stone-200 dark:divide-stone-800">
             {#each items as item (item.id)}
               <tr
                 onclick={() => goto(`${href}/${item.id}`)}
@@ -251,7 +251,7 @@
               >
                 {#each config.columns as column, i}
                   <td
-                    class="text-milk-600 group-hover:text-milk-900 dark:text-milk-400 dark:group-hover:text-milk-200 px-6 py-4 text-sm transition-all duration-200 ease-in-out"
+                    class="px-6 py-4 text-sm text-stone-600 transition-all duration-200 ease-in-out group-hover:text-stone-900 dark:text-stone-400 dark:group-hover:text-stone-200"
                   >
                     {column.formatter
                       ? column.formatter(item[column.key])
@@ -266,14 +266,14 @@
 
       <!-- Table footer with row count -->
       <div
-        class="border-milk-200 bg-milk-50 text-milk-500 dark:border-milk-800 dark:bg-milk-900 dark:text-milk-400 flex items-center justify-between border-t px-6 py-3 text-sm"
+        class="flex items-center justify-between border-t border-stone-200 bg-stone-50 px-6 py-3 text-sm text-stone-500 dark:border-stone-800 dark:bg-stone-900 dark:text-stone-400"
       >
         <div>
-          Showing <span class="text-milk-700 dark:text-milk-300 font-medium"
+          Showing <span class="font-medium text-stone-700 dark:text-stone-300"
             >{items.length}</span
           >
           of
-          <span class="text-milk-700 dark:text-milk-300 font-medium"
+          <span class="font-medium text-stone-700 dark:text-stone-300"
             >{total}</span
           > results
         </div>

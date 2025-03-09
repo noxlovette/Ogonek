@@ -22,10 +22,10 @@
 
 <div class="mx-auto max-w-3xl px-4">
   <div class="mb-12 text-center">
-    <h1 class="text-milk-800 dark:text-milk-100 mb-4 text-4xl font-bold">
+    <h1 class="mb-4 text-4xl font-bold text-stone-800 dark:text-stone-100">
       Contact Me
     </h1>
-    <p class="text-milk-600 dark:text-milk-300 mx-auto max-w-xl">
+    <p class="mx-auto max-w-xl text-stone-600 dark:text-stone-300">
       Need to get in touch? Feel free to reach out through email or Telegram.
     </p>
   </div>
@@ -33,27 +33,27 @@
   <div class="grid gap-6 md:grid-cols-2">
     <!-- Email Card -->
     <div
-      class="dark:bg-milk-900 border-milk-200 dark:border-milk-700 overflow-hidden rounded-xl border bg-white shadow-md transition-all hover:shadow-lg"
+      class="overflow-hidden rounded-xl border border-stone-200 bg-white shadow-md transition-all hover:shadow-lg dark:border-stone-700 dark:bg-stone-900"
     >
       <div class="p-6">
         <div class="mb-4 flex items-center">
           <div class="bg-cacao-100 dark:bg-cacao-900 mr-4 rounded-full p-3">
             <Mail class="text-cacao-600 dark:text-cacao-400 h-6 w-6" />
           </div>
-          <h2 class="text-milk-800 dark:text-milk-200 text-xl font-semibold">
+          <h2 class="text-xl font-semibold text-stone-800 dark:text-stone-200">
             Email
           </h2>
         </div>
 
-        <p class="text-milk-600 dark:text-milk-400 mb-4">
+        <p class="mb-4 text-stone-600 dark:text-stone-400">
           Drop me an email and I'll get back to you as soon as possible.
         </p>
 
         <div
-          class="bg-milk-50 dark:bg-milk-800 flex items-center justify-between rounded-lg p-3"
+          class="flex items-center justify-between rounded-lg bg-stone-50 p-3 dark:bg-stone-800"
         >
           <span
-            class="text-milk-800 dark:text-milk-300 font-mono text-sm break-all md:text-base"
+            class="font-mono text-sm break-all text-stone-800 md:text-base dark:text-stone-300"
           >
             {contactInfo.email}
           </span>
@@ -76,27 +76,27 @@
 
     <!-- Telegram Card -->
     <div
-      class="dark:bg-milk-900 border-milk-200 dark:border-milk-700 overflow-hidden rounded-xl border bg-white shadow-md transition-all hover:shadow-lg"
+      class="overflow-hidden rounded-xl border border-stone-200 bg-white shadow-md transition-all hover:shadow-lg dark:border-stone-700 dark:bg-stone-900"
     >
       <div class="p-6">
         <div class="mb-4 flex items-center">
           <div class="bg-cacao-100 dark:bg-cacao-900 mr-4 rounded-full p-3">
             <MessageSquare class="text-cacao-600 dark:text-cacao-400 h-6 w-6" />
           </div>
-          <h2 class="text-milk-800 dark:text-milk-200 text-xl font-semibold">
+          <h2 class="text-xl font-semibold text-stone-800 dark:text-stone-200">
             Telegram
           </h2>
         </div>
 
-        <p class="text-milk-600 dark:text-milk-400 mb-4">
+        <p class="mb-4 text-stone-600 dark:text-stone-400">
           For faster responses, reach out to me on Telegram.
         </p>
 
         <div
-          class="bg-milk-50 dark:bg-milk-800 flex items-center justify-between rounded-lg p-3"
+          class="flex items-center justify-between rounded-lg bg-stone-50 p-3 dark:bg-stone-800"
         >
           <span
-            class="text-milk-800 dark:text-milk-300 font-mono text-sm md:text-base"
+            class="font-mono text-sm text-stone-800 md:text-base dark:text-stone-300"
           >
             {contactInfo.telegram}
           </span>
@@ -122,7 +122,7 @@
 
   <!-- Additional Contact Info or Form Could Go Here -->
   <div class="mt-12 text-center">
-    <p class="text-milk-600 dark:text-milk-400">
+    <p class="text-stone-600 dark:text-stone-400">
       I typically respond within 24 hours during business days.
     </p>
   </div>

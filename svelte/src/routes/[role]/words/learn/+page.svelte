@@ -49,7 +49,7 @@
     {
       quality: 3,
       label: "Okay 👍",
-      color: "ring-milk-100 hover:bg-milk-200 ring-2",
+      color: "ring-stone-100 hover:bg-stone-200 ring-2",
     },
     {
       quality: 4,
@@ -86,7 +86,7 @@
         </svg>
       </div>
       <h2 class="text-2xl font-bold">🎉 All caught up!</h2>
-      <p class="text-milk-600 dark:text-milk-400 max-w-md">
+      <p class="max-w-md text-stone-600 dark:text-stone-400">
         You've reviewed all your due cards. Come back later for new cards to
         review.
       </p>
@@ -100,7 +100,7 @@
   <div class="space-y-6" in:fade={{ duration: 300 }}>
     <!-- Progress bar with card count indication -->
     <div class="flex items-center justify-between">
-      <span class="text-milk-600 dark:text-milk-400 text-sm">
+      <span class="text-sm text-stone-600 dark:text-stone-400">
         Card {data.cards.indexOf(currentCard) + 1} of {data.cards.length}
       </span>
       <span class="text-cacao-600 dark:text-cacao-400 text-sm font-medium">
@@ -111,7 +111,7 @@
     </div>
 
     <div
-      class="bg-milk-200 dark:bg-milk-700 h-2.5 w-full overflow-hidden rounded-full"
+      class="h-2.5 w-full overflow-hidden rounded-full bg-stone-200 dark:bg-stone-700"
     >
       <div
         class="bg-cacao-600 dark:bg-cacao-600 h-2.5 rounded-full transition-all duration-300"
@@ -123,14 +123,14 @@
 
     <!-- Card container -->
     <div
-      class="dark:bg-milk-900 flex min-h-[350px] flex-col rounded-xl bg-white p-8 shadow-sm transition-all hover:shadow-md"
+      class="flex min-h-[350px] flex-col rounded-xl bg-white p-8 shadow-sm transition-all hover:shadow-md dark:bg-stone-900"
       in:slide={{ duration: 300, easing: quintOut }}
     >
       <div class="flex-grow">
         <!-- Front side -->
         <div class="prose dark:prose-invert max-w-none">
           <h3
-            class="text-milk-500 dark:text-milk-400 mb-4 text-sm font-medium uppercase"
+            class="mb-4 text-sm font-medium text-stone-500 uppercase dark:text-stone-400"
           >
             Question
           </h3>
@@ -140,11 +140,11 @@
         <!-- Back side -->
         {#if showAnswer}
           <div
-            class="border-milk-200 dark:border-milk-700 mt-8 border-t pt-8"
+            class="mt-8 border-t border-stone-200 pt-8 dark:border-stone-700"
             transition:slide
           >
             <h3
-              class="text-milk-500 dark:text-milk-400 mb-4 text-sm font-medium uppercase"
+              class="mb-4 text-sm font-medium text-stone-500 uppercase dark:text-stone-400"
             >
               Answer
             </h3>

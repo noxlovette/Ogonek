@@ -42,11 +42,11 @@
 
 <div class="flex size-full h-max justify-center md:items-center">
   <div
-    class="dark:bg-milk-900 max-w-md space-y-6 rounded-xl bg-white p-6 shadow-md md:w-full md:p-8"
+    class="max-w-md space-y-6 rounded-xl bg-white p-6 shadow-md md:w-full md:p-8 dark:bg-stone-900"
   >
     <div class="flex items-center justify-center space-x-2">
-      <BookOpen class="dark:text-milk-700 text-cacao-500 h-8 w-8" />
-      <h1 class="text-milk-800 text-2xl font-bold dark:text-inherit">
+      <BookOpen class="text-cacao-500 h-8 w-8 dark:text-stone-700" />
+      <h1 class="text-2xl font-bold text-stone-800 dark:text-inherit">
         Homework Time!
       </h1>
     </div>
@@ -55,14 +55,14 @@
       {#await data.body}
         <div class="flex items-center justify-center space-x-3">
           <Loader2
-            class="text-cacao-500 dark:text-milk-200 h-8 w-8 animate-spin"
+            class="text-cacao-500 h-8 w-8 animate-spin dark:text-stone-200"
           />
-          <p class="text-milk-600">Loading...</p>
+          <p class="text-stone-600">Loading...</p>
         </div>
       {:then body}
         <div class="flex items-center justify-center space-x-3">
-          <FileCheck class="text-cacao-500 dark:text-milk-200 h-8 w-8" />
-          <p class="text-milk-600 dark:text-milk-100">Enjoy!</p>
+          <FileCheck class="text-cacao-500 h-8 w-8 dark:text-stone-200" />
+          <p class="text-stone-600 dark:text-stone-100">Enjoy!</p>
         </div>
       {:catch error}
         <p>Something went wrong: {error.message}</p>
@@ -70,7 +70,7 @@
 
       <button
         onclick={download}
-        class="bg-cacao-500 hover:bg-cacao-600 dark:bg-milk-800 dark:hover:bg-milk-700 flex w-full items-center justify-center space-x-2 rounded-lg px-4 py-2 font-medium text-white transition-colors duration-200"
+        class="bg-cacao-500 hover:bg-cacao-600 flex w-full items-center justify-center space-x-2 rounded-lg px-4 py-2 font-medium text-white transition-colors duration-200 dark:bg-stone-800 dark:hover:bg-stone-700"
       >
         <Download class="h-4 w-4" />
         <span>Download Again</span>
@@ -78,7 +78,7 @@
 
       <button
         onclick={goBack}
-        class="bg-milk-100 hover:bg-milk-200 text-milk-700 mt-2 flex w-full items-center justify-center space-x-2 rounded-lg px-4 py-2 font-medium transition-colors duration-200"
+        class="mt-2 flex w-full items-center justify-center space-x-2 rounded-lg bg-stone-100 px-4 py-2 font-medium text-stone-700 transition-colors duration-200 hover:bg-stone-200"
       >
         <ArrowLeft class="h-4 w-4" />
         <span>Go Back</span>

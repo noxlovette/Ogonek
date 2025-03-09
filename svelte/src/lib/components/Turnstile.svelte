@@ -86,7 +86,7 @@
 <div class="relative">
   {#if isLoading}
     <div class="absolute inset-0 flex items-center justify-center">
-      <Loader2 class="font-milk-200 animate-spin"></Loader2>
+      <Loader2 class="font-stone-200 animate-spin"></Loader2>
     </div>
   {/if}
 

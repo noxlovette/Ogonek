@@ -32,9 +32,9 @@
 
 <button
   onclick={toggleTheme}
-  class="bg-milk-100 dark:bg-milk-800 hover:bg-milk-200 dark:hover:bg-milk-700
-         rounded-lg p-2
-         transition-colors duration-200"
+  class="rounded-lg bg-stone-100 p-2 transition-colors
+         duration-200 hover:bg-stone-50
+         dark:bg-stone-800 dark:hover:bg-stone-700"
   aria-label="Toggle theme"
 >
   {#if theme === "light"}

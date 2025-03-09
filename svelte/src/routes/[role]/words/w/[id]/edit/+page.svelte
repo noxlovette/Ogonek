@@ -61,7 +61,7 @@
   <H1>{deck.name}</H1>
   <div class="hidden md:block">
     <div class="flex items-center gap-3">
-      <span class="text-milk-500 dark:text-milk-400 text-sm">
+      <span class="text-sm text-stone-500 dark:text-stone-400">
         {updatedCards.length}
         {updatedCards.length === 1 ? "card" : "cards"}
       </span>
@@ -88,12 +88,12 @@
       <div class="space-y-6">
         {#if updatedCards.length === 0}
           <div
-            class="border-milk-200 bg-milk-50 dark:border-milk-800 dark:bg-milk-900/50 flex flex-col items-center justify-center rounded-xl border-2 border-dashed p-12 text-center"
+            class="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-stone-200 bg-stone-50 p-12 text-center dark:border-stone-800 dark:bg-stone-900/50"
           >
-            <div class="bg-milk-100 dark:bg-milk-800 mb-4 rounded-full p-4">
+            <div class="mb-4 rounded-full bg-stone-100 p-4 dark:bg-stone-800">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="text-milk-500 dark:text-milk-400 h-8 w-8"
+                class="h-8 w-8 text-stone-500 dark:text-stone-400"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -106,15 +106,15 @@
                 />
               </svg>
             </div>
-            <h3 class="text-milk-700 dark:text-milk-300 text-lg font-medium">
+            <h3 class="text-lg font-medium text-stone-700 dark:text-stone-300">
               No cards yet
             </h3>
-            <p class="text-milk-500 dark:text-milk-400 mt-1 max-w-md">
+            <p class="mt-1 max-w-md text-stone-500 dark:text-stone-400">
               Create your first flashcard to get started
             </p>
             <button
               type="button"
-              class="bg-cacao-500 hover:bg-cacao-600 focus:ring-cacao-500 dark:bg-cacao-600 dark:hover:bg-cacao-700 dark:focus:ring-offset-milk-900 mt-6 inline-flex items-center rounded-lg px-4 py-2 text-sm font-medium text-white shadow-sm transition focus:ring-2 focus:ring-offset-2 focus:outline-none"
+              class="bg-cacao-500 hover:bg-cacao-600 focus:ring-cacao-500 dark:bg-cacao-600 dark:hover:bg-cacao-700 mt-6 inline-flex items-center rounded-lg px-4 py-2 text-sm font-medium text-white shadow-sm transition focus:ring-2 focus:ring-offset-2 focus:outline-none dark:focus:ring-offset-stone-900"
               onclick={addCard}
             >
               <Plus class="mr-2 h-4 w-4" />
@@ -131,7 +131,7 @@
           <button
             type="button"
             onclick={addCard}
-            class="group border-milk-200 bg-milk-50 text-milk-500 hover:border-cacao-300 hover:text-cacao-500 dark:border-milk-800 dark:bg-milk-900/50 dark:text-milk-400 dark:hover:border-cacao-700 dark:hover:text-cacao-400 mt-4 flex w-full items-center justify-center rounded-lg border-2 border-dashed py-4 transition"
+            class="group hover:border-cacao-300 hover:text-cacao-500 dark:hover:border-cacao-700 dark:hover:text-cacao-400 mt-4 flex w-full items-center justify-center rounded-lg border-2 border-dashed border-stone-200 bg-stone-50 py-4 text-stone-500 transition dark:border-stone-800 dark:bg-stone-900/50 dark:text-stone-400"
           >
             <Plus class="mr-2 h-5 w-5 transition group-hover:scale-110" />
             <span>Add Another Card</span>
@@ -141,7 +141,7 @@
     </div>
     <div class="lg:col-span-1">
       <div
-        class="dark:bg-milk-900 sticky top-6 space-y-6 rounded-xl bg-white p-5 shadow-sm"
+        class="sticky top-6 space-y-6 rounded-xl bg-white p-5 shadow-sm dark:bg-stone-900"
       >
         <div>
           <Input
@@ -179,7 +179,7 @@
             <select
               name="visibility"
               value={deck.visibility}
-              class="border-milk-200 focus:ring-cacao-500 disabled:text-milk-500 dark:border-milk-800 dark:bg-milk-950 dark:focus:border-milk-800 dark:focus:ring-milk-700 w-full rounded-lg border bg-white px-4 py-2 transition duration-200 focus:ring focus:outline-none dark:focus:ring dark:focus:outline-none"
+              class="focus:ring-cacao-500 w-full rounded-lg border border-stone-200 bg-white px-4 py-2 transition duration-200 focus:ring focus:outline-none disabled:text-stone-500 dark:border-stone-800 dark:bg-stone-950 dark:focus:border-stone-800 dark:focus:ring dark:focus:ring-stone-700 dark:focus:outline-none"
             >
               <option value="private">Private</option>
               <option value="public">Public</option>

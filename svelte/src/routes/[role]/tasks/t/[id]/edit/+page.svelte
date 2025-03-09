@@ -70,7 +70,7 @@
         name="title"
         value={task.title}
         placeholder="Title"
-        class="border-milk-200 focus:ring-cacao-500 dark:border-milk-800 dark:bg-milk-950 dark:focus:border-milk-800 dark:focus:ring-milk-700 disabled:text-milk-500 w-full rounded-lg border px-4 py-2 transition duration-200 focus:ring focus:outline-none dark:focus:ring dark:focus:outline-none"
+        class="focus:ring-cacao-500 w-full rounded-lg border border-stone-200 px-4 py-2 transition duration-200 focus:ring focus:outline-none disabled:text-stone-500 dark:border-stone-800 dark:bg-stone-950 dark:focus:border-stone-800 dark:focus:ring dark:focus:ring-stone-700 dark:focus:outline-none"
       />
     </div>
 
@@ -85,7 +85,7 @@
         type="date"
         name="dueDate"
         bind:value={dueDate}
-        class="border-milk-200 focus:ring-cacao-500 dark:border-milk-800 dark:bg-milk-950 dark:focus:border-milk-800 dark:focus:ring-milk-700 disabled:text-milk-500 w-full rounded-lg border px-4 py-2 transition duration-200 focus:ring focus:outline-none dark:focus:ring dark:focus:outline-none"
+        class="focus:ring-cacao-500 w-full rounded-lg border border-stone-200 px-4 py-2 transition duration-200 focus:ring focus:outline-none disabled:text-stone-500 dark:border-stone-800 dark:bg-stone-950 dark:focus:border-stone-800 dark:focus:ring dark:focus:ring-stone-700 dark:focus:outline-none"
       />
     </div>
 
@@ -98,9 +98,9 @@
           class="peer sr-only"
         />
         <div
-          class="bg-milk-200 peer-focus:ring-cacao-300 peer after:border-milk-300 peer-checked:bg-cacao-600 h-6 w-11 rounded-full peer-focus:ring-4 peer-focus:outline-none after:absolute after:top-[2px] after:left-[2px] after:h-5 after:w-5 after:rounded-full after:border after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full peer-checked:after:border-white"
+          class="peer-focus:ring-cacao-300 peer peer-checked:bg-cacao-600 h-6 w-11 rounded-full bg-stone-200 peer-focus:ring-4 peer-focus:outline-none after:absolute after:top-[2px] after:left-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-stone-300 after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full peer-checked:after:border-white"
         ></div>
-        <span class="text-milk-700 ml-3 text-sm font-medium">Completed</span>
+        <span class="ml-3 text-sm font-medium text-stone-700">Completed</span>
       </label>
     </div>
   </div>

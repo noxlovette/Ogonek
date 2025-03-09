@@ -35,7 +35,7 @@
       {lesson.topic}
     </h2>
 
-    <p class=" text-milk-600 text-sm/relaxed lg:text-base/relaxed">
+    <p class=" text-sm/relaxed text-stone-600 lg:text-base/relaxed">
       {@html rendered}
     </p>
   </div>

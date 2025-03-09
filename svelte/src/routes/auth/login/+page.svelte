@@ -18,17 +18,17 @@
 </script>
 
 <div
-  class="dark:bg-milk-900 flex w-11/12 max-w-md flex-col items-center justify-center space-y-6 rounded-xl bg-white p-9 shadow-md"
+  class="flex w-11/12 max-w-md flex-col items-center justify-center space-y-6 rounded-xl bg-white p-9 shadow-md dark:bg-stone-900"
 >
   <div class="text-center">
-    <h2 class="text-cacao-600 dark:text-milk-200 text-3xl font-bold">
+    <h2 class="text-cacao-600 text-3xl font-bold dark:text-stone-200">
       Welcome back
     </h2>
-    <p class="text-milk-600 mt-2 text-sm">
+    <p class="mt-2 text-sm text-stone-600">
       Don't have an account?
       <a
         href="/auth/signup"
-        class="text-cacao-500 dark:text-milk-50 dark:hover:text-milk-200 hover:text-cacao-400 font-medium"
+        class="text-cacao-500 hover:text-cacao-400 font-medium dark:text-stone-50 dark:hover:text-stone-200"
         >Sign up</a
       >
     </p>

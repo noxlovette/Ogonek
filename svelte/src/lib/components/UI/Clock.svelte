@@ -26,6 +26,6 @@
   });
 </script>
 
-<div class="text-milk-600 font-mono md:text-2xl">
+<div class="font-mono text-stone-600 md:text-2xl">
   {formattedTime}
 </div>

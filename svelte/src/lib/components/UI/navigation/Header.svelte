@@ -8,7 +8,7 @@
 </script>
 
 <header
-  class="ring-milk-200 dark:ring-milk-900 my-2 w-11/12 items-baseline rounded-lg shadow-md ring md:w-full"
+  class="my-2 w-11/12 items-baseline rounded-lg shadow-md ring ring-stone-200 md:w-full dark:ring-stone-900"
 >
   <div
     class="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-3"

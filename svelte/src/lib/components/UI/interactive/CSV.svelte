@@ -139,14 +139,16 @@
   }
 </script>
 
-<div class="bg-milk-950/50 fixed inset-0 z-50 flex items-center justify-center">
+<div
+  class="fixed inset-0 z-50 flex items-center justify-center bg-stone-950/50"
+>
   <div
     class="w-full max-w-lg rounded-xl bg-white p-6 shadow-xl dark:bg-stone-800"
   >
     <div class="mb-4 flex items-center justify-between">
       <h2 class="text-xl font-bold">Import Cards from CSV</h2>
       <button
-        class="text-milk-500 hover:text-milk-700"
+        class="text-stone-500 hover:text-stone-700"
         onclick={closeImportModal}
       >
         <X size={20} />
@@ -156,16 +158,16 @@
     <div class="space-y-4">
       {#if !csvHeaders.length}
         <!-- File Upload -->
-        <p class="text-milk-600 dark:text-milk-400">
+        <p class="text-stone-600 dark:text-stone-400">
           Select a CSV file with semicolon (;) separated values to import as
           cards.
         </p>
 
         <div
-          class="border-milk-300 bg-milk-50 dark:border-milk-700 dark:bg-milk-900 flex h-40 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed px-4 py-6"
+          class="flex h-40 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-stone-300 bg-stone-50 px-4 py-6 dark:border-stone-700 dark:bg-stone-900"
         >
           <svg
-            class="text-milk-400 mb-2 h-10 w-10"
+            class="mb-2 h-10 w-10 text-stone-400"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -177,7 +179,7 @@
               d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
             />
           </svg>
-          <p class="text-milk-600 dark:text-milk-400">
+          <p class="text-stone-600 dark:text-stone-400">
             Drag and drop or click to select
           </p>
           <input
@@ -196,7 +198,7 @@
               <Label>Front</Label>
               <select
                 bind:value={importFrontColumn}
-                class="border-milk-300 dark:border-milk-700 dark:bg-milk-950 w-full rounded-lg border bg-white p-2"
+                class="w-full rounded-lg border border-stone-300 bg-white p-2 dark:border-stone-700 dark:bg-stone-950"
               >
                 <option value="">Select column</option>
                 {#each csvHeaders as header}
@@ -209,7 +211,7 @@
               <Label>Back</Label>
               <select
                 bind:value={importBackColumn}
-                class="border-milk-300 dark:border-milk-700 dark:bg-milk-950 w-full rounded-lg border bg-white p-2"
+                class="w-full rounded-lg border border-stone-300 bg-white p-2 dark:border-stone-700 dark:bg-stone-950"
               >
                 <option value="">Select column</option>
                 {#each csvHeaders as header}
@@ -224,19 +226,21 @@
             <div class="mt-4">
               <h3 class="mb-2 text-sm font-semibold">Preview (first 5 rows)</h3>
               <div
-                class="border-milk-300 dark:border-milk-700 max-h-48 overflow-y-auto rounded-lg border"
+                class="max-h-48 overflow-y-auto rounded-lg border border-stone-300 dark:border-stone-700"
               >
                 <table class="w-full">
-                  <thead class="bg-milk-100 dark:bg-milk-800">
+                  <thead class="bg-stone-100 dark:bg-stone-800">
                     <tr>
                       <th class="p-2 text-left text-sm">Front</th>
                       <th class="p-2 text-left text-sm">Back</th>
                     </tr>
                   </thead>
-                  <tbody class="divide-milk-200 dark:divide-milk-700 divide-y">
+                  <tbody
+                    class="divide-y divide-stone-200 dark:divide-stone-700"
+                  >
                     {#each csvPreview as row}
                       <tr
-                        class="even:bg-milk-50 dark:odd:bg-milk-900 dark:even:bg-milk-800/50 odd:bg-white"
+                        class="odd:bg-white even:bg-stone-50 dark:odd:bg-stone-900 dark:even:bg-stone-800/50"
                       >
                         <td class="p-2 text-sm"
                           >{row[importFrontColumn] || "<empty>"}</td
@@ -254,14 +258,14 @@
 
           <div class="flex justify-end space-x-2 pt-2">
             <button
-              class="border-milk-300 bg-milk-100 text-milk-700 hover:bg-milk-200 dark:border-milk-700 dark:bg-milk-800 dark:text-milk-300 dark:hover:bg-milk-700 rounded-lg border px-4 py-2 font-medium"
+              class="rounded-lg border border-stone-300 bg-stone-100 px-4 py-2 font-medium text-stone-700 hover:bg-stone-200 dark:border-stone-700 dark:bg-stone-800 dark:text-stone-300 dark:hover:bg-stone-700"
               onclick={closeImportModal}
             >
               Cancel
             </button>
 
             <button
-              class="bg-cacao-500 hover:bg-cacao-600 disabled:bg-milk-400 rounded-lg px-4 py-2 font-medium text-white disabled:cursor-not-allowed"
+              class="bg-cacao-500 hover:bg-cacao-600 rounded-lg px-4 py-2 font-medium text-white disabled:cursor-not-allowed disabled:bg-stone-400"
               disabled={!importFrontColumn || !importBackColumn}
               onclick={importCards}
             >

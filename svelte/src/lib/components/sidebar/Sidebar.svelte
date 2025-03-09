@@ -6,9 +6,9 @@
 
 <div
   class={`
-   bg-cacao-600 text-cacao-50 dark:bg-milk-900 dark:ring-milk-900 ring-milk-200 relative
-   my-2 h-max flex-shrink-0 flex-col rounded-lg shadow-md ring
-   transition-all ease-in-out
+   bg-cacao-600 text-cacao-50 relative my-2 h-max flex-shrink-0
+   flex-col rounded-lg shadow-md ring ring-stone-200 transition-all ease-in-out
+   dark:bg-stone-900 dark:ring-stone-900
    ${$sidebar ? "w-24" : "w-1/5"}
    hidden md:flex md:text-lg lg:text-xl xl:text-2xl
  `}
@@ -19,7 +19,7 @@
     <ul
       class={`
        flex flex-col 
-       ${$sidebar ? "items-center space-y-6" : "divide-cacao-400 dark:divide-milk-600/80 space-y-2 divide-y-2 divide-dashed px-4 lg:space-y-3 xl:space-y-4"}
+       ${$sidebar ? "items-center space-y-6" : "divide-cacao-400 space-y-2 divide-y-2 divide-dashed px-4 lg:space-y-3 xl:space-y-4 dark:divide-stone-600/80"}
      `}
     >
       {#each elements as Element}

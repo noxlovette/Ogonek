@@ -97,7 +97,7 @@
 			 {isSuccess ? 'border-green-700 bg-green-50' : ''}
 			 {isDragging
       ? 'border-cacao-700 bg-cacao-100'
-      : 'border-milk-300 hover:border-milk-400 bg-milk-50 dark:bg-milk-900 dark:border-milk-800 dark:hover:border-milk-700'}"
+      : 'border-stone-300 bg-stone-50 hover:border-stone-400 dark:border-stone-800 dark:bg-stone-900 dark:hover:border-stone-700'}"
   >
     <input
       bind:this={fileInput}
@@ -113,7 +113,7 @@
         in:scale={{ duration: 200 }}
       >
         <Loader2 class="text-cacao-500 h-10 w-10 animate-spin" />
-        <p class="text-milk-600">Uploading {fileName}...</p>
+        <p class="text-stone-600">Uploading {fileName}...</p>
       </div>
     {:else if isSuccess}
       <div class="flex flex-col items-center gap-3" in:fade>
@@ -127,10 +127,10 @@
     {:else}
       <div class="flex flex-col items-center gap-3" in:fade>
         <Upload
-          class="h-10 w-10 {fileName ? 'text-cacao-500' : 'text-milk-400'}"
+          class="h-10 w-10 {fileName ? 'text-cacao-500' : 'text-stone-400'}"
         />
         <div class="text-center">
-          <p class="text-milk-600">
+          <p class="text-stone-600">
             {fileName || "Drag and drop your file here, or click to select"}
           </p>
         </div>
@@ -146,7 +146,7 @@
 			 gap-2 rounded-md px-4 py-2
 			 transition-colors duration-200
 			 {isUploading || !fileName
-      ? 'bg-milk-200 text-milk-500 cursor-not-allowed'
+      ? 'cursor-not-allowed bg-stone-200 text-stone-500'
       : 'bg-cacao-500 hover:bg-cacao-600 text-white'}"
   >
     {#if isUploading}

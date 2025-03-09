@@ -79,22 +79,22 @@
   const variantClasses = {
     primary:
       customColors ||
-      "from-cacao-500 to-cacao-600 text-cacao-50 dark:from-milk-800 dark:to-milk-900 dark:text-cacao-100 hover:to-cacao-700 focus:ring-cacao-500 ring-milk-200 dark:ring-milk-800 dark:hover:ring-milk-700 dark:hover:to-milk-950 bg-gradient-to-br",
+      "from-cacao-500 to-cacao-600 text-cacao-50 dark:from-stone-800 dark:to-stone-900 dark:text-cacao-100 hover:to-cacao-700 focus:ring-cacao-500 ring-stone-200 dark:ring-stone-800 dark:hover:ring-stone-700 dark:hover:to-stone-950 bg-gradient-to-br",
     secondary:
       customColors ||
-      "text-milk-700 from-milk-50 to-milk-100 hover:to-milk-200 ring-milk-300 bg-gradient-to-bl",
+      "text-stone-700 from-stone-50 to-stone-100 hover:to-stone-200 ring-stone-300 bg-gradient-to-bl",
     danger:
       customColors ||
       "from-red-500 to-red-600 text-white hover:from-red-500 hover:to-red-700 dark:from-red-500 dark:to-red-600 dark:hover:from-red-500 dark:hover:to-red-700 focus:ring-red-400 bg-gradient-to-br",
     ghost:
       customColors ||
-      "text-milk-600 dark:text-milk-400 hover:bg-milk-100 dark:hover:bg-milk-800 ring-transparent",
+      "text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800 ring-transparent",
     link:
       customColors ||
       "text-cacao-600 dark:text-cacao-400 underline hover:text-cacao-700 dark:hover:text-cacao-300 p-0 ring-transparent",
     outline:
       customColors ||
-      "text-milk-700 dark:text-milk-300 ring-1 ring-milk-300 dark:ring-milk-700 hover:bg-milk-50 dark:hover:bg-milk-800",
+      "text-stone-700 dark:text-stone-300 ring-1 ring-stone-300 dark:ring-stone-700 hover:bg-stone-50 dark:hover:bg-stone-800",
   };
 
   const shapeClasses = $derived(rounded ? "rounded-full" : "rounded-lg");
@@ -156,22 +156,22 @@
 
 {#if showConfirmDialog}
   <div
-    class="bg-milk-950/50 fixed inset-0 z-50 flex items-center justify-center p-4"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-stone-950/50 p-4"
   >
     <div
-      class="dark:bg-milk-900 w-full max-w-md rounded-xl bg-white p-6 shadow-xl"
+      class="w-full max-w-md rounded-xl bg-white p-6 shadow-xl dark:bg-stone-900"
     >
-      <h3 class="text-milk-800 dark:text-milk-200 text-xl font-semibold">
+      <h3 class="text-xl font-semibold text-stone-800 dark:text-stone-200">
         {confirmTitle || "Confirm"}
       </h3>
-      <p class="text-milk-600 dark:text-milk-400 mt-2">
+      <p class="mt-2 text-stone-600 dark:text-stone-400">
         Are you sure you want to {"delete " + confirmText || "continue"}? This
         action cannot be undone.
       </p>
       <div class="mt-6 flex justify-end gap-3">
         <button
           type="button"
-          class="text-milk-700 from-milk-50 to-milk-100 hover:to-milk-200 ring-milk-300 rounded-lg bg-gradient-to-bl px-3 py-2 text-center ring transition-colors"
+          class="rounded-lg bg-gradient-to-bl from-stone-50 to-stone-100 px-3 py-2 text-center text-stone-700 ring ring-stone-300 transition-colors hover:to-stone-200"
           onclick={() => (showConfirmDialog = false)}
         >
           Cancel

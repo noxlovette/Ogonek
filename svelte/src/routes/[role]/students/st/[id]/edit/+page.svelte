@@ -31,9 +31,9 @@
           name="telegramId"
           value={student.telegramId}
           placeholder="@username"
-          class="border-milk-300 focus:ring-cacao-500 rounded-lg border py-2 pr-4 pl-10 focus:border-transparent focus:ring"
+          class="focus:ring-cacao-500 rounded-lg border border-stone-300 py-2 pr-4 pl-10 focus:border-transparent focus:ring"
         />
-        <span class="text-milk-400 absolute top-2.5 left-3">
+        <span class="absolute top-2.5 left-3 text-stone-400">
           <Send></Send>
         </span>
       </div>

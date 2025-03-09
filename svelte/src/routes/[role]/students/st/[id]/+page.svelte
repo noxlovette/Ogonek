@@ -22,7 +22,7 @@
 </div>
 <div class="flex space-x-4">
   <div class="space-y-2">
-    <p class="text-milk-700 block font-medium">Email</p>
+    <p class="block font-medium text-stone-700">Email</p>
     <h3 class="min-w-48">
       {student.email}
     </h3>
@@ -30,7 +30,7 @@
 </div>
 <h3 class="text-2xl font-bold">Notes</h3>
 {#if student.markdown}
-  <div class="markdown ring-milk-200 rounded-lg p-4 ring">
+  <div class="markdown rounded-lg p-4 ring ring-stone-200">
     {@html rendered}
   </div>
 {:else}

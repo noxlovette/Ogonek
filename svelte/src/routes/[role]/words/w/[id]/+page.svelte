@@ -107,11 +107,11 @@
   <!-- Main content area - Flashcards -->
   <div class="space-y-6 lg:col-span-2">
     <div
-      class="dark:bg-milk-900 flex items-center justify-between rounded-lg bg-white p-4 shadow-sm"
+      class="flex items-center justify-between rounded-lg bg-white p-4 shadow-sm dark:bg-stone-900"
     >
       <h2 class="text-xl font-semibold">Flashcards</h2>
       <span
-        class="bg-milk-100 dark:bg-milk-700 text-milk-600 dark:text-milk-300 rounded-full px-3 py-1 text-sm font-medium"
+        class="rounded-full bg-stone-100 px-3 py-1 text-sm font-medium text-stone-600 dark:bg-stone-700 dark:text-stone-300"
       >
         {cards.length}
         {cards.length === 1 ? "card" : "cards"}
@@ -126,12 +126,12 @@
 
     {#if cards.length === 0}
       <div
-        class="border-milk-200 dark:border-milk-700 flex h-40 flex-col items-center justify-center rounded-lg border-2 border-dashed p-6 text-center"
+        class="flex h-40 flex-col items-center justify-center rounded-lg border-2 border-dashed border-stone-200 p-6 text-center dark:border-stone-700"
       >
-        <p class="text-milk-500 dark:text-milk-400 text-lg">
+        <p class="text-lg text-stone-500 dark:text-stone-400">
           No flashcards available
         </p>
-        <p class="text-milk-400 dark:text-milk-500 mt-2 text-sm">
+        <p class="mt-2 text-sm text-stone-400 dark:text-stone-500">
           Add some cards by editing this deck
         </p>
       </div>
@@ -140,22 +140,22 @@
 
   <!-- Sidebar - Deck Info -->
   <div class="flex flex-col space-y-4">
-    <div class="dark:bg-milk-900 rounded-lg bg-white p-6 shadow-sm">
+    <div class="rounded-lg bg-white p-6 shadow-sm dark:bg-stone-900">
       <Label>Description</Label>
       {#if deck.description}
         <p class="mt-2 text-lg">{deck.description}</p>
       {:else}
-        <p class="text-milk-500 dark:text-milk-400 mt-2 italic">
+        <p class="mt-2 text-stone-500 italic dark:text-stone-400">
           No description available
         </p>
       {/if}
 
       {#if deck.visibility}
-        <div class="border-milk-100 dark:border-milk-700 mt-4 border-t pt-4">
+        <div class="mt-4 border-t border-stone-100 pt-4 dark:border-stone-700">
           <Label>Visibility</Label>
           <div class="mt-2 flex items-center gap-2">
             <span
-              class="bg-milk-100 dark:bg-milk-700 text-milk-600 dark:text-milk-300 rounded-full px-3 py-1 text-sm font-medium capitalize"
+              class="rounded-full bg-stone-100 px-3 py-1 text-sm font-medium text-stone-600 capitalize dark:bg-stone-700 dark:text-stone-300"
             >
               {deck.visibility}
             </span>

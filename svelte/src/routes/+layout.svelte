@@ -17,11 +17,11 @@
 <MetaData />
 
 <main
-  class="bg-milk-50 dark:bg-milk-950 text-cacao-800 dark:text-milk-100 h-screen w-screen overflow-auto antialiased"
+  class="h-screen w-screen overflow-auto bg-stone-50 text-stone-800 antialiased dark:bg-stone-950 dark:text-stone-100"
   use:keyEscape={goBack}
 >
   <div
-    class="selection:bg-cacao-500/20 dark:caret-milk-200 caret-cacao-800 mx-auto flex h-full max-w-7xl flex-col items-center font-medium"
+    class="selection:bg-cacao-500/20 caret-cacao-800 mx-auto flex h-full max-w-7xl flex-col items-center font-medium dark:caret-stone-200"
   >
     <Header />
     <div id="main" class="flex w-full flex-1 flex-row py-4">

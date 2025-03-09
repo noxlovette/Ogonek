@@ -1,12 +1,12 @@
 <footer
-  class="ring-milk-200 dark:ring-milk-900 my-2 w-11/12 items-baseline rounded-lg shadow-md ring md:w-full"
+  class="my-2 w-11/12 items-baseline rounded-lg shadow-md ring ring-stone-200 md:w-full dark:ring-stone-900"
 >
   <div
     class="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-3"
   >
     <div class="flex flex-col gap-1 text-sm">
       <p class="flex items-center">© 2025 Danila Volkov</p>
-      <div class="text-milk-500 flex gap-3">
+      <div class="flex gap-3 text-stone-500">
         <a
           href="/paperwork/privacy"
           class="hover:text-cocoa-500 transition-colors">Privacy</a
@@ -22,7 +22,7 @@
     </div>
     <div class="flex items-center gap-4">
       <p class="text-sm">For my students <span class="not-italic">💛</span></p>
-      <div class="text-milk-500 flex gap-3">
+      <div class="flex gap-3 text-stone-500">
         <a
           href="https://github.com/noxlovette"
           aria-label="GitHub"

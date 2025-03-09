@@ -42,7 +42,7 @@
       >
     </div>
     <div class="text-right">
-      <p class="text-milk-700 block font-medium">Student</p>
+      <p class="block font-medium text-stone-700">Student</p>
       <h3 class="">
         {#if data.task.assigneeName === $user.username}
           Not Assigned
@@ -70,7 +70,7 @@
     <H1>{data.task.title}</H1>
   </div>
 
-  <div class="markdown ring-milk-200 dark:ring-milk-900 rounded-lg p-4 ring">
+  <div class="markdown rounded-lg p-4 ring ring-stone-200 dark:ring-stone-900">
     {@html rendered}
   </div>
   <div class="flex space-x-3">
@@ -78,7 +78,7 @@
       <a
         href="/download/{data.task.filePath}"
         onclick={() => (isPreloading = true)}
-        class="dark:hover:bg-milk-900 ring-milk-200 dark:ring-milk-800 dark:hover:ring-milk-950 bg-cacao-600 text-cacao-50 dark:bg-milk-800 dark:text-cacao-100 hover:bg-cacao-700 focus:ring-cacao-500 flex items-center justify-center rounded-lg px-3 py-2 text-sm ring transition-all focus:ring focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:space-x-2 md:px-4 md:text-base"
+        class="bg-cacao-600 text-cacao-50 dark:text-cacao-100 hover:bg-cacao-700 focus:ring-cacao-500 flex items-center justify-center rounded-lg px-3 py-2 text-sm ring ring-stone-200 transition-all focus:ring focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:space-x-2 md:px-4 md:text-base dark:bg-stone-800 dark:ring-stone-800 dark:hover:bg-stone-900 dark:hover:ring-stone-950"
       >
         {#if !isPreloading}
           <Download class="size-6" />
@@ -101,7 +101,7 @@
     >
       <button
         onclick={() => (completed = !completed)}
-        class="dark:hover:bg-milk-900 ring-milk-200 dark:ring-milk-800 dark:hover:ring-milk-950 bg-cacao-600 text-cacao-50 dark:bg-milk-800 dark:text-cacao-100 hover:bg-cacao-700 focus:ring-cacao-500 flex items-center justify-center rounded-lg px-3 py-2 text-sm ring transition-all focus:ring focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:space-x-2 md:px-4 md:text-base"
+        class="bg-cacao-600 text-cacao-50 dark:text-cacao-100 hover:bg-cacao-700 focus:ring-cacao-500 flex items-center justify-center rounded-lg px-3 py-2 text-sm ring ring-stone-200 transition-all focus:ring focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:space-x-2 md:px-4 md:text-base dark:bg-stone-800 dark:ring-stone-800 dark:hover:bg-stone-900 dark:hover:ring-stone-950"
         class:overdue
       >
         {#if completed}

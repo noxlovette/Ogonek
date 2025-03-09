@@ -35,13 +35,13 @@
   <SearchBar bind:query />
 
   <div
-    class="dark:bg-milk-900 bg-cacao-50 absolute top-20 left-1/2 w-11/12 max-w-2xl -translate-x-1/2 rounded-lg shadow-xl md:w-full"
+    class="bg-cacao-50 absolute top-20 left-1/2 w-11/12 max-w-2xl -translate-x-1/2 rounded-lg shadow-xl md:w-full dark:bg-stone-900"
   >
     {#if query}
-      <div class="divide-milk-200 max-h-[32rem] divide-y overflow-y-auto">
+      <div class="max-h-[32rem] divide-y divide-stone-200 overflow-y-auto">
         {#if filteredLessons.length}
           <section class="p-4">
-            <h2 class="text-milk-500 mb-3 text-sm font-medium">Lessons</h2>
+            <h2 class="mb-3 text-sm font-medium text-stone-500">Lessons</h2>
             <div class="space-y-2">
               {#each filteredLessons as lesson}
                 <LessonCard {lesson} />
@@ -52,7 +52,7 @@
 
         {#if filteredTasks.length}
           <section class="p-4">
-            <h2 class="text-milk-500 mb-3 text-sm font-medium">Tasks</h2>
+            <h2 class="mb-3 text-sm font-medium text-stone-500">Tasks</h2>
             <div class="space-y-2">
               {#each filteredTasks as task}
                 <TaskCard interactive={false} {task} />
@@ -62,7 +62,7 @@
         {/if}
 
         {#if !filteredLessons.length && !filteredTasks.length}
-          <div class="text-milk-500 p-8 text-center">No results found</div>
+          <div class="p-8 text-center text-stone-500">No results found</div>
         {/if}
       </div>
     {/if}

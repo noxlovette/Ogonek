@@ -13,20 +13,20 @@
     }
 
     h1 {
-      @apply text-milk-900 dark:text-milk-50 mt-8 mb-4 text-4xl font-bold;
+      @apply mt-8 mb-4 text-4xl font-bold text-stone-900 dark:text-stone-50;
     }
 
     h2 {
-      @apply text-milk-800 dark:text-milk-100 mt-6 mb-3 text-2xl font-semibold;
+      @apply mt-6 mb-3 text-2xl font-semibold text-stone-800 dark:text-stone-100;
     }
 
     h3 {
-      @apply text-milk-700 dark:text-milk-200 mt-4 mb-2 text-xl font-medium;
+      @apply mt-4 mb-2 text-xl font-medium text-stone-700 dark:text-stone-200;
     }
 
     /* Improved paragraph spacing and readability */
     p {
-      @apply text-milk-700 dark:text-milk-300 mb-4 leading-relaxed;
+      @apply mb-4 leading-relaxed text-stone-700 dark:text-stone-300;
     }
 
     /* Enhanced lists with better spacing and bullets */
@@ -36,7 +36,7 @@
     }
 
     li {
-      @apply text-milk-700 dark:text-milk-300 list-disc;
+      @apply list-disc text-stone-700 dark:text-stone-300;
     }
 
     /* Modern link styling with hover effects */
@@ -46,21 +46,21 @@
 
     /* Prettier blockquotes */
     blockquote {
-      @apply border-cacao-400 dark:border-cacao-600 bg-milk-50 dark:bg-milk-800/50 text-milk-700 dark:text-milk-300 my-4 rounded-r-lg border-l-4 py-2 pl-4 italic;
+      @apply border-cacao-400 dark:border-cacao-600 my-4 rounded-r-lg border-l-4 bg-stone-50 py-2 pl-4 text-stone-700 italic dark:bg-stone-800/50 dark:text-stone-300;
     }
 
     /* Code blocks with better contrast and syntax highlighting support */
     pre {
-      @apply bg-milk-900 dark:bg-milk-950 text-milk-100 dark:text-milk-50 my-6 overflow-x-auto rounded-lg p-4;
+      @apply my-6 overflow-x-auto rounded-lg bg-stone-900 p-4 text-stone-100 dark:bg-stone-950 dark:text-stone-50;
     }
 
     code {
-      @apply bg-milk-100 dark:bg-milk-800 text-milk-900 dark:text-milk-50 rounded px-1.5 py-0.5 font-mono text-sm;
+      @apply rounded bg-stone-100 px-1.5 py-0.5 font-mono text-sm text-stone-900 dark:bg-stone-800 dark:text-stone-50;
     }
 
     /* Thematic break with style */
     hr {
-      @apply border-milk-200 dark:border-milk-700 my-8 w-full border-t-2;
+      @apply my-8 w-full border-t-2 border-stone-200 dark:border-stone-700;
     }
 
     /* Modern table design */
@@ -69,11 +69,11 @@
     }
 
     th {
-      @apply bg-milk-100 dark:bg-milk-800 text-milk-900 dark:text-milk-50 border-milk-300 dark:border-milk-600 border-b-2 px-4 py-2 text-left font-medium;
+      @apply border-b-2 border-stone-300 bg-stone-100 px-4 py-2 text-left font-medium text-stone-900 dark:border-stone-600 dark:bg-stone-800 dark:text-stone-50;
     }
 
     td {
-      @apply border-milk-200 dark:border-milk-700 text-milk-700 dark:text-milk-300 border-b px-4 py-2;
+      @apply border-b border-stone-200 px-4 py-2 text-stone-700 dark:border-stone-700 dark:text-stone-300;
     }
 
     /* Additional useful elements */

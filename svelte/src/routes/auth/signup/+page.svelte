@@ -13,17 +13,17 @@
 </script>
 
 <div
-  class="dark:bg-milk-900 flex w-11/12 max-w-md flex-col items-center justify-center space-y-6 rounded-xl bg-white p-9 shadow-md"
+  class="flex w-11/12 max-w-md flex-col items-center justify-center space-y-6 rounded-xl bg-white p-9 shadow-md dark:bg-stone-900"
 >
   <div class="text-center">
-    <h2 class="text-cacao-600 dark:text-milk-100 text-3xl font-bold">
+    <h2 class="text-cacao-600 text-3xl font-bold dark:text-stone-100">
       Create Account
     </h2>
-    <p class="text-milk-600 mt-2 text-sm">
+    <p class="mt-2 text-sm text-stone-600">
       Already have an account?
       <a
         href="/auth/login"
-        class="dark:text-milk-100 text-cacao-500 hover:text-cacao-400 font-medium"
+        class="text-cacao-500 hover:text-cacao-400 font-medium dark:text-stone-100"
         >Sign in</a
       >
     </p>
@@ -42,43 +42,43 @@
   >
     <div class="space-y-4">
       <div>
-        <label for="name" class="text-milk-700 block text-sm font-medium"
+        <label for="name" class="block text-sm font-medium text-stone-700"
           >Full Name</label
         >
         <input
           type="text"
           name="name"
           required
-          class="dark:focus:ring-milk-700 dark:focus:border-milk-800 dark:border-milk-800 disabled:text-milk-500 border-milk-200 dark:bg-milk-950 focus:ring-cacao-500 w-full rounded-lg border px-4 py-2
-            transition duration-200 focus:ring focus:outline-none
-                   dark:focus:ring dark:focus:outline-none"
+          class="focus:ring-cacao-500 w-full rounded-lg border border-stone-200 px-4 py-2 transition duration-200 focus:ring focus:outline-none disabled:text-stone-500
+            dark:border-stone-800 dark:bg-stone-950 dark:focus:border-stone-800 dark:focus:ring
+                   dark:focus:ring-stone-700 dark:focus:outline-none"
         />
       </div>
 
       <div>
-        <label for="username" class="text-milk-700 block text-sm font-medium"
+        <label for="username" class="block text-sm font-medium text-stone-700"
           >Username</label
         >
         <input
           type="text"
           name="username"
           required
-          class="dark:focus:ring-milk-700 dark:focus:border-milk-800 dark:border-milk-800 disabled:text-milk-500 border-milk-200 dark:bg-milk-950 focus:ring-cacao-500 w-full rounded-lg border px-4 py-2
-            transition duration-200 focus:ring focus:outline-none
-                   dark:focus:ring dark:focus:outline-none"
+          class="focus:ring-cacao-500 w-full rounded-lg border border-stone-200 px-4 py-2 transition duration-200 focus:ring focus:outline-none disabled:text-stone-500
+            dark:border-stone-800 dark:bg-stone-950 dark:focus:border-stone-800 dark:focus:ring
+                   dark:focus:ring-stone-700 dark:focus:outline-none"
         />
       </div>
 
       <div>
-        <label for="role" class="text-milk-700 block text-sm font-medium"
+        <label for="role" class="block text-sm font-medium text-stone-700"
           >Role</label
         >
         <select
           name="role"
           required
-          class="dark:focus:ring-milk-700 dark:focus:border-milk-800 dark:border-milk-800 disabled:text-milk-500 border-milk-200 dark:bg-milk-950 focus:ring-cacao-500 w-full rounded-lg border px-4 py-2
-            transition duration-200 focus:ring focus:outline-none
-                   dark:focus:ring dark:focus:outline-none"
+          class="focus:ring-cacao-500 w-full rounded-lg border border-stone-200 px-4 py-2 transition duration-200 focus:ring focus:outline-none disabled:text-stone-500
+            dark:border-stone-800 dark:bg-stone-950 dark:focus:border-stone-800 dark:focus:ring
+                   dark:focus:ring-stone-700 dark:focus:outline-none"
         >
           <option value="">Select a role</option>
           <option value="teacher">Teacher</option>
@@ -87,21 +87,21 @@
       </div>
 
       <div>
-        <label for="email" class="text-milk-700 block text-sm font-medium"
+        <label for="email" class="block text-sm font-medium text-stone-700"
           >Email</label
         >
         <input
           type="email"
           name="email"
           required
-          class="dark:focus:ring-milk-700 dark:focus:border-milk-800 dark:border-milk-800 disabled:text-milk-500 border-milk-200 dark:bg-milk-950 focus:ring-cacao-500 w-full rounded-lg border px-4 py-2
-            transition duration-200 focus:ring focus:outline-none
-                   dark:focus:ring dark:focus:outline-none"
+          class="focus:ring-cacao-500 w-full rounded-lg border border-stone-200 px-4 py-2 transition duration-200 focus:ring focus:outline-none disabled:text-stone-500
+            dark:border-stone-800 dark:bg-stone-950 dark:focus:border-stone-800 dark:focus:ring
+                   dark:focus:ring-stone-700 dark:focus:outline-none"
         />
       </div>
 
       <div>
-        <label for="password" class="text-milk-700 block text-sm font-medium"
+        <label for="password" class="block text-sm font-medium text-stone-700"
           >Password</label
         >
         <input
@@ -109,16 +109,16 @@
           name="password"
           bind:value={password}
           required
-          class="dark:focus:ring-milk-700 dark:focus:border-milk-800 dark:border-milk-800 disabled:text-milk-500 border-milk-200 dark:bg-milk-950 focus:ring-cacao-500 w-full rounded-lg border px-4 py-2
-            transition duration-200 focus:ring focus:outline-none
-                   dark:focus:ring dark:focus:outline-none"
+          class="focus:ring-cacao-500 w-full rounded-lg border border-stone-200 px-4 py-2 transition duration-200 focus:ring focus:outline-none disabled:text-stone-500
+            dark:border-stone-800 dark:bg-stone-950 dark:focus:border-stone-800 dark:focus:ring
+                   dark:focus:ring-stone-700 dark:focus:outline-none"
         />
       </div>
 
       <div>
         <label
           for="confirmPassword"
-          class="text-milk-700 block text-sm font-medium"
+          class="block text-sm font-medium text-stone-700"
           >Confirm Password</label
         >
         <input
@@ -126,9 +126,9 @@
           name="confirmPassword"
           bind:value={confirmPassword}
           required
-          class="dark:focus:ring-milk-700 dark:focus:border-milk-800 dark:border-milk-800 disabled:text-milk-500 border-milk-200 dark:bg-milk-950 focus:ring-cacao-500 w-full rounded-lg border px-4 py-2
-            transition duration-200 focus:ring focus:outline-none
-                   dark:focus:ring dark:focus:outline-none"
+          class="focus:ring-cacao-500 w-full rounded-lg border border-stone-200 px-4 py-2 transition duration-200 focus:ring focus:outline-none disabled:text-stone-500
+            dark:border-stone-800 dark:bg-stone-950 dark:focus:border-stone-800 dark:focus:ring
+                   dark:focus:ring-stone-700 dark:focus:outline-none"
         />
         {#if !passwordMatch}
           <p class="mt-1 text-sm text-red-600">Passwords don't match</p>

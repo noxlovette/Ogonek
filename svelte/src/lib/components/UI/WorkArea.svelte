@@ -8,18 +8,18 @@
 </script>
 
 <div
-  class="ring-milk-200 dark:ring-milk-900 dark:bg-milk-950
-  relative mx-4 flex flex-1 scroll-my-6 flex-col gap-4
-  rounded-lg bg-white px-5 py-3 pb-24 shadow-md ring md:mr-0 md:h-full md:px-6 md:pb-3
-  lg:px-8 lg:py-4"
+  class="relative mx-4 flex
+  flex-1 scroll-my-6 flex-col gap-4 rounded-lg bg-white px-5
+  py-3 pb-24 shadow-md ring ring-stone-200 md:mr-0 md:h-full md:px-6 md:pb-3 lg:px-8 lg:py-4
+  dark:bg-stone-950 dark:ring-stone-900"
 >
   {@render children()}
 
   <button
     onclick={() => sidebar.toggle()}
-    class="bg-cacao-500 dark:bg-milk-800 dark:text-milk-200 hover:bg-cacao-400 dark:hover:bg-milk-700 absolute top-4 -left-7 z-10
-            hidden rounded-full p-1 text-white shadow-md
-            transition-colors md:block"
+    class="bg-cacao-500 hover:bg-cacao-400 absolute top-4 -left-7 z-10 hidden rounded-full p-1
+            text-white shadow-md transition-colors md:block dark:bg-stone-800
+            dark:text-stone-200 dark:hover:bg-stone-700"
     aria-label={$sidebar ? "Expand sidebar" : "Collapse sidebar"}
   >
     {#if $sidebar}
@@ -32,9 +32,9 @@
   {#if role === "s"}
     <button
       onclick={() => rightbar.toggle()}
-      class="bg-cacao-500 dark:bg-milk-800 dark:text-milk-200 hover:bg-cacao-400 dark:hover:bg-milk-700
-          absolute top-4 -right-7 z-30 rounded-full p-1 text-white
-          shadow-md transition-colors"
+      class="bg-cacao-500 hover:bg-cacao-400 absolute top-4 -right-7
+          z-30 rounded-full p-1 text-white shadow-md transition-colors dark:bg-stone-800
+          dark:text-stone-200 dark:hover:bg-stone-700"
       aria-label={$rightbar ? "Expand rightbar" : "Collapse rightbar"}
     >
       {#if $rightbar}

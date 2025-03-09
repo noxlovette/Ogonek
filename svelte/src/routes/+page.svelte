@@ -18,7 +18,7 @@
   <div class="mt-8 space-x-2">
     <a
       href="/auth/login"
-      class="bg-cacao-600 dark:bg-milk-900 dark:border-milk-700 dark:hover:bg-milk-600 dark:hover:text-milk-50 border-milk-200 text-cacao-50 hover:bg-cacao-100 hover:text-cacao-800 mt-5 w-20 rounded-lg border-2 px-3 py-2 text-center text-sm transition-colors md:px-4 md:py-2 md:text-base"
+      class="bg-cacao-600 hover:bg-cacao-100 mt-5 w-20 rounded-lg border-2 border-stone-200 px-3 py-2 text-center text-sm text-stone-50 transition-colors hover:text-stone-800 md:px-4 md:py-2 md:text-base dark:border-stone-700 dark:bg-stone-900 dark:hover:bg-stone-600 dark:hover:text-stone-50"
       >Log In</a
     >
   </div>

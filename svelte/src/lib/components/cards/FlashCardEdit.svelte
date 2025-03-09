@@ -16,7 +16,7 @@
 </script>
 
 <div
-  class="group border-milk-200 hover:border-milk-300 dark:border-milk-800 dark:bg-milk-900 dark:hover:border-milk-600 relative rounded-lg border bg-white p-3 shadow-sm transition-all"
+  class="group relative rounded-lg border border-stone-200 bg-white p-3 shadow-sm transition-all hover:border-stone-300 dark:border-stone-800 dark:bg-stone-900 dark:hover:border-stone-600"
   transition:fade
 >
   <button
@@ -57,7 +57,7 @@
   <button
     type="button"
     onclick={() => (showMediaInput = !showMediaInput)}
-    class="text-milk-600 hover:text-milk-900 dark:text-milk-400 dark:hover:text-milk-200 mt-3 flex items-center gap-1.5 text-sm"
+    class="mt-3 flex items-center gap-1.5 text-sm text-stone-600 hover:text-stone-900 dark:text-stone-400 dark:hover:text-stone-200"
   >
     <Image class="h-4 w-4" />
     {showMediaInput ? "Hide media URL" : "Add media"}
@@ -71,7 +71,7 @@
         name={`cards[${index}][media_url]`}
         bind:value={card.mediaUrl}
         placeholder="https://example.com/image.jpg"
-        class="border-milk-300 placeholder:text-milk-400 focus:border-cocoa-500 focus:ring-cocoa-500 dark:border-milk-600 dark:placeholder:text-milk-500 w-full rounded-md border bg-transparent px-3 py-1.5 text-sm focus:ring-1 focus:outline-none"
+        class="focus:border-cocoa-500 focus:ring-cocoa-500 w-full rounded-md border border-stone-300 bg-transparent px-3 py-1.5 text-sm placeholder:text-stone-400 focus:ring-1 focus:outline-none dark:border-stone-600 dark:placeholder:text-stone-500"
       />
     </div>
   {/if}

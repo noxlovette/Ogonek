@@ -20,21 +20,21 @@
   data-sveltekit-prefetch={prefetch ? "" : null}
   class={[
     styling,
-    `ring-milk-200 dark:ring-milk-900 shadow-milk-100 dark:shadow-milk-900
-     dark:bg-milk-950 hover:ring-cacao-400 hover:shadow-cacao-100 dark:hover:shadow-cacao-100 dark:hover:bg-opacity-20 relative flex flex-col
-     overflow-hidden rounded-xl bg-white p-5 ring-1
-      transition-all duration-200 ease-out
-    dark:shadow-none
+    `hover:ring-cacao-400 hover:shadow-cacao-100 dark:hover:shadow-cacao-100 dark:hover:bg-opacity-20
+     relative flex flex-col overflow-hidden rounded-xl bg-white p-5 ring-1
+     shadow-stone-100 ring-stone-200 transition-all duration-200 ease-out
+      dark:bg-stone-950 dark:shadow-none dark:shadow-stone-900
+    dark:ring-stone-900
   `,
   ]}
   style={`height: ${height};`}
 >
   {#if loading}
     <div
-      class="dark:bg-milk-950/70 absolute inset-0 z-10 flex items-center justify-center bg-white/70"
+      class="absolute inset-0 z-10 flex items-center justify-center bg-white/70 dark:bg-stone-950/70"
     >
       <div
-        class="border-milk-200 border-t-cacao-500 dark:border-milk-700 dark:border-t-cacao-400 h-8 w-8 animate-spin rounded-full border-4"
+        class="border-t-cacao-500 dark:border-t-cacao-400 h-8 w-8 animate-spin rounded-full border-4 border-stone-200 dark:border-stone-700"
       ></div>
     </div>
   {/if}
@@ -45,9 +45,9 @@
 
   {#if gradient}
     <div
-      class="dark:from-milk-950 pointer-events-none absolute right-0 bottom-0 left-0
-       z-0 h-12 bg-gradient-to-t from-white
-       to-transparent"
+      class="pointer-events-none absolute right-0 bottom-0 left-0 z-0
+       h-12 bg-gradient-to-t from-white to-transparent
+       dark:from-stone-950"
     ></div>
   {/if}
 </a>

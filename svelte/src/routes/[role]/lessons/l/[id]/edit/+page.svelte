@@ -49,9 +49,9 @@
         id="title"
         type="text"
         name="title"
-        class="dark:focus:ring-milk-700 dark:focus:border-milk-800 dark:border-milk-800 disabled:text-milk-500 border-milk-200 dark:bg-milk-950 focus:ring-cacao-500 w-full rounded-lg border px-4 py-2
-            transition duration-200 focus:ring focus:outline-none
-                   dark:focus:ring dark:focus:outline-none"
+        class="focus:ring-cacao-500 w-full rounded-lg border border-stone-200 px-4 py-2 transition duration-200 focus:ring focus:outline-none disabled:text-stone-500
+            dark:border-stone-800 dark:bg-stone-950 dark:focus:border-stone-800 dark:focus:ring
+                   dark:focus:ring-stone-700 dark:focus:outline-none"
         value={lesson.title}
       />
     </div>
@@ -63,9 +63,9 @@
         type="text"
         name="topic"
         value={lesson.topic}
-        class="dark:focus:ring-milk-700 dark:focus:border-milk-800 dark:border-milk-800 disabled:text-milk-500 border-milk-200 dark:bg-milk-950 focus:ring-cacao-500 w-full rounded-lg border px-4 py-2
-            transition duration-200 focus:ring focus:outline-none
-                   dark:focus:ring dark:focus:outline-none"
+        class="focus:ring-cacao-500 w-full rounded-lg border border-stone-200 px-4 py-2 transition duration-200 focus:ring focus:outline-none disabled:text-stone-500
+            dark:border-stone-800 dark:bg-stone-950 dark:focus:border-stone-800 dark:focus:ring
+                   dark:focus:ring-stone-700 dark:focus:outline-none"
       />
     </div>
     <AssigneeSelector item={lesson} />

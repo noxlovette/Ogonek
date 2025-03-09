@@ -32,7 +32,7 @@
 >
   <!-- Card Front -->
   <div
-    class="ring-cacao-200 dark:ring-milk-800 dark:bg-milk-900 absolute inset-0 flex h-full w-full items-center justify-center rounded-lg bg-white p-5 shadow-md ring-1 transition-all duration-300 backface-hidden hover:shadow-lg {flippedCards.has(
+    class="ring-cacao-200 absolute inset-0 flex h-full w-full items-center justify-center rounded-lg bg-white p-5 shadow-md ring-1 transition-all duration-300 backface-hidden hover:shadow-lg dark:bg-stone-900 dark:ring-stone-800 {flippedCards.has(
       card.id,
     )
       ? 'opacity-0'
@@ -58,7 +58,7 @@
       {/if}
 
       <div class="absolute right-3 bottom-2">
-        <span class="text-milk-400 dark:text-milk-500 text-xs"
+        <span class="text-xs text-stone-400 dark:text-stone-500"
           >Click to flip</span
         >
       </div>
@@ -67,7 +67,7 @@
 
   <!-- Card Back -->
   <div
-    class="bg-cacao-50 ring-cacao-500 dark:ring-milk-700 dark:bg-milk-900 absolute inset-0 flex h-full w-full items-center justify-center rounded-lg p-5 shadow-md ring-1 transition-all duration-300 backface-hidden hover:shadow-lg {flippedCards.has(
+    class="bg-cacao-50 ring-cacao-500 absolute inset-0 flex h-full w-full items-center justify-center rounded-lg p-5 shadow-md ring-1 transition-all duration-300 backface-hidden hover:shadow-lg dark:bg-stone-900 dark:ring-stone-700 {flippedCards.has(
       card.id,
     )
       ? 'opacity-100'
@@ -83,7 +83,7 @@
       </p>
 
       <div class="absolute right-3 bottom-2">
-        <span class="text-milk-400 dark:text-milk-700 text-xs"
+        <span class="text-xs text-stone-400 dark:text-stone-700"
           >Click to flip</span
         >
       </div>
@@ -97,7 +97,7 @@
         card.id,
       )
         ? 'bg-cacao-500 dark:bg-cacao-400'
-        : 'bg-milk-200 dark:bg-milk-700'}"
+        : 'bg-stone-200 dark:bg-stone-700'}"
     ></div>
   </div>
 </div>

@@ -10,7 +10,7 @@
 
 {#if $isSearchOpen}
   <button
-    class="dark:bg-milk-950/80 bg-milk-900/80 fixed inset-0 z-30 items-start justify-center pt-20 backdrop-blur-sm"
+    class="fixed inset-0 z-30 items-start justify-center bg-stone-900/80 pt-20 backdrop-blur-sm dark:bg-stone-950/80"
     transition:fade={{ duration: 100 }}
     onclick={close}
     aria-label="Search Overlay"

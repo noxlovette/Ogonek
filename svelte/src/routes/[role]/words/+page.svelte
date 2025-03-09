@@ -60,13 +60,13 @@
 
 <!-- Cards due today section -->
 <div
-  class="dark:bg-milk-900 mb-8 rounded-xl bg-white p-4 shadow-sm transition-all hover:shadow-md"
+  class="mb-8 rounded-xl bg-white p-4 shadow-sm transition-all hover:shadow-md dark:bg-stone-900"
 >
   {#if data.cards?.length}
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
       <div>
         <H2>{data.cards.length} cards due today</H2>
-        <p class="text-milk-600 dark:text-milk-400 mt-1">
+        <p class="mt-1 text-stone-600 dark:text-stone-400">
           Time for some learning!
         </p>
       </div>
@@ -81,11 +81,11 @@
   {:else}
     <div class="py-8 text-center" in:fade={{ duration: 300 }}>
       <div
-        class="bg-cacao-50 dark:bg-milk-800 mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full"
+        class="bg-cacao-50 mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full dark:bg-stone-800"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          class="text-cacao-500 dark:text-milk-300 h-8 w-8"
+          class="text-cacao-500 h-8 w-8 dark:text-stone-300"
           viewBox="0 0 20 20"
           fill="currentColor"
         >
@@ -97,7 +97,7 @@
         </svg>
       </div>
       <H2>All Caught Up! 🎉</H2>
-      <p class="text-milk-600 dark:text-milk-400 mt-2">
+      <p class="mt-2 text-stone-600 dark:text-stone-400">
         Check back later for new cards to review
       </p>
     </div>
@@ -138,13 +138,13 @@
         {/each}
       </div>
     {:else}
-      <div class="bg-milk-50 dark:bg-milk-800 rounded-xl py-12 text-center">
+      <div class="rounded-xl bg-stone-50 py-12 text-center dark:bg-stone-800">
         <div
-          class="bg-milk-100 dark:bg-milk-700 mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full"
+          class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-stone-100 dark:bg-stone-700"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="text-milk-500 dark:text-milk-400 h-8 w-8"
+            class="h-8 w-8 text-stone-500 dark:text-stone-400"
             viewBox="0 0 20 20"
             fill="currentColor"
           >
@@ -153,10 +153,10 @@
             />
           </svg>
         </div>
-        <p class="text-milk-800 dark:text-milk-300 mb-2 text-lg font-medium">
+        <p class="mb-2 text-lg font-medium text-stone-800 dark:text-stone-300">
           No decks yet
         </p>
-        <p class="text-milk-600 dark:text-milk-400 mx-auto mb-6 max-w-md">
+        <p class="mx-auto mb-6 max-w-md text-stone-600 dark:text-stone-400">
           Create your first deck to start learning!
         </p>
       </div>

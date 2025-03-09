@@ -24,9 +24,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         db: init_db().await?,
     };
 
-    // TODO implement rate limiting
-    // TODO implement request signing
-
     let protected_routes = Router::new()
         .nest("/lesson", rust::api::routes::lesson_routes::lesson_routes())
         .nest("/user", rust::api::routes::user_routes::user_routes())

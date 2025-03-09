@@ -12,7 +12,7 @@
   }
 
   .chosen {
-    @apply bg-cacao-600 text-milk-50 hover:bg-cacao-600;
+    @apply bg-cacao-600 hover:bg-cacao-600 text-stone-50;
   }
 
   .backface-hidden {
