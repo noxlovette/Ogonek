@@ -12,16 +12,16 @@ use axum_extra::extract::cookie::{Cookie, SameSite};
 #[derive(Serialize, Deserialize, Debug, Validate)]
 #[serde(rename_all = "camelCase")]
 pub struct SignUpPayload {
-    #[validate(length(min = 3, max = 16))]
+    #[validate(length(min = 3))]
     pub name: String,
 
     #[validate(email)]
     pub email: String,
 
-    #[validate(length(min = 8, max = 32))]
+    #[validate(length(min = 8))]
     pub pass: String,
 
-    #[validate(length(min = 3, max = 16))]
+    #[validate(length(min = 2))]
     pub username: String,
     pub role: String,
 }

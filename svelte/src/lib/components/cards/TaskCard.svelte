@@ -49,6 +49,7 @@
               invalidate("tasks:completed");
             },
           },
+          
         })}
       >
         <button

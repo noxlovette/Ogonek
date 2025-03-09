@@ -1,4 +1,3 @@
-// src/lib/types/api.ts - TYPES ONLY
 export interface ApiErrorResponse {
   error: {
     message: string;
