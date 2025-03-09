@@ -6,6 +6,7 @@ import {
   ValidateAccess,
 } from "$lib/server";
 import type { AuthResponse, Profile, User } from "$lib/types";
+import { validateRequired } from "@noxlovette/svarog";
 import { fail, type Actions } from "@sveltejs/kit";
 
 export const actions: Actions = {
@@ -22,9 +23,21 @@ export const actions: Actions = {
         });
       }
 
-      if (!username || !pass) {
+      const validateUsername = validateRequired("username");
+      const validatePass = validateRequired("password");
+
+      const usernameError = validateUsername(username);
+      const passError = validatePass(pass);
+
+      if (usernameError) {
         return fail(400, {
-          message: "Missing required fields",
+          message: usernameError,
+        });
+      }
+
+      if (passError) {
+        return fail(400, {
+          message: passError,
         });
       }
 
@@ -35,7 +48,6 @@ export const actions: Actions = {
         });
       }
 
-      // Login API call with typed response handling
       const response = await fetch("/axum/auth/signin", {
         method: "POST",
         body: JSON.stringify({ username, pass }),

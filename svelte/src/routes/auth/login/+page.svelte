@@ -37,9 +37,6 @@
     method="POST"
     class="w flex flex-col items-center justify-center space-y-4"
     use:enhance={enhanceForm({
-      messages: {
-        failure: "Something's off",
-      },
       handlers: {
         success: async (result) => {
           if (result.data) {

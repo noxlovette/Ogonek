@@ -3,6 +3,7 @@
     "Montserrat", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
     Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
   --font-serif: "Lora", system-ui, -apple-system;
+
   --color-cacao-50: oklch(0.98 0.002 35);
   --color-cacao-100: oklch(0.94 0.015 35);
   --color-cacao-200: oklch(0.89 0.035 35);
@@ -14,15 +15,4 @@
   --color-cacao-800: oklch(0.36 0.075 35);
   --color-cacao-900: oklch(0.25 0.065 35);
   --color-cacao-950: oklch(0.18 0.045 35);
-  --color-stone-50: oklch(0.98 0.002 40);
-  --color-stone-100: oklch(0.95 0.004 40);
-  --color-stone-200: oklch(0.9 0.006 40);
-  --color-stone-300: oklch(0.8 0.008 40);
-  --color-stone-400: oklch(0.7 0.007 40);
-  --color-stone-500: oklch(0.6 0.006 40);
-  --color-stone-600: oklch(0.5 0.005 40);
-  --color-stone-700: oklch(0.4 0.004 40);
-  --color-stone-800: oklch(0.3 0.003 40);
-  --color-stone-900: oklch(0.2 0.002 40);
-  --color-stone-950: oklch(0.1 0.001 40);
 }

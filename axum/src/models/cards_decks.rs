@@ -1,6 +1,13 @@
 use serde::{Deserialize, Serialize};
+use sqlx::prelude::FromRow;
 use time::format_description::well_known::Rfc3339;
 use time::OffsetDateTime;
+
+#[derive(Deserialize)]
+pub struct DeckFilterParams {
+    pub search: Option<String>,
+    pub assignee: Option<String>,
+}
 
 #[serde_with::serde_as]
 #[derive(Serialize, Deserialize, Debug)]
@@ -55,7 +62,7 @@ pub struct DeckWithCardsUpdate {
 }
 
 #[serde_with::serde_as]
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, FromRow)]
 #[serde(rename_all = "camelCase")]
 pub struct DeckBody {
     pub id: String,

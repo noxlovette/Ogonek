@@ -1,11 +1,10 @@
 <script lang="ts" generics="T extends BaseTableItem">
   import { enhance } from "$app/forms";
-  import { PlusCircle, X, Search, LucideEye } from "lucide-svelte";
+  import { PlusCircle, X, Search, LucideEye, RotateCcw } from "lucide-svelte";
   import { goto } from "$app/navigation";
   import { fade } from "svelte/transition";
   import { enhanceForm } from "$lib/utils";
   import {
-    notification,
     searchTerm,
     pageSize,
     currentPage,
@@ -34,9 +33,6 @@
     showComplete = false,
   }: Props<T> = $props();
 
-  let isSubmitting = $state(false);
-
-  // Just one simple derived value
   const isEmptySearch = $derived(
     items.length === 0 && page.url.searchParams.has("search"),
   );
@@ -215,12 +211,12 @@
         <p class="mt-1 max-w-md text-stone-500 dark:text-stone-400">
           Try adjusting your search or filters to find what you're looking for.
         </p>
-        <button
+
+        <UniButton
+          Icon={RotateCcw}
           onclick={() => resetFilters()}
-          class="focus:ring-cacao-500 mt-6 inline-flex items-center justify-center rounded-lg border border-stone-300 bg-white px-4 py-2 text-sm font-medium text-stone-700 shadow-sm transition-colors hover:bg-stone-50 focus:ring-2 focus:ring-offset-2 focus:outline-none dark:border-stone-700 dark:bg-stone-800 dark:text-stone-300 dark:hover:bg-stone-700 dark:focus:ring-offset-stone-900"
+          variant="outline">Clear filters</UniButton
         >
-          Clear filters
-        </button>
       </div>
     {:else}
       <div class="overflow-x-auto">

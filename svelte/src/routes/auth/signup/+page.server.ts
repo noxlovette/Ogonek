@@ -4,7 +4,12 @@ import {
   turnstileVerify,
 } from "$lib/server";
 import type { SignupResponse } from "$lib/types";
-import { isValidEmail } from "$lib/utils";
+import {
+  validateEmail,
+  validatePassword,
+  validatePasswordMatch,
+  validateUsername,
+} from "@noxlovette/svarog";
 import { fail, redirect } from "@sveltejs/kit";
 import type { Actions } from "./$types";
 export const actions: Actions = {
@@ -18,20 +23,30 @@ export const actions: Actions = {
     const name = data.get("name") as string;
     const invite_token = url.searchParams.get("invite");
 
-    // Validation checks
-    if (!isValidEmail(email)) {
-      return fail(400, { message: "Invalid email address" });
+    if (validateEmail(email)) {
+      return fail(400, { message: "Invalid Email" });
     }
-    if (name.length < 3 || name.length > 16) {
-      return fail(400, {
-        message: "Name should be between 3 and 16 characters",
-      });
+
+    const usernameValidation = validateUsername(username);
+    const passValidation = validatePassword(pass);
+    const passMatchValidation = validatePasswordMatch(pass, confirmPassword);
+
+    if (usernameValidation) {
+      return fail(400, { message: usernameValidation });
     }
+
     if (pass !== confirmPassword) {
       return fail(400, { message: "Passwords do not match" });
     }
 
-    // Turnstile verification
+    if (passValidation) {
+      return fail(400, { message: passValidation });
+    }
+
+    if (passMatchValidation) {
+      return fail(400, { message: passMatchValidation });
+    }
+
     const turnstileToken = data.get("cf-turnstile-response") as string;
     if (!turnstileToken) {
       return fail(400, {
@@ -72,7 +87,6 @@ export const actions: Actions = {
       }
     }
 
-    // Success - redirect to login
     return redirect(302, "/auth/login");
   },
 } satisfies Actions;

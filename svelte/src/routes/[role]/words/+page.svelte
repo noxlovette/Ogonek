@@ -8,11 +8,28 @@
   import type { TableConfig, Deck } from "$lib/types";
   import { formatDateTime } from "$lib/utils";
   import { ArrowBigRight, PlusCircle } from "lucide-svelte";
+  import {
+    searchTerm,
+    pageSize,
+    currentPage,
+    assigneeStore,
+  } from "$lib/stores";
+  import { goto } from "$app/navigation";
 
   let { data }: { data: PageData } = $props();
   let { decks, students } = $derived(data);
 
   const role = page.params.role;
+
+  $effect(() => {
+    goto(
+      `?search=${$searchTerm}&page_size=${$pageSize}&page=${$currentPage}&assignee=${$assigneeStore}`,
+      {
+        noScroll: true,
+        keepFocus: true,
+      },
+    );
+  });
 
   const deckConfig: TableConfig<Deck> = {
     columns: [

@@ -1,9 +1,10 @@
 use crate::auth::jwt::Claims;
 use crate::db::init::AppState;
-use crate::models::cards_decks::{DeckBody, DeckCreateBody, CardBody, DeckWithCards, DeckWithCardsAndSubscription, DeckWithCardsUpdate};
+use crate::models::cards_decks::{DeckBody, DeckCreateBody, CardBody, DeckWithCards, DeckWithCardsAndSubscription, DeckWithCardsUpdate, DeckFilterParams};
 use axum::extract::Json;
 use axum::extract::Path;
 use axum::extract::State;
+use axum::extract::Query;
 use axum::http::StatusCode;
 use super::error::APIError;
 
@@ -105,25 +106,45 @@ pub async fn fetch_deck(
         None => Ok(Json(None))
     }
 }
+
 pub async fn fetch_deck_list(
     State(state): State<AppState>,
+    Query(params): Query<DeckFilterParams>,
     claims: Claims,
 ) -> Result<Json<Vec<DeckBody>>, APIError> {
-    let decks = sqlx::query_as!(
-        DeckBody,
-        r#"
-        SELECT id, name, description, visibility, assignee, created_by, created_at
-        FROM decks
-        WHERE created_by = $1 
-           OR assignee = $1
-           OR visibility = 'public'
-        ORDER BY created_at DESC
-        "#,
-        claims.sub
-    )
-    .fetch_all(&state.db)
-    .await?;
-
+    let mut query_builder = sqlx::QueryBuilder::new(
+        "SELECT id, name, description, visibility, assignee, created_by, created_at
+         FROM decks
+         WHERE (created_by = ");
+    
+    query_builder.push_bind(&claims.sub);
+    query_builder.push(" OR assignee = ");
+    query_builder.push_bind(&claims.sub);
+    query_builder.push(" OR visibility = 'public')");
+    
+    // Add search filter if provided
+    if let Some(search) = &params.search {
+        query_builder.push(" AND (name ILIKE ");
+        query_builder.push_bind(format!("%{}%", search));
+        query_builder.push(" OR description ILIKE ");
+        query_builder.push_bind(format!("%{}%", search));
+        query_builder.push(")");
+    }
+    
+    // Add assignee filter if provided
+    if let Some(assignee) = &params.assignee {
+        query_builder.push(" AND assignee = ");
+        query_builder.push_bind(assignee);
+    }
+    
+    // Keep the same ordering
+    query_builder.push(" ORDER BY created_at DESC");
+    
+    let decks = query_builder
+        .build_query_as::<DeckBody>()
+        .fetch_all(&state.db)
+        .await?;
+    
     Ok(Json(decks))
 }
 

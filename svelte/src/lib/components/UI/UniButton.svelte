@@ -31,7 +31,7 @@
     confirmTitle?: string | undefined;
     customColors?: string | undefined;
     onclick?: MouseEventHandler<HTMLButtonElement> | undefined;
-    children: Snippet;
+    children?: Snippet;
   }
 
   let {
@@ -57,8 +57,7 @@
   let disabled = $derived($isLoading || disable);
   let showConfirmDialog = $state(false);
 
-  // Simple function to handle showing the confirmation dialog for danger buttons
-  function handleClick(event) {
+  function handleClick(event: any) {
     if (variant === "danger" && (confirmText || confirmTitle)) {
       event.preventDefault();
       showConfirmDialog = true;
@@ -122,7 +121,7 @@
 
     {#if $isLoading}Loading...
     {:else}
-      {@render children()}
+      {@render children?.()}
     {/if}
 
     {#if Icon && iconPosition === "right"}
@@ -145,7 +144,7 @@
 
     {#if $isLoading}Loading...
     {:else}
-      {@render children()}
+      {@render children?.()}
     {/if}
 
     {#if Icon && iconPosition === "right"}
