@@ -131,6 +131,7 @@
       <form
         method="POST"
         class="mt-3 sm:mt-0"
+        action="?/new"
         use:enhance={enhanceForm({
           messages: {
             redirect: "New Deck Created",

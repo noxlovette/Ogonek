@@ -24,7 +24,7 @@ export const actions: Actions = {
   new: async ({ fetch }) => {
     const body = {
       name: "New Deck",
-      description: "Blablablabla",
+      description: "Your New Deck",
       shared: false,
     };
 

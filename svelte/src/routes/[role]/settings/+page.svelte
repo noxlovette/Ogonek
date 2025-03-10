@@ -226,15 +226,3 @@
     </form>
   </div>
 </div>
-
-<style>
-  /* Add subtle hover animation to inputs */
-  input:not([disabled]):hover {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  }
-
-  /* Override for dark mode */
-  :global(.dark) input:not([disabled]):hover {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  }
-</style>

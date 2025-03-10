@@ -22,7 +22,6 @@
       showAnswer = false;
     } else if ((currentIndex = data.cards.length) && data.cards.length > 1) {
       invalidate("learn:complete");
-      console.debug("invalidation");
       currentIndex = 0;
       showAnswer = false;
     } else {
@@ -34,32 +33,32 @@
     {
       quality: 0,
       label: "Blackout 💀",
-      color: "ring-red-600 hover:bg-red-700 ring-2",
+      color: "ring-red-600 hover:bg-red-700/10 ring-2",
     },
     {
       quality: 1,
       label: "Wrong 🤔",
-      color: "ring-orange-500 hover:bg-orange-600 ring-2",
+      color: "ring-orange-500 hover:bg-orange-600/10 ring-2",
     },
     {
       quality: 2,
       label: "Hard 😅",
-      color: "ring-yellow-500 hover:bg-yellow-600 ring-2",
+      color: "ring-yellow-500 hover:bg-yellow-600/10 ring-2",
     },
     {
       quality: 3,
       label: "Okay 👍",
-      color: "ring-stone-100 hover:bg-stone-200 ring-2",
+      color: "ring-stone-400 hover:bg-stone-400/10 ring-2",
     },
     {
       quality: 4,
       label: "Good 🎯",
-      color: "ring-green-500 hover:bg-green-600 ring-2",
+      color: "ring-green-500 hover:bg-green-600/10 ring-2",
     },
     {
       quality: 5,
       label: "Easy ⚡",
-      color: "ring-cacao-500 hover:bg-cacao-600 ring-2",
+      color: "ring-cacao-500 hover:bg-cacao-600/10 ring-2",
     },
   ];
 </script>
@@ -71,7 +70,7 @@
         class="bg-cacao-50 dark:bg-cacao-900 flex h-20 w-20 items-center justify-center rounded-full"
       >
         <svg
-          xmlns="http://www.w3.org/2000/svg"
+          xmlns="http://www.w3.org/1000/svg"
           class="text-cacao-500 dark:text-cacao-400 h-12 w-12"
           fill="none"
           viewBox="0 0 24 24"
@@ -163,7 +162,7 @@
             onclick={() => (showAnswer = !showAnswer)}
           >
             <svg
-              xmlns="http://www.w3.org/2000/svg"
+              xmlns="http://www.w3.org/1000/svg"
               class="mr-2 h-5 w-5"
               viewBox="0 0 20 20"
               fill="currentColor"
