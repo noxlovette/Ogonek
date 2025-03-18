@@ -1,3 +1,4 @@
+import { env } from "$env/dynamic/public";
 import {
   handleApiResponse,
   isSuccessResponse,
@@ -41,11 +42,13 @@ export const actions: Actions = {
         });
       }
 
-      const turnstileResponse = await turnstileVerify(turnstileToken);
-      if (!turnstileResponse.ok) {
-        return fail(400, {
-          message: "Turnstile verification failed",
-        });
+      if (env.PUBLIC_APP_ENV !== "development") {
+        const turnstileResponse = await turnstileVerify(turnstileToken);
+        if (!turnstileResponse.ok) {
+          return fail(400, {
+            message: "Turnstile verification failed",
+          });
+        }
       }
 
       const response = await fetch("/axum/auth/signin", {

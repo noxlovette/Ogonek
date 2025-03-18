@@ -1,14 +1,15 @@
 <script lang="ts">
   import { UniButton, H1, H2 } from "$lib/components";
   import { user } from "$lib/stores";
-  import { formatDateTime } from "$lib/utils";
+
+  import { formatDate } from "@noxlovette/svarog";
   import type { PageData } from "./$types";
   import { Pencil } from "lucide-svelte";
   import { page } from "$app/state";
 
   let { data }: { data: PageData } = $props();
 
-  let formattedDate = formatDateTime(data.lesson.createdAt);
+  let formattedDate = formatDate(data.lesson.createdAt);
 </script>
 
 {#if page.params.role === "t"}

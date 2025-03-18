@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { formatDateTime } from "$lib/utils";
+  import { formatDate } from "@noxlovette/svarog";
   import Clickable from "./CardClickable.svelte";
   import { user } from "$lib/stores";
   import { onMount } from "svelte";
@@ -14,11 +14,10 @@
     rendered = await parseMarkdown(task.markdown);
     overdue = new Date(task.dueDate) < new Date();
   });
-  let isPreloading = $state(false);
   let { task, interactive = false } = $props();
   let overdue = $state(false);
   let rendered = $state(task.markdown);
-  const formattedDate = formatDateTime(task.dueDate);
+  const formattedDate = formatDate(task.dueDate);
   let completed = $state(task.completed);
   let href =
     $user.role === "teacher"

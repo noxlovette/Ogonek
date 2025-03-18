@@ -12,6 +12,13 @@ export interface Task {
   assignee: string;
   assigneeName: string;
 }
+
+export interface TaskSmall {
+  id: string;
+  title: string;
+  markdown: string;
+  dueDate: string;
+}
 export interface Toast {
   message: string | null;
   type: "success" | "error" | "info" | null;
@@ -42,6 +49,13 @@ export interface Lesson {
   topic: string;
   assignee: string;
   assigneeName: string;
+}
+
+export interface LessonSmall {
+  id: string;
+  title: string;
+  markdown: string;
+  topic: string;
 }
 
 export interface LessonStore {

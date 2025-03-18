@@ -1,9 +1,35 @@
 use crate::auth::jwt::Claims;
 use super::error::APIError;
 use crate::db::init::AppState;
-use crate::models::tasks::{TaskBody, TaskBodyWithStudent, TaskCreateBody, TaskUpdate, TaskPaginationParams};
+use crate::models::tasks::{TaskBody, TaskBodySmall, TaskBodyWithStudent, TaskCreateBody, TaskUpdate, TaskPaginationParams};
 use crate::models::meta::PaginatedResponse;
 use axum::extract::{Json, Path, State, Query};
+
+pub async fn fetch_recent_tasks(
+    State(state): State<AppState>,
+    claims: Claims,
+) -> Result<Json<Vec<TaskBodySmall>>, APIError> {
+    let tasks = sqlx::query_as!(
+        TaskBodySmall,
+        r#"
+        SELECT id, 
+            title, 
+            LEFT(markdown, 100) as "markdown!", 
+            completed,
+            due_date 
+        FROM tasks 
+        WHERE (assignee = $1 OR created_by = $1)
+        AND completed = false
+        ORDER BY created_at DESC
+        LIMIT 3
+        "#,
+        claims.sub
+    )
+    .fetch_all(&state.db)
+    .await?;
+
+    Ok(Json(tasks))
+}
 
 pub async fn fetch_task(
     State(state): State<AppState>,

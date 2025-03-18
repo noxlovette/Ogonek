@@ -8,17 +8,19 @@
 </script>
 
 <div
-  class="relative mx-4 flex
-  flex-1 scroll-my-6 flex-col gap-4 rounded-lg bg-white px-5
-  py-3 pb-24 shadow-md ring ring-stone-200 md:mr-0 md:h-full md:px-6 md:pb-3 lg:px-8 lg:py-4
-  dark:bg-stone-950 dark:ring-stone-900"
+  class="relative mx-6 flex h-max
+  min-h-full flex-1 -translate-y-3 scroll-my-6 flex-col gap-4 rounded-lg
+  bg-white px-5 py-3 pb-24 shadow-sm ring ring-stone-200 md:mr-0 md:px-5 md:pb-3 lg:py-4
+  dark:bg-stone-950 dark:ring-stone-900
+  
+  "
 >
   {@render children()}
 
   <button
     onclick={() => sidebar.toggle()}
-    class="bg-cacao-500 hover:bg-cacao-400 absolute top-4 -left-7 z-10 hidden rounded-full p-1
-            text-white shadow-md transition-colors md:block dark:bg-stone-800
+    class="bg-cacao-500 hover:bg-cacao-50 absolute top-5 -left-10 z-10 hidden rounded-full p-1 text-white
+            shadow-sm transition-colors hover:text-inherit md:block dark:bg-stone-800
             dark:text-stone-200 dark:hover:bg-stone-700"
     aria-label={$sidebar ? "Expand sidebar" : "Collapse sidebar"}
   >
@@ -28,20 +30,4 @@
       <ChevronLeft size={16} />
     {/if}
   </button>
-
-  {#if role === "s"}
-    <button
-      onclick={() => rightbar.toggle()}
-      class="bg-cacao-500 hover:bg-cacao-400 absolute top-4 -right-7
-          z-30 rounded-full p-1 text-white shadow-md transition-colors dark:bg-stone-800
-          dark:text-stone-200 dark:hover:bg-stone-700"
-      aria-label={$rightbar ? "Expand rightbar" : "Collapse rightbar"}
-    >
-      {#if $rightbar}
-        <ChevronLeft size={16} />
-      {:else}
-        <ChevronRight size={16} />
-      {/if}
-    </button>
-  {/if}
 </div>

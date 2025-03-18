@@ -1,9 +1,11 @@
 import { env } from "$env/dynamic/private";
+import redis from "$lib/redisClient";
 import { ValidateAccess } from "$lib/server";
 import * as Sentry from "@sentry/sveltekit";
 import type { Handle, HandleFetch, RequestEvent } from "@sveltejs/kit";
 import { redirect } from "@sveltejs/kit";
 import { sequence } from "@sveltejs/kit/hooks";
+
 Sentry.init({
   dsn: "https://2d5f51ef45d12264bf0a264dbbbeeacb@o4507272574468096.ingest.de.sentry.io/4507947592777808",
   environment: env.PUBLIC_APP_ENV || "development",
@@ -63,15 +65,31 @@ export const handle: Handle = sequence(
 );
 
 async function handleTokenRefresh(event: RequestEvent) {
-  if (isRefreshing) {
-    while (isRefreshing) {
-      await new Promise((resolve) => setTimeout(resolve, 100));
-    }
-    return null;
+  const refreshToken = event.cookies.get("refreshToken");
+  if (!refreshToken) {
+    throw redirect(302, "/auth/login");
   }
 
-  isRefreshing = true;
-  const refreshToken = event.cookies.get("refreshToken");
+  const refreshCacheKey = `refresh:${refreshToken}`;
+
+  const inProgress = await redis.get(refreshCacheKey);
+
+  if (inProgress === "true") {
+    for (let i = 0; i < 10; i++) {
+      await new Promise((resolve) => setTimeout(resolve, 200));
+
+      const cachedUser = await redis.get(`${refreshCacheKey}:result`);
+      if (cachedUser) {
+        return JSON.parse(cachedUser);
+      }
+    }
+
+    // If we waited too long, assume the other process failed and try again
+    await redis.del(refreshCacheKey);
+  }
+
+  // Mark refresh as in progress with expiration (5 seconds)
+  await redis.set(refreshCacheKey, "true", "EX", 5);
 
   try {
     const refreshRes = await event.fetch("/auth/refresh", {
@@ -87,13 +105,25 @@ async function handleTokenRefresh(event: RequestEvent) {
 
     const newAccessToken = event.cookies.get("accessToken");
     if (newAccessToken) {
-      return await ValidateAccess(newAccessToken);
+      const user = await ValidateAccess(newAccessToken);
+
+      // Cache the result for other processes waiting
+      await redis.set(
+        `${refreshCacheKey}:result`,
+        JSON.stringify(user),
+        "EX",
+        3,
+      );
+
+      return user;
     }
+    throw new Error("No access token after refresh");
   } catch (error) {
-    console.error("Refresh failed:", error);
+    console.error("Token refresh failed:", error);
     throw redirect(302, "/auth/login");
   } finally {
-    isRefreshing = false;
+    // Clean up
+    await redis.del(refreshCacheKey);
   }
 }
 

@@ -3,26 +3,27 @@
   import { LessonCard, H1, Clock, TaskCard, H3 } from "$lib/components";
   import { fly } from "svelte/transition";
   import type { Task, Lesson } from "$lib/types";
+  import { getGreeting } from "$lib/utils";
+  import { user } from "$lib/stores";
+
+  const greeting = getGreeting();
 
   let { data }: { data: PageData } = $props();
   let { tasks, lessons }: { tasks: Task[]; lessons: Lesson[] } = data;
-
-  let pending = tasks.filter((task) => !task.completed);
 </script>
 
 <div class="space-y-4">
   <div class="flex items-center justify-between">
-    <H1>Dashboard</H1>
-    <Clock />
+    <H1>{$user.name}, good {greeting}</H1>
   </div>
 
   <section class="space-y-4">
     <H3>Recent Tasks</H3>
     <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
-      {#if pending.length < 1}
+      {#if tasks.length < 1}
         No Tasks
       {/if}
-      {#each pending.slice(0, 6) as task (task.id)}
+      {#each tasks as task (task.id)}
         <div transition:fly={{ y: 20, duration: 300 }}>
           <TaskCard {task} />
         </div>
@@ -36,7 +37,7 @@
       {#if lessons.length < 1}
         No Lessons
       {/if}
-      {#each lessons.slice(0, 6) as lesson (lesson.id)}
+      {#each lessons as lesson (lesson.id)}
         <div transition:fly={{ y: 20, duration: 300 }}>
           <LessonCard {lesson} />
         </div>

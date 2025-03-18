@@ -3,7 +3,8 @@
   import { enhance } from "$app/forms";
   import { page } from "$app/state";
   import type { TableConfig, Lesson } from "$lib/types/index.js";
-  import { formatDateTime } from "$lib/utils";
+  import { formatDate } from "@noxlovette/svarog";
+
   import {
     user,
     searchTerm,
@@ -35,7 +36,7 @@
         key: "createdAt",
         label: "Created",
         formatter: (value: string | boolean | undefined) =>
-          formatDateTime(String(value)),
+          formatDate(String(value)),
       },
     ],
   };

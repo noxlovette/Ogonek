@@ -2,7 +2,7 @@
   import { user } from "$lib/stores";
   import type { Task, TableConfig } from "$lib/types/index.js";
   import { H1, Table, TaskCard, H2, UniButton } from "$lib/components";
-  import { formatDateTime } from "$lib/utils";
+
   import { enhance } from "$app/forms";
   import { page } from "$app/state";
   import { goto } from "$app/navigation";
@@ -15,6 +15,7 @@
     assigneeStore,
   } from "$lib/stores";
   import { Eye, EyeClosed, PlusCircle, Search } from "lucide-svelte";
+  import { formatDate } from "@noxlovette/svarog";
 
   let { data } = $props();
   const { students } = data;
@@ -35,7 +36,7 @@
         key: "dueDate",
         label: "Due",
         formatter: (value: unknown): string =>
-          value ? formatDateTime(value as string) : "No Due Date", // Explicitly return string
+          value ? formatDate(value as string) : "No Due Date", // Explicitly return string
       },
       {
         key: "assigneeName",
@@ -142,7 +143,7 @@
           <!-- Fun thought bubble animation -->
           <div class="absolute -top-3 -right-2 animate-bounce">
             <div
-              class="bg-cacao-100 dark:bg-cacao-800 rounded-full p-2 text-xs text-stone-800 shadow-md dark:text-stone-200"
+              class="bg-cacao-100 dark:bg-cacao-800 rounded-full p-2 text-xs text-stone-800 shadow-sm dark:text-stone-200"
             >
               <span>🤔</span>
             </div>

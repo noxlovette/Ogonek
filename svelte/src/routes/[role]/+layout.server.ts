@@ -1,16 +1,14 @@
 import { env } from "$env/dynamic/private";
 import redis from "$lib/redisClient";
-import type { Lesson, PaginatedResponse, Student, Task } from "$lib/types";
+import type { LessonSmall, Student, TaskSmall } from "$lib/types";
 import type { LayoutServerLoad } from "./$types";
-export const load: LayoutServerLoad = async ({ fetch, params }) => {
-  const [students, lessonsPaginated, tasksPaginated] = await Promise.all([
+export const load: LayoutServerLoad = async ({ fetch }) => {
+  const [students, lessons, tasks] = await Promise.all([
     fetch("/axum/student").then((res) => res.json() as Promise<Student[]>),
-    fetch("/axum/lesson").then(
-      (res) => res.json() as Promise<PaginatedResponse<Lesson>>,
+    fetch("/axum/lesson/recent").then(
+      (res) => res.json() as Promise<LessonSmall>,
     ),
-    fetch("/axum/task").then(
-      (res) => res.json() as Promise<PaginatedResponse<Task>>,
-    ),
+    fetch("/axum/task/recent").then((res) => res.json() as Promise<TaskSmall>),
   ]);
 
   const word = redis.get("wordAPI").then(async (cachedWord) => {
@@ -32,9 +30,6 @@ export const load: LayoutServerLoad = async ({ fetch, params }) => {
       return word;
     }
   });
-
-  const { data: lessons } = lessonsPaginated;
-  const { data: tasks } = tasksPaginated;
 
   return {
     students,

@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { Lesson } from "$lib/types";
-  import { formatDateTime, parseMarkdown } from "$lib/utils";
+  import { parseMarkdown } from "$lib/utils";
+  import { formatDate } from "@noxlovette/svarog";
   import { user } from "$lib/stores";
   import CardClickable from "./CardClickable.svelte";
   import { H2 } from "../typography";
@@ -15,7 +16,10 @@
 
   let { lesson }: Props = $props();
   let rendered = $state(lesson.markdown);
-  const formattedDate = formatDateTime(lesson.createdAt);
+
+  console.log(lesson.createdAt);
+
+  const formattedDate = formatDate(lesson.createdAt);
   let href =
     $user.role === "teacher"
       ? `/t/lessons/l/${lesson.id}`

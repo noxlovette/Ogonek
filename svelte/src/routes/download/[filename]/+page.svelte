@@ -42,7 +42,7 @@
 
 <div class="flex size-full h-max justify-center md:items-center">
   <div
-    class="max-w-md space-y-6 rounded-xl bg-white p-6 shadow-md md:w-full md:p-8 dark:bg-stone-900"
+    class="max-w-md space-y-6 rounded-xl bg-white p-6 shadow-sm md:w-full md:p-8 dark:bg-stone-900"
   >
     <div class="flex items-center justify-center space-x-2">
       <BookOpen class="text-cacao-500 h-8 w-8 dark:text-stone-700" />

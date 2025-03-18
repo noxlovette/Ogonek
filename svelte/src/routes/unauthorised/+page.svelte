@@ -5,7 +5,7 @@
 
 <div class="flex size-full items-center justify-center">
   <div
-    class="w-full max-w-2xl overflow-hidden rounded-lg bg-white p-8 text-center shadow-md"
+    class="w-full max-w-2xl overflow-hidden rounded-lg bg-white p-8 text-center shadow-sm"
   >
     <!-- Main content -->
     <div class="mb-6 flex justify-center space-x-4">

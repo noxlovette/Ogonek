@@ -8,7 +8,7 @@
 <div
   class={`
 relative
-     h-max flex-shrink-0 flex-col overflow-hidden py-2
+     -mr-8 h-max flex-shrink-0 flex-col overflow-hidden py-2 pb-5
      transition-all duration-300 ease-in-out
      ${$rightbar ? "w-0" : "w-1/5"}
      order-last hidden md:flex md:text-lg lg:text-xl

@@ -1,13 +1,37 @@
 use crate::auth::jwt::Claims;
 use crate::db::init::AppState;
-use crate::models::lessons::{LessonBody, LessonBodyWithStudent, LessonCreateBody, LessonCreateResponse, LessonUpdate, PaginationParams};
+use crate::models::lessons::{LessonBody, LessonBodySmall, LessonBodyWithStudent, LessonCreateBody, LessonCreateResponse, LessonUpdate, PaginationParams};
 use axum::extract::{Json, Query};
 use axum::extract::Path;
 use axum::extract::State;
 use super::error::APIError;
 use crate::models::meta::PaginatedResponse;
 
+pub async fn fetch_recent_lessons(
+    State(state): State<AppState>,
+    claims: Claims,
+) -> Result<Json<Vec<LessonBodySmall>>, APIError> {
+    let tasks = sqlx::query_as!(
+        LessonBodySmall,
+        r#"
+        SELECT 
+            id, 
+            title, 
+            LEFT(markdown, 100) as "markdown!", 
+            topic,
+            created_at
+        FROM lessons
+        WHERE (assignee = $1 OR created_by = $1)
+        ORDER BY created_at DESC
+        LIMIT 6
+        "#,
+        claims.sub
+    )
+    .fetch_all(&state.db)
+    .await?;
 
+    Ok(Json(tasks))
+}
 
 pub async fn fetch_lesson(
     State(state): State<AppState>,

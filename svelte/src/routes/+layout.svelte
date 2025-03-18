@@ -21,10 +21,10 @@
   use:keyEscape={goBack}
 >
   <div
-    class="selection:bg-cacao-500/20 caret-cacao-800 mx-auto flex h-full max-w-7xl flex-col items-center font-medium dark:caret-stone-200"
+    class="selection:bg-cacao-500/20 caret-cacao-800 mx-auto flex h-full flex-col items-center px-4 font-medium dark:caret-stone-200"
   >
     <Header />
-    <div id="main" class="flex w-full flex-1 flex-row py-4">
+    <div id="main" class="flex w-full flex-1 flex-row">
       {@render children?.()}
     </div>
     <Footer />

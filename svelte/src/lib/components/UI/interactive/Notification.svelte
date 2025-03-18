@@ -51,7 +51,7 @@
       y: 100,
     }}
     class="fixed bottom-5 left-1/2 z-50 flex max-w-md -translate-x-1/2 items-center gap-3
-			rounded-full bg-stone-50 px-4 py-2 shadow-md ring-1 dark:bg-stone-950 {$notification.type ===
+			rounded-full bg-stone-50 px-4 py-2 shadow-sm ring-1 dark:bg-stone-950 {$notification.type ===
     'success'
       ? 'ring-green-700'
       : $notification.type === 'error'

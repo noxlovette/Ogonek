@@ -1,9 +1,7 @@
 <footer
-  class="my-2 w-11/12 items-baseline rounded-lg shadow-md ring ring-stone-200 md:w-full dark:ring-stone-900"
+  class="mt-5 w-11/12 items-baseline rounded-t-lg shadow-inner ring ring-stone-200 md:w-full dark:ring-stone-900"
 >
-  <div
-    class="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-3"
-  >
+  <div class="mx-auto flex w-full items-center justify-between px-4 py-3">
     <div class="flex flex-col gap-1 text-sm">
       <p class="flex items-center">© 2025 Danila Volkov</p>
       <div class="flex gap-3 text-stone-500">

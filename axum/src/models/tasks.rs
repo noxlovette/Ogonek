@@ -50,6 +50,22 @@ pub struct TaskBody {
 }
 
 #[serde_with::serde_as]
+#[derive(Serialize, Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct TaskBodySmall {
+    pub id: String,
+    pub title: String,
+    pub markdown: String,
+    pub completed: bool,
+    #[serde_as(as = "Option<Rfc3339>")]
+    pub due_date: Option<OffsetDateTime>,
+}
+
+
+
+
+
+#[serde_with::serde_as]
 #[derive(Serialize, Deserialize, Debug, FromRow)]
 #[serde(rename_all = "camelCase")]
 pub struct TaskBodyWithStudent {

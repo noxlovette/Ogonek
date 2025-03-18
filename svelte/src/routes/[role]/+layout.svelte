@@ -13,6 +13,7 @@
     UsefulLinks,
     WordOfTheDay,
     Rightbar,
+    RecentLessons,
   } from "$lib/components";
   import { lessonStore, studentStore, taskStore } from "$lib/stores";
 
@@ -40,7 +41,7 @@
   {@render children?.()}
 </WorkArea>
 {#if role !== "t"}
-  <Rightbar elements={[UsefulLinks, WordOfTheDay]}></Rightbar>
+  <Rightbar elements={[UsefulLinks, WordOfTheDay, RecentLessons]}></Rightbar>
 {/if}
 <BottomMenu {elements} />
 

@@ -46,10 +46,10 @@
 
 <H1>Settings</H1>
 
-<div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+<div class="grid grid-cols-1 gap-6">
   <!-- Main Settings Form -->
   <form
-    class="col-span-1 md:col-span-2 lg:col-span-2"
+    class=""
     method="POST"
     use:enhance={enhanceForm({
       messages: {
@@ -75,7 +75,7 @@
     action="?/update"
   >
     <div
-      class="rounded-xl border border-stone-100 bg-stone-50 p-6 shadow-md transition-all dark:border-stone-800 dark:bg-stone-950"
+      class="rounded-xl border border-stone-100 bg-stone-50 p-6 shadow-sm transition-all dark:border-stone-800 dark:bg-stone-950"
     >
       <div
         class="mb-6 flex items-center justify-between border-b border-stone-200 pb-4 dark:border-stone-700"
@@ -90,7 +90,7 @@
           }}
           type="button"
         >
-          {disabled ? "Edit Profile" : "Editing..."}
+          {disabled ? "Edit" : "Editing..."}
         </UniButton>
       </div>
 
@@ -130,11 +130,11 @@
     </div>
   </form>
 
-  <!-- Right sidebar with account tools -->
+  <!-- Bottom thing with account tools -->
   <div class="grid grid-cols-1 gap-6">
     <!-- Telegram Section -->
     <section
-      class="rounded-xl border border-stone-100 bg-stone-50 p-6 shadow-md transition-all dark:border-stone-800 dark:bg-stone-900"
+      class="rounded-xl border border-stone-100 bg-stone-50 p-6 shadow-sm transition-all dark:border-stone-800 dark:bg-stone-900"
     >
       <div class="mb-3 flex items-center gap-3">
         <div class="rounded-full bg-cyan-100 p-2 dark:bg-cyan-900">
@@ -189,7 +189,7 @@
       })}
     >
       <section
-        class="rounded-xl border border-stone-100 bg-stone-50 p-6 shadow-md transition-all dark:border-stone-800 dark:bg-stone-900"
+        class="rounded-xl border border-stone-100 bg-stone-50 p-6 shadow-sm transition-all dark:border-stone-800 dark:bg-stone-900"
       >
         <div class="mb-3 flex items-center gap-3">
           <div class="rounded-full bg-red-100 p-2 dark:bg-red-900/50">

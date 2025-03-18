@@ -44,6 +44,21 @@ pub struct LessonBody {
     pub updated_at: OffsetDateTime,
 }
 
+
+#[serde_with::serde_as]
+#[derive(Serialize, Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct LessonBodySmall {
+    pub id: String,
+    pub title: String,
+    pub topic: String,
+    pub markdown: String,
+    #[serde_as(as = "Rfc3339")]
+    pub created_at: OffsetDateTime,
+}
+
+
+
 #[derive(Serialize, Deserialize, Debug)]
 pub struct LessonCreateResponse {
     pub id: String,

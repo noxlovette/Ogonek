@@ -1,28 +1,17 @@
 <script lang="ts">
-  import { formatDateTime } from "$lib/utils";
+  import { formatDate } from "@noxlovette/svarog";
   import type { Lesson } from "$lib/types";
-  import { user } from "$lib/stores";
+
+  import { page } from "$app/state";
+  import SidebarItem from "../elements/SidebarItem.svelte";
+  import { Library } from "lucide-svelte";
   interface Props {
     lesson: Lesson;
   }
 
   let { lesson }: Props = $props();
-
-  const formattedDate = formatDateTime(lesson.createdAt);
-  let href =
-    $user.role === "teacher"
-      ? `/t/lessons/l/${lesson.id}`
-      : `/s/lessons/l/${lesson.id}`;
+  const href = `/${page.params.role}/lessons/l/${lesson.id}`;
+  const formattedDate = formatDate(lesson.createdAt);
 </script>
 
-<a
-  {href}
-  class="hover:text-cacao-400 flex flex-col rounded-lg px-2 py-1 transition-all duration-300 hover:translate-x-1"
->
-  <h3>
-    {formattedDate}
-  </h3>
-  <p class="text-base">
-    {lesson.topic}
-  </p>
-</a>
+<SidebarItem Icon={Library} {href} name={formattedDate}></SidebarItem>

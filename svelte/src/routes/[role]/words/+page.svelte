@@ -6,7 +6,6 @@
   import { fade } from "svelte/transition";
   import { page } from "$app/state";
   import type { TableConfig, Deck } from "$lib/types";
-  import { formatDateTime } from "$lib/utils";
   import { ArrowBigRight, PlusCircle } from "lucide-svelte";
   import {
     searchTerm,
@@ -15,6 +14,7 @@
     assigneeStore,
   } from "$lib/stores";
   import { goto } from "$app/navigation";
+  import { formatDate } from "@noxlovette/svarog";
 
   let { data }: { data: PageData } = $props();
   let { decks, students } = $derived(data);
@@ -63,7 +63,7 @@
         key: "createdAt",
         label: "Created",
         formatter: (value: string | boolean | undefined) =>
-          formatDateTime(String(value)),
+          formatDate(String(value)),
       },
     ],
   };
@@ -77,7 +77,7 @@
 
 <!-- Cards due today section -->
 <div
-  class="mb-8 rounded-xl bg-white p-4 shadow-sm transition-all hover:shadow-md dark:bg-stone-900"
+  class="mb-8 rounded-xl bg-white p-4 shadow-sm transition-all hover:shadow-sm dark:bg-stone-900"
 >
   {#if data.cards?.length}
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">

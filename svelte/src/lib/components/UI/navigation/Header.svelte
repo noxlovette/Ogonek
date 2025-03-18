@@ -1,29 +1,21 @@
 <script lang="ts">
-  import { getGreeting } from "$lib/utils";
   import { user } from "$lib/stores";
-  import Search from "../search/SearchHeader.svelte";
+  import { page } from "$app/state";
   import ThemeToggler from "../interactive/ThemeToggler.svelte";
-  const greeting = getGreeting();
-  let href = $user.role === "teacher" ? "/t/dashboard" : "/s/dashboard";
+  import Clock from "../Clock.svelte";
+
+  let href = page.params.role === "t" ? "/t/dashboard" : "/s/dashboard";
 </script>
 
-<header
-  class="my-2 w-11/12 items-baseline rounded-lg shadow-md ring ring-stone-200 md:w-full dark:ring-stone-900"
->
-  <div
-    class="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-3"
-  >
+<header class="w-11/12 items-baseline md:w-full">
+  <div class="mx-auto flex w-full items-center justify-between px-4 py-3">
     <div class="flex w-full md:w-1/6">
       <a {href} class="font-serif text-2xl font-bold">Ogonek</a>
     </div>
 
     {#if $user.name}
-      <Search />
-
-      <div class="hidden w-1/6 min-w-fit items-center space-x-4 md:flex">
-        <p class="flex-shrink text-sm">
-          {$user.name}, good {greeting}
-        </p>
+      <div class="hidden min-w-fit items-center space-x-4 md:flex">
+        <Clock />
         <ThemeToggler />
       </div>
     {:else}

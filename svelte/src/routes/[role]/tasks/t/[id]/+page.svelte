@@ -1,10 +1,7 @@
 <script lang="ts">
   import { H1, UniButton } from "$lib/components";
   import { user } from "$lib/stores";
-  import { formatDateTime } from "$lib/utils";
-  import { goto } from "$app/navigation";
   import { page } from "$app/state";
-
   import { enhance } from "$app/forms";
   import {
     Download,
@@ -14,6 +11,7 @@
     Pencil,
   } from "lucide-svelte";
   import { enhanceForm } from "$lib/utils";
+  import { formatDate } from "@noxlovette/svarog";
 
   let { data } = $props();
   const { rendered } = data;
@@ -22,7 +20,7 @@
   let overdue = $state(false);
   let completed = $state(data.task.completed);
 
-  let formattedDate = formatDateTime(data.task.createdAt);
+  let formattedDate = formatDate(data.task.createdAt);
   let isPreloading = $state(false);
 </script>
 
