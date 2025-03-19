@@ -122,7 +122,7 @@
 
     <!-- Card container -->
     <div
-      class="flex min-h-[350px] flex-col rounded-xl bg-white p-8 shadow-sm transition-all hover:shadow-sm dark:bg-stone-900"
+      class="flex min-h-[350px] flex-col rounded-lg bg-white p-8 shadow-sm transition-all hover:shadow-sm dark:bg-stone-900"
       in:slide={{ duration: 300, easing: quintOut }}
     >
       <div class="flex-grow">

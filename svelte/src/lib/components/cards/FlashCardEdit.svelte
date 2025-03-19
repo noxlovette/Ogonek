@@ -16,7 +16,7 @@
 </script>
 
 <div
-  class="group relative rounded-lg border border-stone-200 bg-white p-3 shadow-sm transition-all hover:border-stone-300 dark:border-stone-800 dark:bg-stone-900 dark:hover:border-stone-600"
+  class="group relative rounded-lg bg-white p-3 shadow-sm ring ring-stone-200 transition-all hover:ring-stone-300 dark:bg-stone-900 dark:ring-stone-800 dark:hover:ring-stone-600"
   transition:fade
 >
   <button
@@ -25,13 +25,13 @@
     class="absolute -top-2 -right-2 hidden rounded-full bg-red-500/90 p-1.5 text-white opacity-0 transition-all group-hover:opacity-100 hover:bg-red-600 focus:ring focus:ring-red-400 md:block"
     title="Remove card"
   >
-    <Trash2 class="h-4 w-4" />
+    <Trash2 class="size-4" />
   </button>
 
   <!-- Card inputs in a compact grid -->
   <div class="grid gap-3 md:grid-cols-2">
     <!-- Front -->
-    <div class="space-y-1.5">
+    <div>
       <Input
         type="textarea"
         labelName="front"
@@ -42,7 +42,7 @@
     </div>
 
     <!-- Back -->
-    <div class="space-y-1.5">
+    <div>
       <Input
         labelName="back"
         type="textarea"
@@ -71,7 +71,7 @@
         name={`cards[${index}][media_url]`}
         bind:value={card.mediaUrl}
         placeholder="https://example.com/image.jpg"
-        class="focus:border-cocoa-500 focus:ring-cocoa-500 w-full rounded-md border border-stone-300 bg-transparent px-3 py-1.5 text-sm placeholder:text-stone-400 focus:ring-1 focus:outline-none dark:border-stone-600 dark:placeholder:text-stone-500"
+        class="focus:ring-cocoa-500 focus:ring-cocoa-500 w-full rounded-md bg-transparent px-3 py-1.5 text-sm ring ring-stone-300 placeholder:text-stone-400 focus:ring-1 focus:outline-none dark:ring-stone-600 dark:placeholder:text-stone-500"
       />
     </div>
   {/if}

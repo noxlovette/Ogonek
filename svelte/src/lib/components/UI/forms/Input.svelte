@@ -41,10 +41,10 @@
 {:else if type === "textarea"}
   <textarea
     {name}
-    rows="5"
+    rows="3"
     bind:value
     {disabled}
-    class="{styling} focus:border-cacao-500 focus:ring-cacao-500"
+    class="{styling} focus:border-cacao-500 focus:ring-cacao-500 resize-none"
     {placeholder}
   ></textarea>
 {:else if type === "number"}

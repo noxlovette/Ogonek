@@ -77,7 +77,7 @@
 
 <!-- Cards due today section -->
 <div
-  class="mb-8 rounded-xl bg-white p-4 shadow-sm transition-all hover:shadow-sm dark:bg-stone-900"
+  class="rounded-lg bg-white p-4 shadow-sm ring ring-stone-200 transition-all hover:shadow-sm dark:bg-stone-900 dark:ring-stone-800"
 >
   {#if data.cards?.length}
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
@@ -156,7 +156,7 @@
         {/each}
       </div>
     {:else}
-      <div class="rounded-xl bg-stone-50 py-12 text-center dark:bg-stone-800">
+      <div class="rounded-lg bg-stone-50 py-12 text-center dark:bg-stone-800">
         <div
           class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-stone-100 dark:bg-stone-700"
         >

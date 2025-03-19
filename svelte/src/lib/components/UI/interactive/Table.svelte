@@ -139,7 +139,7 @@
 
   <!-- Table Container -->
   <div
-    class="overflow-hidden rounded-xl border border-stone-200 bg-white shadow-sm dark:border-stone-800 dark:bg-stone-950"
+    class="overflow-hidden rounded-lg border border-stone-200 bg-white shadow-sm dark:border-stone-800 dark:bg-stone-950"
   >
     {#if items.length === 0 && !isEmptySearch}
       <!-- Empty state -->

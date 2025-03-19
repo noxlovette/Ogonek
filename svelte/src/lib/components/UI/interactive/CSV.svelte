@@ -143,7 +143,7 @@
   class="fixed inset-0 z-50 flex items-center justify-center bg-stone-950/50"
 >
   <div
-    class="w-full max-w-lg rounded-xl bg-white p-6 shadow-xl dark:bg-stone-800"
+    class="w-full max-w-lg rounded-lg bg-white p-6 shadow-xl dark:bg-stone-800"
   >
     <div class="mb-4 flex items-center justify-between">
       <h2 class="text-xl font-bold">Import Cards from CSV</h2>

@@ -18,25 +18,15 @@
     currentPage,
   } from "$lib/stores";
 
-  import { Check, LogOut, Key } from "lucide-svelte";
+  import { Check, LogOut, Key, Bell } from "lucide-svelte";
 
   let disabled = $state(true);
 
-  const fieldGroups = [
-    {
-      title: "User Settings",
-      fields: [
-        { id: "name", label: "Name", type: "text", storeKey: "" },
-        { id: "username", label: "Username", type: "text", storeKey: "" },
-        { id: "email", label: "Email", type: "email", storeKey: "" },
-      ],
-    },
-    {
-      title: "Profile Settings",
-      fields: [
-        { id: "zoom", label: "Zoom URL", type: "text", storeKey: "zoomUrl" },
-      ],
-    },
+  const fields = [
+    { id: "name", label: "Name", type: "text", storeKey: "" },
+    { id: "username", label: "Username", type: "text", storeKey: "" },
+    { id: "email", label: "Email", type: "email", storeKey: "" },
+    { id: "zoom", label: "Zoom URL", type: "text", storeKey: "zoomUrl" },
   ];
 </script>
 
@@ -46,8 +36,7 @@
 
 <H1>Settings</H1>
 
-<div class="grid grid-cols-1 gap-6">
-  <!-- Main Settings Form -->
+<div class="grid grid-cols-2 gap-6">
   <form
     class=""
     method="POST"
@@ -75,11 +64,9 @@
     action="?/update"
   >
     <div
-      class="rounded-xl border border-stone-100 bg-stone-50 p-6 shadow-sm transition-all dark:border-stone-800 dark:bg-stone-950"
+      class="flex flex-col rounded-lg bg-inherit p-6 shadow-sm ring ring-stone-200 transition-all dark:bg-stone-950 dark:ring-stone-800"
     >
-      <div
-        class="mb-6 flex items-center justify-between border-b border-stone-200 pb-4 dark:border-stone-700"
-      >
+      <div class="flex items-center justify-between">
         <H2>Account Settings</H2>
 
         <UniButton
@@ -94,31 +81,22 @@
         </UniButton>
       </div>
 
-      <!-- Fields Grid -->
-      <div class="grid grid-cols-1 gap-x-8 gap-y-6 md:grid-cols-2">
-        {#each fieldGroups as group, i}
+      <div class="grid grid-cols-1 gap-x-4 gap-y-3 md:grid-cols-2">
+        {#each fields as field}
           <div>
-            <H3>
-              {group.title}
-            </H3>
-            <div class="mt-4 space-y-5">
-              {#each group.fields as field}
-                <Input
-                  type={field.type}
-                  placeholder={field.label}
-                  name={field.id}
-                  bind:disabled
-                  value={field.storeKey
-                    ? $profile[field.storeKey]
-                    : $user[field.id]}
-                />
-              {/each}
-            </div>
+            <Input
+              type={field.type}
+              placeholder={field.label}
+              name={field.id}
+              bind:disabled
+              value={field.storeKey
+                ? $profile[field.storeKey]
+                : $user[field.id]}
+            />
           </div>
         {/each}
       </div>
 
-      <!-- Save Button - Spans full width -->
       <div class="mt-8 flex">
         <UniButton
           Icon={Check}
@@ -130,45 +108,35 @@
     </div>
   </form>
 
-  <!-- Bottom thing with account tools -->
-  <div class="grid grid-cols-1 gap-6">
-    <!-- Telegram Section -->
+  <div class="grid gap-4">
     <section
-      class="rounded-xl border border-stone-100 bg-stone-50 p-6 shadow-sm transition-all dark:border-stone-800 dark:bg-stone-900"
+      class="space-y-3 rounded-lg bg-inherit p-6 shadow-sm ring ring-stone-200 transition-all dark:ring-stone-800"
     >
-      <div class="mb-3 flex items-center gap-3">
-        <div class="rounded-full bg-cyan-100 p-2 dark:bg-cyan-900">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5 text-cyan-600 dark:text-cyan-400"
-            fill="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z"
-            ></path>
-          </svg>
-        </div>
+      <div class="flex items-center gap-3">
         <H2>Telegram Notifications</H2>
       </div>
 
-      <p class="mb-4 text-sm text-stone-700 dark:text-stone-300">
+      <p class="text-sm text-stone-700 dark:text-stone-300">
         Connect with our Telegram bot to receive instant notifications for new
         tasks, due dates, and other important updates.
       </p>
 
-      <a
-        href="https://t.me/fz_notif_bot"
-        class="flex w-full items-center justify-center gap-2 rounded-lg bg-cyan-600 px-4 py-2.5 font-medium text-white transition-colors hover:bg-cyan-700"
-      >
-        Connect to Telegram
-      </a>
+      <div class="flex">
+        <UniButton
+          variant="primary"
+          Icon={Bell}
+          href="https://t.me/fz_notif_bot"
+        >
+          Enable Notifications
+        </UniButton>
+      </div>
     </section>
 
     <!-- Logout Section -->
     <form
       action="?/logout"
       method="POST"
+      class="flex h-full flex-col"
       use:enhance={enhanceForm({
         messages: {
           failure: "Something's off",
@@ -189,39 +157,24 @@
       })}
     >
       <section
-        class="rounded-xl border border-stone-100 bg-stone-50 p-6 shadow-sm transition-all dark:border-stone-800 dark:bg-stone-900"
+        class="flex flex-col justify-between space-y-3 rounded-lg bg-inherit p-6 shadow-sm ring ring-stone-200 transition-all dark:ring-stone-800"
       >
-        <div class="mb-3 flex items-center gap-3">
-          <div class="rounded-full bg-red-100 p-2 dark:bg-red-900/50">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 text-red-600 dark:text-red-400"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-              />
-            </svg>
-          </div>
+        <div class="flex items-center gap-3">
           <H2>Account</H2>
         </div>
 
-        <p class="mb-4 text-sm text-stone-700 dark:text-stone-300">
+        <p class="text-sm text-stone-700 dark:text-stone-300">
           "I didn't say it was gonna be easy, Neo. I just said it would be the
           truth."
         </p>
-
-        <UniButton
-          variant="danger"
-          type="submit"
-          Icon={LogOut}
-          formaction="?/logout">Log Out</UniButton
-        >
+        <div>
+          <UniButton
+            variant="danger"
+            type="submit"
+            Icon={LogOut}
+            formaction="?/logout">Log Out</UniButton
+          >
+        </div>
       </section>
     </form>
   </div>

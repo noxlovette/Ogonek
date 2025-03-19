@@ -1,5 +1,7 @@
 <script lang="ts">
   import { sidebar } from "$lib/stores";
+  import { ChevronLeft, ChevronRight } from "lucide-svelte";
+
   let { elements }: { elements: ConstructorOfATypedSvelteComponent[] } =
     $props();
 </script>
@@ -14,6 +16,19 @@
  `}
 >
   <div class="w-full overflow-hidden py-2">
+    <button
+    onclick={() => sidebar.toggle()}
+    class="bg-cacao-500 hover:bg-cacao-50 absolute right-0 -top-1 z-10 hidden rounded-full p-1 text-cacao-50
+            shadow-sm transition-colors md:block dark:bg-stone-800
+            dark:text-stone-200 dark:hover:bg-stone-700"
+    aria-label={$sidebar ? "Expand sidebar" : "Collapse sidebar"}
+  >
+    {#if $sidebar}
+      <ChevronRight size={16} />
+    {:else}
+      <ChevronLeft size={16} />
+    {/if}
+  </button>
     <ul
       class={`
     flex flex-col space-y-2 ${$sidebar ? "items-center space-y-6 py-2" : "divide-y divide-stone-200/40 px-3 dark:divide-stone-600/80"}

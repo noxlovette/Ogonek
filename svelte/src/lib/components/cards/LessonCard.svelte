@@ -6,6 +6,7 @@
   import CardClickable from "./CardClickable.svelte";
   import { H2 } from "../typography";
   import { onMount } from "svelte";
+    import { page } from "$app/state";
   interface Props {
     lesson: Lesson;
   }
@@ -20,15 +21,19 @@
   console.log(lesson.createdAt);
 
   const formattedDate = formatDate(lesson.createdAt);
-  let href =
-    $user.role === "teacher"
-      ? `/t/lessons/l/${lesson.id}`
-      : `/s/lessons/l/${lesson.id}`;
+  const role = page.params.role;
+
+  const href = role === "t" ? `/t/lessons/l/${lesson.id}`: `/s/lessons/l/${lesson.id}`;
 </script>
 
 <CardClickable {href}>
   <H2>
+    {#if (role === "s")}
     {formattedDate}
+
+    {:else}
+    {lesson.title}
+    {/if}
   </H2>
 
   <div class="flex flex-col">

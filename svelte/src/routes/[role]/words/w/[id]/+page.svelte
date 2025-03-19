@@ -35,7 +35,7 @@
   <title>{deck.name} | Flashcards</title>
 </svelte:head>
 
-<div class="mb-6 flex flex-wrap items-center justify-between gap-4">
+<div class="flex flex-wrap items-center justify-between gap-4">
   <H1>{deck.name}</H1>
   <div class="flex gap-2">
     <form
@@ -107,7 +107,7 @@
   <!-- Main content area - Flashcards -->
   <div class="space-y-6 lg:col-span-2">
     <div
-      class="flex items-center justify-between rounded-lg bg-white p-4 shadow-sm dark:bg-stone-900"
+      class="flex items-center justify-between rounded-lg bg-white p-4 shadow-sm ring ring-stone-200 dark:bg-stone-900 dark:ring-stone-900"
     >
       <h2 class="text-xl font-semibold">Flashcards</h2>
       <span
@@ -139,8 +139,10 @@
   </div>
 
   <!-- Sidebar - Deck Info -->
-  <div class="flex flex-col space-y-4">
-    <div class="rounded-lg bg-white p-6 shadow-sm dark:bg-stone-900">
+  <div class="sticky flex flex-col space-y-4">
+    <div
+      class="rounded-lg bg-white p-6 shadow-sm ring ring-stone-200 dark:bg-stone-900 dark:ring-stone-900"
+    >
       <Label>Description</Label>
       {#if deck.description}
         <p class="mt-2 text-lg">{deck.description}</p>

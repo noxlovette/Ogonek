@@ -88,7 +88,7 @@
       <div class="space-y-6">
         {#if updatedCards.length === 0}
           <div
-            class="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-stone-200 bg-stone-50 p-12 text-center dark:border-stone-800 dark:bg-stone-900/50"
+            class="flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-stone-200 bg-stone-50 p-12 text-center dark:border-stone-800 dark:bg-stone-900/50"
           >
             <div class="mb-4 rounded-full bg-stone-100 p-4 dark:bg-stone-800">
               <svg
@@ -140,9 +140,7 @@
       </div>
     </div>
     <div class="lg:col-span-1">
-      <div
-        class="sticky top-6 space-y-6 rounded-xl bg-white p-5 shadow-sm dark:bg-stone-900"
-      >
+      <div class="sticky top-6 space-y-6">
         <div>
           <Input
             labelName="Deck Name"

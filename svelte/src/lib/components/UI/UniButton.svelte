@@ -84,7 +84,7 @@
       "text-stone-700 from-stone-50 to-stone-100 hover:to-stone-200 ring-stone-300 bg-gradient-to-bl",
     danger:
       customColors ||
-      "from-red-500 to-red-600 text-white hover:from-red-500 hover:to-red-700 dark:from-red-500 dark:to-red-600 dark:hover:from-red-500 dark:hover:to-red-700 focus:ring-red-400 bg-gradient-to-br",
+      "from-red-500 to-red-600 text-white hover:from-red-500 hover:to-red-700 dark:from-red-500 dark:to-red-600 dark:hover:from-red-500 dark:hover:to-red-700 focus:ring-red-400  bg-gradient-to-br dark:ring-red-800 dark:hover:ring-red-700",
     ghost:
       customColors ||
       "text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800 ring-transparent",
@@ -158,7 +158,7 @@
     class="fixed inset-0 z-50 flex items-center justify-center bg-stone-950/50 p-4"
   >
     <div
-      class="w-full max-w-md rounded-xl bg-white p-6 shadow-xl dark:bg-stone-900"
+      class="w-full max-w-md rounded-lg bg-white p-6 shadow-xl dark:bg-stone-900"
     >
       <h3 class="text-xl font-semibold text-stone-800 dark:text-stone-200">
         {confirmTitle || "Confirm"}

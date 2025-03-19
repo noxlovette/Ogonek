@@ -21,7 +21,7 @@
   class={[
     styling,
     `hover:ring-cacao-400 hover:shadow-cacao-100 dark:hover:shadow-cacao-100 dark:hover:bg-opacity-20
-     relative flex flex-col overflow-hidden rounded-xl bg-white p-5 ring-1
+     relative flex flex-col overflow-hidden rounded-lg bg-white p-5 ring-1
      shadow-stone-100 ring-stone-200 transition-all duration-200 ease-out
       dark:bg-stone-950 dark:shadow-none dark:shadow-stone-900
     dark:ring-stone-900
