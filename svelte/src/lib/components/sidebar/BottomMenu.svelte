@@ -1,41 +1,5 @@
 <script lang="ts">
   let props = $props();
-  let activeIndex = $state(-1);
-  let startY = 0;
-  const swipeThreshold = 50;
-
-  const hapticFeedback = {
-    light: () => navigator.vibrate?.(10),
-    medium: () => navigator.vibrate?.(15),
-    heavy: () => navigator.vibrate?.([20, 10, 20]),
-  };
-
-  function handleTouchStart(e: TouchEvent, i: number) {
-    activeIndex = i;
-    startY = e.touches[0].clientY;
-    hapticFeedback.light();
-  }
-
-  function handleTouchMove(e: TouchEvent) {
-    if (activeIndex === -1) return;
-
-    const currentY = e.touches[0].clientY;
-    const diff = startY - currentY;
-
-    if (diff > swipeThreshold) {
-      hapticFeedback.heavy();
-      window.dispatchEvent(
-        new CustomEvent("dockSwipeUp", {
-          detail: { index: activeIndex },
-        }),
-      );
-    }
-  }
-
-  function handleTouchEnd() {
-    if (activeIndex !== -1) hapticFeedback.medium();
-    activeIndex = -1;
-  }
 </script>
 
 <div
@@ -43,14 +7,7 @@
 >
   <ul class="{props.subclass} flex w-full items-end justify-around">
     {#each props.elements as Element, i}
-      <li
-        ontouchstart={(e) => handleTouchStart(e, i)}
-        ontouchmove={handleTouchMove}
-        ontouchend={handleTouchEnd}
-        class="transition-all duration-300 ease-out {activeIndex === i
-          ? 'scale-125'
-          : 'scale-100'}"
-      >
+      <li class="transition-all duration-300 ease-out">
         <Element />
       </li>
     {/each}

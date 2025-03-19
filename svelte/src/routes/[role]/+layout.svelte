@@ -24,7 +24,7 @@
   let { data, children } = $props();
   const role = page.params.role;
 
-  let elements = $state([Dashboard, Todo, Lessons, Zoom, Words, Settings]);
+  let elements = $state([Dashboard, Todo, Lessons, Words, Zoom, Settings]);
 
   if (role === "t") {
     elements = [Dashboard, Todo, Lessons, Students, Words, Settings];

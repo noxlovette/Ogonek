@@ -36,7 +36,7 @@
 
 <H1>Settings</H1>
 
-<div class="grid grid-cols-2 gap-6">
+<div class="grid gap-6 md:grid-cols-2">
   <form
     class=""
     method="POST"
@@ -64,7 +64,7 @@
     action="?/update"
   >
     <div
-      class="flex flex-col rounded-lg bg-inherit p-6 shadow-sm ring ring-stone-200 transition-all dark:bg-stone-950 dark:ring-stone-800"
+      class="flex flex-col rounded-lg bg-inherit p-4 shadow-sm ring ring-stone-200 transition-all md:p-5 lg:p-6 dark:bg-stone-950 dark:ring-stone-800"
     >
       <div class="flex items-center justify-between">
         <H2>Account Settings</H2>
@@ -81,7 +81,7 @@
         </UniButton>
       </div>
 
-      <div class="grid grid-cols-1 gap-x-4 gap-y-3 md:grid-cols-2">
+      <div class="grid grid-cols-1 gap-x-4 gap-y-3">
         {#each fields as field}
           <div>
             <Input
@@ -110,7 +110,7 @@
 
   <div class="grid gap-4">
     <section
-      class="space-y-3 rounded-lg bg-inherit p-6 shadow-sm ring ring-stone-200 transition-all dark:ring-stone-800"
+      class="space-y-3 rounded-lg bg-inherit p-4 shadow-sm ring ring-stone-200 transition-all md:p-5 lg:p-6 dark:ring-stone-800"
     >
       <div class="flex items-center gap-3">
         <H2>Telegram Notifications</H2>
@@ -157,7 +157,7 @@
       })}
     >
       <section
-        class="flex flex-col justify-between space-y-3 rounded-lg bg-inherit p-6 shadow-sm ring ring-stone-200 transition-all dark:ring-stone-800"
+        class="flex flex-col justify-between space-y-3 rounded-lg bg-inherit p-4 shadow-sm ring ring-stone-200 transition-all md:p-5 lg:p-6 dark:ring-stone-800"
       >
         <div class="flex items-center gap-3">
           <H2>Account</H2>

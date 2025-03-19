@@ -7,9 +7,9 @@
   let href = page.params.role === "t" ? "/t/dashboard" : "/s/dashboard";
 </script>
 
-<header class="w-11/12 items-baseline md:w-full">
+<header class="w-full items-baseline">
   <div class="mx-auto flex w-full items-center justify-between px-4 py-3">
-    <div class="flex w-full md:w-1/6">
+    <div class="z-50 flex w-full items-center justify-center md:w-1/6">
       <a {href} class="font-serif text-2xl font-bold">Ogonek</a>
     </div>
 

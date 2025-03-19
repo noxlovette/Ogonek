@@ -23,6 +23,7 @@
     <UniButton
       size="sm"
       Icon={Eye}
+      fullWidth={false}
       href="/s/lessons"
       type="button"
       variant="link">View All</UniButton

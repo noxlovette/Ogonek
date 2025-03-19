@@ -1,10 +1,15 @@
 <script lang="ts">
   import { sidebar } from "$lib/stores/sidebar";
+  import { page } from "$app/state";
 
   let { Icon, href = "/", name, external = false } = $props();
 
   const target = $derived(external === true ? "_blank" : undefined);
   const rel = $derived(external === true ? "noopener noreferrer" : undefined);
+
+  const isActive = $derived(
+    page.url.pathname.toLowerCase().includes(name.toLowerCase()),
+  );
 </script>
 
 <a
@@ -12,12 +17,13 @@
   {target}
   {rel}
   class={`
-     inline-flex items-center font-serif transition-all
+     inline-flex items-center rounded-lg p-2 font-serif transition-all
      ${
        $sidebar
-         ? "hover:bg-cacao-500 justify-center rounded-full p-2 dark:hover:bg-stone-800"
-         : "md:px-1 md:py-2 md:hover:translate-x-1 lg:px-2 lg:py-4"
+         ? "hover:bg-cacao-500 justify-center  dark:hover:bg-stone-800"
+         : "md:hover:translate-x-1"
      }
+    ${isActive ? " bg-cacao-700  shadow-inner" : ""}
    `}
 >
   {#if $sidebar}

@@ -5,7 +5,7 @@
   import { invalidate } from "$app/navigation";
   import { enhanceForm } from "$lib/utils";
   import UniButton from "$lib/components/UI/UniButton.svelte";
-  import { Home } from "lucide-svelte";
+  import { Eye, Home } from "lucide-svelte";
 
   let { data } = $props();
 
@@ -110,7 +110,7 @@
     </div>
 
     <div
-      class="h-2.5 w-full overflow-hidden rounded-full bg-stone-200 dark:bg-stone-700"
+      class="h-2.5 w-full overflow-hidden rounded-full ring ring-stone-200 dark:bg-stone-700 dark:ring-stone-800"
     >
       <div
         class="bg-cacao-600 dark:bg-cacao-600 h-2.5 rounded-full transition-all duration-300"
@@ -122,7 +122,7 @@
 
     <!-- Card container -->
     <div
-      class="flex min-h-[350px] flex-col rounded-lg bg-white p-8 shadow-sm transition-all hover:shadow-sm dark:bg-stone-900"
+      class="flex min-h-[350px] flex-col rounded-lg bg-white p-8 shadow-sm ring ring-stone-200 transition-all hover:shadow-sm dark:bg-stone-900 dark:ring-stone-900"
       in:slide={{ duration: 300, easing: quintOut }}
     >
       <div class="flex-grow">
@@ -157,25 +157,14 @@
       <!-- Action buttons -->
       <div class="mt-8 flex justify-center">
         {#if !showAnswer}
-          <button
-            class="bg-cacao-600 hover:bg-cacao-700 text-cacao-50 flex items-center justify-center rounded-lg px-6 py-3 font-medium transition"
+          <UniButton
+            Icon={Eye}
             onclick={() => (showAnswer = !showAnswer)}
+            type="button"
+            variant="outline"
           >
-            <svg
-              xmlns="http://www.w3.org/1000/svg"
-              class="mr-2 h-5 w-5"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-              <path
-                fill-rule="evenodd"
-                d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
-                clip-rule="evenodd"
-              />
-            </svg>
             Show Answer
-          </button>
+          </UniButton>
         {:else}
           <form
             method="POST"

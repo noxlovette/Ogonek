@@ -139,15 +139,6 @@
               />
             </svg>
           </div>
-
-          <!-- Fun thought bubble animation -->
-          <div class="absolute -top-3 -right-2 animate-bounce">
-            <div
-              class="bg-cacao-100 dark:bg-cacao-800 rounded-full p-2 text-xs text-stone-800 shadow-sm dark:text-stone-200"
-            >
-              <span>🤔</span>
-            </div>
-          </div>
         </div>
 
         <h3 class="mb-2 text-2xl font-bold text-stone-800 dark:text-stone-200">
@@ -176,8 +167,8 @@
             type="submit"
             disabled={isSubmitting}
             class="group from-cacao-500 to-cacao-600 hover:from-cacao-600 hover:to-cacao-700 focus:ring-cacao-500 relative w-full overflow-hidden rounded-lg bg-gradient-to-r px-6
-             py-3 text-white shadow-lg transition-all focus:ring-2 focus:ring-offset-2
-             focus:outline-none disabled:opacity-70"
+             py-3 text-white shadow-sm ring ring-stone-200 transition-all focus:ring-2 focus:ring-offset-2 focus:outline-none
+             disabled:opacity-70 dark:ring-stone-900"
           >
             <span class="relative z-10 flex items-center justify-center gap-2">
               {#if isSubmitting}

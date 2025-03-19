@@ -6,4 +6,4 @@
   let href = $user.role === "teacher" ? "/t/dashboard" : "/s/dashboard";
 </script>
 
-<SidebarItem {href} name="Home" Icon={House} />
+<SidebarItem {href} name="Dashboard" Icon={House} />

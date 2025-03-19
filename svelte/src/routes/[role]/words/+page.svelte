@@ -77,7 +77,7 @@
 
 <!-- Cards due today section -->
 <div
-  class="rounded-lg bg-white p-4 shadow-sm ring ring-stone-200 transition-all hover:shadow-sm dark:bg-stone-900 dark:ring-stone-800"
+  class="rounded-lg bg-white p-4 shadow-sm ring ring-stone-200 transition-all dark:bg-stone-900 dark:ring-stone-800"
 >
   {#if data.cards?.length}
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
