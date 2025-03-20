@@ -1,5 +1,5 @@
 use crate::api::{decks, learning};
-use crate::db::init::AppState;
+use crate::schema::AppState;
 use axum::routing::{get, post, patch};
 use axum::Router;
 

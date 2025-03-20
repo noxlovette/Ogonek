@@ -1,6 +1,6 @@
 use axum::extract::{Json, State, Path};
 use crate::auth::jwt::Claims;
-use crate::db::init::AppState;
+use crate::schema::AppState;
 use crate::models::cards_decks::{CardProgress, CardProgressWithFields, ReviewPayload};
 use super::error::APIError;
 use axum::http::StatusCode;

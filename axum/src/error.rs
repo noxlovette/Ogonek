@@ -4,6 +4,7 @@ use axum::{
     response::{IntoResponse, Response},
     Json,
 };
+use aws_sdk_s3::presigning::PresigningConfigError;
 use serde_json::json;
 use thiserror::Error;
 
@@ -116,6 +117,14 @@ impl From<crate::auth::error::AuthError> for AppError {
             crate::auth::error::AuthError::AuthenticationFailed => Self::AuthenticationFailed,
             crate::auth::error::AuthError::Conflict(msg) => Self::AlreadyExists(msg),
         }
+    }
+}
+
+
+// Convert from S3 Erorrs
+impl From<PresigningConfigError> for AppError{
+    fn from(err:PresigningConfigError) -> Self {
+        Self::Internal(("S3 error").into())
     }
 }
 

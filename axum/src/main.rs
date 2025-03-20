@@ -4,7 +4,9 @@ use axum::{
     routing::get,
     Router,
 };
-use rust::db::init::{init_db, AppState};
+use rust::db::init::init_db;
+use rust::s3::init::init_s3;
+use rust::schema::AppState;
 use rust::tools::logging::init_logging;
 use rust::tools::middleware::api_key::validate_api_key;
 use tower::ServiceBuilder;
@@ -23,6 +25,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     init_logging().await;
     let state = AppState {
         db: init_db().await?,
+        s3: init_s3().await?,
     };
 
     let protected_routes = Router::new()
@@ -43,6 +46,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             "/deck",
             rust::api::routes::deck_routes::deck_routes(),
         )
+        .nest("/s3", rust::api::routes::s3_routes::s3_routes())
         .layer(axum::middleware::from_fn(validate_api_key));
 
     let app = Router::new()

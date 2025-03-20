@@ -3,7 +3,7 @@ use crate::auth::helpers::verify_password;
 use crate::auth::helpers::{generate_refresh_token, generate_token, hash_password};
 use crate::auth::jwt::Claims;
 use crate::auth::jwt::RefreshClaims;
-use crate::db::init::AppState;
+use crate::schema::AppState;
 use crate::api::error::APIError;
 use crate::models::users::{
     AuthBody, AuthPayload, BindPayload, InviteToken, SignUpBody, SignUpPayload, User,

@@ -1,6 +1,6 @@
 use crate::auth::helpers::hash_password;
 use crate::auth::jwt::Claims;
-use crate::db::init::AppState;
+use crate::schema::AppState;
 use super::error::APIError;
 use axum::extract::Json;
 use axum::extract::State;

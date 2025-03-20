@@ -1,6 +1,6 @@
 use crate::auth::jwt::Claims;
 use super::error::APIError;
-use crate::db::init::AppState;
+use crate::schema::AppState;
 use crate::models::profiles::{Profile, ProfileUpdate};
 use axum::extract::Json;
 use axum::extract::State;

@@ -1,5 +1,5 @@
 use crate::auth::jwt::Claims;
-use crate::db::init::AppState;
+use crate::schema::AppState;
 use crate::models::cards_decks::{DeckBody, DeckCreateBody, CardBody, DeckWithCards, DeckWithCardsAndSubscription, DeckWithCardsUpdate, DeckFilterParams};
 use axum::extract::Json;
 use axum::extract::Path;

@@ -1,5 +1,5 @@
 use crate::api::user;
-use crate::db::init::AppState;
+use crate::schema::AppState;
 use axum::routing::get;
 use axum::Router;
 

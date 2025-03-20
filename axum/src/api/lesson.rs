@@ -1,5 +1,5 @@
 use crate::auth::jwt::Claims;
-use crate::db::init::AppState;
+use crate::schema::AppState;
 use crate::models::lessons::{LessonBody, LessonBodySmall, LessonBodyWithStudent, LessonCreateBody, LessonCreateResponse, LessonUpdate, PaginationParams};
 use axum::extract::{Json, Query};
 use axum::extract::Path;
