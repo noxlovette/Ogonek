@@ -1,6 +1,7 @@
 use axum::{
     http::{HeaderName, HeaderValue, Method, Request, StatusCode},
     response::IntoResponse,
+    routing::get,
     Router,
 };
 use rust::db::init::{init_db, AppState};
@@ -45,7 +46,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .layer(axum::middleware::from_fn(validate_api_key));
 
     let app = Router::new()
-        .merge(protected_routes) // Everything else with API key protection
+        .merge(protected_routes)
+        .route("/health", get(health_check))
         .fallback(handler_404)
         .with_state(state)
         .layer(
@@ -95,4 +97,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
 async fn handler_404() -> impl IntoResponse {
     (StatusCode::NOT_FOUND, "Nothing to see here")
+}
+
+async fn health_check() -> impl IntoResponse {
+    StatusCode::OK
 }
