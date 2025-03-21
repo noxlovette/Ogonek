@@ -6,5 +6,4 @@ pub mod user_routes;
 pub mod student_routes;
 pub mod profile_routes;
 pub mod deck_routes;
-pub mod file_routes;
 pub mod s3_routes;

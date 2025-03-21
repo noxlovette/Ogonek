@@ -1,104 +1,260 @@
 use axum::Json;
-use axum::{
-    extract::{Multipart, Path},
-    http::{header, StatusCode},
-    response::IntoResponse,
-};
-use std::path::PathBuf;
-use tokio::fs;
-use tokio::io::AsyncWriteExt;
-use tracing::error;
-use tracing::info;
-use serde_json;
+use crate::auth::jwt::Claims;
+use axum::extract::{State, Path, Query};
+use crate::schema::AppState;
+use crate::models::files::{File, FileUpdate, FileListParams, CreateFolderRequest, S3KeyRecord};
+use super::error::APIError;
+use axum::http::StatusCode;
+use axum::response::IntoResponse;
 
-pub async fn upload_handler(mut multipart: Multipart) -> Result<impl IntoResponse, StatusCode> {
-    let upload_path = std::env::var("UPLOAD_PATH").unwrap_or_else(|_| "./uploads".to_string());
-    if !PathBuf::from(&upload_path).exists() {
-        fs::create_dir_all(&upload_path).await.map_err(|err| {
-            error!("Failed to create upload directory: {:?}", err);
-            StatusCode::INTERNAL_SERVER_ERROR
-        })?;
-    }
+// id lookups – s3 keys are stored in the DB
+// upload file s3
+// move folder
 
-    let mut unique_filename = String::new();
+// this section is for the explorer! It does not handle file creation as that should happen during the upload
+pub async fn fetch_file(
+    State(state): State<AppState>,
+    claims: Claims,
+    Path(file_id): Path<String>,
+) -> Result<Json<Option<File>>, APIError> {
+    let file = sqlx::query_as!(
+        File,
+        r#"
+        SELECT * FROM files 
+        WHERE id = $1 AND (
+            owner_id = $2
+        )
+        "#,
+        file_id,
+        claims.sub
+    )
+    .fetch_optional(&state.db)
+    .await?;
 
-    while let Some(mut field) = multipart.next_field().await.map_err(|err| {
-        error!("Error processing multipart field: {:?}", err);
-        StatusCode::BAD_REQUEST
-    })? {
-        let filename = field
-            .file_name()
-            .ok_or_else(|| {
-                error!("Field missing filename");
-                StatusCode::BAD_REQUEST
-            })?
-            .to_string();
-        let safe_filename = filename
-            .trim()
-            .to_lowercase()
-            .replace(' ', "-")
-            .chars()
-            .filter(|c| c.is_alphanumeric() || *c == '-' || *c == '.')
-            .collect::<String>();
-        unique_filename = format!("{}-{}", uuid::Uuid::new_v4(), safe_filename);
+    Ok(Json(file))
+}
 
-        let file_path = PathBuf::from(&upload_path).join(&unique_filename);
-        let mut file = tokio::fs::File::create(&file_path).await.map_err(|err| {
-            error!("Failed to create file: {:?}", err);
-            StatusCode::INTERNAL_SERVER_ERROR
-        })?;
-
-        while let Some(chunk) = field.chunk().await.map_err(|err| {
-            error!("Failed to read chunk: {:?}", err);
-            StatusCode::INTERNAL_SERVER_ERROR
-        })? {
-            file.write_all(&chunk).await.map_err(|err| {
-                error!("Failed to write chunk: {:?}", err);
-                StatusCode::INTERNAL_SERVER_ERROR
-            })?;
+pub async fn list_files(
+    State(state): State<AppState>,
+    claims: Claims,
+    Query(params): Query<FileListParams>,
+) -> Result<Json<Vec<File>>, APIError> {
+    let files = if let Some(folder_id) = params.folder_id {
+        // Verify the folder exists and user has access
+        let folder_exists = sqlx::query!(
+            r#"
+            SELECT 1 as "exists!: bool" FROM files
+            WHERE id = $1 AND(
+            owner_id = $2
+            )
+            "#,
+            folder_id,
+            claims.sub
+        )
+        .fetch_optional(&state.db)
+        .await?
+        .is_some();
+        
+        if !folder_exists {
+            return Err(APIError::NotFound("Deck Not Found".into()))
         }
-
-        info!("Uploaded file: {}", safe_filename);
-    }
-    Ok(Json(serde_json::json!({ "filePath": unique_filename })))
+        // Get all files/folders with this parent_id
+        sqlx::query_as!(
+            File,
+            r#"
+            SELECT * FROM files 
+            WHERE parent_id = $1 AND owner_id = $2
+            ORDER BY is_folder DESC, name ASC
+            "#,
+            folder_id,
+            claims.sub
+        )
+        .fetch_all(&state.db)
+        .await?
+    } else {
+        // Root folder contents
+        sqlx::query_as!(
+            File,
+            r#"
+            SELECT * FROM files 
+            WHERE parent_id IS NULL AND owner_id = $1
+            ORDER BY is_folder DESC, name ASC
+            "#,
+            claims.sub
+        )
+        .fetch_all(&state.db)
+        .await?
+    };
+    
+    Ok(Json(files))
 }
 
-pub async fn download_handler(
-    Path(filename): Path<String>,
-) -> Result<impl IntoResponse, StatusCode> {
-    let upload_path = std::env::var("UPLOAD_PATH").unwrap_or_else(|_| "./uploads".to_string());
-    let file_path = PathBuf::from(&upload_path).join(&filename);
+pub async fn update_file(
+    State(state): State<AppState>,
+    claims: Claims,
+    Path(file_id): Path<String>,
+    Json(payload): Json<FileUpdate>
+) -> Result<StatusCode, APIError> {
+        sqlx::query!(
+        r#"
+        UPDATE files
+        SET
+            name = COALESCE($3, name),
+            path = COALESCE($4, path),
+            parent_id = COALESCE($5, parent_id)
+        WHERE id=$1 AND owner_id = $2
+        "#,
+        file_id,
+        claims.sub,
+            payload.name,
+            payload.path,
+            payload.parent_id
+    )
+        .execute(&state.db)
+        .await?;
 
-    // Basic path traversal protection
-    if !file_path.starts_with(&upload_path) {
-        error!("Path traversal attempt detected");
-        return Err(StatusCode::BAD_REQUEST);
-    }
-
-    // Read the file
-    let data = fs::read(&file_path).await.map_err(|err| {
-        error!("Failed to read file {:?}: {:?}", file_path, err);
-        StatusCode::NOT_FOUND
-    })?;
-
-    // Guess MIME type from filename
-    let mime_type = mime_guess::from_path(&file_path)
-        .first_or_octet_stream()
-        .to_string();
-
-    info!("guessed mime type");
-
-    // Build response with proper headers
-    let headers = [
-        (header::CONTENT_TYPE, mime_type),
-        (
-            header::CONTENT_DISPOSITION,
-            format!("attachment; filename=\"{}\"", filename),
-        ),
-    ];
-
-    info!("returning file {:?}", filename);
-    Ok((headers, data))
+    Ok(StatusCode::NO_CONTENT)
 }
 
-//TODO ADD METHOD TRANSFORMER
+pub async fn delete_file(
+    State(state): State<AppState>,
+    claims: Claims,
+    Path(file_id): Path<String>
+) -> Result<StatusCode, APIError> {
+    let file = sqlx::query_as!(
+        S3KeyRecord,
+        r#"
+        DELETE FROM files
+        WHERE id = $1 AND owner_id = $2
+        RETURNING s3_key
+        "#,
+        file_id,
+        claims.sub
+    ).fetch_one(&state.db).await?;
+
+    if let Some(key) = &file.s3_key {
+        state.s3
+        .delete_object()
+        .bucket(std::env::var("SCW_BUCKET_NAME")?)
+        .key(key)
+        .send()
+        .await?;
+    } else {
+        return Err(APIError::NotFound("Object not found".into()))
+    }
+
+    Ok(StatusCode::NO_CONTENT)
+}
+
+
+// FOLDERS
+pub async fn create_folder(
+    State(state): State<AppState>,
+    claims: Claims,
+    Json(payload): Json<CreateFolderRequest>,   
+) -> Result<StatusCode, APIError> {
+    // Get parent folder data to build the correct path
+    let parent_path = if let Some(parent_id) = &payload.parent_id {
+        sqlx::query_scalar!(
+            "SELECT path FROM files WHERE id = $1 AND owner_id = $2 AND is_folder = true",
+            parent_id,
+            claims.sub
+        )
+        .fetch_optional(&state.db)
+        .await?
+        .ok_or_else(|| APIError::NotFound("Parent folder not found".into()))?
+    } else {
+        "/".to_string() // Root path
+    };
+    
+    // Construct the new folder path (handle slashes properly)
+    let folder_path = if parent_path.ends_with('/') {
+        format!("{}{}", parent_path, payload.name)
+    } else {
+        format!("{}/{}", parent_path, payload.name)
+    };
+    
+    // Create the folder record in database
+    let folder_id = nanoid::nanoid!();
+    sqlx::query!(
+        r#"
+        INSERT INTO files (id, name, s3_key, path, is_folder, parent_id, owner_id, size)
+        VALUES ($1, $2, $3, $4, true, $5, $6, 0)
+        "#,
+        folder_id,
+        payload.name,
+        folder_path, // S3 key for a folder is the path itself (used as a prefix)
+        folder_path,
+        payload.parent_id,
+        claims.sub
+    )
+    .execute(&state.db)
+    .await?;
+    
+    Ok(StatusCode::CREATED)
+}
+
+
+pub async fn delete_folder(
+    State(state): State<AppState>,
+    claims: Claims,
+    Path(folder_id): Path<String>,
+) -> Result<impl IntoResponse, APIError> {
+    // First verify folder exists and belongs to the user
+    let folder = sqlx::query!(
+        "SELECT id, path FROM files WHERE id = $1 AND owner_id = $2 AND is_folder = true",
+        folder_id,
+        claims.sub
+    )
+    .fetch_optional(&state.db)
+    .await?
+    .ok_or_else(|| APIError::NotFound("Folder not found".into()))?;
+    
+    // Begin a transaction
+    let mut tx = state.db.begin().await?;
+    
+    // Get all files (not folders) within this folder hierarchy
+    let files = sqlx::query_as!(
+        S3KeyRecord,
+        r#"
+        WITH RECURSIVE folder_contents AS (
+            SELECT id, s3_key FROM files WHERE id = $1
+            UNION ALL
+            SELECT f.id, f.s3_key FROM files f
+            JOIN folder_contents fc ON f.parent_id = fc.id
+            WHERE f.is_folder = false
+        )
+        SELECT s3_key FROM folder_contents WHERE s3_key != $2
+        "#,
+        folder_id,
+        folder.path  // Skip the folder itself which doesn't have a real S3 object
+    )
+    .fetch_all(&mut *tx)
+    .await?;
+
+  // delete from S3
+    for file in files {
+        if let Some(key) = &file.s3_key {
+            state.s3
+            .delete_object()
+            .bucket(std::env::var("SCW_BUCKET_NAME")?)
+            .key(key)
+            .send()
+            .await?;
+        }
+    }
+    
+    // Delete the folder from the database - this will cascade to all children
+    sqlx::query!(
+        "DELETE FROM files WHERE id = $1 AND owner_id = $2",
+        folder_id,
+        claims.sub
+    )
+    .execute(&mut *tx)
+    .await?;
+    
+    // Commit the transaction
+    tx.commit().await?;
+    
+    Ok(StatusCode::NO_CONTENT)
+}
