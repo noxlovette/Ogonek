@@ -146,7 +146,9 @@ pub async fn delete_file(
     claims: Claims,
     Path(file_id): Path<String>
 ) -> Result<StatusCode, APIError> {
-    let file = sqlx::query_as!(
+    tracing::info!(user_id = %claims.sub, file_id = %file_id, "Attempting to delete file");
+    
+    let file = match sqlx::query_as!(
         S3KeyRecord,
         r#"
         DELETE FROM files
@@ -155,22 +157,64 @@ pub async fn delete_file(
         "#,
         file_id,
         claims.sub
-    ).fetch_one(&state.db).await?;
+    ).fetch_one(&state.db).await {
+        Ok(file) => {
+            tracing::debug!(file_id = %file_id, "File record successfully deleted from database");
+            file
+        },
+        Err(err) => {
+            tracing::error!(
+                error = %err, 
+                file_id = %file_id, 
+                user_id = %claims.sub, 
+                "Failed to delete file record from database"
+            );
+            return Err(APIError::from(err));
+        }
+    };
+    
 
     if let Some(key) = &file.s3_key {
-        state.s3
-        .delete_object()
-        .bucket(std::env::var("SCW_BUCKET_NAME")?)
-        .key(encode(key))
-        .send()
-        .await?;
+        let bucket_name = match std::env::var("SCW_BUCKET_NAME") {
+            Ok(name) => name,
+            Err(err) => {
+                tracing::error!(error = %err, "Failed to get SCW_BUCKET_NAME from environment");
+                return Err(APIError::Internal("Missing bucket configuration".into()));
+            }
+        };
+        
+        match state.s3
+            .delete_object()
+            .bucket(&bucket_name)
+            .key(key)
+            .send()
+            .await 
+        {
+            Ok(_) => {
+                tracing::info!(
+                    file_id = %file_id, 
+                    s3_key = %key, 
+                    "Successfully deleted file from S3"
+                );
+            },
+            Err(err) => {
+                tracing::error!(
+                    error = %err, 
+                    file_id = %file_id, 
+                    s3_key = %key, 
+                    "Failed to delete object from S3"
+                );
+                return Err(APIError::from(err));
+            }
+        }
     } else {
-        return Err(APIError::NotFound("Object not found".into()))
+        tracing::warn!(file_id = %file_id, "File record exists but has no S3 key");
+        return Err(APIError::NotFound("Object not found".into()));
     }
-
+    
+    tracing::info!(file_id = %file_id, "File deletion completed successfully");
     Ok(StatusCode::NO_CONTENT)
 }
-
 
 // FOLDERS
 pub async fn create_folder(
@@ -264,7 +308,7 @@ pub async fn delete_folder(
             state.s3
             .delete_object()
             .bucket(std::env::var("SCW_BUCKET_NAME")?)
-            .key(encode(key))
+            .key(key)
             .send()
             .await?;
         }
