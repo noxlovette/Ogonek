@@ -6,6 +6,7 @@ use crate::models::files::{File, FileUpdate, FileListParams, CreateFolderRequest
 use super::error::APIError;
 use axum::http::StatusCode;
 use axum::response::IntoResponse;
+use urlencoding::encode;
 
 // id lookups – s3 keys are stored in the DB
 // upload file s3
@@ -39,7 +40,7 @@ pub async fn list_files(
     claims: Claims,
     Query(params): Query<FileListParams>,
 ) -> Result<Json<Vec<File>>, APIError> {
-    let files = if let Some(folder_id) = params.folder_id {
+    let files = if let Some(folder_id) = params.parent_id {
         // Verify the folder exists and user has access
         let folder_exists = sqlx::query!(
             r#"
@@ -56,7 +57,7 @@ pub async fn list_files(
         .is_some();
         
         if !folder_exists {
-            return Err(APIError::NotFound("Deck Not Found".into()))
+            return Err(APIError::NotFound("Folder Not Found".into()))
         }
         // Get all files/folders with this parent_id
         sqlx::query_as!(
@@ -95,6 +96,30 @@ pub async fn update_file(
     Path(file_id): Path<String>,
     Json(payload): Json<FileUpdate>
 ) -> Result<StatusCode, APIError> {
+
+    let parent_id = if let Some(parent_id) = payload.parent_id {
+        let folder_exists = sqlx::query!(
+            r#"
+            SELECT 1 as "exists!: bool" FROM files
+            WHERE id = $1 AND (
+                owner_id = $2 AND is_folder = true
+            )
+            "#,
+            parent_id,
+            claims.sub
+        )
+        .fetch_optional(&state.db)
+        .await?
+        .is_some();
+        
+        if !folder_exists {
+            return Err(APIError::NotFound("Folder Not Found".into()));
+        }
+        Some(parent_id)
+    } else {
+        None
+    };
+
         sqlx::query!(
         r#"
         UPDATE files
@@ -108,7 +133,7 @@ pub async fn update_file(
         claims.sub,
             payload.name,
             payload.path,
-            payload.parent_id
+            parent_id
     )
         .execute(&state.db)
         .await?;
@@ -136,7 +161,7 @@ pub async fn delete_file(
         state.s3
         .delete_object()
         .bucket(std::env::var("SCW_BUCKET_NAME")?)
-        .key(key)
+        .key(encode(key))
         .send()
         .await?;
     } else {
@@ -151,10 +176,11 @@ pub async fn delete_file(
 pub async fn create_folder(
     State(state): State<AppState>,
     claims: Claims,
+    Query(params): Query<FileListParams>,
     Json(payload): Json<CreateFolderRequest>,   
 ) -> Result<StatusCode, APIError> {
     // Get parent folder data to build the correct path
-    let parent_path = if let Some(parent_id) = &payload.parent_id {
+    let parent_path = if let Some(parent_id) = &params.parent_id {
         sqlx::query_scalar!(
             "SELECT path FROM files WHERE id = $1 AND owner_id = $2 AND is_folder = true",
             parent_id,
@@ -185,7 +211,7 @@ pub async fn create_folder(
         payload.name,
         folder_path, // S3 key for a folder is the path itself (used as a prefix)
         folder_path,
-        payload.parent_id,
+        params.parent_id,
         claims.sub
     )
     .execute(&state.db)
@@ -238,7 +264,7 @@ pub async fn delete_folder(
             state.s3
             .delete_object()
             .bucket(std::env::var("SCW_BUCKET_NAME")?)
-            .key(key)
+            .key(encode(key))
             .send()
             .await?;
         }

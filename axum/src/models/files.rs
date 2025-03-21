@@ -33,15 +33,15 @@ pub struct S3KeyRecord {
 #[serde(rename_all = "camelCase")]
 
 pub struct FileUpdate {
-    pub name: String,
-    pub path: String,
+    pub name: Option<String>,
+    pub path: Option<String>,
     pub parent_id: Option<String>
 }
 
 
 #[derive(Debug, Deserialize)]
 pub struct FileListParams {
-    pub folder_id: Option<String>,
+    pub parent_id: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -49,6 +49,5 @@ pub struct FileListParams {
 
 pub struct CreateFolderRequest {
     pub name: String,
-    pub path: String,
     pub parent_id: Option<String>
 }

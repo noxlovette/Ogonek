@@ -47,6 +47,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             rust::api::routes::deck_routes::deck_routes(),
         )
         .nest("/s3", rust::api::routes::s3_routes::s3_routes())
+        .nest("/file", rust::api::routes::file_routes::file_routes())
         .layer(axum::middleware::from_fn(validate_api_key));
 
     let app = Router::new()
