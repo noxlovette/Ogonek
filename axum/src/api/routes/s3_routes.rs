@@ -13,6 +13,6 @@ pub fn s3_routes() -> Router<AppState> {
     )
     .route("/stream/{key}", get(fetch::stream_file))
     .route(
-        "/presign/{key}", get(fetch::get_presigned_url)
+        "/presign/{encoded_key}", get(fetch::get_presigned_url)
     )
 }

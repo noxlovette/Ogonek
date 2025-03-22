@@ -6,7 +6,7 @@ use axum::http::{HeaderMap, HeaderValue, StatusCode};
 use axum::Json;
 use serde_json::json;
 use bytes::BytesMut;
-
+use base64::{Engine as _, engine::general_purpose::STANDARD as BASE64};
 
 pub async fn check_s3_connection(
     State(state): State<AppState>,
@@ -122,19 +122,30 @@ pub async fn stream_file(
 
 pub async fn get_presigned_url(
     State(state): State<AppState>,
-    Path(key): Path<String>,
-    ) -> Result<impl IntoResponse, AppError> {
-    tracing::info!("Generating presigned URL for: bucket=ogonek-scaleway, key={}", key);
+    Path(encoded_key): Path<String>,
+) -> Result<impl IntoResponse, AppError> {
+    // Decode the base64 key
+    let key = BASE64.decode(encoded_key)
+        .map_err(|_| AppError::BadRequest("Invalid base64 encoding".into()))?;
+    
+    let key_str = String::from_utf8(key)
+        .map_err(|_| AppError::BadRequest("Invalid UTF-8 in decoded key".into()))?;
+    
+    tracing::info!("Generating presigned URL for: bucket=ogonek-scaleway, key={}", key_str);
+
+    
     // Create a presigned request that expires in 15 minutes
     let presigned_req = state.s3
-    .get_object()
-    .bucket("ogonek-scaleway")
-    .key(&key)
-    .presigned(aws_sdk_s3::presigning::PresigningConfig::expires_in(
-    std::time::Duration::from_secs(15 * 60)
-    )?)
-    .await
-    .map_err(|e| AppError::Internal(format!("Failed to create presigned URL: {}", e)))?;
+        .get_object()
+        .bucket("ogonek-scaleway")
+        .key(&key_str)
+        .presigned(aws_sdk_s3::presigning::PresigningConfig::expires_in(
+            std::time::Duration::from_secs(15 * 60)
+        )?)
+        .await
+        .map_err(|e| AppError::Internal(format!("Failed to create presigned URL: {}", e)))?;
+    
     let presigned_url = presigned_req.uri().to_string();
-    Ok(Json(json!({ "url": presigned_url })))
-    }
+    
+    Ok((StatusCode::OK, Json(json!({ "url": presigned_url }))))
+}

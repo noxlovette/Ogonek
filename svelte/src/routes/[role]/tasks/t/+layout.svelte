@@ -2,7 +2,7 @@
   let { children } = $props();
 </script>
 
-{@render children()}
+{@render children?.()}
 
 <svelte:head>
   <title>Task</title>

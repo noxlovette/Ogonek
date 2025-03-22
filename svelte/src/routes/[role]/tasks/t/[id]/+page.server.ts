@@ -1,33 +1,10 @@
 import { handleApiResponse, isSuccessResponse } from "$lib/server";
-import type { EmptyResponse, Task } from "$lib/types";
-import { parseMarkdown } from "$lib/utils";
+import type { EmptyResponse } from "$lib/types";
 import type { Actions } from "@sveltejs/kit";
-import { fail, redirect } from "@sveltejs/kit";
-import type { PageServerLoad } from "./$types";
-
-export const load: PageServerLoad = async ({ params, fetch }) => {
-  const { id } = params;
-  try {
-    const response = await fetch(`/axum/task/t/${id}`);
-    if (!response.ok) {
-      throw redirect(303, "/s/tasks/");
-    }
-    const task: Task = await response.json();
-
-    const rendered = await parseMarkdown(task.markdown);
-
-    return {
-      task,
-      rendered,
-    };
-  } catch (err) {
-    console.log(err);
-    throw redirect(303, "/s/tasks/");
-  }
-};
+import { fail } from "@sveltejs/kit";
 
 export const actions = {
-  default: async ({ request, fetch }) => {
+  complete: async ({ request, fetch }) => {
     const formData = await request.formData();
     const id = formData.get("id");
     const completed = formData.get("completed") === "true";
@@ -48,6 +25,24 @@ export const actions = {
 
     return {
       success: true,
+    };
+  },
+  download: async ({ fetch, request }) => {
+    const formData = request.formData();
+
+    const key = (await formData).get("key") as string;
+    const encodedKey = btoa(key);
+
+    const response = await fetch(`/axum/s3/presign/${encodedKey}`);
+
+    if (!response.ok) {
+      return fail(400, { error: "Failed to generate presigned url" });
+    }
+
+    const presigned = await response.json();
+
+    return {
+      presigned,
     };
   },
 } satisfies Actions;

@@ -20,11 +20,6 @@
     ],
   };
 
-  interface Result {
-    type: "success" | "error";
-    data: string;
-  }
-
   let href = "/t/students/st";
 </script>
 
