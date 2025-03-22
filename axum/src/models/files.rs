@@ -24,6 +24,23 @@ pub struct File {
     pub updated_at: OffsetDateTime,
 }
 
+#[derive(Serialize, Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct FileSmall {
+    pub id: String,
+    pub name: String,
+    pub s3_key: String,
+    pub mime_type: Option<String>,
+    pub size: i64
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct FileMinimal {
+    pub id: String,
+    pub s3_key: Option<String>,
+}
+
 #[derive(Debug)]
 pub struct S3KeyRecord {
     pub s3_key: Option<String>,
@@ -43,6 +60,13 @@ pub struct FileUpdate {
 pub struct FileListParams {
     pub parent_id: Option<String>,
 }
+
+#[derive(Debug, Deserialize)]
+pub struct UploadParams {
+    pub parent_id: Option<String>,
+    pub task_id: Option<String>,
+}
+
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]

@@ -160,19 +160,6 @@ export const handleFetch: HandleFetch = async ({ event, request, fetch }) => {
     // Create new request with the full URL including query parameters
     request = new Request(newUrl, request);
   }
-
-  if (url.pathname.startsWith("/file-server/")) {
-    const cleanPath = url.pathname.replace("/file-server/", "/");
-    const newUrl = new URL(cleanPath, env.UPLOAD_URL);
-    // Do the same for file server requests
-    url.searchParams.forEach((value, key) => {
-      newUrl.searchParams.set(key, value);
-    });
-    request = new Request(newUrl, request);
-    request.headers.append("X-API-KEY", env.API_KEY_FILE);
-    return fetch(request);
-  }
-
   request.headers.set("X-API-KEY", env.API_KEY_AXUM);
   request.headers.set("Content-Type", "application/json");
   const accessToken = event.cookies.get("accessToken");

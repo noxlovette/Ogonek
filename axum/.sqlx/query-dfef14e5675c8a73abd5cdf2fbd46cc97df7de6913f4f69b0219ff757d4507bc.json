@@ -1,0 +1,23 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        \n        SELECT 1 as \"exists!: bool\" \n        FROM tasks \n        WHERE id = $1 AND (assignee = $2 OR created_by = $2)\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "exists!: bool",
+        "type_info": "Int4"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Text"
+      ]
+    },
+    "nullable": [
+      null
+    ]
+  },
+  "hash": "dfef14e5675c8a73abd5cdf2fbd46cc97df7de6913f4f69b0219ff757d4507bc"
+}

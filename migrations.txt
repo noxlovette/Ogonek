@@ -1,0 +1,303 @@
+CREATE TABLE "user" (
+    id VARCHAR(21) PRIMARY KEY,
+    name VARCHAR NOT NULL CHECK (LENGTH(name) >= 3),
+    username VARCHAR NOT NULL,
+    email VARCHAR NOT NULL,
+    pass VARCHAR NOT NULL,
+    role VARCHAR NOT NULL,
+    verified BOOLEAN NOT NULL DEFAULT false,
+    joined TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT user_username_key UNIQUE (username),
+    CONSTRAINT user_email_key UNIQUE (email),
+    CONSTRAINT email_format CHECK (email ~* '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$')
+);CREATE TABLE profile (
+    user_id VARCHAR(21) PRIMARY KEY REFERENCES "user"(id) ON DELETE CASCADE,
+    quizlet_url VARCHAR(255),
+    bio TEXT,
+    avatar_url VARCHAR(255),
+    zoom_url VARCHAR(255),
+    timezone VARCHAR(50),
+    CONSTRAINT valid_quizlet_url CHECK (quizlet_url ~ '^https?:\/\/quizlet\.com\/.*$'),
+    CONSTRAINT valid_zoom_url CHECK (zoom_url ~ '^https?:\/\/(?:[a-z0-9-]+\.)?zoom\.us\/j\/\d{9,11}(?:\?pwd=[a-zA-Z0-9]+)?$')
+);
+
+CREATE FUNCTION create_profile_for_user()
+RETURNS TRIGGER AS $$
+BEGIN
+    INSERT INTO profile (user_id)
+    VALUES (NEW.id);
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER create_profile_after_user_insert
+    AFTER INSERT ON "user"
+    FOR EACH ROW
+    EXECUTE FUNCTION create_profile_for_user();CREATE TABLE lessons (
+    id VARCHAR(21) PRIMARY KEY,
+    markdown TEXT NOT NULL DEFAULT '#New Lesson',
+    title VARCHAR(255) NOT NULL,
+    topic VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_by VARCHAR(21) NOT NULL REFERENCES "user"(id),
+    assignee VARCHAR(21) NOT NULL REFERENCES "user"(id)
+);
+
+-- Create updated_at trigger function (if not exists)
+CREATE OR REPLACE FUNCTION update_updated_at_column()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at = CURRENT_TIMESTAMP;
+    RETURN NEW;
+END;
+$$ language 'plpgsql';
+
+-- Add trigger to lessons
+CREATE TRIGGER update_lessons_updated_at
+    BEFORE UPDATE ON lessons
+    FOR EACH ROW
+    EXECUTE FUNCTION update_updated_at_column();CREATE TABLE tasks (
+    id VARCHAR(21) PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    markdown TEXT NOT NULL,
+    priority SMALLINT NOT NULL DEFAULT 1 
+        CHECK (priority >= 1 AND priority <= 3),
+    completed BOOLEAN NOT NULL DEFAULT FALSE,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    due_date TIMESTAMP WITH TIME ZONE,
+    file_path TEXT,
+    created_by VARCHAR(21) NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
+    assignee VARCHAR(21) NOT NULL REFERENCES "user"(id) ON DELETE CASCADE
+);
+
+-- Add trigger for updated_at
+CREATE OR REPLACE FUNCTION update_updated_at_column()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at = CURRENT_TIMESTAMP;
+    RETURN NEW;
+END;
+$$ language 'plpgsql';
+
+CREATE TRIGGER update_tasks_updated_at
+    BEFORE UPDATE ON tasks
+    FOR EACH ROW
+    EXECUTE FUNCTION update_updated_at_column();CREATE TABLE teacher_student (
+    teacher_id VARCHAR(21) REFERENCES "user"(id) ON DELETE CASCADE,
+    student_id VARCHAR(21) REFERENCES "user"(id) ON DELETE CASCADE,
+    status VARCHAR(20) DEFAULT 'active',
+    markdown TEXT,
+    telegram_id VARCHAR(20),
+    joined TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (teacher_id, student_id)
+);
+
+CREATE INDEX idx_teacher_student_notes 
+    ON teacher_student 
+    USING GIN (to_tsvector('english', markdown));CREATE TABLE student_notes (
+    id VARCHAR(21) PRIMARY KEY,
+    lesson_id VARCHAR(21) NOT NULL,
+    user_id VARCHAR(21) NOT NULL,
+    is_bookmarked BOOLEAN DEFAULT false,
+    notes TEXT,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (lesson_id) REFERENCES lessons(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES "user"(id) ON DELETE CASCADE,
+    CONSTRAINT unique_student_lesson_note UNIQUE (lesson_id, user_id)
+);
+
+CREATE INDEX idx_student_notes_lesson_user 
+    ON student_notes(lesson_id, user_id);
+CREATE TABLE decks (
+    id VARCHAR(21) PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    description TEXT,
+    created_by VARCHAR(21) NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
+    shared BOOLEAN NOT NULL DEFAULT FALSE,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE cards (
+    id VARCHAR(21) PRIMARY KEY,
+    front TEXT NOT NULL,
+    back TEXT NOT NULL,
+    media_url TEXT,
+    deck_id VARCHAR(21) NOT NULL REFERENCES decks(id) ON DELETE CASCADE,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE card_progress (
+    id VARCHAR(21) PRIMARY KEY,
+    user_id VARCHAR(21) NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
+    card_id VARCHAR(21) NOT NULL REFERENCES cards(id) ON DELETE CASCADE,
+    review_count INT NOT NULL DEFAULT 0, -- Number of reviews
+    last_reviewed TIMESTAMP WITH TIME ZONE, -- Last review timestamp
+    due_date TIMESTAMP WITH TIME ZONE, -- Next scheduled review
+    ease_factor FLOAT NOT NULL DEFAULT 2.5, -- SR algorithm modifier
+    interval INT NOT NULL DEFAULT 1, -- Days until next review
+    CONSTRAINT unique_card_user UNIQUE (user_id, card_id)
+);
+-- Step 1: Add visibility column and assignee column
+ALTER TABLE decks
+ADD COLUMN visibility VARCHAR(20) NOT NULL DEFAULT 'private',
+ADD COLUMN assignee VARCHAR(21) REFERENCES "user"(id) ON DELETE SET NULL,
+ADD CONSTRAINT valid_visibility CHECK (visibility IN ('private', 'assigned', 'public'));
+
+-- Step 2: Migrate data from shared to visibility
+UPDATE decks 
+SET visibility = CASE 
+    WHEN shared = TRUE THEN 'public' 
+    ELSE 'private' 
+END;
+
+-- Step 3: Drop the shared column
+ALTER TABLE decks
+DROP COLUMN shared;-- Optimized indices for lesson pagination
+CREATE INDEX IF NOT EXISTS idx_lessons_created_at_id ON lessons(created_at DESC, id);
+CREATE INDEX IF NOT EXISTS idx_lessons_assignee_created_at ON lessons(assignee, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_lessons_created_by_created_at ON lessons(created_by, created_at DESC);
+
+-- Optimized indices for task pagination
+CREATE INDEX IF NOT EXISTS idx_tasks_due_date_id ON tasks(due_date DESC, id);
+CREATE INDEX IF NOT EXISTS idx_tasks_assignee_due_date ON tasks(assignee, due_date DESC);
+CREATE INDEX IF NOT EXISTS idx_tasks_created_by_due_date ON tasks(created_by, due_date DESC);
+
+-- Optimized indices for card progress pagination (for learning/flashcards)
+CREATE INDEX IF NOT EXISTS idx_card_progress_user_due_date ON card_progress(user_id, due_date);
+
+-- Add updated_at trigger if not already present
+CREATE OR REPLACE FUNCTION update_updated_at_column()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at = CURRENT_TIMESTAMP;
+    RETURN NEW;
+END;
+$$ language 'plpgsql';
+-- Add migration script here
+-- Add subscribers support to decks
+ALTER TABLE decks
+ADD COLUMN subscribers TEXT[] DEFAULT '{}';
+
+-- Create a dedicated junction table for deck subscriptions for better querying
+CREATE TABLE deck_subscriptions (
+    deck_id VARCHAR(21) NOT NULL REFERENCES decks(id) ON DELETE CASCADE,
+    user_id VARCHAR(21) NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
+    PRIMARY KEY (deck_id, user_id)
+);
+
+-- Create index for efficient lookup
+CREATE INDEX idx_deck_subscriptions_user_id ON deck_subscriptions(user_id);
+
+CREATE OR REPLACE FUNCTION update_deck_subscribers()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF TG_OP = 'INSERT' THEN
+        -- Add user to subscribers array
+        UPDATE decks 
+        SET subscribers = array_append(subscribers, NEW.user_id)
+        WHERE id = NEW.deck_id;
+    ELSIF TG_OP = 'DELETE' THEN
+        -- Remove user from subscribers array
+        UPDATE decks 
+        SET subscribers = array_remove(subscribers, OLD.user_id)
+        WHERE id = OLD.deck_id;
+    END IF;
+    RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Create trigger for the junction table
+CREATE TRIGGER update_deck_subscribers_trigger
+AFTER INSERT OR DELETE ON deck_subscriptions
+FOR EACH ROW EXECUTE FUNCTION update_deck_subscribers();
+
+CREATE OR REPLACE FUNCTION create_card_progress_for_subscribers()
+RETURNS TRIGGER AS $$
+DECLARE
+    subscriber_id VARCHAR(21);
+BEGIN
+    -- For each subscriber of the deck, create a card_progress entry
+    FOR subscriber_id IN 
+        SELECT user_id FROM deck_subscriptions WHERE deck_id = NEW.deck_id
+    LOOP
+        INSERT INTO card_progress (
+            id, user_id, card_id, review_count, due_date, ease_factor, interval
+        ) VALUES (
+            nanoid(),
+            subscriber_id,
+            NEW.id,
+            0,
+            CURRENT_TIMESTAMP,
+            2.5,
+            1
+        )
+        ON CONFLICT (user_id, card_id) DO NOTHING; -- Avoid duplicates
+    END LOOP;
+    
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Create nanoid function for PostgreSQL (since you can't directly call nanoid from triggers)
+CREATE OR REPLACE FUNCTION nanoid(size INT DEFAULT 21)
+RETURNS TEXT AS $$
+DECLARE
+    id TEXT := '';
+    i INT := 0;
+    alphabet TEXT := '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    alphabet_length INT := length(alphabet);
+BEGIN
+    WHILE i < size LOOP
+        id := id || substr(alphabet, 1 + floor(random() * alphabet_length)::INT, 1);
+        i := i + 1;
+    END LOOP;
+    RETURN id;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Create trigger for cards
+CREATE TRIGGER create_card_progress_for_subscribers_trigger
+AFTER INSERT ON cards
+FOR EACH ROW EXECUTE FUNCTION create_card_progress_for_subscribers();-- Add migration script here
+CREATE TABLE files (
+    id VARCHAR(21) PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    s3_key VARCHAR(255) NOT NULL,
+    path VARCHAR(255) NOT NULL,
+    mime_type VARCHAR(100),
+    size BIGINT NOT NULL,
+    is_folder BOOLEAN NOT NULL DEFAULT FALSE,
+    parent_id VARCHAR(21) REFERENCES files(id) ON DELETE CASCADE,
+    owner_id VARCHAR(21) NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
+    visibility VARCHAR(20) NOT NULL DEFAULT 'private',
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT valid_visibility CHECK (visibility IN ('private', 'shared', 'public'))
+);
+
+-- Junction table for file sharing
+CREATE TABLE file_shares (
+    file_id VARCHAR(21) NOT NULL REFERENCES files(id) ON DELETE CASCADE,
+    user_id VARCHAR(21) NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
+    permission VARCHAR(20) NOT NULL DEFAULT 'view', -- 'view', 'edit', 'manage'
+    shared_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    shared_by VARCHAR(21) NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
+    PRIMARY KEY (file_id, user_id)
+);
+
+CREATE INDEX idx_files_parent_id ON files(parent_id);
+CREATE INDEX idx_files_owner_id ON files(owner_id);
+CREATE INDEX idx_files_path ON files(path);
+CREATE INDEX idx_file_shares_user_id ON file_shares(user_id);
+-- Add migration script here
+CREATE TABLE task_files (
+    task_id VARCHAR(21) NOT NULL REFERENCES tasks(id) ON DELETE CASCADE,
+    file_id VARCHAR(21) NOT NULL REFERENCES files(id) ON DELETE CASCADE,
+    PRIMARY KEY (task_id, file_id)
+);
+
+CREATE INDEX idx_task_files_task_id ON task_files(task_id);
+CREATE INDEX idx_task_files_file_id ON task_files(file_id);

@@ -54,7 +54,7 @@ export const actions = {
       return error(code || 400, message);
     }
 
-    const message = `You have a new task: "${title}"\\. You can view it on [Ogonek](https://Ogonek\\.noxlovette\\.com/s/tasks)\\.`;
+    const message = `You have a new task: "${title}"\\. You can view it on [Ogonek](https://Ogonek\\.app/s/tasks)/${id}\\.`;
 
     if (telegramId && initialAssignee !== assignee) {
       const telegramResponse = await notifyTelegram(message, telegramId);
@@ -88,7 +88,7 @@ export const actions = {
 
     if (!file) throw new Error("yikes, no file");
 
-    const response = await fetch("/file-server/upload", {
+    const response = await fetch("/axum/file/upload", {
       method: "POST",
       body: formData,
     });

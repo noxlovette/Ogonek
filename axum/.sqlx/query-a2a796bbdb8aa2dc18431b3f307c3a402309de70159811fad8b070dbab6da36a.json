@@ -1,0 +1,23 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n            SELECT 1 as \"exists!: bool\" FROM files\n            WHERE id = $1 AND (\n                owner_id = $2 AND is_folder = true\n            )\n            ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "exists!: bool",
+        "type_info": "Int4"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Text"
+      ]
+    },
+    "nullable": [
+      null
+    ]
+  },
+  "hash": "a2a796bbdb8aa2dc18431b3f307c3a402309de70159811fad8b070dbab6da36a"
+}

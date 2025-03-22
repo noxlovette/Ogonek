@@ -72,9 +72,9 @@
     {@html rendered}
   </div>
   <div class="flex space-x-3">
-    {#if data.task.filePath}
+    {#if data.task.fileId}
       <a
-        href="/download/{data.task.filePath}"
+        href="/download/{data.task.fileId}"
         onclick={() => (isPreloading = true)}
         class="bg-cacao-600 text-cacao-50 dark:text-cacao-100 hover:bg-cacao-700 focus:ring-cacao-500 flex items-center justify-center rounded-lg px-3 py-2 text-sm ring ring-stone-200 transition-all focus:ring focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:space-x-2 md:px-4 md:text-base dark:bg-stone-800 dark:ring-stone-800 dark:hover:bg-stone-900 dark:hover:ring-stone-950"
       >
