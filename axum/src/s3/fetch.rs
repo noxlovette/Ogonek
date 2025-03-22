@@ -32,15 +32,21 @@ pub async fn check_s3_connection(
 
 pub async fn download_file(
     State(state): State<AppState>,
-    Path(key): Path<String>,
+    Path(encoded_key): Path<String>,
 ) -> Result<impl IntoResponse, AppError> {
-    tracing::info!("Downloading file from S3: bucket=ogonek-scaleway, key={}", key);
+    
+    let key = BASE64.decode(encoded_key)
+    .map_err(|_| AppError::BadRequest("Invalid base64 encoding".into()))?;
 
+let key_str = String::from_utf8(key)
+.map_err(|_| AppError::BadRequest("Invalid UTF-8 in decoded key".into()))?;
+
+tracing::info!("Downloading file from S3: bucket=ogonek-scaleway, key={}", key_str);
     // Get the object from S3
     let mut object = state.s3
         .get_object()
         .bucket("ogonek-scaleway")
-        .key(&key)
+        .key(&key_str)
         .send()
         .await
         .map_err(|e| AppError::Internal(format!("Failed to get object from S3: {}", e)))?;
@@ -62,7 +68,7 @@ pub async fn download_file(
     }
     
     // Set filename for download
-    let filename = key.split('/').last().unwrap_or("download");
+    let filename = key_str.split('/').last().unwrap_or("download");
     headers.insert(
         "Content-Disposition", 
         HeaderValue::from_str(&format!("attachment; filename=\"{}\"", filename)).unwrap()

@@ -3,7 +3,7 @@ use crate::models::files::{FileSmall, FileMinimal};
 use super::error::APIError;
 use crate::schema::AppState;
 use crate::models::tasks::{TaskBodySmall, TaskWithFilesResponse, TaskBodyWithStudent, TaskCreateBody, TaskFileBind, TaskPaginationParams, TaskUpdate};
-use crate::models::meta::PaginatedResponse;
+use crate::models::meta::{PaginatedResponse, CreationId};
 use axum::extract::{Json, Path, State, Query};
 use hyper::StatusCode;
 use crate::s3::post::delete_s3;
@@ -209,16 +209,19 @@ pub async fn create_task(
     State(state): State<AppState>,
     claims: Claims,
     Json(payload): Json<TaskCreateBody>,
-) -> Result<StatusCode, APIError> {
+) -> Result<Json<CreationId>, APIError> {
     let mut assignee = &claims.sub;
 
     if payload.assignee.is_some() {
         assignee = payload.assignee.as_ref().unwrap();
     }
 
-    sqlx::query!(
+    let id = sqlx::query_as!(
+        CreationId,
         "INSERT INTO tasks (id, title, markdown, due_date, assignee, created_by)
-         VALUES ($1, $2, $3, $4, $5, $6)",
+         VALUES ($1, $2, $3, $4, $5, $6)
+         RETURNING id
+         ",
         nanoid::nanoid!(),
         payload.title,
         payload.markdown,
@@ -229,7 +232,7 @@ pub async fn create_task(
     .fetch_one(&state.db)
     .await?;
 
-    Ok(StatusCode::CREATED)
+    Ok(Json(id))
 }
 
 pub async fn delete_task(

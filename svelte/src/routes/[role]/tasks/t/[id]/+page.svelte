@@ -85,6 +85,8 @@
     </form>
   </div>
 {/if}
-{#each files as file}
-  <FileTaskCard {file} />
-{/each}
+<div class="flex space-x-4">
+  {#each files as file}
+    <FileTaskCard {file} />
+  {/each}
+</div>

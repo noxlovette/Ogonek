@@ -1,4 +1,5 @@
 use crate::auth::jwt::Claims;
+use crate::models::meta::CreationId;
 use crate::schema::AppState;
 use crate::models::cards_decks::{DeckBody, DeckCreateBody, CardBody, DeckWithCards, DeckWithCardsAndSubscription, DeckWithCardsUpdate, DeckFilterParams};
 use axum::extract::Json;
@@ -13,7 +14,7 @@ pub async fn create_deck(
     State(state): State<AppState>,
     claims: Claims,
     Json(payload): Json<DeckCreateBody>,
-) -> Result<Json<DeckBody>, APIError> {
+) -> Result<Json<CreationId>, APIError> {
 
     let visibility = if payload.assignee.is_some() {
         payload.visibility.unwrap_or("assigned".to_string())
@@ -21,12 +22,12 @@ pub async fn create_deck(
         payload.visibility.unwrap_or("private".to_string())
     };
 
-    let deck = sqlx::query_as!(
-        DeckBody,
+    let id = sqlx::query_as!(
+        CreationId,
         r#"
         INSERT INTO decks (id, created_by, name, description, visibility, assignee)
         VALUES ($1, $2, $3, $4, $5, $6)
-        RETURNING id, name, description, visibility, assignee, created_by, created_at
+        RETURNING id
         "#,
         nanoid::nanoid!(),
         claims.sub,
@@ -38,7 +39,7 @@ pub async fn create_deck(
     .fetch_one(&state.db)
     .await?;
 
-    Ok(Json(deck))
+    Ok(Json(id))
 }
 
 pub async fn fetch_deck(
@@ -154,18 +155,16 @@ pub async fn update_deck(
     claims: Claims,
     Path(deck_id): Path<String>,
     Json(payload): Json<DeckWithCardsUpdate>,
-) -> Result<Json<DeckWithCards>, APIError> {
+) -> Result<StatusCode, APIError> {
     // Step 1: Update the deck
-    let deck = sqlx::query_as!(
-        DeckBody,
+    sqlx::query!(
         "UPDATE decks 
          SET 
             name = COALESCE($1, name),
             description = COALESCE($2, description), 
             visibility = COALESCE($3, visibility),
             assignee = COALESCE($4, assignee)
-         WHERE id = $5 AND created_by = $6
-         RETURNING id, name, description, visibility, assignee, created_by, created_at",
+         WHERE id = $5 AND created_by = $6",
         payload.deck.name,
         payload.deck.description,
         payload.deck.visibility,
@@ -173,7 +172,7 @@ pub async fn update_deck(
         deck_id,
         claims.sub
     )
-    .fetch_one(&state.db)
+    .execute(&state.db)
     .await?;
 
     let mut tx = state.db.begin().await?;
@@ -220,18 +219,7 @@ pub async fn update_deck(
 
     tx.commit().await?;
 
-    // Fetch updated cards
-    let updated_cards = sqlx::query_as!(
-        CardBody,
-        r#"
-        SELECT * FROM cards WHERE deck_id = $1
-        "#,
-        deck_id
-    )
-    .fetch_all(&state.db)
-    .await?;
-
-    Ok(Json(DeckWithCards { deck, cards: updated_cards }))
+    Ok(StatusCode::NO_CONTENT)
 }
 
 
@@ -239,21 +227,19 @@ pub async fn delete_deck(
     State(state): State<AppState>,
     claims: Claims,
     Path(deck_id): Path<String>,
-) -> Result<Json<DeckBody>, APIError> {
-    let deck = sqlx::query_as!(
-        DeckBody,
+) -> Result<StatusCode, APIError> {
+sqlx::query!(
         r#"
         DELETE FROM decks
         WHERE id = $1 AND created_by = $2
-        RETURNING id, name, description, created_by, visibility, assignee, created_at
         "#,
         deck_id,
         claims.sub
     )
-    .fetch_one(&state.db)
+    .execute(&state.db)
     .await?;
 
-    Ok(Json(deck))
+    Ok(StatusCode::NO_CONTENT)
 }
 
 pub async fn subscribe_to_deck(

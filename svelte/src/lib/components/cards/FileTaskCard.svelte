@@ -1,10 +1,18 @@
 <script lang="ts">
   import { notification } from "$lib/stores/notification";
   import { enhanceForm } from "$lib/utils";
+  import { isLoading } from "$lib/stores";
   import { enhance } from "$app/forms";
   import type { FileSmall } from "$lib/types";
   import { formatFileSize, getFileExtension } from "$lib/utils";
-  import { FileText, Image, FileAudio, FileVideo, File } from "lucide-svelte";
+  import {
+    FileText,
+    Image,
+    FileAudio,
+    FileVideo,
+    File,
+    Loader2,
+  } from "lucide-svelte";
   import H3 from "../typography/H3.svelte";
 
   let { file }: { file: FileSmall } = $props();
@@ -31,25 +39,21 @@
   action="?/download"
   use:enhance={enhanceForm({
     messages: {
-      failure: "Failed to generate presigned shit",
+      failure: "Meow",
     },
     handlers: {
       success: async (result) => {
-        const presigned = String(result.data?.presigned);
+        const body = result.data?.body;
         try {
-          const fileResponse = await fetch(presigned);
-          console.log(presigned);
-
-          const blob = await fileResponse.blob();
-          const url = window.URL.createObjectURL(blob);
+          const blob = new Blob([body], {
+            type: "application/octet-stream",
+          });
+          const url = URL.createObjectURL(blob);
           const a = document.createElement("a");
-          a.style.display = "none";
           a.href = url;
           a.download = file.name;
-          document.body.appendChild(a);
           a.click();
-          window.URL.revokeObjectURL(url);
-
+          URL.revokeObjectURL(url);
           notification.set({
             message: `${file.name} downloaded successfully`,
             type: "success",
@@ -62,10 +66,11 @@
   })}
 >
   <input type="hidden" value={file.s3Key} name="key" />
+  <input type="hidden" value={file.name} name="filename" />
   <button
     type="submit"
     disabled={downloading}
-    class="group relative flex aspect-square size-42 flex-col items-center justify-between rounded-md p-2 ring ring-stone-200 transition-colors hover:bg-stone-100 dark:ring-stone-800"
+    class="group relative flex aspect-square size-42 flex-col items-center justify-between rounded-md p-2 ring ring-stone-200 transition-colors hover:bg-stone-100 dark:ring-stone-800 dark:hover:bg-stone-800"
   >
     <H3>
       {file.name.split(".").shift()}
@@ -86,13 +91,11 @@
         </span>
       {/if}
     </div>
-    {#if downloading}
+    {#if $isLoading}
       <div
         class="absolute inset-0 flex items-center justify-center bg-white/80 dark:bg-stone-900/80"
       >
-        <div
-          class="border-t-cacao-500 dark:border-t-cacao-400 h-6 w-6 animate-spin rounded-full border-2 border-stone-300 dark:border-stone-600"
-        ></div>
+        <Loader2 class="size-16 animate-spin" />
       </div>
     {/if}
   </button>

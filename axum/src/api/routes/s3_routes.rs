@@ -8,7 +8,7 @@ pub fn s3_routes() -> Router<AppState> {
     Router::new()
         .route("/", get(fetch::check_s3_connection))
     .route(
-        "/{key}",
+        "/{encoded_key}",
         get(fetch::download_file)
     )
     .route("/stream/{key}", get(fetch::stream_file))

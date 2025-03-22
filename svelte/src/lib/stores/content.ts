@@ -1,24 +1,25 @@
-import type { Lesson, Student, Task } from "$lib/types";
+import type { LessonSmall, Student, TaskSmall } from "$lib/types";
 import { writable } from "svelte/store";
 
 const createLessonStore = () => {
-  const { subscribe, set, update } = writable<Lesson[]>([]);
+  const { subscribe, set, update } = writable<LessonSmall[]>([]);
 
   return {
     subscribe,
-    setLessons: (lessons: Lesson[]) => set(lessons),
-    addLesson: (lesson: Lesson) => update((lessons) => [...lessons, lesson]),
+    setLessons: (lessons: LessonSmall[]) => set(lessons),
+    addLesson: (lesson: LessonSmall) =>
+      update((lessons) => [...lessons, lesson]),
     reset: () => set([]),
   };
 };
 
 const createTaskStore = () => {
-  const { subscribe, set, update } = writable<Task[]>([]);
+  const { subscribe, set, update } = writable<TaskSmall[]>([]);
 
   return {
     subscribe,
-    setTasks: (tasks: Task[]) => set(tasks),
-    addTask: (task: Task) => update((tasks) => [...tasks, task]),
+    setTasks: (tasks: TaskSmall[]) => set(tasks),
+    addTask: (task: TaskSmall) => update((tasks) => [...tasks, task]),
     reset: () => set([]),
   };
 };

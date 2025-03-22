@@ -65,7 +65,6 @@
     completedStore.toggle();
   }
 
-  // Fun phrases for the button
   const buttonPhrases = [
     "Feed Me Tasks! 🍔",
     "More Work Please! 🧠",
@@ -76,7 +75,6 @@
     "Send Homework My Way! 📝",
   ];
 
-  // Pick a random phrase
   const randomPhrase =
     buttonPhrases[Math.floor(Math.random() * buttonPhrases.length)];
 </script>
@@ -95,7 +93,6 @@
     {#if tasks.length === 0}
       <UniButton type="submit" variant="ghost" Icon={PlusCircle}
         >Add your first one</UniButton
-      >
       >
     {/if}
   </form>

@@ -1,12 +1,12 @@
 <script lang="ts">
   import { formatDate } from "@noxlovette/svarog";
-  import type { Lesson } from "$lib/types";
+  import type { Lesson, LessonSmall } from "$lib/types";
 
   import { page } from "$app/state";
   import SidebarItem from "../elements/SidebarItem.svelte";
   import { Library } from "lucide-svelte";
   interface Props {
-    lesson: Lesson;
+    lesson: LessonSmall;
   }
 
   let { lesson }: Props = $props();

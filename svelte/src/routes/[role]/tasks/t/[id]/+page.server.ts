@@ -31,18 +31,24 @@ export const actions = {
     const formData = request.formData();
 
     const key = (await formData).get("key") as string;
+    const filename = (await formData).get("filename") as string;
+
     const encodedKey = btoa(key);
 
-    const response = await fetch(`/axum/s3/presign/${encodedKey}`);
+    const response = await fetch(`/axum/s3/${encodedKey}`);
 
     if (!response.ok) {
-      return fail(400, { error: "Failed to generate presigned url" });
+      return fail(400, { error: "Failed to fetch file" });
     }
 
-    const presigned = await response.json();
-
     return {
-      presigned,
+      filename,
+      body: await response.arrayBuffer(),
+      headers: {
+        "Content-Type":
+          response.headers.get("Content-Type") || "application/octet-stream",
+        "Content-Disposition": response.headers.get("Content-Disposition"),
+      },
     };
   },
 } satisfies Actions;

@@ -84,6 +84,7 @@ export interface LessonSmall {
   title: string;
   markdown: string;
   topic: string;
+  createdAt: string;
 }
 
 export interface LessonStore {
