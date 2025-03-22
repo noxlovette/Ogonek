@@ -1,14 +1,13 @@
 <script lang="ts">
-  import type { Lesson } from "$lib/types";
+  import type { LessonSmall } from "$lib/types";
   import { parseMarkdown } from "$lib/utils";
   import { formatDate } from "@noxlovette/svarog";
-  import { user } from "$lib/stores";
   import CardClickable from "./CardClickable.svelte";
   import { H2 } from "../typography";
   import { onMount } from "svelte";
   import { page } from "$app/state";
   interface Props {
-    lesson: Lesson;
+    lesson: LessonSmall;
   }
 
   onMount(async () => {
@@ -17,8 +16,6 @@
 
   let { lesson }: Props = $props();
   let rendered = $state(lesson.markdown);
-
-  console.log(lesson.createdAt);
 
   const formattedDate = formatDate(lesson.createdAt);
   const role = page.params.role;

@@ -1,8 +1,7 @@
 <script lang="ts">
   import { notification, clearNotification } from "$lib/stores";
-  import { fly } from "svelte/transition";
-  import { quintInOut } from "svelte/easing";
-  import { Check, AlertCircle, X } from "lucide-svelte";
+  import { fade } from "svelte/transition";
+  import { Check, AlertCircle, X, Ban } from "lucide-svelte";
   import type { Toast } from "$lib/types";
   import { onDestroy } from "svelte";
 
@@ -15,7 +14,7 @@
       }
       timeout = setTimeout(() => {
         clearNotification();
-      }, 2800);
+      }, 3000);
     }
   });
 
@@ -24,49 +23,41 @@
       clearTimeout(timeout);
     }
   });
-</script>
 
-{#snippet icon(type: Toast["type"])}
-  {#if type === "success"}
-    <Check
-      class="size-5 rounded-full bg-stone-100 p-1 text-green-700 lg:size-6 dark:bg-inherit dark:ring-1 dark:ring-stone-900"
-    />
-  {:else if type === "error"}
-    <X
-      class="size-5 rounded-full bg-stone-100 p-1 text-red-700 lg:size-6 dark:bg-inherit  dark:ring-1 dark:ring-stone-900"
-    />
-  {:else}
-    <AlertCircle
-      class="text-cacao-700 size-5 rounded-full bg-stone-100 p-1 lg:size-6 dark:bg-inherit  dark:ring-1 dark:ring-stone-900"
-    />
-  {/if}
-{/snippet}
+  function handleDismiss() {
+    clearNotification();
+  }
+</script>
 
 {#if $notification.message}
   <div
-    transition:fly={{
-      duration: 300,
-      easing: quintInOut,
-      x: 0,
-      y: 100,
-    }}
-    class="fixed bottom-5 left-1/2 z-50 flex max-w-md -translate-x-1/2 items-center gap-3
-			rounded-full bg-stone-50 px-4 py-2 shadow-sm ring-1 dark:bg-stone-950 {$notification.type ===
-    'success'
-      ? 'ring-green-700'
+    transition:fade={{ duration: 200 }}
+    class="fixed top-4 left-1/2 z-50 flex max-w-md -translate-x-1/2 items-center gap-3 rounded-lg shadow-lg ring-1
+    {$notification.type === 'success'
+      ? 'bg-green-50 text-green-700 ring-green-200 dark:bg-green-900/30 dark:ring-green-800'
       : $notification.type === 'error'
-        ? 'ring-red-700'
-        : 'ring-amber-700'}"
+        ? 'bg-red-50 text-red-700 ring-red-200 dark:bg-red-900/30 dark:ring-red-800'
+        : 'bg-cacao-50 text-cacao-700 ring-cacao-200 dark:ring-cacao-800 dark:bg-cacao-900/30'} 
+    px-4 py-3"
   >
-    {@render icon($notification.type)}
+    {#if $notification.type === "success"}
+      <Check class="size-5" />
+    {:else if $notification.type === "error"}
+      <Ban class="size-5" />
+    {:else}
+      <AlertCircle class="size-5" />
+    {/if}
 
-    <p
-      class="flex text-sm font-bold
-text-stone-800
-		capitalize dark:text-inherit
-		"
-    >
+    <p class="text-sm font-medium">
       {$notification.message}
     </p>
+
+    <button
+      onclick={handleDismiss}
+      class="ml-1 rounded-full p-1 transition-colors hover:bg-stone-200/50 dark:hover:bg-stone-800/50"
+      aria-label="Dismiss notification"
+    >
+      <X class="size-4" />
+    </button>
   </div>
 {/if}

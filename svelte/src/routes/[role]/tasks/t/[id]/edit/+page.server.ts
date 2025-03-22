@@ -1,6 +1,6 @@
 import { handleApiResponse, isSuccessResponse } from "$lib/server";
 import { notifyTelegram } from "$lib/server/telegram";
-import type { UploadResponse } from "$lib/types";
+import type { EmptyResponse } from "$lib/types";
 import type { Actions } from "@sveltejs/kit";
 import { error, fail, redirect } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
@@ -82,30 +82,25 @@ export const actions = {
 
     redirect(303, "/t/tasks");
   },
-  upload: async ({ request, fetch }) => {
+  upload: async ({ request, fetch, params }) => {
     const formData = await request.formData();
     const file = formData.get("file") as File;
 
     if (!file) throw new Error("yikes, no file");
 
-    const response = await fetch("/axum/file/upload", {
+    const response = await fetch(`/axum/file?file_id=${params.id}`, {
       method: "POST",
       body: formData,
     });
 
-    const uploadResult = await handleApiResponse<UploadResponse>(response);
+    const uploadResult = await handleApiResponse<EmptyResponse>(response);
 
     if (!isSuccessResponse(uploadResult)) {
       return fail(uploadResult.status, { message: uploadResult.message });
     }
 
-    console.log(uploadResult);
-
-    let { filePath } = uploadResult.data;
-
     return {
       success: true,
-      filePath,
       message: "Uploaded successfully",
     };
   },

@@ -1,7 +1,14 @@
 <script lang="ts">
   import { user } from "$lib/stores";
   import type { Task, TableConfig } from "$lib/types/index.js";
-  import { H1, Table, TaskCard, H2, UniButton } from "$lib/components";
+  import {
+    H1,
+    Table,
+    TaskCard,
+    H2,
+    UniButton,
+    HeaderEmbellish,
+  } from "$lib/components";
 
   import { enhance } from "$app/forms";
   import { page } from "$app/state";
@@ -79,7 +86,9 @@
     buttonPhrases[Math.floor(Math.random() * buttonPhrases.length)];
 </script>
 
-<H1>Tasks</H1>
+<HeaderEmbellish>
+  <H1>Tasks</H1>
+</HeaderEmbellish>
 {#if role === "t"}
   <Table
     items={tasks}

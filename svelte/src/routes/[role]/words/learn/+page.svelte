@@ -5,7 +5,8 @@
   import { invalidate } from "$app/navigation";
   import { enhanceForm } from "$lib/utils";
   import UniButton from "$lib/components/UI/UniButton.svelte";
-  import { Eye, Home } from "lucide-svelte";
+  import { CheckCheck, Eye, Home } from "lucide-svelte";
+  import { HeaderEmbellish } from "$lib/components";
 
   let { data } = $props();
 
@@ -67,22 +68,9 @@
   <div class="p-8" in:fade={{ duration: 300 }}>
     <div class="flex flex-col items-center space-y-6 py-10 text-center">
       <div
-        class="bg-cacao-50 dark:bg-cacao-900 flex h-20 w-20 items-center justify-center rounded-full"
+        class="bg-cacao-50 mx-auto flex h-16 w-16 items-center justify-center rounded-full dark:bg-stone-800"
       >
-        <svg
-          xmlns="http://www.w3.org/1000/svg"
-          class="text-cacao-500 dark:text-cacao-400 h-12 w-12"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M5 13l4 4L19 7"
-          />
-        </svg>
+        <CheckCheck />
       </div>
       <h2 class="text-2xl font-bold">🎉 All caught up!</h2>
       <p class="max-w-md text-stone-600 dark:text-stone-400">
@@ -97,8 +85,7 @@
   </div>
 {:else if currentCard}
   <div class="space-y-6" in:fade={{ duration: 300 }}>
-    <!-- Progress bar with card count indication -->
-    <div class="flex items-center justify-between">
+    <HeaderEmbellish>
       <span class="text-sm text-stone-600 dark:text-stone-400">
         Card {data.cards.indexOf(currentCard) + 1} of {data.cards.length}
       </span>
@@ -107,8 +94,7 @@
           ((data.cards.indexOf(currentCard) + 1) / data.cards.length) * 100,
         )}% Complete
       </span>
-    </div>
-
+    </HeaderEmbellish>
     <div
       class="h-2.5 w-full overflow-hidden rounded-full ring ring-stone-200 dark:bg-stone-700 dark:ring-stone-800"
     >

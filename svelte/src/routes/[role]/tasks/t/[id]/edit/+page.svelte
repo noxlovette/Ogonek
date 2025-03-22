@@ -9,13 +9,15 @@
     UniButton,
     Uploader,
     AssigneeSelector,
-    Input,
     Label,
+    Toggler,
+    HeaderEmbellish,
+    GreySpan,
   } from "$lib/components";
   import type { PageData } from "./$types";
 
   let { data }: { data: PageData } = $props();
-  let { task } = data;
+  let { task, files } = data;
 
   let markdown = $state(task.markdown);
   let filePath = $state(task.filePath);
@@ -44,8 +46,14 @@
     },
   })}
 >
-  <div class="flex items-center justify-between">
-    <H1>Edit Task</H1>
+  <HeaderEmbellish>
+    <div class="flex items-end space-x-4">
+      <H1>Edit Task</H1>
+      <GreySpan>
+        {files.length}
+        {files.length === 1 ? "file" : "files"}
+      </GreySpan>
+    </div>
     <div class="flex items-center space-x-3">
       <UniButton variant="secondary" Icon={Ban} href=".">Cancel</UniButton>
       <UniButton variant="primary" type="submit" Icon={Check}>Save</UniButton>
@@ -57,13 +65,12 @@
         confirmTitle="Delete Task">Delete</UniButton
       >
     </div>
-  </div>
+  </HeaderEmbellish>
 
   <input type="hidden" name="initialAssignee" value={task.assignee} />
   <input type="hidden" name="markdown" value={markdown} />
-  <input type="hidden" name="filePath" bind:value={filePath} />
 
-  <div class="justify- grid grid-cols-1 gap-5 md:grid-cols-3">
+  <div class="grid grid-cols-1 gap-5 md:grid-cols-4">
     <div class="space-y-2">
       <Label>Title</Label>
       <input
@@ -88,25 +95,13 @@
         class="focus:ring-cacao-500 w-full rounded-lg border border-stone-200 px-4 py-2 transition duration-200 focus:ring focus:outline-none disabled:text-stone-500 dark:border-stone-800 dark:bg-stone-950 dark:focus:border-stone-800 dark:focus:ring dark:focus:ring-stone-700 dark:focus:outline-none"
       />
     </div>
-
-    <div class="col-span-full mt-2">
-      <label class="relative inline-flex cursor-pointer items-center">
-        <input
-          type="checkbox"
-          name="completed"
-          checked={task.completed}
-          class="peer sr-only"
-        />
-        <div
-          class="peer-focus:ring-cacao-300 peer peer-checked:bg-cacao-600 h-6 w-11 rounded-full bg-stone-200 peer-focus:ring-4 peer-focus:outline-none after:absolute after:top-[2px] after:left-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-stone-300 after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full peer-checked:after:border-white"
-        ></div>
-        <span class="ml-3 text-sm font-medium text-stone-700">Completed</span>
-      </label>
+    <div class="mt-2 self-end">
+      <Toggler bind:value={task.completed} />
     </div>
   </div>
 </form>
 
-<div class="flex h-full w-full items-end space-x-4">
+<div class="flex space-x-4">
   <Editor bind:markdownContent={markdown} />
-  <Uploader bind:filePath {fileName} />
+  <Uploader />
 </div>

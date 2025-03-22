@@ -30,7 +30,7 @@
 </div>
 <h3 class="text-2xl font-bold">Notes</h3>
 {#if student.markdown}
-  <div class="markdown rounded-lg p-4 ring ring-stone-200">
+  <div class="markdown">
     {@html rendered}
   </div>
 {:else}

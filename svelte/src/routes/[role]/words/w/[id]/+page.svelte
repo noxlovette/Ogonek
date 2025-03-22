@@ -1,6 +1,13 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
-  import { Label, WordCard, H1, UniButton } from "$lib/components";
+  import {
+    Label,
+    WordCard,
+    H1,
+    UniButton,
+    GreySpan,
+    HeaderEmbellish,
+  } from "$lib/components";
   import { invalidate } from "$app/navigation";
 
   import { notification, user } from "$lib/stores";
@@ -106,17 +113,13 @@
 <div class="grid gap-8 lg:grid-cols-3">
   <!-- Main content area - Flashcards -->
   <div class="space-y-6 lg:col-span-2">
-    <div
-      class="flex items-center justify-between rounded-lg bg-white p-4 shadow-sm ring ring-stone-200 dark:bg-stone-900 dark:ring-stone-900"
-    >
+    <HeaderEmbellish>
       <h2 class="text-xl font-semibold">Flashcards</h2>
-      <span
-        class="rounded-full bg-stone-100 px-3 py-1 text-sm font-medium text-stone-600 dark:bg-stone-700 dark:text-stone-300"
-      >
+      <GreySpan>
         {cards.length}
         {cards.length === 1 ? "card" : "cards"}
-      </span>
-    </div>
+      </GreySpan>
+    </HeaderEmbellish>
 
     <div class="grid gap-4 sm:grid-cols-1 md:grid-cols-2">
       {#each cards as card (card.id)}

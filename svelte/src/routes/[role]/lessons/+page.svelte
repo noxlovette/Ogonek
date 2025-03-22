@@ -1,5 +1,12 @@
 <script lang="ts">
-  import { H1, Table, H2, LessonCard, UniButton } from "$lib/components";
+  import {
+    H1,
+    Table,
+    H2,
+    LessonCard,
+    UniButton,
+    HeaderEmbellish,
+  } from "$lib/components";
   import { enhance } from "$app/forms";
   import { page } from "$app/state";
   import type { TableConfig, Lesson } from "$lib/types/index.js";
@@ -52,8 +59,9 @@
   });
 </script>
 
-<H1>Lessons</H1>
-
+<HeaderEmbellish>
+  <H1>Lessons</H1>
+</HeaderEmbellish>
 {#if role === "t"}
   <Table
     bind:items={data.lessonsPaginated.data}

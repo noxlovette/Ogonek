@@ -78,13 +78,13 @@
   const variantClasses = {
     primary:
       customColors ||
-      "from-cacao-500 to-cacao-600 text-cacao-50 dark:from-stone-800 dark:to-stone-900 dark:text-cacao-100 hover:to-cacao-700 focus:ring-cacao-500 ring-stone-200 dark:ring-stone-800 dark:hover:ring-stone-700 dark:hover:to-stone-950 bg-gradient-to-br",
+      "from-cacao-600/95 to-cacao-600/70 text-white hover:to-cacao-700 focus:ring-cacao-400 ring-cacao-200 dark:ring-cacao-800 dark:hover:ring-cacao-700 bg-gradient-to-br shadow-sm backdrop-blur-sm",
     secondary:
       customColors ||
-      "text-stone-700 from-stone-50 to-stone-100 hover:to-stone-200 ring-stone-300 bg-gradient-to-bl",
+      "text-stone-700 dark:text-stone-300 from-stone-50/95 to-stone-100/70 hover:to-stone-200/95 dark:from-stone-800/80 dark:to-stone-900/80 dark:hover:to-stone-950/90 ring-stone-300/70 dark:ring-stone-700/70 bg-gradient-to-bl shadow-sm backdrop-blur-sm",
     danger:
       customColors ||
-      "from-red-500 to-red-600 text-white hover:from-red-500 hover:to-red-700 dark:from-red-500 dark:to-red-600 dark:hover:from-red-500 dark:hover:to-red-700 focus:ring-red-400  bg-gradient-to-br dark:ring-red-800 dark:hover:ring-red-700",
+      "from-red-500 to-red-600 text-white hover:from-red-500 hover:to-red-700 dark:from-red-500 dark:to-red-600 dark:hover:from-red-500 dark:hover:to-red-700 focus:ring-red-400 bg-gradient-to-br dark:ring-red-800 dark:hover:ring-red-700",
     ghost:
       customColors ||
       "text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800 ring-transparent",

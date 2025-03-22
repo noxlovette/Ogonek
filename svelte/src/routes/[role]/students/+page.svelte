@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { PageData } from "./$types";
-  import { Table, H1, UniButton } from "$lib/components";
+  import { Table, H1, UniButton, HeaderEmbellish } from "$lib/components";
   import type { Student, TableConfig } from "$lib/types";
   import { enhance } from "$app/forms";
   import { notification } from "$lib/stores";
@@ -23,7 +23,9 @@
   let href = "/t/students/st";
 </script>
 
-<H1>Students</H1>
+<HeaderEmbellish>
+  <H1>Students</H1>
+</HeaderEmbellish>
 <Table config={studentConfig} {href} items={students} {students} />
 <form
   method="POST"

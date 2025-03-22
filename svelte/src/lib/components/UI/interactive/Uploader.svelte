@@ -1,14 +1,14 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
   import { notification } from "$lib/stores";
+  import type { FileSmall } from "$lib/types";
   import { Upload, Loader2, Check } from "lucide-svelte";
   import { fade, scale } from "svelte/transition";
-
-  let { filePath = $bindable(), fileName = "" } = $props();
 
   let isDragging = $state(false);
   let isUploading = $state(false);
   let isSuccess = $state(false);
+  let fileName = $state("");
   let fileInput: HTMLInputElement;
 
   function handleDragOver(e: DragEvent) {
@@ -56,11 +56,7 @@
 
     return async ({ result }) => {
       isUploading = false;
-
       if (result.type === "success") {
-        console.log(result);
-        filePath = result.data?.filePath;
-        console.log(filePath);
         isSuccess = true;
         notification.set({
           message: "File uploaded successfully!",
@@ -80,7 +76,6 @@
     };
   }}
 >
-  <!-- Upload Area -->
   <div
     onclick={() => fileInput.click()}
     onkeydown={(e) =>
@@ -94,7 +89,7 @@
     class="relative flex h-full flex-1 cursor-pointer
 			 flex-col items-center justify-center rounded-lg border-2
 			 border-dashed p-12 transition-colors duration-200
-			 {isSuccess ? 'border-green-700 bg-green-50' : ''}
+			 {isSuccess ? 'border-green-500' : ''}
 			 {isDragging
       ? 'border-cacao-700 bg-cacao-100'
       : 'border-stone-300 bg-stone-50 hover:border-stone-400 dark:border-stone-800 dark:bg-stone-900 dark:hover:border-stone-700'}"
@@ -117,9 +112,9 @@
       </div>
     {:else if isSuccess}
       <div class="flex flex-col items-center gap-3" in:fade>
-        <Check class="size-10 text-green-700" />
+        <Check class="size-10 text-green-600" />
         <div class="text-center">
-          <p class="text-green-400">
+          <p class="">
             {fileName} has been uploaded
           </p>
         </div>
@@ -130,7 +125,7 @@
           class="h-10 w-10 {fileName ? 'text-cacao-500' : 'text-stone-400'}"
         />
         <div class="text-center">
-          <p class="text-stone-600">
+          <p class=" text-stone-600">
             {fileName || "Drag and drop your file here, or click to select"}
           </p>
         </div>

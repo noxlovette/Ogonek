@@ -1,12 +1,26 @@
 <script lang="ts">
   import type { PageData } from "./$types";
-  import { H1, H2, DeckCard, Table, UniButton } from "$lib/components";
+  import {
+    H1,
+    H2,
+    H3,
+    DeckCard,
+    Table,
+    UniButton,
+    HeaderEmbellish,
+  } from "$lib/components";
   import { enhance } from "$app/forms";
   import { enhanceForm } from "$lib/utils";
   import { fade } from "svelte/transition";
   import { page } from "$app/state";
   import type { TableConfig, Deck } from "$lib/types";
-  import { ArrowBigRight, PlusCircle } from "lucide-svelte";
+  import {
+    ArrowBigRight,
+    Cat,
+    CheckCheck,
+    PlusCircle,
+    Ticket,
+  } from "lucide-svelte";
   import {
     searchTerm,
     pageSize,
@@ -73,53 +87,35 @@
   <title>Flashcards | Review</title>
 </svelte:head>
 
-<H1>Flashcards</H1>
-
-<!-- Cards due today section -->
-<div
-  class="rounded-lg bg-white p-4 shadow-sm ring ring-stone-200 transition-all dark:bg-stone-900 dark:ring-stone-800"
->
-  {#if data.cards?.length}
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-      <div>
-        <H2>{data.cards.length} cards due today</H2>
-        <p class="mt-1 text-stone-600 dark:text-stone-400">
-          Time for some learning!
-        </p>
-      </div>
-
+<HeaderEmbellish>
+  <div>
+    <H1>Flashcards</H1>
+    <H3>
+      {#if data.cards?.length}
+        {data.cards.length} cards due today
+      {:else}
+        All Caught Up! 🎉
+      {/if}
+    </H3>
+  </div>
+  <div>
+    {#if data.cards?.length}
       <UniButton
         variant="primary"
         Icon={ArrowBigRight}
         iconPosition="right"
         href="words/learn">Start Review</UniButton
       >
-    </div>
-  {:else}
-    <div class="py-8 text-center" in:fade={{ duration: 300 }}>
+    {:else}
       <div
-        class="bg-cacao-50 mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full dark:bg-stone-800"
+        class="bg-cacao-50 mx-auto flex h-16 w-16 items-center justify-center rounded-full dark:bg-stone-800"
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="text-cacao-500 h-8 w-8 dark:text-stone-300"
-          viewBox="0 0 20 20"
-          fill="currentColor"
-        >
-          <path
-            fill-rule="evenodd"
-            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-            clip-rule="evenodd"
-          />
-        </svg>
+        <Cat />
       </div>
-      <H2>All Caught Up! 🎉</H2>
-      <p class="mt-2 text-stone-600 dark:text-stone-400">
-        Check back later for new cards to review
-      </p>
-    </div>
-  {/if}
-</div>
+    {/if}
+  </div>
+</HeaderEmbellish>
+
 {#if role === "s"}
   <!-- Decks Management Section -->
   <div>
