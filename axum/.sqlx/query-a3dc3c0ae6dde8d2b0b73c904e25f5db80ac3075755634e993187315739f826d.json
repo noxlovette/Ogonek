@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "DELETE FROM lessons WHERE id = $1 AND created_by = $2",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Text"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "a3dc3c0ae6dde8d2b0b73c904e25f5db80ac3075755634e993187315739f826d"
+}
