@@ -88,7 +88,7 @@ export const actions = {
 
     if (!file) throw new Error("yikes, no file");
 
-    const response = await fetch(`/axum/file?file_id=${params.id}`, {
+    const response = await fetch(`/axum/file?task_id=${params.id}`, {
       method: "POST",
       body: formData,
     });
@@ -102,6 +102,23 @@ export const actions = {
     return {
       success: true,
       message: "Uploaded successfully",
+    };
+  },
+  deleteFile: async ({ request, fetch }) => {
+    const formData = await request.formData();
+    const id = formData.get("fileId");
+
+    const response = await fetch(`/axum/file/${id}`, { method: "DELETE" });
+
+    const deleteResult = await handleApiResponse<EmptyResponse>(response);
+
+    if (!isSuccessResponse(deleteResult)) {
+      return fail(deleteResult.status, { message: deleteResult.message });
+    }
+
+    return {
+      success: true,
+      message: "Deleted File",
     };
   },
 } satisfies Actions;

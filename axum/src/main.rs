@@ -22,6 +22,9 @@ const REQUEST_ID_HEADER: &str = "x-request-id";
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
+
+    let cors = std::env::var("CORS").expect("CORS needs to be set");
+
     init_logging().await;
     let state = AppState {
         db: init_db().await?,
@@ -80,9 +83,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                     REQUEST_ID_HEADER,
                 )))
                 .layer(TimeoutLayer::new(std::time::Duration::from_secs(10)))
+                .layer(axum::extract::DefaultBodyLimit::max(100 * 1024 * 1024))
                 .layer(
                     CorsLayer::new()
-                        .allow_origin("*".parse::<HeaderValue>().unwrap())
+                        .allow_origin(cors.parse::<HeaderValue>().unwrap())
                         .allow_methods([
                             Method::GET,
                             Method::POST,

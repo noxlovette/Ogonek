@@ -1,8 +1,5 @@
-// src/error.rs
 use axum::{
-    http::StatusCode,
-    response::{IntoResponse, Response},
-    Json,
+    extract::multipart::MultipartError, http::StatusCode, response::{IntoResponse, Response}, Json
 };
 use serde_json::json;
 use thiserror::Error;
@@ -131,6 +128,12 @@ impl From<std::env::VarError> for AppError {
             std::env::VarError::NotUnicode(_) => Self::Internal("Not Unicode".into())
         }
     } 
+}
+
+impl From<MultipartError> for AppError {
+    fn from(_err: MultipartError) -> Self {
+        Self::BadRequest("Multipart Error".into())
+    }
 }
 
 use aws_sdk_s3::error::SdkError;

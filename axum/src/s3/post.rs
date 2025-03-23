@@ -3,7 +3,7 @@ use crate::error::AppError;
 use serde::Serialize;
 use aws_sdk_s3::primitives::ByteStream;
 use sqlx::types::time::OffsetDateTime;
-
+use bytes::Bytes;
 
 #[derive(Debug, Serialize)]
 pub struct FileMetadata {
@@ -21,27 +21,25 @@ pub struct FileMetadata {
     pub updated_at: OffsetDateTime,
 }
 
-
 pub async fn upload_s3(
     file_name: &String,
-    file_data: &Vec<u8>,
+    file_data: &[u8],
     s3_key: &String,
     mime_type: &String,
     state: &AppState,
 ) -> Result<(), AppError> {
-
     if file_data.is_empty() {
         return Err(AppError::BadRequest("File is empty".to_string()));
     }
-
+    
     let bucket_name = std::env::var("SCW_BUCKET_NAME")
         .map_err(|err| {
             tracing::error!(error = %err, "Failed to get SCW_BUCKET_NAME from environment");
             AppError::Internal("Missing bucket configuration".into())
         })?;
-
+    
     tracing::info!(
-        "Uploading file to S3: name={}, key={}, size={}", 
+        "Uploading file to S3: name={}, key={}, size={}",
         file_name, s3_key, file_data.len()
     );
     
@@ -49,7 +47,7 @@ pub async fn upload_s3(
         .put_object()
         .bucket(&bucket_name)
         .key(s3_key)
-        .body(ByteStream::from(file_data.clone()))
+        .body(ByteStream::from(Bytes::copy_from_slice(file_data)))  // More efficient copy
         .content_type(mime_type)
         .send()
         .await
@@ -65,6 +63,7 @@ pub async fn upload_s3(
     
     Ok(())
 }
+
 
 
 pub async fn delete_s3(s3_key: &String, state: &AppState) -> Result<(), AppError> {

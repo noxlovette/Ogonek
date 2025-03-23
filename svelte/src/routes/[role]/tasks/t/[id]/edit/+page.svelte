@@ -20,8 +20,6 @@
   let { task, files } = data;
 
   let markdown = $state(task.markdown);
-  let filePath = $state(task.filePath);
-  let fileName = $state("");
 
   let dueDate = $state(
     task.dueDate ? new Date(task.dueDate).toISOString().split("T")[0] : "",
@@ -103,5 +101,5 @@
 
 <div class="flex space-x-4">
   <Editor bind:markdownContent={markdown} />
-  <Uploader />
+  <Uploader {files} />
 </div>

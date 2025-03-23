@@ -117,7 +117,6 @@ pub async fn upload_file(
     Ok(StatusCode::CREATED)
 }
 
-
 pub async fn fetch_file(
     State(state): State<AppState>,
     claims: Claims,
