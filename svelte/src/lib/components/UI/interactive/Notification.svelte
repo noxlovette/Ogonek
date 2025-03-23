@@ -34,10 +34,10 @@
     transition:fade={{ duration: 200 }}
     class="fixed top-4 left-1/2 z-50 flex max-w-md -translate-x-1/2 items-center gap-3 rounded-lg shadow-lg ring-1
     {$notification.type === 'success'
-      ? 'bg-green-50 text-green-700 ring-green-200 dark:bg-green-900/30 dark:ring-green-800'
+      ? 'bg-green-50 text-green-700 ring-green-200 dark:bg-green-900 dark:text-green-200 dark:ring-green-800'
       : $notification.type === 'error'
-        ? 'bg-red-50 text-red-700 ring-red-200 dark:bg-red-900/30 dark:ring-red-800'
-        : 'bg-cacao-50 text-cacao-700 ring-cacao-200 dark:ring-cacao-800 dark:bg-cacao-900/30'} 
+        ? 'bg-red-50 text-red-700 ring-red-200 dark:bg-red-900 dark:text-red-200 dark:ring-red-800'
+        : 'bg-cacao-50 text-cacao-700 ring-cacao-200 dark:ring-cacao-800 dark:text-cacao-200 dark:bg-cacao-900'} 
     px-4 py-3"
   >
     {#if $notification.type === "success"}

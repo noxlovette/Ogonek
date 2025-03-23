@@ -15,6 +15,7 @@
     Rightbar,
     RecentLessons,
     QuickAdd,
+    MobileMenu,
   } from "$lib/components";
   import { lessonStore, studentStore, taskStore } from "$lib/stores";
 
@@ -45,7 +46,7 @@
 </WorkArea>
 
 <Rightbar elements={elementsRight}></Rightbar>
-<BottomMenu elements={elementsLeft} />
+<MobileMenu elements={elementsLeft} />
 
 <svelte:head>
   <title>Tasks</title>

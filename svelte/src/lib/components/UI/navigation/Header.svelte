@@ -1,20 +1,30 @@
 <script lang="ts">
-  import { user } from "$lib/stores";
+  import { user, mobileMenuOpen } from "$lib/stores";
   import { page } from "$app/state";
+
   import ThemeToggler from "../interactive/ThemeToggler.svelte";
   import Clock from "../Clock.svelte";
+  import { Menu } from "lucide-svelte";
 
   let href = page.params.role === "t" ? "/t/dashboard" : "/s/dashboard";
 </script>
 
 <header class="w-full items-baseline">
-  <div class="mx-auto flex w-full items-center justify-between px-4 py-3">
+  <div
+    class="relative mx-auto flex w-full items-center justify-between px-4 py-3"
+  >
     <div
       class="z-50 flex w-full items-center justify-center md:w-1/6 md:items-start md:justify-start"
     >
       <a {href} class="font-serif text-2xl font-bold">Ogonek</a>
     </div>
-
+    <button
+      aria-label={$mobileMenuOpen ? "Close menu" : "Open menu"}
+      class="absolute right-0 z-50 flex flex-col items-center justify-center rounded-md p-2 transition-colors hover:bg-stone-200 md:hidden dark:hover:bg-stone-700"
+      onclick={() => mobileMenuOpen.toggle()}
+    >
+      <Menu />
+    </button>
     {#if $user.name}
       <div class="hidden min-w-fit items-center space-x-4 md:flex">
         <Clock />

@@ -31,8 +31,8 @@
       <Icon class="size-6 lg:size-7 xl:size-8" />
     </div>
   {:else}
-    <Icon class="size-6 md:mr-2 lg:size-7 xl:size-8" />
-    <p class="hidden md:block">
+    <Icon class="mr-2 size-6 lg:size-7 xl:size-8" />
+    <p class="">
       {name}
     </p>
   {/if}
