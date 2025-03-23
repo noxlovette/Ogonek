@@ -1,9 +1,12 @@
 use crate::auth::jwt::Claims;
+use crate::models::files::{FileSmall, FileMinimal};
 use super::error::APIError;
-use crate::db::init::AppState;
-use crate::models::tasks::{TaskBody, TaskBodySmall, TaskBodyWithStudent, TaskCreateBody, TaskUpdate, TaskPaginationParams};
-use crate::models::meta::PaginatedResponse;
+use crate::schema::AppState;
+use crate::models::tasks::{TaskBodySmall, TaskWithFilesResponse, TaskBodyWithStudent, TaskCreateBody, TaskFileBind, TaskPaginationParams, TaskUpdate};
+use crate::models::meta::{PaginatedResponse, CreationId};
 use axum::extract::{Json, Path, State, Query};
+use hyper::StatusCode;
+use crate::s3::post::delete_s3;
 
 pub async fn fetch_recent_tasks(
     State(state): State<AppState>,
@@ -35,18 +38,18 @@ pub async fn fetch_task(
     State(state): State<AppState>,
     Path(id): Path<String>,
     claims: Claims,
-) -> Result<Json<Option<TaskBodyWithStudent>>, APIError> {
+) -> Result<Json<TaskWithFilesResponse>, APIError> {
+    // First fetch the task with assignee info
     let task = sqlx::query_as!(
         TaskBodyWithStudent,
         r#"
-        SELECT 
+        SELECT
             t.id,
             t.title,
             t.markdown,
             t.priority,
             t.completed,
             t.due_date,
-            t.file_path,
             t.assignee,
             t.created_by,
             t.created_at,
@@ -54,15 +57,36 @@ pub async fn fetch_task(
             u.name as assignee_name
         FROM tasks t
         LEFT JOIN "user" u ON t.assignee = u.id
-        WHERE t.id = $1 
+        WHERE t.id = $1
         AND (t.assignee = $2 OR t.created_by = $2)
         "#,
         id,
         claims.sub
     )
     .fetch_optional(&state.db)
+    .await?
+    .ok_or_else(|| APIError::NotFound("Task not found".into()))?;
+
+    // Then fetch the associated files
+    let files = sqlx::query_as!(
+        FileSmall,
+        r#"
+        SELECT 
+            f.id,
+            f.name,
+            f.mime_type, 
+            f.s3_key,
+            f.size
+        FROM files f
+        JOIN task_files tf ON f.id = tf.file_id
+        WHERE tf.task_id = $1
+        "#,
+        id
+    )
+    .fetch_all(&state.db)
     .await?;
-    Ok(Json(task))
+
+    Ok(Json(TaskWithFilesResponse { task, files }))
 }
 
 pub async fn list_tasks(
@@ -172,7 +196,6 @@ pub async fn list_tasks(
         .fetch_one(&state.db)
         .await?;
     
-    // Return paginated response
     Ok(Json(PaginatedResponse {
         data: tasks,
         total: count,
@@ -186,18 +209,19 @@ pub async fn create_task(
     State(state): State<AppState>,
     claims: Claims,
     Json(payload): Json<TaskCreateBody>,
-) -> Result<Json<TaskBody>, APIError> {
+) -> Result<Json<CreationId>, APIError> {
     let mut assignee = &claims.sub;
 
     if payload.assignee.is_some() {
         assignee = payload.assignee.as_ref().unwrap();
     }
 
-    let task = sqlx::query_as!(
-        TaskBody,
+    let id = sqlx::query_as!(
+        CreationId,
         "INSERT INTO tasks (id, title, markdown, due_date, assignee, created_by)
          VALUES ($1, $2, $3, $4, $5, $6)
-         RETURNING *",
+         RETURNING id
+         ",
         nanoid::nanoid!(),
         payload.title,
         payload.markdown,
@@ -207,26 +231,87 @@ pub async fn create_task(
     )
     .fetch_one(&state.db)
     .await?;
-    Ok(Json(task))
+
+    Ok(Json(id))
 }
 
 pub async fn delete_task(
     State(state): State<AppState>,
     Path(id): Path<String>,
     claims: Claims,
-) -> Result<Json<TaskBody>, APIError> {
-    let task = sqlx::query_as!(
-        TaskBody,
-        "DELETE FROM tasks WHERE id = $1 AND (assignee = $2 OR created_by = $2) RETURNING *",
+) -> Result<StatusCode, APIError> {
+    // Start by fetching the task to ensure it exists and user has permission
+    let file_exists = sqlx::query!(
+        r#"
+        
+        SELECT 1 as "exists!: bool" 
+        FROM tasks 
+        WHERE id = $1 AND (assignee = $2 OR created_by = $2)
+        "#,
         id,
         claims.sub
     )
     .fetch_optional(&state.db)
-    .await
-    .map_err(APIError::Database)?
-    .ok_or_else(|| APIError::NotFound("Task not found".into()))?;
+    .await?
+    .is_some();
 
-    Ok(Json(task))
+    if !file_exists {
+        return Err(APIError::NotFound("Task doesn't exist".into()))
+    }
+
+    let files = sqlx::query_as!(
+        FileMinimal,
+        r#"
+        SELECT f.id, f.s3_key
+        FROM files f
+        JOIN task_files tf ON f.id = tf.file_id
+        WHERE tf.task_id = $1
+        "#,
+        id
+    )
+    .fetch_all(&state.db)
+    .await?;
+
+    let file_ids: Vec<String> = files.iter().map(|f| f.id.clone()).collect();
+    
+    let mut tx = state.db.begin().await?;
+    
+    if !file_ids.is_empty() {
+        sqlx::query!(
+            r#"DELETE FROM task_files WHERE task_id = $1"#,
+            id
+        )
+        .execute(&mut *tx)
+        .await?;
+
+        sqlx::query!(
+            r#"DELETE FROM files WHERE id = ANY($1)"#,
+            &file_ids
+        )
+        .execute(&mut *tx)
+        .await?;
+    }
+    
+    sqlx::query!(
+        r#"DELETE FROM tasks WHERE id = $1 AND (assignee = $2 OR created_by = $2)"#,
+        id,
+        claims.sub
+    )
+    .execute(&mut *tx)
+    .await?;
+    
+    tx.commit().await?;
+    
+    for file in files {
+        if let Some(s3_key) = file.s3_key {
+            if let Err(e) = delete_s3(&s3_key, &state).await {
+                // Log error but don't fail the request since DB deletion was successful
+                tracing::error!("Failed to delete file from S3: {}, error: {:?}", s3_key, e);
+            }
+        }
+    }
+    
+    Ok(StatusCode::NO_CONTENT)
 }
 
 pub async fn update_task(
@@ -234,34 +319,56 @@ pub async fn update_task(
     Path(id): Path<String>, 
     claims: Claims,
     Json(payload): Json<TaskUpdate>,
-) -> Result<Json<TaskBody>, APIError> {
-    let task = sqlx::query_as!(
-        TaskBody,
+) -> Result<StatusCode, APIError> {
+    
+    sqlx::query!(
         "UPDATE tasks
          SET
-            title = COALESCE($1, title),
-            markdown = COALESCE($2, markdown),
-            priority = COALESCE($3, priority),
-            completed = COALESCE($4, completed),
-            due_date = COALESCE($5, due_date),
-            assignee = COALESCE($6, assignee),
-            file_path = COALESCE($7, file_path)
-         WHERE id = $8 AND (assignee = $9 OR created_by = $9)
-         RETURNING *",
+            title = COALESCE($3, title),
+            markdown = COALESCE($4, markdown),
+            priority = COALESCE($5, priority),
+            completed = COALESCE($6, completed),
+            due_date = COALESCE($7, due_date),
+            assignee = COALESCE($8, assignee)
+         WHERE id = $1 AND (assignee = $2 OR created_by = $2)",
+        id,
+        claims.sub,
         payload.title,
         payload.markdown,
         payload.priority,
         payload.completed,
         payload.due_date,
         payload.assignee,
-        payload.file_path,
-        id,
-        claims.sub
     )
-    .fetch_optional(&state.db)
-    .await
-    .map_err(APIError::Database)?
-    .ok_or_else(|| APIError::NotFound("Task not found".into()))?;
+    .execute(&state.db)
+    .await?;
 
-    Ok(Json(task))
+    Ok(StatusCode::NO_CONTENT)
+}
+
+pub async fn add_file_to_task(
+    State(state): State<AppState>,
+    Path(task_id): Path<String>,
+    Json(payload): Json<TaskFileBind>
+) -> Result<StatusCode, APIError> {
+
+    let mut tx = state.db.begin().await?;
+
+    for file_id in payload.file_ids {
+        sqlx::query!(
+            r#"
+            INSERT INTO task_files (task_id, file_id)
+            VALUES ($1, $2)
+            ON CONFLICT DO NOTHING
+            "#,
+            task_id,
+            file_id,
+        )
+        .execute(&mut *tx)
+        .await?;
+    }
+
+    tx.commit().await?;
+
+    Ok(StatusCode::CREATED)
 }

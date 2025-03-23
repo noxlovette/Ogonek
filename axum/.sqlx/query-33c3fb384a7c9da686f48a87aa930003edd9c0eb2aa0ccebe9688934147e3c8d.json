@@ -1,0 +1,23 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "SELECT path FROM files WHERE id = $1 AND owner_id = $2 AND is_folder = true",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "path",
+        "type_info": "Varchar"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Text"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "33c3fb384a7c9da686f48a87aa930003edd9c0eb2aa0ccebe9688934147e3c8d"
+}

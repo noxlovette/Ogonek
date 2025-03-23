@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "INSERT INTO tasks (id, title, markdown, due_date, assignee, created_by)\n         VALUES ($1, $2, $3, $4, $5, $6)\n         RETURNING *",
+  "query": "\n        SELECT\n            t.id,\n            t.title,\n            t.markdown,\n            t.priority,\n            t.completed,\n            t.due_date,\n            t.assignee,\n            t.created_by,\n            t.created_at,\n            t.updated_at,\n            u.name as assignee_name\n        FROM tasks t\n        LEFT JOIN \"user\" u ON t.assignee = u.id\n        WHERE t.id = $1\n        AND (t.assignee = $2 OR t.created_by = $2)\n        ",
   "describe": {
     "columns": [
       {
@@ -30,43 +30,39 @@
       },
       {
         "ordinal": 5,
-        "name": "created_at",
-        "type_info": "Timestamptz"
-      },
-      {
-        "ordinal": 6,
-        "name": "updated_at",
-        "type_info": "Timestamptz"
-      },
-      {
-        "ordinal": 7,
         "name": "due_date",
         "type_info": "Timestamptz"
       },
       {
-        "ordinal": 8,
-        "name": "file_path",
-        "type_info": "Text"
+        "ordinal": 6,
+        "name": "assignee",
+        "type_info": "Varchar"
       },
       {
-        "ordinal": 9,
+        "ordinal": 7,
         "name": "created_by",
         "type_info": "Varchar"
       },
       {
+        "ordinal": 8,
+        "name": "created_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 9,
+        "name": "updated_at",
+        "type_info": "Timestamptz"
+      },
+      {
         "ordinal": 10,
-        "name": "assignee",
+        "name": "assignee_name",
         "type_info": "Varchar"
       }
     ],
     "parameters": {
       "Left": [
-        "Varchar",
-        "Varchar",
         "Text",
-        "Timestamptz",
-        "Varchar",
-        "Varchar"
+        "Text"
       ]
     },
     "nullable": [
@@ -75,13 +71,13 @@
       false,
       false,
       false,
+      true,
       false,
       false,
-      true,
-      true,
+      false,
       false,
       false
     ]
   },
-  "hash": "df117d41cd59b2e445b057dcff16d626f242c20a748cafc298186fb36111ffee"
+  "hash": "00984e5368a5a8d24a94df81b19722fdb1b53156f9afa05673b48c4b81b48fcb"
 }

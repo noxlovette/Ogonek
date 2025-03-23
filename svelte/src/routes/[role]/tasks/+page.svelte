@@ -1,7 +1,14 @@
 <script lang="ts">
   import { user } from "$lib/stores";
   import type { Task, TableConfig } from "$lib/types/index.js";
-  import { H1, Table, TaskCard, H2, UniButton } from "$lib/components";
+  import {
+    H1,
+    Table,
+    TaskCard,
+    H2,
+    UniButton,
+    HeaderEmbellish,
+  } from "$lib/components";
 
   import { enhance } from "$app/forms";
   import { page } from "$app/state";
@@ -65,7 +72,6 @@
     completedStore.toggle();
   }
 
-  // Fun phrases for the button
   const buttonPhrases = [
     "Feed Me Tasks! 🍔",
     "More Work Please! 🧠",
@@ -76,12 +82,13 @@
     "Send Homework My Way! 📝",
   ];
 
-  // Pick a random phrase
   const randomPhrase =
     buttonPhrases[Math.floor(Math.random() * buttonPhrases.length)];
 </script>
 
-<H1>Tasks</H1>
+<HeaderEmbellish>
+  <H1>Tasks</H1>
+</HeaderEmbellish>
 {#if role === "t"}
   <Table
     items={tasks}
@@ -95,7 +102,6 @@
     {#if tasks.length === 0}
       <UniButton type="submit" variant="ghost" Icon={PlusCircle}
         >Add your first one</UniButton
-      >
       >
     {/if}
   </form>

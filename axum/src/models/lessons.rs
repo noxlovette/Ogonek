@@ -57,13 +57,6 @@ pub struct LessonBodySmall {
     pub created_at: OffsetDateTime,
 }
 
-
-
-#[derive(Serialize, Deserialize, Debug)]
-pub struct LessonCreateResponse {
-    pub id: String,
-}
-
 #[serde_with::serde_as]
 #[derive(Serialize, Deserialize, Debug, FromRow)]
 #[serde(rename_all = "camelCase")]

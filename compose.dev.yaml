@@ -1,21 +1,6 @@
 name: fl-dev
 
 services:
-  upload-service:
-    container_name: upld-fl-dev
-    build:
-      context: ./upload-service
-      dockerfile: Dockerfile.dev
-    volumes:
-      - uploads:/app/uploads
-    ports:
-      - "3001:3001"
-    env_file:
-      - ./upload-service/.env
-    depends_on:
-      - svelte
-      - axum
-
   svelte:
     build:
       context: ./svelte

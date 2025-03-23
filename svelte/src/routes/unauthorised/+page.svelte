@@ -33,7 +33,7 @@
       onclick={() => window.history.back()}
     >
       <ArrowLeft
-        class="group-hover:-tranmilk-x-1 transition-transform duration-200"
+        class="group-hover:-transtone-x-1 transition-transform duration-200"
       />
       Return to Safety
     </button>

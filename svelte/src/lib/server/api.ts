@@ -14,12 +14,10 @@ export async function handleApiResponse<T>(
     };
   }
 
-  // For 204 No Content
-  if (response.status === 204) {
+  if (response.status === 204 || response.status === 201) {
     return { success: true, data: {} as T };
   }
 
-  // For responses with content
   const data = (await response.json()) as T;
   return { success: true, data };
 }

@@ -1,6 +1,6 @@
 import { handleApiResponse, isSuccessResponse } from "$lib/server";
 import { notifyTelegram } from "$lib/server/telegram";
-import type { UploadResponse } from "$lib/types";
+import type { EmptyResponse } from "$lib/types";
 import type { Actions } from "@sveltejs/kit";
 import { error, fail, redirect } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
@@ -54,7 +54,7 @@ export const actions = {
       return error(code || 400, message);
     }
 
-    const message = `You have a new task: "${title}"\\. You can view it on [Ogonek](https://Ogonek\\.noxlovette\\.com/s/tasks)\\.`;
+    const message = `You have a new task: "${title}"\\. You can view it on [Ogonek](https://Ogonek\\.app/s/tasks)/${id}\\.`;
 
     if (telegramId && initialAssignee !== assignee) {
       const telegramResponse = await notifyTelegram(message, telegramId);
@@ -82,31 +82,43 @@ export const actions = {
 
     redirect(303, "/t/tasks");
   },
-  upload: async ({ request, fetch }) => {
+  upload: async ({ request, fetch, params }) => {
     const formData = await request.formData();
     const file = formData.get("file") as File;
 
     if (!file) throw new Error("yikes, no file");
 
-    const response = await fetch("/file-server/upload", {
+    const response = await fetch(`/axum/file?task_id=${params.id}`, {
       method: "POST",
       body: formData,
     });
 
-    const uploadResult = await handleApiResponse<UploadResponse>(response);
+    const uploadResult = await handleApiResponse<EmptyResponse>(response);
 
     if (!isSuccessResponse(uploadResult)) {
       return fail(uploadResult.status, { message: uploadResult.message });
     }
 
-    console.log(uploadResult);
+    return {
+      success: true,
+      message: "Uploaded successfully",
+    };
+  },
+  deleteFile: async ({ request, fetch }) => {
+    const formData = await request.formData();
+    const id = formData.get("fileId");
 
-    let { filePath } = uploadResult.data;
+    const response = await fetch(`/axum/file/${id}`, { method: "DELETE" });
+
+    const deleteResult = await handleApiResponse<EmptyResponse>(response);
+
+    if (!isSuccessResponse(deleteResult)) {
+      return fail(deleteResult.status, { message: deleteResult.message });
+    }
 
     return {
       success: true,
-      filePath,
-      message: "Uploaded successfully",
+      message: "Deleted File",
     };
   },
 } satisfies Actions;

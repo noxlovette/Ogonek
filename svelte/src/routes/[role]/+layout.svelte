@@ -14,6 +14,8 @@
     WordOfTheDay,
     Rightbar,
     RecentLessons,
+    QuickAdd,
+    MobileMenu,
   } from "$lib/components";
   import { lessonStore, studentStore, taskStore } from "$lib/stores";
 
@@ -24,10 +26,12 @@
   let { data, children } = $props();
   const role = page.params.role;
 
-  let elements = $state([Dashboard, Todo, Lessons, Words, Zoom, Settings]);
+  let elementsLeft = $state([Dashboard, Todo, Lessons, Words, Zoom, Settings]);
+  let elementsRight = $state([UsefulLinks, WordOfTheDay, RecentLessons]);
 
   if (role === "t") {
-    elements = [Dashboard, Todo, Lessons, Students, Words, Settings];
+    elementsLeft = [Dashboard, Todo, Lessons, Students, Words, Settings];
+    elementsRight = [QuickAdd];
   }
 
   lessonStore.setLessons(data.lessons);
@@ -36,14 +40,13 @@
   setContext<Promise<Word>>("word", data.word);
 </script>
 
-<Sidebar {elements} />
+<Sidebar elements={elementsLeft} />
 <WorkArea>
   {@render children?.()}
 </WorkArea>
-{#if role !== "t"}
-  <Rightbar elements={[UsefulLinks, WordOfTheDay, RecentLessons]}></Rightbar>
-{/if}
-<BottomMenu {elements} />
+
+<Rightbar elements={elementsRight}></Rightbar>
+<MobileMenu elements={elementsLeft} />
 
 <svelte:head>
   <title>Tasks</title>

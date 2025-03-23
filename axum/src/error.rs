@@ -1,8 +1,5 @@
-// src/error.rs
 use axum::{
-    http::StatusCode,
-    response::{IntoResponse, Response},
-    Json,
+    extract::multipart::MultipartError, http::StatusCode, response::{IntoResponse, Response}, Json
 };
 use serde_json::json;
 use thiserror::Error;
@@ -44,6 +41,9 @@ pub enum AppError {
     // General server errors
     #[error("Internal server error: {0}")]
     Internal(String),
+
+    #[error("Bad Request: {0}")]
+    BadRequest(String),
 }
 
 impl IntoResponse for AppError {
@@ -61,6 +61,7 @@ impl IntoResponse for AppError {
             
             // Validation errors -> 400
             Self::Validation(_) => (StatusCode::BAD_REQUEST, self.to_string()),
+            Self::BadRequest(e) => (StatusCode::BAD_REQUEST, e.to_string()),
             
             // Database errors -> 500 (or map specific DB errors to more appropriate codes)
             Self::Database(db_err) => {
@@ -116,6 +117,91 @@ impl From<crate::auth::error::AuthError> for AppError {
             crate::auth::error::AuthError::AuthenticationFailed => Self::AuthenticationFailed,
             crate::auth::error::AuthError::Conflict(msg) => Self::AlreadyExists(msg),
         }
+    }
+}
+
+
+impl From<std::env::VarError> for AppError {
+    fn from(err: std::env::VarError) -> Self{
+        match err {
+            std::env::VarError::NotPresent => Self::NotFound("Value not found".into()),
+            std::env::VarError::NotUnicode(_) => Self::Internal("Not Unicode".into())
+        }
+    } 
+}
+
+impl From<MultipartError> for AppError {
+    fn from(_err: MultipartError) -> Self {
+        Self::BadRequest("Multipart Error".into())
+    }
+}
+
+use aws_sdk_s3::error::SdkError;
+use aws_sdk_s3::presigning::PresigningConfigError;
+use aws_credential_types::provider::error::CredentialsError;
+
+
+
+// Generic handler for all S3 SDK errors
+impl<E> From<SdkError<E>> for AppError
+where
+    E: std::error::Error + Send + Sync + 'static,
+{
+    fn from(err: SdkError<E>) -> Self {
+        match &err {
+            SdkError::ConstructionFailure(err) => {
+                tracing::error!("S3 client construction error: {:?}", err);
+                Self::Internal("Failed to construct S3 client".into())
+            }
+            SdkError::DispatchFailure(err) => {
+                tracing::error!("S3 dispatch error: {:?}", err);
+                Self::Internal("Failed to dispatch S3 request".into())
+            }
+            SdkError::ResponseError(err) => {
+                tracing::error!("S3 response error: {:?}", err);
+                Self::Internal("S3 response error".into())
+            }
+            SdkError::ServiceError(service_err) => {
+                // Log the full error for debugging
+                tracing::error!("S3 service error: {:?}", service_err);
+                
+                // Check error type using string matching as a fallback
+                let err_str = format!("{:?}", service_err);
+                
+                if err_str.contains("NoSuchKey") || err_str.contains("NoSuchBucket") {
+                    Self::NotFound("S3 resource not found".into())
+                } else if err_str.contains("AccessDenied") {
+                    Self::AccessDenied
+                } else if err_str.contains("InvalidBucketName") {
+                    Self::Validation("Invalid S3 bucket name".into())
+                } else if err_str.contains("BucketAlreadyExists") || err_str.contains("BucketAlreadyOwnedByYou") {
+                    Self::AlreadyExists("S3 bucket already exists".into())
+                } else {
+                    Self::Internal(format!("S3 service error: {:?}", service_err.err()))
+                }
+            }
+            SdkError::TimeoutError(_) => {
+                Self::Internal("S3 request timed out".into())
+            }
+            _ => Self::Internal(format!("Unknown S3 error: {:?}", err)),
+        }
+    }
+}
+
+
+// Handle Presigning-specific errors
+impl From<PresigningConfigError> for AppError {
+    fn from(err: PresigningConfigError) -> Self {
+        tracing::error!("S3 presigning error: {:?}", err);
+        Self::Internal(format!("Failed to generate presigned URL: {}", err))
+    }
+}
+
+// Handle credential errors
+impl From<CredentialsError> for AppError {
+    fn from(err: CredentialsError) -> Self {
+        tracing::error!("AWS credentials error: {:?}", err);
+        Self::Internal("Failed to authenticate with AWS".into())
     }
 }
 

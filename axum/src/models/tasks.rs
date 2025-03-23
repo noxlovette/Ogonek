@@ -3,6 +3,7 @@ use serde_with::serde_as;
 use sqlx::prelude::FromRow;
 use time::format_description::well_known::Rfc3339;
 use time::OffsetDateTime;
+use super::files::FileSmall;
 
 #[derive(Debug, Deserialize)]
 pub struct TaskPaginationParams {
@@ -80,10 +81,9 @@ pub struct TaskBodyWithStudent {
     pub updated_at: OffsetDateTime,
     #[serde_as(as = "Option<Rfc3339>")]
     pub due_date: Option<OffsetDateTime>,
-    pub file_path: Option<String>,
     pub created_by: String,
     pub assignee: String,
-    pub assignee_name: String, // or whatever new field you need
+    pub assignee_name: String,
 }
 
 #[serde_with::serde_as]
@@ -108,6 +108,16 @@ pub struct TaskUpdate {
     pub completed: Option<bool>,
     #[serde_as(as = "Option<Rfc3339>")]
     pub due_date: Option<OffsetDateTime>,
-    pub assignee: Option<String>,
-    pub file_path: Option<String>,
+    pub assignee: Option<String>
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct TaskFileBind {
+    pub file_ids: Vec<String>
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct TaskWithFilesResponse {
+    pub task: TaskBodyWithStudent,
+    pub files: Vec<FileSmall>,
 }

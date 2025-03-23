@@ -68,7 +68,7 @@ function createCompleted() {
   };
 }
 
-function createLoadingStore() {
+function createToggleStore() {
   const { subscribe, set } = writable(false);
 
   return {
@@ -85,4 +85,5 @@ function createLoadingStore() {
   };
 }
 
-export const isLoading = createLoadingStore();
+export const isLoading = createToggleStore();
+export const mobileMenuOpen = createToggleStore();

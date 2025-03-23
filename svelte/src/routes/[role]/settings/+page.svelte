@@ -19,6 +19,7 @@
   } from "$lib/stores";
 
   import { Check, LogOut, Key, Bell } from "lucide-svelte";
+  import HeaderEmbellish from "$lib/components/typography/HeaderEmbellish.svelte";
 
   let disabled = $state(true);
 
@@ -34,8 +35,9 @@
   <title>Settings</title>
 </svelte:head>
 
-<H1>Settings</H1>
-
+<HeaderEmbellish>
+  <H1>Settings</H1>
+</HeaderEmbellish>
 <div class="grid gap-6 md:grid-cols-2">
   <form
     class=""

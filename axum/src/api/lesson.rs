@@ -1,11 +1,12 @@
 use crate::auth::jwt::Claims;
-use crate::db::init::AppState;
-use crate::models::lessons::{LessonBody, LessonBodySmall, LessonBodyWithStudent, LessonCreateBody, LessonCreateResponse, LessonUpdate, PaginationParams};
+use crate::schema::AppState;
+use crate::models::lessons::{LessonBody, LessonBodySmall, LessonBodyWithStudent, LessonCreateBody, LessonUpdate, PaginationParams};
 use axum::extract::{Json, Query};
 use axum::extract::Path;
 use axum::extract::State;
+use hyper::StatusCode;
 use super::error::APIError;
-use crate::models::meta::PaginatedResponse;
+use crate::models::meta::{CreationId, PaginatedResponse};
 
 pub async fn fetch_recent_lessons(
     State(state): State<AppState>,
@@ -139,7 +140,6 @@ pub async fn list_lessons(
         .fetch_one(&state.db)
         .await?;
     
-    // Return paginated response
     Ok(Json(PaginatedResponse {
         data: lessons,
         total: count,
@@ -153,15 +153,15 @@ pub async fn create_lesson(
     State(state): State<AppState>,
     claims: Claims,
     Json(payload): Json<LessonCreateBody>,
-) -> Result<Json<LessonCreateResponse>, APIError> {
+) -> Result<Json<CreationId>, APIError> {
     let mut assignee = &claims.sub;
 
     if payload.assignee.is_some() {
         assignee = payload.assignee.as_ref().unwrap();
     }
 
-    let lesson = sqlx::query_as!(
-        LessonCreateResponse,
+    let id = sqlx::query_as!(
+        CreationId,
         "INSERT INTO lessons (id, title, topic, markdown, created_by, assignee) 
          VALUES ($1, $2, $3, $4, $5, $6)
          RETURNING id",
@@ -175,25 +175,23 @@ pub async fn create_lesson(
     .fetch_one(&state.db)
     .await?;
 
-    Ok(Json(lesson))
+    Ok(Json(id))
 }
 
 pub async fn delete_lesson(
     State(state): State<AppState>,
     Path(id): Path<String>,
     claims: Claims,
-) -> Result<Json<LessonBody>, APIError> {
-    let lesson = sqlx::query_as!(
-        LessonBody,
-        "DELETE FROM lessons WHERE id = $1 AND created_by = $2 RETURNING *",
+) -> Result<StatusCode, APIError> {
+    sqlx::query!(
+        "DELETE FROM lessons WHERE id = $1 AND created_by = $2",
         id,
         claims.sub
     )
-    .fetch_optional(&state.db)
-    .await?
-    .ok_or_else(||APIError::NotFound("Lesson Not Found".into()))?;
+    .execute(&state.db)
+    .await?;
 
-    Ok(Json(lesson))
+    Ok(StatusCode::NO_CONTENT)
 }
 
 pub async fn update_lesson(
@@ -201,9 +199,8 @@ pub async fn update_lesson(
     Path(id): Path<String>,
     claims: Claims,
     Json(payload): Json<LessonUpdate>,
-) -> Result<Json<LessonBody>, APIError> {
-    let lesson = sqlx::query_as!(
-        LessonBody,
+) -> Result<StatusCode, APIError> {
+    sqlx::query!(
         "UPDATE lessons 
          SET 
             title = COALESCE($1, title),
@@ -211,7 +208,7 @@ pub async fn update_lesson(
             markdown = COALESCE($3, markdown),
             assignee = COALESCE($4, assignee)
          WHERE id = $5 AND created_by = $6
-         RETURNING *",
+",
         payload.title,
         payload.topic,
         payload.markdown,
@@ -219,9 +216,8 @@ pub async fn update_lesson(
         id,
         claims.sub
     )
-    .fetch_optional(&state.db)
-    .await?
-    .ok_or_else(||APIError::NotFound("Lesson Not Found".into()))?;
+    .execute(&state.db)
+    .await?;
 
-    Ok(Json(lesson))
+    Ok(StatusCode::NO_CONTENT)
 }

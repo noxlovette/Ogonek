@@ -16,10 +16,3 @@ services:
         RUSTFLAGS: "-C target-cpu=native"
     env_file:
       - ./axum/.env.production
-
-  upld:
-    build:
-      context: ./upload-service
-      dockerfile: Dockerfile
-    env_file:
-      - ./upload-service/.env

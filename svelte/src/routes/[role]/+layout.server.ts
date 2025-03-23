@@ -6,9 +6,11 @@ export const load: LayoutServerLoad = async ({ fetch }) => {
   const [students, lessons, tasks] = await Promise.all([
     fetch("/axum/student").then((res) => res.json() as Promise<Student[]>),
     fetch("/axum/lesson/recent").then(
-      (res) => res.json() as Promise<LessonSmall>,
+      (res) => res.json() as Promise<LessonSmall[]>,
     ),
-    fetch("/axum/task/recent").then((res) => res.json() as Promise<TaskSmall>),
+    fetch("/axum/task/recent").then(
+      (res) => res.json() as Promise<TaskSmall[]>,
+    ),
   ]);
 
   const word = redis.get("wordAPI").then(async (cachedWord) => {

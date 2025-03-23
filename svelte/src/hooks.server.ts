@@ -6,11 +6,13 @@ import type { Handle, HandleFetch, RequestEvent } from "@sveltejs/kit";
 import { redirect } from "@sveltejs/kit";
 import { sequence } from "@sveltejs/kit/hooks";
 
-Sentry.init({
-  dsn: "https://2d5f51ef45d12264bf0a264dbbbeeacb@o4507272574468096.ingest.de.sentry.io/4507947592777808",
-  environment: env.PUBLIC_APP_ENV || "development",
-  tracesSampleRate: 1,
-});
+if (env.PUBLIC_APP_ENV !== "development") {
+  Sentry.init({
+    dsn: "https://2d5f51ef45d12264bf0a264dbbbeeacb@o4507272574468096.ingest.de.sentry.io/4507947592777808",
+    environment: env.PUBLIC_APP_ENV || "development",
+    tracesSampleRate: 1,
+  });
+}
 
 let isRefreshing = false;
 
@@ -160,21 +162,11 @@ export const handleFetch: HandleFetch = async ({ event, request, fetch }) => {
     // Create new request with the full URL including query parameters
     request = new Request(newUrl, request);
   }
-
-  if (url.pathname.startsWith("/file-server/")) {
-    const cleanPath = url.pathname.replace("/file-server/", "/");
-    const newUrl = new URL(cleanPath, env.UPLOAD_URL);
-    // Do the same for file server requests
-    url.searchParams.forEach((value, key) => {
-      newUrl.searchParams.set(key, value);
-    });
-    request = new Request(newUrl, request);
-    request.headers.append("X-API-KEY", env.API_KEY_FILE);
-    return fetch(request);
-  }
-
   request.headers.set("X-API-KEY", env.API_KEY_AXUM);
-  request.headers.set("Content-Type", "application/json");
+  // Only set Content-Type for non-FormData requests
+  if (!request.headers.get("Content-Type")?.includes("multipart/form-data")) {
+    request.headers.set("Content-Type", "application/json");
+  }
   const accessToken = event.cookies.get("accessToken");
   if (accessToken) {
     request.headers.set("Authorization", `Bearer ${accessToken}`);

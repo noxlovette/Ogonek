@@ -176,72 +176,128 @@ BEGIN
     RETURN NEW;
 END;
 $$ language 'plpgsql';
+-- Add migration script here
+-- Add subscribers support to decks
+ALTER TABLE decks
+ADD COLUMN subscribers TEXT[] DEFAULT '{}';
 
--- Consider adding a counter cache for pagination efficiency
-ALTER TABLE "user" ADD COLUMN IF NOT EXISTS lessons_count INTEGER DEFAULT 0;
-ALTER TABLE "user" ADD COLUMN IF NOT EXISTS tasks_count INTEGER DEFAULT 0;
+-- Create a dedicated junction table for deck subscriptions for better querying
+CREATE TABLE deck_subscriptions (
+    deck_id VARCHAR(21) NOT NULL REFERENCES decks(id) ON DELETE CASCADE,
+    user_id VARCHAR(21) NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
+    PRIMARY KEY (deck_id, user_id)
+);
 
--- Create a function to update the lesson counts
-CREATE OR REPLACE FUNCTION update_lesson_count()
+-- Create index for efficient lookup
+CREATE INDEX idx_deck_subscriptions_user_id ON deck_subscriptions(user_id);
+
+CREATE OR REPLACE FUNCTION update_deck_subscribers()
 RETURNS TRIGGER AS $$
 BEGIN
     IF TG_OP = 'INSERT' THEN
-        -- Update both assignee and creator counts
-        UPDATE "user" SET lessons_count = lessons_count + 1 WHERE id = NEW.assignee;
-        IF NEW.assignee != NEW.created_by THEN
-            UPDATE "user" SET lessons_count = lessons_count + 1 WHERE id = NEW.created_by;
-        END IF;
+        -- Add user to subscribers array
+        UPDATE decks 
+        SET subscribers = array_append(subscribers, NEW.user_id)
+        WHERE id = NEW.deck_id;
     ELSIF TG_OP = 'DELETE' THEN
-        -- Update both assignee and creator counts
-        UPDATE "user" SET lessons_count = lessons_count - 1 WHERE id = OLD.assignee;
-        IF OLD.assignee != OLD.created_by THEN
-            UPDATE "user" SET lessons_count = lessons_count - 1 WHERE id = OLD.created_by;
-        END IF;
+        -- Remove user from subscribers array
+        UPDATE decks 
+        SET subscribers = array_remove(subscribers, OLD.user_id)
+        WHERE id = OLD.deck_id;
     END IF;
-    
     RETURN NULL;
 END;
-$$ language 'plpgsql';
+$$ LANGUAGE plpgsql;
 
--- Create trigger for lessons
-CREATE TRIGGER update_lesson_count_trigger
-AFTER INSERT OR DELETE ON lessons
-FOR EACH ROW EXECUTE FUNCTION update_lesson_count();
+-- Create trigger for the junction table
+CREATE TRIGGER update_deck_subscribers_trigger
+AFTER INSERT OR DELETE ON deck_subscriptions
+FOR EACH ROW EXECUTE FUNCTION update_deck_subscribers();
 
--- Create a function to update the task counts
-CREATE OR REPLACE FUNCTION update_task_count()
+CREATE OR REPLACE FUNCTION create_card_progress_for_subscribers()
 RETURNS TRIGGER AS $$
+DECLARE
+    subscriber_id VARCHAR(21);
 BEGIN
-    IF TG_OP = 'INSERT' THEN
-        -- Update both assignee and creator counts
-        UPDATE "user" SET tasks_count = tasks_count + 1 WHERE id = NEW.assignee;
-        IF NEW.assignee != NEW.created_by THEN
-            UPDATE "user" SET tasks_count = tasks_count + 1 WHERE id = NEW.created_by;
-        END IF;
-    ELSIF TG_OP = 'DELETE' THEN
-        -- Update both assignee and creator counts
-        UPDATE "user" SET tasks_count = tasks_count - 1 WHERE id = OLD.assignee;
-        IF OLD.assignee != OLD.created_by THEN
-            UPDATE "user" SET tasks_count = tasks_count - 1 WHERE id = OLD.created_by;
-        END IF;
-    END IF;
+    -- For each subscriber of the deck, create a card_progress entry
+    FOR subscriber_id IN 
+        SELECT user_id FROM deck_subscriptions WHERE deck_id = NEW.deck_id
+    LOOP
+        INSERT INTO card_progress (
+            id, user_id, card_id, review_count, due_date, ease_factor, interval
+        ) VALUES (
+            nanoid(),
+            subscriber_id,
+            NEW.id,
+            0,
+            CURRENT_TIMESTAMP,
+            2.5,
+            1
+        )
+        ON CONFLICT (user_id, card_id) DO NOTHING; -- Avoid duplicates
+    END LOOP;
     
-    RETURN NULL;
+    RETURN NEW;
 END;
-$$ language 'plpgsql';
+$$ LANGUAGE plpgsql;
 
--- Create trigger for tasks
-CREATE TRIGGER update_task_count_trigger
-AFTER INSERT OR DELETE ON tasks
-FOR EACH ROW EXECUTE FUNCTION update_task_count();
+-- Create nanoid function for PostgreSQL (since you can't directly call nanoid from triggers)
+CREATE OR REPLACE FUNCTION nanoid(size INT DEFAULT 21)
+RETURNS TEXT AS $$
+DECLARE
+    id TEXT := '';
+    i INT := 0;
+    alphabet TEXT := '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    alphabet_length INT := length(alphabet);
+BEGIN
+    WHILE i < size LOOP
+        id := id || substr(alphabet, 1 + floor(random() * alphabet_length)::INT, 1);
+        i := i + 1;
+    END LOOP;
+    RETURN id;
+END;
+$$ LANGUAGE plpgsql;
 
--- Populate the initial counts (run once after migration)
-UPDATE "user" u SET 
-    lessons_count = (
-        SELECT COUNT(*) FROM lessons l 
-        WHERE l.assignee = u.id OR l.created_by = u.id
-    ),
-    tasks_count = (
-        SELECT COUNT(*) FROM tasks t 
-        WHERE t.assignee = u.id OR t.created_by = u.id
-    );
+-- Create trigger for cards
+CREATE TRIGGER create_card_progress_for_subscribers_trigger
+AFTER INSERT ON cards
+FOR EACH ROW EXECUTE FUNCTION create_card_progress_for_subscribers();-- Add migration script here
+CREATE TABLE files (
+    id VARCHAR(21) PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    s3_key VARCHAR(255) NOT NULL,
+    path VARCHAR(255) NOT NULL,
+    mime_type VARCHAR(100),
+    size BIGINT NOT NULL,
+    is_folder BOOLEAN NOT NULL DEFAULT FALSE,
+    parent_id VARCHAR(21) REFERENCES files(id) ON DELETE CASCADE,
+    owner_id VARCHAR(21) NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
+    visibility VARCHAR(20) NOT NULL DEFAULT 'private',
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT valid_visibility CHECK (visibility IN ('private', 'shared', 'public'))
+);
+
+-- Junction table for file sharing
+CREATE TABLE file_shares (
+    file_id VARCHAR(21) NOT NULL REFERENCES files(id) ON DELETE CASCADE,
+    user_id VARCHAR(21) NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
+    permission VARCHAR(20) NOT NULL DEFAULT 'view', -- 'view', 'edit', 'manage'
+    shared_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    shared_by VARCHAR(21) NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
+    PRIMARY KEY (file_id, user_id)
+);
+
+CREATE INDEX idx_files_parent_id ON files(parent_id);
+CREATE INDEX idx_files_owner_id ON files(owner_id);
+CREATE INDEX idx_files_path ON files(path);
+CREATE INDEX idx_file_shares_user_id ON file_shares(user_id);
+-- Add migration script here
+CREATE TABLE task_files (
+    task_id VARCHAR(21) NOT NULL REFERENCES tasks(id) ON DELETE CASCADE,
+    file_id VARCHAR(21) NOT NULL REFERENCES files(id) ON DELETE CASCADE,
+    PRIMARY KEY (task_id, file_id)
+);
+
+CREATE INDEX idx_task_files_task_id ON task_files(task_id);
+CREATE INDEX idx_task_files_file_id ON task_files(file_id);

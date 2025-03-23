@@ -7,3 +7,8 @@ pub struct PaginatedResponse<T> {
     pub page: i64,
     pub per_page: i64,
 }
+
+#[derive(Debug, Serialize)] 
+    pub struct CreationId {
+        pub id: String,
+    }

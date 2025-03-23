@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "DELETE FROM tasks WHERE id = $1 AND (assignee = $2 OR created_by = $2)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Text"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "a3c2b064111b8ef5987c282b57452bea3febc8638263bf51ae1b1cfcbf1f6b82"
+}

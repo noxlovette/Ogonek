@@ -13,6 +13,34 @@ export interface Task {
   assigneeName: string;
 }
 
+export interface TaskWithFiles {
+  task: Task;
+  files: FileSmall[];
+}
+
+export interface FileSmall {
+  id: string;
+  name: string;
+  s3Key: string;
+  mimeType?: string;
+  size: number;
+}
+
+export interface File {
+  id: string;
+  name: string;
+  s3Key: string;
+  path: string;
+  mimeType?: string;
+  size: number;
+  isFolder: boolean;
+  parentId: string;
+  ownerId: string;
+  visibility: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface TaskSmall {
   id: string;
   title: string;
@@ -56,6 +84,7 @@ export interface LessonSmall {
   title: string;
   markdown: string;
   topic: string;
+  createdAt: string;
 }
 
 export interface LessonStore {

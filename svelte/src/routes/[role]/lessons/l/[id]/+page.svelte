@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { UniButton, H1, H2 } from "$lib/components";
+  import { UniButton, H1, H2, H3, HeaderEmbellish } from "$lib/components";
   import { user } from "$lib/stores";
 
   import { formatDate } from "@noxlovette/svarog";
@@ -7,54 +7,44 @@
   import { Pencil } from "lucide-svelte";
   import { page } from "$app/state";
 
+  let role = $derived(page.params.role);
+
   let { data }: { data: PageData } = $props();
 
   let formattedDate = formatDate(data.lesson.createdAt);
 </script>
 
-{#if page.params.role === "t"}
-  <div class="flex items-baseline space-x-4">
-    <H1>{data.lesson.title}</H1>
-    <UniButton
-      Icon={Pencil}
-      href="/t/lessons/l/{data.lesson.id}/edit"
-      variant="outline">Edit</UniButton
-    >
+<HeaderEmbellish>
+  <div>
+    <H1>
+      {#if role === "t"}
+        {data.lesson.title}
+      {:else}
+        Lesson From {formattedDate}
+      {/if}
+    </H1>
+    {#if role === "t"}
+      <H3>
+        {data.lesson.assigneeName}
+      </H3>
+    {/if}
   </div>
-  <div class="flex space-x-4">
-    <div class="space-y-2">
-      <p class="block font-medium text-stone-700">Topic</p>
-      <h3 class="min-w-48">
-        {data.lesson.topic}
-      </h3>
-    </div>
-    <div class="space-y-2">
-      <p class="block font-medium text-stone-700">Student</p>
-      <h3 class="min-w-48">
-        {#if data.lesson.assigneeName === $user.username}
-          Not Assigned
-        {:else}
-          {data.lesson.assigneeName}
-        {/if}
-      </h3>
-    </div>
-  </div>
-  <div class="markdown">
-    {@html data.rendered}
-  </div>
-{:else}
-  <div class="flex items-baseline space-x-4">
-    <H1>Lesson From {formattedDate}</H1>
-  </div>
-  <div class="">
+  <div class="flex items-center space-x-3">
+    {#if role === "t"}
+      <UniButton
+        Icon={Pencil}
+        href="/t/lessons/l/{data.lesson.id}/edit"
+        variant="outline">Edit</UniButton
+      >
+    {/if}
     <H2>
       {data.lesson.topic}
     </H2>
   </div>
-  <div class="markdown">
-    {@html data.rendered}
-  </div>
-{/if}
+</HeaderEmbellish>
+<div class="markdown">
+  {@html data.rendered}
+</div>
 
 <svelte:head>
   <title>Lesson From {formattedDate}</title>
