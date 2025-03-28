@@ -4,7 +4,6 @@ use aws_sdk_s3::Client as S3Client;
 
 
 pub async fn init_s3() -> anyhow::Result<S3Client> {
-
     let region = std::env::var("SCW_REGION")
         .map_err(|_| anyhow::anyhow!("SCW_REGION environment variable is missing"))?;
     let endpoint = std::env::var("SCW_URL")
@@ -24,7 +23,6 @@ pub async fn init_s3() -> anyhow::Result<S3Client> {
         "scaleway-credentials"
     );
 
-    // Build the config with explicit timeout
     let s3_config = aws_config::defaults(BehaviorVersion::latest())
         .region(Region::new(region))
         .endpoint_url(endpoint)
@@ -40,6 +38,7 @@ pub async fn init_s3() -> anyhow::Result<S3Client> {
 
     let s3_client = S3Client::new(&s3_config);
     
+    // instantly check if the connection is alive
     match s3_client.list_buckets().send().await {
         Ok(_) => tracing::info!("Successfully connected to S3 service"),
         Err(e) => tracing::warn!("Could not verify S3 connection: {}", e),

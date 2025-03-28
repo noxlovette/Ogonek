@@ -24,13 +24,16 @@ const REQUEST_ID_HEADER: &str = "x-request-id";
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let cors = std::env::var("CORS").expect("CORS needs to be set");
+    let bucket_name = std::env::var("SCW_BUCKET_NAME").expect("SCW_BUCKET_NAME needs to be set");
 
     init_logging().await;
+
     let state = AppState {
         db: init_db().await?,
         s3: init_s3().await?,
+        bucket_name
     };
-
+    
     let protected_routes = Router::new()
         .nest("/lesson", rust::api::routes::lesson_routes::lesson_routes())
         .nest("/user", rust::api::routes::user_routes::user_routes())
@@ -82,7 +85,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 .layer(PropagateRequestIdLayer::new(HeaderName::from_static(
                     REQUEST_ID_HEADER,
                 )))
-                .layer(TimeoutLayer::new(std::time::Duration::from_secs(10)))
+                .layer(TimeoutLayer::new(std::time::Duration::from_secs(30)))
                 .layer(axum::extract::DefaultBodyLimit::max(100 * 1024 * 1024))
                 .layer(
                     CorsLayer::new()

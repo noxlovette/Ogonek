@@ -12,6 +12,7 @@ impl Default for SM2Calculator {
     }
 }
 
+// the algorithm that calculates the ease of card recall and adjusts the next review date accordingly
 impl SM2Calculator {
     pub fn calculate_next_review(
         &self,

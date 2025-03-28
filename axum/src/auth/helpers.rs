@@ -11,7 +11,6 @@ use uuid::Uuid;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 pub fn generate_token(user: &User) -> Result<String, AuthError> {
-    // In your signup function:
     let now = SystemTime::now()
         .duration_since(UNIX_EPOCH)
         .unwrap()
@@ -72,6 +71,7 @@ pub fn generate_refresh_token(user: &User) -> Result<String, AuthError> {
     return Ok(token);
 }
 
+// argon2 algo
 pub fn hash_password(pass: &str) -> Result<String, PasswordHashError> {
     let pass_bytes = pass.as_bytes();
 

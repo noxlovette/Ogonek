@@ -1,6 +1,5 @@
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
-// log into stdout
 pub async fn init_logging() {
     tracing_subscriber::registry()
         .with(

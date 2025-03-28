@@ -9,6 +9,7 @@ use dotenvy::dotenv;
 #[derive(Clone, Debug)]
 struct ApiKey(String);
 
+// the extractor of the key
 impl ApiKey {
     fn from_header(value: &str) -> Option<Self> {
         // Prevent empty strings
@@ -30,6 +31,7 @@ fn get_key(headers: &HeaderMap) -> Option<ApiKey> {
         .and_then(ApiKey::from_header)
 }
 
+// you can modify validation logic
 fn key_valid(api_key: &ApiKey) -> bool {
     dotenv().ok();
     let valid_key = std::env::var("API_KEY").expect("API_KEY must be set");
@@ -39,7 +41,7 @@ fn key_valid(api_key: &ApiKey) -> bool {
 pub async fn validate_api_key(request: Request, next: Next) -> Result<Response, StatusCode> {
     let api_key = get_key(request.headers()).ok_or(StatusCode::UNAUTHORIZED)?;
 
-    // Here you can add your key validation logic
+    
     if !key_valid(&api_key) {
         return Err(StatusCode::UNAUTHORIZED);
     }

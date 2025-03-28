@@ -18,7 +18,7 @@
         >
       </div>
     </div>
-    <div class="items-center gap-4">
+    <div class="items-center gap-4 flex">
       <p class="text-xs md:text-sm">
         For my students <span class="not-italic">💛</span>
       </p>

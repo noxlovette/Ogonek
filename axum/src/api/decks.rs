@@ -1,7 +1,7 @@
 use crate::auth::jwt::Claims;
 use crate::models::meta::CreationId;
 use crate::schema::AppState;
-use crate::models::cards_decks::{DeckBody, DeckCreateBody, CardBody, DeckWithCards, DeckWithCardsAndSubscription, DeckWithCardsUpdate, DeckFilterParams};
+use crate::models::cards_decks::{DeckBody, DeckCreateBody, CardBody, DeckWithCardsAndSubscription, DeckWithCardsUpdate, DeckFilterParams};
 use axum::extract::Json;
 use axum::extract::Path;
 use axum::extract::State;

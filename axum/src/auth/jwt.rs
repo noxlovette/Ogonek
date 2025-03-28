@@ -3,13 +3,11 @@ use axum_extra::{
     headers::{authorization::Bearer, Authorization, Cookie},
     TypedHeader,
 };
-
 use jsonwebtoken::{decode, Algorithm, DecodingKey, EncodingKey, Validation};
-
 use crate::auth::error::AuthError;
-use dotenvy::dotenv;
 use serde::{Deserialize, Serialize};
 use std::sync::LazyLock;
+use dotenvy::dotenv;
 
 pub static KEYS: LazyLock<Keys> = LazyLock::new(|| {
     dotenv().ok();
@@ -27,6 +25,8 @@ pub static KEYS_REFRESH: LazyLock<Keys> = LazyLock::new(|| {
     Keys::new(private_key.as_bytes(), public_key.as_bytes())
 });
 
+
+// the main implementation that actually validates the JWT-refresh
 impl<S> FromRequestParts<S> for RefreshClaims
 where
     S: Send + Sync,
@@ -56,6 +56,8 @@ where
     }
 }
 
+
+// same thing but for the access token
 impl<S> FromRequestParts<S> for Claims
 where
     S: Send + Sync,

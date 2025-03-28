@@ -1,4 +1,4 @@
-name: fl-build
+name: ogonek-build
 
 services:
   svelte:

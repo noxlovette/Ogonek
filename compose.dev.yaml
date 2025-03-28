@@ -1,11 +1,11 @@
-name: fl-dev
+name: ogonek-dev
 
 services:
   svelte:
     build:
       context: ./svelte
       dockerfile: Dockerfile.dev
-    container_name: svelte-fl-dev
+    container_name: svelte-ogonek-dev
     ports:
       - "5173:5173"
     volumes:
@@ -17,7 +17,7 @@ services:
 
   redis:
     image: redis/redis-stack:latest
-    container_name: redis-fl-dev
+    container_name: redis-ogonek-dev
     ports:
       - "6379:6379"
       - "8003:8001"
@@ -26,7 +26,7 @@ services:
     build:
       context: ./axum
       dockerfile: Dockerfile.dev
-    container_name: axum-fl-dev
+    container_name: axum-ogonek-dev
     ports:
       - "3000:3000"
     volumes:
@@ -35,19 +35,25 @@ services:
       - cargo-target:/app/target
     env_file:
       - ./axum/.env
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
     depends_on:
       postgres:
         condition: service_healthy
 
   postgres:
     image: postgres
-    container_name: pg-fl-dev
+    container_name: pg-ogonek-dev
     restart: always
     user: postgres
     volumes:
       - db-data:/var/lib/postgresql/data
     environment:
-      - POSTGRES_DB=pg-fl-dev
+      - POSTGRES_DB=pg-ogonek-dev
       - POSTGRES_PASSWORD=changeme
     ports:
       - "5433:5432"
@@ -59,10 +65,10 @@ services:
 
 volumes:
   cargo-cache:
-    name: cargo-cache-fl-dev
+    name: cargo-cache-ogonek-dev
   cargo-target:
-    name: cargo-target-fl-dev
+    name: cargo-target-ogonek-dev
   db-data:
-    name: db-fl-dev
+    name: db-ogonek-dev
   uploads:
-    name: uploads-fl-dev
+    name: uploads-ogonek-dev

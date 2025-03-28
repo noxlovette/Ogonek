@@ -8,44 +8,23 @@ use serde_json::json;
 use bytes::BytesMut;
 use base64::{Engine as _, engine::general_purpose::STANDARD as BASE64};
 
-pub async fn check_s3_connection(
-    State(state): State<AppState>,
-) -> Result<impl IntoResponse, AppError> {
-    let result = state.s3.list_buckets().send().await
-        .map_err(|e| {
-            tracing::error!("S3 connection test failed: {:?}", e);
-            AppError::Internal(format!("S3 connection test failed: {}", e))
-        })?;
-    
-    let bucket_count = result.buckets().len();
-    let bucket_names: Vec<&str> = result.buckets()
-        .iter()
-        .filter_map(|b| b.name())
-        .collect();
-    
-    tracing::info!("Successfully connected to S3. Found {} buckets: {:?}", 
-        bucket_count, bucket_names);
-    
-    Ok(format!("S3 connection successful! Found {} buckets.", bucket_count))
-}
-
-
 pub async fn download_file(
     State(state): State<AppState>,
     Path(encoded_key): Path<String>,
 ) -> Result<impl IntoResponse, AppError> {
     
+    // validate the incoming key
     let key = BASE64.decode(encoded_key)
     .map_err(|_| AppError::BadRequest("Invalid base64 encoding".into()))?;
 
-let key_str = String::from_utf8(key)
-.map_err(|_| AppError::BadRequest("Invalid UTF-8 in decoded key".into()))?;
+    let key_str = String::from_utf8(key)
+    .map_err(|_| AppError::BadRequest("Invalid UTF-8 in decoded key".into()))?;
 
-tracing::info!("Downloading file from S3: bucket=ogonek-scaleway, key={}", key_str);
+
     // Get the object from S3
     let mut object = state.s3
         .get_object()
-        .bucket("ogonek-scaleway")
+        .bucket(state.bucket_name)
         .key(&key_str)
         .send()
         .await
@@ -94,12 +73,11 @@ pub async fn stream_file(
     State(state): State<AppState>,
     Path(key): Path<String>,
 ) -> Result<impl IntoResponse, AppError> {
-    tracing::info!("Streaming file from S3: bucket=ogonek-scaleway, key={}", key);
 
     // Get the object from S3
     let object = state.s3
         .get_object()
-        .bucket("ogonek-scaleway")
+        .bucket(state.bucket_name)
         .key(&key)
         .send()
         .await
@@ -110,6 +88,8 @@ pub async fn stream_file(
         .unwrap_or("application/octet-stream")
         .to_string();
     
+
+    // one of the many fallbacks to the filename. it is stored in the db so this is technically dead code
     let filename = key.split('/').last().unwrap_or("download");
     
     // Create a stream from the body
@@ -137,13 +117,10 @@ pub async fn get_presigned_url(
     let key_str = String::from_utf8(key)
         .map_err(|_| AppError::BadRequest("Invalid UTF-8 in decoded key".into()))?;
     
-    tracing::info!("Generating presigned URL for: bucket=ogonek-scaleway, key={}", key_str);
-
-    
     // Create a presigned request that expires in 15 minutes
     let presigned_req = state.s3
         .get_object()
-        .bucket("ogonek-scaleway")
+        .bucket(state.bucket_name)
         .key(&key_str)
         .presigned(aws_sdk_s3::presigning::PresigningConfig::expires_in(
             std::time::Duration::from_secs(15 * 60)
@@ -154,4 +131,25 @@ pub async fn get_presigned_url(
     let presigned_url = presigned_req.uri().to_string();
     
     Ok((StatusCode::OK, Json(json!({ "url": presigned_url }))))
+}
+
+pub async fn check_s3_connection(
+    State(state): State<AppState>,
+) -> Result<StatusCode, AppError> {
+    let result = state.s3.list_buckets().send().await
+        .map_err(|e| {
+            tracing::error!("S3 connection test failed: {:?}", e);
+            AppError::Internal(format!("S3 connection test failed: {}", e))
+        })?;
+    
+    let bucket_count = result.buckets().len();
+    let bucket_names: Vec<&str> = result.buckets()
+        .iter()
+        .filter_map(|b| b.name())
+        .collect();
+    
+    tracing::info!("Successfully connected to S3. Found {} buckets: {:?}", 
+        bucket_count, bucket_names);
+    
+    Ok(StatusCode::OK)
 }
