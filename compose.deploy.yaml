@@ -1,6 +1,6 @@
 services:
   svelte:
-    image: ghcr.io/noxlovette/fl-prod-svelte:v1.1.2
+    image: ghcr.io/noxlovette/svelte-ogonek:v1.2.1
     container_name: svelte-fl-prod
     env_file:
       - ./.env.svelte
@@ -17,6 +17,7 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+
   redis:
     image: redis/redis-stack-server:latest
     container_name: redis-fl-prod
@@ -25,7 +26,7 @@ services:
       - internal
 
   axum:
-    image: ghcr.io/noxlovette/fl-prod-axum:v1.1.2
+    image: ghcr.io/noxlovette/axum-ogonek:v1.2.1
     container_name: axum-fl-prod
     logging:
       driver: "json-file"
@@ -39,26 +40,15 @@ services:
         condition: service_healthy
     networks:
       - internal
+      - web  # ✅ Added this to allow external network access
+    dns:  # ✅ Explicitly set public DNS for external resolution
+      - 8.8.8.8
+      - 1.1.1.1
     restart: unless-stopped
     deploy:
       resources:
         limits:
           memory: 1G
-
-  upld:
-    image: ghcr.io/noxlovette/fl-prod-upld:v1.0.2
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
-    container_name: upld-fl-prod
-    networks: 
-      - internal
-    volumes:
-      - uploads:/app/uploads
-    env_file:
-      - ./.env.upld
 
   postgres:
     image: postgres:17-alpine
@@ -82,8 +72,6 @@ services:
 volumes:
   db-data:
     name: db-fl-prod
-  uploads:
-    name: uploads-fl-prod
 
 networks:
   web:
@@ -91,3 +79,4 @@ networks:
   internal:
     name: internal-fl
     internal: true
+
