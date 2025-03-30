@@ -77,6 +77,7 @@ The API is organized around these primary resources:
 
 - Docker and Docker Compose
 - Scaleway S3 compatible storage account (or alternative S3 provider)
+- sqlx and cargo installed
 
 ### Environment Variables
 
@@ -86,7 +87,11 @@ See the .env.example in the axum/ and svelte/ directories
 
 1. Clone the repository
 2. Set up environment variables
-3. Run with Docker Compose:
+3. From the axum/ folder, run:
+   ```
+   sqlx database create && sqlx migrate run
+   ```
+4. Run with Docker Compose:
    ```
    docker compose -f compose.dev.yaml up -d
    ```

@@ -139,7 +139,7 @@
         {/if}
       </div>
     </div>
-    <div class="lg:col-span-1">
+    <div class="relative h-full lg:col-span-1">
       <div class="sticky top-6 space-y-6">
         <div>
           <Input

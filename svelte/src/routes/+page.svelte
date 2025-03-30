@@ -1,25 +1,38 @@
 <script lang="ts">
+  import { H1, H2, IntroCard, UniButton } from "$lib/components";
   import { user } from "$lib/stores";
+  import { Flame, FlameKindling } from "lucide-svelte";
 
   let href = $user.role === "teacher" ? "/t/dashboard" : "/s/dashboard";
 </script>
 
-<div
-  class="flex w-full flex-col items-center space-y-4 p-4 text-center md:p-6 md:text-left lg:p-8"
->
-  <h1
-    class="text-[3rem] leading-[3rem] font-bold md:leading-[4rem] xl:text-[4rem]"
-  >
-    Welcome to Ogonek
+<div class="flex w-full flex-col items-center space-y-4 md:p-6">
+  <h1 class="text-3xl font-bold tracking-tighter md:text-4xl lg:text-6xl">
+    Welcome to <span class="font-serif italic">Ogonek</span>
   </h1>
-  <h2 class="text-xl">
-    See your homework, revisit previous lessons. One place for your English
-  </h2>
-  <div class="mt-8 space-x-2">
-    <a
+  <grid class="grid gap-3 md:grid-cols-3">
+    <IntroCard title="Lessons"
+      >Enjoy the freedom of markdown to keep track of each lesson you have, get
+      control of your money and time investment.</IntroCard
+    >
+    <IntroCard title="Homework"
+      >Upload and download files, set deadlines, create and receive detailed
+      tasks to get going in your studies.</IntroCard
+    >
+    <IntroCard title="Flashcards"
+      >Imagine if Quizlet and Anki had a child – that is what is waiting for you
+      in Ogonek's spaced-repetition study logic.</IntroCard
+    >
+  </grid>
+  <div class="grid grid-cols-2 gap-3">
+    <UniButton
+      Icon={Flame}
+      iconPosition="right"
       href="/auth/login"
-      class="bg-cacao-600 hover:bg-cacao-100 mt-5 w-20 rounded-lg border-2 border-stone-200 px-3 py-2 text-center text-sm text-stone-50 transition-colors hover:text-stone-800 md:px-4 md:py-2 md:text-base dark:border-stone-700 dark:bg-stone-900 dark:hover:bg-stone-600 dark:hover:text-stone-50"
-      >Log In</a
+      variant="secondary">Log In</UniButton
+    >
+    <UniButton Icon={FlameKindling} href="/auth/signup" variant="primary">
+      Sign up</UniButton
     >
   </div>
 </div>

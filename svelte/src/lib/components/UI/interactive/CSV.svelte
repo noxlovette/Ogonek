@@ -2,8 +2,9 @@
   import { Label } from "$lib/components/typography";
   import { notification } from "$lib/stores";
   import type { Card, Deck } from "$lib/types";
-  import { X } from "lucide-svelte";
+  import { UploadCloud, X } from "lucide-svelte";
   import Papa from "papaparse";
+  import UniButton from "../UniButton.svelte";
   interface CSVRow {
     [key: string]: string;
   }
@@ -149,6 +150,7 @@
       <h2 class="text-xl font-bold">Import Cards from CSV</h2>
       <button
         class="text-stone-500 hover:text-stone-700"
+        type="button"
         onclick={closeImportModal}
       >
         <X size={20} />
@@ -164,21 +166,9 @@
         </p>
 
         <div
-          class="flex h-40 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-stone-300 bg-stone-50 px-4 py-6 dark:border-stone-700 dark:bg-stone-900"
+          class="relative flex h-40 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-stone-300 bg-stone-50 px-4 py-6 dark:border-stone-700 dark:bg-stone-900"
         >
-          <svg
-            class="mb-2 h-10 w-10 text-stone-400"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-            />
-          </svg>
+          <UploadCloud class="size-12 opacity-80" />
           <p class="text-stone-600 dark:text-stone-400">
             Drag and drop or click to select
           </p>
@@ -186,7 +176,7 @@
             bind:this={fileInput}
             type="file"
             accept=".csv"
-            class="absolute h-full w-full cursor-pointer opacity-0"
+            class="absolute size-full cursor-pointer opacity-0"
             onchange={handleFileSelect}
           />
         </div>

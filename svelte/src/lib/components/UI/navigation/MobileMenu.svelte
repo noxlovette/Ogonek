@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { slide } from "svelte/transition";
-  import { quintOut } from "svelte/easing";
   import { mobileMenuOpen } from "$lib/stores";
 
   interface MobileMenuProps {

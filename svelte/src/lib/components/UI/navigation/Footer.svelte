@@ -1,7 +1,7 @@
 <footer
-  class="mt-5 w-full items-baseline rounded-t-lg shadow-inner ring ring-stone-200 dark:ring-stone-900"
+  class="mt-12 w-full items-baseline rounded-t-lg shadow-inner ring ring-stone-200 dark:ring-stone-900"
 >
-  <div class="mx-auto flex w-full items-center justify-between px-4 py-3">
+  <div class="mx-auto flex w-full items-center justify-between px-3 py-2">
     <div class="flex flex-col gap-1 text-sm">
       <p class="flex items-center">© 2025 Danila Volkov</p>
       <div class="hidden gap-3 text-stone-500 md:flex">
@@ -18,7 +18,7 @@
         >
       </div>
     </div>
-    <div class="items-center gap-4 flex">
+    <div class="flex items-center gap-4">
       <p class="text-xs md:text-sm">
         For my students <span class="not-italic">💛</span>
       </p>

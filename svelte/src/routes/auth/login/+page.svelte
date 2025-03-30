@@ -18,7 +18,7 @@
 </script>
 
 <div
-  class="flex w-11/12 max-w-md flex-col items-center justify-center space-y-6 rounded-lg bg-white p-9 shadow-sm dark:bg-stone-900"
+  class="flex max-w-md flex-col items-center justify-center space-y-4 rounded-lg bg-white p-5 shadow-sm dark:bg-stone-900"
 >
   <div class="text-center">
     <h2 class="text-cacao-600 text-3xl font-bold dark:text-stone-200">

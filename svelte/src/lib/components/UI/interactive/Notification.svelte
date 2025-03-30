@@ -48,7 +48,7 @@
       <AlertCircle class="size-5" />
     {/if}
 
-    <p class="text-sm font-medium">
+    <p class="text-sm font-medium capitalize">
       {$notification.message}
     </p>
 
