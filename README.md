@@ -1,6 +1,6 @@
-# Ogonek
+# Ogonek 🔥
 
-EduCards is a modern, full-stack web application designed to facilitate teaching and learning through flashcards, task management, and lesson planning. The platform connects teachers and students in a collaborative learning environment.
+A modern, full-stack web application designed to facilitate teaching and learning through flashcards, task management, and lesson planning. The platform connects teachers and students in a collaborative learning environment.
 
 ## Overview
 
@@ -95,6 +95,12 @@ See the .env.example in the axum/ and svelte/ directories
    ```
    docker compose -f compose.dev.yaml up -d
    ```
+
+### Build
+
+```
+SVELTE_IMAGE=ghcr.io/username/svelte-ogonek:tag AXUM_IMAGE=ghcr.io/username/axum-ogonek:tag docker buildx bake -f compose.buildx.yaml --push
+```
 
 ## License
 
