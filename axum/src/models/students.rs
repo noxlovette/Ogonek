@@ -2,6 +2,9 @@ use serde::{Deserialize, Serialize};
 use serde_with::serde_as;
 use time::format_description::well_known::Rfc3339;
 use time::OffsetDateTime;
+use super::cards_decks::DeckBodySmall;
+use super::lessons::LessonBodySmall;
+use super::tasks::TaskBodySmall;
 
 #[serde_with::serde_as]
 #[derive(Debug, Serialize, Deserialize)]
@@ -37,4 +40,14 @@ pub struct AddStudentRequest {
 pub struct UpdateStudentRequest {
     pub markdown: String,
     pub telegram_id: String
+}
+
+
+#[derive(Serialize, Deserialize, Debug)]
+#[serde(rename_all="camelCase")]
+pub struct CompositeStudent {
+    pub student: Student,
+    pub decks: Vec<DeckBodySmall>,
+    pub lessons: Vec<LessonBodySmall>,
+    pub tasks: Vec<TaskBodySmall>
 }

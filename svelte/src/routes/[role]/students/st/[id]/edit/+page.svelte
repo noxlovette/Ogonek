@@ -38,7 +38,7 @@
         </span>
       </div>
 
-      <UniButton variant="secondary" Icon={Ban}>Cancel</UniButton>
+      <UniButton variant="secondary" href="." Icon={Ban}>Cancel</UniButton>
       <UniButton variant="primary" type="submit" Icon={Check}>Save</UniButton>
       <UniButton
         variant="danger"

@@ -1,12 +1,12 @@
 <script lang="ts">
-  import type { Deck } from "$lib/types";
+  import type { Deck, DeckSmall } from "$lib/types";
 
   import { user } from "$lib/stores";
   import CardClickable from "./CardClickable.svelte";
   import { H2 } from "../typography";
 
   interface Props {
-    deck: Deck;
+    deck: Deck | DeckSmall;
   }
 
   let { deck }: Props = $props();

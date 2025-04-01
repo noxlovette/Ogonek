@@ -1,38 +1,70 @@
 <script lang="ts">
-  import { H1, UniButton } from "$lib/components";
-  import type { Student } from "$lib/types";
+  import {
+    DeckCard,
+    GridCell,
+    H1,
+    H3,
+    HeaderEmbellish,
+    LessonCard,
+    TaskCard,
+    UniButton,
+  } from "$lib/components";
+  import H2 from "$lib/components/typography/H2.svelte";
   import type { PageData } from "./$types";
   import { Pencil } from "lucide-svelte";
   let { data }: { data: PageData } = $props();
 
-  const { student, rendered }: { student: Student; rendered: String } = data;
+  const { student, rendered, studentTasks, studentLessons, studentDecks } =
+    data;
 </script>
 
 <svelte:head>
   <title>{student.name}</title>
 </svelte:head>
-<div class="flex items-baseline space-x-4">
-  <H1>{student.name}</H1>
+<HeaderEmbellish>
+  <div>
+    <H1>{student.name}</H1>
+    <H3>
+      {student.email}
+    </H3>
+  </div>
 
   <UniButton
     Icon={Pencil}
     href="/t/students/st/{student.id}/edit"
     variant="outline">Edit</UniButton
   >
-</div>
-<div class="flex space-x-4">
-  <div class="space-y-2">
-    <p class="block font-medium text-stone-700">Email</p>
-    <h3 class="min-w-48">
-      {student.email}
-    </h3>
-  </div>
-</div>
-<h3 class="text-2xl font-bold">Notes</h3>
-{#if student.markdown}
-  <div class="markdown">
-    {@html rendered}
-  </div>
-{:else}
-  <p>No notes yet</p>
-{/if}
+</HeaderEmbellish>
+<grid class="grid gap-4 md:grid-cols-2">
+  <GridCell>
+    <H2>Decks</H2>
+    {#each studentDecks as deck}
+      <DeckCard {deck}></DeckCard>
+    {/each}
+  </GridCell>
+
+  <GridCell>
+    <H2>Lessons</H2>
+    {#each studentLessons as lesson}
+      <LessonCard {lesson}></LessonCard>
+    {/each}
+  </GridCell>
+
+  <GridCell>
+    <H2>Tasks</H2>
+    {#each studentTasks as task}
+      <TaskCard {task}></TaskCard>
+    {/each}
+  </GridCell>
+
+  <GridCell>
+    <H2>Notes</H2>
+    {#if student.markdown}
+      <div class="">
+        {@html rendered}
+      </div>
+    {:else}
+      <p>No notes yet</p>
+    {/if}
+  </GridCell>
+</grid>

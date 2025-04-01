@@ -75,6 +75,16 @@ pub struct DeckBody {
     pub created_at: OffsetDateTime,
 }
 
+#[serde_with::serde_as]
+#[derive(Serialize, Deserialize, Debug, FromRow)]
+#[serde(rename_all = "camelCase")]
+pub struct DeckBodySmall {
+    pub id: String,
+    pub name: String,
+    pub description: Option<String>,
+}
+
+
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct DeckCreateBody {

@@ -104,6 +104,19 @@ export interface Student {
   telegramId: string;
 }
 
+export interface CompositeStudent {
+  student: Student;
+  tasks: TaskSmall[];
+  lessons: LessonSmall[];
+  decks: DeckSmall[];
+}
+
+export interface DeckSmall {
+  id: string;
+  name: string;
+  description: string;
+}
+
 export interface BaseTableItem {
   id: string;
 }

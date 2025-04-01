@@ -227,13 +227,9 @@
             >
               {#each config.columns as column}
                 <th
-                  class="px-6 py-4 text-left text-sm font-medium whitespace-nowrap text-stone-700 dark:text-stone-300"
+                  class="px-4 py-2 text-left text-sm font-semibold whitespace-nowrap text-stone-700 dark:text-stone-300"
                 >
-                  <div
-                    class="hover:text-cacao-600 dark:hover:text-cacao-400 inline-flex cursor-pointer items-center gap-1.5"
-                  >
-                    {column.label}
-                  </div>
+                  {column.label}
                 </th>
               {/each}
             </tr>
@@ -242,16 +238,18 @@
             {#each items as item (item.id)}
               <tr
                 onclick={() => goto(`${href}/${item.id}`)}
-                class="group hover:bg-cacao-50/30 dark:hover:bg-cacao-900/10 cursor-pointer transition-all duration-300 ease-in-out"
+                class="group hover:bg-cacao-50/30 dark:hover:bg-cacao-900/10 max-h-24 cursor-pointer transition-all duration-300 ease-in-out"
                 in:fade|global={{ duration: 300, delay: 50 }}
               >
                 {#each config.columns as column, i}
                   <td
-                    class="px-6 py-4 text-sm text-stone-600 transition-all duration-200 ease-in-out group-hover:text-stone-900 dark:text-stone-400 dark:group-hover:text-stone-200"
+                    class="max-h-24 px-4 py-2 text-sm text-stone-600 transition-all duration-200 ease-in-out group-hover:text-stone-900 dark:text-stone-400 dark:group-hover:text-stone-200"
                   >
-                    {column.formatter
-                      ? column.formatter(item[column.key])
-                      : item[column.key]}
+                    <div class="max-h-20 overflow-hidden text-ellipsis">
+                      {column.formatter
+                        ? column.formatter(item[column.key])
+                        : item[column.key]}
+                    </div>
                   </td>
                 {/each}
               </tr>

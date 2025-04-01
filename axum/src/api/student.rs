@@ -1,19 +1,22 @@
 use crate::auth::jwt::Claims;
+use crate::models::cards_decks::DeckBodySmall;
+use crate::models::students::CompositeStudent;
+use crate::models::tasks::TaskBodySmall;
 use super::error::APIError;
 use crate::schema::AppState;
 use crate::models::students::UpdateStudentRequest;
 use crate::models::students::Student;
+use crate::models::lessons::LessonBodySmall;
 use axum::extract::Json;
 use axum::extract::State;
 use axum::http::StatusCode;
 use axum::extract::Path;
 
 pub async fn upsert_student(
-    claims: Claims, // from auth middleware
+    claims: Claims,
     State(state): State<AppState>,
     Path(id): Path<String>,
 ) -> Result<StatusCode, APIError> {
-    // Insert the relationship
 
     if claims.role != "teacher" {
         return Ok(StatusCode::UNAUTHORIZED);
@@ -91,7 +94,10 @@ pub async fn fetch_student(
     claims: Claims,
     State(state): State<AppState>,
     Path(id): Path<String>,
-) -> Result<Json<Student>, APIError> {
+) -> Result<Json<CompositeStudent>, APIError> {
+
+    let mut tx = state.db.begin().await?;
+
     let student = sqlx::query_as!(
         Student,
         r#"
@@ -103,10 +109,55 @@ pub async fn fetch_student(
         claims.sub,
         id,
     )
-    .fetch_one(&state.db)
+    .fetch_one(&mut *tx)
     .await?;
 
-    Ok(Json(student))
+    let decks = sqlx::query_as!(
+        DeckBodySmall,
+        r#"
+        SELECT id, name, description FROM decks
+        WHERE (created_by = $1 AND assignee = $2)
+        LIMIT 2
+        "#,
+        claims.sub,
+        student.id
+    )
+    .fetch_all(&mut *tx)
+    .await?;
+
+    let lessons = sqlx::query_as!(
+        LessonBodySmall,
+        r#"
+        SELECT id, title, topic, markdown, created_at
+        FROM lessons
+        WHERE (created_by = $1 AND assignee = $2)
+        ORDER BY created_at desc
+        LIMIT 2
+        "#,
+        claims.sub,
+        student.id,
+    )
+    .fetch_all(&mut *tx)
+    .await?;
+
+    let tasks = sqlx::query_as!(
+        TaskBodySmall,
+        r#"
+        SELECT id, title, markdown, completed, due_date
+        FROM tasks
+        WHERE (created_by = $1 AND assignee = $2 AND completed = false)
+        LIMIT 2
+        "#,
+        claims.sub,
+        student.id,
+    )
+    .fetch_all(&mut *tx)
+    .await?;
+
+    tx.commit().await?;
+    
+
+    Ok(Json(CompositeStudent {student, decks, lessons, tasks}))
 }
 
 pub async fn list_students(
@@ -120,6 +171,7 @@ pub async fn list_students(
         FROM "user" u
         INNER JOIN teacher_student ts ON u.id = ts.student_id
         WHERE ts.teacher_id = $1 AND ts.status = 'active'
+        ORDER BY u.name ASC
         "#,
         claims.sub
     )

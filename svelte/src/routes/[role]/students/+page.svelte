@@ -25,6 +25,9 @@
 
 <HeaderEmbellish>
   <H1>Students</H1>
+  <UniButton type="submit" variant="primary" Icon={PersonStanding}
+    >Invite Students</UniButton
+  >
 </HeaderEmbellish>
 <Table config={studentConfig} {href} items={students} {students} />
 <form
@@ -48,11 +51,7 @@
       },
     },
   })}
->
-  <UniButton type="submit" variant="ghost" Icon={PersonStanding}
-    >Invite Students</UniButton
-  >
-</form>
+></form>
 
 <svelte:head>
   <title>Students</title>
