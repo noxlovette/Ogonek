@@ -7,6 +7,7 @@
     UniButton,
     GreySpan,
     HeaderEmbellish,
+    EmptySpace,
   } from "$lib/components";
   import { invalidate } from "$app/navigation";
 
@@ -109,10 +110,8 @@
   </div>
 </HeaderEmbellish>
 
-<!-- Main content area with properly structured grid layout for sticky sidebar -->
 <div class="grid gap-8 lg:grid-cols-3">
-  <!-- Cards section - takes up 2 columns on large screens -->
-  <div class="space-y-6 lg:col-span-2">
+  <div class="lg:col-span-2">
     <div class="grid gap-4 sm:grid-cols-1 md:grid-cols-2">
       {#each cards as card (card.id)}
         <WordCard bind:flippedCards {card} {toggleCard} />
@@ -120,16 +119,14 @@
     </div>
 
     {#if cards.length === 0}
-      <div
-        class="flex h-40 flex-col items-center justify-center rounded-lg border-2 border-dashed border-stone-200 p-6 text-center dark:border-stone-700"
-      >
+      <EmptySpace>
         <p class="text-lg text-stone-500 dark:text-stone-400">
           No flashcards available
         </p>
         <p class="mt-2 text-sm text-stone-400 dark:text-stone-500">
           Add some cards by editing this deck
         </p>
-      </div>
+      </EmptySpace>
     {/if}
   </div>
 

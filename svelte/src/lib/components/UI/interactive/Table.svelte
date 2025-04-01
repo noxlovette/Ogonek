@@ -137,7 +137,6 @@
     {/if}
   </div>
 
-  <!-- Table Container -->
   <div
     class="overflow-hidden rounded-lg border border-stone-200 bg-white shadow-sm dark:border-stone-800 dark:bg-stone-950"
   >

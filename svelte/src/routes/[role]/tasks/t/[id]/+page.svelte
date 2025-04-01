@@ -1,5 +1,11 @@
 <script lang="ts">
-  import { H1, H3, HeaderEmbellish, UniButton } from "$lib/components";
+  import {
+    EmptySpace,
+    H1,
+    H3,
+    HeaderEmbellish,
+    UniButton,
+  } from "$lib/components";
   import { user } from "$lib/stores";
   import { page } from "$app/state";
   import { enhance } from "$app/forms";
@@ -68,12 +74,18 @@
   </div>
 </HeaderEmbellish>
 
-<div class="markdown">
-  {@html rendered}
-</div>
+<grid class="grid gap-4 md:grid-cols-4">
+  <div class="markdown md:col-span-3">
+    {@html rendered}
+  </div>
 
-<div class="flex space-x-4">
-  {#each files as file}
-    <FileTaskCard {file} />
-  {/each}
-</div>
+  {#if files.length > 0}
+    <div class="flex w-full flex-col items-center space-y-2">
+      {#each files as file}
+        <FileTaskCard {file} />
+      {/each}
+    </div>
+  {:else}
+    <EmptySpace>No files attached</EmptySpace>
+  {/if}
+</grid>

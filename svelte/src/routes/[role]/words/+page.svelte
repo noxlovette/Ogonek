@@ -16,6 +16,7 @@
   import type { TableConfig, Deck } from "$lib/types";
   import {
     ArrowBigRight,
+    BookOpen,
     Cat,
     CheckCheck,
     PlusCircle,
@@ -108,7 +109,7 @@
       >
     {:else}
       <div
-        class="bg-cacao-50 mx-auto flex h-16 w-16 items-center justify-center rounded-full dark:bg-stone-800"
+        class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-stone-200 dark:bg-stone-800"
       >
         <Cat />
       </div>
@@ -117,11 +118,8 @@
 </HeaderEmbellish>
 
 {#if role === "s"}
-  <!-- Decks Management Section -->
-  <div>
-    <div
-      class="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between"
-    >
+  <div class="space-y-4">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
       <H2>Your Decks</H2>
 
       <form
@@ -152,20 +150,13 @@
         {/each}
       </div>
     {:else}
-      <div class="rounded-lg bg-stone-50 py-12 text-center dark:bg-stone-800">
+      <div
+        class="rounded-lg bg-stone-50 py-12 text-center shadow-sm ring ring-stone-200 dark:bg-stone-800 dark:ring-stone-900"
+      >
         <div
-          class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-stone-100 dark:bg-stone-700"
+          class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-stone-200 dark:bg-stone-700"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-8 w-8 text-stone-500 dark:text-stone-400"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-          >
-            <path
-              d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z"
-            />
-          </svg>
+          <BookOpen />
         </div>
         <p class="mb-2 text-lg font-medium text-stone-800 dark:text-stone-300">
           No decks yet

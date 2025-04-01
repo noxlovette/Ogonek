@@ -1,3 +1,4 @@
+export { default as EmptySpace } from "./EmptySpace.svelte";
 export { default as GreySpan } from "./GreySpan.svelte";
 export { default as GridCell } from "./GridCell.svelte";
 export { default as H1 } from "./H1.svelte";
