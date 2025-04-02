@@ -5,6 +5,7 @@
     H1,
     AssigneeSelector,
     UniButton,
+    HeaderEmbellish,
     Label,
   } from "$lib/components";
   import type { PageData } from "./$types";
@@ -27,18 +28,20 @@
     },
   })}
 >
-  <div class="flex items-baseline space-x-4">
+  <HeaderEmbellish>
     <H1>Edit Lesson</H1>
-    <UniButton variant="secondary" Icon={Ban} href=".">Cancel</UniButton>
-    <UniButton variant="primary" type="submit" Icon={Check}>Save</UniButton>
-    <UniButton
-      variant="danger"
-      formaction="?/delete"
-      Icon={Trash2}
-      confirmText={lesson.title}
-      confirmTitle="Delete Lesson">Delete</UniButton
-    >
-  </div>
+    <div class="flex items-center space-x-3">
+      <UniButton variant="secondary" Icon={Ban} href=".">Cancel</UniButton>
+      <UniButton variant="primary" type="submit" Icon={Check}>Save</UniButton>
+      <UniButton
+        variant="danger"
+        formaction="?/delete"
+        Icon={Trash2}
+        confirmText={lesson.title}
+        confirmTitle="Delete Lesson">Delete</UniButton
+      >
+    </div>
+  </HeaderEmbellish>
 
   <input type="hidden" name="id" value={lesson.id} />
   <input type="hidden" name="markdown" value={markdown} />

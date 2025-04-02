@@ -14,6 +14,10 @@ pub fn deck_routes() -> Router<AppState> {
                 .post(learning::reset_deck_progress)
         )
         .route(
+            "/public",
+            get(decks::fetch_deck_list_public)
+        )
+        .route(
             "/learn/subscribe/{deck_id}",
             post(decks::subscribe_to_deck).delete(decks::unsubscribe_from_deck)
         )

@@ -6,6 +6,7 @@
     FlashCardEdit,
     AssigneeSelector,
     CSV,
+    HeaderEmbellish,
   } from "$lib/components";
 
   import { enhanceForm } from "$lib/utils";
@@ -56,8 +57,7 @@
 <svelte:head>
   <title>{`Edit ${deck.name} | Flashcards`}</title>
 </svelte:head>
-
-<div class="flex items-center justify-between">
+<HeaderEmbellish>
   <H1>{deck.name}</H1>
   <div class="hidden md:block">
     <div class="flex items-center gap-3">
@@ -67,8 +67,7 @@
       </span>
     </div>
   </div>
-</div>
-
+</HeaderEmbellish>
 <form
   method="POST"
   action="?/update"

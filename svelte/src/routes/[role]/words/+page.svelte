@@ -11,16 +11,14 @@
   } from "$lib/components";
   import { enhance } from "$app/forms";
   import { enhanceForm } from "$lib/utils";
-  import { fade } from "svelte/transition";
   import { page } from "$app/state";
   import type { TableConfig, Deck } from "$lib/types";
   import {
     ArrowBigRight,
     BookOpen,
     Cat,
-    CheckCheck,
     PlusCircle,
-    Ticket,
+    ShoppingBag,
   } from "lucide-svelte";
   import {
     searchTerm,
@@ -99,7 +97,10 @@
       {/if}
     </H3>
   </div>
-  <div>
+  <div class="flex space-x-4">
+    <UniButton Icon={ShoppingBag} variant="outline" href="words/marketplace"
+      >Marketplace</UniButton
+    >
     {#if data.cards?.length}
       <UniButton
         variant="primary"
@@ -116,7 +117,6 @@
     {/if}
   </div>
 </HeaderEmbellish>
-
 {#if role === "s"}
   <div class="space-y-4">
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">

@@ -1,7 +1,7 @@
 use crate::auth::jwt::Claims;
 use crate::models::meta::CreationId;
 use crate::schema::AppState;
-use crate::models::cards_decks::{DeckBody, DeckCreateBody, CardBody, DeckWithCardsAndSubscription, DeckWithCardsUpdate, DeckFilterParams};
+use crate::models::cards_decks::{CardBody, DeckBody, DeckBodySmall, DeckCreateBody, DeckFilterParams, DeckWithCardsAndSubscription, DeckWithCardsUpdate};
 use axum::extract::Json;
 use axum::extract::Path;
 use axum::extract::State;
@@ -143,6 +143,24 @@ pub async fn fetch_deck_list(
     
     let decks = query_builder
         .build_query_as::<DeckBody>()
+        .fetch_all(&state.db)
+        .await?;
+    
+    Ok(Json(decks))
+}
+
+
+pub async fn fetch_deck_list_public(
+    State(state): State<AppState>
+) -> Result<Json<Vec<DeckBodySmall>>, APIError> {
+    let decks = sqlx::query_as!(
+     DeckBodySmall,
+     r#"
+     SELECT id, name, description
+     FROM decks
+     WHERE visibility = 'public'
+     "#   
+    )
         .fetch_all(&state.db)
         .await?;
     
