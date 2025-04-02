@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "\n        INSERT INTO cards (id, deck_id, front, back, media_url)\n        VALUES ($1, $2, $3, $4, $5)\n        ON CONFLICT (id) DO UPDATE\n        SET \n            front = EXCLUDED.front,\n            back = EXCLUDED.back,\n            deck_id = EXCLUDED.deck_id,\n            media_url = EXCLUDED.media_url\n        RETURNING *\n        ",
+  "query": "\n        INSERT INTO cards (id, deck_id, front, back, media_url)\n        VALUES ($1, $2, $3, $4, $5)\n        ON CONFLICT (id) DO UPDATE\n        SET\n            front = EXCLUDED.front,\n            back = EXCLUDED.back,\n            deck_id = EXCLUDED.deck_id,\n            media_url = EXCLUDED.media_url\n        RETURNING *\n        ",
   "describe": {
     "columns": [
       {
@@ -52,5 +52,5 @@
       false
     ]
   },
-  "hash": "7e273c035a719629e2f07876f9f17bb13360a85783d08b75dc49f6589cf5b1f4"
+  "hash": "f91137dec5ee97746d9c68537d5b3ffb816e603cd0361617156b85d5b2a7fbd4"
 }

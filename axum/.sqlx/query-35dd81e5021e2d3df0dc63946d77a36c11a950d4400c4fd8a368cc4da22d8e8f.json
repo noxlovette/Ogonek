@@ -1,0 +1,23 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        SELECT c.id FROM cards c\n        LEFT JOIN card_progress cp\n            ON cp.card_id = c.id\n            AND cp.user_id = $1\n        WHERE c.deck_id = $2\n        AND cp.id IS NULL\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Varchar"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Text"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "35dd81e5021e2d3df0dc63946d77a36c11a950d4400c4fd8a368cc4da22d8e8f"
+}

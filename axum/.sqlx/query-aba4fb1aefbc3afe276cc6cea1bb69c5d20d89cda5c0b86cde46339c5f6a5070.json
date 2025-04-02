@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "\n        SELECT id, name, description, visibility, assignee, created_by, created_at FROM decks \n        WHERE id = $1 AND (\n            created_by = $2\n            OR assignee = $2\n            OR visibility = 'public'\n        )\n        ",
+  "query": "\n        SELECT id, name, description, visibility, assignee, created_by, created_at FROM decks\n        WHERE id = $1 AND (\n            created_by = $2\n            OR assignee = $2\n            OR visibility = 'public'\n        )\n        ",
   "describe": {
     "columns": [
       {
@@ -55,5 +55,5 @@
       false
     ]
   },
-  "hash": "01bd3e9aea5f8b62bbd88d90dd6cb46454677b0eb8f3ee0acd3c078ccced5e89"
+  "hash": "aba4fb1aefbc3afe276cc6cea1bb69c5d20d89cda5c0b86cde46339c5f6a5070"
 }
