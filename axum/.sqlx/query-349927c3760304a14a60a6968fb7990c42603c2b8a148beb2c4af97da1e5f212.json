@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        UPDATE card_progress cp\n        SET\n            review_count = 0,\n            ease_factor = 2.5,\n            interval = 1,\n            last_reviewed = NULL,\n            due_date = CURRENT_TIMESTAMP\n        FROM cards c\n        WHERE cp.card_id = c.id\n        AND c.deck_id = $1\n        AND cp.user_id = $2\n        ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Text"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "349927c3760304a14a60a6968fb7990c42603c2b8a148beb2c4af97da1e5f212"
+}

@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "\n        SELECT \n            cp.*,\n            c.front,\n            c.back\n        FROM card_progress cp\n        JOIN cards c ON c.id = cp.card_id\n        WHERE cp.user_id = $1 \n            AND (cp.due_date <= CURRENT_TIMESTAMP OR cp.review_count = 0)\n        ORDER BY cp.due_date ASC\n        ",
+  "query": "\n        SELECT\n            cp.*,\n            c.front,\n            c.back,\n            c.media_url\n        FROM card_progress cp\n        JOIN cards c ON c.id = cp.card_id\n        WHERE cp.user_id = $1\n            AND (cp.due_date <= CURRENT_TIMESTAMP OR cp.review_count = 0)\n        ORDER BY cp.due_date ASC\n        ",
   "describe": {
     "columns": [
       {
@@ -52,6 +52,11 @@
         "ordinal": 9,
         "name": "back",
         "type_info": "Text"
+      },
+      {
+        "ordinal": 10,
+        "name": "media_url",
+        "type_info": "Text"
       }
     ],
     "parameters": {
@@ -69,8 +74,9 @@
       false,
       false,
       false,
-      false
+      false,
+      true
     ]
   },
-  "hash": "e0cc66b0889424082106c031f5775010b17c1f1cfbaa7bda69281fe4304b7241"
+  "hash": "db115262ac25eb4f73ab2f42e1fe5c21b613fcc946f386dae14e480511df7491"
 }

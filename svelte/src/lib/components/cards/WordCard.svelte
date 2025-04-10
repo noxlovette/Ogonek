@@ -18,6 +18,8 @@
         ? "text-base"
         : "text-lg";
   };
+
+  $inspect(card);
 </script>
 
 <div

@@ -1,26 +1,27 @@
-use axum::extract::{Json, State, Path};
-use crate::auth::jwt::Claims;
-use crate::schema::AppState;
-use crate::models::cards_decks::{CardProgress, CardProgressWithFields, ReviewPayload};
 use super::error::APIError;
-use axum::http::StatusCode;
-use time::{OffsetDateTime, Duration};
+use crate::auth::jwt::Claims;
+use crate::models::cards_decks::{CardProgress, CardProgressWithFields, ReviewPayload};
+use crate::schema::AppState;
 use crate::tools::sm2::SM2Calculator;
+use axum::extract::{Json, Path, State};
+use axum::http::StatusCode;
+use time::{Duration, OffsetDateTime};
 
 pub async fn fetch_due_cards(
     State(state): State<AppState>,
-    claims: Claims
+    claims: Claims,
 ) -> Result<Json<Vec<CardProgressWithFields>>, APIError> {
     let progress_list = sqlx::query_as!(
         CardProgressWithFields,
         r#"
-        SELECT 
+        SELECT
             cp.*,
             c.front,
-            c.back
+            c.back,
+            c.media_url
         FROM card_progress cp
         JOIN cards c ON c.id = cp.card_id
-        WHERE cp.user_id = $1 
+        WHERE cp.user_id = $1
             AND (cp.due_date <= CURRENT_TIMESTAMP OR cp.review_count = 0)
         ORDER BY cp.due_date ASC
         "#,
@@ -39,7 +40,7 @@ pub async fn update_card_progress(
     Json(payload): Json<ReviewPayload>,
 ) -> Result<StatusCode, APIError> {
     let calculator = SM2Calculator::default();
-    
+
     // Get current progress without transaction
     let current_progress = sqlx::query_as!(
         CardProgress,
@@ -120,14 +121,14 @@ pub async fn reset_deck_progress(
     sqlx::query!(
         r#"
         UPDATE card_progress cp
-        SET 
+        SET
             review_count = 0,
             ease_factor = 2.5,
             interval = 1,
             last_reviewed = NULL,
             due_date = CURRENT_TIMESTAMP
         FROM cards c
-        WHERE cp.card_id = c.id 
+        WHERE cp.card_id = c.id
         AND c.deck_id = $1
         AND cp.user_id = $2
         "#,
@@ -138,6 +139,6 @@ pub async fn reset_deck_progress(
     .await?;
 
     tx.commit().await?;
-    
+
     Ok(StatusCode::OK)
 }

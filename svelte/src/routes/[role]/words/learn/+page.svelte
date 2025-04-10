@@ -15,7 +15,7 @@
 
   let isComplete = $state(data.cards.length === 0);
   let showAnswer = $state(false);
-
+  $inspect(currentCard);
   const nextCard = async () => {
     if (currentIndex < data.cards.length - 1) {
       console.debug("not invalidated");
@@ -136,6 +136,9 @@
             <div class="prose dark:prose-invert max-w-none">
               {currentCard.back}
             </div>
+            {#if currentCard.mediaUrl}
+              <img src={currentCard.mediaUrl} alt={currentCard.front} />
+            {/if}
           </div>
         {/if}
       </div>

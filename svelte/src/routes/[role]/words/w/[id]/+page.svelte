@@ -12,16 +12,9 @@
   import { invalidate } from "$app/navigation";
 
   import { notification, user } from "$lib/stores";
-  import {
-    Pencil,
-    Shapes,
-    Share,
-    UserRoundMinus,
-    UserRoundPlus,
-  } from "lucide-svelte";
+  import { Pencil, Share, UserRoundMinus, UserRoundPlus } from "lucide-svelte";
   import { enhanceForm } from "$lib/utils";
 
-  let isSubmitting = $state(false);
   let { data } = $props();
 
   let cards = $derived(data.cards);

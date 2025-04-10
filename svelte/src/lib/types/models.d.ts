@@ -183,6 +183,7 @@ export interface CardProgress {
   interval: number;
   front: string;
   back: string;
+  mediaUrl: string;
 }
 
 export interface PaginatedResponse<T> {

@@ -27,7 +27,7 @@ pub struct CardBody {
 pub struct CardCreateBody {
     pub front: String,
     pub back: String,
-    pub media_url: Option<String>
+    pub media_url: Option<String>,
 }
 
 #[derive(Deserialize, Debug)]
@@ -36,7 +36,7 @@ pub struct CardUpdate {
     pub id: Option<String>,
     pub front: Option<String>,
     pub back: Option<String>,
-    pub media_url: Option<String>
+    pub media_url: Option<String>,
 }
 
 #[derive(Deserialize, Serialize, Debug)]
@@ -58,7 +58,7 @@ pub struct DeckWithCards {
 #[serde(rename_all = "camelCase")]
 pub struct DeckWithCardsUpdate {
     pub deck: DeckUpdate,
-    pub cards: Vec<CardUpdate>
+    pub cards: Vec<CardUpdate>,
 }
 
 #[serde_with::serde_as]
@@ -84,14 +84,13 @@ pub struct DeckBodySmall {
     pub description: Option<String>,
 }
 
-
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct DeckCreateBody {
     pub name: String,
     pub description: Option<String>,
     pub visibility: Option<String>,
-    pub assignee: Option<String>
+    pub assignee: Option<String>,
 }
 
 #[derive(Deserialize, Debug)]
@@ -100,7 +99,7 @@ pub struct DeckUpdate {
     pub name: Option<String>,
     pub description: Option<String>,
     pub visibility: Option<String>,
-    pub assignee: Option<String>
+    pub assignee: Option<String>,
 }
 
 use validator::Validate;
@@ -120,7 +119,8 @@ pub struct CardProgressWithFields {
     #[validate(range(min = 1))]
     pub interval: i32,
     pub front: String,
-    pub back: String
+    pub back: String,
+    pub media_url: Option<String>,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, Validate)]
@@ -136,7 +136,7 @@ pub struct CardProgress {
     #[validate(range(min = 1.3, max = 5.0))]
     pub ease_factor: f64,
     #[validate(range(min = 1))]
-    pub interval: i32
+    pub interval: i32,
 }
 
 #[derive(Debug, Deserialize, Validate)]

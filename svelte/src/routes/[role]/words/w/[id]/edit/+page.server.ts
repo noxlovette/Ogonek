@@ -22,7 +22,7 @@ export const actions = {
         id: formData.get(`cards[${index}][id]`) || null,
         front: formData.get(`cards[${index}][front]`),
         back: formData.get(`cards[${index}][back]`),
-        media_url: formData.get(`cards[${index}][media_url]`) || null,
+        mediaUrl: formData.get(`cards[${index}][media_url]`) || null,
       });
       index++;
     }
