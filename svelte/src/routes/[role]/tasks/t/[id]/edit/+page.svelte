@@ -15,6 +15,7 @@
     GreySpan,
   } from "$lib/components";
   import type { PageData } from "./$types";
+  import Multipart from "$lib/components/UI/interactive/Multipart.svelte";
 
   let { data }: { data: PageData } = $props();
   let { task, files } = data;
@@ -99,7 +100,7 @@
   </div>
 </form>
 
-<div class="flex space-x-4">
+<div class="grid grid-cols-3 space-x-4">
   <Editor bind:markdownContent={markdown} />
-  <Uploader />
+  <Multipart taskId={task.id} />
 </div>

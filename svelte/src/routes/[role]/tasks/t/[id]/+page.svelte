@@ -14,6 +14,7 @@
   import { CheckSquare, Square, Pencil } from "lucide-svelte";
   import { enhanceForm } from "$lib/utils";
   import { formatDate } from "@noxlovette/svarog";
+  import Multipart from "$lib/components/UI/interactive/Multipart.svelte";
 
   let { data } = $props();
   const { files, rendered } = $derived(data);
@@ -94,7 +95,7 @@
     {#if page.params.role === "s"}
       <div class="flex w-full flex-col space-y-2">
         <Label>Upload your HW here</Label>
-        <Uploader />
+        <Multipart />
       </div>
     {/if}
   </div>

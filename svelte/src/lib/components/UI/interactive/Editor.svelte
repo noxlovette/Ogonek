@@ -18,7 +18,7 @@
   });
 </script>
 
-<div class="flex size-full flex-col gap-4">
+<div class="col-span-2 flex size-full flex-col gap-4">
   <!-- Added h-full here -->
   <div id="header" class="flex space-x-4">
     <h1 class="text-2xl font-bold">Markdown</h1>

@@ -16,6 +16,7 @@ pub struct File {
     pub is_folder: bool,
     pub parent_id: Option<String>,
     pub owner_id: String,
+    pub upload_status: Option<String>,
     pub visibility: String,
     #[serde_as(as = "Rfc3339")]
     pub created_at: OffsetDateTime,
