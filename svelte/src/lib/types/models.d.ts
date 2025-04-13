@@ -24,6 +24,7 @@ export interface FileSmall {
   s3Key: string;
   mimeType?: string;
   size: number;
+  ownerId: string;
 }
 
 export interface File {

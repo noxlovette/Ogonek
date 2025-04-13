@@ -3,19 +3,20 @@
     EmptySpace,
     H1,
     H3,
+    Label,
+    Uploader,
     HeaderEmbellish,
     UniButton,
+    FileTaskCard,
   } from "$lib/components";
-  import { user } from "$lib/stores";
   import { page } from "$app/state";
   import { enhance } from "$app/forms";
-  import { Download, CheckSquare, Square, Pencil } from "lucide-svelte";
+  import { CheckSquare, Square, Pencil } from "lucide-svelte";
   import { enhanceForm } from "$lib/utils";
   import { formatDate } from "@noxlovette/svarog";
-  import FileTaskCard from "$lib/components/cards/FileTaskCard.svelte";
 
   let { data } = $props();
-  const { task, files, rendered } = $derived(data);
+  const { files, rendered } = $derived(data);
 
   let role = $derived(page.params.role);
   let completed = $state(data.task.completed);
@@ -55,9 +56,9 @@
         Icon={completed ? CheckSquare : Square}
       >
         {#if completed}
-          <p class="hidden md:block">Completed</p>
+          <p class="">Completed</p>
         {:else}
-          <p class="hidden md:block">Mark as Completed</p>
+          <p class="">Done</p>
         {/if}
       </UniButton>
 
@@ -79,13 +80,22 @@
     {@html rendered}
   </div>
 
-  {#if files.length > 0}
-    <div class="flex w-full flex-col items-center space-y-2">
-      {#each files as file}
-        <FileTaskCard {file} />
-      {/each}
-    </div>
-  {:else}
-    <EmptySpace>No files attached</EmptySpace>
-  {/if}
+  <div class="flex flex-col items-center space-y-2">
+    {#if files.length > 0}
+      <div class="flex w-full flex-col space-y-2">
+        <Label>Attached Files</Label>
+        {#each files as file}
+          <FileTaskCard {file} />
+        {/each}
+      </div>
+    {:else}
+      <EmptySpace>No files attached</EmptySpace>
+    {/if}
+    {#if page.params.role === "s"}
+      <div class="flex w-full flex-col space-y-2">
+        <Label>Upload your HW here</Label>
+        <Uploader />
+      </div>
+    {/if}
+  </div>
 </grid>

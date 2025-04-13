@@ -27,3 +27,7 @@ export type EmptyResponse = Record<string, never>;
 export interface UploadResponse {
   filePath: string;
 }
+
+export interface URLResponse {
+  url: string;
+}

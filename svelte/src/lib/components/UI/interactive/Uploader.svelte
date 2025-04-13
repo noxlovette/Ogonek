@@ -1,19 +1,15 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
   import { notification } from "$lib/stores";
-  import type { FileSmall } from "$lib/types";
-  import { enhanceForm } from "$lib/utils";
-  import { Upload, Loader2, Check, Trash2 } from "lucide-svelte";
+  import { Upload, Loader2, Check } from "lucide-svelte";
+
   import { fade, scale } from "svelte/transition";
-  import UniButton from "../UniButton.svelte";
 
   let isDragging = $state(false);
   let isUploading = $state(false);
   let isSuccess = $state(false);
   let fileName = $state("");
   let fileInput: HTMLInputElement;
-
-  let { files }: { files: FileSmall[] } = $props();
 
   function handleDragOver(e: DragEvent) {
     e.preventDefault();
@@ -28,9 +24,17 @@
     e.preventDefault();
     isDragging = false;
     const file = e.dataTransfer?.files[0];
-    if (file) handleFileSelect(file);
-  }
+    if (file) {
+      handleFileSelect(file);
 
+      // Create a DataTransfer object and add the file
+      const dataTransfer = new DataTransfer();
+      dataTransfer.items.add(file);
+
+      // Assign the files to the input element
+      fileInput.files = dataTransfer.files;
+    }
+  }
   function handleFileSelect(file: File) {
     fileName = file.name;
   }
@@ -91,13 +95,13 @@
       role="button"
       tabindex="0"
       aria-label="File upload area"
-      class="relative flex h-full flex-1 cursor-pointer
+      class="relative flex flex-1 cursor-pointer
 			 flex-col items-center justify-center rounded-lg border-2
 			 border-dashed p-12 transition-colors duration-200
 			 {isSuccess ? 'border-green-500' : ''}
 			 {isDragging
         ? 'border-cacao-700 bg-cacao-100'
-        : 'border-stone-300 bg-stone-50 hover:border-stone-400 dark:border-stone-800 dark:bg-stone-900 dark:hover:border-stone-700'}"
+        : 'border-stone-200 hover:border-stone-400 dark:border-stone-800 dark:bg-stone-900 dark:hover:border-stone-700'}"
     >
       <input
         bind:this={fileInput}
@@ -156,21 +160,4 @@
       {/if}
     </button>
   </form>
-
-  {#each files as file}
-    <form
-      action="?/deleteFile"
-      method="POST"
-      use:enhance={enhanceForm({
-        messages: {
-          success: "Deleted File",
-        },
-      })}
-    >
-      <input type="hidden" value={file.id} name="fileId" />
-      <UniButton type="submit" Icon={Trash2} fullWidth={true} variant="danger">
-        {file.name.slice(0, 15)}
-      </UniButton>
-    </form>
-  {/each}
 </div>

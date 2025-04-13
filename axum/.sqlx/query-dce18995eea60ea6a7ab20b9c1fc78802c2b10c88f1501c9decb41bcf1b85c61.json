@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "\n        \n        SELECT 1 as \"exists!: bool\" \n        FROM tasks \n        WHERE id = $1 AND (assignee = $2 OR created_by = $2)\n        ",
+  "query": "\n\n        SELECT 1 as \"exists!: bool\"\n        FROM tasks\n        WHERE id = $1 AND (assignee = $2 OR created_by = $2)\n        ",
   "describe": {
     "columns": [
       {
@@ -19,5 +19,5 @@
       null
     ]
   },
-  "hash": "dfef14e5675c8a73abd5cdf2fbd46cc97df7de6913f4f69b0219ff757d4507bc"
+  "hash": "dce18995eea60ea6a7ab20b9c1fc78802c2b10c88f1501c9decb41bcf1b85c61"
 }

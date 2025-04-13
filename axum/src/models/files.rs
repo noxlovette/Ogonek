@@ -2,7 +2,6 @@ use serde::{Deserialize, Serialize};
 use time::format_description::well_known::Rfc3339;
 use time::OffsetDateTime;
 
-
 #[serde_with::serde_as]
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
@@ -31,7 +30,8 @@ pub struct FileSmall {
     pub name: String,
     pub s3_key: String,
     pub mime_type: Option<String>,
-    pub size: i64
+    pub size: i64,
+    pub owner_id: String,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -48,13 +48,11 @@ pub struct S3KeyRecord {
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
-
 pub struct FileUpdate {
     pub name: Option<String>,
     pub path: Option<String>,
-    pub parent_id: Option<String>
+    pub parent_id: Option<String>,
 }
-
 
 #[derive(Debug, Deserialize)]
 pub struct FileListParams {
@@ -67,11 +65,10 @@ pub struct UploadParams {
     pub task_id: Option<String>,
 }
 
-
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 
 pub struct CreateFolderRequest {
     pub name: String,
-    pub parent_id: Option<String>
+    pub parent_id: Option<String>,
 }

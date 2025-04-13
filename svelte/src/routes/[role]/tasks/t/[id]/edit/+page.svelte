@@ -101,5 +101,5 @@
 
 <div class="flex space-x-4">
   <Editor bind:markdownContent={markdown} />
-  <Uploader {files} />
+  <Uploader />
 </div>

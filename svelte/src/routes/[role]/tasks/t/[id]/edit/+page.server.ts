@@ -31,7 +31,7 @@ export const actions = {
         ? new Date(`${dueDate}T23:59:59`).toISOString()
         : null;
 
-    let body = {
+    const body = {
       id,
       title,
       markdown,

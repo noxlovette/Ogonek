@@ -1,6 +1,6 @@
 @layer components {
   .markdown {
-    @apply mx-auto w-full max-w-[65ch] rounded-lg p-4 ring ring-stone-200 dark:ring-stone-900;
+    @apply mx-auto my-4 w-full max-w-[65ch] rounded-lg md:my-0 md:px-4;
 
     > *:first-child {
       @apply mt-0;

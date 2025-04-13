@@ -1,7 +1,6 @@
 <script lang="ts">
   import "../app.css";
   import { Header, Footer, Notification, MetaData } from "$lib/components";
-  import SearchOverlay from "$lib/components/UI/search/SearchOverlay.svelte";
   import { keyEscape } from "$lib/actions";
 
   function goBack() {
@@ -30,7 +29,6 @@
     <Footer />
   </div>
   <Notification />
-  <SearchOverlay />
 </main>
 
 <svelte:head>

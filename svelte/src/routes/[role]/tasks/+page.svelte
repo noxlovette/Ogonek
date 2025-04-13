@@ -21,21 +21,13 @@
     currentPage,
     assigneeStore,
   } from "$lib/stores";
-  import {
-    Eye,
-    EyeClosed,
-    Lightbulb,
-    LightbulbOff,
-    PlusCircle,
-    Search,
-  } from "lucide-svelte";
+  import { Eye, EyeClosed, Lightbulb, PlusCircle } from "lucide-svelte";
   import { formatDate } from "@noxlovette/svarog";
 
   let { data } = $props();
   const { students } = data;
   let { data: tasks, total } = $derived(data.tasksPaginated);
   let role = page.params.role;
-  let isSubmitting = $state(false);
 
   const taskConfig: TableConfig<Task> = {
     columns: [
@@ -100,7 +92,7 @@
     showComplete={true}
   />
   <form action="?/new" method="post" use:enhance>
-    {#if tasks.length === 0}
+    {#if tasks?.length === 0}
       <UniButton type="submit" variant="ghost" Icon={PlusCircle}
         >Add your first one</UniButton
       >
@@ -109,7 +101,7 @@
 {:else}
   <section class="space-y-4">
     <div class="flex items-center justify-between">
-      <H2>Active Tasks ({tasks.length})</H2>
+      <H2>Active Tasks ({tasks?.length})</H2>
 
       <UniButton
         type="button"
@@ -121,7 +113,7 @@
       </UniButton>
     </div>
 
-    {#if tasks.length > 0}
+    {#if tasks?.length > 0}
       <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
         {#each tasks as task (task.id)}
           <TaskCard {task} interactive={true} />
