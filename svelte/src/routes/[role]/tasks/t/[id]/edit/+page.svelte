@@ -7,12 +7,12 @@
     Editor,
     H1,
     UniButton,
-    Uploader,
     AssigneeSelector,
     Label,
     Toggler,
     HeaderEmbellish,
     GreySpan,
+    Multipart,
   } from "$lib/components";
   import type { PageData } from "./$types";
 
@@ -99,7 +99,7 @@
   </div>
 </form>
 
-<div class="flex space-x-4">
+<div class="grid grid-cols-3 gap-4 space-x-4">
   <Editor bind:markdownContent={markdown} />
-  <Uploader {files} />
+  <Multipart taskId={task.id} />
 </div>

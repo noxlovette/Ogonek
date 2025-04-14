@@ -14,8 +14,6 @@ if (env.PUBLIC_APP_ENV !== "development") {
   });
 }
 
-let isRefreshing = false;
-
 const PROTECTED_PATHS = new Set(["/t/", "/s/", "/download/"]);
 
 function isProtectedPath(path: string): boolean {

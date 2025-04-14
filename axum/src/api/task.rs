@@ -1,12 +1,15 @@
-use crate::auth::jwt::Claims;
-use crate::models::files::{FileSmall, FileMinimal};
 use super::error::APIError;
-use crate::schema::AppState;
-use crate::models::tasks::{TaskBodySmall, TaskWithFilesResponse, TaskBodyWithStudent, TaskCreateBody, TaskFileBind, TaskPaginationParams, TaskUpdate};
-use crate::models::meta::{PaginatedResponse, CreationId};
-use axum::extract::{Json, Path, State, Query};
-use hyper::StatusCode;
+use crate::auth::jwt::Claims;
+use crate::models::files::{FileMinimal, FileSmall};
+use crate::models::meta::{CreationId, PaginatedResponse};
+use crate::models::tasks::{
+    TaskBodySmall, TaskBodyWithStudent, TaskCreateBody, TaskFileBind, TaskPaginationParams,
+    TaskUpdate, TaskWithFilesResponse,
+};
 use crate::s3::post::delete_s3;
+use crate::schema::AppState;
+use axum::extract::{Json, Path, Query, State};
+use hyper::StatusCode;
 
 pub async fn fetch_recent_tasks(
     State(state): State<AppState>,
@@ -15,12 +18,12 @@ pub async fn fetch_recent_tasks(
     let tasks = sqlx::query_as!(
         TaskBodySmall,
         r#"
-        SELECT id, 
-            title, 
-            LEFT(markdown, 100) as "markdown!", 
+        SELECT id,
+            title,
+            LEFT(markdown, 100) as "markdown!",
             completed,
-            due_date 
-        FROM tasks 
+            due_date
+        FROM tasks
         WHERE (assignee = $1 OR created_by = $1)
         AND completed = false
         ORDER BY created_at DESC
@@ -71,12 +74,13 @@ pub async fn fetch_task(
     let files = sqlx::query_as!(
         FileSmall,
         r#"
-        SELECT 
+        SELECT
             f.id,
             f.name,
-            f.mime_type, 
+            f.mime_type,
             f.s3_key,
-            f.size
+            f.size,
+            f.owner_id
         FROM files f
         JOIN task_files tf ON f.id = tf.file_id
         WHERE tf.task_id = $1
@@ -95,7 +99,7 @@ pub async fn list_tasks(
     Query(params): Query<TaskPaginationParams>,
 ) -> Result<Json<PaginatedResponse<TaskBodyWithStudent>>, APIError> {
     let mut query_builder = sqlx::QueryBuilder::new(
-        "SELECT 
+        "SELECT
             t.id,
             t.title,
             t.markdown,
@@ -110,13 +114,14 @@ pub async fn list_tasks(
             u.name as assignee_name
         FROM tasks t
         LEFT JOIN \"user\" u ON t.assignee = u.id
-        WHERE (t.assignee = ");
-    
+        WHERE (t.assignee = ",
+    );
+
     query_builder.push_bind(&claims.sub);
     query_builder.push(" OR t.created_by = ");
     query_builder.push_bind(&claims.sub);
     query_builder.push(")");
-    
+
     // Add search filter if provided
     if let Some(search) = &params.search {
         query_builder.push(" AND (t.title ILIKE ");
@@ -125,13 +130,13 @@ pub async fn list_tasks(
         query_builder.push_bind(format!("%{}%", search));
         query_builder.push(")");
     }
-    
+
     // Add priority filter if provided
     if let Some(priority) = &params.priority {
         query_builder.push(" AND t.priority = ");
         query_builder.push_bind(priority);
     }
-    
+
     // Add completed filter if provided
     if let Some(completed) = &params.completed {
         query_builder.push(" AND t.completed = ");
@@ -142,31 +147,31 @@ pub async fn list_tasks(
         query_builder.push(" AND t.assignee = ");
         query_builder.push_bind(assignee);
     }
-    
+
     // Add ordering - tasks typically ordered by due date
     query_builder.push(" ORDER BY t.due_date ASC NULLS LAST");
-    
+
     // Add limit and offset
     query_builder.push(" LIMIT ");
     query_builder.push_bind(params.limit());
     query_builder.push(" OFFSET ");
     query_builder.push_bind(params.offset());
-    
+
     // Execute the query
     let tasks = query_builder
         .build_query_as::<TaskBodyWithStudent>()
         .fetch_all(&state.db)
         .await?;
-    
+
     // Count query - build a similar query without LIMIT/OFFSET but with COUNT
-    let mut count_query_builder = sqlx::QueryBuilder::new(
-        "SELECT COUNT(*) FROM tasks t WHERE (t.assignee = ");
-    
+    let mut count_query_builder =
+        sqlx::QueryBuilder::new("SELECT COUNT(*) FROM tasks t WHERE (t.assignee = ");
+
     count_query_builder.push_bind(&claims.sub);
     count_query_builder.push(" OR t.created_by = ");
     count_query_builder.push_bind(&claims.sub);
     count_query_builder.push(")");
-    
+
     // Add the same filters as the main query
     if let Some(search) = &params.search {
         count_query_builder.push(" AND (t.title ILIKE ");
@@ -175,12 +180,12 @@ pub async fn list_tasks(
         count_query_builder.push_bind(format!("%{}%", search));
         count_query_builder.push(")");
     }
-    
+
     if let Some(priority) = &params.priority {
         count_query_builder.push(" AND t.priority = ");
         count_query_builder.push_bind(priority);
     }
-    
+
     if let Some(completed) = &params.completed {
         count_query_builder.push(" AND t.completed = ");
         count_query_builder.push_bind(completed);
@@ -190,12 +195,12 @@ pub async fn list_tasks(
         count_query_builder.push(" AND t.assignee = ");
         count_query_builder.push_bind(assignee);
     }
-    
+
     let count: i64 = count_query_builder
         .build_query_scalar()
         .fetch_one(&state.db)
         .await?;
-    
+
     Ok(Json(PaginatedResponse {
         data: tasks,
         total: count,
@@ -203,7 +208,6 @@ pub async fn list_tasks(
         per_page: params.limit(),
     }))
 }
-
 
 pub async fn create_task(
     State(state): State<AppState>,
@@ -243,9 +247,9 @@ pub async fn delete_task(
     // Start by fetching the task to ensure it exists and user has permission
     let file_exists = sqlx::query!(
         r#"
-        
-        SELECT 1 as "exists!: bool" 
-        FROM tasks 
+
+        SELECT 1 as "exists!: bool"
+        FROM tasks
         WHERE id = $1 AND (assignee = $2 OR created_by = $2)
         "#,
         id,
@@ -256,7 +260,7 @@ pub async fn delete_task(
     .is_some();
 
     if !file_exists {
-        return Err(APIError::NotFound("Task doesn't exist".into()))
+        return Err(APIError::NotFound("Task doesn't exist".into()));
     }
 
     let files = sqlx::query_as!(
@@ -273,25 +277,19 @@ pub async fn delete_task(
     .await?;
 
     let file_ids: Vec<String> = files.iter().map(|f| f.id.clone()).collect();
-    
-    let mut tx = state.db.begin().await?;
-    
-    if !file_ids.is_empty() {
-        sqlx::query!(
-            r#"DELETE FROM task_files WHERE task_id = $1"#,
-            id
-        )
-        .execute(&mut *tx)
-        .await?;
 
-        sqlx::query!(
-            r#"DELETE FROM files WHERE id = ANY($1)"#,
-            &file_ids
-        )
-        .execute(&mut *tx)
-        .await?;
+    let mut tx = state.db.begin().await?;
+
+    if !file_ids.is_empty() {
+        sqlx::query!(r#"DELETE FROM task_files WHERE task_id = $1"#, id)
+            .execute(&mut *tx)
+            .await?;
+
+        sqlx::query!(r#"DELETE FROM files WHERE id = ANY($1)"#, &file_ids)
+            .execute(&mut *tx)
+            .await?;
     }
-    
+
     sqlx::query!(
         r#"DELETE FROM tasks WHERE id = $1 AND (assignee = $2 OR created_by = $2)"#,
         id,
@@ -299,9 +297,9 @@ pub async fn delete_task(
     )
     .execute(&mut *tx)
     .await?;
-    
+
     tx.commit().await?;
-    
+
     for file in files {
         if let Some(s3_key) = file.s3_key {
             if let Err(e) = delete_s3(&s3_key, &state).await {
@@ -310,17 +308,16 @@ pub async fn delete_task(
             }
         }
     }
-    
+
     Ok(StatusCode::NO_CONTENT)
 }
 
 pub async fn update_task(
     State(state): State<AppState>,
-    Path(id): Path<String>, 
+    Path(id): Path<String>,
     claims: Claims,
     Json(payload): Json<TaskUpdate>,
 ) -> Result<StatusCode, APIError> {
-    
     sqlx::query!(
         "UPDATE tasks
          SET
@@ -349,9 +346,8 @@ pub async fn update_task(
 pub async fn add_file_to_task(
     State(state): State<AppState>,
     Path(task_id): Path<String>,
-    Json(payload): Json<TaskFileBind>
+    Json(payload): Json<TaskFileBind>,
 ) -> Result<StatusCode, APIError> {
-
     let mut tx = state.db.begin().await?;
 
     for file_id in payload.file_ids {

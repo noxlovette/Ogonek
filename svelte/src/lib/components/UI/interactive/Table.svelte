@@ -60,7 +60,7 @@
           type="text"
           bind:value={$searchTerm}
           placeholder="Search..."
-          class="focus:border-cacao-400 focus:ring-cacao-500/20 dark:focus:border-cacao-500 dark:focus:ring-cacao-500/30 w-full rounded-full border border-stone-200 bg-white py-2.5 pr-10 pl-10 shadow-sm placeholder:text-stone-400 focus:ring-2 focus:outline-none dark:border-stone-800 dark:bg-stone-950 dark:placeholder:text-stone-600"
+          class="focus:border-cacao-400 focus:ring-cacao-500/20 dark:focus:border-cacao-500 dark:focus:ring-cacao-500/30 w-full rounded-full border border-stone-200 bg-white py-2.5 pr-10 pl-10 placeholder:text-stone-400 focus:ring-2 focus:outline-none dark:border-stone-800 dark:bg-stone-950 dark:placeholder:text-stone-600"
         />
         {#if $searchTerm}
           <button
@@ -81,7 +81,7 @@
               id="assignee"
               name="assignee"
               bind:value={$assigneeStore}
-              class="focus:border-cacao-500 focus:ring-cacao-500/20 dark:focus:border-cacao-500 dark:focus:ring-cacao-500/30 w-full appearance-none rounded-lg border border-stone-200 bg-white py-2 pr-10 pl-4 text-sm shadow-sm focus:ring-2 focus:outline-none dark:border-stone-800 dark:bg-stone-950"
+              class="focus:border-cacao-500 focus:ring-cacao-500/20 dark:focus:border-cacao-500 dark:focus:ring-cacao-500/30 w-full appearance-none rounded-lg border border-stone-200 bg-white py-2 pr-10 pl-4 text-sm focus:ring-2 focus:outline-none dark:border-stone-800 dark:bg-stone-950"
             >
               <option value="">All Students</option>
               {#each students as student}
@@ -138,7 +138,7 @@
   </div>
 
   <div
-    class="overflow-hidden rounded-lg border border-stone-200 bg-white shadow-sm dark:border-stone-800 dark:bg-stone-950"
+    class="overflow-hidden rounded-lg border border-stone-200 bg-white dark:border-stone-800 dark:bg-stone-950"
   >
     {#if items.length === 0 && !isEmptySearch}
       <!-- Empty state -->

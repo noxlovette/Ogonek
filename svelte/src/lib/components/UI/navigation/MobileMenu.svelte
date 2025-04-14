@@ -1,8 +1,9 @@
 <script lang="ts">
   import { mobileMenuOpen } from "$lib/stores";
+  import type { Component } from "svelte";
 
   interface MobileMenuProps {
-    elements: any[];
+    elements: Component[];
   }
 
   let { elements = [] }: MobileMenuProps = $props();
@@ -27,12 +28,12 @@
       <nav class="p-6">
         <ul class="flex w-full flex-col items-end space-y-4">
           {#each elements as Element}
-            <li
+            <button
               class="transition-all duration-300 ease-out"
               onclick={() => mobileMenuOpen.false()}
             >
               <Element />
-            </li>
+            </button>
           {/each}
         </ul>
       </nav>

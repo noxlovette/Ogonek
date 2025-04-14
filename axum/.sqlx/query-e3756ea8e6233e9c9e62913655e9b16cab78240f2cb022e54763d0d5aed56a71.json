@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "\n        SELECT \n            f.id,\n            f.name,\n            f.mime_type, \n            f.s3_key,\n            f.size\n        FROM files f\n        JOIN task_files tf ON f.id = tf.file_id\n        WHERE tf.task_id = $1\n        ",
+  "query": "\n        SELECT\n            f.id,\n            f.name,\n            f.mime_type,\n            f.s3_key,\n            f.size,\n            f.owner_id\n        FROM files f\n        JOIN task_files tf ON f.id = tf.file_id\n        WHERE tf.task_id = $1\n        ",
   "describe": {
     "columns": [
       {
@@ -27,6 +27,11 @@
         "ordinal": 4,
         "name": "size",
         "type_info": "Int8"
+      },
+      {
+        "ordinal": 5,
+        "name": "owner_id",
+        "type_info": "Varchar"
       }
     ],
     "parameters": {
@@ -39,8 +44,9 @@
       false,
       true,
       false,
+      false,
       false
     ]
   },
-  "hash": "13716339e266f86b40cc63be9d952b9425a1748bfd94cd7170abd50dc3ecc740"
+  "hash": "e3756ea8e6233e9c9e62913655e9b16cab78240f2cb022e54763d0d5aed56a71"
 }

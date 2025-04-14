@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        UPDATE files\n        SET upload_status = 'complete'\n        WHERE id = $1 AND owner_id = $2\n        ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Text"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "5c0b1e939c79b7fc0c6c6a40489a829e06ae5b63cb9cee99ea5184bfbf5f3ee3"
+}

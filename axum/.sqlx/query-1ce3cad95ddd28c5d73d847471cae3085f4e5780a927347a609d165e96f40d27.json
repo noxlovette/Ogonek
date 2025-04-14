@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "\n            SELECT * FROM files \n            WHERE parent_id = $1 AND owner_id = $2\n            ORDER BY is_folder DESC, name ASC\n            ",
+  "query": "\n            SELECT * FROM files\n            WHERE parent_id IS NULL AND owner_id = $1\n            ORDER BY is_folder DESC, name ASC\n            ",
   "describe": {
     "columns": [
       {
@@ -62,11 +62,15 @@
         "ordinal": 11,
         "name": "updated_at",
         "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 12,
+        "name": "upload_status",
+        "type_info": "Text"
       }
     ],
     "parameters": {
       "Left": [
-        "Text",
         "Text"
       ]
     },
@@ -82,8 +86,9 @@
       false,
       false,
       false,
-      false
+      false,
+      true
     ]
   },
-  "hash": "13a34f64b2664511df63c5b30b1af38b6f323a574f802d8becf1c122d54c4374"
+  "hash": "1ce3cad95ddd28c5d73d847471cae3085f4e5780a927347a609d165e96f40d27"
 }
