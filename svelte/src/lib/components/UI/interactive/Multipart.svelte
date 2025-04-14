@@ -40,6 +40,7 @@
 
   let {
     taskId = null,
+    notify = false,
     folderId = null,
     onComplete = (fileId: string) => {},
   } = $props();
@@ -177,16 +178,19 @@
       }
 
       // 3. Complete the multipart upload
-      const completeResponse = await fetch("/api/multipart/complete", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          uploadId,
-          fileId: fileIdLocal,
-          s3Key,
-          parts: completedParts,
-        }),
-      });
+      const completeResponse = await fetch(
+        `/api/multipart/complete?taskId=${taskId}&notify=${notify}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            uploadId,
+            fileId: fileIdLocal,
+            s3Key,
+            parts: completedParts,
+          }),
+        },
+      );
 
       if (!completeResponse.ok) {
         throw new Error(

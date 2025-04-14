@@ -4,7 +4,6 @@
     H1,
     H3,
     Label,
-    Uploader,
     HeaderEmbellish,
     UniButton,
     FileTaskCard,
@@ -95,7 +94,7 @@
     {#if page.params.role === "s"}
       <div class="flex w-full flex-col space-y-2">
         <Label>Upload your HW here</Label>
-        <Multipart taskId={data.task.id} />
+        <Multipart taskId={data.task.id} notify={true} />
       </div>
     {/if}
   </div>
