@@ -95,7 +95,7 @@
     {#if page.params.role === "s"}
       <div class="flex w-full flex-col space-y-2">
         <Label>Upload your HW here</Label>
-        <Multipart />
+        <Multipart taskId={data.task.id} />
       </div>
     {/if}
   </div>

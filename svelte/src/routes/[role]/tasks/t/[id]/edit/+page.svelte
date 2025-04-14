@@ -7,15 +7,14 @@
     Editor,
     H1,
     UniButton,
-    Uploader,
     AssigneeSelector,
     Label,
     Toggler,
     HeaderEmbellish,
     GreySpan,
+    Multipart,
   } from "$lib/components";
   import type { PageData } from "./$types";
-  import Multipart from "$lib/components/UI/interactive/Multipart.svelte";
 
   let { data }: { data: PageData } = $props();
   let { task, files } = data;
@@ -100,7 +99,7 @@
   </div>
 </form>
 
-<div class="grid grid-cols-3 space-x-4">
+<div class="grid grid-cols-3 gap-4 space-x-4">
   <Editor bind:markdownContent={markdown} />
   <Multipart taskId={task.id} />
 </div>

@@ -1,76 +1,90 @@
-<!-- MultipartUploader.svelte -->
 <script lang="ts">
   import { onDestroy } from "svelte";
   import UniButton from "../UniButton.svelte";
   import { Ban, Check, Upload, X } from "lucide-svelte";
   import { Label } from "$lib/components/typography";
-  import GreySpan from "$lib/components/typography/GreySpan.svelte";
 
-  interface partUploadUrl {
+  type UploadStatus = "waiting" | "uploading" | "complete" | "error";
+
+  interface PartUploadUrl {
     partNumber: number;
     url: string;
   }
 
-  interface initResponse {
+  interface InitResponse {
     uploadId: string;
     fileId: string;
     s3Key: string;
-    parts: partUploadUrl[];
+    parts: PartUploadUrl[];
   }
+
+  interface CompletedPart {
+    partNumber: number;
+    etag: string;
+  }
+
+  interface FileUploadState {
+    id: string;
+    file: File;
+    progress: {
+      uploaded: number;
+      total: number;
+      bytes: number;
+      totalBytes: number;
+      percentComplete: number;
+    };
+    status: UploadStatus;
+    errorMessage?: string;
+    abortController?: AbortController;
+  }
+
   let {
     taskId = null,
     folderId = null,
-    onComplete = (fileId) => {},
+    onComplete = (fileId: string) => {},
   } = $props();
-  // Component state
-  let files: File[] = $state([]);
-  let uploadProgress: Record<string, { uploaded: number; total: number }> =
-    $state({});
-  let uploadStatus: Record<
-    string,
-    "waiting" | "uploading" | "complete" | "error"
-  > = $state({});
-  let abortControllers: Record<string, AbortController> = {};
-  let errorMessages: Record<string, string> = $state({});
 
-  // Constants
+  let fileUploads: FileUploadState[] = $state([]);
+
   const CHUNK_SIZE = 5 * 1024 * 1024; // 5MB per chunk
 
-  // Handle file selection
-  function handleFileSelect(event: Event) {
-    const input = event.target as HTMLInputElement;
-    if (input.files) {
-      files = [...files, ...Array.from(input.files)];
-
-      // Initialize tracking for each file
-      Array.from(input.files).forEach((file) => {
-        const fileId = crypto.randomUUID();
-        uploadProgress[fileId] = {
-          uploaded: 0,
-          total: Math.ceil(file.size / CHUNK_SIZE),
-        };
-        uploadStatus[fileId] = "waiting";
-      });
-
-      // Reset input
-      input.value = "";
-    }
-  }
-
-  // Calculate number of chunks needed
   function calculateChunks(file: File): number {
     return Math.ceil(file.size / CHUNK_SIZE);
   }
 
+  function handleFileSelect(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (!input.files?.length) return;
+
+    // Add new files to the uploads array
+    const newFiles = Array.from(input.files).map((file) => ({
+      id: crypto.randomUUID(),
+      file,
+      progress: {
+        uploaded: 0,
+        total: calculateChunks(file),
+        bytes: 0,
+        totalBytes: file.size,
+        percentComplete: 0,
+      },
+      status: "waiting" as UploadStatus,
+    }));
+
+    fileUploads = [...fileUploads, ...newFiles];
+
+    input.value = "";
+  }
+
   // Start upload process for a file
-  async function uploadFile(file: File, index: number) {
-    const fileId = Object.keys(uploadProgress)[index];
+  async function uploadFile(fileState: FileUploadState) {
+    const { id, file } = fileState;
     let uploadIdLocal = "";
     let fileIdLocal = "";
     let s3Key = "";
 
     try {
-      uploadStatus[fileId] = "uploading";
+      fileState.status = "uploading";
+      fileState.abortController = new AbortController();
 
       // 1. Initialize multipart upload
       const initResponse = await fetch("/api/multipart/init", {
@@ -87,25 +101,23 @@
       });
 
       if (!initResponse.ok) {
-        const errorText = await initResponse.text();
-        throw new Error(`Failed to initialize upload: ${errorText}`);
+        throw new Error(
+          `Failed to initialize upload: ${await initResponse.text()}`,
+        );
       }
 
       const {
         uploadId,
-        fileId: fileDbId,
+        fileId,
         s3Key: fileKey,
         parts,
-      } = (await initResponse.json()) as initResponse;
+      } = (await initResponse.json()) as InitResponse;
       uploadIdLocal = uploadId;
-      fileIdLocal = fileDbId;
+      fileIdLocal = fileId;
       s3Key = fileKey;
 
-      // Create abort controller for this upload
-      abortControllers[fileId] = new AbortController();
-      const signal = abortControllers[fileId].signal;
-
-      const completedParts: { partNumber: number; etag: string }[] = [];
+      const signal = fileState.abortController.signal;
+      const completedParts: CompletedPart[] = [];
 
       // 2. Upload each chunk directly to S3
       for (let i = 0; i < parts.length; i++) {
@@ -120,12 +132,20 @@
         const chunk = file.slice(start, end);
 
         try {
-          // Upload chunk directly to S3 using presigned URL
-          const uploadResult = await fetch(url, {
-            method: "PUT",
-            body: chunk,
+          // Upload chunk directly to S3 using presigned URL with progress tracking
+          const uploadResult = await uploadWithProgress(
+            url,
+            chunk,
             signal,
-          });
+            (loaded) => {
+              // Update byte-level progress
+              const chunkStart = (partNumber - 1) * CHUNK_SIZE;
+              fileState.progress.bytes = chunkStart + loaded;
+              fileState.progress.percentComplete =
+                (fileState.progress.bytes / fileState.progress.totalBytes) *
+                100;
+            },
+          );
 
           if (!uploadResult.ok) {
             throw new Error(
@@ -136,13 +156,16 @@
           // Extract ETag from response headers, removing quotes if present
           const etag =
             uploadResult.headers.get("ETag")?.replace(/['"]/g, "") || "";
-          completedParts.push({
-            partNumber,
-            etag,
-          });
+          completedParts.push({ partNumber, etag });
 
-          // Update progress
-          uploadProgress[fileId].uploaded = i + 1;
+          // Update chunk-level progress
+          fileState.progress.uploaded = i + 1;
+
+          // Ensure bytes progress is accurate at chunk boundaries
+          const chunkEnd = Math.min(file.size, partNumber * CHUNK_SIZE);
+          fileState.progress.bytes = chunkEnd;
+          fileState.progress.percentComplete =
+            (chunkEnd / fileState.progress.totalBytes) * 100;
         } catch (error: any) {
           if (error.name === "AbortError") {
             throw new Error("Upload aborted by user");
@@ -159,33 +182,34 @@
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           uploadId,
-          fileId,
+          fileId: fileIdLocal,
           s3Key,
           parts: completedParts,
         }),
       });
 
       if (!completeResponse.ok) {
-        const errorText = await completeResponse.text();
-        throw new Error(`Failed to complete upload: ${errorText}`);
+        throw new Error(
+          `Failed to complete upload: ${await completeResponse.text()}`,
+        );
       }
 
-      uploadStatus[fileId] = "complete";
+      fileState.status = "complete";
       onComplete(fileIdLocal);
     } catch (error: any) {
       console.error(`Upload failed for ${file.name}:`, error);
-      uploadStatus[fileId] = "error";
-      errorMessages[fileId] = error.message || "Upload failed";
+      fileState.status = "error";
+      fileState.errorMessage = error.message || "Upload failed";
 
       // Try to abort the upload on S3 if it was initialized
-      if (uploadIdLocal && fileIdLocal && s3Key) {
+      if (uploadIdLocal && s3Key) {
         try {
           await fetch("/api/multipart/abort", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               uploadId: uploadIdLocal,
-              fileId: fileIdLocal,
+              fileId: id,
               s3Key,
             }),
           });
@@ -196,84 +220,169 @@
     }
   }
 
-  // Start uploading all files
-  async function startUploads() {
-    files.forEach((file, index) => {
-      uploadFile(file, index);
-    });
+  // Start uploading all waiting files
+  function startUploads() {
+    fileUploads
+      .filter((upload) => upload.status === "waiting")
+      .forEach(uploadFile);
   }
 
   // Cancel an upload
-  function cancelUpload(index: number) {
-    const fileId = Object.keys(uploadProgress)[index];
-    if (abortControllers[fileId]) {
-      abortControllers[fileId].abort();
-      uploadStatus[fileId] = "error";
-      errorMessages[fileId] = "Upload cancelled by user";
-    }
+  function cancelUpload(fileState: FileUploadState) {
+    fileState.abortController?.abort();
+    fileState.status = "error";
+    fileState.errorMessage = "Upload cancelled by user";
   }
 
   // Remove a file from the list
-  function removeFile(index: number) {
+  function removeFile(fileState: FileUploadState) {
     // Cancel upload if in progress
-    cancelUpload(index);
+    if (fileState.status === "uploading") {
+      cancelUpload(fileState);
+    }
 
-    // Remove from lists
-    const fileId = Object.keys(uploadProgress)[index];
-    const updatedProgress = { ...uploadProgress };
-    const updatedStatus = { ...uploadStatus };
-    const updatedErrorMessages = { ...errorMessages };
-
-    delete updatedProgress[fileId];
-    delete updatedStatus[fileId];
-    delete updatedErrorMessages[fileId];
-
-    uploadProgress = updatedProgress;
-    uploadStatus = updatedStatus;
-    errorMessages = updatedErrorMessages;
-
-    files = files.filter((_, i) => i !== index);
+    // Remove from list
+    fileUploads = fileUploads.filter((upload) => upload.id !== fileState.id);
   }
-
-  // Calculate total size of all files
-  const totalSize = $derived(files.reduce((sum, file) => sum + file.size, 0));
-  const formattedTotalSize = $derived((totalSize / (1024 * 1024)).toFixed(2));
 
   // Clean up abort controllers on component destroy
   onDestroy(() => {
-    Object.values(abortControllers).forEach((controller) => {
-      controller.abort();
+    fileUploads.forEach((upload) => {
+      upload.abortController?.abort();
     });
   });
+
+  // Upload with progress tracking
+  async function uploadWithProgress(
+    url: string,
+    data: Blob,
+    signal: AbortSignal,
+    onProgress: (loaded: number) => void,
+  ): Promise<Response> {
+    return new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+
+      xhr.upload.addEventListener("progress", (event) => {
+        if (event.lengthComputable) {
+          onProgress(event.loaded);
+        }
+      });
+
+      xhr.addEventListener("loadend", () => {
+        if (xhr.readyState === 4) {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            // Convert XHR response to fetch Response for consistency
+            const response = new Response(xhr.response, {
+              status: xhr.status,
+              statusText: xhr.statusText,
+              headers: new Headers({
+                ETag: xhr.getResponseHeader("ETag") || "",
+              }),
+            });
+            resolve(response);
+          } else {
+            reject(new Error(`HTTP error ${xhr.status}: ${xhr.statusText}`));
+          }
+        }
+      });
+
+      xhr.addEventListener("error", () => {
+        reject(new Error("Network error occurred"));
+      });
+
+      xhr.addEventListener("abort", () => {
+        reject(new Error("Upload aborted"));
+      });
+
+      // Initialize the request
+      xhr.open("PUT", url);
+      xhr.send(data);
+
+      // Handle abort signal
+      if (signal) {
+        signal.addEventListener("abort", () => {
+          xhr.abort();
+        });
+      }
+    });
+  }
+
+  // Format file size with appropriate units
+  function formatFileSize(bytes: number): string {
+    if (bytes < 1024) return bytes + " B";
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(2) + " KB";
+    return (bytes / (1024 * 1024)).toFixed(2) + " MB";
+  }
+
+  // Format percentage display
+  function formatPercentage(value: number): string {
+    return Math.min(100, Math.max(0, Math.round(value))) + "%";
+  }
+
+  let isDragging = $state(false);
+
+  function handleDragOver(e: DragEvent) {
+    e.preventDefault();
+    isDragging = true;
+  }
+
+  function handleDragLeave() {
+    isDragging = false;
+  }
+
+  function handleDrop(e: DragEvent) {
+    e.preventDefault();
+    isDragging = false;
+
+    if (!e.dataTransfer?.files.length) return;
+
+    // Create a synthetic event that mimics an input change event
+    const mockEvent = {
+      target: {
+        files: e.dataTransfer.files,
+      },
+    } as unknown as Event;
+
+    // Use your existing file handling function
+    handleFileSelect(mockEvent);
+  }
+  let fileInput: HTMLInputElement;
 </script>
 
-<div class="w-full space-y-4 rounded-lg">
+<div class="flex flex-col space-y-2 rounded-lg">
   <label
     for="fileInput"
-    class="hover:border-cacao-400 flex h-32 w-full cursor-pointer appearance-none justify-center rounded-md border-2 border-dashed border-stone-300 transition focus:outline-none"
+    ondragover={handleDragOver}
+    ondragleave={handleDragLeave}
+    ondrop={handleDrop}
+    aria-label="File upload area"
+    class="relative flex flex-1 cursor-pointer
+			 flex-col items-center justify-center rounded-lg border-2
+			 border-dashed p-12 transition-colors duration-200
+			 {isDragging
+      ? 'border-cacao-700 bg-cacao-100'
+      : 'border-stone-200 hover:border-stone-400 dark:border-stone-800 dark:bg-stone-900 dark:hover:border-stone-700'}"
   >
+    <input
+      bind:this={fileInput}
+      id="fileInput"
+      type="file"
+      name="file"
+      onchange={handleFileSelect}
+      multiple
+      class="hidden"
+    />
     <span
       class="flex flex-col items-center justify-center space-y-2 text-center"
     >
-      <Upload></Upload>
+      <Upload />
       <Label>Select files for upload</Label>
     </span>
-    <input
-      id="fileInput"
-      type="file"
-      class="hidden"
-      multiple
-      onchange={handleFileSelect}
-    />
   </label>
 
-  {#if files.length > 0}
+  {#if fileUploads.length > 0}
     <div class="space-y-4">
-      {#each files as file, i}
-        {@const fileId = Object.keys(uploadProgress)[i]}
-        {@const progress = uploadProgress[fileId]}
-        {@const status = uploadStatus[fileId]}
-
+      {#each fileUploads as fileState}
         <div
           class="flex flex-col space-y-2 rounded-sm border border-stone-200 bg-stone-50 p-2"
         >
@@ -281,18 +390,20 @@
             <div>
               <p
                 class="max-w-full text-sm font-medium text-stone-700"
-                title={file.name}
+                title={fileState.file.name}
               >
-                {file.name.slice(0, 15)}
+                {fileState.file.name.length > 15
+                  ? fileState.file.name.slice(0, 15) + "..."
+                  : fileState.file.name}
               </p>
               <p class="text-xs text-stone-500">
-                {(file.size / 1024 / 1024).toFixed(2)} MB
+                {formatFileSize(fileState.file.size)}
               </p>
             </div>
 
             <button
               class="absolute top-0 right-0 text-stone-400 hover:text-stone-600"
-              onclick={() => removeFile(i)}
+              onclick={() => removeFile(fileState)}
               title="Remove file"
               aria-label="Remove file"
             >
@@ -300,37 +411,38 @@
             </button>
           </div>
 
-          {#if status === "uploading"}
+          {#if fileState.status === "uploading"}
             <div class="mb-1 h-1.5 w-full rounded-full bg-stone-200">
               <div
                 class="bg-cacao-600 h-1.5 rounded-full transition-all duration-300"
-                style="width: {Math.round(
-                  (progress.uploaded / progress.total) * 100,
-                )}%"
+                style="width: {formatPercentage(
+                  fileState.progress.percentComplete,
+                )}"
               ></div>
             </div>
             <p class="text-xs text-stone-500">
-              {progress.uploaded} of {progress.total} chunks uploaded ({Math.round(
-                (progress.uploaded / progress.total) * 100,
-              )}%)
+              {formatFileSize(fileState.progress.bytes)} of {formatFileSize(
+                fileState.progress.totalBytes,
+              )}
+              ({formatPercentage(fileState.progress.percentComplete)})
             </p>
-          {:else if status === "complete"}
+          {:else if fileState.status === "complete"}
             <div class="flex items-center text-xs text-green-600">
               <Check class="mr-1 size-4" />
               Upload complete
             </div>
-          {:else if status === "error"}
+          {:else if fileState.status === "error"}
             <div class="flex items-center text-xs text-red-600">
-              <Ban class="mr-1 size-4"></Ban>
-              {errorMessages[fileId] || "Upload failed"}
+              <Ban class="mr-1 size-4" />
+              {fileState.errorMessage || "Upload failed"}
             </div>
           {/if}
         </div>
       {/each}
 
-      {#if files.some((_f, i) => uploadStatus[Object.keys(uploadStatus)[i]] === "waiting")}
+      {#if fileUploads.some((upload) => upload.status === "waiting")}
         <UniButton variant="primary" Icon={Upload} onclick={startUploads}>
-          Begin
+          Begin Upload
         </UniButton>
       {/if}
     </div>
