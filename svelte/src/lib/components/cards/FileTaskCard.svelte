@@ -67,20 +67,10 @@
         success: async (result) => {
           const url = result.data?.url;
 
-          if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-            window.open(url, "_blank");
-          } else {
-            // For desktop, use the download attribute approach
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = file.name;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-          }
+          window.open(url, "_blank");
 
           notification.set({
-            message: `${file.name} download started`,
+            message: `${file.name} opened in new tab`,
             type: "success",
           });
         },
