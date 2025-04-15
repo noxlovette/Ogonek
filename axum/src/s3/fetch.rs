@@ -18,13 +18,14 @@ pub async fn get_presigned_url(
 
     let key_str = String::from_utf8(key)
         .map_err(|_| AppError::BadRequest("Invalid UTF-8 in decoded key".into()))?;
-
+    let filename = key_str.split('/').last().unwrap_or("download");
     // Create a presigned request that expires in 15 minutes
     let presigned_req = state
         .s3
         .get_object()
         .bucket(state.bucket_name)
         .key(&key_str)
+        .response_content_disposition(format!("attachment; filename=\"{}\"", filename))
         .presigned(aws_sdk_s3::presigning::PresigningConfig::expires_in(
             std::time::Duration::from_secs(15 * 60),
         )?)

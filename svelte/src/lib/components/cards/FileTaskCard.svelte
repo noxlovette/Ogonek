@@ -66,12 +66,19 @@
       handlers: {
         success: async (result) => {
           const url = result.data?.url;
-          const a = document.createElement("a");
-          a.href = url;
-          a.target = "_blank";
-          a.rel = "noopener noreferrer";
-          a.download = file.name;
-          a.click();
+
+          if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+            window.open(url, "_blank");
+          } else {
+            // For desktop, use the download attribute approach
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = file.name;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+          }
+
           notification.set({
             message: `${file.name} download started`,
             type: "success",
