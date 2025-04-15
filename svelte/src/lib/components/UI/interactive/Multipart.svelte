@@ -365,7 +365,7 @@
 			 border-dashed p-12 transition-colors duration-200
 			 {isDragging
       ? 'border-cacao-700 bg-cacao-100'
-      : 'border-stone-200 hover:border-stone-400 dark:border-stone-800 dark:bg-stone-900 dark:hover:border-stone-700'}"
+      : 'border-stone-200 hover:border-stone-400 dark:border-stone-800 dark:bg-stone-950 dark:hover:border-stone-700'}"
   >
     <input
       bind:this={fileInput}
@@ -388,12 +388,12 @@
     <div class="space-y-4">
       {#each fileUploads as fileState}
         <div
-          class="flex flex-col space-y-2 rounded-sm border border-stone-200 bg-stone-50 p-2"
+          class="flex flex-col space-y-2 rounded-sm bg-stone-50 p-2 ring ring-stone-200 dark:bg-stone-900 dark:ring-stone-800"
         >
           <div class="relative flex items-start justify-between">
             <div>
               <p
-                class="max-w-full text-sm font-medium text-stone-700"
+                class="max-w-full text-sm font-medium text-stone-700 dark:text-stone-400"
                 title={fileState.file.name}
               >
                 {fileState.file.name.length > 15
@@ -416,9 +416,11 @@
           </div>
 
           {#if fileState.status === "uploading"}
-            <div class="mb-1 h-1.5 w-full rounded-full bg-stone-200">
+            <div
+              class="mb-1 h-1.5 w-full rounded-full bg-stone-200 dark:bg-stone-600"
+            >
               <div
-                class="bg-cacao-600 h-1.5 rounded-full transition-all duration-300"
+                class="bg-cacao-600 h-1.5 rounded-full transition-all duration-300 dark:bg-stone-100"
                 style="width: {formatPercentage(
                   fileState.progress.percentComplete,
                 )}"

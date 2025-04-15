@@ -67,7 +67,7 @@
   ];
 
   function handleKeyPress(event: KeyboardEvent) {
-    if (!showAnswer) {
+    if (!showAnswer && event.key == " ") {
       showAnswer = true;
     }
 
@@ -187,7 +187,7 @@
       <div class="col-span-2 flex h-full md:col-span-1">
         {#if !showAnswer}
           <button
-            class="flex w-full flex-col items-center justify-center space-y-2 rounded-lg bg-stone-50 ring ring-stone-200 transition-colors hover:bg-stone-100 dark:bg-stone-800 dark:ring-stone-700"
+            class="flex w-full flex-col items-center justify-center space-y-2 rounded-lg bg-stone-50 ring ring-stone-200 transition-colors hover:bg-stone-100 dark:bg-stone-800 dark:ring-stone-700 dark:hover:bg-stone-900"
             onclick={() => (showAnswer = !showAnswer)}
           >
             <p>Flip</p>
