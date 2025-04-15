@@ -62,17 +62,19 @@
     use:enhance={enhanceForm({
       messages: {
         failure: "Meow",
+        success: `${file.name} download started`,
       },
       handlers: {
         success: async (result) => {
           const url = result.data?.url;
 
-          window.open(url, "_blank");
-
-          notification.set({
-            message: `${file.name} opened in new tab`,
-            type: "success",
-          });
+          const iframe = document.createElement("iframe");
+          iframe.style.display = "none";
+          iframe.src = url;
+          document.body.appendChild(iframe);
+          setTimeout(() => {
+            document.body.removeChild(iframe);
+          }, 5000); // Give it some time to initiate the download
         },
       },
     })}
