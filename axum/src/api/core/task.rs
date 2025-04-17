@@ -1,4 +1,4 @@
-use super::error::APIError;
+use crate::api::error::APIError;
 use crate::auth::jwt::Claims;
 use crate::models::files::{FileMinimal, FileSmall};
 use crate::models::meta::{CreationId, PaginatedResponse};

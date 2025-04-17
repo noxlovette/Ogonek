@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "\n        SELECT username, email, role, id, name, pass, verified\n        FROM \"user\" \n        WHERE username = $1\n        ",
+  "query": "\n        SELECT u.username, u.email, u.id, u.name, ts.markdown, ts.student_telegram_id\n        FROM \"user\" u\n        INNER JOIN teacher_student ts ON u.id = ts.student_id\n        WHERE ts.teacher_id = $1 AND ts.status = 'active'\n        ORDER BY u.name ASC\n        ",
   "describe": {
     "columns": [
       {
@@ -15,28 +15,23 @@
       },
       {
         "ordinal": 2,
-        "name": "role",
-        "type_info": "Varchar"
-      },
-      {
-        "ordinal": 3,
         "name": "id",
         "type_info": "Varchar"
       },
       {
-        "ordinal": 4,
+        "ordinal": 3,
         "name": "name",
         "type_info": "Varchar"
       },
       {
-        "ordinal": 5,
-        "name": "pass",
-        "type_info": "Varchar"
+        "ordinal": 4,
+        "name": "markdown",
+        "type_info": "Text"
       },
       {
-        "ordinal": 6,
-        "name": "verified",
-        "type_info": "Bool"
+        "ordinal": 5,
+        "name": "student_telegram_id",
+        "type_info": "Varchar"
       }
     ],
     "parameters": {
@@ -49,10 +44,9 @@
       false,
       false,
       false,
-      false,
-      false,
-      false
+      true,
+      true
     ]
   },
-  "hash": "f90fe0993cc011b275824d6e96d70e0791c6171195016b39f59c25e24818e3c0"
+  "hash": "14ad84739df4f2561815a6b20ff6af117969f1cb891bf417fd30034ea56e76a8"
 }

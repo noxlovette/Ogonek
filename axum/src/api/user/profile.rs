@@ -1,9 +1,9 @@
+use crate::api::error::APIError;
 use crate::auth::jwt::Claims;
-use super::error::APIError;
+use crate::models::profiles::{Profile, ProfileParams, ProfileUpdate};
+use crate::models::ProfileWithTS;
 use crate::schema::AppState;
-use crate::models::profiles::{Profile, ProfileUpdate};
-use axum::extract::Json;
-use axum::extract::State;
+use axum::extract::{Json, Query, State};
 
 pub async fn upsert_profile(
     State(state): State<AppState>,
@@ -53,8 +53,9 @@ pub async fn upsert_profile(
 
 pub async fn fetch_profile(
     State(state): State<AppState>,
+    Query(params): Query<ProfileParams>,
     claims: Claims,
-) -> Result<Json<Option<Profile>>, APIError> {
+) -> Result<Json<ProfileWithTS>, APIError> {
     let profile = sqlx::query_as!(
         Profile,
         r#"
@@ -64,6 +65,27 @@ pub async fn fetch_profile(
         claims.sub
     )
     .fetch_optional(&state.db)
-    .await?;
-    Ok(Json(profile))
+    .await?
+    .ok_or_else(|| APIError::NotFound("Profile not found".into()))?;
+
+    let teacher_telegram_id = if params.is_student {
+        sqlx::query!(
+            r#"
+                SELECT teacher_telegram_id FROM teacher_student
+                WHERE student_id = $1
+                "#,
+            claims.sub
+        )
+        .fetch_optional(&state.db)
+        .await?
+        .map(|record| record.teacher_telegram_id)
+        .flatten()
+    } else {
+        None
+    };
+
+    Ok(Json(ProfileWithTS {
+        profile,
+        teacher_telegram_id,
+    }))
 }

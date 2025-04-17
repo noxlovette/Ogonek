@@ -1,7 +1,7 @@
+use crate::api::error::APIError;
 use crate::auth::helpers::hash_password;
 use crate::auth::jwt::Claims;
 use crate::schema::AppState;
-use super::error::APIError;
 use axum::extract::Json;
 use axum::extract::State;
 
@@ -10,7 +10,7 @@ use crate::models::users::{User, UserUpdate};
 pub async fn fetch_user(
     State(state): State<AppState>,
     claims: Claims,
-) -> Result<Json<User>, APIError> { 
+) -> Result<Json<User>, APIError> {
     tracing::info!("Attempting to fetch user");
     let user = sqlx::query_as!(
         User,
@@ -35,7 +35,7 @@ pub async fn fetch_user(
 pub async fn delete_user(
     State(state): State<AppState>,
     claims: Claims,
-) -> Result<Json<User>, APIError> { 
+) -> Result<Json<User>, APIError> {
     let user = sqlx::query_as!(
         User,
         r#"
@@ -61,13 +61,11 @@ pub async fn update_user(
     State(state): State<AppState>,
     claims: Claims,
     Json(payload): Json<UserUpdate>,
-) -> Result<Json<User>, APIError> { 
+) -> Result<Json<User>, APIError> {
     tracing::info!("Attempting update for user");
 
     let hashed_pass = match payload.pass {
-        Some(ref pass) => {
-            Some(hash_password(pass).map_err(|_| APIError::PasswordHash)?)
-        },
+        Some(ref pass) => Some(hash_password(pass).map_err(|_| APIError::PasswordHash)?),
         None => None,
     };
 
@@ -75,7 +73,7 @@ pub async fn update_user(
         User,
         r#"
         UPDATE "user"
-        SET 
+        SET
             name = COALESCE($1, name),
             username = COALESCE($2, username),
             email = COALESCE($3, email),
@@ -83,7 +81,7 @@ pub async fn update_user(
             role = COALESCE($5, role),
             verified = COALESCE($6, verified)
         WHERE id = $7
-        RETURNING username, email, role, id, name, pass, verified 
+        RETURNING username, email, role, id, name, pass, verified
         "#,
         payload.name,
         payload.username,

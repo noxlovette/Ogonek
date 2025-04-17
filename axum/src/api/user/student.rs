@@ -1,23 +1,22 @@
+use crate::api::error::APIError;
 use crate::auth::jwt::Claims;
 use crate::models::cards_decks::DeckBodySmall;
-use crate::models::students::CompositeStudent;
-use crate::models::tasks::TaskBodySmall;
-use super::error::APIError;
-use crate::schema::AppState;
-use crate::models::students::UpdateStudentRequest;
-use crate::models::students::Student;
 use crate::models::lessons::LessonBodySmall;
+use crate::models::students::CompositeStudent;
+use crate::models::students::Student;
+use crate::models::students::UpdateStudentRequest;
+use crate::models::tasks::TaskBodySmall;
+use crate::schema::AppState;
 use axum::extract::Json;
+use axum::extract::Path;
 use axum::extract::State;
 use axum::http::StatusCode;
-use axum::extract::Path;
 
 pub async fn upsert_student(
     claims: Claims,
     State(state): State<AppState>,
     Path(id): Path<String>,
 ) -> Result<StatusCode, APIError> {
-
     if claims.role != "teacher" {
         return Ok(StatusCode::UNAUTHORIZED);
     }
@@ -27,7 +26,7 @@ pub async fn upsert_student(
         VALUES ($1, $2)
         ON CONFLICT (teacher_id, student_id) DO UPDATE SET status = 'active'
         "#,
-        claims.sub, 
+        claims.sub,
         id
     )
     .execute(&state.db)
@@ -37,9 +36,7 @@ pub async fn upsert_student(
             APIError::AlreadyExists("Already Exists".into())
         }
         _ => APIError::Database(e),
-    }
-    )?;
-
+    })?;
 
     Ok(StatusCode::CREATED)
 }
@@ -70,19 +67,18 @@ pub async fn update_student(
     Path(id): Path<String>,
     Json(payload): Json<UpdateStudentRequest>,
 ) -> Result<StatusCode, APIError> {
-    
     sqlx::query!(
         r#"
         UPDATE teacher_student
         SET
             markdown = COALESCE($3, markdown),
-            telegram_id = COALESCE($4, telegram_id)
+            student_telegram_id = COALESCE($4, student_telegram_id)
         WHERE teacher_id = $1 AND student_id = $2
         "#,
         claims.sub,
         id,
         payload.markdown,
-        payload.telegram_id
+        payload.student_telegram_id
     )
     .execute(&state.db)
     .await?;
@@ -95,13 +91,12 @@ pub async fn fetch_student(
     State(state): State<AppState>,
     Path(id): Path<String>,
 ) -> Result<Json<CompositeStudent>, APIError> {
-
     let mut tx = state.db.begin().await?;
 
     let student = sqlx::query_as!(
         Student,
         r#"
-        SELECT u.username, u.email, u.id, u.name, ts.markdown, ts.telegram_id
+        SELECT u.username, u.email, u.id, u.name, ts.markdown, ts.student_telegram_id
         FROM "user" u
         INNER JOIN teacher_student ts ON u.id = ts.student_id
         WHERE ts.teacher_id = $1 AND student_id = $2
@@ -155,9 +150,13 @@ pub async fn fetch_student(
     .await?;
 
     tx.commit().await?;
-    
 
-    Ok(Json(CompositeStudent {student, decks, lessons, tasks}))
+    Ok(Json(CompositeStudent {
+        student,
+        decks,
+        lessons,
+        tasks,
+    }))
 }
 
 pub async fn list_students(
@@ -167,7 +166,7 @@ pub async fn list_students(
     let students = sqlx::query_as!(
         Student,
         r#"
-        SELECT u.username, u.email, u.id, u.name, ts.markdown, ts.telegram_id
+        SELECT u.username, u.email, u.id, u.name, ts.markdown, ts.student_telegram_id
         FROM "user" u
         INNER JOIN teacher_student ts ON u.id = ts.student_id
         WHERE ts.teacher_id = $1 AND ts.status = 'active'

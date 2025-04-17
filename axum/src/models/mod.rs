@@ -1,8 +1,19 @@
+pub mod cards_decks;
+pub mod files;
 pub mod lessons;
+pub mod meta;
+pub mod profiles;
+pub mod s3;
 pub mod students;
 pub mod tasks;
 pub mod users;
-pub mod profiles;
-pub mod cards_decks;
-pub mod meta;
-pub mod files;
+
+pub use cards_decks::*;
+pub use files::*;
+pub use lessons::*;
+pub use meta::*;
+pub use profiles::*;
+pub use s3::*;
+pub use students::*;
+pub use tasks::*;
+pub use users::*;

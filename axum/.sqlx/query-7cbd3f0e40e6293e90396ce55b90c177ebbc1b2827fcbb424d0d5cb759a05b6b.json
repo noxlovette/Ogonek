@@ -1,0 +1,17 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        UPDATE teacher_student\n        SET\n            markdown = COALESCE($3, markdown),\n            student_telegram_id = COALESCE($4, student_telegram_id)\n        WHERE teacher_id = $1 AND student_id = $2\n        ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Text",
+        "Text",
+        "Varchar"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "7cbd3f0e40e6293e90396ce55b90c177ebbc1b2827fcbb424d0d5cb759a05b6b"
+}

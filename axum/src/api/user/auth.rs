@@ -1,13 +1,13 @@
+use crate::api::error::APIError;
 use crate::auth::error::AuthError;
 use crate::auth::helpers::verify_password;
 use crate::auth::helpers::{generate_refresh_token, generate_token, hash_password};
 use crate::auth::jwt::Claims;
 use crate::auth::jwt::RefreshClaims;
-use crate::schema::AppState;
-use crate::api::error::APIError;
 use crate::models::users::{
     AuthBody, AuthPayload, BindPayload, InviteToken, SignUpBody, SignUpPayload, User,
 };
+use crate::schema::AppState;
 use axum::extract::Json;
 use axum::extract::State;
 use axum::response::Response;
@@ -73,7 +73,6 @@ pub async fn authorize(
     State(state): State<AppState>,
     Json(payload): Json<AuthPayload>,
 ) -> Result<Response, APIError> {
-
     if payload.username.is_empty() || payload.pass.is_empty() {
         return Err(APIError::InvalidCredentials);
     }
@@ -86,7 +85,7 @@ pub async fn authorize(
         User,
         r#"
         SELECT username, email, role, id, name, pass, verified
-        FROM "user" 
+        FROM "user"
         WHERE username = $1
         "#,
         payload.username
@@ -116,8 +115,8 @@ pub async fn refresh(
     let user = sqlx::query_as!(
         User,
         r#"
-        SELECT username, email, role, id, name, pass, verified 
-        FROM "user" 
+        SELECT username, email, role, id, name, pass, verified
+        FROM "user"
         WHERE id = $1
         "#,
         claims.sub
@@ -154,7 +153,6 @@ pub async fn generate_invite_link(claims: Claims) -> Result<Json<String>, AuthEr
     )))
 }
 
-// New endpoint for binding students to teachers
 pub async fn bind_student_to_teacher(
     State(state): State<AppState>,
     Json(payload): Json<BindPayload>,
@@ -169,7 +167,7 @@ pub async fn bind_student_to_teacher(
         r#"
         INSERT INTO teacher_student (teacher_id, student_id)
         VALUES ($1, $2)
-        ON CONFLICT DO NOTHING 
+        ON CONFLICT DO NOTHING
         "#,
         token.teacher_id,
         payload.student_id

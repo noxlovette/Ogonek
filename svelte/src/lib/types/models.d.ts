@@ -60,6 +60,11 @@ export interface Profile {
   [key: string]: string | undefined;
 }
 
+export interface ProfileComposite {
+  profile: Profile;
+  teacher_telegram_id: string;
+}
+
 export interface User {
   name: string | null;
   username: string | null;

@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "INSERT INTO lessons (id, title, topic, markdown, created_by, assignee) \n         VALUES ($1, $2, $3, $4, $5, $6)\n         RETURNING id",
+  "query": "INSERT INTO lessons (id, title, topic, markdown, created_by, assignee)\n         VALUES ($1, $2, $3, $4, $5, $6)\n         RETURNING id",
   "describe": {
     "columns": [
       {
@@ -23,5 +23,5 @@
       false
     ]
   },
-  "hash": "0a9ed13fd2d07d8edf9bbe50bed592421de1ec9701c3a31a4ac8419a3d3bdd23"
+  "hash": "794cd243d96831aa13a8a68e1c165b1af414f8feaba57c820287555a1c5281a9"
 }

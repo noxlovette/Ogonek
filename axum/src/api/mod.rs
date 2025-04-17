@@ -1,13 +1,5 @@
-pub mod auth;
-pub mod decks;
+pub mod core;
 pub mod error;
-pub mod file;
-pub mod learning;
-pub mod lesson;
-pub mod multipart;
-pub mod notes;
-pub mod profile;
+pub mod files;
 pub mod routes;
-pub mod student;
-pub mod task;
 pub mod user;

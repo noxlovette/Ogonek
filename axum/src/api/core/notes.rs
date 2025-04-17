@@ -1,12 +1,11 @@
+use crate::api::error::APIError;
 use crate::auth::jwt::Claims;
-use super::error::APIError;
-use crate::schema::AppState;
 use crate::models::lessons::{StudentNote, StudentNoteUpdate};
+use crate::schema::AppState;
 use axum::extract::Json;
 use axum::extract::Path;
 use axum::extract::State;
 
-// servers as both patch and create endpoint
 pub async fn upsert_student_note(
     State(state): State<AppState>,
     claims: Claims,
@@ -18,7 +17,7 @@ pub async fn upsert_student_note(
         r#"
         INSERT INTO student_notes (id, lesson_id, user_id, is_bookmarked, notes)
         VALUES ($1, $2, $3, $4, $5)
-        ON CONFLICT (lesson_id, user_id) 
+        ON CONFLICT (lesson_id, user_id)
         DO UPDATE SET
             is_bookmarked = EXCLUDED.is_bookmarked,
             notes = EXCLUDED.notes,

@@ -6,7 +6,7 @@ import {
   turnstileVerify,
   ValidateAccess,
 } from "$lib/server";
-import type { AuthResponse, Profile, User } from "$lib/types";
+import type { AuthResponse, ProfileComposite, User } from "$lib/types";
 import { validateRequired } from "@noxlovette/svarog";
 import { fail, type Actions } from "@sveltejs/kit";
 
@@ -80,9 +80,9 @@ export const actions: Actions = {
         });
       }
 
-      // Fetch user profile with typed response handling
       const profileResponse = await fetch("/axum/profile");
-      const profileResult = await handleApiResponse<Profile>(profileResponse);
+      const profileResult =
+        await handleApiResponse<ProfileComposite>(profileResponse);
 
       if (!isSuccessResponse(profileResult)) {
         return fail(profileResult.status, { message: profileResult.message });

@@ -1,12 +1,14 @@
+use crate::api::error::APIError;
 use crate::auth::jwt::Claims;
+use crate::models::lessons::{
+    LessonBodySmall, LessonBodyWithStudent, LessonCreateBody, LessonUpdate, PaginationParams,
+};
+use crate::models::meta::{CreationId, PaginatedResponse};
 use crate::schema::AppState;
-use crate::models::lessons::{LessonBodySmall, LessonBodyWithStudent, LessonCreateBody, LessonUpdate, PaginationParams};
-use axum::extract::{Json, Query};
 use axum::extract::Path;
 use axum::extract::State;
+use axum::extract::{Json, Query};
 use hyper::StatusCode;
-use super::error::APIError;
-use crate::models::meta::{CreationId, PaginatedResponse};
 
 pub async fn fetch_recent_lessons(
     State(state): State<AppState>,
@@ -15,10 +17,10 @@ pub async fn fetch_recent_lessons(
     let tasks = sqlx::query_as!(
         LessonBodySmall,
         r#"
-        SELECT 
-            id, 
-            title, 
-            LEFT(markdown, 100) as "markdown!", 
+        SELECT
+            id,
+            title,
+            LEFT(markdown, 100) as "markdown!",
             topic,
             created_at
         FROM lessons
@@ -42,7 +44,7 @@ pub async fn fetch_lesson(
     let lesson = sqlx::query_as!(
         LessonBodyWithStudent,
         r#"
-        SELECT 
+        SELECT
             l.id,
             l.title,
             l.topic,
@@ -54,7 +56,7 @@ pub async fn fetch_lesson(
             u.name as assignee_name
         FROM lessons l
         LEFT JOIN "user" u ON l.assignee = u.id
-        WHERE l.id = $1 
+        WHERE l.id = $1
         AND (l.assignee = $2 OR l.created_by = $2)
         "#,
         id,
@@ -70,11 +72,10 @@ pub async fn list_lessons(
     Query(params): Query<PaginationParams>,
     claims: Claims,
 ) -> Result<Json<PaginatedResponse<LessonBodyWithStudent>>, APIError> {
-
     let mut query_builder = sqlx::QueryBuilder::new(
-        "SELECT l.id, l.title, l.topic, l.markdown, l.assignee, l.created_by, l.created_at, l.updated_at, u.name as assignee_name 
-         FROM lessons l 
-         LEFT JOIN \"user\" u ON l.assignee = u.id 
+        "SELECT l.id, l.title, l.topic, l.markdown, l.assignee, l.created_by, l.created_at, l.updated_at, u.name as assignee_name
+         FROM lessons l
+         LEFT JOIN \"user\" u ON l.assignee = u.id
          WHERE (l.assignee = ");
 
     query_builder.push_bind(&claims.sub);
@@ -111,14 +112,14 @@ pub async fn list_lessons(
         .fetch_all(&state.db)
         .await?;
     // Count query - build a similar query without LIMIT/OFFSET but with COUNT
-    let mut count_query_builder = sqlx::QueryBuilder::new(
-        "SELECT COUNT(*) FROM lessons l WHERE (l.assignee = ");
-    
+    let mut count_query_builder =
+        sqlx::QueryBuilder::new("SELECT COUNT(*) FROM lessons l WHERE (l.assignee = ");
+
     count_query_builder.push_bind(&claims.sub);
     count_query_builder.push(" OR l.created_by = ");
     count_query_builder.push_bind(&claims.sub);
     count_query_builder.push(")");
-    
+
     // Add the same filters as the main query
     if let Some(search) = &params.search {
         count_query_builder.push(" AND (l.title ILIKE ");
@@ -129,17 +130,17 @@ pub async fn list_lessons(
         count_query_builder.push_bind(format!("%{}%", search));
         count_query_builder.push(")");
     }
-    
+
     if let Some(assignee) = &params.assignee {
         count_query_builder.push(" AND l.assignee = ");
         count_query_builder.push_bind(assignee);
     }
-    
+
     let count: i64 = count_query_builder
         .build_query_scalar()
         .fetch_one(&state.db)
         .await?;
-    
+
     Ok(Json(PaginatedResponse {
         data: lessons,
         total: count,
@@ -147,7 +148,6 @@ pub async fn list_lessons(
         per_page: params.limit(),
     }))
 }
-
 
 pub async fn create_lesson(
     State(state): State<AppState>,
@@ -162,7 +162,7 @@ pub async fn create_lesson(
 
     let id = sqlx::query_as!(
         CreationId,
-        "INSERT INTO lessons (id, title, topic, markdown, created_by, assignee) 
+        "INSERT INTO lessons (id, title, topic, markdown, created_by, assignee)
          VALUES ($1, $2, $3, $4, $5, $6)
          RETURNING id",
         nanoid::nanoid!(),
@@ -201,10 +201,10 @@ pub async fn update_lesson(
     Json(payload): Json<LessonUpdate>,
 ) -> Result<StatusCode, APIError> {
     sqlx::query!(
-        "UPDATE lessons 
-         SET 
+        "UPDATE lessons
+         SET
             title = COALESCE($1, title),
-            topic =COALESCE($2, topic), 
+            topic =COALESCE($2, topic),
             markdown = COALESCE($3, markdown),
             assignee = COALESCE($4, assignee)
          WHERE id = $5 AND created_by = $6

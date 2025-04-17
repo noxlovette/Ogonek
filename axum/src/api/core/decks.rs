@@ -1,4 +1,4 @@
-use super::error::APIError;
+use crate::api::error::APIError;
 use crate::auth::jwt::Claims;
 use crate::models::cards_decks::{
     CardBody, DeckBody, DeckBodySmall, DeckCreateBody, DeckFilterParams,
@@ -125,7 +125,6 @@ pub async fn fetch_deck_list(
     query_builder.push_bind(&claims.sub);
     query_builder.push(")");
 
-    // Add search filter if provided
     if let Some(search) = &params.search {
         query_builder.push(" AND (name ILIKE ");
         query_builder.push_bind(format!("%{}%", search));
@@ -134,13 +133,11 @@ pub async fn fetch_deck_list(
         query_builder.push(")");
     }
 
-    // Add assignee filter if provided
     if let Some(assignee) = &params.assignee {
         query_builder.push(" AND assignee = ");
         query_builder.push_bind(assignee);
     }
 
-    // Keep the same ordering
     query_builder.push(" ORDER BY created_at DESC");
 
     let decks = query_builder
@@ -338,32 +335,16 @@ pub async fn subscribe_to_deck(
 
     Ok(StatusCode::NO_CONTENT)
 }
-
+// does not delete card progress
 pub async fn unsubscribe_from_deck(
     State(state): State<AppState>,
     claims: Claims,
     Path(deck_id): Path<String>,
 ) -> Result<StatusCode, APIError> {
-    // Remove subscription
     sqlx::query!(
         r#"
         DELETE FROM deck_subscriptions
         WHERE deck_id = $1 AND user_id = $2
-        "#,
-        deck_id,
-        claims.sub
-    )
-    .execute(&state.db)
-    .await?;
-
-    // Optionally, you can also clean up card progress
-    sqlx::query!(
-        r#"
-        DELETE FROM card_progress cp
-        USING cards c
-        WHERE cp.card_id = c.id
-        AND c.deck_id = $1
-        AND cp.user_id = $2
         "#,
         deck_id,
         claims.sub
