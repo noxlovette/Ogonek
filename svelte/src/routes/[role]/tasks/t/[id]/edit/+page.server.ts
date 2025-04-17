@@ -23,7 +23,7 @@ export const actions = {
     const filePath = formData.get("filePath")?.toString() || "";
 
     const assigneeData = formData.get("student")?.toString() || "{}";
-    const { assignee = "", telegramId = "" } = JSON.parse(assigneeData);
+    const { assignee = "", studentTelegramId = "" } = JSON.parse(assigneeData);
     const initialAssignee = formData.get("initialAssignee")?.toString() || "";
 
     const dueDateWithTime =
@@ -56,8 +56,8 @@ export const actions = {
 
     const message = `You have a new task: "${title}"\\. You can view it on [Ogonek](https://Ogonek\\.app/s/tasks/t/${id})\\.`;
 
-    if (telegramId && initialAssignee !== assignee) {
-      const telegramResponse = await notifyTelegram(message, telegramId);
+    if (studentTelegramId && initialAssignee !== assignee) {
+      const telegramResponse = await notifyTelegram(message, studentTelegramId);
       if (telegramResponse.status !== 404 && telegramResponse.status !== 200) {
         return fail(400);
       }

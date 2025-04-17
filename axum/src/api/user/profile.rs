@@ -1,6 +1,6 @@
 use crate::api::error::APIError;
 use crate::auth::jwt::Claims;
-use crate::models::profiles::{Profile, ProfileParams, ProfileUpdate};
+use crate::models::profiles::{Profile, ProfileParams, ProfileUpdate, TeacherData};
 use crate::models::ProfileWithTS;
 use crate::schema::AppState;
 use axum::extract::{Json, Query, State};
@@ -15,35 +15,27 @@ pub async fn upsert_profile(
         r#"
         INSERT INTO profile (
             user_id,
-            quizlet_url,
             zoom_url,
-            bio,
             avatar_url,
-            timezone
+            telegram_id
         )
         VALUES (
-            $1, -- user_id
-            $2, -- quizlet_url
-            $3, -- zoom_url
-            $4, -- bio
-            $5, -- avatar_url
-            $6  -- timezone
+            $1,
+            $2,
+            $3,
+            $4
         )
         ON CONFLICT (user_id)
         DO UPDATE SET
-            quizlet_url = COALESCE(EXCLUDED.quizlet_url, profile.quizlet_url),
             zoom_url = COALESCE(EXCLUDED.zoom_url, profile.zoom_url),
-            bio = COALESCE(EXCLUDED.bio, profile.bio),
             avatar_url = COALESCE(EXCLUDED.avatar_url, profile.avatar_url),
-            timezone = COALESCE(EXCLUDED.timezone, profile.timezone)
+            telegram_id = COALESCE(EXCLUDED.telegram_id, profile.telegram_id)
         RETURNING *
         "#,
-        claims.sub, // $1
-        payload.quizlet_url,
+        claims.sub,
         payload.zoom_url,
-        payload.bio,
         payload.avatar_url,
-        payload.timezone,
+        payload.telegram_id,
     )
     .fetch_one(&state.db)
     .await?;
@@ -68,24 +60,27 @@ pub async fn fetch_profile(
     .await?
     .ok_or_else(|| APIError::NotFound("Profile not found".into()))?;
 
-    let teacher_telegram_id = if params.is_student {
-        sqlx::query!(
+    let teacher_data = if params.is_student == "true" {
+        sqlx::query_as!(
+            TeacherData,
             r#"
-                SELECT teacher_telegram_id FROM teacher_student
-                WHERE student_id = $1
+                SELECT
+                    p.telegram_id as teacher_telegram_id,
+                    p.zoom_url as teacher_zoom_url
+                FROM teacher_student ts
+                JOIN profile p ON ts.teacher_id = p.user_id
+                WHERE ts.student_id = $1
                 "#,
             claims.sub
         )
         .fetch_optional(&state.db)
         .await?
-        .map(|record| record.teacher_telegram_id)
-        .flatten()
     } else {
         None
     };
 
     Ok(Json(ProfileWithTS {
         profile,
-        teacher_telegram_id,
+        teacher_data,
     }))
 }

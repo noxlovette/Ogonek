@@ -1,20 +1,10 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
   import { goto } from "$app/navigation";
-
   import { Input, Turnstile, UniButton } from "$lib/components";
-  import {
-    setProfile,
-    setUser,
-    initialUser,
-    initialProfile,
-    notification,
-  } from "$lib/stores";
-  import type { UserData } from "$lib/types";
+  import { initialUser, notification } from "$lib/stores";
   import { enhanceForm } from "$lib/utils";
   import { DoorOpen } from "lucide-svelte";
-
-  let isSubmitting = $state(false);
 </script>
 
 <div
@@ -40,12 +30,8 @@
       handlers: {
         success: async (result) => {
           if (result.data) {
-            const { user = initialUser, profile = initialProfile } =
-              result.data;
-            setUser(user);
-            setProfile(profile);
-            localStorage.setItem("user", JSON.stringify(user));
-            localStorage.setItem("profile", JSON.stringify(profile));
+            const { user = initialUser } = result.data;
+
             notification.set({ message: "Welcome home", type: "success" });
             await goto(
               user.role === "teacher" ? "/t/dashboard" : "/s/dashboard",

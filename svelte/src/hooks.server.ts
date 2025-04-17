@@ -2,7 +2,12 @@ import { env } from "$env/dynamic/private";
 import redis from "$lib/redisClient";
 import { ValidateAccess } from "$lib/server";
 import * as Sentry from "@sentry/sveltekit";
-import type { Handle, HandleFetch, RequestEvent } from "@sveltejs/kit";
+import type {
+  Handle,
+  HandleFetch,
+  RequestEvent,
+  ServerInit,
+} from "@sveltejs/kit";
 import { redirect } from "@sveltejs/kit";
 import { sequence } from "@sveltejs/kit/hooks";
 
@@ -22,6 +27,7 @@ function isProtectedPath(path: string): boolean {
     Array.from(PROTECTED_PATHS).some((prefix) => path.startsWith(prefix))
   );
 }
+export const init: ServerInit = async () => {};
 
 export const handle: Handle = sequence(
   Sentry.sentryHandle(),

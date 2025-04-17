@@ -34,7 +34,7 @@
 {/snippet}
 
 <div class="relative">
-  {#if file.ownerId === $user.sub}
+  {#if file.ownerId === $user.id}
     <form
       action="?/deleteFile"
       method="POST"

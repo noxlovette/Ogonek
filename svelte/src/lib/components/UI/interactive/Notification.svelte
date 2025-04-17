@@ -2,7 +2,6 @@
   import { notification, clearNotification } from "$lib/stores";
   import { fade } from "svelte/transition";
   import { Check, AlertCircle, X, Ban } from "lucide-svelte";
-  import type { Toast } from "$lib/types";
   import { onDestroy } from "svelte";
 
   let timeout: ReturnType<typeof setTimeout> | null = null;
@@ -34,10 +33,10 @@
     transition:fade={{ duration: 200 }}
     class="fixed top-4 left-1/2 z-50 flex max-w-md -translate-x-1/2 items-center gap-3 rounded-lg shadow-lg ring-1
     {$notification.type === 'success'
-      ? 'bg-green-50 text-green-700 ring-green-200 dark:bg-green-900 dark:text-green-200 dark:ring-green-800'
+      ? 'bg-stone-50 text-green-700 ring-green-600 dark:bg-stone-900  dark:text-green-200'
       : $notification.type === 'error'
-        ? 'bg-red-50 text-red-700 ring-red-200 dark:bg-red-900 dark:text-red-200 dark:ring-red-800'
-        : 'bg-cacao-50 text-cacao-700 ring-cacao-200 dark:ring-cacao-800 dark:text-cacao-200 dark:bg-cacao-900'} 
+        ? 'bg-stone-50 text-red-700 ring-red-600 dark:bg-stone-900 dark:text-red-200'
+        : 'text-cacao-700 ring-cacao-600 dark:text-cacao-200 bg-stone-50 dark:bg-stone-900 '}
     px-4 py-3"
   >
     {#if $notification.type === "success"}
@@ -48,7 +47,7 @@
       <AlertCircle class="size-5" />
     {/if}
 
-    <p class="text-sm font-medium capitalize">
+    <p class="text font-medium capitalize">
       {$notification.message}
     </p>
 

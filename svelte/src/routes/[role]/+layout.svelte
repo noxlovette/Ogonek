@@ -9,7 +9,6 @@
     Zoom,
     Sidebar,
     WorkArea,
-    BottomMenu,
     UsefulLinks,
     WordOfTheDay,
     Rightbar,
@@ -17,7 +16,13 @@
     QuickAdd,
     MobileMenu,
   } from "$lib/components";
-  import { lessonStore, studentStore, taskStore } from "$lib/stores";
+  import {
+    lessonStore,
+    studentStore,
+    setUser,
+    setProfile,
+    setTeacherData,
+  } from "$lib/stores";
 
   import { page } from "$app/state";
   import { setContext } from "svelte";
@@ -35,9 +40,12 @@
   }
 
   lessonStore.setLessons(data.lessons);
-  taskStore.setTasks(data.tasks);
   studentStore.setStudents(data.students);
   setContext<Promise<Word>>("word", data.word);
+
+  setUser(data.user);
+  setProfile(data.profile);
+  setTeacherData(data.teacherData);
 </script>
 
 <Sidebar elements={elementsLeft} />
