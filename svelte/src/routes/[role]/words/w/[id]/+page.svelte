@@ -68,7 +68,7 @@
         Share Deck
       </UniButton>
     </form>
-    {#if $user.sub === deck.createdBy}
+    {#if $user.id === deck.createdBy}
       <UniButton variant="outline" href="{deck.id}/edit" Icon={Pencil}
         >Edit</UniButton
       >

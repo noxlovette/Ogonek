@@ -1,15 +1,25 @@
 import { env } from "$env/dynamic/private";
 import redis from "$lib/redisClient";
-import type { LessonSmall, Student, TaskSmall } from "$lib/types";
+import type {
+  LessonSmall,
+  ProfileComposite,
+  Student,
+  TaskSmall,
+  User,
+} from "$lib/types";
 import type { LayoutServerLoad } from "./$types";
-export const load: LayoutServerLoad = async ({ fetch }) => {
-  const [students, lessons, tasks] = await Promise.all([
+export const load: LayoutServerLoad = async ({ fetch, params }) => {
+  const [students, lessons, tasks, user, profileComposite] = await Promise.all([
     fetch("/axum/student").then((res) => res.json() as Promise<Student[]>),
     fetch("/axum/lesson/recent").then(
       (res) => res.json() as Promise<LessonSmall[]>,
     ),
     fetch("/axum/task/recent").then(
       (res) => res.json() as Promise<TaskSmall[]>,
+    ),
+    fetch("/axum/user").then((res) => res.json() as Promise<User>),
+    fetch(`/axum/profile?isStudent=${params.role === "t" ? false : true}`).then(
+      (res) => res.json() as Promise<ProfileComposite>,
     ),
   ]);
 
@@ -38,5 +48,8 @@ export const load: LayoutServerLoad = async ({ fetch }) => {
     lessons,
     tasks,
     word,
+    profile: profileComposite.profile,
+    teacherData: profileComposite.teacherData,
+    user,
   };
 };

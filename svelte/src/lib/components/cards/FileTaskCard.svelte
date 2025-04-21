@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { notification } from "$lib/stores/notification";
   import { enhanceForm } from "$lib/utils";
   import { isLoading, user } from "$lib/stores";
   import { enhance } from "$app/forms";
@@ -35,7 +34,7 @@
 {/snippet}
 
 <div class="relative">
-  {#if file.ownerId === $user.sub}
+  {#if file.ownerId === $user.id}
     <form
       action="?/deleteFile"
       method="POST"

@@ -1,5 +1,8 @@
 use axum::{
-    extract::multipart::MultipartError, http::StatusCode, response::{IntoResponse, Response}, Json
+    extract::multipart::MultipartError,
+    http::StatusCode,
+    response::{IntoResponse, Response},
+    Json,
 };
 use serde_json::json;
 use thiserror::Error;
@@ -9,35 +12,35 @@ pub enum AppError {
     // Authentication errors
     #[error("Invalid credentials")]
     InvalidCredentials,
-    
+
     #[error("Authentication failed")]
     AuthenticationFailed,
-    
+
     #[error("Access denied")]
     AccessDenied,
-    
+
     #[error("Invalid token")]
     InvalidToken,
-    
+
     // Resource errors
     #[error("Resource not found: {0}")]
     NotFound(String),
-    
+
     #[error("Resource already exists: {0}")]
     AlreadyExists(String),
-    
+
     // Validation errors
     #[error("Validation error: {0}")]
     Validation(String),
-    
+
     // Database errors
     #[error("Database error")]
     Database(#[from] sqlx::Error),
-    
+
     // Password handling errors
     #[error("Password hashing error")]
     PasswordHash,
-    
+
     // General server errors
     #[error("Internal server error: {0}")]
     Internal(String),
@@ -54,41 +57,53 @@ impl IntoResponse for AppError {
             Self::AuthenticationFailed => (StatusCode::UNAUTHORIZED, self.to_string()),
             Self::AccessDenied => (StatusCode::FORBIDDEN, self.to_string()),
             Self::InvalidToken => (StatusCode::UNAUTHORIZED, self.to_string()),
-            
+
             // Resource errors -> 404/409
             Self::NotFound(_resource) => (StatusCode::NOT_FOUND, self.to_string()),
             Self::AlreadyExists(_resource) => (StatusCode::CONFLICT, self.to_string()),
-            
+
             // Validation errors -> 400
             Self::Validation(_) => (StatusCode::BAD_REQUEST, self.to_string()),
             Self::BadRequest(e) => (StatusCode::BAD_REQUEST, e.to_string()),
-            
+
             // Database errors -> 500 (or map specific DB errors to more appropriate codes)
             Self::Database(db_err) => {
                 // Log detailed DB error for internal visibility
                 tracing::error!("Database error: {:?}", db_err);
-                
+
                 // Map certain DB errors to specific status codes
                 if let sqlx::Error::Database(dbe) = db_err {
                     if let Some(constraint) = dbe.constraint() {
                         if constraint.contains("_key") || constraint.contains("_unique") {
-                            return Self::AlreadyExists(format!("Resource with this property already exists")).into_response();
+                            return Self::AlreadyExists(format!(
+                                "Resource with this property already exists"
+                            ))
+                            .into_response();
                         }
                     }
                 }
-                (StatusCode::INTERNAL_SERVER_ERROR, "Database operation failed".to_string())
+                (
+                    StatusCode::INTERNAL_SERVER_ERROR,
+                    "Database operation failed".to_string(),
+                )
             }
-            
+
             // Password handling errors -> 500
-            Self::PasswordHash => (StatusCode::INTERNAL_SERVER_ERROR, "Authentication operation failed".to_string()),
-            
+            Self::PasswordHash => (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                "Authentication operation failed".to_string(),
+            ),
+
             // General server errors -> 500
             Self::Internal(details) => {
                 tracing::error!("Internal server error: {}", details);
-                (StatusCode::INTERNAL_SERVER_ERROR, "Internal server error".to_string())
+                (
+                    StatusCode::INTERNAL_SERVER_ERROR,
+                    "Internal server error".to_string(),
+                )
             }
         };
-        
+
         // Create a consistent error response format
         let body = Json(json!({
             "error": {
@@ -96,11 +111,10 @@ impl IntoResponse for AppError {
                 "code": status.as_u16()
             }
         }));
-        
+
         (status, body).into_response()
     }
 }
-
 
 // Convert from AuthError
 impl From<crate::auth::error::AuthError> for AppError {
@@ -109,10 +123,16 @@ impl From<crate::auth::error::AuthError> for AppError {
             crate::auth::error::AuthError::WrongCredentials => Self::InvalidCredentials,
             crate::auth::error::AuthError::InvalidCredentials => Self::InvalidCredentials,
             crate::auth::error::AuthError::SignUpFail => Self::Internal("Failed to sign up".into()),
-            crate::auth::error::AuthError::TokenCreation => Self::Internal("Failed to create token".into()),
+            crate::auth::error::AuthError::TokenCreation => {
+                Self::Internal("Failed to create token".into())
+            }
             crate::auth::error::AuthError::InvalidToken => Self::InvalidToken,
-            crate::auth::error::AuthError::EmailTaken => Self::AlreadyExists("Email already taken".into()),
-            crate::auth::error::AuthError::UsernameTaken => Self::AlreadyExists("Username already taken".into()),
+            crate::auth::error::AuthError::EmailTaken => {
+                Self::AlreadyExists("Email already taken".into())
+            }
+            crate::auth::error::AuthError::UsernameTaken => {
+                Self::AlreadyExists("Username already taken".into())
+            }
             crate::auth::error::AuthError::UserNotFound => Self::NotFound("User not found".into()),
             crate::auth::error::AuthError::AuthenticationFailed => Self::AuthenticationFailed,
             crate::auth::error::AuthError::Conflict(msg) => Self::AlreadyExists(msg),
@@ -120,14 +140,13 @@ impl From<crate::auth::error::AuthError> for AppError {
     }
 }
 
-
 impl From<std::env::VarError> for AppError {
-    fn from(err: std::env::VarError) -> Self{
+    fn from(err: std::env::VarError) -> Self {
         match err {
             std::env::VarError::NotPresent => Self::NotFound("Value not found".into()),
-            std::env::VarError::NotUnicode(_) => Self::Internal("Not Unicode".into())
+            std::env::VarError::NotUnicode(_) => Self::Internal("Not Unicode".into()),
         }
-    } 
+    }
 }
 
 impl From<MultipartError> for AppError {
@@ -136,11 +155,9 @@ impl From<MultipartError> for AppError {
     }
 }
 
+use aws_credential_types::provider::error::CredentialsError;
 use aws_sdk_s3::error::SdkError;
 use aws_sdk_s3::presigning::PresigningConfigError;
-use aws_credential_types::provider::error::CredentialsError;
-
-
 
 // Generic handler for all S3 SDK errors
 impl<E> From<SdkError<E>> for AppError
@@ -164,30 +181,29 @@ where
             SdkError::ServiceError(service_err) => {
                 // Log the full error for debugging
                 tracing::error!("S3 service error: {:?}", service_err);
-                
+
                 // Check error type using string matching as a fallback
                 let err_str = format!("{:?}", service_err);
-                
+
                 if err_str.contains("NoSuchKey") || err_str.contains("NoSuchBucket") {
                     Self::NotFound("S3 resource not found".into())
                 } else if err_str.contains("AccessDenied") {
                     Self::AccessDenied
                 } else if err_str.contains("InvalidBucketName") {
                     Self::Validation("Invalid S3 bucket name".into())
-                } else if err_str.contains("BucketAlreadyExists") || err_str.contains("BucketAlreadyOwnedByYou") {
+                } else if err_str.contains("BucketAlreadyExists")
+                    || err_str.contains("BucketAlreadyOwnedByYou")
+                {
                     Self::AlreadyExists("S3 bucket already exists".into())
                 } else {
                     Self::Internal(format!("S3 service error: {:?}", service_err.err()))
                 }
             }
-            SdkError::TimeoutError(_) => {
-                Self::Internal("S3 request timed out".into())
-            }
+            SdkError::TimeoutError(_) => Self::Internal("S3 request timed out".into()),
             _ => Self::Internal(format!("Unknown S3 error: {:?}", err)),
         }
     }
 }
-
 
 // Handle Presigning-specific errors
 impl From<PresigningConfigError> for AppError {
@@ -210,9 +226,13 @@ impl From<crate::db::error::DbError> for AppError {
     fn from(err: crate::db::error::DbError) -> Self {
         match err {
             crate::db::error::DbError::Db => Self::Internal("Database operation failed".into()),
-            crate::db::error::DbError::NotFound => Self::NotFound("Resource not found".into()),
-            crate::db::error::DbError::TransactionFailed => Self::Internal("Transaction failed".into()),
-            crate::db::error::DbError::AlreadyExists => Self::AlreadyExists("Resource already exists".into()),
+            crate::db::error::DbError::NotFound(msg) => Self::NotFound(format!("DB: {}", msg)),
+            crate::db::error::DbError::TransactionFailed => {
+                Self::Internal("Transaction failed".into())
+            }
+            crate::db::error::DbError::AlreadyExists => {
+                Self::AlreadyExists("Resource already exists".into())
+            }
         }
     }
 }

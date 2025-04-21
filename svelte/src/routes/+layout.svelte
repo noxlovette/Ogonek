@@ -1,16 +1,14 @@
 <script lang="ts">
   import "../app.css";
   import { Header, Footer, Notification, MetaData } from "$lib/components";
+
   import { keyEscape } from "$lib/actions";
 
   function goBack() {
     window.history.back();
   }
 
-  interface Props {
-    children?: import("svelte").Snippet;
-  }
-  let { children }: Props = $props();
+  let { children } = $props();
 </script>
 
 <MetaData />

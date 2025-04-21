@@ -53,11 +53,19 @@ export interface Toast {
   type: "success" | "error" | "info" | null;
 }
 export interface Profile {
-  quizletUrl: string | null;
   zoomUrl: string | null;
-  bio: string | null;
   avatarUrl: string | null;
   [key: string]: string | undefined;
+}
+
+export interface TeacherData {
+  teacherZoomUrl: string;
+  teacherTelegramId: string;
+}
+
+export interface ProfileComposite {
+  profile: Profile;
+  teacherData: TeacherData;
 }
 
 export interface User {
@@ -65,7 +73,7 @@ export interface User {
   username: string | null;
   role: string | null;
   email: string | null;
-  sub: string | null;
+  id: string | null;
   [key: string]: string | undefined;
 }
 
@@ -102,7 +110,7 @@ export interface Student {
   role: string;
   markdown: string;
   joined: string;
-  telegramId: string;
+  studentTelegramId: string;
 }
 
 export interface CompositeStudent {

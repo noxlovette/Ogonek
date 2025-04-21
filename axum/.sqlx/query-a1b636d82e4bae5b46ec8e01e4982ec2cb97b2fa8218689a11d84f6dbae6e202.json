@@ -10,27 +10,17 @@
       },
       {
         "ordinal": 1,
-        "name": "quizlet_url",
-        "type_info": "Varchar"
-      },
-      {
-        "ordinal": 2,
-        "name": "bio",
-        "type_info": "Text"
-      },
-      {
-        "ordinal": 3,
         "name": "avatar_url",
         "type_info": "Varchar"
       },
       {
-        "ordinal": 4,
+        "ordinal": 2,
         "name": "zoom_url",
         "type_info": "Varchar"
       },
       {
-        "ordinal": 5,
-        "name": "timezone",
+        "ordinal": 3,
+        "name": "telegram_id",
         "type_info": "Varchar"
       }
     ],
@@ -41,8 +31,6 @@
     },
     "nullable": [
       false,
-      true,
-      true,
       true,
       true,
       true

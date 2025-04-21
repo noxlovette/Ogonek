@@ -1,4 +1,4 @@
-import type { Profile, User } from "$lib/types";
+import type { Profile, TeacherData, User } from "$lib/types";
 import { writable } from "svelte/store";
 
 export const initialUser: User = {
@@ -10,14 +10,18 @@ export const initialUser: User = {
 };
 
 export const initialProfile: Profile = {
-  quizletUrl: "",
   zoomUrl: "",
-  bio: "",
   avatarUrl: "",
+};
+
+export const initialTeacherData: TeacherData = {
+  teacherZoomUrl: "",
+  teacherTelegramId: "",
 };
 
 export const profile = writable<Profile>(initialProfile);
 export const user = writable<User>(initialUser);
+export const teacherData = writable<TeacherData>(initialTeacherData);
 export function setProfile(data: Profile) {
   profile.update((currentState) => ({
     ...currentState,
@@ -30,7 +34,12 @@ export function setUser(data: User) {
     ...data,
   }));
 }
-
+export function setTeacherData(data: TeacherData) {
+  teacherData.update((currentState) => ({
+    ...currentState,
+    ...data,
+  }));
+}
 export function clearUser() {
   user.update(() => ({
     username: "",

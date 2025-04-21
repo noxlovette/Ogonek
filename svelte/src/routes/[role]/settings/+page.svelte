@@ -1,16 +1,13 @@
-<script>
-  import { H1, H2, H3, Input, UniButton } from "$lib/components";
+<script lang="ts">
+  import { H1, H2, Input, UniButton } from "$lib/components";
   import { enhance } from "$app/forms";
   import { goto } from "$app/navigation";
+  import { page } from "$app/state";
   import { enhanceForm } from "$lib/utils";
   import {
     user,
     profile,
     notification,
-    setProfile,
-    setUser,
-    initialProfile,
-    initialUser,
     clearUser,
     assigneeStore,
     pageSize,
@@ -23,12 +20,34 @@
 
   let disabled = $state(true);
 
-  const fields = [
-    { id: "name", label: "Name", type: "text", storeKey: "" },
-    { id: "username", label: "Username", type: "text", storeKey: "" },
-    { id: "email", label: "Email", type: "email", storeKey: "" },
-    { id: "zoom", label: "Zoom URL", type: "text", storeKey: "zoomUrl" },
-  ];
+  function getFields(role: string) {
+    // Start with the default first three elements
+    const defaultFields = [
+      { id: "name", label: "Name", type: "text", storeKey: "" },
+      { id: "username", label: "Username", type: "text", storeKey: "" },
+      { id: "email", label: "Email", type: "email", storeKey: "" },
+    ];
+
+    if (role === "t") {
+      defaultFields.push({
+        id: "telegramId",
+        label: "Telegram ID",
+        type: "text",
+        storeKey: "telegramId",
+      });
+
+      defaultFields.push({
+        id: "zoomUrl",
+        label: "Zoom URL",
+        type: "text",
+        storeKey: "zoomUrl",
+      });
+    }
+
+    return defaultFields;
+  }
+
+  const fields = getFields(page.params.role);
 </script>
 
 <svelte:head>
@@ -43,23 +62,10 @@
     class=""
     method="POST"
     use:enhance={enhanceForm({
-      messages: {
-        failure: "Something's off",
-      },
       handlers: {
-        success: async (result) => {
-          if (result.data) {
-            const { user, profile } = result.data ?? {
-              user: initialUser,
-              profile: initialProfile,
-            };
-            setUser(user);
-            setProfile(profile);
-            localStorage.setItem("user", JSON.stringify(user));
-            localStorage.setItem("profile", JSON.stringify(profile));
-            notification.set({ message: "Changes saved ✨", type: "success" });
-            disabled = true;
-          }
+        success: async () => {
+          notification.set({ message: "Changes saved ✨", type: "success" });
+          disabled = true;
         },
       },
     })}
@@ -140,14 +146,9 @@
       method="POST"
       class="flex h-full flex-col"
       use:enhance={enhanceForm({
-        messages: {
-          failure: "Something's off",
-        },
         handlers: {
           redirect: async (result) => {
             clearUser();
-            localStorage.removeItem("user");
-            localStorage.removeItem("profile");
             assigneeStore.reset();
             pageSize.reset();
             currentPage.reset();

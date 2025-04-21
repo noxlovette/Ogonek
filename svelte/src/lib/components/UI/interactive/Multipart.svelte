@@ -3,6 +3,7 @@
   import UniButton from "../UniButton.svelte";
   import { Ban, Check, Upload, X } from "lucide-svelte";
   import { Label } from "$lib/components/typography";
+  import { teacherData } from "$lib/stores";
 
   type UploadStatus = "waiting" | "uploading" | "complete" | "error";
 
@@ -179,7 +180,7 @@
 
       // 3. Complete the multipart upload
       const completeResponse = await fetch(
-        `/api/multipart/complete?taskId=${taskId}&notify=${notify}`,
+        `/api/multipart/complete?taskId=${taskId}&notify=${notify}&teacherTelegramId=${$teacherData.teacherTelegramId}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

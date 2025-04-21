@@ -20,9 +20,12 @@
     pageSize,
     currentPage,
     assigneeStore,
+    teacherData,
   } from "$lib/stores";
   import { Eye, EyeClosed, Lightbulb, PlusCircle } from "lucide-svelte";
   import { formatDate } from "@noxlovette/svarog";
+
+  $inspect($teacherData);
 
   let { data } = $props();
   const { students } = data;
@@ -143,6 +146,11 @@
           })}
         >
           <input type="hidden" value={$user.username} name="username" />
+          <input
+            type="hidden"
+            value={$teacherData.teacherTelegramId}
+            name="teacherTelegramId"
+          />
           <UniButton type="submit" variant="primary" Icon={Lightbulb}>
             {randomPhrase}
           </UniButton>

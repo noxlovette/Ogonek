@@ -21,7 +21,7 @@
       <option
         value={JSON.stringify({
           assignee: student.id,
-          telegramId: student.telegramId,
+          studentTelegramId: student.studentTelegramId,
         })}
         selected={student.id === item.assignee}
       >

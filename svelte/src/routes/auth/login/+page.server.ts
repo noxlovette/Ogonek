@@ -6,7 +6,7 @@ import {
   turnstileVerify,
   ValidateAccess,
 } from "$lib/server";
-import type { AuthResponse, Profile, User } from "$lib/types";
+import type { AuthResponse, User } from "$lib/types";
 import { validateRequired } from "@noxlovette/svarog";
 import { fail, type Actions } from "@sveltejs/kit";
 
@@ -16,14 +16,6 @@ export const actions: Actions = {
       const data = await request.formData();
       const username = data.get("username") as string;
       const pass = data.get("password") as string;
-      const turnstileToken = data.get("cf-turnstile-response") as string;
-
-      if (!turnstileToken) {
-        return fail(400, {
-          message: "Please complete the CAPTCHA verification",
-        });
-      }
-
       const validateUsername = validateRequired("username");
       const validatePass = validateRequired("password");
 
@@ -43,6 +35,12 @@ export const actions: Actions = {
       }
 
       if (env.PUBLIC_APP_ENV !== "development") {
+        const turnstileToken = data.get("cf-turnstile-response") as string;
+        if (!turnstileToken) {
+          return fail(400, {
+            message: "Please complete the CAPTCHA verification",
+          });
+        }
         const turnstileResponse = await turnstileVerify(turnstileToken);
         if (!turnstileResponse.ok) {
           return fail(400, {
@@ -57,7 +55,6 @@ export const actions: Actions = {
       });
 
       const authResult = await handleApiResponse<AuthResponse>(response);
-
       if (!isSuccessResponse(authResult)) {
         return fail(authResult.status, { message: authResult.message });
       }
@@ -80,19 +77,10 @@ export const actions: Actions = {
         });
       }
 
-      // Fetch user profile with typed response handling
-      const profileResponse = await fetch("/axum/profile");
-      const profileResult = await handleApiResponse<Profile>(profileResponse);
-
-      if (!isSuccessResponse(profileResult)) {
-        return fail(profileResult.status, { message: profileResult.message });
-      }
-
       return {
         success: true,
         message: "Login successful",
         user,
-        profile: profileResult.data,
       };
     } catch (error) {
       console.error("Signin error:", error);

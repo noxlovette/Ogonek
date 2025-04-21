@@ -1,4 +1,3 @@
-import { env } from "$env/dynamic/private";
 import {
   handleApiResponse,
   isSuccessResponse,
@@ -67,15 +66,15 @@ export const actions: Actions = {
   requestHW: async ({ request }) => {
     const formData = await request.formData();
     const username = formData.get("username");
+    const teacherTelegramId = formData.get("teacherTelegramId") as string;
 
-    const message = `${username} needs homework`;
+    if (teacherTelegramId) {
+      const message = `${username} needs homework`;
 
-    const telegramResponse = await notifyTelegram(
-      message,
-      env.TELEGRAM_CHAT_ID,
-    );
-    if (telegramResponse.status !== 200) {
-      return fail(400);
+      const telegramResponse = await notifyTelegram(message, teacherTelegramId);
+      if (telegramResponse.status !== 200) {
+        return fail(400);
+      }
     }
   },
   completed: async ({ request, fetch }) => {

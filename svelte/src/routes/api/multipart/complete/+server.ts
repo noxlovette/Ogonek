@@ -1,4 +1,3 @@
-import { env } from "$env/dynamic/private";
 import { notifyTelegram } from "$lib/server";
 import type { RequestHandler } from "./$types";
 
@@ -6,6 +5,7 @@ export const POST: RequestHandler = async ({ request, fetch, url }) => {
   try {
     const taskId = url.searchParams.get("taskId");
     const shouldNotify = url.searchParams.get("notify") === "true";
+    const teacherTelegramId = url.searchParams.get("teacherTelegramId");
     const payload = await request.json();
 
     // Log incoming request details for debugging
@@ -28,13 +28,14 @@ export const POST: RequestHandler = async ({ request, fetch, url }) => {
     // Only send notification if both conditions are met:
     // 1. shouldNotify flag is true
     // 2. taskId is present
-    if (shouldNotify && taskId) {
+    // 3. telegramId is present
+    if (shouldNotify && taskId && teacherTelegramId) {
       const message = `A task has been completed\\. Check the student's homework on [Ogonek](https://Ogonek\\.app/t/tasks/t/${taskId})\\.`;
 
       try {
         const telegramResponse = await notifyTelegram(
           message,
-          env.TELEGRAM_CHAT_ID,
+          teacherTelegramId,
         );
 
         // Log notification status but don't fail the request if notification fails
