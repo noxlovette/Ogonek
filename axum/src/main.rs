@@ -4,8 +4,7 @@ use axum::{
     routing::get,
     Router,
 };
-use rust::db::init::init_db;
-use rust::s3::init::init_s3;
+
 use rust::schema::AppState;
 use rust::tools::logging::init_logging;
 use rust::tools::middleware::api_key::validate_api_key;
@@ -22,18 +21,11 @@ const REQUEST_ID_HEADER: &str = "x-request-id";
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-
     let cors = std::env::var("CORS").expect("CORS needs to be set");
-    let bucket_name = std::env::var("SCW_BUCKET_NAME").expect("SCW_BUCKET_NAME needs to be set");
-
     init_logging().await;
 
-    let state = AppState {
-        db: init_db().await?,
-        s3: init_s3().await?,
-        bucket_name
-    };
-    
+    let state = AppState::new().await?;
+
     let protected_routes = Router::new()
         .nest("/lesson", rust::api::routes::lesson_routes::lesson_routes())
         .nest("/user", rust::api::routes::user_routes::user_routes())
@@ -48,10 +40,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             "/profile",
             rust::api::routes::profile_routes::profile_routes(),
         )
-        .nest(
-            "/deck",
-            rust::api::routes::deck_routes::deck_routes(),
-        )
+        .nest("/deck", rust::api::routes::deck_routes::deck_routes())
         .nest("/s3", rust::api::routes::s3_routes::s3_routes())
         .nest("/file", rust::api::routes::file_routes::file_routes())
         .layer(axum::middleware::from_fn(validate_api_key));

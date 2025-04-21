@@ -1,6 +1,6 @@
 use super::cards_decks::DeckBodySmall;
 use super::lessons::LessonBodySmall;
-use super::tasks::TaskBodySmall;
+use super::tasks::TaskSmall;
 use serde::{Deserialize, Serialize};
 use serde_with::serde_as;
 use time::format_description::well_known::Rfc3339;
@@ -48,5 +48,5 @@ pub struct CompositeStudent {
     pub student: Student,
     pub decks: Vec<DeckBodySmall>,
     pub lessons: Vec<LessonBodySmall>,
-    pub tasks: Vec<TaskBodySmall>,
+    pub tasks: Vec<TaskSmall>,
 }

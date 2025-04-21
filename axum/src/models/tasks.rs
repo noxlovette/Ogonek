@@ -1,9 +1,9 @@
+use super::files::FileSmall;
 use serde::{Deserialize, Serialize};
 use serde_with::serde_as;
 use sqlx::prelude::FromRow;
 use time::format_description::well_known::Rfc3339;
 use time::OffsetDateTime;
-use super::files::FileSmall;
 
 #[derive(Debug, Deserialize)]
 pub struct TaskPaginationParams {
@@ -19,12 +19,12 @@ impl TaskPaginationParams {
     pub fn limit(&self) -> i64 {
         self.per_page.unwrap_or(50).min(100).max(1)
     }
-    
+
     pub fn offset(&self) -> i64 {
         let page = self.page.unwrap_or(1).max(1);
         (page - 1) * self.limit()
     }
-    
+
     pub fn page(&self) -> i64 {
         self.page.unwrap_or(1).max(1)
     }
@@ -33,7 +33,7 @@ impl TaskPaginationParams {
 #[serde_with::serde_as]
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
-pub struct TaskBody {
+pub struct Task {
     pub id: String,
     pub title: String,
     pub markdown: String,
@@ -53,7 +53,7 @@ pub struct TaskBody {
 #[serde_with::serde_as]
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
-pub struct TaskBodySmall {
+pub struct TaskSmall {
     pub id: String,
     pub title: String,
     pub markdown: String,
@@ -62,14 +62,10 @@ pub struct TaskBodySmall {
     pub due_date: Option<OffsetDateTime>,
 }
 
-
-
-
-
 #[serde_with::serde_as]
 #[derive(Serialize, Deserialize, Debug, FromRow)]
 #[serde(rename_all = "camelCase")]
-pub struct TaskBodyWithStudent {
+pub struct TaskWithStudent {
     pub id: String,
     pub title: String,
     pub markdown: String,
@@ -89,7 +85,7 @@ pub struct TaskBodyWithStudent {
 #[serde_with::serde_as]
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
-pub struct TaskCreateBody {
+pub struct TaskCreate {
     pub title: String,
     pub markdown: String,
     pub priority: Option<i16>,
@@ -108,16 +104,16 @@ pub struct TaskUpdate {
     pub completed: Option<bool>,
     #[serde_as(as = "Option<Rfc3339>")]
     pub due_date: Option<OffsetDateTime>,
-    pub assignee: Option<String>
+    pub assignee: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct TaskFileBind {
-    pub file_ids: Vec<String>
+    pub file_ids: Vec<String>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct TaskWithFilesResponse {
-    pub task: TaskBodyWithStudent,
+    pub task: TaskWithStudent,
     pub files: Vec<FileSmall>,
 }

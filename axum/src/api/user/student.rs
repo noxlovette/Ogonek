@@ -5,7 +5,7 @@ use crate::models::lessons::LessonBodySmall;
 use crate::models::students::CompositeStudent;
 use crate::models::students::Student;
 use crate::models::students::UpdateStudentRequest;
-use crate::models::tasks::TaskBodySmall;
+use crate::models::tasks::TaskSmall;
 use crate::schema::AppState;
 use axum::extract::Json;
 use axum::extract::Path;
@@ -136,7 +136,7 @@ pub async fn fetch_student(
     .await?;
 
     let tasks = sqlx::query_as!(
-        TaskBodySmall,
+        TaskSmall,
         r#"
         SELECT id, title, markdown, completed, due_date
         FROM tasks
