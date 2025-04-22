@@ -1,9 +1,9 @@
 use crate::api::error::APIError;
+use crate::auth::claims::RefreshClaims;
 use crate::auth::error::AuthError;
-use crate::auth::helpers::verify_password;
-use crate::auth::helpers::{generate_refresh_token, generate_token, hash_password};
-use crate::auth::jwt::Claims;
-use crate::auth::jwt::RefreshClaims;
+use crate::auth::password::{hash_password, verify_password};
+use crate::auth::tokens::{generate_refresh_token, generate_token};
+use crate::auth::Claims;
 use crate::models::users::{
     AuthBody, AuthPayload, BindPayload, InviteToken, SignUpBody, SignUpPayload, User,
 };

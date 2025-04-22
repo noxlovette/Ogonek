@@ -1,5 +1,5 @@
 use crate::api::error::APIError;
-use crate::auth::jwt::Claims;
+use crate::auth::Claims;
 use crate::db::crud::core::task::{
     add_files, count, create, delete, fetch_recent, find_all, find_by_id, update,
 };

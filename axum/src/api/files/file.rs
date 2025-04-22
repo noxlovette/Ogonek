@@ -1,5 +1,5 @@
 use crate::api::error::APIError;
-use crate::auth::jwt::Claims;
+use crate::auth::Claims;
 use crate::db::crud::files::file;
 use crate::models::files::{File, FileListParams, FileUpdate};
 use crate::s3::post::delete_s3;

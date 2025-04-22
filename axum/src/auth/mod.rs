@@ -1,3 +1,6 @@
+pub mod claims;
 pub mod error;
-pub mod helpers;
-pub mod jwt;
+pub mod password;
+pub mod tokens;
+
+pub use claims::Claims;

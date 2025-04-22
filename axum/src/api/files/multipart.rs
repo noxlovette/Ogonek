@@ -1,4 +1,4 @@
-use crate::auth::jwt::Claims;
+use crate::auth::Claims;
 use crate::db::crud::files::file;
 use crate::error::AppError;
 use crate::models::{

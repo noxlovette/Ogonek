@@ -1,7 +1,7 @@
 //not used
 
 use crate::api::error::APIError;
-use crate::auth::jwt::Claims;
+use crate::auth::Claims;
 use crate::models::lessons::{StudentNote, StudentNoteUpdate};
 use crate::schema::AppState;
 use axum::extract::Json;

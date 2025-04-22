@@ -1,5 +1,5 @@
 use crate::api::error::APIError;
-use crate::auth::jwt::Claims;
+use crate::auth::Claims;
 use crate::models::profiles::{Profile, ProfileParams, ProfileUpdate, TeacherData};
 use crate::models::ProfileWithTS;
 use crate::schema::AppState;

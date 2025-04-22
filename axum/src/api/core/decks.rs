@@ -1,5 +1,5 @@
 use crate::api::error::APIError;
-use crate::auth::jwt::Claims;
+use crate::auth::Claims;
 use crate::db::crud::learning;
 use crate::models::{
     CreationId, Deck, DeckCreate, DeckFilterParams, DeckSmall, DeckWithCardsAndSubscription,
