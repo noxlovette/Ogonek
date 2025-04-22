@@ -1,6 +1,6 @@
 use crate::api::error::APIError;
 use crate::auth::jwt::Claims;
-use crate::db::crud::lesson;
+use crate::db::crud::core::lesson;
 use crate::models::meta::{CreationId, PaginatedResponse};
 use crate::models::{LessonCreate, LessonSmall, LessonUpdate, LessonWithStudent, PaginationParams};
 use crate::schema::AppState;

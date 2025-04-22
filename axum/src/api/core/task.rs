@@ -1,9 +1,9 @@
 use crate::api::error::APIError;
 use crate::auth::jwt::Claims;
-use crate::db::crud::file::fetch_files_task;
-use crate::db::crud::task::{
+use crate::db::crud::core::task::{
     add_files, count, create, delete, fetch_recent, find_all, find_by_id, update,
 };
+use crate::db::crud::files::file::fetch_files_task;
 
 use crate::models::meta::{CreationId, PaginatedResponse};
 use crate::models::tasks::{

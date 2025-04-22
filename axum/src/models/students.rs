@@ -1,5 +1,5 @@
 use super::cards_decks::DeckSmall;
-use super::lessons::LessonBodySmall;
+use super::lessons::LessonSmall;
 use super::tasks::TaskSmall;
 use serde::{Deserialize, Serialize};
 use serde_with::serde_as;
@@ -47,6 +47,6 @@ pub struct UpdateStudentRequest {
 pub struct CompositeStudent {
     pub student: Student,
     pub decks: Vec<DeckSmall>,
-    pub lessons: Vec<LessonBodySmall>,
+    pub lessons: Vec<LessonSmall>,
     pub tasks: Vec<TaskSmall>,
 }

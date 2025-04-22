@@ -1,5 +1,5 @@
 use crate::auth::jwt::Claims;
-use crate::db::crud::file;
+use crate::db::crud::files::file;
 use crate::error::AppError;
 use crate::models::{
     AbortMultipartRequest, CompleteMultipartRequest, InitUploadRequest, MultipartInitResultS3,

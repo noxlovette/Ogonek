@@ -1,4 +1,4 @@
-pub mod file;
+pub mod core;
+pub mod files;
 pub mod learning;
-pub mod lesson;
-pub mod task;
+pub mod user;
