@@ -30,7 +30,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .nest("/lesson", rust::api::routes::lesson_routes::lesson_routes())
         .nest("/user", rust::api::routes::user_routes::user_routes())
         .nest("/task", rust::api::routes::task_routes::task_routes())
-        .nest("/notes", rust::api::routes::notes_routes::notes_routes())
+        // .nest("/notes", rust::api::routes::notes_routes::notes_routes())
         .nest(
             "/student",
             rust::api::routes::student_routes::student_routes(),

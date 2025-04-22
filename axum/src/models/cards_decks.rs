@@ -139,6 +139,15 @@ pub struct CardProgress {
     pub interval: i32,
 }
 
+#[derive(Serialize, Deserialize)]
+pub struct UpdateCardProgress {
+    pub review_count: i32,
+    pub due_date: OffsetDateTime,
+    pub ease_factor: f64,
+    pub interval: i32,
+    pub last_reviewed: OffsetDateTime,
+}
+
 #[derive(Debug, Deserialize, Validate)]
 pub struct ReviewPayload {
     #[validate(range(min = 0, max = 5))]

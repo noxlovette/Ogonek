@@ -100,27 +100,6 @@ pub async fn create(db: &PgPool, user_id: &str, create: DeckCreate) -> Result<Cr
     Ok(id)
 }
 
-pub async fn check_subscription(
-    db: &PgPool,
-    deck_id: &str,
-    user_id: &str,
-) -> Result<bool, DbError> {
-    let is_subscribed = sqlx::query!(
-        r#"
-        SELECT EXISTS(
-            SELECT 1 FROM deck_subscriptions
-            WHERE deck_id = $1 AND user_id = $2
-        ) as "is_subscribed!"
-        "#,
-        deck_id,
-        user_id
-    )
-    .fetch_one(db)
-    .await?
-    .is_subscribed;
-
-    Ok(is_subscribed)
-}
 pub async fn delete(db: &PgPool, deck_id: &str, user_id: &str) -> Result<(), DbError> {
     sqlx::query!(
         r#"
