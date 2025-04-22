@@ -1,5 +1,6 @@
 use crate::api::error::APIError;
 use crate::auth::jwt::Claims;
+use crate::db::crud::file;
 use crate::models::files::{CreateFolderRequest, File, FileListParams, FileUpdate, S3KeyRecord};
 use crate::s3::post::delete_s3;
 use crate::schema::AppState;
@@ -12,20 +13,8 @@ pub async fn fetch_file(
     State(state): State<AppState>,
     claims: Claims,
     Path(file_id): Path<String>,
-) -> Result<Json<Option<File>>, APIError> {
-    let file = sqlx::query_as!(
-        File,
-        r#"
-        SELECT * FROM files
-        WHERE id = $1 AND (
-            owner_id = $2
-        )
-        "#,
-        file_id,
-        claims.sub
-    )
-    .fetch_optional(&state.db)
-    .await?;
+) -> Result<Json<File>, APIError> {
+    let file = file::find_by_id(&state.db, &file_id, &claims.sub).await?;
 
     Ok(Json(file))
 }
@@ -35,50 +24,7 @@ pub async fn list_files(
     claims: Claims,
     Query(params): Query<FileListParams>,
 ) -> Result<Json<Vec<File>>, APIError> {
-    let files = if let Some(folder_id) = params.parent_id {
-        let folder_exists = sqlx::query!(
-            r#"
-            SELECT 1 as "exists!: bool" FROM files
-            WHERE id = $1 AND(
-            owner_id = $2
-            )
-            "#,
-            folder_id,
-            claims.sub
-        )
-        .fetch_optional(&state.db)
-        .await?
-        .is_some();
-
-        if !folder_exists {
-            return Err(APIError::NotFound("Folder Not Found".into()));
-        }
-        sqlx::query_as!(
-            File,
-            r#"
-            SELECT * FROM files
-            WHERE parent_id = $1 AND owner_id = $2
-            ORDER BY is_folder DESC, name ASC
-            "#,
-            folder_id,
-            claims.sub
-        )
-        .fetch_all(&state.db)
-        .await?
-    } else {
-        // Root folder contents
-        sqlx::query_as!(
-            File,
-            r#"
-            SELECT * FROM files
-            WHERE parent_id IS NULL AND owner_id = $1
-            ORDER BY is_folder DESC, name ASC
-            "#,
-            claims.sub
-        )
-        .fetch_all(&state.db)
-        .await?
-    };
+    let files = file::find_all(&state.db, params, &claims.sub).await?;
 
     Ok(Json(files))
 }
@@ -89,46 +35,7 @@ pub async fn update_file(
     Path(file_id): Path<String>,
     Json(payload): Json<FileUpdate>,
 ) -> Result<StatusCode, APIError> {
-    let parent_id = if let Some(parent_id) = payload.parent_id {
-        let folder_exists = sqlx::query!(
-            r#"
-            SELECT 1 as "exists!: bool" FROM files
-            WHERE id = $1 AND (
-                owner_id = $2 AND is_folder = true
-            )
-            "#,
-            parent_id,
-            claims.sub
-        )
-        .fetch_optional(&state.db)
-        .await?
-        .is_some();
-
-        if !folder_exists {
-            return Err(APIError::NotFound("Folder Not Found".into()));
-        }
-        Some(parent_id)
-    } else {
-        None
-    };
-
-    sqlx::query!(
-        r#"
-        UPDATE files
-        SET
-            name = COALESCE($3, name),
-            path = COALESCE($4, path),
-            parent_id = COALESCE($5, parent_id)
-        WHERE id=$1 AND owner_id = $2
-        "#,
-        file_id,
-        claims.sub,
-        payload.name,
-        payload.path,
-        parent_id
-    )
-    .execute(&state.db)
-    .await?;
+    file::update(&state.db, &file_id, &claims.sub, payload).await?;
 
     Ok(StatusCode::NO_CONTENT)
 }
@@ -138,44 +45,13 @@ pub async fn delete_file(
     claims: Claims,
     Path(file_id): Path<String>,
 ) -> Result<StatusCode, APIError> {
-    tracing::info!(user_id = %claims.sub, file_id = %file_id, "Attempting to delete file");
-
-    let file = match sqlx::query_as!(
-        S3KeyRecord,
-        r#"
-        DELETE FROM files
-        WHERE id = $1 AND owner_id = $2
-        RETURNING s3_key
-        "#,
-        file_id,
-        claims.sub
-    )
-    .fetch_one(&state.db)
-    .await
-    {
-        Ok(file) => {
-            tracing::debug!(file_id = %file_id, "File record successfully deleted from database");
-            file
-        }
-        Err(err) => {
-            tracing::error!(
-                error = %err,
-                file_id = %file_id,
-                user_id = %claims.sub,
-                "Failed to delete file record from database"
-            );
-            return Err(APIError::from(err));
-        }
-    };
-
+    let file = file::delete(&state.db, &file_id, &claims.sub).await?;
     if let Some(key) = &file.s3_key {
         delete_s3(key, &state).await?;
     } else {
-        tracing::warn!(file_id = %file_id, "File record exists but has no S3 key");
-        return Err(APIError::NotFound("Object not found".into()));
+        return Err(APIError::NotFound("S3 Object not Found".into()));
     }
 
-    tracing::info!(file_id = %file_id, "File deletion completed successfully");
     Ok(StatusCode::NO_CONTENT)
 }
 

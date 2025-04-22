@@ -27,8 +27,8 @@
     <div class="relative">
       <input
         type="text"
-        name="telegramId"
-        value={student.telegramId}
+        name="studentTelegramId"
+        value={student.studentTelegramId}
         placeholder="@username"
         class="focus:ring-cacao-500 rounded-lg border border-stone-300 py-2 pr-4 pl-10 focus:border-transparent focus:ring"
       />
