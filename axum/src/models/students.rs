@@ -1,4 +1,4 @@
-use super::cards_decks::DeckBodySmall;
+use super::cards_decks::DeckSmall;
 use super::lessons::LessonBodySmall;
 use super::tasks::TaskSmall;
 use serde::{Deserialize, Serialize};
@@ -46,7 +46,7 @@ pub struct UpdateStudentRequest {
 #[serde(rename_all = "camelCase")]
 pub struct CompositeStudent {
     pub student: Student,
-    pub decks: Vec<DeckBodySmall>,
+    pub decks: Vec<DeckSmall>,
     pub lessons: Vec<LessonBodySmall>,
     pub tasks: Vec<TaskSmall>,
 }

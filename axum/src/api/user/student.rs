@@ -1,6 +1,6 @@
 use crate::api::error::APIError;
 use crate::auth::jwt::Claims;
-use crate::models::cards_decks::DeckBodySmall;
+use crate::models::cards_decks::DeckSmall;
 use crate::models::lessons::LessonBodySmall;
 use crate::models::students::CompositeStudent;
 use crate::models::students::Student;
@@ -108,7 +108,7 @@ pub async fn fetch_student(
     .await?;
 
     let decks = sqlx::query_as!(
-        DeckBodySmall,
+        DeckSmall,
         r#"
         SELECT id, name, description FROM decks
         WHERE (created_by = $1 AND assignee = $2)
