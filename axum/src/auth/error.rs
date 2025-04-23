@@ -7,10 +7,15 @@ use axum::{
 use serde_json::json;
 use thiserror::Error;
 
-impl From<sqlx::error::Error> for AuthError {
-    fn from(error: sqlx::error::Error) -> Self {
-        eprintln!("{error}");
-        Self::AuthenticationFailed
+impl From<sqlx::Error> for AuthError {
+    fn from(error: sqlx::Error) -> Self {
+        match error {
+            sqlx::Error::RowNotFound => Self::UserNotFound,
+            other => {
+                eprintln!("Database error: {other}");
+                Self::InvalidCredentials
+            }
+        }
     }
 }
 

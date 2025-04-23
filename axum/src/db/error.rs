@@ -4,20 +4,20 @@ use thiserror::Error;
 
 #[derive(Error, Debug)]
 pub enum DbError {
-    #[error("Database error")]
-    Db,
+    #[error("Database error: {0}")]
+    Database(SqlxError),
     #[error("Not Found: {0}")]
     NotFound(String),
     #[error("Transaction failed")]
     TransactionFailed,
-    #[error("Already exists")]
-    AlreadyExists,
+    #[error("Already exists: {0}")]
+    AlreadyExists(String),
 }
 
 impl From<SqlxError> for DbError {
     fn from(error: SqlxError) -> Self {
         eprintln!("Database error: {}", error);
-        Self::Db
+        Self::Database(error)
     }
 }
 
