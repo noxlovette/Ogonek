@@ -25,7 +25,7 @@
   } = $props();
 
   const styling =
-    "mt-1 md:mt-2 w-full rounded-md p-1 px-2 text-sm md:text-base lg:text-lg  dark:border-stone-700 dark:bg-stone-950 disabled:text-stone-500 ring ring-stone-200 dark:ring-stone-800";
+    "mt-1 md:mt-2 w-full rounded-md p-1 px-2 text-sm md:text-base lg:text-lg  dark:border-stone-700 dark:bg-stone-950 disabled:text-stone-500 ring ring-stone-300/30 dark:ring-stone-600/30";
 </script>
 
 <Label>{labelName}</Label>

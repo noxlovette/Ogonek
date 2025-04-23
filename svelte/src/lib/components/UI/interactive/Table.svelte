@@ -237,7 +237,7 @@
             {#each items as item (item.id)}
               <tr
                 onclick={() => goto(`${href}/${item.id}`)}
-                class="group hover:bg-cacao-50/30 dark:hover:bg-cacao-900/10 max-h-24 cursor-pointer transition-all duration-300 ease-in-out"
+                class="group hover:bg-cacao-50/30 dark:hover:bg-cacao-900/10 max-h-24 cursor-pointer transition-all duration-150 ease-in-out"
                 in:fade|global={{ duration: 300, delay: 50 }}
               >
                 {#each config.columns as column, i}

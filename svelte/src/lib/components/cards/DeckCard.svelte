@@ -15,19 +15,10 @@
     $user.role === "teacher"
       ? `/t/words/w/${deck.id}`
       : `/s/words/w/${deck.id}`;
+
+  const title = deck.name;
+  const subtitle = deck.description ?? "Deck Description";
+  const caption = "";
 </script>
 
-<CardClickable {href}>
-  <H2>
-    {deck.name}
-  </H2>
-
-  <div class="flex flex-col">
-    <h2
-      class="text-lg font-semibold
-              "
-    >
-      {deck.description ?? "Deck Description"}
-    </h2>
-  </div>
-</CardClickable>
+<CardClickable {href} {title} {subtitle} {caption}></CardClickable>

@@ -14,7 +14,7 @@
 </script>
 
 <HeaderEmbellish>
-  <H1>{$user.name}, good {greeting}</H1>
+  <H1>Good {greeting}, {$user.name}</H1>
 </HeaderEmbellish>
 
 <section class="space-y-4">

@@ -72,7 +72,7 @@
     action="?/update"
   >
     <div
-      class="flex flex-col rounded-lg bg-inherit p-4 shadow-sm ring ring-stone-200 transition-all md:p-5 lg:p-6 dark:bg-stone-950 dark:ring-stone-800"
+      class="flex flex-col rounded-lg bg-inherit px-5 py-4 shadow-sm ring ring-stone-300/30 transition-all dark:bg-stone-950 dark:ring-stone-600/30"
     >
       <div class="flex items-center justify-between">
         <H2>Account Settings</H2>
@@ -118,7 +118,7 @@
 
   <div class="grid gap-4">
     <section
-      class="space-y-3 rounded-lg bg-inherit p-4 shadow-sm ring ring-stone-200 transition-all md:p-5 lg:p-6 dark:ring-stone-800"
+      class="space-y-3 rounded-lg bg-inherit px-5 py-4 shadow-sm ring ring-stone-300/30 transition-all dark:ring-stone-600/30"
     >
       <div class="flex items-center gap-3">
         <H2>Telegram Notifications</H2>
@@ -140,11 +140,10 @@
       </div>
     </section>
 
-    <!-- Logout Section -->
     <form
       action="?/logout"
       method="POST"
-      class="flex h-full flex-col"
+      class="flex flex-col"
       use:enhance={enhanceForm({
         handlers: {
           redirect: async (result) => {
@@ -160,7 +159,7 @@
       })}
     >
       <section
-        class="flex flex-col justify-between space-y-3 rounded-lg bg-inherit p-4 shadow-sm ring ring-stone-200 transition-all md:p-5 lg:p-6 dark:ring-stone-800"
+        class="flex flex-col justify-between space-y-3 rounded-lg bg-inherit px-4 py-5 shadow-sm ring ring-stone-300/30 dark:ring-stone-600/30"
       >
         <div class="flex items-center gap-3">
           <H2>Account</H2>

@@ -151,7 +151,7 @@
       </div>
     {:else}
       <div
-        class="rounded-lg bg-stone-50 py-12 text-center shadow-sm ring ring-stone-200 dark:bg-stone-800 dark:ring-stone-900"
+        class="rounded-lg bg-stone-50 py-12 text-center shadow-sm ring ring-stone-300/30 dark:bg-stone-800 dark:ring-stone-600/30"
       >
         <div
           class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-stone-200 dark:bg-stone-700"

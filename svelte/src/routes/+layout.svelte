@@ -14,7 +14,7 @@
 <MetaData />
 
 <main
-  class="flex h-screen w-screen justify-center overflow-x-clip overflow-y-auto bg-stone-50 text-stone-800 antialiased dark:bg-stone-950 dark:text-stone-100"
+  class="flex h-screen w-screen justify-center overflow-x-clip overflow-y-auto bg-white text-stone-800 antialiased dark:bg-stone-950 dark:text-stone-100"
   use:keyEscape={goBack}
 >
   <div

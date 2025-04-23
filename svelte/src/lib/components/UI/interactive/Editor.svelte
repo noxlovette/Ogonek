@@ -46,7 +46,7 @@
 			  rounded-lg border border-stone-200
 			  p-4 shadow-sm ring-0 ring-transparent
 			  focus:border-stone-500 focus:ring-transparent dark:border-stone-900 dark:bg-stone-950
-			  dark:ring-stone-900"
+			  dark:ring-stone-600/30"
           spellcheck="false"
         ></textarea>
       </div>

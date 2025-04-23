@@ -1,5 +1,5 @@
 <footer
-  class="mt-12 w-full items-baseline rounded-t-lg shadow-inner ring ring-stone-200 dark:ring-stone-900"
+  class="mt-12 w-full items-baseline rounded-t-lg shadow-inner ring ring-stone-300/30 dark:ring-stone-600/30"
 >
   <div class="mx-auto flex w-full items-center justify-between px-3 py-2">
     <div class="flex flex-col gap-1 text-sm">
