@@ -72,7 +72,7 @@
     action="?/update"
   >
     <div
-      class="flex flex-col rounded-lg bg-inherit px-5 py-4 shadow-sm ring ring-stone-300/30 transition-all dark:bg-stone-950 dark:ring-stone-600/30"
+      class="flex flex-col rounded-lg bg-inherit px-5 py-4 shadow-sm ring ring-stone-300/40 transition-all dark:bg-stone-950 dark:ring-stone-600/50"
     >
       <div class="flex items-center justify-between">
         <H2>Account Settings</H2>
@@ -118,7 +118,7 @@
 
   <div class="grid gap-4">
     <section
-      class="space-y-3 rounded-lg bg-inherit px-5 py-4 shadow-sm ring ring-stone-300/30 transition-all dark:ring-stone-600/30"
+      class="space-y-3 rounded-lg bg-inherit px-5 py-4 shadow-sm ring ring-stone-300/40 transition-all dark:ring-stone-600/50"
     >
       <div class="flex items-center gap-3">
         <H2>Telegram Notifications</H2>
@@ -159,7 +159,7 @@
       })}
     >
       <section
-        class="flex flex-col justify-between space-y-3 rounded-lg bg-inherit px-4 py-5 shadow-sm ring ring-stone-300/30 dark:ring-stone-600/30"
+        class="flex flex-col justify-between space-y-3 rounded-lg bg-inherit px-4 py-5 shadow-sm ring ring-stone-300/40 dark:ring-stone-600/50"
       >
         <div class="flex items-center gap-3">
           <H2>Account</H2>

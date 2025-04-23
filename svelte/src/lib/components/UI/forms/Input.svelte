@@ -21,57 +21,70 @@
       | "password"
       | "email"
       | "checkbox"
+      | "date"
       | string;
   } = $props();
 
-  const styling =
-    "mt-1 md:mt-2 w-full rounded-md p-1 px-2 text-sm md:text-base lg:text-lg  dark:border-stone-700 dark:bg-stone-950 disabled:text-stone-500 ring ring-stone-300/30 dark:ring-stone-600/30";
+  const baseStyle =
+    "w-full rounded-2xl bg-white dark:bg-stone-950 border border-stone-300 dark:border-stone-700 px-4 py-2 text-base text-stone-900 dark:text-stone-100 placeholder-stone-400 transition-all shadow-sm focus:shadow-md focus:outline-none focus:border-cacao-500 focus:ring-2 focus:ring-cacao-500/20 disabled:opacity-60 disabled:cursor-not-allowed";
 </script>
 
-<Label>{labelName}</Label>
-{#if type === "text"}
-  <input
-    {name}
-    type="text"
-    bind:value
-    {disabled}
-    class="{styling} focus:border-cacao-500 focus:ring-cacao-500"
-    {placeholder}
-  />
-{:else if type === "textarea"}
-  <textarea
-    {name}
-    rows="3"
-    bind:value
-    {disabled}
-    class="{styling} focus:border-cacao-500 focus:ring-cacao-500 resize-none"
-    {placeholder}
-  ></textarea>
-{:else if type === "number"}
-  <input
-    type="number"
-    {placeholder}
-    {name}
-    {disabled}
-    bind:value
-    class="{styling} focus:border-cacao-500 focus:ring-cacao-500"
-  />
-{:else if type === "password"}
-  <input
-    type="password"
-    {placeholder}
-    {name}
-    bind:value
-    {disabled}
-    class="{styling} focus:border-cacao-500 focus:ring-cacao-500"
-  />
-{:else if type === "email"}
-  <input
-    type="email"
-    {placeholder}
-    {name}
-    bind:value
-    {disabled}
-    class="{styling} focus:border-cacao-500 focus:ring-cacao-500"
-  />
-{/if}
+<div class="space-y-1">
+  <Label>{labelName}</Label>
+
+  {#if type === "text"}
+    <input
+      {name}
+      type="text"
+      bind:value
+      {disabled}
+      class={baseStyle}
+      {placeholder}
+    />
+  {:else if type === "textarea"}
+    <textarea
+      {name}
+      rows="3"
+      bind:value
+      {disabled}
+      class={baseStyle + " resize-none"}
+      {placeholder}
+    ></textarea>
+  {:else if type === "number"}
+    <input
+      type="number"
+      {placeholder}
+      {name}
+      {disabled}
+      bind:value
+      class={baseStyle}
+    />
+  {:else if type === "password"}
+    <input
+      type="password"
+      {placeholder}
+      {name}
+      bind:value
+      {disabled}
+      class={baseStyle}
+    />
+  {:else if type === "email"}
+    <input
+      type="email"
+      {placeholder}
+      {name}
+      bind:value
+      {disabled}
+      class={baseStyle}
+    />
+  {:else if type === "date"}
+    <input
+      type="date"
+      {placeholder}
+      {name}
+      bind:value
+      {disabled}
+      class={baseStyle}
+    />
+  {/if}
+</div>

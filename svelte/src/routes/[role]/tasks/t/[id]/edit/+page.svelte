@@ -13,6 +13,7 @@
     HeaderEmbellish,
     GreySpan,
     Multipart,
+    Input,
   } from "$lib/components";
   import type { PageData } from "./$types";
 
@@ -69,30 +70,16 @@
   <input type="hidden" name="markdown" value={markdown} />
 
   <div class="grid grid-cols-1 gap-5 md:grid-cols-4">
-    <div class="space-y-2">
-      <Label>Title</Label>
-      <input
-        name="title"
-        value={task.title}
-        placeholder="Title"
-        class="focus:ring-cacao-500 w-full rounded-lg border border-stone-200 px-4 py-2 transition duration-200 focus:ring focus:outline-none disabled:text-stone-500 dark:border-stone-800 dark:bg-stone-950 dark:focus:border-stone-800 dark:focus:ring dark:focus:ring-stone-700 dark:focus:outline-none"
-      />
-    </div>
+    <Input name="title" value={task.title} placeholder="Title"></Input>
+    <AssigneeSelector item={task} />
 
-    <div class="space-y-2">
-      <AssigneeSelector item={task} />
-    </div>
-
-    <div class="space-y-2">
-      <Label>Due Date</Label>
-      <input
-        id="dueDate"
-        type="date"
-        name="dueDate"
-        bind:value={dueDate}
-        class="focus:ring-cacao-500 w-full rounded-lg border border-stone-200 px-4 py-2 transition duration-200 focus:ring focus:outline-none disabled:text-stone-500 dark:border-stone-800 dark:bg-stone-950 dark:focus:border-stone-800 dark:focus:ring dark:focus:ring-stone-700 dark:focus:outline-none"
-      />
-    </div>
+    <Input
+      bind:value={dueDate}
+      type="date"
+      name="dueDate"
+      labelName="Due Date"
+      placeholder="Due Date"
+    ></Input>
     <div class="mt-2 self-end">
       <Toggler bind:value={task.completed} />
     </div>

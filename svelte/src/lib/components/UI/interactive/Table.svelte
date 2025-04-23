@@ -60,7 +60,7 @@
           type="text"
           bind:value={$searchTerm}
           placeholder="Search..."
-          class="focus:border-cacao-400 focus:ring-cacao-500/20 dark:focus:border-cacao-500 dark:focus:ring-cacao-500/30 w-full rounded-full border border-stone-200 bg-white py-2.5 pr-10 pl-10 placeholder:text-stone-400 focus:ring-2 focus:outline-none dark:border-stone-800 dark:bg-stone-950 dark:placeholder:text-stone-600"
+          class="focus:border-cacao-400 focus:ring-cacao-500/20 dark:focus:border-cacao-500 dark:focus:ring-cacao-500/30 w-full rounded-2xl bg-white py-2.5 pr-10 pl-10 shadow-sm ring ring-stone-300/50 placeholder:text-stone-400 focus:ring-2 focus:outline-none dark:border-stone-600/30 dark:bg-stone-950 dark:ring-stone-600/50 dark:placeholder:text-stone-600"
         />
         {#if $searchTerm}
           <button
@@ -75,36 +75,6 @@
     </div>
     {#if items.length !== 0}
       <div class="hidden items-center gap-3 md:flex">
-        {#if students.length > 0}
-          <div class="relative min-w-40">
-            <select
-              id="assignee"
-              name="assignee"
-              bind:value={$assigneeStore}
-              class="focus:border-cacao-500 focus:ring-cacao-500/20 dark:focus:border-cacao-500 dark:focus:ring-cacao-500/30 w-full appearance-none rounded-lg border border-stone-200 bg-white py-2 pr-10 pl-4 text-sm focus:ring-2 focus:outline-none dark:border-stone-800 dark:bg-stone-950"
-            >
-              <option value="">All Students</option>
-              {#each students as student}
-                <option value={student.id}>{student.name}</option>
-              {/each}
-            </select>
-            <div
-              class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-stone-500"
-            >
-              <svg class="h-4 w-4 fill-current" viewBox="0 0 20 20">
-                <path
-                  d="M7 7l3-3 3 3m0 6l-3 3-3-3"
-                  stroke="currentColor"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  fill="none"
-                ></path>
-              </svg>
-            </div>
-          </div>
-        {/if}
-
         <form
           action="?/new"
           method="post"
@@ -138,7 +108,7 @@
   </div>
 
   <div
-    class="overflow-hidden rounded-lg border border-stone-200 bg-white dark:border-stone-800 dark:bg-stone-950"
+    class="overflow-hidden rounded-lg bg-white shadow-sm ring ring-stone-300/50 dark:border-stone-600/30 dark:bg-stone-950 dark:ring-stone-600/50"
   >
     {#if items.length === 0 && !isEmptySearch}
       <!-- Empty state -->
@@ -222,7 +192,7 @@
         <table class="w-full table-auto">
           <thead>
             <tr
-              class="border-b border-stone-200 bg-stone-50 dark:border-stone-700 dark:bg-stone-900"
+              class="border-b border-stone-300/30 bg-stone-50 dark:border-stone-700 dark:bg-stone-900"
             >
               {#each config.columns as column}
                 <th
@@ -259,7 +229,7 @@
 
       <!-- Table footer with row count -->
       <div
-        class="flex items-center justify-between border-t border-stone-200 bg-stone-50 px-6 py-3 text-sm text-stone-500 dark:border-stone-800 dark:bg-stone-900 dark:text-stone-400"
+        class="flex items-center justify-between border-t border-stone-300/30 bg-stone-50 px-6 py-3 text-sm text-stone-500 dark:border-stone-600/30 dark:bg-stone-900 dark:text-stone-400"
       >
         <div>
           Showing <span class="font-medium text-stone-700 dark:text-stone-300"

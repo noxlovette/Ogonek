@@ -8,19 +8,13 @@
 
   $effect(() => {
     if ($notification.message) {
-      if (timeout) {
-        clearTimeout(timeout);
-      }
-      timeout = setTimeout(() => {
-        clearNotification();
-      }, 3000);
+      if (timeout) clearTimeout(timeout);
+      timeout = setTimeout(() => clearNotification(), 3000);
     }
   });
 
   onDestroy(() => {
-    if (timeout) {
-      clearTimeout(timeout);
-    }
+    if (timeout) clearTimeout(timeout);
   });
 
   function handleDismiss() {
@@ -30,33 +24,30 @@
 
 {#if $notification.message}
   <div
-    transition:fade={{ duration: 200 }}
-    class="fixed top-4 left-1/2 z-50 flex max-w-md -translate-x-1/2 items-center gap-3 rounded-lg shadow-lg ring-1
-    {$notification.type === 'success'
-      ? 'bg-stone-50 text-green-700 ring-green-600 dark:bg-stone-900  dark:text-green-200'
-      : $notification.type === 'error'
-        ? 'bg-stone-50 text-red-700 ring-red-600 dark:bg-stone-900 dark:text-red-200'
-        : 'text-cacao-700 ring-cacao-600 dark:text-cacao-200 bg-stone-50 dark:bg-stone-900 '}
-    px-4 py-3"
+    transition:fade={{ duration: 250 }}
+    class="fixed top-5 left-1/2 z-50 flex max-w-sm -translate-x-1/2 items-center gap-3 rounded-2xl
+    border border-stone-200 bg-white/70 px-5 py-3 capitalize
+    shadow-xl
+    ring-1 ring-black/5 backdrop-blur-md dark:border-stone-800 dark:bg-stone-900/70 dark:ring-white/10"
   >
     {#if $notification.type === "success"}
-      <Check class="size-5" />
+      <Check class="size-5 text-green-500" />
     {:else if $notification.type === "error"}
-      <Ban class="size-5" />
+      <Ban class="size-5 text-red-500" />
     {:else}
-      <AlertCircle class="size-5" />
+      <AlertCircle class="size-5 text-yellow-500" />
     {/if}
 
-    <p class="text font-medium capitalize">
+    <p class="flex-1 text-sm font-medium text-stone-800 dark:text-stone-100">
       {$notification.message}
     </p>
 
     <button
       onclick={handleDismiss}
-      class="ml-1 rounded-full p-1 transition-colors hover:bg-stone-200/50 dark:hover:bg-stone-800/50"
+      class="rounded-full p-1 transition-colors hover:bg-stone-200/40 dark:hover:bg-stone-800/40"
       aria-label="Dismiss notification"
     >
-      <X class="size-4" />
+      <X class="size-4 text-stone-600 dark:text-stone-300" />
     </button>
   </div>
 {/if}

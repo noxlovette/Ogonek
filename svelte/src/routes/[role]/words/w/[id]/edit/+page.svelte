@@ -87,7 +87,7 @@
       <div class="space-y-6">
         {#if updatedCards.length === 0}
           <div
-            class="flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-stone-200 bg-stone-50 p-12 text-center dark:border-stone-800 dark:bg-stone-900/50"
+            class="flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-stone-300/30 bg-stone-50 p-12 text-center dark:border-stone-600/30 dark:bg-stone-900/50"
           >
             <div class="mb-4 rounded-full bg-stone-100 p-4 dark:bg-stone-800">
               <svg
@@ -130,7 +130,7 @@
           <button
             type="button"
             onclick={addCard}
-            class="group hover:border-cacao-300 hover:text-cacao-500 dark:hover:border-cacao-700 dark:hover:text-cacao-400 mt-4 flex w-full items-center justify-center rounded-lg border-2 border-dashed border-stone-200 bg-stone-50 py-4 text-stone-500 transition dark:border-stone-800 dark:bg-stone-900/50 dark:text-stone-400"
+            class="group hover:border-cacao-300 hover:text-cacao-500 dark:hover:border-cacao-700 dark:hover:text-cacao-400 mt-4 flex w-full items-center justify-center rounded-lg border-2 border-dashed border-stone-300/30 bg-stone-50 py-4 text-stone-500 transition dark:border-stone-600/30 dark:bg-stone-900/50 dark:text-stone-400"
           >
             <Plus class="mr-2 h-5 w-5 transition group-hover:scale-110" />
             <span>Add Another Card</span>
@@ -159,15 +159,6 @@
           />
         </div>
 
-        <div>
-          <UniButton
-            type="button"
-            onclick={showImportModal}
-            Icon={UploadCloud}
-            variant="outline">Import</UniButton
-          >
-        </div>
-
         {#if role === "t"}
           <AssigneeSelector item={deck} />
 
@@ -176,7 +167,7 @@
             <select
               name="visibility"
               value={deck.visibility}
-              class="focus:ring-cacao-500 w-full rounded-lg border border-stone-200 bg-white px-4 py-2 transition duration-200 focus:ring focus:outline-none disabled:text-stone-500 dark:border-stone-800 dark:bg-stone-950 dark:focus:border-stone-800 dark:focus:ring dark:focus:ring-stone-700 dark:focus:outline-none"
+              class="focus:border-cacao-500 focus:ring-cacao-500/20 h-full w-full rounded-2xl border border-stone-300 bg-white px-4 py-2 text-base text-stone-900 placeholder-stone-400 shadow-sm transition-all focus:shadow-md focus:ring-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60 dark:border-stone-700 dark:bg-stone-950 dark:text-stone-100"
             >
               <option value="private">Private</option>
               <option value="public">Public</option>
@@ -186,6 +177,12 @@
         {/if}
 
         <div class="flex flex-col gap-3 pt-4">
+          <UniButton
+            type="button"
+            onclick={showImportModal}
+            Icon={UploadCloud}
+            variant="outline">Import</UniButton
+          >
           <UniButton variant="secondary" Icon={Ban} href=".">Cancel</UniButton>
           <UniButton variant="primary" type="submit" Icon={Check}
             >Save</UniButton

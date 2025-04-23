@@ -22,10 +22,10 @@
     styling,
     `hover:ring-cacao-400 group relative flex
      flex-col justify-between overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm ring-1
-      ring-stone-300/30 transition-all duration-200 ease-out
+      ring-stone-300/40 transition-all duration-200 ease-out
 
       dark:bg-stone-950
-    dark:ring-stone-600/30
+    dark:ring-stone-600/50
   `,
   ]}
   style={`height: ${height};`}

@@ -34,7 +34,7 @@
 >
   <!-- Card Front -->
   <div
-    class="ring-cacao-200 absolute inset-0 flex h-full w-full items-center justify-center rounded-sm bg-white p-5 shadow-sm ring-1 transition-all duration-150 backface-hidden hover:shadow-lg dark:bg-stone-900 dark:ring-stone-600/30 {flippedCards.has(
+    class="ring-cacao-200 absolute inset-0 flex h-full w-full items-center justify-center rounded-sm bg-white p-5 shadow-sm ring-1 transition-all duration-150 backface-hidden hover:shadow-sm dark:bg-stone-900 dark:ring-stone-600/50 {flippedCards.has(
       card.id,
     )
       ? 'opacity-0'
@@ -69,7 +69,7 @@
 
   <!-- Card Back -->
   <div
-    class="bg-cacao-50 ring-cacao-500 absolute inset-0 flex h-full w-full items-center justify-center rounded-sm p-5 shadow-sm ring-1 transition-all duration-150 backface-hidden hover:shadow-lg dark:bg-stone-900 dark:ring-stone-700 {flippedCards.has(
+    class="bg-cacao-50 ring-cacao-500 absolute inset-0 flex h-full w-full items-center justify-center rounded-sm p-5 shadow-sm ring-1 transition-all duration-150 backface-hidden hover:shadow-sm dark:bg-stone-900 dark:ring-stone-600/50 {flippedCards.has(
       card.id,
     )
       ? 'opacity-100'

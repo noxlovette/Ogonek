@@ -29,5 +29,5 @@
   {title}
   {subtitle}
   {caption}
-  styling={overdue ? "ring-offset-1 ring-offset-red-400" : ""}
+  styling={overdue ? "ring-offset-2 ring-offset-red-400/50" : ""}
 />

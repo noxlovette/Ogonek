@@ -37,7 +37,7 @@
     bind:this={searchElement}
     onclick={handleSearchClick}
     {placeholder}
-    class="bg-cacao-50 focus:ring-cacao-500 focus:placeholder:text-cacao-400/70 w-full rounded-full border border-stone-200 py-2 pr-4 pl-10 placeholder:text-stone-500 focus:border-transparent focus:ring dark:border-stone-900 dark:bg-stone-950
+    class="bg-cacao-50 focus:ring-cacao-500 focus:placeholder:text-cacao-400/70 w-full rounded-full py-2 pr-4 pl-10 shadow-sm placeholder:text-stone-500 focus:border-transparent focus:ring dark:border-stone-900 dark:bg-stone-950
         dark:focus:ring-stone-700
         dark:focus:placeholder:text-stone-700
         "
@@ -46,11 +46,11 @@
     class="absolute top-1/2 right-3 hidden -translate-y-1/2 items-center gap-1 text-xs text-stone-400 md:flex dark:text-stone-800"
   >
     <kbd
-      class="rounded border border-stone-300 bg-stone-100 px-1.5 py-0.5 dark:border-stone-800 dark:bg-stone-400"
+      class="rounded border border-stone-300 bg-stone-100 px-1.5 py-0.5 dark:border-stone-600/30 dark:bg-stone-400"
       >{cmdKey}</kbd
     >
     <kbd
-      class="rounded border border-stone-300 bg-stone-100 px-1.5 py-0.5 dark:border-stone-800 dark:bg-stone-400"
+      class="rounded border border-stone-300 bg-stone-100 px-1.5 py-0.5 dark:border-stone-600/30 dark:bg-stone-400"
       >K</kbd
     >
   </div>

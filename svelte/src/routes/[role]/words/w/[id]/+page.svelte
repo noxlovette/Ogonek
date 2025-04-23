@@ -126,7 +126,7 @@
   <div class="h-full">
     <div class="sticky top-6">
       <div
-        class="space-y-3 rounded-lg bg-white p-4 shadow-sm ring-1 ring-stone-300/30 dark:bg-stone-800 dark:ring-stone-700"
+        class="space-y-3 rounded-lg bg-white p-4 shadow-sm ring-1 ring-stone-300/40 dark:bg-stone-800 dark:ring-stone-600/50"
       >
         <Label>Description</Label>
         {#if deck.description}

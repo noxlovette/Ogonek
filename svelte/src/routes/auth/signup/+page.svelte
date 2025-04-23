@@ -49,8 +49,8 @@
           type="text"
           name="name"
           required
-          class="focus:ring-cacao-500 w-full rounded-lg border border-stone-200 px-4 py-2 transition duration-200 focus:ring focus:outline-none disabled:text-stone-500
-            dark:border-stone-800 dark:bg-stone-950 dark:focus:border-stone-800 dark:focus:ring
+          class="focus:ring-cacao-500 w-full rounded-lg px-4 py-2 shadow-sm transition duration-200 focus:ring focus:outline-none disabled:text-stone-500
+            dark:border-stone-600/30 dark:bg-stone-950 dark:focus:border-stone-800 dark:focus:ring
                    dark:focus:ring-stone-700 dark:focus:outline-none"
         />
       </div>
@@ -63,8 +63,8 @@
           type="text"
           name="username"
           required
-          class="focus:ring-cacao-500 w-full rounded-lg border border-stone-200 px-4 py-2 transition duration-200 focus:ring focus:outline-none disabled:text-stone-500
-            dark:border-stone-800 dark:bg-stone-950 dark:focus:border-stone-800 dark:focus:ring
+          class="focus:ring-cacao-500 w-full rounded-lg px-4 py-2 shadow-sm transition duration-200 focus:ring focus:outline-none disabled:text-stone-500
+            dark:border-stone-600/30 dark:bg-stone-950 dark:focus:border-stone-800 dark:focus:ring
                    dark:focus:ring-stone-700 dark:focus:outline-none"
         />
       </div>
@@ -76,8 +76,8 @@
         <select
           name="role"
           required
-          class="focus:ring-cacao-500 w-full rounded-lg border border-stone-200 px-4 py-2 transition duration-200 focus:ring focus:outline-none disabled:text-stone-500
-            dark:border-stone-800 dark:bg-stone-950 dark:focus:border-stone-800 dark:focus:ring
+          class="focus:ring-cacao-500 w-full rounded-lg px-4 py-2 shadow-sm transition duration-200 focus:ring focus:outline-none disabled:text-stone-500
+            dark:border-stone-600/30 dark:bg-stone-950 dark:focus:border-stone-800 dark:focus:ring
                    dark:focus:ring-stone-700 dark:focus:outline-none"
         >
           <option value="">Select a role</option>
@@ -94,8 +94,8 @@
           type="email"
           name="email"
           required
-          class="focus:ring-cacao-500 w-full rounded-lg border border-stone-200 px-4 py-2 transition duration-200 focus:ring focus:outline-none disabled:text-stone-500
-            dark:border-stone-800 dark:bg-stone-950 dark:focus:border-stone-800 dark:focus:ring
+          class="focus:ring-cacao-500 w-full rounded-lg px-4 py-2 shadow-sm transition duration-200 focus:ring focus:outline-none disabled:text-stone-500
+            dark:border-stone-600/30 dark:bg-stone-950 dark:focus:border-stone-800 dark:focus:ring
                    dark:focus:ring-stone-700 dark:focus:outline-none"
         />
       </div>
@@ -109,8 +109,8 @@
           name="password"
           bind:value={password}
           required
-          class="focus:ring-cacao-500 w-full rounded-lg border border-stone-200 px-4 py-2 transition duration-200 focus:ring focus:outline-none disabled:text-stone-500
-            dark:border-stone-800 dark:bg-stone-950 dark:focus:border-stone-800 dark:focus:ring
+          class="focus:ring-cacao-500 w-full rounded-lg px-4 py-2 shadow-sm transition duration-200 focus:ring focus:outline-none disabled:text-stone-500
+            dark:border-stone-600/30 dark:bg-stone-950 dark:focus:border-stone-800 dark:focus:ring
                    dark:focus:ring-stone-700 dark:focus:outline-none"
         />
       </div>
@@ -126,8 +126,8 @@
           name="confirmPassword"
           bind:value={confirmPassword}
           required
-          class="focus:ring-cacao-500 w-full rounded-lg border border-stone-200 px-4 py-2 transition duration-200 focus:ring focus:outline-none disabled:text-stone-500
-            dark:border-stone-800 dark:bg-stone-950 dark:focus:border-stone-800 dark:focus:ring
+          class="focus:ring-cacao-500 w-full rounded-lg px-4 py-2 shadow-sm transition duration-200 focus:ring focus:outline-none disabled:text-stone-500
+            dark:border-stone-600/30 dark:bg-stone-950 dark:focus:border-stone-800 dark:focus:ring
                    dark:focus:ring-stone-700 dark:focus:outline-none"
         />
         {#if !passwordMatch}

@@ -1,6 +1,6 @@
 @layer components {
   .markdown {
-    @apply mx-auto my-4 w-full max-w-[65ch] rounded-xl px-4 md:my-0;
+    @apply mx-auto my-4 w-full rounded-xl px-4 md:my-0;
 
     > *:first-child {
       @apply mt-0;
@@ -52,7 +52,7 @@
     }
 
     hr {
-      @apply my-8 border-t border-stone-200 dark:border-stone-700;
+      @apply my-8 border-t border-stone-300/30 dark:border-stone-700;
     }
 
     table {
@@ -64,7 +64,7 @@
     }
 
     td {
-      @apply border-b border-stone-200 px-3 py-2 text-sm text-stone-700 dark:border-stone-700 dark:text-stone-300;
+      @apply border-b border-stone-300/30 px-3 py-2 text-sm text-stone-700 dark:border-stone-700 dark:text-stone-300;
     }
 
     img {
@@ -123,7 +123,7 @@
     }
 
     hr {
-      @apply my-1 border-t border-stone-200 dark:border-stone-700;
+      @apply my-1 border-t border-stone-300/30 dark:border-stone-700;
     }
 
     table {
@@ -135,7 +135,7 @@
     }
 
     td {
-      @apply border-b border-stone-200 px-2 py-1 text-stone-700 dark:border-stone-700 dark:text-stone-300;
+      @apply border-b border-stone-300/30 px-2 py-1 text-stone-700 dark:border-stone-700 dark:text-stone-300;
     }
 
     img {

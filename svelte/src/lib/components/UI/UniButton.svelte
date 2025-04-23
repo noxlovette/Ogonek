@@ -76,16 +76,16 @@
 
   const variantClasses = {
     primary:
-      "bg-gradient-to-br from-white/80 to-stone-100/80 text-stone-900 shadow-md ring-1 ring-stone-300/30 hover:from-white hover:to-stone-200 dark:from-stone-900/70 dark:to-stone-800/70 dark:text-white dark:hover:from-stone-800 dark:hover:to-stone-700",
+      "bg-gradient-to-br from-white/80 transition-colors to-stone-100/80 text-stone-900 shadow-sm ring-1 ring-stone-300/40 hover:from-white hover:to-stone-200 dark:from-stone-900/70 dark:to-stone-800/70 dark:text-white dark:hover:from-stone-800 dark:hover:to-stone-700",
     secondary:
       "bg-white/70 text-stone-700 ring-1 ring-stone-300 hover:bg-white shadow-sm dark:bg-stone-900/80 dark:text-stone-200 hover:dark:bg-stone-800 dark:ring-stone-600/40",
     danger:
-      "bg-gradient-to-br from-red-100/80 to-red-200/80 text-red-800 hover:from-red-200 hover:to-red-300 ring-1 ring-red-300/40 shadow-sm dark:from-red-700/70 dark:to-red-800/70 dark:text-white dark:hover:from-red-600 dark:hover:to-red-700",
+      "bg-gradient-to-br from-red-100/80 transition-colors to-red-200/80 text-red-800 hover:from-red-200 hover:to-red-300 ring-1 ring-red-300/40 shadow-sm dark:from-red-700/70 dark:to-red-800/70 dark:text-white dark:hover:from-red-600 dark:hover:to-red-700",
     ghost:
       "text-stone-600 dark:text-stone-400 hover:bg-stone-100/60 dark:hover:bg-stone-800/60",
     link: "text-cacao-600 underline hover:text-cacao-800 p-0 ring-0 dark:text-cacao-300 dark:hover:text-cacao-100",
     outline:
-      "bg-transparent text-stone-800 ring-1 ring-stone-300 hover:bg-stone-50 dark:text-stone-200 dark:ring-stone-700 dark:hover:bg-stone-800",
+      "bg-transparent text-stone-800 ring-1 ring-stone-300 hover:bg-stone-50 dark:text-stone-200 dark:ring-stone-600/50 dark:hover:bg-stone-800",
   };
 
   const shapeClasses = $derived(rounded ? "rounded-full" : "rounded-lg");
@@ -150,7 +150,7 @@
     class="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm"
   >
     <div
-      class="w-full max-w-sm rounded-xl bg-white/90 p-6 shadow-lg ring-1 ring-stone-300/30 dark:bg-stone-900/90 dark:ring-stone-700"
+      class="w-full max-w-sm rounded-xl bg-white/90 p-6 shadow-sm ring-1 ring-stone-300/40 dark:bg-stone-900/90 dark:ring-stone-600/50"
     >
       <h3 class="text-lg font-semibold text-stone-800 dark:text-stone-200">
         {confirmTitle || "Are you sure?"}
