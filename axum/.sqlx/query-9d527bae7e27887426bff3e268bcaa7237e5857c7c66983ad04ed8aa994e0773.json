@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "\n        SELECT\n            t.id,\n            t.title,\n            t.markdown,\n            t.priority,\n            t.completed,\n            t.due_date,\n            t.assignee,\n            t.created_by,\n            t.created_at,\n            t.updated_at,\n            u.name as assignee_name\n        FROM tasks t\n        LEFT JOIN \"user\" u ON t.assignee = u.id\n        WHERE t.id = $1\n        AND (t.assignee = $2 OR t.created_by = $2)\n        ",
+  "query": "\n            SELECT\n                t.id,\n                t.title,\n                t.markdown,\n                t.priority,\n                t.completed,\n                t.due_date,\n                t.assignee,\n                t.created_by,\n                t.created_at,\n                t.updated_at,\n                u.name as assignee_name\n            FROM tasks t\n            LEFT JOIN \"user\" u ON t.assignee = u.id\n            WHERE t.id = $1\n            AND (t.assignee = $2 OR t.created_by = $2)\n            ",
   "describe": {
     "columns": [
       {
@@ -79,5 +79,5 @@
       false
     ]
   },
-  "hash": "00984e5368a5a8d24a94df81b19722fdb1b53156f9afa05673b48c4b81b48fcb"
+  "hash": "9d527bae7e27887426bff3e268bcaa7237e5857c7c66983ad04ed8aa994e0773"
 }

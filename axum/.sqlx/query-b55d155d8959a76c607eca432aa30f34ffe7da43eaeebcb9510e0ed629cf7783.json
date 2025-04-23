@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "\n     SELECT id, name, description\n     FROM decks\n     WHERE visibility = 'public'\n     ",
+  "query": "\n SELECT id, name, description\n FROM decks\n WHERE visibility = 'public'\n ",
   "describe": {
     "columns": [
       {
@@ -28,5 +28,5 @@
       true
     ]
   },
-  "hash": "786bc215cf58d0cd3adfae73fee7b08c360f4ed2b4666f0996bce10f1e3ae35b"
+  "hash": "b55d155d8959a76c607eca432aa30f34ffe7da43eaeebcb9510e0ed629cf7783"
 }

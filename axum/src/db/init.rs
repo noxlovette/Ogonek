@@ -12,6 +12,5 @@ pub async fn init_db() -> anyhow::Result<PgPool> {
         .await
         .context("Failed to connect to Postgres")?;
 
-    sqlx::migrate!().run(&db).await?;
     Ok(db)
 }
