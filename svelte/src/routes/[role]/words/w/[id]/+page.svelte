@@ -37,8 +37,9 @@
 </svelte:head>
 <HeaderEmbellish>
   <H1>{deck.name}</H1>
-  <div class="flex gap-2">
+  <div class="flex flex-col gap-2 md:flex-row">
     <form
+      class="w-full"
       method="POST"
       action="?/share"
       use:enhance={enhanceForm({

@@ -87,7 +87,7 @@
 </svelte:head>
 
 <HeaderEmbellish>
-  <div>
+  <div class="flex flex-col items-center md:items-start">
     <H1>Flashcards</H1>
     <H3>
       {#if data.cards?.length}
@@ -97,9 +97,13 @@
       {/if}
     </H3>
   </div>
-  <div class="flex space-x-4">
-    <UniButton Icon={ShoppingBag} variant="outline" href="words/marketplace"
-      >Marketplace</UniButton
+
+  <div class="flex flex-col gap-2 md:flex-row md:gap-4">
+    <UniButton
+      Icon={ShoppingBag}
+      variant="outline"
+      href="words/marketplace"
+      styling="hidden md:flex">Marketplace</UniButton
     >
     {#if data.cards?.length}
       <UniButton
@@ -120,11 +124,11 @@
 {#if role === "s"}
   <div class="space-y-4">
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-      <H2>Your Decks</H2>
+      <H2 styling="hidden md:block">Your Decks</H2>
 
       <form
         method="POST"
-        class="mt-3 sm:mt-0"
+        class="mt-0 md:mt-3"
         action="?/new"
         use:enhance={enhanceForm({
           messages: {
@@ -138,11 +142,11 @@
           Icon={PlusCircle}
           type="submit"
           variant="outline"
+          styling="md:flex hidden"
           iconPosition="right">New Deck</UniButton
         >
       </form>
     </div>
-
     {#if decks.length}
       <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {#each decks as deck}

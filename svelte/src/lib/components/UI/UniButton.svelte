@@ -1,7 +1,7 @@
 <script lang="ts">
   import { Loader2 } from "lucide-svelte";
   import { isLoading } from "$lib/stores";
-  import type { Component, Snippet } from "svelte";
+  import type { ComponentType, Snippet } from "svelte";
   import type { MouseEventHandler } from "svelte/elements";
 
   type ButtonVariant =
@@ -23,7 +23,7 @@
     formaction?: string | undefined;
     styling?: string;
     disable?: boolean;
-    Icon: Component | undefined;
+    Icon: ComponentType | undefined;
     iconPosition?: "left" | "right";
     fullWidth?: boolean;
     rounded?: boolean;

@@ -1,4 +1,4 @@
-export { default as caption } from "./caption.svelte";
+export { default as Caption } from "./Caption.svelte";
 export { default as EmptySpace } from "./EmptySpace.svelte";
 export { default as GreySpan } from "./GreySpan.svelte";
 export { default as GridCell } from "./GridCell.svelte";

@@ -122,9 +122,7 @@
         review.
       </p>
 
-      <UniButton href="." Icon={Home} variant="primary"
-        >Return to the Words page</UniButton
-      >
+      <UniButton href="." Icon={Home} variant="primary">Words Page</UniButton>
     </div>
   </div>
 {:else if currentCard}

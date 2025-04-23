@@ -3,7 +3,7 @@
 </script>
 
 <h3
-  class="text-2xl leading-6 font-medium tracking-normal text-balance sm:text-xl lg:text-2xl {styling}"
+  class="text-xl leading-6 font-medium tracking-normal text-balance md:text-2xl {styling}"
 >
   {@render children()}
 </h3>

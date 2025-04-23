@@ -80,7 +80,6 @@
   </form>
 {:else}
   <section class="space-y-4">
-    <H2>Recent Lessons</H2>
     <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
       {#each lessons as lesson}
         <LessonCard {lesson} />
