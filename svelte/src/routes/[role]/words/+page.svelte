@@ -93,31 +93,36 @@
       {#if data.cards?.length}
         {data.cards.length} cards due today
       {:else}
-        All Caught Up! 🎉
+        All Caught Up!
       {/if}
     </H3>
   </div>
 
-  <div class="flex flex-col gap-2 md:flex-row md:gap-4">
+  <div class="flex flex-col gap-2 md:flex-row">
+    <form
+      action="?/new"
+      method="post"
+      use:enhance={enhanceForm({
+        messages: {
+          redirect: "New Deck Created",
+        },
+        navigate: true,
+      })}
+    >
+      <UniButton Icon={PlusCircle} type="submit" variant="primary"
+        >New</UniButton
+      >
+    </form>
     <UniButton
       Icon={ShoppingBag}
-      variant="outline"
+      variant="primary"
       href="words/marketplace"
       styling="hidden md:flex">Marketplace</UniButton
     >
     {#if data.cards?.length}
-      <UniButton
-        variant="primary"
-        Icon={ArrowBigRight}
-        iconPosition="right"
-        href="words/learn">Start Review</UniButton
+      <UniButton variant="primary" Icon={ArrowBigRight} href="words/learn"
+        >Start Review</UniButton
       >
-    {:else}
-      <div
-        class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-stone-200 dark:bg-stone-800"
-      >
-        <Cat />
-      </div>
     {/if}
   </div>
 </HeaderEmbellish>
@@ -133,7 +138,6 @@
         use:enhance={enhanceForm({
           messages: {
             redirect: "New Deck Created",
-            defaultError: "Something's off",
           },
           navigate: true,
         })}
@@ -142,8 +146,7 @@
           Icon={PlusCircle}
           type="submit"
           variant="outline"
-          styling="md:flex hidden"
-          iconPosition="right">New Deck</UniButton
+          styling="md:flex hidden">New Deck</UniButton
         >
       </form>
     </div>

@@ -41,12 +41,8 @@
       },
     })}
   >
-    <div class="">
-      <Input name="username" placeholder="Username" value="" />
-    </div>
-    <div class="">
-      <Input name="password" placeholder="Password" value="" type="password" />
-    </div>
+    <Input name="username" placeholder="Username" value="" />
+    <Input name="password" placeholder="Password" value="" type="password" />
     <Turnstile />
     <UniButton Icon={DoorOpen} type="submit" variant="primary" fullWidth={true}
       >Login</UniButton

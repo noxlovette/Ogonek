@@ -84,14 +84,31 @@
 
 <HeaderEmbellish>
   <H1>Tasks</H1>
-  <UniButton
-    type="button"
-    onclick={toggleCompletedTasks}
-    variant="primary"
-    Icon={$completedStore === true ? EyeClosed : Eye}
-  >
-    {$completedStore === true ? "Hide Completed" : "Show Completed"}
-  </UniButton>
+  <div class="flex gap-2">
+    <form
+      action="?/new"
+      method="post"
+      use:enhance={enhanceForm({
+        messages: {
+          redirect: "New Task Created",
+        },
+        navigate: true,
+      })}
+    >
+      <UniButton Icon={PlusCircle} type="submit" variant="primary"
+        >New</UniButton
+      >
+    </form>
+
+    <UniButton
+      type="button"
+      onclick={toggleCompletedTasks}
+      variant="primary"
+      Icon={$completedStore === true ? EyeClosed : Eye}
+    >
+      {$completedStore === true ? "Hide Completed" : "Show Completed"}
+    </UniButton>
+  </div>
 </HeaderEmbellish>
 {#if role === "t"}
   <Table
@@ -102,13 +119,6 @@
     {total}
     showComplete={true}
   />
-  <form action="?/new" method="post" use:enhance>
-    {#if tasks?.length === 0}
-      <UniButton type="submit" variant="ghost" Icon={PlusCircle}
-        >Add your first one</UniButton
-      >
-    {/if}
-  </form>
 {:else if tasks?.length > 0}
   <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
     {#each tasks as task (task.id)}

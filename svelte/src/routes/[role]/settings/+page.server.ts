@@ -1,5 +1,5 @@
 import { handleApiResponse, isSuccessResponse } from "$lib/server";
-import type { Profile, User } from "$lib/types";
+import type { EmptyResponse } from "$lib/types";
 import { fail, redirect, type Actions } from "@sveltejs/kit";
 export const actions = {
   update: async ({ request, fetch, params }) => {
@@ -50,12 +50,12 @@ export const actions = {
       }),
     ]);
 
-    const profileResult = await handleApiResponse<Profile>(profileRes);
+    const profileResult = await handleApiResponse<EmptyResponse>(profileRes);
     if (!isSuccessResponse(profileResult)) {
       return fail(profileResult.status, { message: profileResult.message });
     }
 
-    const userResult = await handleApiResponse<User>(userRes);
+    const userResult = await handleApiResponse<EmptyResponse>(userRes);
     if (!isSuccessResponse(userResult)) {
       return fail(userResult.status, { message: userResult.message });
     }

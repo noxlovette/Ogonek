@@ -1,15 +1,12 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
-  import { notification } from "$lib/stores";
-  import { goto } from "$app/navigation";
-  import { Turnstile, UniButton } from "$lib/components";
+  import { Turnstile, UniButton, Input, Label } from "$lib/components";
   import { DoorOpen } from "lucide-svelte";
   import { enhanceForm } from "$lib/utils";
 
   let password = $state("");
   let confirmPassword = $state("");
   let passwordMatch = $state(true);
-  let isSubmitting = $state(false);
 </script>
 
 <div
@@ -41,99 +38,38 @@
     })}
   >
     <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-      <div>
-        <label for="name" class="block text-sm font-medium text-stone-700"
-          >Full Name</label
-        >
-        <input
-          type="text"
-          name="name"
-          required
-          class="focus:ring-cacao-500 w-full rounded-lg px-4 py-2 shadow-sm transition duration-200 focus:ring focus:outline-none disabled:text-stone-500
-            dark:border-stone-600/30 dark:bg-stone-950 dark:focus:border-stone-800 dark:focus:ring
-                   dark:focus:ring-stone-700 dark:focus:outline-none"
-        />
-      </div>
+      <Input name="name" placeholder="Name" value=""></Input>
+      <Input name="username" placeholder="Username" value=""></Input>
 
-      <div>
-        <label for="username" class="block text-sm font-medium text-stone-700"
-          >Username</label
-        >
-        <input
-          type="text"
-          name="username"
-          required
-          class="focus:ring-cacao-500 w-full rounded-lg px-4 py-2 shadow-sm transition duration-200 focus:ring focus:outline-none disabled:text-stone-500
-            dark:border-stone-600/30 dark:bg-stone-950 dark:focus:border-stone-800 dark:focus:ring
-                   dark:focus:ring-stone-700 dark:focus:outline-none"
-        />
-      </div>
-
-      <div>
-        <label for="role" class="block text-sm font-medium text-stone-700"
-          >Role</label
-        >
+      <div class="flex flex-col space-y-1">
+        <Label>Role</Label>
         <select
           name="role"
           required
-          class="focus:ring-cacao-500 w-full rounded-lg px-4 py-2 shadow-sm transition duration-200 focus:ring focus:outline-none disabled:text-stone-500
-            dark:border-stone-600/30 dark:bg-stone-950 dark:focus:border-stone-800 dark:focus:ring
-                   dark:focus:ring-stone-700 dark:focus:outline-none"
+          class="focus:border-cacao-500 focus:ring-cacao-500/20 h-full w-full rounded-2xl border border-stone-300 bg-white px-4 py-2 text-base text-stone-900 placeholder-stone-400 shadow-sm transition-all focus:shadow-md focus:ring-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60 dark:border-stone-700 dark:bg-stone-950 dark:text-stone-100"
         >
           <option value="">Select a role</option>
           <option value="teacher">Teacher</option>
           <option value="student">Student</option>
         </select>
       </div>
+      <Input name="email" placeholder="Email" type="email" value=""></Input>
+      <Input
+        name="password"
+        placeholder="Password"
+        type="password"
+        bind:value={password}
+      ></Input>
+      <Input
+        name="confirmPassword"
+        placeholder="Again"
+        type="password"
+        bind:value={confirmPassword}
+      ></Input>
 
-      <div>
-        <label for="email" class="block text-sm font-medium text-stone-700"
-          >Email</label
-        >
-        <input
-          type="email"
-          name="email"
-          required
-          class="focus:ring-cacao-500 w-full rounded-lg px-4 py-2 shadow-sm transition duration-200 focus:ring focus:outline-none disabled:text-stone-500
-            dark:border-stone-600/30 dark:bg-stone-950 dark:focus:border-stone-800 dark:focus:ring
-                   dark:focus:ring-stone-700 dark:focus:outline-none"
-        />
-      </div>
-
-      <div>
-        <label for="password" class="block text-sm font-medium text-stone-700"
-          >Password</label
-        >
-        <input
-          type="password"
-          name="password"
-          bind:value={password}
-          required
-          class="focus:ring-cacao-500 w-full rounded-lg px-4 py-2 shadow-sm transition duration-200 focus:ring focus:outline-none disabled:text-stone-500
-            dark:border-stone-600/30 dark:bg-stone-950 dark:focus:border-stone-800 dark:focus:ring
-                   dark:focus:ring-stone-700 dark:focus:outline-none"
-        />
-      </div>
-
-      <div>
-        <label
-          for="confirmPassword"
-          class="block text-sm font-medium text-stone-700"
-          >Confirm Password</label
-        >
-        <input
-          type="password"
-          name="confirmPassword"
-          bind:value={confirmPassword}
-          required
-          class="focus:ring-cacao-500 w-full rounded-lg px-4 py-2 shadow-sm transition duration-200 focus:ring focus:outline-none disabled:text-stone-500
-            dark:border-stone-600/30 dark:bg-stone-950 dark:focus:border-stone-800 dark:focus:ring
-                   dark:focus:ring-stone-700 dark:focus:outline-none"
-        />
-        {#if !passwordMatch}
-          <p class="mt-1 text-sm text-red-600">Passwords don't match</p>
-        {/if}
-      </div>
+      {#if !passwordMatch}
+        <p class="mt-1 text-sm text-red-600">Passwords don't match</p>
+      {/if}
     </div>
     <Turnstile />
     <UniButton Icon={DoorOpen} type="submit" variant="primary"

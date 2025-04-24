@@ -8,7 +8,6 @@
     H1,
     UniButton,
     AssigneeSelector,
-    Label,
     Toggler,
     HeaderEmbellish,
     GreySpan,

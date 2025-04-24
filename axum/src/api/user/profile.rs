@@ -5,15 +5,16 @@ use crate::models::profiles::{ProfileParams, ProfileUpdate};
 use crate::models::ProfileWithTS;
 use crate::schema::AppState;
 use axum::extract::{Json, Query, State};
+use hyper::StatusCode;
 
 pub async fn upsert_profile(
     State(state): State<AppState>,
     claims: Claims,
     Json(payload): Json<ProfileUpdate>,
-) -> Result<(), APIError> {
+) -> Result<StatusCode, APIError> {
     profile::upsert(&state.db, &claims.sub, &payload).await?;
 
-    Ok(())
+    Ok(StatusCode::NO_CONTENT)
 }
 
 pub async fn fetch_profile(
