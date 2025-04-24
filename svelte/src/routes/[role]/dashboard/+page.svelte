@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { PageData } from "./$types";
-  import { LessonCard, H1, Clock, TaskCard, H3 } from "$lib/components";
+  import { LessonCard, H1, TaskCard, H3, EmptySpace } from "$lib/components";
   import { fly } from "svelte/transition";
   import type { TaskSmall, LessonSmall } from "$lib/types";
   import { getGreeting } from "$lib/utils";
@@ -21,7 +21,7 @@
   <H3>Recent Tasks</H3>
   <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
     {#if tasks.length < 1}
-      No Tasks
+      <EmptySpace>No Tasks</EmptySpace>
     {/if}
     {#each tasks as task (task.id)}
       <div transition:fly={{ y: 20, duration: 300 }}>
@@ -35,7 +35,7 @@
   <H3>Latest Lessons</H3>
   <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
     {#if lessons.length < 1}
-      No Lessons
+      <EmptySpace>No Lessons</EmptySpace>
     {/if}
     {#each lessons as lesson (lesson.id)}
       <div transition:fly={{ y: 20, duration: 300 }}>

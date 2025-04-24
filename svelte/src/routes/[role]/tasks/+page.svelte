@@ -5,9 +5,9 @@
     H1,
     Table,
     TaskCard,
-    H2,
     UniButton,
     HeaderEmbellish,
+    EmptySpace,
   } from "$lib/components";
 
   import { enhance } from "$app/forms";
@@ -85,20 +85,22 @@
 <HeaderEmbellish>
   <H1>Tasks</H1>
   <div class="flex gap-2">
-    <form
-      action="?/new"
-      method="post"
-      use:enhance={enhanceForm({
-        messages: {
-          redirect: "New Task Created",
-        },
-        navigate: true,
-      })}
-    >
-      <UniButton Icon={PlusCircle} type="submit" variant="primary"
-        >New</UniButton
+    {#if role == "t"}
+      <form
+        action="?/new"
+        method="post"
+        use:enhance={enhanceForm({
+          messages: {
+            redirect: "New Task Created",
+          },
+          navigate: true,
+        })}
       >
-    </form>
+        <UniButton Icon={PlusCircle} type="submit" variant="primary"
+          >New</UniButton
+        >
+      </form>
+    {/if}
 
     <UniButton
       type="button"
@@ -126,7 +128,7 @@
     {/each}
   </div>
 {:else}
-  <div class="flex flex-col items-center justify-center py-12 text-center">
+  <EmptySpace>
     <h3 class="mb-2 text-2xl font-bold text-stone-800 dark:text-stone-200">
       Task Inbox Zero
     </h3>
@@ -158,7 +160,7 @@
         {randomPhrase}
       </UniButton>
     </form>
-  </div>
+  </EmptySpace>
 {/if}
 
 <svelte:head>

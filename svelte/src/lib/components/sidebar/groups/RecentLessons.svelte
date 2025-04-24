@@ -11,7 +11,7 @@
 <Group>
   <H2>Recent Lessons</H2>
 
-  <div class={$sidebar ? "flex-row py-2" : "flex-col"}>
+  <div class={$sidebar ? "flex-row space-y-2 py-2" : "flex-col"}>
     {#if $lessonStore.length === 0}
       <p>No lessons found</p>
     {:else}
@@ -26,7 +26,7 @@
       fullWidth={false}
       href="/s/lessons"
       type="button"
-      variant="link">View All</UniButton
+      variant="ghost">View All</UniButton
     >
   </div>
 </Group>

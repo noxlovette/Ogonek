@@ -1,9 +1,6 @@
 <script lang="ts">
-  import { H1, H2, IntroCard, UniButton } from "$lib/components";
-  import { user } from "$lib/stores";
+  import { IntroCard, UniButton } from "$lib/components";
   import { Flame, FlameKindling } from "lucide-svelte";
-
-  let href = $user.role === "teacher" ? "/t/dashboard" : "/s/dashboard";
 </script>
 
 <div class="flex w-full flex-col items-center space-y-4 md:p-6">

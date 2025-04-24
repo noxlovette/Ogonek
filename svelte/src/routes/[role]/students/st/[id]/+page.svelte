@@ -1,6 +1,7 @@
 <script lang="ts">
   import {
     DeckCard,
+    EmptySpace,
     GridCell,
     H1,
     H3,
@@ -41,6 +42,11 @@
     {#each studentDecks as deck}
       <DeckCard {deck}></DeckCard>
     {/each}
+    {#if studentDecks.length < 1}
+      <EmptySpace>
+        <H3>No Decks</H3>
+      </EmptySpace>
+    {/if}
   </GridCell>
 
   <GridCell>
@@ -48,6 +54,11 @@
     {#each studentLessons as lesson}
       <LessonCard {lesson}></LessonCard>
     {/each}
+    {#if studentLessons.length < 1}
+      <EmptySpace>
+        <H3>No Lessons</H3>
+      </EmptySpace>
+    {/if}
   </GridCell>
 
   <GridCell>
@@ -55,6 +66,11 @@
     {#each studentTasks as task}
       <TaskCard {task}></TaskCard>
     {/each}
+    {#if studentTasks.length < 1}
+      <EmptySpace>
+        <H3>No Tasks</H3>
+      </EmptySpace>
+    {/if}
   </GridCell>
 
   <GridCell>
@@ -64,7 +80,9 @@
         {@html rendered}
       </div>
     {:else}
-      <p>No notes yet</p>
+      <EmptySpace>
+        <H3>No Notes</H3>
+      </EmptySpace>
     {/if}
   </GridCell>
 </grid>

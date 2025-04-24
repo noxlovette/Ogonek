@@ -19,7 +19,7 @@ if (env.PUBLIC_APP_ENV !== "development") {
   });
 }
 
-const PROTECTED_PATHS = new Set(["/t/", "/s/", "/download/"]);
+const PROTECTED_PATHS = new Set(["/t/", "/s/", "/auth/bind/"]);
 
 function isProtectedPath(path: string): boolean {
   return (

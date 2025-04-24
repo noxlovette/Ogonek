@@ -2,10 +2,11 @@
   import {
     H1,
     Table,
-    H2,
     LessonCard,
     UniButton,
     HeaderEmbellish,
+    EmptySpace,
+    H3,
   } from "$lib/components";
   import { enhance } from "$app/forms";
   import { enhanceForm } from "$lib/utils";
@@ -72,7 +73,11 @@
       navigate: true,
     })}
   >
-    <UniButton Icon={PlusCircle} type="submit" variant="primary">New</UniButton>
+    {#if role === "t"}
+      <UniButton Icon={PlusCircle} type="submit" variant="primary"
+        >New</UniButton
+      >
+    {/if}
   </form>
 </HeaderEmbellish>
 {#if role === "t"}
@@ -84,6 +89,11 @@
     {students}
   />
 {:else}
+  {#if lessons.length < 1}
+    <EmptySpace>
+      <H3>No Lessons</H3>
+    </EmptySpace>
+  {/if}
   <section class="space-y-4">
     <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
       {#each lessons as lesson}

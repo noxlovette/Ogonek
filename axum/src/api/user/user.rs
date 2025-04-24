@@ -1,20 +1,33 @@
 use crate::api::error::APIError;
+use crate::auth::error::AuthError;
 use crate::auth::password::hash_password;
-use crate::auth::Claims;
+use crate::auth::{tokens, Claims};
 use crate::db::crud::user::user;
 use crate::schema::AppState;
-use axum::extract::Json;
-use axum::extract::State;
+use axum::extract::{Json, Query, State};
 use hyper::StatusCode;
 
-use crate::models::users::{User, UserUpdate};
+use crate::models::users::{InviteTokenParams, UserUpdate, UserWithInvite};
 
 pub async fn fetch_user(
     State(state): State<AppState>,
     claims: Claims,
-) -> Result<Json<User>, APIError> {
+    Query(params): Query<InviteTokenParams>,
+) -> Result<Json<UserWithInvite>, APIError> {
+    let teacher = if let Some(invite) = params.invite {
+        let teacher_id = tokens::decode_invite_token(invite).await?;
+
+        Some(
+            user::find_by_id(&state.db, &teacher_id)
+                .await
+                .map_err(|_| AuthError::InvalidToken)?,
+        )
+    } else {
+        None
+    };
+
     let user = user::find_by_id(&state.db, &claims.sub).await?;
-    Ok(Json(user))
+    Ok(Json(UserWithInvite { user, teacher }))
 }
 
 pub async fn delete_user(

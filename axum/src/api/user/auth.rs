@@ -2,18 +2,15 @@ use crate::api::error::APIError;
 use crate::auth::claims::RefreshClaims;
 use crate::auth::error::AuthError;
 use crate::auth::password::{hash_password, verify_password};
-use crate::auth::tokens::{generate_refresh_token, generate_token};
+use crate::auth::tokens::{self, generate_refresh_token, generate_token};
 use crate::auth::Claims;
 use crate::db::crud::user::auth;
-use crate::models::users::{AuthBody, AuthPayload, BindPayload, InviteToken, SignUpPayload};
+use crate::models::users::{AuthBody, AuthPayload, BindParams, BindPayload, SignUpPayload};
 use crate::schema::AppState;
-use axum::extract::Json;
-use axum::extract::State;
+use axum::extract::{Json, Query, State};
 use axum::response::Response;
 use hyper::StatusCode;
 use validator::Validate;
-
-use base64::{engine::general_purpose::URL_SAFE, Engine as _};
 
 pub async fn signup(
     State(state): State<AppState>,
@@ -71,36 +68,41 @@ pub async fn refresh(
     Ok(AuthBody::into_refresh(token))
 }
 
-pub async fn generate_invite_link(claims: Claims) -> Result<Json<String>, AuthError> {
+pub async fn generate_invite_link(
+    claims: Claims,
+    Query(params): Query<BindParams>,
+) -> Result<Json<String>, AuthError> {
     if claims.role != "teacher" {
         return Err(AuthError::InvalidToken);
     }
 
     let frontend_url = std::env::var("FRONTEND_URL")
-        .unwrap_or_else(|_| "http://localhost".to_string())
+        .unwrap_or_else(|_| "http://localhost:5173".to_string())
         .trim_end_matches('/')
         .to_string();
 
-    let token = InviteToken::new(claims.sub);
-    let encoded = URL_SAFE.encode(serde_json::to_string(&token).unwrap().as_bytes());
+    let encoded = tokens::encode_invite_token(claims.sub).await?;
 
-    Ok(Json(format!(
-        "{}/auth/signup?invite={}",
-        frontend_url, encoded
-    )))
+    if params.is_registered == "true" {
+        Ok(Json(format!(
+            "{}/auth/bind?invite={}",
+            frontend_url, encoded
+        )))
+    } else {
+        Ok(Json(format!(
+            "{}/auth/signup?invite={}",
+            frontend_url, encoded
+        )))
+    }
 }
 
 pub async fn bind_student_to_teacher(
     State(state): State<AppState>,
     Json(payload): Json<BindPayload>,
 ) -> Result<StatusCode, AuthError> {
-    let token: InviteToken = serde_json::from_str(
-        &String::from_utf8(URL_SAFE.decode(&payload.invite_token).unwrap())
-            .map_err(|_| AuthError::InvalidToken)?,
-    )
-    .map_err(|_| AuthError::InvalidToken)?;
+    let teacher_id = tokens::decode_invite_token(payload.invite_token).await?;
 
-    auth::bind(&state.db, &token.teacher_id, &payload.student_id).await?;
+    auth::bind(&state.db, &teacher_id, &payload.student_id).await?;
 
     Ok(StatusCode::NO_CONTENT)
 }

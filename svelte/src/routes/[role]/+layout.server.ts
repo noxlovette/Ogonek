@@ -5,23 +5,24 @@ import type {
   ProfileComposite,
   Student,
   TaskSmall,
-  User,
+  UserAndTeacher,
 } from "$lib/types";
 import type { LayoutServerLoad } from "./$types";
 export const load: LayoutServerLoad = async ({ fetch, params }) => {
-  const [students, lessons, tasks, user, profileComposite] = await Promise.all([
-    fetch("/axum/student").then((res) => res.json() as Promise<Student[]>),
-    fetch("/axum/lesson/recent").then(
-      (res) => res.json() as Promise<LessonSmall[]>,
-    ),
-    fetch("/axum/task/recent").then(
-      (res) => res.json() as Promise<TaskSmall[]>,
-    ),
-    fetch("/axum/user").then((res) => res.json() as Promise<User>),
-    fetch(`/axum/profile?isStudent=${params.role === "t" ? false : true}`).then(
-      (res) => res.json() as Promise<ProfileComposite>,
-    ),
-  ]);
+  const [students, lessons, tasks, userAndTeacher, profileComposite] =
+    await Promise.all([
+      fetch("/axum/student").then((res) => res.json() as Promise<Student[]>),
+      fetch("/axum/lesson/recent").then(
+        (res) => res.json() as Promise<LessonSmall[]>,
+      ),
+      fetch("/axum/task/recent").then(
+        (res) => res.json() as Promise<TaskSmall[]>,
+      ),
+      fetch("/axum/user").then((res) => res.json() as Promise<UserAndTeacher>),
+      fetch(
+        `/axum/profile?isStudent=${params.role === "t" ? false : true}`,
+      ).then((res) => res.json() as Promise<ProfileComposite>),
+    ]);
 
   const word = redis.get("wordAPI").then(async (cachedWord) => {
     if (cachedWord) {
@@ -42,6 +43,8 @@ export const load: LayoutServerLoad = async ({ fetch, params }) => {
       return word;
     }
   });
+
+  const { user } = userAndTeacher;
 
   return {
     students,
