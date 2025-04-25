@@ -6,6 +6,7 @@ use crate::auth::tokens::{self, generate_refresh_token, generate_token};
 use crate::auth::Claims;
 use crate::db::crud::user::auth;
 use crate::models::users::{AuthBody, AuthPayload, BindParams, BindPayload, SignUpPayload};
+use crate::models::CreationId;
 use crate::schema::AppState;
 use axum::extract::{Json, Query, State};
 use axum::response::Response;
@@ -15,7 +16,7 @@ use validator::Validate;
 pub async fn signup(
     State(state): State<AppState>,
     Json(payload): Json<SignUpPayload>,
-) -> Result<StatusCode, APIError> {
+) -> Result<Json<CreationId>, APIError> {
     if payload.username.is_empty() || payload.pass.is_empty() {
         return Err(APIError::InvalidCredentials);
     }
@@ -29,9 +30,9 @@ pub async fn signup(
         pass: hashed_password,
         ..payload
     };
-    auth::signup(&state.db, &created).await?;
+    let id = auth::signup(&state.db, &created).await?;
 
-    Ok(StatusCode::CREATED)
+    Ok(Json(id))
 }
 
 pub async fn authorize(

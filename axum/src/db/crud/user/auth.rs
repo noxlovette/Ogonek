@@ -1,16 +1,18 @@
 use crate::auth::error::AuthError;
 use crate::db::error::DbError;
-use crate::models::{AuthPayload, SignUpPayload, User};
+use crate::models::{AuthPayload, CreationId, SignUpPayload, User};
 use nanoid::nanoid;
 use sqlx::PgPool;
 
-pub async fn signup(db: &PgPool, create: &SignUpPayload) -> Result<(), DbError> {
+pub async fn signup(db: &PgPool, create: &SignUpPayload) -> Result<CreationId, DbError> {
     let id = nanoid!();
 
-    sqlx::query!(
+    let id = sqlx::query_as!(
+        CreationId,
         r#"
             INSERT INTO "user" (name, username, email, role, pass, verified, id)
             VALUES ($1, $2, $3, $4, $5, false, $6)
+            RETURNING id
         "#,
         create.name,
         create.username,
@@ -19,7 +21,7 @@ pub async fn signup(db: &PgPool, create: &SignUpPayload) -> Result<(), DbError> 
         create.pass,
         id
     )
-    .execute(db)
+    .fetch_one(db)
     .await
     .map_err(|e| match e {
         sqlx::Error::Database(dbe) if dbe.constraint() == Some("user_username_key") => {
@@ -31,7 +33,7 @@ pub async fn signup(db: &PgPool, create: &SignUpPayload) -> Result<(), DbError> 
         _ => DbError::Database(e),
     })?;
 
-    Ok(())
+    Ok(id)
 }
 
 pub async fn authorise(db: &PgPool, user: &AuthPayload) -> Result<User, AuthError> {

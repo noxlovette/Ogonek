@@ -63,7 +63,7 @@
           },
         })}
       >
-        <Caption>Is your student Ogonek's user?</Caption>
+        <Caption>Do they have an account?</Caption>
         <Toggler name="isRegistered" title="Yes"></Toggler>
         <UniButton
           type="submit"
