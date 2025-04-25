@@ -2,7 +2,6 @@
   import type { PageData } from "./$types";
   import {
     H1,
-    H2,
     H3,
     DeckCard,
     Table,
@@ -13,12 +12,7 @@
   import { enhanceForm } from "$lib/utils";
   import { page } from "$app/state";
   import type { TableConfig, Deck } from "$lib/types";
-  import {
-    ArrowBigRight,
-    BookOpen,
-    PlusCircle,
-    ShoppingBag,
-  } from "lucide-svelte";
+  import { ArrowBigRight, PlusCircle, ShoppingBag } from "lucide-svelte";
   import {
     searchTerm,
     pageSize,

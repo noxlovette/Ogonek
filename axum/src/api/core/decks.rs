@@ -89,7 +89,7 @@ pub async fn subscribe_to_deck(
     claims: Claims,
     Path(deck_id): Path<String>,
 ) -> Result<StatusCode, APIError> {
-    learning::subscribe::subscribe(&state.db, &claims.sub, &deck_id).await?;
+    learning::subscribe::subscribe(&state.db, &deck_id, &claims.sub).await?;
 
     Ok(StatusCode::NO_CONTENT)
 }
@@ -99,7 +99,7 @@ pub async fn unsubscribe_from_deck(
     claims: Claims,
     Path(deck_id): Path<String>,
 ) -> Result<StatusCode, APIError> {
-    learning::subscribe::unsubscribe(&state.db, &claims.sub, &deck_id).await?;
+    learning::subscribe::unsubscribe(&state.db, &deck_id, &claims.sub).await?;
 
     Ok(StatusCode::NO_CONTENT)
 }

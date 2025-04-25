@@ -1,7 +1,9 @@
 use crate::db::error::DbError;
 use sqlx::PgPool;
 
-pub async fn subscribe(db: &PgPool, user_id: &str, deck_id: &str) -> Result<(), DbError> {
+pub async fn subscribe(db: &PgPool, deck_id: &str, user_id: &str) -> Result<(), DbError> {
+    let mut tx = db.begin().await?;
+
     sqlx::query!(
         r#"
     INSERT INTO deck_subscriptions (deck_id, user_id)
@@ -11,10 +13,8 @@ pub async fn subscribe(db: &PgPool, user_id: &str, deck_id: &str) -> Result<(), 
         deck_id,
         user_id
     )
-    .execute(db)
+    .execute(&mut *tx)
     .await?;
-
-    let mut tx = db.begin().await?;
 
     let cards = sqlx::query!(
         r#"
@@ -53,7 +53,7 @@ pub async fn subscribe(db: &PgPool, user_id: &str, deck_id: &str) -> Result<(), 
     Ok(())
 }
 
-pub async fn unsubscribe(db: &PgPool, user_id: &str, deck_id: &str) -> Result<(), DbError> {
+pub async fn unsubscribe(db: &PgPool, deck_id: &str, user_id: &str) -> Result<(), DbError> {
     sqlx::query!(
         r#"
         DELETE FROM deck_subscriptions
@@ -65,12 +65,27 @@ pub async fn unsubscribe(db: &PgPool, user_id: &str, deck_id: &str) -> Result<()
     .execute(db)
     .await?;
 
+    // Optionally, you can also clean up card progress
+    sqlx::query!(
+        r#"
+    DELETE FROM card_progress cp
+    USING cards c
+    WHERE cp. card_id = c. id
+    AND c.deck_id = $1
+    AND cp.user_id = $2
+    "#,
+        deck_id,
+        user_id
+    )
+    .execute(db)
+    .await?;
+
     Ok(())
 }
 pub async fn check_subscription(
     db: &PgPool,
-    user_id: &str,
     deck_id: &str,
+    user_id: &str,
 ) -> Result<bool, DbError> {
     let is_subscribed = sqlx::query!(
         r#"
