@@ -3,13 +3,13 @@ export function getGreeting() {
   const hours = date.getHours();
 
   if (hours >= 5 && hours < 12) {
-    return "morning ☕";
+    return "morning";
   } else if (hours >= 12 && hours < 18) {
-    return "afternoon ☀️";
+    return "afternoon";
   } else if (hours >= 18 && hours < 22) {
-    return "evening 🌖";
+    return "evening";
   } else {
-    return "night 😴";
+    return "night";
   }
 }
 

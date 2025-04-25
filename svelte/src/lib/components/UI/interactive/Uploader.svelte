@@ -101,7 +101,7 @@
 			 {isSuccess ? 'border-green-500' : ''}
 			 {isDragging
         ? 'border-cacao-700 bg-cacao-100'
-        : 'border-stone-200 hover:border-stone-400 dark:border-stone-800 dark:bg-stone-900 dark:hover:border-stone-700'}"
+        : 'border-stone-300/30 hover:border-stone-400 dark:border-stone-600/30 dark:bg-stone-900 dark:hover:border-stone-700'}"
     >
       <input
         bind:this={fileInput}

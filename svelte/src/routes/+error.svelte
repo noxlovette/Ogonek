@@ -36,10 +36,10 @@
   in:fade={{ duration: 300, delay: 150 }}
 >
   <div
-    class="w-full max-w-md overflow-hidden rounded-lg bg-white shadow-lg dark:bg-stone-800"
+    class="w-full max-w-md overflow-hidden rounded-lg bg-white shadow-sm dark:bg-stone-800"
   >
     <div
-      class="ring-b flex w-full justify-center bg-stone-100 p-6 ring-stone-200 dark:bg-stone-700 dark:ring-stone-600"
+      class="ring-b flex w-full justify-center bg-stone-100 p-6 ring-stone-300/40 dark:bg-stone-700 dark:ring-stone-600"
     >
       <div in:fly={{ y: -20, duration: 400, delay: 200, easing: backOut }}>
         {#if is404}

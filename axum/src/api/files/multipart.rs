@@ -1,5 +1,5 @@
-use crate::auth::jwt::Claims;
-use crate::db::crud::check_file_exists;
+use crate::auth::Claims;
+use crate::db::crud::files::file;
 use crate::error::AppError;
 use crate::models::{
     AbortMultipartRequest, CompleteMultipartRequest, InitUploadRequest, MultipartInitResultS3,
@@ -17,7 +17,7 @@ pub async fn init_multipart_upload(
     Json(payload): Json<InitUploadRequest>,
 ) -> Result<Json<MultipartUploadInit>, AppError> {
     if let Some(ref parent_id) = payload.parent_id {
-        check_file_exists(&state, &parent_id, &claims.sub).await?;
+        file::check_file_exists(&state.db, &parent_id, &claims.sub).await?;
         Some(parent_id)
     } else {
         None
@@ -89,7 +89,7 @@ pub async fn complete_multipart_upload(
     claims: Claims,
     Json(payload): Json<CompleteMultipartRequest>,
 ) -> Result<StatusCode, AppError> {
-    check_file_exists(&state, &payload.file_id, &claims.sub).await?;
+    file::check_file_exists(&state.db, &payload.file_id, &claims.sub).await?;
     complete_multipart_s3(&state, &payload.s3_key, &payload.upload_id, payload.parts).await?;
 
     sqlx::query!(
@@ -112,19 +112,9 @@ pub async fn abort_multipart_upload(
     claims: Claims,
     Json(payload): Json<AbortMultipartRequest>,
 ) -> Result<StatusCode, AppError> {
-    check_file_exists(&state, &payload.file_id, &claims.sub).await?;
+    file::check_file_exists(&state.db, &payload.file_id, &claims.sub).await?;
     abort_multipart_s3(&state, &payload.s3_key, &payload.upload_id).await?;
-
-    sqlx::query!(
-        r#"
-        DELETE FROM files
-        WHERE id = $1 AND owner_id = $2
-        "#,
-        payload.file_id,
-        claims.sub
-    )
-    .execute(&state.db)
-    .await?;
+    file::delete(&state.db, &payload.file_id, &claims.sub).await?;
 
     Ok(StatusCode::OK)
 }

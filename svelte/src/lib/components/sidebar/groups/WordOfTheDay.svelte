@@ -3,6 +3,7 @@
   import { H2 } from "$lib/components";
   import { getContext } from "svelte";
   import type { Word } from "$lib/types";
+  import Caption from "$lib/components/typography/Caption.svelte";
 
   const word = getContext<Promise<Word>>("word");
 </script>
@@ -16,12 +17,13 @@
     <h3 class="italic select-text">
       {word.word}
     </h3>
-    <p class="text-xs select-text lg:text-base">
-      {#if word.results}
+
+    {#if word.results}
+      <p class="text-sm font-semibold">
         {word.results[0].definition}
-      {:else}
-        No definition found
-      {/if}
-    </p>
+      </p>
+    {:else}
+      <Caption>No definition found</Caption>
+    {/if}
   {/await}
 </Group>

@@ -8,8 +8,14 @@ export const load: PageServerLoad = async ({ params }) => {
 };
 
 export const actions: Actions = {
-  default: async ({ fetch }) => {
-    const response = await fetch("/axum/auth/invite", { method: "POST" });
+  default: async ({ fetch, request }) => {
+    const formData = await request.formData();
+    const isRegistered = formData.has("isRegistered");
+    console.log(isRegistered);
+    const response = await fetch(
+      `/axum/auth/invite?isRegistered=${isRegistered}`,
+      { method: "POST" },
+    );
 
     if (!response.ok) {
       return fail(400, { error: "Failed to generate invite link" });

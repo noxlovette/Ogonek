@@ -11,6 +11,7 @@
   import type { PageData } from "./$types";
   import { enhanceForm } from "$lib/utils";
   import { Ban, Check, Trash2 } from "lucide-svelte";
+  import Input from "$lib/components/UI/forms/Input.svelte";
   let { data }: { data: PageData } = $props();
   let { lesson } = data;
 
@@ -45,32 +46,9 @@
 
   <input type="hidden" name="id" value={lesson.id} />
   <input type="hidden" name="markdown" value={markdown} />
-  <div class="flex space-x-4">
-    <div class="space-y-2">
-      <Label>Title</Label>
-      <input
-        id="title"
-        type="text"
-        name="title"
-        class="focus:ring-cacao-500 w-full rounded-lg border border-stone-200 px-4 py-2 transition duration-200 focus:ring focus:outline-none disabled:text-stone-500
-            dark:border-stone-800 dark:bg-stone-950 dark:focus:border-stone-800 dark:focus:ring
-                   dark:focus:ring-stone-700 dark:focus:outline-none"
-        value={lesson.title}
-      />
-    </div>
-
-    <div class="space-y-2">
-      <Label>Topic</Label>
-      <input
-        id="topic"
-        type="text"
-        name="topic"
-        value={lesson.topic}
-        class="focus:ring-cacao-500 w-full rounded-lg border border-stone-200 px-4 py-2 transition duration-200 focus:ring focus:outline-none disabled:text-stone-500
-            dark:border-stone-800 dark:bg-stone-950 dark:focus:border-stone-800 dark:focus:ring
-                   dark:focus:ring-stone-700 dark:focus:outline-none"
-      />
-    </div>
+  <div class="grid grid-cols-1 gap-5 md:grid-cols-3">
+    <Input name="title" value={lesson.title} placeholder="Title"></Input>
+    <Input name="topic" value={lesson.topic} placeholder="Topic"></Input>
     <AssigneeSelector item={lesson} />
   </div>
 </form>

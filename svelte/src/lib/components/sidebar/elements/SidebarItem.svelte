@@ -2,6 +2,8 @@
   import { sidebar } from "$lib/stores/sidebar";
   import { page } from "$app/state";
 
+  import H3 from "$lib/components/typography/H3.svelte";
+
   let { Icon, href = "/", name, external = false } = $props();
 
   const target = $derived(external === true ? "_blank" : undefined);
@@ -17,23 +19,24 @@
   {target}
   {rel}
   class={`
-     inline-flex items-center rounded-lg p-2 font-serif transition-all
+     inline-flex items-center rounded-lg px-2 py-1 transition-all
      ${
        $sidebar
-         ? "hover:bg-cacao-500 justify-center  dark:hover:bg-stone-800"
+         ? "hover:bg-cacao-500 justify-center dark:hover:bg-stone-800"
          : "md:hover:translate-x-1"
      }
-    ${isActive ? " bg-cacao-700  shadow-inner" : ""}
+    ${isActive ? " bg-cacao-500 text-cacao-50 dark:bg-cacao-600 dark:text-cacao-100 ring-cacao-700/40 shadow-inner ring-1" : ""}
    `}
 >
   {#if $sidebar}
     <div class="flex items-center justify-center">
-      <Icon class="size-6 lg:size-7 xl:size-8" />
+      <Icon class="size-6 lg:size-7 " />
     </div>
   {:else}
-    <Icon class="mr-2 size-6 lg:size-7 xl:size-8" />
-    <p class="">
+    <Icon class="mr-2 size-6 lg:size-7 " />
+
+    <H3>
       {name}
-    </p>
+    </H3>
   {/if}
 </a>

@@ -122,9 +122,7 @@
         review.
       </p>
 
-      <UniButton href="." Icon={Home} variant="primary"
-        >Return to the Words page</UniButton
-      >
+      <UniButton href="." Icon={Home} variant="primary">Words Page</UniButton>
     </div>
   </div>
 {:else if currentCard}
@@ -140,10 +138,10 @@
       </span>
     </HeaderEmbellish>
     <div
-      class="h-2.5 w-full overflow-hidden rounded-full ring ring-stone-200 dark:bg-stone-700 dark:ring-stone-800"
+      class="h-2.5 w-full overflow-hidden rounded-full ring ring-stone-300/40 dark:bg-stone-700 dark:ring-stone-600/50"
     >
       <div
-        class="bg-cacao-600 dark:bg-cacao-600 h-2.5 rounded-full transition-all duration-300"
+        class="bg-cacao-600 dark:bg-cacao-600 h-2.5 rounded-full transition-all duration-150"
         style="width: {((data.cards.indexOf(currentCard) + 1) /
           data.cards.length) *
           100}%"
@@ -152,7 +150,7 @@
 
     <!-- Card container -->
     <div
-      class="grid min-h-[350px] w-full gap-4 rounded-lg p-4 ring ring-stone-200 transition-all md:grid-cols-3 dark:ring-stone-900"
+      class="grid min-h-[350px] w-full gap-4 rounded-lg p-4 ring ring-stone-300/40 transition-all md:grid-cols-3 dark:ring-stone-600/50"
       in:slide={{ duration: 100, easing: quintOut }}
     >
       <div
@@ -175,7 +173,7 @@
                 <img
                   src={currentCard.mediaUrl}
                   alt={currentCard.front}
-                  class="max-h-[200px] rounded-lg object-contain shadow-sm ring-1 ring-stone-200 dark:ring-stone-700"
+                  class="max-h-[200px] rounded-lg object-contain shadow-sm ring-1 ring-stone-300/40 dark:ring-stone-600/50"
                 />
               </div>
             {/if}
@@ -187,7 +185,7 @@
       <div class="col-span-2 flex h-full md:col-span-1">
         {#if !showAnswer}
           <button
-            class="flex w-full flex-col items-center justify-center space-y-2 rounded-lg bg-stone-50 ring ring-stone-200 transition-colors hover:bg-stone-100 dark:bg-stone-800 dark:ring-stone-700 dark:hover:bg-stone-900"
+            class="flex w-full flex-col items-center justify-center space-y-2 rounded-lg bg-stone-50 ring ring-stone-300/40 transition-colors hover:bg-stone-100 dark:bg-stone-800 dark:ring-stone-600/50 dark:hover:bg-stone-900"
             onclick={() => (showAnswer = !showAnswer)}
           >
             <p>Flip</p>

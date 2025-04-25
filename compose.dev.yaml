@@ -19,6 +19,12 @@ services:
     ports:
       - "6379:6379"
       - "8003:8001"
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
+      interval: 1s
+      timeout: 3s
+      retries: 5
+      start_period: 30s
   axum:
     build:
       context: ./axum

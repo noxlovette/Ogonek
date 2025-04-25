@@ -12,7 +12,7 @@ pub struct DeckFilterParams {
 #[serde_with::serde_as]
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
-pub struct CardBody {
+pub struct Card {
     pub id: String,
     pub front: String,
     pub back: String,
@@ -24,7 +24,7 @@ pub struct CardBody {
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
-pub struct CardCreateBody {
+pub struct CardCreate {
     pub front: String,
     pub back: String,
     pub media_url: Option<String>,
@@ -42,16 +42,16 @@ pub struct CardUpdate {
 #[derive(Deserialize, Serialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct DeckWithCardsAndSubscription {
-    pub deck: DeckBody,
-    pub cards: Vec<CardBody>,
+    pub deck: Deck,
+    pub cards: Vec<Card>,
     pub is_subscribed: bool,
 }
 
 #[derive(Deserialize, Serialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct DeckWithCards {
-    pub deck: DeckBody,
-    pub cards: Vec<CardBody>,
+    pub deck: Deck,
+    pub cards: Vec<Card>,
 }
 
 #[derive(Deserialize, Debug)]
@@ -64,7 +64,7 @@ pub struct DeckWithCardsUpdate {
 #[serde_with::serde_as]
 #[derive(Serialize, Deserialize, Debug, FromRow)]
 #[serde(rename_all = "camelCase")]
-pub struct DeckBody {
+pub struct Deck {
     pub id: String,
     pub name: String,
     pub description: Option<String>,
@@ -78,7 +78,7 @@ pub struct DeckBody {
 #[serde_with::serde_as]
 #[derive(Serialize, Deserialize, Debug, FromRow)]
 #[serde(rename_all = "camelCase")]
-pub struct DeckBodySmall {
+pub struct DeckSmall {
     pub id: String,
     pub name: String,
     pub description: Option<String>,
@@ -86,7 +86,7 @@ pub struct DeckBodySmall {
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
-pub struct DeckCreateBody {
+pub struct DeckCreate {
     pub name: String,
     pub description: Option<String>,
     pub visibility: Option<String>,
@@ -137,6 +137,15 @@ pub struct CardProgress {
     pub ease_factor: f64,
     #[validate(range(min = 1))]
     pub interval: i32,
+}
+
+#[derive(Serialize, Deserialize)]
+pub struct UpdateCardProgress {
+    pub review_count: i32,
+    pub due_date: OffsetDateTime,
+    pub ease_factor: f64,
+    pub interval: i32,
+    pub last_reviewed: OffsetDateTime,
 }
 
 #[derive(Debug, Deserialize, Validate)]

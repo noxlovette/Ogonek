@@ -2,12 +2,14 @@
   import {
     H1,
     Table,
-    H2,
     LessonCard,
     UniButton,
     HeaderEmbellish,
+    EmptySpace,
+    H3,
   } from "$lib/components";
   import { enhance } from "$app/forms";
+  import { enhanceForm } from "$lib/utils";
   import { page } from "$app/state";
   import type { TableConfig, Lesson } from "$lib/types/index.js";
   import { formatDate } from "@noxlovette/svarog";
@@ -61,6 +63,22 @@
 
 <HeaderEmbellish>
   <H1>Lessons</H1>
+  <form
+    action="?/new"
+    method="post"
+    use:enhance={enhanceForm({
+      messages: {
+        redirect: "New Lesson Created",
+      },
+      navigate: true,
+    })}
+  >
+    {#if role === "t"}
+      <UniButton Icon={PlusCircle} type="submit" variant="primary"
+        >New</UniButton
+      >
+    {/if}
+  </form>
 </HeaderEmbellish>
 {#if role === "t"}
   <Table
@@ -70,17 +88,13 @@
     {total}
     {students}
   />
-
-  <form action="?/new" method="post" use:enhance>
-    {#if lessons.length === 0}
-      <UniButton type="submit" variant="primary" Icon={PlusCircle}
-        >Add your first one</UniButton
-      >
-    {/if}
-  </form>
 {:else}
+  {#if lessons.length < 1}
+    <EmptySpace>
+      <H3>No Lessons</H3>
+    </EmptySpace>
+  {/if}
   <section class="space-y-4">
-    <H2>Recent Lessons</H2>
     <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
       {#each lessons as lesson}
         <LessonCard {lesson} />

@@ -5,9 +5,9 @@
     H1,
     Table,
     TaskCard,
-    H2,
     UniButton,
     HeaderEmbellish,
+    EmptySpace,
   } from "$lib/components";
 
   import { enhance } from "$app/forms";
@@ -84,6 +84,33 @@
 
 <HeaderEmbellish>
   <H1>Tasks</H1>
+  <div class="flex gap-2">
+    {#if role == "t"}
+      <form
+        action="?/new"
+        method="post"
+        use:enhance={enhanceForm({
+          messages: {
+            redirect: "New Task Created",
+          },
+          navigate: true,
+        })}
+      >
+        <UniButton Icon={PlusCircle} type="submit" variant="primary"
+          >New</UniButton
+        >
+      </form>
+    {/if}
+
+    <UniButton
+      type="button"
+      onclick={toggleCompletedTasks}
+      variant="primary"
+      Icon={$completedStore === true ? EyeClosed : Eye}
+    >
+      {$completedStore === true ? "Hide Completed" : "Show Completed"}
+    </UniButton>
+  </div>
 </HeaderEmbellish>
 {#if role === "t"}
   <Table
@@ -94,70 +121,46 @@
     {total}
     showComplete={true}
   />
-  <form action="?/new" method="post" use:enhance>
-    {#if tasks?.length === 0}
-      <UniButton type="submit" variant="ghost" Icon={PlusCircle}
-        >Add your first one</UniButton
-      >
-    {/if}
-  </form>
+{:else if tasks?.length > 0}
+  <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+    {#each tasks as task (task.id)}
+      <TaskCard {task} />
+    {/each}
+  </div>
 {:else}
-  <section class="space-y-4">
-    <div class="flex items-center justify-between">
-      <H2>Active Tasks ({tasks?.length})</H2>
+  <EmptySpace>
+    <h3 class="mb-2 text-2xl font-bold text-stone-800 dark:text-stone-200">
+      Task Inbox Zero
+    </h3>
 
-      <UniButton
-        type="button"
-        onclick={toggleCompletedTasks}
-        variant="primary"
-        Icon={$completedStore === true ? EyeClosed : Eye}
-      >
-        {$completedStore === true ? "Hide Completed" : "Show Completed"}
+    <p class="mb-6 max-w-md text-stone-600 dark:text-stone-400">
+      Wow, you've completed all your tasks! Time to either celebrate or ask for
+      more challenges.
+    </p>
+
+    <form
+      method="POST"
+      action="?/requestHW"
+      class=""
+      use:enhance={enhanceForm({
+        messages: {
+          success: "Teacher Notified",
+          error: "Error",
+          failure: "Something's off",
+        },
+      })}
+    >
+      <input type="hidden" value={$user.username} name="username" />
+      <input
+        type="hidden"
+        value={$teacherData.teacherTelegramId}
+        name="teacherTelegramId"
+      />
+      <UniButton type="submit" variant="primary" Icon={Lightbulb}>
+        {randomPhrase}
       </UniButton>
-    </div>
-
-    {#if tasks?.length > 0}
-      <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-        {#each tasks as task (task.id)}
-          <TaskCard {task} interactive={true} />
-        {/each}
-      </div>
-    {:else}
-      <div class="flex flex-col items-center justify-center py-12 text-center">
-        <h3 class="mb-2 text-2xl font-bold text-stone-800 dark:text-stone-200">
-          Task Inbox Zero
-        </h3>
-
-        <p class="mb-6 max-w-md text-stone-600 dark:text-stone-400">
-          Wow, you've completed all your tasks! Time to either celebrate or ask
-          for more challenges.
-        </p>
-
-        <form
-          method="POST"
-          action="?/requestHW"
-          class=""
-          use:enhance={enhanceForm({
-            messages: {
-              success: "Teacher Notified",
-              error: "Error",
-              failure: "Something's off",
-            },
-          })}
-        >
-          <input type="hidden" value={$user.username} name="username" />
-          <input
-            type="hidden"
-            value={$teacherData.teacherTelegramId}
-            name="teacherTelegramId"
-          />
-          <UniButton type="submit" variant="primary" Icon={Lightbulb}>
-            {randomPhrase}
-          </UniButton>
-        </form>
-      </div>
-    {/if}
-  </section>
+    </form>
+  </EmptySpace>
 {/if}
 
 <svelte:head>

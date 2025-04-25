@@ -5,11 +5,11 @@ export const actions = {
   update: async ({ request, fetch }) => {
     const formData = await request.formData();
     const markdown = formData.get("markdown");
-    const telegramId = formData.get("telegramId");
+    const studentTelegramId = formData.get("studentTelegramId");
     const id = formData.get("id");
-    let body = {
+    const body = {
       markdown,
-      telegramId,
+      studentTelegramId,
     };
 
     const response = await fetch(`/axum/student/${id}`, {

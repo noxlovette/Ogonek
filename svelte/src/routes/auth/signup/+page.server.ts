@@ -21,7 +21,7 @@ export const actions: Actions = {
     const email = data.get("email") as string;
     const role = data.get("role") as string;
     const name = data.get("name") as string;
-    const invite_token = url.searchParams.get("invite");
+    const inviteToken = url.searchParams.get("invite");
 
     if (validateEmail(email)) {
       return fail(400, { message: "Invalid Email" });
@@ -72,12 +72,13 @@ export const actions: Actions = {
       return fail(result.status, { message: result.message });
     }
 
-    if (invite_token) {
+    if (inviteToken) {
       const studentId = result.data.id;
+      console.log(studentId);
 
       const inviteResponse = await fetch("/axum/auth/bind", {
         method: "POST",
-        body: JSON.stringify({ invite_token, student_id: studentId }),
+        body: JSON.stringify({ inviteToken, studentId }),
       });
 
       const inviteResult = await handleApiResponse(inviteResponse);

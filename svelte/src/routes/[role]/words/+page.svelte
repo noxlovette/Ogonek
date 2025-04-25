@@ -16,7 +16,6 @@
   import {
     ArrowBigRight,
     BookOpen,
-    Cat,
     PlusCircle,
     ShoppingBag,
   } from "lucide-svelte";
@@ -28,6 +27,7 @@
   } from "$lib/stores";
   import { goto } from "$app/navigation";
   import { formatDate } from "@noxlovette/svarog";
+  import EmptySpace from "$lib/components/typography/EmptySpace.svelte";
 
   let { data }: { data: PageData } = $props();
   let { decks, students } = $derived(data);
@@ -87,62 +87,47 @@
 </svelte:head>
 
 <HeaderEmbellish>
-  <div>
+  <div class="flex flex-col items-center md:items-start">
     <H1>Flashcards</H1>
     <H3>
       {#if data.cards?.length}
         {data.cards.length} cards due today
       {:else}
-        All Caught Up! 🎉
+        All Caught Up!
       {/if}
     </H3>
   </div>
-  <div class="flex space-x-4">
-    <UniButton Icon={ShoppingBag} variant="outline" href="words/marketplace"
-      >Marketplace</UniButton
+
+  <div class="flex flex-col gap-2 md:flex-row">
+    <form
+      action="?/new"
+      method="post"
+      use:enhance={enhanceForm({
+        messages: {
+          redirect: "New Deck Created",
+        },
+        navigate: true,
+      })}
+    >
+      <UniButton Icon={PlusCircle} type="submit" variant="primary"
+        >New</UniButton
+      >
+    </form>
+    <UniButton
+      Icon={ShoppingBag}
+      variant="primary"
+      href="words/marketplace"
+      styling="hidden md:flex">Marketplace</UniButton
     >
     {#if data.cards?.length}
-      <UniButton
-        variant="primary"
-        Icon={ArrowBigRight}
-        iconPosition="right"
-        href="words/learn">Start Review</UniButton
+      <UniButton variant="primary" Icon={ArrowBigRight} href="words/learn"
+        >Start Review</UniButton
       >
-    {:else}
-      <div
-        class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-stone-200 dark:bg-stone-800"
-      >
-        <Cat />
-      </div>
     {/if}
   </div>
 </HeaderEmbellish>
 {#if role === "s"}
   <div class="space-y-4">
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-      <H2>Your Decks</H2>
-
-      <form
-        method="POST"
-        class="mt-3 sm:mt-0"
-        action="?/new"
-        use:enhance={enhanceForm({
-          messages: {
-            redirect: "New Deck Created",
-            defaultError: "Something's off",
-          },
-          navigate: true,
-        })}
-      >
-        <UniButton
-          Icon={PlusCircle}
-          type="submit"
-          variant="outline"
-          iconPosition="right">New Deck</UniButton
-        >
-      </form>
-    </div>
-
     {#if decks.length}
       <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {#each decks as deck}
@@ -150,21 +135,9 @@
         {/each}
       </div>
     {:else}
-      <div
-        class="rounded-lg bg-stone-50 py-12 text-center shadow-sm ring ring-stone-200 dark:bg-stone-800 dark:ring-stone-900"
-      >
-        <div
-          class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-stone-200 dark:bg-stone-700"
-        >
-          <BookOpen />
-        </div>
-        <p class="mb-2 text-lg font-medium text-stone-800 dark:text-stone-300">
-          No decks yet
-        </p>
-        <p class="mx-auto mb-6 max-w-md text-stone-600 dark:text-stone-400">
-          Create your first deck to start learning!
-        </p>
-      </div>
+      <EmptySpace>
+        <H3>No decks</H3>
+      </EmptySpace>
     {/if}
   </div>
 {:else}

@@ -2,6 +2,7 @@ import type { Profile, TeacherData, User } from "$lib/types";
 import { writable } from "svelte/store";
 
 export const initialUser: User = {
+  id: "",
   username: "",
   sub: "",
   name: "",
@@ -42,6 +43,7 @@ export function setTeacherData(data: TeacherData) {
 }
 export function clearUser() {
   user.update(() => ({
+    id: "",
     username: "",
     sub: "",
     name: "",

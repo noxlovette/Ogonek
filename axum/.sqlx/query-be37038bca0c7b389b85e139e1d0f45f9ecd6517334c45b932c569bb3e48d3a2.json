@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n    INSERT INTO deck_subscriptions (deck_id, user_id)\n    VALUES ($1, $2)\n    ON CONFLICT (deck_id, user_id) DO NOTHING\n    ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Varchar",
+        "Varchar"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "be37038bca0c7b389b85e139e1d0f45f9ecd6517334c45b932c569bb3e48d3a2"
+}

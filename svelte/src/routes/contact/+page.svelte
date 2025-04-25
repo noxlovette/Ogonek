@@ -33,7 +33,7 @@
   <div class="grid gap-6 md:grid-cols-2">
     <!-- Email Card -->
     <div
-      class="overflow-hidden rounded-lg border border-stone-200 bg-white shadow-sm transition-all hover:shadow-lg dark:border-stone-700 dark:bg-stone-900"
+      class="overflow-hidden rounded-lg bg-white shadow-sm shadow-sm transition-all hover:shadow-sm dark:border-stone-700 dark:bg-stone-900"
     >
       <div class="p-6">
         <div class="mb-4 flex items-center">
@@ -76,7 +76,7 @@
 
     <!-- Telegram Card -->
     <div
-      class="overflow-hidden rounded-lg border border-stone-200 bg-white shadow-sm transition-all hover:shadow-lg dark:border-stone-700 dark:bg-stone-900"
+      class="overflow-hidden rounded-lg bg-white shadow-sm shadow-sm transition-all hover:shadow-sm dark:border-stone-700 dark:bg-stone-900"
     >
       <div class="p-6">
         <div class="mb-4 flex items-center">

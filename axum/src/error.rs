@@ -225,13 +225,17 @@ impl From<CredentialsError> for AppError {
 impl From<crate::db::error::DbError> for AppError {
     fn from(err: crate::db::error::DbError) -> Self {
         match err {
-            crate::db::error::DbError::Db => Self::Internal("Database operation failed".into()),
-            crate::db::error::DbError::NotFound(msg) => Self::NotFound(format!("DB: {}", msg)),
+            crate::db::error::DbError::Database(msg) => {
+                Self::Internal(format!("Database operation failed: {}", msg))
+            }
+            crate::db::error::DbError::NotFound(msg) => {
+                Self::NotFound(format!("Not found: {}", msg))
+            }
             crate::db::error::DbError::TransactionFailed => {
                 Self::Internal("Transaction failed".into())
             }
-            crate::db::error::DbError::AlreadyExists => {
-                Self::AlreadyExists("Resource already exists".into())
+            crate::db::error::DbError::AlreadyExists(msg) => {
+                Self::AlreadyExists(format!("Resource already exists: {}", msg))
             }
         }
     }

@@ -14,14 +14,14 @@
 <MetaData />
 
 <main
-  class="flex h-screen w-screen justify-center overflow-x-clip overflow-y-auto bg-stone-50 text-stone-800 antialiased dark:bg-stone-950 dark:text-stone-100"
+  class="flex h-screen w-screen justify-center overflow-x-clip overflow-y-auto bg-white text-stone-800 antialiased dark:bg-stone-950 dark:text-stone-100"
   use:keyEscape={goBack}
 >
   <div
-    class="selection:bg-cacao-500/20 caret-cacao-800 relative flex h-full w-full flex-col items-center px-4 font-medium dark:caret-stone-200"
+    class="selection:bg-cacao-500/20 caret-cacao-800 relative flex h-full w-full flex-col items-center font-medium dark:caret-stone-200"
   >
     <Header />
-    <div id="main" class="flex w-full flex-1 flex-row">
+    <div id="main" class="flex w-full flex-1 flex-row px-4">
       {@render children?.()}
     </div>
     <Footer />

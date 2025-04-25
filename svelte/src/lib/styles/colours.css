@@ -1,7 +1,8 @@
 @theme {
   --font-sans:
-    "Montserrat", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-    Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+    ui-sans-serif, -apple-system, system-ui, "Helvetica Neue", Helvetica,
+    "Segoe UI", Roboto, Arial, "Noto Sans", sans-serif;
+
   --font-serif: "Lora", system-ui, -apple-system;
 
   --color-cacao-50: oklch(0.98 0.002 35);

@@ -29,17 +29,10 @@ pub struct File {
 pub struct FileSmall {
     pub id: String,
     pub name: String,
-    pub s3_key: String,
+    pub s3_key: Option<String>,
     pub mime_type: Option<String>,
     pub size: i64,
     pub owner_id: String,
-}
-
-#[derive(Serialize, Deserialize, Debug)]
-#[serde(rename_all = "camelCase")]
-pub struct FileMinimal {
-    pub id: String,
-    pub s3_key: Option<String>,
 }
 
 #[derive(Debug)]

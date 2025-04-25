@@ -1,0 +1,95 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n            SELECT * FROM files\n            WHERE id = $1 AND (owner_id = $2)\n            ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 1,
+        "name": "name",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 2,
+        "name": "s3_key",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 3,
+        "name": "path",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 4,
+        "name": "mime_type",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 5,
+        "name": "size",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 6,
+        "name": "is_folder",
+        "type_info": "Bool"
+      },
+      {
+        "ordinal": 7,
+        "name": "parent_id",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 8,
+        "name": "owner_id",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 9,
+        "name": "visibility",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 10,
+        "name": "created_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 11,
+        "name": "updated_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 12,
+        "name": "upload_status",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Text"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      false,
+      true
+    ]
+  },
+  "hash": "e396f4365e50263b3209111862444e479fc0706021016037e330e74ac466eafd"
+}

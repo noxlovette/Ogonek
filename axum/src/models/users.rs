@@ -4,10 +4,10 @@ use axum::http::{
 };
 use axum::response::{IntoResponse, Response};
 use axum::Json;
+use axum_extra::extract::cookie::{Cookie, SameSite};
+use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use validator::Validate;
-use chrono::{DateTime, Utc};
-use axum_extra::extract::cookie::{Cookie, SameSite};  
 
 #[derive(Serialize, Deserialize, Debug, Validate)]
 #[serde(rename_all = "camelCase")]
@@ -25,7 +25,6 @@ pub struct SignUpPayload {
     pub username: String,
     pub role: String,
 }
-
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct SignUpBody {
@@ -50,11 +49,11 @@ pub struct User {
     pub name: String,
     pub username: String,
     pub email: String,
+    #[serde(skip_serializing)]
     pub pass: String,
     pub role: String,
     pub verified: bool,
 }
-
 
 #[derive(Debug, Deserialize, Validate)]
 #[serde(rename_all = "camelCase")]
@@ -64,7 +63,6 @@ pub struct AuthPayload {
     #[validate(length(min = 8, max = 32))]
     pub pass: String,
 }
-
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -121,10 +119,9 @@ impl AuthBody {
 }
 
 fn build_auth_cookie(name: &str, value: String, is_refresh: bool) -> Cookie {
-
     let base_domain = env::var("APP_DOMAIN").unwrap_or_else(|_| "localhost".to_string());
     let domain = format!(".{}", base_domain);
-    
+
     Cookie::build((name, value))
         .http_only(true)
         .secure(env::var("APP_ENV").unwrap() == "production")
@@ -139,25 +136,44 @@ fn build_auth_cookie(name: &str, value: String, is_refresh: bool) -> Cookie {
         .build()
 }
 
-
 // Simple struct to hold the invite data
 #[derive(Serialize, Deserialize)]
 pub struct InviteToken {
-   pub teacher_id: String,
+    pub teacher_id: String,
     pub created_at: DateTime<Utc>,
 }
 
-
 impl InviteToken {
     pub fn new(teacher_id: String) -> Self {
-        Self { teacher_id,
-        created_at: Utc::now(),
+        Self {
+            teacher_id,
+            created_at: Utc::now(),
         }
     }
 }
 
 #[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct BindPayload {
-   pub  student_id: String,  // Could be either the person inviting or being invited
-   pub  invite_token: String,
+    pub student_id: String, // Could be either the person inviting or being invited
+    pub invite_token: String,
+}
+
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct BindParams {
+    pub is_registered: String,
+}
+
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct InviteTokenParams {
+    pub invite: Option<String>,
+}
+
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct UserWithInvite {
+    pub user: User,
+    pub teacher: Option<User>,
 }

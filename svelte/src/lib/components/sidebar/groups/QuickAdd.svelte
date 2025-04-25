@@ -16,7 +16,7 @@
         Icon={ListTodo}
         fullWidth={true}
         type="submit"
-        variant="outline">Add Task</UniButton
+        variant="primary">Add Task</UniButton
       >
     </form>
     <form action="/t/lessons?/new" method="POST" class="" use:enhance>
@@ -25,7 +25,7 @@
         Icon={BookOpenCheck}
         fullWidth={true}
         type="submit"
-        variant="outline">Add Lesson</UniButton
+        variant="primary">Add Lesson</UniButton
       >
     </form>
     <form action="/t/words?/new" method="POST" class="" use:enhance>
@@ -34,7 +34,7 @@
         Icon={WholeWord}
         fullWidth={true}
         type="submit"
-        variant="outline">Add Deck</UniButton
+        variant="primary">Add Deck</UniButton
       >
     </form>
   </div>

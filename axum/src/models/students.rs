@@ -1,6 +1,6 @@
-use super::cards_decks::DeckBodySmall;
-use super::lessons::LessonBodySmall;
-use super::tasks::TaskBodySmall;
+use super::cards_decks::DeckSmall;
+use super::lessons::LessonSmall;
+use super::tasks::TaskSmall;
 use serde::{Deserialize, Serialize};
 use serde_with::serde_as;
 use time::format_description::well_known::Rfc3339;
@@ -46,7 +46,7 @@ pub struct UpdateStudentRequest {
 #[serde(rename_all = "camelCase")]
 pub struct CompositeStudent {
     pub student: Student,
-    pub decks: Vec<DeckBodySmall>,
-    pub lessons: Vec<LessonBodySmall>,
-    pub tasks: Vec<TaskBodySmall>,
+    pub decks: Vec<DeckSmall>,
+    pub lessons: Vec<LessonSmall>,
+    pub tasks: Vec<TaskSmall>,
 }

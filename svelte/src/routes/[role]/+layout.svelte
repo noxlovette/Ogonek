@@ -15,6 +15,7 @@
     RecentLessons,
     QuickAdd,
     MobileMenu,
+    StudentFilter,
   } from "$lib/components";
   import {
     lessonStore,
@@ -26,7 +27,7 @@
 
   import { page } from "$app/state";
   import { setContext } from "svelte";
-  import type { Word } from "$lib/types/index.js";
+  import type { Word, Student } from "$lib/types";
 
   let { data, children } = $props();
   const role = page.params.role;
@@ -36,12 +37,13 @@
 
   if (role === "t") {
     elementsLeft = [Dashboard, Todo, Lessons, Students, Words, Settings];
-    elementsRight = [QuickAdd];
+    elementsRight = [QuickAdd, StudentFilter];
   }
 
   lessonStore.setLessons(data.lessons);
   studentStore.setStudents(data.students);
   setContext<Promise<Word>>("word", data.word);
+  setContext<Student[]>("students", data.students);
 
   setUser(data.user);
   setProfile(data.profile);

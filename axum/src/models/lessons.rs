@@ -15,23 +15,21 @@ impl PaginationParams {
     pub fn limit(&self) -> i64 {
         self.per_page.unwrap_or(50).min(100).max(1)
     }
-    
+
     pub fn offset(&self) -> i64 {
         let page = self.page.unwrap_or(1).max(1);
         (page - 1) * self.limit()
     }
-    
+
     pub fn page(&self) -> i64 {
         self.page.unwrap_or(1).max(1)
     }
 }
 
-
-
 #[serde_with::serde_as]
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
-pub struct LessonBody {
+pub struct Lesson {
     pub id: String,
     pub title: String,
     pub topic: String,
@@ -44,11 +42,10 @@ pub struct LessonBody {
     pub updated_at: OffsetDateTime,
 }
 
-
 #[serde_with::serde_as]
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
-pub struct LessonBodySmall {
+pub struct LessonSmall {
     pub id: String,
     pub title: String,
     pub topic: String,
@@ -60,7 +57,7 @@ pub struct LessonBodySmall {
 #[serde_with::serde_as]
 #[derive(Serialize, Deserialize, Debug, FromRow)]
 #[serde(rename_all = "camelCase")]
-pub struct LessonBodyWithStudent {
+pub struct LessonWithStudent {
     pub id: String,
     pub title: String,
     pub topic: String,
@@ -76,7 +73,7 @@ pub struct LessonBodyWithStudent {
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
-pub struct LessonCreateBody {
+pub struct LessonCreate {
     pub title: String,
     pub topic: String,
     pub markdown: String,

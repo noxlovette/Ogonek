@@ -77,6 +77,11 @@ export interface User {
   [key: string]: string | undefined;
 }
 
+export interface UserAndTeacher {
+  user: User;
+  teacher: Teacher;
+}
+
 export interface Lesson {
   id: string;
   title: string;
