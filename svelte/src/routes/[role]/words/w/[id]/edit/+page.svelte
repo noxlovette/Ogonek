@@ -201,6 +201,7 @@
     </div>
   </div>
 </form>
+
 {#if page.state.showImportModal}
-  <CSV bind:updatedCards {deck} />
+  <CSV {deck} bind:updatedCards />
 {/if}

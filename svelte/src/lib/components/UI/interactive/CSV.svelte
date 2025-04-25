@@ -3,8 +3,10 @@
   import { notification } from "$lib/stores";
   import type { Card, Deck } from "$lib/types";
   import { UploadCloud, X } from "lucide-svelte";
-  import Papa from "papaparse";
   import ModalBackGround from "../forms/ModalBackGround.svelte";
+  import { extractWordsFromRewordFile } from "$lib/utils";
+  import Papa from "papaparse";
+  import H2 from "$lib/components/typography/H2.svelte";
   interface CSVRow {
     [key: string]: string;
   }
@@ -13,8 +15,10 @@
     deck,
     updatedCards = $bindable([]),
   }: { deck: Deck; updatedCards: Card[] } = $props();
+  type importOptions = "csv" | "reword";
 
   let fileInput: HTMLInputElement | null = $state(null);
+  let importOption: importOptions = "reword";
   let importFrontColumn = $state("");
   let importBackColumn = $state("");
   let csvHeaders = $state<string[]>([]);
@@ -31,14 +35,7 @@
     window.history.back();
   }
 
-  function handleFileSelect(e: Event) {
-    const target = e.target as HTMLInputElement;
-    const file = target.files?.[0];
-    if (!file) return;
-
-    // Store the file reference
-    selectedFile = file;
-
+  function parseCSV(file: File) {
     Papa.parse(file, {
       header: true,
       delimiter: ";", // Use semicolon as separator
@@ -67,26 +64,8 @@
     });
   }
 
-  function importCards() {
-    if (!importFrontColumn || !importBackColumn) {
-      notification.set({
-        type: "error",
-        message: "Please select columns for front and back of cards",
-      });
-      return;
-    }
-
-    // Use the stored file reference instead of reading from input again
-    if (!selectedFile) {
-      console.error("No file selected");
-      notification.set({
-        type: "error",
-        message: "No file selected",
-      });
-      return;
-    }
-
-    Papa.parse(selectedFile, {
+  function importCSV(file: File) {
+    Papa.parse(file, {
       header: true,
       delimiter: ";",
       complete: (results) => {
@@ -94,7 +73,6 @@
         if (results.data && results.data.length) {
           const csvData = results.data as CSVRow[];
 
-          console.log("creating new cards from", csvData.length, "rows");
           const newCards = csvData
             .filter((row) => row[importFrontColumn] && row[importBackColumn])
             .map((row) => ({
@@ -105,12 +83,8 @@
               mediaUrl: undefined,
             }));
 
-          console.log("created", newCards.length, "new cards");
-
-          // Append to existing cards
           updatedCards = [...updatedCards, ...newCards];
 
-          console.log("cards updated, total:", updatedCards.length);
           notification.set({
             type: "success",
             message: `Added ${newCards.length} cards from CSV`,
@@ -118,7 +92,6 @@
 
           closeImportModal();
         } else {
-          console.error("No data in results");
           notification.set({
             type: "error",
             message: "Failed to parse CSV data",
@@ -126,7 +99,6 @@
         }
       },
       error: (error) => {
-        console.error("Error parsing CSV:", error);
         notification.set({
           type: "error",
           message: `Error importing CSV: ${error.message}`,
@@ -134,11 +106,128 @@
       },
     });
   }
+
+  function importFromReword(words: Array<Record<string, any>>) {
+    if (!importFrontColumn || !importBackColumn) {
+      notification.set({
+        type: "error",
+        message: "Please select both front and back fields.",
+      });
+      return;
+    }
+
+    const newCards = words
+      .filter((word) => word[importFrontColumn] && word[importBackColumn])
+      .map((word) => ({
+        id: "",
+        deckId: deck.id,
+        front: word[importFrontColumn],
+        back: word[importBackColumn],
+        mediaUrl: undefined,
+      }));
+
+    console.log(newCards);
+
+    updatedCards = [...updatedCards, ...newCards];
+
+    console.log(updatedCards);
+
+    notification.set({
+      type: "success",
+      message: `Added ${newCards.length} cards from .reword`,
+    });
+
+    closeImportModal();
+  }
+
+  async function handleFileSelect(e: Event) {
+    const target = e.target as HTMLInputElement;
+    const file = target.files?.[0];
+    if (!file) return;
+
+    selectedFile = file;
+
+    // Set importOption based on file extension
+    const extension = file.name.split(".").pop()?.toLowerCase();
+    if (extension === "csv") {
+      importOption = "csv";
+    } else if (extension === "reword") {
+      importOption = "reword";
+    } else {
+      console.error("Unsupported file type");
+      return;
+    }
+
+    if (importOption === "csv") {
+      parseCSV(file);
+    } else {
+      try {
+        const words = await extractWordsFromRewordFile(file);
+        if (!Array.isArray(words) || words.length === 0) {
+          csvPreview = [];
+          csvHeaders = [];
+          return;
+        }
+
+        csvPreview = words;
+        csvHeaders = Object.keys(words[0]);
+
+        const frontKeys = ["wrd"];
+        const backKeys = [
+          "fra",
+          "deu",
+          "rus",
+          "eng",
+          "kor",
+          "ara",
+          "spa",
+          "por",
+          "ita",
+          "ukr",
+          "jpn",
+          "zhs",
+          "zht",
+        ];
+
+        importFrontColumn =
+          frontKeys.find((key) => csvHeaders.includes(key)) || "wrd";
+        importBackColumn =
+          backKeys.find((key) => csvHeaders.includes(key)) || "";
+      } catch (err) {
+        console.error("Failed to parse .reword file:", err);
+      }
+    }
+  }
+
+  function importCards() {
+    if (!importFrontColumn || !importBackColumn) {
+      notification.set({
+        type: "error",
+        message: "Please select columns for front and back of cards",
+      });
+      return;
+    }
+
+    if (!selectedFile) {
+      notification.set({
+        type: "error",
+        message: "No file selected",
+      });
+      return;
+    }
+
+    if (importOption == "csv") {
+      importCSV(selectedFile);
+    } else {
+      importFromReword(csvPreview);
+    }
+  }
 </script>
 
 <ModalBackGround>
-  <div class="mb-4 flex items-center justify-between">
-    <h2 class="text-xl font-bold">Import Cards from CSV</h2>
+  <div class="mb-4 flex min-w-1/2 items-center justify-between">
+    <H2>Import Cards</H2>
+
     <button
       class="text-stone-500 hover:text-stone-700"
       type="button"
@@ -150,10 +239,9 @@
 
   <div class="space-y-4">
     {#if !csvHeaders.length}
-      <!-- File Upload -->
       <p class="text-stone-600 dark:text-stone-400">
-        Select a CSV file with semicolon (;) separated values to import as
-        cards.
+        Select either a CSV file with semicolon (;) separated values or a
+        .reword Package file
       </p>
 
       <div
@@ -166,13 +254,12 @@
         <input
           bind:this={fileInput}
           type="file"
-          accept=".csv"
+          accept=".csv,.reword"
           class="absolute size-full cursor-pointer opacity-0"
           onchange={handleFileSelect}
         />
       </div>
     {:else}
-      <!-- Column Mapping -->
       <div class="space-y-4">
         <div class="grid grid-cols-2 gap-4">
           <div>
