@@ -38,8 +38,6 @@ services:
       - cargo-target:/app/target
     env_file:
       - ./axum/.env
-    environment:
-      - DATABASE_URL=postgres://postgres:changeme@postgres:5432/pg-ogonek-dev
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
       interval: 10s
