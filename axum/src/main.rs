@@ -4,7 +4,7 @@ use axum::{
     routing::get,
     Router,
 };
-
+use rust::tools::daemons::task_cleanup::daily_cleanup;
 use rust::schema::AppState;
 use rust::tools::logging::init_logging;
 use rust::tools::middleware::api_key::validate_api_key;
@@ -25,6 +25,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     init_logging().await;
 
     let state = AppState::new().await?;
+    let cleanup_state = state.clone();
+    tokio::spawn(async move {
+        daily_cleanup(cleanup_state).await;
+    });
 
     let protected_routes = Router::new()
         .nest("/lesson", rust::api::routes::lesson_routes::lesson_routes())
