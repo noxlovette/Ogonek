@@ -45,6 +45,7 @@ bun.lockb
 .svelte-kit
 /build
 data
+tarpaulin-report.html
 
 # OS
 .DS_Store

@@ -162,6 +162,29 @@ pub async fn delete(
 
     Ok(())
 }
+
+pub async fn delete_system(db: &PgPool, id: &str, file_ids: Vec<String>) -> Result<(), DbError> {
+    let mut tx = db.begin().await?;
+
+    if !file_ids.is_empty() {
+        sqlx::query!(r#"DELETE FROM task_files WHERE task_id = $1"#, id)
+            .execute(&mut *tx)
+            .await?;
+
+        sqlx::query!(r#"DELETE FROM files WHERE id = ANY($1)"#, &file_ids)
+            .execute(&mut *tx)
+            .await?;
+    }
+
+    sqlx::query!(r#"DELETE FROM tasks WHERE id = $1"#, id)
+        .execute(&mut *tx)
+        .await?;
+
+    tx.commit().await?;
+
+    Ok(())
+}
+
 pub async fn update(
     db: &PgPool,
     id: &str,
@@ -248,4 +271,20 @@ pub async fn add_files(db: &PgPool, task_id: &str, file_ids: Vec<String>) -> Res
     tx.commit().await?;
 
     Ok(())
+}
+
+pub async fn fetch_old_tasks(db: &PgPool) -> Result<Vec<CreationId>, DbError> {
+    let tasks = sqlx::query_as!(
+        CreationId,
+        r#"
+        SELECT id
+        FROM tasks
+        WHERE created_at < NOW() - INTERVAL '1 month'
+        AND completed = true;
+        "#
+    )
+    .fetch_all(db)
+    .await?;
+
+    Ok(tasks)
 }

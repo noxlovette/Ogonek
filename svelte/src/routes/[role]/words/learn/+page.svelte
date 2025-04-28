@@ -3,9 +3,15 @@
   import { quintOut } from "svelte/easing";
   import { enhance } from "$app/forms";
   import { invalidate } from "$app/navigation";
-  import { enhanceForm } from "$lib/utils";
+  import { enhanceForm, qualityButtons } from "$lib/utils";
   import { CheckCheck, Home } from "lucide-svelte";
-  import { HeaderEmbellish, UniButton, Label, KBD } from "$lib/components";
+  import {
+    HeaderEmbellish,
+    UniButton,
+    Label,
+    KBD,
+    Input,
+  } from "$lib/components";
 
   let { data } = $props();
 
@@ -14,7 +20,11 @@
 
   let isComplete = $state(data.cards.length === 0);
   let showAnswer = $state(false);
+  let showCloze = $derived(currentCard.front.split(/\s+/).length < 4);
+  let userInput = $state("");
+
   const nextCard = async () => {
+    userInput = "";
     if (currentIndex < data.cards.length - 1) {
       currentIndex++;
       showAnswer = false;
@@ -27,53 +37,15 @@
     }
   };
 
-  const qualityButtons = [
-    {
-      quality: 0,
-      label: "1066",
-      color: "ring-red-600 hover:bg-red-700/10 ring",
-      key: 1,
-    },
-    {
-      quality: 1,
-      label: "Wrong",
-      color: "ring-orange-500 hover:bg-orange-600/10 ring",
-      key: 2,
-    },
-    {
-      quality: 2,
-      label: "Hard",
-      color: "ring-yellow-500 hover:bg-yellow-600/10 ring",
-      key: 3,
-    },
-    {
-      quality: 3,
-      label: "Okay",
-      color: "ring-stone-400 hover:bg-stone-400/10 ring",
-      key: 4,
-    },
-    {
-      quality: 4,
-      label: "Good",
-      color: "ring-green-500 hover:bg-green-600/10 ring",
-      key: 5,
-    },
-    {
-      quality: 5,
-      label: "Easy",
-      color: "ring-cacao-500 hover:bg-cacao-600/10 ring",
-      key: 6,
-    },
-  ];
-
   function handleKeyPress(event: KeyboardEvent) {
-    if (!showAnswer && event.key == " ") {
+    if (!showAnswer && !showCloze && event.key == " ") {
+      showAnswer = true;
+    } else if (!showAnswer && showCloze && event.key == "Enter") {
       showAnswer = true;
     }
 
     const key = event.key;
 
-    // Find the button with the matching data-key attribute
     const matchingButton: HTMLButtonElement | null = document.querySelector(
       `button[data-key="${key}"]`,
     );
@@ -116,7 +88,7 @@
       >
         <CheckCheck />
       </div>
-      <h2 class="text-2xl font-bold">🎉 All caught up!</h2>
+      <h2 class="text-2xl font-bold">All caught up!</h2>
       <p class="max-w-md text-stone-600 dark:text-stone-400">
         You've reviewed all your due cards. Come back later for new cards to
         review.
@@ -158,11 +130,50 @@
       >
         <!-- Front side -->
         <div class="flex-grow">
-          <Label>Question</Label>
-          <div class="text-lg">{currentCard.front}</div>
+          <Label>{showCloze ? "" : "Question"}</Label>
+
+          {#if showCloze}
+            {#if !showAnswer}
+              <Input
+                name="Your version"
+                bind:value={userInput}
+                placeholder="Type your answer..."
+              ></Input>
+            {:else}
+              <div class="space-y-2">
+                <Label>Your Answer:</Label>
+                <div class="rounded-lg bg-stone-100 p-3 dark:bg-stone-800">
+                  <span class="">{userInput}</span>
+                </div>
+
+                <Label>Correct Answer:</Label>
+                <div class="rounded-lg bg-green-100 p-3 dark:bg-green-900">
+                  <span class="">{currentCard.front}</span>
+                </div>
+              </div>
+            {/if}
+          {:else}
+            <div class="text-lg">{currentCard.front}</div>
+          {/if}
         </div>
         <!-- Back side -->
-        {#if showAnswer}
+        {#if showCloze}
+          <div class="flex-grow">
+            <Label>Question</Label>
+            <p>
+              {currentCard.back}
+            </p>
+            {#if currentCard.mediaUrl}
+              <div class="mt-4 flex justify-center">
+                <img
+                  src={currentCard.mediaUrl}
+                  alt={currentCard.front}
+                  class="max-h-[200px] rounded-lg object-contain shadow-sm ring-1 ring-stone-300/40 dark:ring-stone-600/50"
+                />
+              </div>
+            {/if}
+          </div>
+        {:else if showAnswer}
           <div class="flex-grow">
             <Label>Answer</Label>
             <p>
@@ -181,7 +192,6 @@
         {/if}
       </div>
 
-      <!-- Action buttons container - always spans 1 column on md screens -->
       <div class="col-span-2 flex h-full md:col-span-1">
         {#if !showAnswer}
           <button
@@ -189,7 +199,7 @@
             onclick={() => (showAnswer = !showAnswer)}
           >
             <p>Flip</p>
-            <KBD>Space</KBD>
+            <KBD>{showCloze ? "Enter" : "Space"}</KBD>
           </button>
         {:else}
           <form
