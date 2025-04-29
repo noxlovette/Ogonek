@@ -11,8 +11,7 @@ pub struct AppState {
 
 impl AppState {
     pub async fn new() -> anyhow::Result<Self> {
-        let bucket_name =
-            std::env::var("SCW_BUCKET_NAME").expect("SCW_BUCKET_NAME needs to be set");
+        let bucket_name = std::env::var("S3_BUCKET_NAME").expect("S3_BUCKET_NAME needs to be set");
 
         let db = init_db().await?;
         let s3 = init_s3().await?;
