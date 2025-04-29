@@ -15,8 +15,8 @@
     keywords = "education, teach, English, classroom management, teaching, learning",
     robots = "index, follow",
     ogTitle = "Ogonek",
-    ogUrl = "https://ogonek.noxlovette.com",
-    ogImage = "https://ogonek.noxlovette.com/images/og.png",
+    ogUrl = "https://ogonek.app",
+    ogImage = "https://ogonek.app/images/og.png",
   }: Props = $props();
   let ogType = "website";
 </script>
@@ -40,16 +40,16 @@
       "@context": "http://schema.org",
       "@type": "WebApplication",
       "name": "Ogonek",
-      "url": "https://Ogonek.noxlovette.com",
+      "url": "https://ogonek.app",
       "description": "Ogonek. The digital classroom for private teachers.",
       "applicationCategory": "EducationalApplication",
       "operatingSystem": "All",
       // "screenshot": "https://Ogonek.noxlovette.com/static/images/screenshot.jpg",
       "featureList": "Flashcards, Scheduling, Lesson Notes, Student Progress Tracking",
-      "softwareVersion": "1.1.3",
+      "softwareVersion": "1.2.11",
       "author": {
         "@type": "Organization",
-        "name": "NoxLovette",
+        "name": "noxlovette",
         "url": "https://noxlovette.com"
       },
       "datePublished": "2024-12-17"

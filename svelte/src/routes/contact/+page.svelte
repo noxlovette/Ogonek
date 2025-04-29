@@ -50,7 +50,7 @@
         </p>
 
         <div
-          class="flex items-center justify-between rounded-lg bg-stone-50 p-3 dark:bg-stone-800"
+          class="flex items-center justify-between rounded-lg bg-stone-50/30 p-3 dark:bg-stone-800/30"
         >
           <span
             class="font-mono text-sm break-all text-stone-800 md:text-base dark:text-stone-300"
@@ -93,7 +93,7 @@
         </p>
 
         <div
-          class="flex items-center justify-between rounded-lg bg-stone-50 p-3 dark:bg-stone-800"
+          class="flex items-center justify-between rounded-lg bg-stone-50/30 p-3 dark:bg-stone-800/30"
         >
           <span
             class="font-mono text-sm text-stone-800 md:text-base dark:text-stone-300"

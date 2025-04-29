@@ -14,7 +14,7 @@
        after:rounded-full after:border after:border-stone-300 after:bg-white
        after:transition-all after:content-[''] peer-checked:after:translate-x-full
        peer-checked:after:border-white
-       dark:bg-stone-700 dark:peer-checked:bg-stone-500
+       dark:bg-stone-700/30 dark:peer-checked:bg-stone-500/30
        dark:after:border-stone-600"
   ></div>
   <span class="ml-3 text-sm font-medium text-stone-700 dark:text-stone-300">
