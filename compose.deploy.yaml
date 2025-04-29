@@ -1,6 +1,6 @@
 services:
   svelte:
-    image: ghcr.io/noxlovette/svelte-ogonek:v1.2.1
+    image: ghcr.io/noxlovette/svelte-ogonek:v1.2.10
     container_name: svelte-fl-prod
     env_file:
       - ./.env.svelte
@@ -21,12 +21,22 @@ services:
   redis:
     image: redis/redis-stack-server:latest
     container_name: redis-fl-prod
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
     networks:
       - web
       - internal
-
+    deploy:
+      resources:
+        limits:
+          memory: 1G
   axum:
-    image: ghcr.io/noxlovette/axum-ogonek:v1.2.1
+    image: ghcr.io/noxlovette/axum-ogonek:v1.2.10
     container_name: axum-fl-prod
     logging:
       driver: "json-file"
@@ -35,13 +45,19 @@ services:
         max-file: "3"
     env_file:
       - ./.env.axum
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
     depends_on:
       postgres:
         condition: service_healthy
     networks:
       - internal
-      - web  # ✅ Added this to allow external network access
-    dns:  # ✅ Explicitly set public DNS for external resolution
+      - web 
+    dns:  
       - 8.8.8.8
       - 1.1.1.1
     restart: unless-stopped
