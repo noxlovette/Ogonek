@@ -1,6 +1,6 @@
 services:
   svelte:
-    image: ghcr.io/noxlovette/svelte-ogonek:v1.2.10
+    image: ghcr.io/noxlovette/svelte-ogonek:1.2.11
     container_name: svelte-fl-prod
     env_file:
       - ./.env.svelte
@@ -36,7 +36,7 @@ services:
         limits:
           memory: 1G
   axum:
-    image: ghcr.io/noxlovette/axum-ogonek:v1.2.10
+    image: ghcr.io/noxlovette/axum-ogonek:1.2.11
     container_name: axum-fl-prod
     logging:
       driver: "json-file"
