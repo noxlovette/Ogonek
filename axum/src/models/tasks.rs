@@ -17,7 +17,7 @@ pub struct TaskPaginationParams {
 
 impl TaskPaginationParams {
     pub fn limit(&self) -> i64 {
-        self.per_page.unwrap_or(50).min(100).max(1)
+        self.per_page.unwrap_or(50).clamp(1, 100)
     }
 
     pub fn offset(&self) -> i64 {

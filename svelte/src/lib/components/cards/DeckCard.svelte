@@ -3,7 +3,6 @@
 
   import { user } from "$lib/stores";
   import CardClickable from "./CardClickable.svelte";
-  import { H2 } from "../typography";
 
   interface Props {
     deck: Deck | DeckSmall;

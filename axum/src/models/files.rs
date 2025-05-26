@@ -5,7 +5,6 @@ use time::OffsetDateTime;
 #[serde_with::serde_as]
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
-
 pub struct File {
     pub id: String,
     pub name: String,
@@ -61,7 +60,6 @@ pub struct UploadParams {
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
-
 pub struct CreateFolderRequest {
     pub name: String,
     pub parent_id: Option<String>,

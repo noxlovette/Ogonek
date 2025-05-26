@@ -75,9 +75,9 @@ impl IntoResponse for AppError {
                 if let sqlx::Error::Database(dbe) = db_err {
                     if let Some(constraint) = dbe.constraint() {
                         if constraint.contains("_key") || constraint.contains("_unique") {
-                            return Self::AlreadyExists(format!(
-                                "Resource with this property already exists"
-                            ))
+                            return Self::AlreadyExists(
+                                "Resource with this property already exists".to_string(),
+                            )
                             .into_response();
                         }
                     }

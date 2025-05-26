@@ -44,7 +44,7 @@
     taskId = null,
     notify = false,
     folderId = null,
-    onComplete = (fileId: string) => {},
+    onComplete = () => {},
   } = $props();
 
   let fileUploads: FileUploadState[] = $state([]);
@@ -169,13 +169,9 @@
           fileState.progress.bytes = chunkEnd;
           fileState.progress.percentComplete =
             (chunkEnd / fileState.progress.totalBytes) * 100;
-        } catch (error: any) {
-          if (error.name === "AbortError") {
-            throw new Error("Upload aborted by user");
-          }
-          throw new Error(
-            `Failed to upload part ${partNumber}: ${error.message}`,
-          );
+        } catch (error) {
+          console.error(error);
+          throw new Error("Failed to upload");
         }
       }
 
@@ -202,10 +198,10 @@
 
       fileState.status = "complete";
       onComplete(fileIdLocal);
-    } catch (error: any) {
+    } catch (error) {
       logger.error(`Upload failed for ${file.name}:`, error);
       fileState.status = "error";
-      fileState.errorMessage = error.message || "Upload failed";
+      fileState.errorMessage = "Upload failed";
 
       // Try to abort the upload on S3 if it was initialized
       if (uploadIdLocal && s3Key) {

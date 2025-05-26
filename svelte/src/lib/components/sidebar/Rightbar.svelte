@@ -1,8 +1,8 @@
 <script lang="ts">
   import { rightbar } from "$lib/stores/sidebar";
+  import type { Component } from "svelte";
 
-  let { elements }: { elements: ConstructorOfATypedSvelteComponent[] } =
-    $props();
+  let { elements }: { elements: Component[] } = $props();
 </script>
 
 <div

@@ -2,7 +2,6 @@
   import { enhance } from "$app/forms";
   import { goto } from "$app/navigation";
   import { Input, Turnstile, UniButton } from "$lib/components";
-  import logger from "$lib/logger";
   import { initialUser, notification } from "$lib/stores";
   import { enhanceForm } from "$lib/utils";
   import { DoorOpen } from "lucide-svelte";

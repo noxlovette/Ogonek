@@ -62,7 +62,7 @@ pub async fn create_task(
         assignee = payload.assignee.as_ref().unwrap();
     }
 
-    let id = create(&state.db, &payload, &claims.sub, &assignee).await?;
+    let id = create(&state.db, &payload, &claims.sub, assignee).await?;
 
     Ok(Json(id))
 }

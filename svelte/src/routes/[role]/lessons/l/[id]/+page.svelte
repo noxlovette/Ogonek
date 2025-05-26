@@ -1,6 +1,5 @@
 <script lang="ts">
   import { UniButton, H1, H2, H3, HeaderEmbellish } from "$lib/components";
-  import { user } from "$lib/stores";
 
   import { formatDate } from "@noxlovette/svarog";
   import type { PageData } from "./$types";
@@ -43,6 +42,7 @@
   </div>
 </HeaderEmbellish>
 <div class="markdown">
+  <!-- Input is sanitized with rehype -->
   {@html data.rendered}
 </div>
 

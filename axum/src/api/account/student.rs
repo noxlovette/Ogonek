@@ -1,6 +1,6 @@
 use crate::api::error::APIError;
 use crate::auth::Claims;
-use crate::db::crud::user::student;
+use crate::db::crud::account::student;
 
 use crate::models::{CompositeStudent, Student, UpdateStudentRequest};
 use crate::schema::AppState;

@@ -42,6 +42,7 @@
   >
     <div class="h-full w-full">
       <p class="markdown-mini h-full w-full px-4">
+        <!-- Input is sanitized with rehype -->
         {@html caption}
       </p>
     </div>

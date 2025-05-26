@@ -181,6 +181,11 @@ export interface Card {
   createdAt?: string;
 }
 
+export interface ImportWord {
+  front: string;
+  back: string;
+}
+
 export interface DeckWithCards {
   deck: Deck;
   cards: Card[];

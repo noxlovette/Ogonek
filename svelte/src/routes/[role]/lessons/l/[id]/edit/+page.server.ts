@@ -17,9 +17,9 @@ export const actions = {
     const id = formData.get("id");
     const topic = formData.get("topic");
     const assigneeData = formData.get("student")?.toString() || "{}";
-    const { assignee = "", telegramId = "" } = JSON.parse(assigneeData);
+    const { assignee = "" } = JSON.parse(assigneeData);
 
-    let body = {
+    const body = {
       id,
       title,
       markdown,

@@ -1,5 +1,5 @@
 import type { CompositeStudent } from "$lib/types";
-import { parseMarkdown } from "$lib/utils";
+import { parseMarkdown } from "@noxlovette/svarog";
 import type { LayoutServerLoad } from "./$types";
 
 export const load: LayoutServerLoad = async ({ params, fetch }) => {

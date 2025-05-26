@@ -12,7 +12,7 @@ import { validateRequired } from "@noxlovette/svarog";
 import { fail, type Actions } from "@sveltejs/kit";
 
 export const actions: Actions = {
-  default: async ({ request, fetch, cookies, locals }) => {
+  default: async ({ request, fetch, cookies }) => {
     try {
       const data = await request.formData();
       const username = data.get("username") as string;

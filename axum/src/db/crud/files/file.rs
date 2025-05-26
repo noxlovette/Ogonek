@@ -77,7 +77,7 @@ pub async fn find_all(
     user_id: &str,
 ) -> Result<Vec<File>, DbError> {
     let files = if let Some(folder_id) = params.parent_id {
-        check_file_exists(db, &folder_id, &user_id).await?;
+        check_file_exists(db, &folder_id, user_id).await?;
 
         sqlx::query_as!(
             File,

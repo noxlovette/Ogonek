@@ -57,7 +57,7 @@
   let disabled = $derived($isLoading || disable);
   let showConfirmDialog = $state(false);
 
-  function handleClick(event: any) {
+  function handleClick(event: MouseEvent) {
     if (variant === "danger" && (confirmText || confirmTitle)) {
       event.preventDefault();
       showConfirmDialog = true;

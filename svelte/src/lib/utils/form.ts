@@ -57,8 +57,6 @@ type EnhanceConfig = {
   shouldUpdate?: boolean;
 };
 
-type SubmitFunctionArgs = Parameters<SubmitFunction>[0];
-
 export function enhanceForm(config: EnhanceConfig = {}): SubmitFunction {
   const {
     messages = {},
@@ -67,13 +65,7 @@ export function enhanceForm(config: EnhanceConfig = {}): SubmitFunction {
     shouldUpdate = true,
   } = config;
 
-  return ({
-    formElement,
-    formData,
-    action,
-    cancel,
-    submitter,
-  }: SubmitFunctionArgs) => {
+  return () => {
     // Start loading
     isLoading.true();
 

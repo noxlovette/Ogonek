@@ -34,7 +34,7 @@ pub async fn init_multipart_s3(
             .bucket(&state.bucket_name)
             .key(s3_key)
             .upload_id(upload_id)
-            .part_number(part_number as i32)
+            .part_number(part_number)
             .presigned(PresigningConfig::expires_in(
                 std::time::Duration::from_secs(3600),
             )?)

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { parseMarkdown } from "$lib/utils";
+  import { parseMarkdown } from "@noxlovette/svarog";
 
   let {
     markdownContent = $bindable(
@@ -51,6 +51,9 @@
       <div
         class="markdown w-full rounded-lg p-4 shadow-sm dark:border-stone-900"
       >
+        <!-- eslint-disable-next-line svelte/no-at-html -->
+        <!-- @ts-ignore -->
+        <!-- Input is sanitized with rehype -->
         {@html htmlContent}
       </div>
     {/if}

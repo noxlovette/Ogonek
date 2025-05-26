@@ -4,7 +4,7 @@ import svelte from "eslint-plugin-svelte";
 import globals from "globals";
 import ts from "typescript-eslint";
 
-/** @type {import('eslint').Linter.Config[]} */
+/** @type {import('eslint').Linter.FlatConfig[]} */
 export default [
   js.configs.recommended,
   ...ts.configs.recommended,
@@ -20,11 +20,15 @@ export default [
     },
   },
   {
-    files: ["**/*.svelte"],
+    files: ["**/*.svelte", "**/*.ts"],
     languageOptions: {
       parserOptions: {
         parser: ts.parser,
       },
+    },
+    rules: {
+      "svelte/no-at-html-tags": "off",
+      "@typescript-eslint/no-explicit-any": "off",
     },
   },
   {

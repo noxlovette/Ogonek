@@ -151,7 +151,7 @@ async function getUserFromToken(event: RequestEvent) {
       logger.debug("validating user from token");
       user = await ValidateAccess(accessToken);
     } catch (error) {
-      logger.debug("attempting to refresh user from token");
+      logger.debug({ error }, "attempting to refresh user from token");
       user = await handleTokenRefresh(event);
     }
   } else if (event.cookies.get("refreshToken")) {

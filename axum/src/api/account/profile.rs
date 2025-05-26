@@ -1,6 +1,6 @@
 use crate::api::error::APIError;
 use crate::auth::Claims;
-use crate::db::crud::user::profile;
+use crate::db::crud::account::profile;
 use crate::models::profiles::{ProfileParams, ProfileUpdate};
 use crate::models::ProfileWithTS;
 use crate::schema::AppState;

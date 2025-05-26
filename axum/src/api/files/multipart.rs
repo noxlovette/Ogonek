@@ -17,14 +17,14 @@ pub async fn init_multipart_upload(
     Json(payload): Json<InitUploadRequest>,
 ) -> Result<Json<MultipartUploadInit>, AppError> {
     if let Some(ref parent_id) = payload.parent_id {
-        file::check_file_exists(&state.db, &parent_id, &claims.sub).await?;
+        file::check_file_exists(&state.db, parent_id, &claims.sub).await?;
         Some(parent_id)
     } else {
         None
     };
 
     let file_id = nanoid::nanoid!();
-    let file_extension = payload.file_name.split('.').last().unwrap_or("");
+    let file_extension = payload.file_name.split('.').next_back().unwrap_or("");
     let s3_key = if payload.task_id.is_some() {
         format!("tasks/{}/{}.{}", claims.sub, file_id, file_extension)
     } else {

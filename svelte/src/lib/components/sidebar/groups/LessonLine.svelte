@@ -1,6 +1,6 @@
 <script lang="ts">
   import { formatDate } from "@noxlovette/svarog";
-  import type { Lesson, LessonSmall } from "$lib/types";
+  import type { LessonSmall } from "$lib/types";
 
   import { page } from "$app/state";
   import SidebarItem from "../elements/SidebarItem.svelte";

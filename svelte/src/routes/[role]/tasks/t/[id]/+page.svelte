@@ -77,6 +77,8 @@
 
 <grid class="grid gap-4 md:grid-cols-4">
   <div class="markdown md:col-span-3">
+    <!-- eslint-disable-next-line svelte/no-at-html -->
+    <!-- Input is sanitized with rehype -->
     {@html rendered}
   </div>
 
