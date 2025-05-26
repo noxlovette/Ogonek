@@ -54,9 +54,8 @@ services:
     user: postgres
     volumes:
       - db-data:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_DB=pg-ogonek-dev
-      - POSTGRES_PASSWORD=changeme
+    env_file:
+      - ./.env
     ports:
       - "5433:5432"
     healthcheck:

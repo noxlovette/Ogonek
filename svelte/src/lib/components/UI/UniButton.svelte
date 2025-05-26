@@ -157,7 +157,7 @@
     <div class="mt-5 flex justify-end gap-2">
       <button
         type="button"
-        class="rounded-lg bg-white px-4 py-2 text-stone-700 ring-1 ring-stone-300 transition-all hover:bg-stone-50 dark:bg-stone-800 dark:text-stone-200 dark:hover:bg-stone-700"
+        class="rounded-lg bg-white px-4 py-2 text-stone-700/30 ring-1 ring-stone-300 transition-all hover:bg-stone-50 dark:bg-stone-800/30 dark:text-stone-200 dark:hover:bg-stone-700"
         onclick={() => (showConfirmDialog = false)}
       >
         Cancel

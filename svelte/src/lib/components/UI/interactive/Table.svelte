@@ -63,7 +63,7 @@
         <table class="w-full table-auto">
           <thead>
             <tr
-              class="border-b border-stone-300/30 bg-stone-50 dark:border-stone-700 dark:bg-stone-900"
+              class="border-b border-stone-300/30 bg-stone-50/30 dark:border-stone-700 dark:bg-stone-900/30"
             >
               {#each config.columns as column}
                 <th
@@ -79,7 +79,7 @@
               <tr
                 onclick={() => goto(`${href}/${item.id}`)}
                 class="group hover:bg-cacao-50/30 dark:hover:bg-cacao-900/10 max-h-24 cursor-pointer transition-all duration-150 ease-in-out"
-                in:fade|global={{ duration: 300, delay: 50 }}
+                in:fade|global={{ duration: 150, delay: 10 }}
               >
                 {#each config.columns as column, i}
                   <td
@@ -99,7 +99,7 @@
       </div>
 
       <div
-        class="flex items-center justify-between border-t border-stone-300/30 bg-stone-50 px-6 py-3 text-sm text-stone-500 dark:border-stone-600/30 dark:bg-stone-900 dark:text-stone-400"
+        class="flex items-center justify-between border-t border-stone-300/30 bg-stone-50/30 px-6 py-3 text-sm text-stone-500 dark:border-stone-600/30 dark:bg-stone-900/30 dark:text-stone-400"
       >
         <div>
           Showing <span class="font-medium text-stone-700 dark:text-stone-300"

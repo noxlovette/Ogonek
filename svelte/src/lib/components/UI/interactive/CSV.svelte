@@ -306,7 +306,7 @@
                 <tbody class="divide-y divide-stone-200 dark:divide-stone-700">
                   {#each csvPreview as row}
                     <tr
-                      class="odd:bg-white even:bg-stone-50 dark:odd:bg-stone-900 dark:even:bg-stone-800/50"
+                      class="odd:bg-white even:bg-stone-50/30 dark:odd:bg-stone-900/30 dark:even:bg-stone-800/50"
                     >
                       <td class="p-2 text-sm"
                         >{row[importFrontColumn] || "<empty>"}</td

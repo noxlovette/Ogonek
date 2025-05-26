@@ -2,6 +2,7 @@ use crate::error::AppError;
 use crate::models::{CompletedPart, MultipartInitResultS3, PartUploadUrl};
 use crate::schema::AppState;
 use aws_sdk_s3::presigning::PresigningConfig;
+use std::error::Error;
 
 pub async fn init_multipart_s3(
     state: &AppState,
@@ -58,6 +59,9 @@ pub async fn complete_multipart_s3(
     upload_id: &str,
     parts: Vec<CompletedPart>,
 ) -> Result<(), AppError> {
+    let mut parts = parts;
+    parts.sort_by_key(|p| p.part_number);
+
     let completed_parts: Vec<aws_sdk_s3::types::CompletedPart> = parts
         .iter()
         .map(|part| {
@@ -72,7 +76,7 @@ pub async fn complete_multipart_s3(
         .set_parts(Some(completed_parts))
         .build();
 
-    state
+    let resp = state
         .s3
         .complete_multipart_upload()
         .bucket(&state.bucket_name)
@@ -80,10 +84,20 @@ pub async fn complete_multipart_s3(
         .upload_id(upload_id)
         .multipart_upload(completed_upload)
         .send()
-        .await
-        .map_err(|e| AppError::Internal(format!("Failed to complete multipart upload: {}", e)))?;
+        .await;
 
-    Ok(())
+    match resp {
+        Ok(_) => Ok(()),
+        Err(e) => {
+            if let Some(source) = e.source() {
+                tracing::error!("Inner error: {:?}", source);
+            }
+            Err(AppError::Internal(format!(
+                "Failed to complete multipart upload: {}",
+                e
+            )))
+        }
+    }
 }
 
 pub async fn abort_multipart_s3(

@@ -9,6 +9,34 @@
   }
 }
 
+@layer utilities {
+  .text-frosted {
+    position: relative;
+  }
+
+  .text-frosted::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: inherit;
+    -webkit-mask-image: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0) 40%,
+      rgba(0, 0, 0, 1) 100%
+    );
+    mask-image: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0) 40%,
+      rgba(0, 0, 0, 1) 100%
+    );
+    filter: blur(2px); /* Apply slight blur to text edges */
+    z-index: -1; /* Place the blur effect behind the text */
+  }
+}
+
 @layer components {
   .overdue {
     @apply font-medium text-red-600;
