@@ -7,6 +7,7 @@
   import { extractWordsFromRewordFile } from "$lib/utils";
   import Papa from "papaparse";
   import H2 from "$lib/components/typography/H2.svelte";
+  import logger from "$lib/logger";
   interface CSVRow {
     [key: string]: string;
   }
@@ -69,7 +70,7 @@
       header: true,
       delimiter: ";",
       complete: (results) => {
-        console.log("parsing complete", results);
+        logger.info("parsing complete", results);
         if (results.data && results.data.length) {
           const csvData = results.data as CSVRow[];
 
@@ -126,11 +127,11 @@
         mediaUrl: undefined,
       }));
 
-    console.log(newCards);
+    logger.debug(newCards);
 
     updatedCards = [...updatedCards, ...newCards];
 
-    console.log(updatedCards);
+    logger.debug(updatedCards);
 
     notification.set({
       type: "success",
@@ -154,7 +155,7 @@
     } else if (extension === "reword") {
       importOption = "reword";
     } else {
-      console.error("Unsupported file type");
+      logger.error("Unsupported file type");
       return;
     }
 
@@ -194,7 +195,7 @@
         importBackColumn =
           backKeys.find((key) => csvHeaders.includes(key)) || "";
       } catch (err) {
-        console.error("Failed to parse .reword file:", err);
+        logger.error("Failed to parse .reword file:", err);
       }
     }
   }

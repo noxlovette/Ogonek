@@ -1,17 +1,18 @@
 import { env } from "$env/dynamic/public";
+import logger from "$lib/logger";
 import {
   handleApiResponse,
   isSuccessResponse,
-  parseCookieOptions,
+  setTokenCookie,
   turnstileVerify,
   ValidateAccess,
 } from "$lib/server";
-import type { AuthResponse, User } from "$lib/types";
+import type { AuthResponse } from "$lib/types";
 import { validateRequired } from "@noxlovette/svarog";
 import { fail, type Actions } from "@sveltejs/kit";
 
 export const actions: Actions = {
-  default: async ({ request, fetch, cookies }) => {
+  default: async ({ request, fetch, cookies, locals }) => {
     try {
       const data = await request.formData();
       const username = data.get("username") as string;
@@ -59,31 +60,20 @@ export const actions: Actions = {
         return fail(authResult.status, { message: authResult.message });
       }
 
-      // Handle cookies from response
-      response.headers.getSetCookie().forEach((cookie) => {
-        const [fullCookie, ...opts] = cookie.split(";");
-        const [name, value] = fullCookie.split("=");
-        const cookieOptions = parseCookieOptions(opts);
-        cookies.set(name, value, cookieOptions);
-      });
+      const { accessToken, refreshToken } = authResult.data;
+      setTokenCookie(cookies, "accessToken", accessToken);
+      setTokenCookie(cookies, "refreshToken", refreshToken);
 
-      // Validate the access token
-      const { accessToken } = authResult.data;
-      const user = (await ValidateAccess(accessToken)) as User;
+      const user = await ValidateAccess(accessToken.token);
 
-      if (!user) {
-        return fail(401, {
-          message: "Invalid access token",
-        });
-      }
+      logger.debug({ user }, "user from the login");
 
       return {
-        success: true,
-        message: "Login successful",
         user,
+        success: true,
       };
     } catch (error) {
-      console.error("Signin error:", error);
+      logger.error("Signin error:", error);
       return fail(500, {
         message:
           error instanceof Error ? error.message : "Internal server error",

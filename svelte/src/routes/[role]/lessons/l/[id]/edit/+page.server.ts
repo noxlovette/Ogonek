@@ -1,3 +1,4 @@
+import logger from "$lib/logger";
 import type { Actions } from "@sveltejs/kit";
 import { redirect } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
@@ -33,7 +34,7 @@ export const actions = {
 
     if (!response.ok) {
       const errorData = await response.json(); // Parse error details
-      console.error("Error updating lesson:", errorData);
+      logger.error("Error updating lesson:", errorData);
       return {
         success: false,
         error: errorData,
@@ -52,7 +53,7 @@ export const actions = {
 
     if (!response.ok) {
       const errorData = await response.json(); // Parse error details
-      console.error("Error deleting lesson:", errorData);
+      logger.error("Error deleting lesson:", errorData);
       return {
         success: false,
         error: errorData,

@@ -1,62 +1,19 @@
-type CookieResponse = Response & {
-  headers: Headers & {
-    get(name: "set-cookie"): string | null;
-    getSetCookie(): string[];
-  };
-};
+import type { Cookies } from "@sveltejs/kit";
+import logger from "../logger";
 
-export const setCookiesFromResponse = (
-  originalResponse: Response,
-  cookieResponse: CookieResponse,
-): Response => {
-  const newResponse = new Response(originalResponse.body, originalResponse);
-  const setCookieHeaders = cookieResponse.headers.getSetCookie();
+export function setTokenCookie(
+  cookies: Cookies,
+  name: string,
+  token: { token: string; expiresAt: string },
+) {
+  logger.debug("setting up token as cookie");
+  const expiry = new Date(Number(token.expiresAt) * 1000);
+  const maxAge = Math.floor((expiry.getTime() - Date.now()) / 1000);
 
-  setCookieHeaders.forEach((cookie) => {
-    newResponse.headers.append("set-cookie", cookie);
+  cookies.set(name, token.token, {
+    path: "/",
+    maxAge,
   });
 
-  return newResponse;
-};
-
-export interface CookieOptions {
-  path: string;
-  httpOnly?: boolean;
-  secure?: boolean;
-  sameSite?: "lax" | "strict" | "none";
-  domain?: string;
-  maxAge?: number;
+  logger.debug("set up token as cookie");
 }
-
-export const parseCookieOptions = (opts: string[]): CookieOptions => {
-  const options: CookieOptions = { path: "/" }; // Ensure path is always defined
-
-  opts.forEach((opt) => {
-    const [key, val] = opt.trim().split("=");
-    const normalizedKey = key.toLowerCase().replace(/-/g, "");
-
-    switch (normalizedKey) {
-      case "path":
-        options.path = val || "/";
-        break;
-      case "httponly":
-        options.httpOnly = true;
-        break;
-      case "secure":
-        options.secure = true;
-        break;
-      case "samesite":
-        options.sameSite = val as "lax" | "strict" | "none";
-        break;
-      case "domain":
-        options.domain = val;
-        break;
-      case "maxage":
-      case "max-age":
-        options.maxAge = val ? parseInt(val) : undefined;
-        break;
-    }
-  });
-
-  return options;
-};

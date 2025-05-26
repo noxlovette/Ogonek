@@ -1,3 +1,4 @@
+import logger from "$lib/logger";
 import { notifyTelegram } from "$lib/server";
 import type { RequestHandler } from "./$types";
 
@@ -8,12 +9,10 @@ export const POST: RequestHandler = async ({ request, fetch, url }) => {
     const teacherTelegramId = url.searchParams.get("teacherTelegramId");
     const payload = await request.json();
 
-    // Log incoming request details for debugging
-    console.log(
+    logger.debug(
       `Processing multipart completion with taskId: ${taskId}, notify: ${shouldNotify}`,
     );
 
-    // Forward the request to the actual API endpoint
     const response = await fetch("/axum/s3/multipart/complete", {
       method: "POST",
       body: JSON.stringify(payload),
@@ -21,7 +20,7 @@ export const POST: RequestHandler = async ({ request, fetch, url }) => {
 
     if (!response.ok) {
       const error = await response.text();
-      console.error("Error completing multipart upload:", error);
+      logger.error("Error completing multipart upload:", error);
       return new Response(error, { status: response.status });
     }
 
@@ -40,14 +39,14 @@ export const POST: RequestHandler = async ({ request, fetch, url }) => {
 
         // Log notification status but don't fail the request if notification fails
         if (telegramResponse.status !== 200) {
-          console.warn(
+          logger.warn(
             `Telegram notification failed with status: ${telegramResponse.status}`,
           );
         } else {
-          console.log("Telegram notification sent successfully");
+          logger.info("Telegram notification sent successfully");
         }
       } catch (notifyError) {
-        console.error("Failed to send Telegram notification:", notifyError);
+        logger.error("Failed to send Telegram notification:", notifyError);
         // Don't fail the main request just because notification failed
       }
     }
@@ -57,7 +56,7 @@ export const POST: RequestHandler = async ({ request, fetch, url }) => {
       headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
-    console.error("Error in complete multipart upload:", error);
+    logger.error("Error in complete multipart upload:", error);
     return new Response(
       JSON.stringify({
         error: error instanceof Error ? error.message : "Unknown error",

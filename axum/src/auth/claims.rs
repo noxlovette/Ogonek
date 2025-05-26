@@ -58,6 +58,7 @@ impl Keys {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Claims {
     pub sub: String,
+    pub role: String,
     pub exp: usize,
     pub iat: usize,
 }

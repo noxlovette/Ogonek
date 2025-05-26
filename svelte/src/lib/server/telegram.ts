@@ -1,4 +1,5 @@
 import { env } from "$env/dynamic/private";
+import logger from "../logger";
 
 interface TelegramResponse {
   ok: boolean;
@@ -16,7 +17,7 @@ export async function notifyTelegram(
   addressee: string,
 ): Promise<Response> {
   if (!env.TELEGRAM_API) {
-    console.error("Telegram API token not configured");
+    logger.error("Telegram API token not configured");
     return new Response(
       JSON.stringify({ message: "Telegram configuration missing" }),
       {
@@ -44,7 +45,7 @@ export async function notifyTelegram(
     const data = (await response.json()) as TelegramResponse;
 
     if (!response.ok) {
-      console.error("Telegram API error:", data.description);
+      logger.error("Telegram API error:", data.description);
       return new Response(
         JSON.stringify({
           message: "Failed to send message",
@@ -59,7 +60,7 @@ export async function notifyTelegram(
       { status: 200 },
     );
   } catch (error) {
-    console.error("Failed to send Telegram message:", error);
+    logger.error("Failed to send Telegram message:", error);
     return new Response(
       JSON.stringify({
         message: "Internal server error",

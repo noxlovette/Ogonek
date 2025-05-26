@@ -1,6 +1,5 @@
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
-use std::time::SystemTime;
 use validator::Validate;
 
 #[derive(Serialize, Deserialize, Debug, Validate)]
@@ -66,6 +65,12 @@ pub struct TokenWithExpiry {
 }
 
 #[derive(Serialize)]
+pub struct RefreshTokenResponse {
+    #[serde(rename = "accessToken")]
+    pub refresh_token: TokenWithExpiry,
+}
+
+#[derive(Serialize)]
 pub struct TokenPair {
     #[serde(rename = "accessToken")]
     pub access_token: TokenWithExpiry,
@@ -107,7 +112,7 @@ impl InviteToken {
 #[derive(Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct BindPayload {
-    pub student_id: String, // Could be either the person inviting or being invited
+    pub student_id: String,
     pub invite_token: String,
 }
 

@@ -8,7 +8,7 @@ export const load: PageServerLoad = async () => {
     const parsedMarkdown = await parseMarkdown(termsContent);
     return { markdown: parsedMarkdown };
   } catch (err) {
-    console.error("Error reading markdown file:", err);
+    logger.error("Error reading markdown file:", err);
     throw error(500, "Error loading project content");
   }
 };

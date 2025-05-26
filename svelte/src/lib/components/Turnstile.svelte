@@ -1,8 +1,9 @@
 <!-- Turnstile.svelte -->
 <script lang="ts">
-  import { onMount, onDestroy } from "svelte";
+  import { onMount, onDestroy, tick } from "svelte";
   import { page } from "$app/state";
   import { Loader2 } from "lucide-svelte";
+  import logger from "$lib/logger";
 
   let turnstileElement: HTMLDivElement;
   let widgetId: string | null = null;
@@ -58,7 +59,7 @@
         });
       }
     } catch (error) {
-      console.error("Turnstile initialization failed:", error);
+      logger.error("Turnstile initialization failed:", error);
       hasError = true;
     } finally {
       isLoading = false;
@@ -68,6 +69,7 @@
   // Reinit on route changes
   $effect(() => {
     if (page.url.pathname) {
+      tick();
       setTimeout(initTurnstile, 0);
     }
   });

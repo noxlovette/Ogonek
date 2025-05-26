@@ -6,9 +6,13 @@ use crate::models::TokenWithExpiry;
 use base64::{engine::general_purpose::URL_SAFE, Engine as _};
 use jsonwebtoken::Algorithm;
 use jsonwebtoken::{encode, Header};
-use std::time::{Duration, SystemTime, UNIX_EPOCH};
+use std::time::{SystemTime, UNIX_EPOCH};
 
-pub fn generate_token(user_id: &str, secs: u64) -> Result<TokenWithExpiry, AuthError> {
+pub fn generate_token(
+    user_id: &str,
+    user_role: &str,
+    secs: u64,
+) -> Result<TokenWithExpiry, AuthError> {
     let now = SystemTime::now()
         .duration_since(UNIX_EPOCH)
         .unwrap()
@@ -18,6 +22,7 @@ pub fn generate_token(user_id: &str, secs: u64) -> Result<TokenWithExpiry, AuthE
 
     let claims = Claims {
         sub: user_id.to_string(),
+        role: user_role.to_string(),
         exp: exp as usize,
         iat: now as usize,
     };

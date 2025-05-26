@@ -4,6 +4,7 @@
   import { Ban, Check, Upload, X } from "lucide-svelte";
   import { Label } from "$lib/components/typography";
   import { teacherData } from "$lib/stores";
+  import logger from "$lib/logger";
 
   type UploadStatus = "waiting" | "uploading" | "complete" | "error";
 
@@ -202,7 +203,7 @@
       fileState.status = "complete";
       onComplete(fileIdLocal);
     } catch (error: any) {
-      console.error(`Upload failed for ${file.name}:`, error);
+      logger.error(`Upload failed for ${file.name}:`, error);
       fileState.status = "error";
       fileState.errorMessage = error.message || "Upload failed";
 
@@ -219,7 +220,7 @@
             }),
           });
         } catch (abortError) {
-          console.error("Failed to abort upload:", abortError);
+          logger.error("Failed to abort upload:", abortError);
         }
       }
     }

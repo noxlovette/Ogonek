@@ -1,3 +1,4 @@
+import logger from "$lib/logger";
 import type { Actions } from "@sveltejs/kit";
 import { redirect } from "@sveltejs/kit";
 
@@ -36,7 +37,7 @@ export const actions = {
 
     if (!response.ok) {
       const errorData = await response.json(); // Parse error details
-      console.error("Error deleting student:", errorData);
+      logger.error("Error deleting student:", errorData);
       return {
         success: false,
         error: errorData,

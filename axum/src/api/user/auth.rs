@@ -5,7 +5,7 @@ use crate::auth::tokens::{self, generate_token};
 use crate::auth::Claims;
 use crate::db::crud::user::auth;
 use crate::models::users::{AuthPayload, BindParams, BindPayload, SignUpPayload, TokenPair};
-use crate::models::{CreationId, TokenWithExpiry};
+use crate::models::{CreationId, RefreshTokenResponse, TokenWithExpiry};
 use crate::schema::AppState;
 use axum::extract::{Json, Query, State};
 use hyper::StatusCode;
@@ -51,8 +51,8 @@ pub async fn authorize(
         return Err(APIError::AuthenticationFailed);
     }
 
-    let access_token = generate_token(&user.id, 60 * 15)?;
-    let refresh_token = generate_token(&user.id, 60 * 60 * 24 * 30)?;
+    let access_token = generate_token(&user.id, &user.role, 60 * 15)?;
+    let refresh_token = generate_token(&user.id, &user.role, 60 * 60 * 24 * 30)?;
 
     Ok(Json(TokenPair::new(access_token, refresh_token)))
 }
@@ -60,14 +60,11 @@ pub async fn authorize(
 pub async fn refresh(
     State(state): State<AppState>,
     claims: Claims,
-) -> Result<Json<TokenWithExpiry>, APIError> {
+) -> Result<Json<RefreshTokenResponse>, APIError> {
     let user = auth::fetch_by_id(&state.db, &claims.sub).await?;
 
-    let refresh_token = generate_token(&user.id, 60 * 15)?;
-    Ok(Json(TokenWithExpiry {
-        token: refresh_token.token,
-        expires_at: refresh_token.expires_at,
-    }))
+    let refresh_token = generate_token(&user.id, &user.role, 60 * 15)?;
+    Ok(Json(RefreshTokenResponse { refresh_token }))
 }
 
 pub async fn generate_invite_link(
