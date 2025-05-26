@@ -22,7 +22,7 @@ impl SM2Calculator {
         review_count: i32,
     ) -> (f64, i32, i32) {
         let quality = quality as f64;
-        
+
         // Calculate new ease factor
         let new_ease = (current_ease + (0.1 - (5.0 - quality) * (0.08 + (5.0 - quality) * 0.02)))
             .clamp(self.min_ease_factor, self.max_ease_factor);
@@ -32,9 +32,10 @@ impl SM2Calculator {
             (0, 1) // Reset progress for poor recall
         } else {
             match review_count {
-                0 => (1, 1),      // First successful review
-                1 => (2, 6),      // Second successful review
-                _ => {            // Subsequent reviews
+                0 => (1, 1), // First successful review
+                1 => (2, 6), // Second successful review
+                _ => {
+                    // Subsequent reviews
                     let interval = (current_interval as f64 * new_ease).round() as i32;
                     (review_count + 1, interval)
                 }
