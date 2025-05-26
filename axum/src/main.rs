@@ -4,8 +4,8 @@ use axum::{
     routing::get,
     Router,
 };
-use rust::tools::daemons::task_cleanup::daily_cleanup;
 use rust::schema::AppState;
+use rust::tools::daemons::task_cleanup::daily_cleanup;
 use rust::tools::logging::init_logging;
 use rust::tools::middleware::api_key::validate_api_key;
 use tower::ServiceBuilder;
@@ -29,6 +29,22 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     tokio::spawn(async move {
         daily_cleanup(cleanup_state).await;
     });
+
+    let _guard = sentry::init((
+        std::env::var("SENTRY_DSN").expect("SENTRY_DSN must be set"),
+        sentry::ClientOptions {
+            release: sentry::release_name!(),
+            environment: Some(
+                std::env::var("APP_ENV")
+                    .expect("APP_ENV must be set")
+                    .into(),
+            ),
+            // Capture user IPs and potentially sensitive headers when using HTTP server integrations
+            // see https://docs.sentry.io/platforms/rust/data-management/data-collected for more info
+            send_default_pii: true,
+            ..Default::default()
+        },
+    ));
 
     let protected_routes = Router::new()
         .nest("/lesson", rust::api::routes::lesson_routes::lesson_routes())

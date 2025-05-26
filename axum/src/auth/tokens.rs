@@ -6,66 +6,57 @@ use base64::{engine::general_purpose::URL_SAFE, Engine as _};
 use jsonwebtoken::{encode, Header};
 use std::time::{SystemTime, UNIX_EPOCH};
 use uuid::Uuid;
-
-pub fn generate_token(user: &User) -> Result<String, AuthError> {
+pub fn generate_token_with_duration(
+    user: &User,
+    duration_secs: usize,
+    is_refresh: bool,
+) -> Result<String, AuthError> {
     let now = SystemTime::now()
         .duration_since(UNIX_EPOCH)
         .unwrap()
         .as_secs() as usize;
 
-    // 15 minutes from now
-    let exp = now + (60 * 15);
+    let exp = now + duration_secs;
 
-    let claims = Claims {
-        name: user.name.clone(),
-        username: user.username.clone(),
-        email: user.email.clone(),
-        role: user.role.clone(),
-        sub: user.id.clone().to_string(),
-        exp,
-        iat: now,
-        nbf: Some(now),
-        jti: Some(Uuid::new_v4().to_string()),
-        // aud:"svelte:user:general".to_string(),
-        iss: "auth:auth".to_string(),
-    };
+    if is_refresh {
+        let claims = RefreshClaims {
+            sub: user.id.clone().to_string(),
+            exp,
+        };
 
-    let token = encode(
-        &Header::new(jsonwebtoken::Algorithm::RS256),
-        &claims,
-        &KEYS.encoding,
-    )
-    .map_err(|e| {
-        eprintln!("Token creation error: {:?}", e);
-        AuthError::TokenCreation
-    })?;
+        encode(
+            &Header::new(jsonwebtoken::Algorithm::RS256),
+            &claims,
+            &KEYS_REFRESH.encoding,
+        )
+        .map_err(|e| {
+            eprintln!("Refresh token creation error: {:?}", e);
+            AuthError::TokenCreation
+        })
+    } else {
+        let claims = Claims {
+            name: user.name.clone(),
+            username: user.username.clone(),
+            email: user.email.clone(),
+            role: user.role.clone(),
+            sub: user.id.clone().to_string(),
+            exp,
+            iat: now,
+            nbf: Some(now),
+            jti: Some(Uuid::new_v4().to_string()),
+            iss: "auth:auth".to_string(),
+        };
 
-    return Ok(token);
-}
-
-pub fn generate_refresh_token(user: &User) -> Result<String, AuthError> {
-    let exp = SystemTime::now()
-        .duration_since(UNIX_EPOCH)
-        .unwrap()
-        .as_secs() as usize
-        + (60 * 60 * 24 * 30); // 30 days from now
-
-    let claims = RefreshClaims {
-        sub: user.id.clone().to_string(),
-        exp,
-    };
-
-    let token = encode(
-        &Header::new(jsonwebtoken::Algorithm::RS256),
-        &claims,
-        &KEYS_REFRESH.encoding,
-    )
-    .map_err(|e| {
-        eprintln!("Token creation error: {:?}", e);
-        AuthError::TokenCreation
-    })?;
-
-    return Ok(token);
+        encode(
+            &Header::new(jsonwebtoken::Algorithm::RS256),
+            &claims,
+            &KEYS.encoding,
+        )
+        .map_err(|e| {
+            eprintln!("Access token creation error: {:?}", e);
+            AuthError::TokenCreation
+        })
+    }
 }
 
 pub async fn decode_invite_token(token: String) -> Result<String, AuthError> {
