@@ -1,12 +1,6 @@
-use axum::http::{
-    header::{self},
-    HeaderValue,
-};
-use axum::response::{IntoResponse, Response};
-use axum::Json;
-use axum_extra::extract::cookie::{Cookie, SameSite};
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
+use std::time::SystemTime;
 use validator::Validate;
 
 #[derive(Serialize, Deserialize, Debug, Validate)]
@@ -64,76 +58,34 @@ pub struct AuthPayload {
     pub pass: String,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
-#[serde(rename_all = "camelCase")]
-pub struct AuthBody {
-    pub access_token: String,
-    pub token_type: String,
+#[derive(Serialize)]
+pub struct TokenWithExpiry {
+    pub token: String,
+    #[serde(rename = "expiresAt")]
+    pub expires_at: u64,
 }
 
-use std::env;
+#[derive(Serialize)]
+pub struct TokenPair {
+    #[serde(rename = "accessToken")]
+    pub access_token: TokenWithExpiry,
+    #[serde(rename = "refreshToken")]
+    pub refresh_token: TokenWithExpiry,
+}
 
-impl AuthBody {
-    pub fn new(access_token: String) -> Self {
+impl TokenPair {
+    pub fn new(access_token: TokenWithExpiry, refresh_token: TokenWithExpiry) -> Self {
         Self {
-            access_token,
-            token_type: "Bearer".to_string(),
+            access_token: TokenWithExpiry {
+                token: access_token.token,
+                expires_at: access_token.expires_at,
+            },
+            refresh_token: TokenWithExpiry {
+                token: refresh_token.token,
+                expires_at: refresh_token.expires_at,
+            },
         }
     }
-
-    pub fn into_refresh(access_token: String) -> Response {
-        let mut response = Json(AuthBody::new(access_token.to_string())).into_response();
-
-        let cookie = build_auth_cookie("accessToken", access_token, false);
-
-        response.headers_mut().insert(
-            header::SET_COOKIE,
-            HeaderValue::from_str(&cookie.to_string()).unwrap(),
-        );
-
-        response
-    }
-
-    pub fn into_response(access_token: String, refresh_token: String) -> Response {
-        // Just convert the AuthBody to JSON response without Bearer header
-        let mut response = Json(AuthBody::new(access_token.to_string())).into_response();
-
-        // Set up the secure cookie for refresh token
-        let cookies = [
-            build_auth_cookie("refreshToken", refresh_token, true),
-            build_auth_cookie("accessToken", access_token, false),
-        ];
-
-        response.headers_mut().insert(
-            header::SET_COOKIE,
-            HeaderValue::from_str(&cookies[0].to_string()).unwrap(),
-        );
-
-        response.headers_mut().append(
-            header::SET_COOKIE,
-            HeaderValue::from_str(&cookies[1].to_string()).unwrap(),
-        );
-
-        response
-    }
-}
-
-fn build_auth_cookie(name: &str, value: String, is_refresh: bool) -> Cookie {
-    let base_domain = env::var("APP_DOMAIN").unwrap_or_else(|_| "localhost".to_string());
-    let domain = format!(".{}", base_domain);
-
-    Cookie::build((name, value))
-        .http_only(true)
-        .secure(env::var("APP_ENV").unwrap() == "production")
-        .same_site(SameSite::Lax)
-        .max_age(if is_refresh {
-            time::Duration::days(30)
-        } else {
-            time::Duration::minutes(15)
-        })
-        .path("/")
-        .domain(domain)
-        .build()
 }
 
 // Simple struct to hold the invite data

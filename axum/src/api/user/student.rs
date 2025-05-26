@@ -13,10 +13,6 @@ pub async fn upsert_student(
     State(state): State<AppState>,
     Path(id): Path<String>,
 ) -> Result<StatusCode, APIError> {
-    if claims.role != "teacher" {
-        return Ok(StatusCode::UNAUTHORIZED);
-    }
-
     student::upsert(&state.db, &claims.sub, &id).await?;
 
     Ok(StatusCode::CREATED)

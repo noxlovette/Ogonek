@@ -1,15 +1,13 @@
 use crate::api::error::APIError;
-use crate::auth::claims::RefreshClaims;
 use crate::auth::error::AuthError;
 use crate::auth::password::{hash_password, verify_password};
-use crate::auth::tokens::{self, generate_refresh_token, generate_token};
+use crate::auth::tokens::{self, generate_token};
 use crate::auth::Claims;
 use crate::db::crud::user::auth;
-use crate::models::users::{AuthBody, AuthPayload, BindParams, BindPayload, SignUpPayload};
-use crate::models::CreationId;
+use crate::models::users::{AuthPayload, BindParams, BindPayload, SignUpPayload, TokenPair};
+use crate::models::{CreationId, TokenWithExpiry};
 use crate::schema::AppState;
 use axum::extract::{Json, Query, State};
-use axum::response::Response;
 use hyper::StatusCode;
 use validator::Validate;
 
@@ -38,7 +36,7 @@ pub async fn signup(
 pub async fn authorize(
     State(state): State<AppState>,
     Json(payload): Json<AuthPayload>,
-) -> Result<Response, APIError> {
+) -> Result<Json<TokenPair>, APIError> {
     if payload.username.is_empty() || payload.pass.is_empty() {
         return Err(APIError::InvalidCredentials);
     }
@@ -53,30 +51,29 @@ pub async fn authorize(
         return Err(APIError::AuthenticationFailed);
     }
 
-    let token = generate_token(&user)?;
-    let refresh_token = generate_refresh_token(&user)?;
+    let access_token = generate_token(&user.id, 60 * 15)?;
+    let refresh_token = generate_token(&user.id, 60 * 60 * 24 * 30)?;
 
-    Ok(AuthBody::into_response(token, refresh_token))
+    Ok(Json(TokenPair::new(access_token, refresh_token)))
 }
 
 pub async fn refresh(
     State(state): State<AppState>,
-    claims: RefreshClaims,
-) -> Result<Response, APIError> {
+    claims: Claims,
+) -> Result<Json<TokenWithExpiry>, APIError> {
     let user = auth::fetch_by_id(&state.db, &claims.sub).await?;
 
-    let token = generate_token(&user)?;
-    Ok(AuthBody::into_refresh(token))
+    let refresh_token = generate_token(&user.id, 60 * 15)?;
+    Ok(Json(TokenWithExpiry {
+        token: refresh_token.token,
+        expires_at: refresh_token.expires_at,
+    }))
 }
 
 pub async fn generate_invite_link(
     claims: Claims,
     Query(params): Query<BindParams>,
 ) -> Result<Json<String>, AuthError> {
-    if claims.role != "teacher" {
-        return Err(AuthError::InvalidToken);
-    }
-
     let frontend_url = std::env::var("FRONTEND_URL")
         .unwrap_or_else(|_| "http://localhost:5173".to_string())
         .trim_end_matches('/')
