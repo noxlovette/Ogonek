@@ -80,37 +80,8 @@ mod tests {
     use super::*;
     use crate::db::error::DbError;
     use crate::models::UserUpdate;
+    use crate::tests::{cleanup_user, create_test_user};
     use sqlx::PgPool;
-
-    // Helper function to create a test user
-    async fn create_test_user(db: &PgPool, username: &str, email: &str) -> String {
-        let user_id = nanoid::nanoid!();
-        sqlx::query!(
-            r#"
-            INSERT INTO "user" (id, username, email, name, pass, role, verified)
-            VALUES ($1, $2, $3, $4, $5, $6, $7)
-            "#,
-            user_id,
-            username,
-            email,
-            "Test Name",
-            "hashed_password",
-            "user",
-            false
-        )
-        .execute(db)
-        .await
-        .expect("Failed to create test user");
-
-        user_id
-    }
-
-    // Helper function to clean up test user
-    async fn cleanup_user(db: &PgPool, user_id: &str) {
-        let _ = sqlx::query!(r#"DELETE FROM "user" WHERE id = $1"#, user_id)
-            .execute(db)
-            .await;
-    }
 
     #[sqlx::test]
     async fn test_find_by_id_success(db: PgPool) {

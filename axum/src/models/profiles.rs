@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 #[serde(rename_all = "camelCase")]
 pub struct Profile {
     pub user_id: String,
-    pub zoom_url: Option<String>,
+    pub video_call_url: Option<String>,
     pub avatar_url: Option<String>,
     pub telegram_id: Option<String>,
 }
@@ -12,7 +12,7 @@ pub struct Profile {
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct ProfileUpdate {
-    pub zoom_url: Option<String>,
+    pub video_call_url: Option<String>,
     pub avatar_url: Option<String>,
     pub telegram_id: Option<String>,
 }
@@ -27,7 +27,7 @@ pub struct ProfileWithTS {
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct TeacherData {
-    pub teacher_zoom_url: Option<String>,
+    pub teacher_video_call_url: Option<String>,
     pub teacher_telegram_id: Option<String>,
 }
 
