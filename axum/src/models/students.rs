@@ -38,8 +38,8 @@ pub struct AddStudentRequest {
 #[derive(Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct UpdateStudentRequest {
-    pub markdown: String,
-    pub student_telegram_id: String,
+    pub markdown: Option<String>,
+    pub student_telegram_id: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
