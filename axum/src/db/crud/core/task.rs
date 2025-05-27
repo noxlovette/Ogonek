@@ -396,7 +396,7 @@ mod tests {
         let user_id = create_test_user(&db, "user", "user@test.com").await;
 
         // Create multiple tasks
-        for i in 1..=3 {
+        for _i in 1..=3 {
             create_test_task(&db, &user_id, &user_id).await;
         }
 
