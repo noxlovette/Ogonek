@@ -203,7 +203,7 @@ pub async fn count(db: &PgPool, user_id: &str) -> Result<i64, DbError> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::models::{Card, CardUpdate, DeckUpdate};
+    use crate::models::{CardUpdate, DeckUpdate};
     use crate::tests::create_test_user;
     use sqlx::PgPool;
 
