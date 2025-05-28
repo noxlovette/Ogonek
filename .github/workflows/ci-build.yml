@@ -10,6 +10,21 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:alpine
+        env:
+          POSTGRES_DB: test_db
+          POSTGRES_USER: testuser
+          POSTGRES_PASSWORD: testpass
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -21,13 +36,29 @@ jobs:
           toolchain: stable
           override: true
 
+      # Install sqlx-cli
+      - name: Install sqlx-cli
+        run: cargo install sqlx-cli --no-default-features --features native-tls,postgres
+
+      # Set up database
+      - name: Run database migrations
+        env:
+          DATABASE_URL: postgres://testuser:testpass@localhost:5432/test_db
+        run: |
+          cd axum
+          sqlx migrate run
+
       - name: Rust Lint and Format
+        env:
+          DATABASE_URL: postgres://testuser:testpass@localhost:5432/test_db
         run: |
           cd axum
           cargo fmt -- --check
           cargo clippy -- -D warnings
 
       - name: Rust Tests
+        env:
+          DATABASE_URL: postgres://testuser:testpass@localhost:5432/test_db
         run: |
           cd axum
           cargo test
@@ -51,6 +82,7 @@ jobs:
           cd svelte
           pnpm lint
           pnpm format
+
       - name: Svelte Test
         run: |
           cd svelte
