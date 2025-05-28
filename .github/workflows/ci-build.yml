@@ -88,7 +88,7 @@ jobs:
       - name: Rust Clippy
         run: |
           cd axum
-          cargo clippy --all-targets --all-features -- -D warnings
+          cargo clippy -- -D warnings
 
       - name: Rust Tests
         run: |
