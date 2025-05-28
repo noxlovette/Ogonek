@@ -1,6 +1,6 @@
 {
   "name": "ogonek",
-  "version": "1.2.11",
+  "version": "1.2.12",
   "private": true,
   "scripts": {
     "dev": "vite dev",
@@ -40,7 +40,7 @@
   "dependencies": {
     "@dicebear/collection": "^9.2.2",
     "@dicebear/core": "^9.2.2",
-    "@noxlovette/svarog": "^0.0.6",
+    "@noxlovette/svarog": "^0.0.7",
     "@sentry/sveltekit": "^9.23.0",
     "@sveltejs/adapter-node": "^5.2.12",
     "@types/papaparse": "^5.3.16",

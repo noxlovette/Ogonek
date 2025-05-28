@@ -41,10 +41,10 @@
       storeKey: "telegramID",
     },
     {
-      id: "videoURL",
+      id: "videoCallURL",
       label: "Video Call URL",
       type: "text",
-      storeKey: "videoURL",
+      storeKey: "videoCallURL",
     },
   ];
 
