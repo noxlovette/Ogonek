@@ -4,10 +4,10 @@ use axum::{
     routing::get,
     Router,
 };
-use rust::schema::AppState;
-use rust::tools::daemons::task_cleanup::daily_cleanup;
-use rust::tools::logging::init_logging;
-use rust::tools::middleware::api_key::validate_api_key;
+use ogonek::schema::AppState;
+use ogonek::tools::daemons::task_cleanup::daily_cleanup;
+use ogonek::tools::logging::init_logging;
+use ogonek::tools::middleware::api_key::validate_api_key;
 use tower::ServiceBuilder;
 use tower_http::{
     cors::CorsLayer,
@@ -47,22 +47,25 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     ));
 
     let protected_routes = Router::new()
-        .nest("/lesson", rust::api::routes::lesson_routes::lesson_routes())
-        .nest("/user", rust::api::routes::user_routes::user_routes())
-        .nest("/task", rust::api::routes::task_routes::task_routes())
-        // .nest("/notes", rust::api::routes::notes_routes::notes_routes())
+        .nest(
+            "/lesson",
+            ogonek::api::routes::lesson_routes::lesson_routes(),
+        )
+        .nest("/user", ogonek::api::routes::user_routes::user_routes())
+        .nest("/task", ogonek::api::routes::task_routes::task_routes())
+        // .nest("/notes", ogonek::api::routes::notes_routes::notes_routes())
         .nest(
             "/student",
-            rust::api::routes::student_routes::student_routes(),
+            ogonek::api::routes::student_routes::student_routes(),
         )
-        .nest("/auth", rust::api::routes::auth_routes::auth_routes())
+        .nest("/auth", ogonek::api::routes::auth_routes::auth_routes())
         .nest(
             "/profile",
-            rust::api::routes::profile_routes::profile_routes(),
+            ogonek::api::routes::profile_routes::profile_routes(),
         )
-        .nest("/deck", rust::api::routes::deck_routes::deck_routes())
-        .nest("/s3", rust::api::routes::s3_routes::s3_routes())
-        .nest("/file", rust::api::routes::file_routes::file_routes())
+        .nest("/deck", ogonek::api::routes::deck_routes::deck_routes())
+        .nest("/s3", ogonek::api::routes::s3_routes::s3_routes())
+        .nest("/file", ogonek::api::routes::file_routes::file_routes())
         .layer(axum::middleware::from_fn(validate_api_key));
 
     let app = Router::new()

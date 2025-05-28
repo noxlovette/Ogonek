@@ -2487,6 +2487,38 @@ dependencies = [
 ]
 
 [[package]]
+name = "ogonek"
+version = "1.3.0"
+dependencies = [
+ "anyhow",
+ "argon2",
+ "aws-config",
+ "aws-credential-types",
+ "aws-sdk-s3",
+ "axum",
+ "axum-extra",
+ "base64 0.22.1",
+ "chrono",
+ "dotenvy",
+ "hyper 1.6.0",
+ "jsonwebtoken",
+ "nanoid",
+ "sentry",
+ "serde",
+ "serde_json",
+ "serde_with",
+ "sqlx",
+ "thiserror",
+ "time",
+ "tokio",
+ "tower",
+ "tower-http",
+ "tracing",
+ "tracing-subscriber",
+ "validator",
+]
+
+[[package]]
 name = "once_cell"
 version = "1.21.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2966,38 +2998,6 @@ dependencies = [
  "spki 0.7.3",
  "subtle",
  "zeroize",
-]
-
-[[package]]
-name = "rust"
-version = "1.2.11"
-dependencies = [
- "anyhow",
- "argon2",
- "aws-config",
- "aws-credential-types",
- "aws-sdk-s3",
- "axum",
- "axum-extra",
- "base64 0.22.1",
- "chrono",
- "dotenvy",
- "hyper 1.6.0",
- "jsonwebtoken",
- "nanoid",
- "sentry",
- "serde",
- "serde_json",
- "serde_with",
- "sqlx",
- "thiserror",
- "time",
- "tokio",
- "tower",
- "tower-http",
- "tracing",
- "tracing-subscriber",
- "validator",
 ]
 
 [[package]]
