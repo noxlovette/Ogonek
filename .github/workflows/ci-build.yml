@@ -1,23 +1,17 @@
 name: CI Build
 on:
   push:
-    branches:
-      - main
+    branches: [main]
   pull_request:
-    branches:
-      - main
+    branches: [main]
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      DATABASE_URL: ${{ secrets.DATABASE_URL }}
-      JWT_PRIVATE_KEY: ${{ secrets.JWT_PRIVATE_KEY }}
-      JWT_PUBLIC_KEY: ${{ secrets.JWT_PUBLIC_KEY }}
 
     services:
       postgres:
-        image: postgres:alpine
+        image: postgres:15-alpine
         env:
           POSTGRES_DB: test_db
           POSTGRES_USER: testuser
@@ -30,60 +24,130 @@ jobs:
         ports:
           - 5432:5432
 
+      redis:
+        image: redis:7-alpine
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+
+    env:
+      DATABASE_URL: postgresql://testuser:testpass@localhost:5432/test_db
+      REDIS_URL: redis://localhost:6379
+      JWT_PRIVATE_KEY: ${{ secrets.JWT_PRIVATE_KEY }}
+      JWT_PUBLIC_KEY: ${{ secrets.JWT_PUBLIC_KEY }}
+
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
-      # Rust setup
+      # Rust setup with caching
       - name: Set up Rust
-        uses: actions-rs/toolchain@v1
+        uses: dtolnay/rust-toolchain@stable
         with:
-          toolchain: stable
-          override: true
+          components: rustfmt, clippy
 
-      # Install sqlx-cli
+      - name: Cache Rust dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            axum/target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('axum/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-
+
+      # Install sqlx-cli with caching
+      - name: Cache sqlx-cli
+        id: cache-sqlx
+        uses: actions/cache@v4
+        with:
+          path: ~/.cargo/bin/sqlx
+          key: sqlx-cli-${{ runner.os }}
+
       - name: Install sqlx-cli
+        if: steps.cache-sqlx.outputs.cache-hit != 'true'
         run: cargo install sqlx-cli --no-default-features --features native-tls,postgres
 
-      # Set up database
+      # Database setup
       - name: Run database migrations
         run: |
           cd axum
           sqlx migrate run
 
-      - name: Rust Lint and Format
+      # Rust checks
+      - name: Rust Format Check
         run: |
           cd axum
-          cargo fmt -- --check
-          cargo clippy -- -D warnings
+          cargo fmt --check
+
+      - name: Rust Clippy
+        run: |
+          cd axum
+          cargo clippy --all-targets --all-features -- -D warnings
 
       - name: Rust Tests
         run: |
           cd axum
           cargo test
 
-      # Node setup for Svelte
+      # Node.js setup with caching
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: "20"
 
       - name: Install pnpm
-        run: npm install -g pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8
+
+      - name: Cache pnpm dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('svelte/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
 
       - name: Install Svelte dependencies
         run: |
           cd svelte
-          pnpm install
+          pnpm install --frozen-lockfile
 
-      - name: Svelte Lint and Format
+      # Svelte checks
+      - name: Svelte Format Check
         run: |
           cd svelte
-          pnpm lint
-          pnpm format
+          pnpm run format:check
 
-      - name: Svelte Test
+      - name: Svelte Lint
         run: |
           cd svelte
-          pnpm exec playwright install
-          pnpm test
+          pnpm run lint
+
+      - name: Svelte Build
+        run: |
+          cd svelte
+          pnpm run build
+
+      # Playwright setup and tests
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('svelte/pnpm-lock.yaml') }}
+
+      - name: Install Playwright browsers
+        run: |
+          cd svelte
+          pnpm exec playwright install --with-deps
+
+      - name: Run Playwright tests
+        run: |
+          cd svelte
+          pnpm run test
