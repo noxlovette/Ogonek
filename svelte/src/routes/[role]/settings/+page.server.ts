@@ -6,15 +6,10 @@ export const actions = {
     const formData = await request.formData();
 
     if (params.role === "t") {
-      const validateZoom = (url: string) => {
-        if (!url) return false;
-        return /^https?:\/\/(?:[a-z0-9-]+\.)?zoom\.us\/j\/\d{9,11}(?:\?pwd=[a-zA-Z0-9]+)?$/.test(
-          url,
-        );
-      };
+      const videoCallUrl = formData.get("videoURL") as string;
 
-      if (!validateZoom(formData.get("zoomUrl") as string)) {
-        return fail(400, { message: "Please enter a Zoom Room URL" });
+      if (videoCallUrl && !/^https?:\/\//.test(videoCallUrl)) {
+        return fail(400, { message: "Please enter a valid URL" });
       }
     }
 
@@ -28,9 +23,9 @@ export const actions = {
     }
 
     const profileBody = {
-      zoomUrl: formData.get("zoomUrl"),
-      avatarUrl: formData.get("avatarUrl"),
-      telegramId: formData.get("telegramId"),
+      zoomUrl: formData.get("zoomURL"),
+      avatarUrl: formData.get("avatarURL"),
+      telegramId: formData.get("telegramID"),
     };
 
     const userBody = {

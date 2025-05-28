@@ -8,6 +8,7 @@ export default defineConfig({
       sourceMapsUploadOptions: {
         org: "danila-volkov",
         project: "svelte-fl",
+        authToken: process.env.SENTRY_AUTH_TOKEN,
       },
     }),
     sveltekit(),

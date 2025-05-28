@@ -9,17 +9,6 @@ const config = {
       out: "build",
       precompress: false,
     }),
-    csp: {
-      directives: {
-        "default-src": ["self"],
-        "script-src": ["self"],
-        "style-src": ["self", "unsafe-inline"],
-        "img-src": ["self", "data:"],
-        "connect-src": ["self"],
-        "font-src": ["self"],
-        "report-uri": ["/csp-violation-report"],
-      },
-    },
   },
 };
 

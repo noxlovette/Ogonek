@@ -12,6 +12,7 @@ target/
 cargo/
 *.rs.bk
 *.pdb
+test-results/
 
 *.crt
 *.csv

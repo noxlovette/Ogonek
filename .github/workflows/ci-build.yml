@@ -66,3 +66,8 @@ jobs:
           cd svelte
           pnpm lint
           pnpm format
+      - name: Svelte Test
+        run: |
+          cd svelte
+          pnpm exec playwright install
+          pnpm test
