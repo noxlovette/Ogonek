@@ -10,6 +10,11 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      JWT_PRIVATE_KEY: ${{ secrets.JWT_PRIVATE_KEY }}
+      JWT_PUBLIC_KEY: ${{ secrets.JWT_PUBLIC_KEY }}
+
     services:
       postgres:
         image: postgres:alpine
@@ -42,23 +47,17 @@ jobs:
 
       # Set up database
       - name: Run database migrations
-        env:
-          DATABASE_URL: postgres://testuser:testpass@localhost:5432/test_db
         run: |
           cd axum
           sqlx migrate run
 
       - name: Rust Lint and Format
-        env:
-          DATABASE_URL: postgres://testuser:testpass@localhost:5432/test_db
         run: |
           cd axum
           cargo fmt -- --check
           cargo clippy -- -D warnings
 
       - name: Rust Tests
-        env:
-          DATABASE_URL: postgres://testuser:testpass@localhost:5432/test_db
         run: |
           cd axum
           cargo test
