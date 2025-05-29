@@ -9,3 +9,6 @@ debug/
 .idea
 *.log
 .DS_Store
+target/
+*.tmp
+*.md

@@ -4,17 +4,13 @@ services:
     build:
       context: ./svelte
       dockerfile: Dockerfile
-      platforms: ["linux/amd64"]
       tags:
         - ${SVELTE_IMAGE}
     image: ${SVELTE_IMAGE}
-
   axum:
     build:
       context: ./axum
       dockerfile: Dockerfile
-      platforms: ["linux/amd64"]
-      cache_from:
+      tags:
         - ${AXUM_IMAGE}
-      target: builder
     image: ${AXUM_IMAGE}
