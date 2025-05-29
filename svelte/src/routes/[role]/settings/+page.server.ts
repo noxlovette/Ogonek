@@ -6,7 +6,7 @@ export const actions = {
     const formData = await request.formData();
 
     if (params.role === "t") {
-      const videoCallUrl = formData.get("videoCallURL") as string;
+      const videoCallUrl = formData.get("videoCallUrl") as string;
 
       if (videoCallUrl && !/^https?:\/\//.test(videoCallUrl)) {
         return fail(400, { message: "Please enter a valid URL" });
@@ -23,9 +23,9 @@ export const actions = {
     }
 
     const profileBody = {
-      videoCallURL: formData.get("videoCallURL"),
-      avatarUrl: formData.get("avatarURL"),
-      telegramId: formData.get("telegramID"),
+      videoCallUrl: formData.get("videoCallUrl"),
+      avatarUrl: formData.get("avatarUrl"),
+      telegramId: formData.get("telegramId"),
     };
 
     const userBody = {

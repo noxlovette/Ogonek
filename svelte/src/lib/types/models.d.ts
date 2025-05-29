@@ -59,7 +59,7 @@ export interface Profile {
 }
 
 export interface TeacherData {
-  teacherZoomUrl: string;
+  teacherVideoCallUrl: string;
   teacherTelegramId: string;
 }
 

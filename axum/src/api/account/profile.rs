@@ -12,6 +12,7 @@ pub async fn upsert_profile(
     claims: Claims,
     Json(payload): Json<ProfileUpdate>,
 ) -> Result<StatusCode, APIError> {
+    tracing::info!("{}", serde_json::to_string(&payload).unwrap_or_default());
     profile::upsert(&state.db, &claims.sub, &payload).await?;
 
     Ok(StatusCode::NO_CONTENT)

@@ -16,7 +16,7 @@ const initialProfile: Profile = {
 };
 
 const initialTeacherData: TeacherData = {
-  teacherZoomUrl: "",
+  teacherVideoCallUrl: "",
   teacherTelegramId: "",
 };
 

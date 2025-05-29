@@ -4,19 +4,13 @@ services:
     build:
       context: ./svelte
       dockerfile: Dockerfile
-      platforms: ["linux/amd64"]
-
       tags:
         - ${SVELTE_IMAGE}
     image: ${SVELTE_IMAGE}
-
   axum:
     build:
       context: ./axum
       dockerfile: Dockerfile
-      platforms: ["linux/amd64"]
-      args:
-        RUSTFLAGS: "-C target-cpu=native"
       tags:
         - ${AXUM_IMAGE}
     image: ${AXUM_IMAGE}
