@@ -68,7 +68,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cargo/bin/sqlx
-          key: sqlx-cli-${{ runner.os }}-${{ hashFiles('axum/Cargo.lock') }}-v0.8.6
+          key: sqlx-cli-${{ runner.os }}-v0.8.6
 
       - name: Install sqlx-cli
         if: steps.cache-sqlx.outputs.cache-hit != 'true'
