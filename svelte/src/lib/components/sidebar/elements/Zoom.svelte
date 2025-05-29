@@ -3,8 +3,8 @@
   import SidebarItem from "./SidebarItem.svelte";
   import { teacherData } from "$lib/stores";
 
-  let href = $teacherData.teacherZoomUrl
-    ? $teacherData.teacherZoomUrl
+  let href = $teacherData.teacherVideoCallUrl
+    ? $teacherData.teacherVideoCallUrl
     : "https://zoom.us";
 </script>
 

@@ -35,16 +35,16 @@
 
   const teacherFields = [
     {
-      id: "telegramID",
+      id: "telegramId",
       label: "Telegram ID",
       type: "text",
-      storeKey: "telegramID",
+      storeKey: "telegramId",
     },
     {
-      id: "videoCallURL",
-      label: "Video Call URL",
+      id: "videoCallUrl",
+      label: "Video Call Url",
       type: "text",
-      storeKey: "videoCallURL",
+      storeKey: "videoCallUrl",
     },
   ];
 </script>
