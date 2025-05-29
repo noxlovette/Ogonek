@@ -1,5 +1,7 @@
 # Ogonek 🔥
 
+[![CI](https://github.com/noxlovette/ogonek/actions/workflows/ci-build.yml/badge.svg)](https://github.com/noxlovette/ogonek/actions/workflows/ci-build.yml)
+
 A modern, full-stack web application designed to facilitate teaching and learning through flashcards, task management, and lesson planning. The platform connects teachers and students in a collaborative learning environment.
 
 ## Overview
