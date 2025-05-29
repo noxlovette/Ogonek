@@ -1,14 +1,13 @@
-// tests/integration_tests.rs
-use crate::schema::AppState;
 use axum::{
     body::Body,
     http::{Request, StatusCode},
 };
+
+mod common;
+use common::*;
 use serde_json::json;
 use sqlx::PgPool;
 use tower::ServiceExt;
-
-use super::common::{cleanup_user, create_test_user};
 
 #[sqlx::test]
 async fn test_auth_flow_end_to_end(db: PgPool) {
@@ -37,12 +36,9 @@ async fn test_auth_flow_end_to_end(db: PgPool) {
 
     let signup_response = app.clone().oneshot(signup_request).await.unwrap();
     assert_eq!(signup_response.status(), StatusCode::OK);
-
-    let signup_body = hyper::body::to_bytes(signup_response.into_body())
-        .await
-        .unwrap();
-    let signup_result: serde_json::Value = serde_json::from_slice(&signup_body).unwrap();
-    let user_id = signup_result["id"].as_str().unwrap();
+    let body = signup_response.into_body();
+    let bytes = axum::body::to_bytes(body, usize::MAX).await.unwrap();
+    let signup_result: serde_json::Value = serde_json::from_slice(&bytes).unwrap();
 
     // Test signin
     let signin_payload = json!({
@@ -63,11 +59,9 @@ async fn test_auth_flow_end_to_end(db: PgPool) {
 
     let signin_response = app.clone().oneshot(signin_request).await.unwrap();
     assert_eq!(signin_response.status(), StatusCode::OK);
-
-    let signin_body = hyper::body::to_bytes(signin_response.into_body())
-        .await
-        .unwrap();
-    let signin_result: serde_json::Value = serde_json::from_slice(&signin_body).unwrap();
+    let body = signin_response.into_body();
+    let bytes = axum::body::to_bytes(body, usize::MAX).await.unwrap();
+    let signin_result: serde_json::Value = serde_json::from_slice(&bytes).unwrap();
 
     let access_token = signin_result["accessToken"]["token"].as_str().unwrap();
     let refresh_token = signin_result["refreshToken"]["token"].as_str().unwrap();
@@ -75,7 +69,7 @@ async fn test_auth_flow_end_to_end(db: PgPool) {
     // Test protected endpoint with access token
     let protected_request = Request::builder()
         .method("GET")
-        .uri("/user/")
+        .uri("/user")
         .header("authorization", format!("Bearer {}", access_token))
         .header(
             "x-api-key",
