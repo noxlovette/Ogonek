@@ -9,4 +9,3 @@ export { default as H4 } from "./H4.svelte";
 export { default as HeaderEmbellish } from "./HeaderEmbellish.svelte";
 export { default as KBD } from "./KBD.svelte";
 export { default as Label } from "./Label.svelte";
-export { default as SmallLink } from "./SmallLink.svelte";

@@ -2,7 +2,7 @@ import { env } from "$env/dynamic/private";
 import { importSPKI, type JWTPayload, jwtVerify } from "jose";
 import logger from "../logger";
 
-const EXPIRY_BUFFER = 30; // seconds
+const EXPIRY_BUFFER = 30;
 
 export async function ValidateAccess(jwt: string): Promise<JWTPayload> {
   const spki = env.JWT_PUBLIC_KEY;
@@ -22,10 +22,9 @@ export async function ValidateAccess(jwt: string): Promise<JWTPayload> {
     const result = await jwtVerify(jwt, publicKey, { algorithms: [alg] });
     payload = result.payload;
   } catch (err) {
-    logger.error("JWT verification failed", err);
+    logger.error({ err }, "JWT verification failed");
     throw new Error("Invalid token");
   }
-  logger.debug({ payload }, "Token payload");
   logger.info("Access verification complete");
 
   if (payload.exp && typeof payload.exp === "number") {

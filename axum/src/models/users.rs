@@ -67,7 +67,13 @@ pub struct TokenWithExpiry {
 #[derive(Serialize)]
 pub struct RefreshTokenResponse {
     #[serde(rename = "accessToken")]
-    pub refresh_token: TokenWithExpiry,
+    pub access_token: TokenWithExpiry,
+}
+
+#[derive(Deserialize)]
+pub struct RefreshTokenPayload {
+    #[serde(rename = "refreshToken")]
+    pub refresh_token: String,
 }
 
 #[derive(Serialize)]

@@ -10,12 +10,6 @@ export function getFileExtension(filename: string): string {
   return filename.split(".").pop()?.toUpperCase() || "";
 }
 
-export const stripUUID = (str: string): string => {
-  const uuidPattern =
-    /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}/;
-  return str.replace(uuidPattern, "").replace(/^-+/, "");
-};
-
 export function shuffleArray<T>(array: T[]): T[] {
   const newArray = [...array];
   for (let i = newArray.length - 1; i > 0; i--) {
@@ -23,9 +17,4 @@ export function shuffleArray<T>(array: T[]): T[] {
     [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
   }
   return newArray;
-}
-
-export function isValidEmail(email: string): boolean {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
 }

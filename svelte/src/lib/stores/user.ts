@@ -10,12 +10,12 @@ export const initialUser: User = {
   email: "",
 };
 
-export const initialProfile: Profile = {
+const initialProfile: Profile = {
   zoomUrl: "",
   avatarUrl: "",
 };
 
-export const initialTeacherData: TeacherData = {
+const initialTeacherData: TeacherData = {
   teacherZoomUrl: "",
   teacherTelegramId: "",
 };

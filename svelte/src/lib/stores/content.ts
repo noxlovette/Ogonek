@@ -26,7 +26,3 @@ const createStudentStore = () => {
 };
 export const lessonStore = createLessonStore();
 export const studentStore = createStudentStore();
-
-export const isSearchOpen = writable(false);
-
-export const tableQuery = writable("");

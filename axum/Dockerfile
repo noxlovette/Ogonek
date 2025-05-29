@@ -36,7 +36,7 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /app
 
-COPY --from=builder /usr/src/app/target/release/rust ./app
+COPY --from=builder /usr/src/app/target/release/ogonek ./app
 
 # Use non-root user
 USER appuser
