@@ -384,7 +384,7 @@
 
   {#if fileUploads.length > 0}
     <div class="space-y-4">
-      {#each fileUploads as fileState}
+      {#each fileUploads as fileState, index (index)}
         <div
           class="flex flex-col space-y-2 rounded-sm bg-stone-50/30 p-2 ring ring-stone-300/40 dark:bg-stone-900/30 dark:ring-stone-600/50"
         >

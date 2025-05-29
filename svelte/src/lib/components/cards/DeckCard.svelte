@@ -9,7 +9,6 @@
   }
 
   let { deck }: Props = $props();
-  $inspect(deck);
   let href =
     $user.role === "teacher"
       ? `/t/words/w/${deck.id}`

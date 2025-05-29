@@ -27,7 +27,7 @@
          ${$rightbar ? "items-center space-y-6" : " space-y-2 px-4 lg:space-y-3 xl:space-y-4"}
        `}
   >
-    {#each elements as Element}
+    {#each elements as Element, index (index)}
       <Element />
     {/each}
   </ul>

@@ -47,8 +47,6 @@
       storeKey: "videoCallURL",
     },
   ];
-
-  $inspect($profile);
 </script>
 
 <svelte:head>
@@ -98,7 +96,7 @@
       </div>
 
       <div class="grid gap-3">
-        {#each defaultFields as field}
+        {#each defaultFields as field, index (index)}
           <div>
             <Input
               type={field.type}
@@ -118,7 +116,7 @@
       <Panel>
         <H2>Teacher Settings</H2>
         <div class="grid gap-3">
-          {#each teacherFields as field}
+          {#each teacherFields as field, index (index)}
             <div>
               <Input
                 type={field.type}

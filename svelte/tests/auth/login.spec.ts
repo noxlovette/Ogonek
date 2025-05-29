@@ -20,12 +20,6 @@ const mockUserResponse = {
   role: "student",
 };
 
-const mockTeacherResponse = {
-  id: "qqnEQfztjpiIYq56NA3ob",
-  username: "teacher",
-  role: "teacher",
-};
-
 test.describe("Login Page", () => {
   test.beforeEach(async ({ page }) => {
     // Navigate to login page before each test

@@ -217,7 +217,7 @@
             })}
           >
             <input type="hidden" value={currentCard.id} name="cardId" />
-            {#each qualityButtons as quality}
+            {#each qualityButtons as quality (quality.key)}
               {@render qualityButton(quality)}
             {/each}
           </form>

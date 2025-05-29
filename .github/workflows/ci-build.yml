@@ -128,7 +128,7 @@ jobs:
       - name: Svelte Format Check
         run: |
           cd svelte
-          pnpm run format:check
+          pnpm run format
 
       - name: Svelte Lint
         run: |

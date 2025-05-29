@@ -29,7 +29,7 @@
 
       <nav class="px-6 pt-2 pb-6">
         <ul class="flex flex-col space-y-4">
-          {#each elements as Element}
+          {#each elements as Element, index (index)}
             <button
               class="w-full text-left text-base font-medium text-stone-800 transition-opacity hover:opacity-80 dark:text-stone-100"
               onclick={() => mobileMenuOpen.false()}

@@ -86,7 +86,7 @@
     {#if files.length > 0}
       <div class="flex w-full flex-col space-y-2">
         <Label>Attached Files</Label>
-        {#each files as file}
+        {#each files as file (file.id)}
           <FileTaskCard {file} />
         {/each}
       </div>

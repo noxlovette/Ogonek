@@ -270,7 +270,7 @@
               class="w-full rounded-lg border border-stone-300 bg-white p-2 dark:border-stone-700 dark:bg-stone-950"
             >
               <option value="">Select column</option>
-              {#each csvHeaders as header}
+              {#each csvHeaders as header, index (index)}
                 <option value={header}>{header}</option>
               {/each}
             </select>
@@ -283,7 +283,7 @@
               class="w-full rounded-lg border border-stone-300 bg-white p-2 dark:border-stone-700 dark:bg-stone-950"
             >
               <option value="">Select column</option>
-              {#each csvHeaders as header}
+              {#each csvHeaders as header, index (index)}
                 <option value={header}>{header}</option>
               {/each}
             </select>
@@ -305,7 +305,7 @@
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-stone-200 dark:divide-stone-700">
-                  {#each csvPreview as row}
+                  {#each csvPreview as row, index (index)}
                     <tr
                       class="odd:bg-white even:bg-stone-50/30 dark:odd:bg-stone-900/30 dark:even:bg-stone-800/50"
                     >

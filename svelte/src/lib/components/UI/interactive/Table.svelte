@@ -60,7 +60,7 @@
             <tr
               class="border-b border-stone-300/30 bg-stone-50/30 dark:border-stone-700 dark:bg-stone-900/30"
             >
-              {#each config.columns as column}
+              {#each config.columns as column, index (index)}
                 <th
                   class="px-4 py-2 text-left text-sm font-semibold whitespace-nowrap text-stone-700 dark:text-stone-300"
                 >
@@ -76,7 +76,7 @@
                 class="group hover:bg-cacao-50/30 dark:hover:bg-cacao-900/10 max-h-24 cursor-pointer transition-all duration-150 ease-in-out"
                 in:fade|global={{ duration: 150, delay: 10 }}
               >
-                {#each config.columns as column}
+                {#each config.columns as column, index (index)}
                   <td
                     class="max-h-24 px-4 py-2 text-sm text-stone-600 transition-all duration-200 ease-in-out group-hover:text-stone-900 dark:text-stone-400 dark:group-hover:text-stone-200"
                   >

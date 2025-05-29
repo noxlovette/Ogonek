@@ -15,7 +15,7 @@
     {#if $lessonStore.length === 0}
       <p>No lessons found</p>
     {:else}
-      {#each $lessonStore.slice(0, 2) as lesson}
+      {#each $lessonStore.slice(0, 2) as lesson (lesson.id)}
         <LessonLine {lesson} />
       {/each}
     {/if}

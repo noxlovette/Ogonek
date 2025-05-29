@@ -4,4 +4,8 @@ pnpm-lock.yaml
 yarn.lock
 .svelte-kit
 
+# node
 node_modules
+
+# artefacts
+build/

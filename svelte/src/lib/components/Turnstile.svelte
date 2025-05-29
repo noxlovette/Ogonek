@@ -9,10 +9,12 @@
   let widgetId: string | null = null;
   let isLoading = $state(true);
   let hasError = $state(false);
+  let turnstileToken = $state<string>("");
 
   function initTurnstile() {
     isLoading = true;
     hasError = false;
+    turnstileToken = "";
 
     if (typeof window === "undefined" || !window.turnstile) {
       const checkTurnstile = setInterval(() => {
@@ -29,7 +31,6 @@
           isLoading = false;
         }
       }, 5000);
-
       return;
     }
 
@@ -47,14 +48,12 @@
           sitekey: "0x4AAAAAAA6Es9VtsFFGCAbw",
           theme: "auto",
           callback: (token: string) => {
-            const turnstileInput = document.createElement("input");
-            turnstileInput.type = "hidden";
-            turnstileInput.name = "cf-turnstile-response";
-            turnstileInput.value = token;
-            turnstileElement.appendChild(turnstileInput);
+            // Update reactive state instead of DOM manipulation
+            turnstileToken = token;
           },
           "error-callback": () => {
             hasError = true;
+            turnstileToken = "";
           },
         });
       }
@@ -97,6 +96,11 @@
     class="cf-turnstile my-4 transition-opacity duration-200"
     class:opacity-0={isLoading}
   ></div>
+
+  <!-- Svelte-managed hidden input instead of DOM manipulation -->
+  {#if turnstileToken}
+    <input type="hidden" name="cf-turnstile-response" value={turnstileToken} />
+  {/if}
 
   {#if hasError}
     <div class="text-brick-500 mt-2 text-sm">
