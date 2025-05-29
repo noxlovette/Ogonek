@@ -59,8 +59,8 @@ test.describe("Login Page", () => {
     await page.fill('input[name="password"]', "password123");
     await page.click('button[type="submit"]');
 
-    // Should show validation error
-    await expect(page.locator("text=username")).toBeVisible();
+    // Wait for and check the specific validation error
+    await expect(page.getByText("username is required")).toBeVisible();
   });
 
   test("validates required password field", async ({ page }) => {
@@ -68,7 +68,7 @@ test.describe("Login Page", () => {
     await page.fill('input[name="username"]', "testuser");
     await page.click('button[type="submit"]');
 
-    // Should show validation error
+    // This one is already correct
     await expect(page.getByText("password is required")).toBeVisible();
   });
 
