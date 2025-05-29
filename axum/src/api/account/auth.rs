@@ -1,11 +1,11 @@
 use crate::api::error::APIError;
 use crate::auth::error::AuthError;
 use crate::auth::password::{hash_password, verify_password};
-use crate::auth::tokens::{self, generate_token};
+use crate::auth::tokens::{self, decode_token, generate_token};
 use crate::auth::Claims;
 use crate::db::crud::account::auth;
 use crate::models::users::{AuthPayload, BindParams, BindPayload, SignUpPayload, TokenPair};
-use crate::models::{CreationId, RefreshTokenResponse};
+use crate::models::{CreationId, RefreshTokenPayload, RefreshTokenResponse};
 use crate::schema::AppState;
 use axum::extract::{Json, Query, State};
 use hyper::StatusCode;
@@ -57,14 +57,20 @@ pub async fn authorize(
     Ok(Json(TokenPair::new(access_token, refresh_token)))
 }
 
+/// Receives the refresh token as json, gets it, then decodes, finds the user id, and generates a new access token
 pub async fn refresh(
     State(state): State<AppState>,
-    claims: Claims,
+    Json(request): Json<RefreshTokenPayload>,
 ) -> Result<Json<RefreshTokenResponse>, APIError> {
-    let user = auth::fetch_by_id(&state.db, &claims.sub).await?;
+    // Decode the refresh token to get user claims
+    let refresh_claims = decode_token(&request.refresh_token)?;
 
-    let refresh_token = generate_token(&user.id, &user.role, 60 * 15)?;
-    Ok(Json(RefreshTokenResponse { refresh_token }))
+    let user = auth::fetch_by_id(&state.db, &refresh_claims.sub).await?;
+    let new_access_token = generate_token(&user.id, &user.role, 60 * 15)?;
+
+    Ok(Json(RefreshTokenResponse {
+        access_token: new_access_token,
+    }))
 }
 
 pub async fn generate_invite_link(

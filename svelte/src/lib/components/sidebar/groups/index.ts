@@ -1,4 +1,3 @@
-export { default as LessonLine } from "./LessonLine.svelte";
 export { default as QuickAdd } from "./QuickAdd.svelte";
 export { default as RecentLessons } from "./RecentLessons.svelte";
 export { default as StudentFilter } from "./StudentFilter.svelte";
