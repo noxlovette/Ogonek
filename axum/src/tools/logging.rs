@@ -1,21 +1,47 @@
-use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
+use tracing_subscriber::{fmt, layer::SubscriberExt, util::SubscriberInitExt, EnvFilter};
 
-pub async fn init_logging() {
-    tracing_subscriber::registry()
-        .with(
-            tracing_subscriber::EnvFilter::try_from_default_env().unwrap_or_else(|_| {
-                format!(
-                    "{}=debug,tower_http=debug,axum::rejection=trace",
-                    env!("CARGO_CRATE_NAME")
-                )
-                .into()
-            }),
+pub async fn init_logging() -> anyhow::Result<()> {
+    if tracing::dispatcher::has_been_set() {
+        return Ok(());
+    }
+
+    let env_filter = EnvFilter::try_from_default_env().unwrap_or_else(|_| {
+        let level = if cfg!(debug_assertions) {
+            "debug"
+        } else {
+            "info"
+        };
+        format!(
+            "{}={},tower_http=debug,axum::rejection=trace,sqlx=info,hyper=info",
+            env!("CARGO_CRATE_NAME"),
+            level
         )
-        .with(
-            tracing_subscriber::fmt::layer()
-                .with_writer(std::io::stdout)
-                .with_ansi(true),
-        )
-        .init();
-    tracing::info!("logging initialized");
+        .into()
+    });
+
+    let registry = tracing_subscriber::registry().with(env_filter);
+
+    // Use JSON formatting in production, pretty formatting in development
+    if std::env::var("LOG_FORMAT").as_deref() == Ok("json") {
+        registry
+            .with(fmt::layer().json().with_current_span(false))
+            .try_init()
+            .map_err(|e| anyhow::anyhow!("Failed to initialize JSON logging: {}", e))?;
+    } else {
+        registry
+            .with(
+                fmt::layer()
+                    .with_target(true)
+                    .with_thread_ids(true)
+                    .with_file(true)
+                    .with_line_number(true)
+                    .with_ansi(atty::is(atty::Stream::Stdout))
+                    .compact(),
+            )
+            .try_init()
+            .map_err(|e| anyhow::anyhow!("Failed to initialize pretty logging: {}", e))?;
+    }
+
+    tracing::info!("Logging initialized successfully");
+    Ok(())
 }

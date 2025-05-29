@@ -31,7 +31,7 @@ argon2 = "0.5.3"
 # Auxiliary Crates
 thiserror = "2.0.9"
 tracing = "0.1"
-tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+tracing-subscriber = { version = "0.3", features = ["env-filter", "json"] }
 tower-http = { version = "0.6.2", features = ["full"] }
 anyhow = "1.0.95"
 validator = { version = "0.20.0", features = ["derive"] }
@@ -44,3 +44,4 @@ aws-sdk-s3 = "1.79.0"
 aws-credential-types = "1.2.2"
 aws-config = "1.6.0"
 sentry = "0.38.1"
+atty = "0.2.14"

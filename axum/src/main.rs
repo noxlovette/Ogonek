@@ -20,7 +20,7 @@ use tracing::{error, info_span};
 const REQUEST_ID_HEADER: &str = "x-request-id";
 
 #[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error>> {
+async fn main() -> anyhow::Result<()> {
     let cors = std::env::var("CORS").expect("CORS needs to be set");
     init_logging().await;
 
