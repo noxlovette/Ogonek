@@ -5,7 +5,6 @@ services:
       context: ./svelte
       dockerfile: Dockerfile
       platforms: ["linux/amd64"]
-
       tags:
         - ${SVELTE_IMAGE}
     image: ${SVELTE_IMAGE}
@@ -15,8 +14,7 @@ services:
       context: ./axum
       dockerfile: Dockerfile
       platforms: ["linux/amd64"]
-      args:
-        RUSTFLAGS: "-C target-cpu=native"
-      tags:
+      cache_from:
         - ${AXUM_IMAGE}
+      target: builder
     image: ${AXUM_IMAGE}
