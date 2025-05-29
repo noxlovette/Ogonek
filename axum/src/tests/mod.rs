@@ -1,3 +1,2 @@
-pub mod common;
-
-pub use common::*;
+mod common;
+mod integration;
