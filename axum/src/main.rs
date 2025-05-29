@@ -22,7 +22,7 @@ const REQUEST_ID_HEADER: &str = "x-request-id";
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
     let cors = std::env::var("CORS").expect("CORS needs to be set");
-    init_logging().await;
+    let _ = init_logging().await;
 
     let state = AppState::new().await?;
     let cleanup_state = state.clone();
