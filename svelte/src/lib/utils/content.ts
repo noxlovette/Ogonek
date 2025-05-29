@@ -1,11 +1,3 @@
-import rehypeFormat from "rehype-format";
-import rehypeSanitize from "rehype-sanitize";
-import rehypeStringify from "rehype-stringify";
-import remarkGfm from "remark-gfm";
-import remarkParse from "remark-parse";
-import remarkRehype from "remark-rehype";
-import { unified } from "unified";
-
 export function formatFileSize(bytes: number): string {
   if (bytes === 0) return "0 Bytes";
   const k = 1024;
@@ -16,19 +8,6 @@ export function formatFileSize(bytes: number): string {
 
 export function getFileExtension(filename: string): string {
   return filename.split(".").pop()?.toUpperCase() || "";
-}
-
-export async function parseMarkdown(content: string) {
-  const processor = unified()
-    .use(remarkParse)
-    .use(remarkGfm)
-    .use(remarkRehype, { allowDangerousHtml: true })
-    .use(rehypeFormat)
-    .use(rehypeSanitize)
-    .use(rehypeStringify);
-
-  const result = await processor.process(content);
-  return String(result);
 }
 
 export const stripUUID = (str: string): string => {

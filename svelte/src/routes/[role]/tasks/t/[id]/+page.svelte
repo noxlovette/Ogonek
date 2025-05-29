@@ -77,6 +77,8 @@
 
 <grid class="grid gap-4 md:grid-cols-4">
   <div class="markdown md:col-span-3">
+    <!-- eslint-disable-next-line svelte/no-at-html -->
+    <!-- Input is sanitized with rehype -->
     {@html rendered}
   </div>
 
@@ -84,7 +86,7 @@
     {#if files.length > 0}
       <div class="flex w-full flex-col space-y-2">
         <Label>Attached Files</Label>
-        {#each files as file}
+        {#each files as file (file.id)}
           <FileTaskCard {file} />
         {/each}
       </div>

@@ -124,7 +124,7 @@
   <div class="space-y-4">
     {#if decks.length}
       <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {#each decks as deck}
+        {#each decks as deck (deck.id)}
           <DeckCard {deck} />
         {/each}
       </div>

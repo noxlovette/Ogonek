@@ -18,8 +18,21 @@ export interface NewResponse {
 }
 
 export interface AuthResponse {
-  accessToken: string;
-  refreshToken?: string;
+  accessToken: {
+    token: string;
+    expiresAt: string;
+  };
+  refreshToken: {
+    token: string;
+    expiresAt: string;
+  };
+}
+
+export interface RefreshResponse {
+  accessToken: {
+    token: string;
+    expiresAt: string;
+  };
 }
 
 export type EmptyResponse = Record<string, never>;

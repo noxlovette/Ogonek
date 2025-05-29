@@ -2,7 +2,6 @@
   import { fade } from "svelte/transition";
   import { Trash2, Image } from "lucide-svelte";
   import type { Card } from "$lib/types";
-  import { Label } from "../typography";
   import { Input } from "../UI";
 
   let {

@@ -1,6 +1,8 @@
 import { env } from "$env/dynamic/private";
+import logger from "$lib/logger";
 import redis from "$lib/redisClient";
-import { ValidateAccess } from "$lib/server";
+import { ValidateAccess, setTokenCookie } from "$lib/server";
+import type { RefreshResponse } from "$lib/types";
 import * as Sentry from "@sentry/sveltekit";
 import type {
   Handle,
@@ -13,7 +15,7 @@ import { sequence } from "@sveltejs/kit/hooks";
 
 if (env.PUBLIC_APP_ENV !== "development") {
   Sentry.init({
-    dsn: "https://2d5f51ef45d12264bf0a264dbbbeeacb@o4507272574468096.ingest.de.sentry.io/4507947592777808",
+    dsn: env.PUBLIC_SENTRY_DSN,
     environment: env.PUBLIC_APP_ENV || "development",
     tracesSampleRate: 1,
   });
@@ -27,7 +29,9 @@ function isProtectedPath(path: string): boolean {
     Array.from(PROTECTED_PATHS).some((prefix) => path.startsWith(prefix))
   );
 }
-export const init: ServerInit = async () => {};
+export const init: ServerInit = async () => {
+  logger.info("App Booted");
+};
 
 export const handle: Handle = sequence(
   Sentry.sentryHandle(),
@@ -55,13 +59,18 @@ export const handle: Handle = sequence(
       throw redirect(302, "/auth/login");
     }
 
+    event.locals.user = user;
+    logger.debug("set user as locals");
+
     const isTeacherRoute = role === "t";
     const isStudentRoute = role === "s";
 
     if (isTeacherRoute && user.role !== "teacher") {
+      logger.info({ user }, "Redirecting to unauthorised as student");
       throw redirect(303, "/unauthorised");
     }
     if (isStudentRoute && user.role !== "student") {
+      logger.info({ user }, "Redirecting to unauthorised as teacher");
       throw redirect(303, "/unauthorised");
     }
 
@@ -73,6 +82,7 @@ export const handle: Handle = sequence(
 async function handleTokenRefresh(event: RequestEvent) {
   const refreshToken = event.cookies.get("refreshToken");
   if (!refreshToken) {
+    logger.info("Redirecting unauthorised user");
     throw redirect(302, "/auth/login");
   }
 
@@ -98,34 +108,32 @@ async function handleTokenRefresh(event: RequestEvent) {
   await redis.set(refreshCacheKey, "true", "EX", 5);
 
   try {
+    logger.info("Sending request to refresh token");
     const refreshRes = await event.fetch("/auth/refresh", {
+      method: "POST",
       headers: {
-        Cookie: `refreshToken=${refreshToken}`,
+        "Content-Type": "application/json",
         Accept: "application/json",
       },
     });
-
     if (!refreshRes.ok) {
+      logger.error("Refresh failed after sending request to Svelte backend");
       throw new Error("Refresh failed");
     }
-
-    const newAccessToken = event.cookies.get("accessToken");
-    if (newAccessToken) {
-      const user = await ValidateAccess(newAccessToken);
-
-      // Cache the result for other processes waiting
-      await redis.set(
-        `${refreshCacheKey}:result`,
-        JSON.stringify(user),
-        "EX",
-        3,
-      );
-
-      return user;
+    const { accessToken } = (await refreshRes.json()) as RefreshResponse;
+    if (!accessToken) {
+      logger.error("No access token in refresh response");
+      throw new Error("No access token in refresh response");
     }
-    throw new Error("No access token after refresh");
+    setTokenCookie(event.cookies, "accessToken", accessToken);
+
+    const user = await ValidateAccess(accessToken.token);
+
+    await redis.set(`${refreshCacheKey}:result`, JSON.stringify(user), "EX", 3);
+
+    return user;
   } catch (error) {
-    console.error("Token refresh failed:", error);
+    logger.error("Token refresh failed:", error);
     throw redirect(302, "/auth/login");
   } finally {
     // Clean up
@@ -134,13 +142,16 @@ async function handleTokenRefresh(event: RequestEvent) {
 }
 
 async function getUserFromToken(event: RequestEvent) {
+  logger.debug("getting user from token");
   const accessToken = event.cookies.get("accessToken");
   let user = null;
 
   if (accessToken) {
     try {
+      logger.debug("validating user from token");
       user = await ValidateAccess(accessToken);
     } catch (error) {
+      logger.debug({ error }, "attempting to refresh user from token");
       user = await handleTokenRefresh(event);
     }
   } else if (event.cookies.get("refreshToken")) {

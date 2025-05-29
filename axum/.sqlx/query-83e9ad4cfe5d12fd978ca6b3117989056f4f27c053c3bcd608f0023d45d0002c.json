@@ -1,0 +1,17 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        INSERT INTO profile (\n            user_id,\n            video_call_url,\n            avatar_url,\n            telegram_id\n        )\n        VALUES (\n            $1,\n            $2,\n            $3,\n            $4\n        )\n        ON CONFLICT (user_id)\n        DO UPDATE SET\n            video_call_url = COALESCE(EXCLUDED.video_call_url, profile.video_call_url),\n            avatar_url = COALESCE(EXCLUDED.avatar_url, profile.avatar_url),\n            telegram_id = COALESCE(EXCLUDED.telegram_id, profile.telegram_id)\n        ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Varchar",
+        "Varchar",
+        "Varchar",
+        "Varchar"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "83e9ad4cfe5d12fd978ca6b3117989056f4f27c053c3bcd608f0023d45d0002c"
+}

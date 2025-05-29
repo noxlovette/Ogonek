@@ -20,7 +20,7 @@
       class="focus:border-cacao-500 focus:ring-cacao-500/20 dark:focus:border-cacao-500 dark:focus:ring-cacao-500/30 w-full appearance-none rounded-lg bg-white py-2 pr-10 pl-4 text-sm shadow-sm focus:ring-2 focus:outline-none dark:border-stone-600/30 dark:bg-stone-950"
     >
       <option value="">All Students</option>
-      {#each students as student}
+      {#each students as student (student.id)}
         <option value={student.id}>{student.name}</option>
       {/each}
     </select>

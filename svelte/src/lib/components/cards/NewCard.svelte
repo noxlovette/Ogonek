@@ -1,6 +1,5 @@
 <script lang="ts">
   import { PlusCircle } from "lucide-svelte";
-  import CardClickable from "./CardClickable.svelte";
 
   let { href = ".", body = {} } = $props();
 </script>

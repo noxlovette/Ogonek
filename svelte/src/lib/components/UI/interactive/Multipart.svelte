@@ -4,6 +4,7 @@
   import { Ban, Check, Upload, X } from "lucide-svelte";
   import { Label } from "$lib/components/typography";
   import { teacherData } from "$lib/stores";
+  import logger from "$lib/logger";
 
   type UploadStatus = "waiting" | "uploading" | "complete" | "error";
 
@@ -43,7 +44,7 @@
     taskId = null,
     notify = false,
     folderId = null,
-    onComplete = (fileId: string) => {},
+    onComplete = () => {},
   } = $props();
 
   let fileUploads: FileUploadState[] = $state([]);
@@ -168,13 +169,9 @@
           fileState.progress.bytes = chunkEnd;
           fileState.progress.percentComplete =
             (chunkEnd / fileState.progress.totalBytes) * 100;
-        } catch (error: any) {
-          if (error.name === "AbortError") {
-            throw new Error("Upload aborted by user");
-          }
-          throw new Error(
-            `Failed to upload part ${partNumber}: ${error.message}`,
-          );
+        } catch (error) {
+          console.error(error);
+          throw new Error("Failed to upload");
         }
       }
 
@@ -201,10 +198,10 @@
 
       fileState.status = "complete";
       onComplete(fileIdLocal);
-    } catch (error: any) {
-      console.error(`Upload failed for ${file.name}:`, error);
+    } catch (error) {
+      logger.error(`Upload failed for ${file.name}:`, error);
       fileState.status = "error";
-      fileState.errorMessage = error.message || "Upload failed";
+      fileState.errorMessage = "Upload failed";
 
       // Try to abort the upload on S3 if it was initialized
       if (uploadIdLocal && s3Key) {
@@ -219,7 +216,7 @@
             }),
           });
         } catch (abortError) {
-          console.error("Failed to abort upload:", abortError);
+          logger.error("Failed to abort upload:", abortError);
         }
       }
     }
@@ -387,7 +384,7 @@
 
   {#if fileUploads.length > 0}
     <div class="space-y-4">
-      {#each fileUploads as fileState}
+      {#each fileUploads as fileState, index (index)}
         <div
           class="flex flex-col space-y-2 rounded-sm bg-stone-50/30 p-2 ring ring-stone-300/40 dark:bg-stone-900/30 dark:ring-stone-600/50"
         >

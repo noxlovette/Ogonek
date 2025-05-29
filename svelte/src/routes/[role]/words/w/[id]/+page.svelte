@@ -55,7 +55,8 @@
                 message: "Link copied to clipboard!",
                 type: "success",
               });
-            } catch (err) {
+            } catch (e) {
+              console.error(e);
               notification.set({
                 message: "Failed to copy link",
                 type: "error",

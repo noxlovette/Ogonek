@@ -1,17 +1,7 @@
 <script lang="ts">
   import type { PageData } from "./$types";
-  import {
-    Table,
-    H1,
-    UniButton,
-    HeaderEmbellish,
-    StudentAdder,
-  } from "$lib/components";
+  import { Table, H1, HeaderEmbellish, StudentAdder } from "$lib/components";
   import type { Student, TableConfig } from "$lib/types";
-  import { enhance } from "$app/forms";
-  import { notification } from "$lib/stores";
-  import { PersonStanding } from "lucide-svelte";
-  import { enhanceForm } from "$lib/utils";
 
   let { data }: { data: PageData } = $props();
 

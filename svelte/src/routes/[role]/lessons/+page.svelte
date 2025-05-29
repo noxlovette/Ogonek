@@ -96,7 +96,7 @@
   {/if}
   <section class="space-y-4">
     <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-      {#each lessons as lesson}
+      {#each lessons as lesson (lesson.id)}
         <LessonCard {lesson} />
       {/each}
     </div>

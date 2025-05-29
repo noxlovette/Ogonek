@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { LessonSmall } from "$lib/types";
-  import { parseMarkdown } from "$lib/utils";
+  import { parseMarkdown } from "@noxlovette/svarog";
   import { formatDate } from "@noxlovette/svarog";
   import CardClickable from "./CardClickable.svelte";
   import { onMount } from "svelte";
@@ -10,7 +10,7 @@
   }
 
   onMount(async () => {
-    rendered = await parseMarkdown(lesson.markdown);
+    rendered = await parseMarkdown(lesson.markdown.slice(0, 100));
   });
 
   let { lesson }: Props = $props();

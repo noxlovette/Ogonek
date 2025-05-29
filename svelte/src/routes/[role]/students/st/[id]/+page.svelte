@@ -39,7 +39,7 @@
 <grid class="grid gap-4 md:grid-cols-2">
   <GridCell>
     <H2>Decks</H2>
-    {#each studentDecks as deck}
+    {#each studentDecks as deck (deck.id)}
       <DeckCard {deck}></DeckCard>
     {/each}
     {#if studentDecks.length < 1}
@@ -51,7 +51,7 @@
 
   <GridCell>
     <H2>Lessons</H2>
-    {#each studentLessons as lesson}
+    {#each studentLessons as lesson (lesson.id)}
       <LessonCard {lesson}></LessonCard>
     {/each}
     {#if studentLessons.length < 1}
@@ -63,7 +63,7 @@
 
   <GridCell>
     <H2>Tasks</H2>
-    {#each studentTasks as task}
+    {#each studentTasks as task (task.id)}
       <TaskCard {task}></TaskCard>
     {/each}
     {#if studentTasks.length < 1}

@@ -35,20 +35,18 @@
 
   const teacherFields = [
     {
-      id: "telegramId",
+      id: "telegramID",
       label: "Telegram ID",
       type: "text",
-      storeKey: "telegramId",
+      storeKey: "telegramID",
     },
     {
-      id: "zoomUrl",
-      label: "Zoom URL",
+      id: "videoCallURL",
+      label: "Video Call URL",
       type: "text",
-      storeKey: "zoomUrl",
+      storeKey: "videoCallURL",
     },
   ];
-
-  $inspect($profile);
 </script>
 
 <svelte:head>
@@ -98,7 +96,7 @@
       </div>
 
       <div class="grid gap-3">
-        {#each defaultFields as field}
+        {#each defaultFields as field, index (index)}
           <div>
             <Input
               type={field.type}
@@ -118,7 +116,7 @@
       <Panel>
         <H2>Teacher Settings</H2>
         <div class="grid gap-3">
-          {#each teacherFields as field}
+          {#each teacherFields as field, index (index)}
             <div>
               <Input
                 type={field.type}

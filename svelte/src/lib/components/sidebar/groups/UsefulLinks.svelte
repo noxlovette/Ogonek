@@ -14,7 +14,7 @@
 <Group>
   <H2>Useful Links</H2>
   <div class="{$sidebar ? 'flex-row' : 'flex-col'} space-y-5">
-    {#each elements as Element}
+    {#each elements as Element, index (index)}
       <Element />
     {/each}
   </div>

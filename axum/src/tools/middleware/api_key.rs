@@ -41,7 +41,6 @@ fn key_valid(api_key: &ApiKey) -> bool {
 pub async fn validate_api_key(request: Request, next: Next) -> Result<Response, StatusCode> {
     let api_key = get_key(request.headers()).ok_or(StatusCode::UNAUTHORIZED)?;
 
-    
     if !key_valid(&api_key) {
         return Err(StatusCode::UNAUTHORIZED);
     }

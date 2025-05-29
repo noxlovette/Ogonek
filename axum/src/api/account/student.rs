@@ -1,6 +1,6 @@
 use crate::api::error::APIError;
 use crate::auth::Claims;
-use crate::db::crud::user::student;
+use crate::db::crud::account::student;
 
 use crate::models::{CompositeStudent, Student, UpdateStudentRequest};
 use crate::schema::AppState;
@@ -13,10 +13,6 @@ pub async fn upsert_student(
     State(state): State<AppState>,
     Path(id): Path<String>,
 ) -> Result<StatusCode, APIError> {
-    if claims.role != "teacher" {
-        return Ok(StatusCode::UNAUTHORIZED);
-    }
-
     student::upsert(&state.db, &claims.sub, &id).await?;
 
     Ok(StatusCode::CREATED)

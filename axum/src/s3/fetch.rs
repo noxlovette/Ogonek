@@ -18,7 +18,7 @@ pub async fn get_presigned_url(
 
     let key_str = String::from_utf8(key)
         .map_err(|_| AppError::BadRequest("Invalid UTF-8 in decoded key".into()))?;
-    let filename = key_str.split('/').last().unwrap_or("download");
+    let filename = key_str.split('/').next_back().unwrap_or("download");
     // Create a presigned request that expires in 15 minutes
     let presigned_req = state
         .s3

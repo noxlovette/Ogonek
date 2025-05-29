@@ -11,7 +11,6 @@ export const actions: Actions = {
   default: async ({ fetch, request }) => {
     const formData = await request.formData();
     const isRegistered = formData.has("isRegistered");
-    console.log(isRegistered);
     const response = await fetch(
       `/axum/auth/invite?isRegistered=${isRegistered}`,
       { method: "POST" },

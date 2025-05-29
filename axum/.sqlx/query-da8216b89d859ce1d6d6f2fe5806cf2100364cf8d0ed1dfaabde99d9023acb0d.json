@@ -1,11 +1,11 @@
 {
   "db_name": "PostgreSQL",
-  "query": "\n        SELECT * FROM profile\n        WHERE user_id = $1\n        ",
+  "query": "\n        SELECT video_call_url, avatar_url, telegram_id, user_id FROM profile\n        WHERE user_id = $1\n        ",
   "describe": {
     "columns": [
       {
         "ordinal": 0,
-        "name": "user_id",
+        "name": "video_call_url",
         "type_info": "Varchar"
       },
       {
@@ -15,12 +15,12 @@
       },
       {
         "ordinal": 2,
-        "name": "zoom_url",
+        "name": "telegram_id",
         "type_info": "Varchar"
       },
       {
         "ordinal": 3,
-        "name": "telegram_id",
+        "name": "user_id",
         "type_info": "Varchar"
       }
     ],
@@ -30,11 +30,11 @@
       ]
     },
     "nullable": [
-      false,
       true,
       true,
-      true
+      true,
+      false
     ]
   },
-  "hash": "a1b636d82e4bae5b46ec8e01e4982ec2cb97b2fa8218689a11d84f6dbae6e202"
+  "hash": "da8216b89d859ce1d6d6f2fe5806cf2100364cf8d0ed1dfaabde99d9023acb0d"
 }

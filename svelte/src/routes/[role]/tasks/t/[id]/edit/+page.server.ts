@@ -41,8 +41,6 @@ export const actions = {
       filePath,
     };
 
-    console.log(filePath);
-
     const response = await fetch(`/axum/task/t/${id}`, {
       method: "PATCH",
       body: JSON.stringify(body),

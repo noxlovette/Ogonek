@@ -10,7 +10,7 @@ pub fn hash_password(pass: &str) -> Result<String, PasswordHashError> {
     let salt = SaltString::generate(&mut OsRng);
     let argon2 = Argon2::default();
 
-    let hash = argon2.hash_password(&pass_bytes, &salt)?.to_string();
+    let hash = argon2.hash_password(pass_bytes, &salt)?.to_string();
     let parsed_hash = PasswordHash::new(&hash)?;
 
     argon2

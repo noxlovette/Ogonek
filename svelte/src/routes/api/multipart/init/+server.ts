@@ -12,15 +12,15 @@ export const POST: RequestHandler = async ({ request, fetch }) => {
 
     if (!response.ok) {
       const error = await response.text();
-      console.error("Error initializing multipart upload:", error);
+      logger.error("Error initializing multipart upload:", error);
       return new Response(error, { status: response.status });
     }
 
     const data = await response.json();
-    console.log(data);
+    logger.debug(data);
     return json(data);
   } catch (error) {
-    console.error("Error in init multipart upload:", error);
+    logger.error("Error in init multipart upload:", error);
     return new Response("Internal server error", { status: 500 });
   }
 };

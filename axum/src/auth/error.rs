@@ -102,3 +102,38 @@ impl From<DbError> for PasswordHashError {
         Self::VerificationError
     }
 }
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use argon2::password_hash::Error as Argon2Error;
+    use sqlx::Error as SqlxError;
+    use validator::ValidationError;
+
+    #[test]
+    fn test_sqlx_error_conversion_row_not_found() {
+        let sqlx_error = SqlxError::RowNotFound;
+        let auth_error: AuthError = sqlx_error.into();
+        assert!(matches!(auth_error, AuthError::UserNotFound));
+    }
+
+    #[test]
+    fn test_sqlx_error_conversion_other() {
+        let dummy_err = SqlxError::ColumnNotFound("some_column".to_string());
+        let auth_error: AuthError = dummy_err.into();
+        assert!(matches!(auth_error, AuthError::InvalidCredentials));
+    }
+
+    #[test]
+    fn test_password_hash_error_conversion_from_argon2() {
+        let err = Argon2Error::Password;
+        let hash_error: PasswordHashError = err.into();
+        assert!(matches!(hash_error, PasswordHashError::HashingError(_)));
+    }
+
+    #[test]
+    fn test_validation_error_to_auth_error() {
+        let err = ValidationError::new("invalid");
+        let auth_error: AuthError = err.into();
+        assert!(matches!(auth_error, AuthError::InvalidCredentials));
+    }
+}

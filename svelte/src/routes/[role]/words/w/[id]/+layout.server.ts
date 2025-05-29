@@ -1,3 +1,4 @@
+import logger from "$lib/logger";
 import type { DeckWithCards } from "$lib/types";
 import { error } from "@sveltejs/kit";
 import type { LayoutServerLoad } from "./$types";
@@ -18,7 +19,8 @@ export const load: LayoutServerLoad = async ({ fetch, params }) => {
     const deckComposite: DeckWithCards = await response.json();
     const { deck, cards, isSubscribed } = deckComposite;
     return { deck, cards, isSubscribed };
-  } catch (err: any) {
-    return error(500, err);
+  } catch (err) {
+    logger.error({ err }, "error while loading deck");
+    return error(500);
   }
 };

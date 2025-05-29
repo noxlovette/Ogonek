@@ -7,6 +7,7 @@
   import { extractWordsFromRewordFile } from "$lib/utils";
   import Papa from "papaparse";
   import H2 from "$lib/components/typography/H2.svelte";
+  import logger from "$lib/logger";
   interface CSVRow {
     [key: string]: string;
   }
@@ -69,7 +70,7 @@
       header: true,
       delimiter: ";",
       complete: (results) => {
-        console.log("parsing complete", results);
+        logger.info("parsing complete", results);
         if (results.data && results.data.length) {
           const csvData = results.data as CSVRow[];
 
@@ -126,11 +127,11 @@
         mediaUrl: undefined,
       }));
 
-    console.log(newCards);
+    logger.debug(newCards);
 
     updatedCards = [...updatedCards, ...newCards];
 
-    console.log(updatedCards);
+    logger.debug(updatedCards);
 
     notification.set({
       type: "success",
@@ -154,7 +155,7 @@
     } else if (extension === "reword") {
       importOption = "reword";
     } else {
-      console.error("Unsupported file type");
+      logger.error("Unsupported file type");
       return;
     }
 
@@ -194,7 +195,7 @@
         importBackColumn =
           backKeys.find((key) => csvHeaders.includes(key)) || "";
       } catch (err) {
-        console.error("Failed to parse .reword file:", err);
+        logger.error("Failed to parse .reword file:", err);
       }
     }
   }
@@ -269,7 +270,7 @@
               class="w-full rounded-lg border border-stone-300 bg-white p-2 dark:border-stone-700 dark:bg-stone-950"
             >
               <option value="">Select column</option>
-              {#each csvHeaders as header}
+              {#each csvHeaders as header, index (index)}
                 <option value={header}>{header}</option>
               {/each}
             </select>
@@ -282,7 +283,7 @@
               class="w-full rounded-lg border border-stone-300 bg-white p-2 dark:border-stone-700 dark:bg-stone-950"
             >
               <option value="">Select column</option>
-              {#each csvHeaders as header}
+              {#each csvHeaders as header, index (index)}
                 <option value={header}>{header}</option>
               {/each}
             </select>
@@ -304,7 +305,7 @@
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-stone-200 dark:divide-stone-700">
-                  {#each csvPreview as row}
+                  {#each csvPreview as row, index (index)}
                     <tr
                       class="odd:bg-white even:bg-stone-50/30 dark:odd:bg-stone-900/30 dark:even:bg-stone-800/50"
                     >

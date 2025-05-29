@@ -1,5 +1,6 @@
+import logger from "$lib/logger";
 import type { TaskWithFiles } from "$lib/types";
-import { parseMarkdown } from "$lib/utils";
+import { parseMarkdown } from "@noxlovette/svarog";
 import { redirect } from "@sveltejs/kit";
 import type { LayoutServerLoad } from "./$types";
 
@@ -22,6 +23,7 @@ export const load: LayoutServerLoad = async ({ params, fetch }) => {
       rendered,
     };
   } catch (err) {
+    logger.warn({ err }, "task load failed");
     throw redirect(303, `/${role}/tasks/`);
   }
 };

@@ -3,14 +3,12 @@
 
   import { user } from "$lib/stores";
   import CardClickable from "./CardClickable.svelte";
-  import { H2 } from "../typography";
 
   interface Props {
     deck: Deck | DeckSmall;
   }
 
   let { deck }: Props = $props();
-  $inspect(deck);
   let href =
     $user.role === "teacher"
       ? `/t/words/w/${deck.id}`

@@ -74,7 +74,7 @@ export const actions: Actions = {
 
     if (inviteToken) {
       const studentId = result.data.id;
-      console.log(studentId);
+      logger.debug(studentId);
 
       const inviteResponse = await fetch("/axum/auth/bind", {
         method: "POST",

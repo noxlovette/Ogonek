@@ -3,10 +3,10 @@
   import CardClickable from "./CardClickable.svelte";
   import { user } from "$lib/stores";
   import { onMount } from "svelte";
-  import { parseMarkdown } from "$lib/utils";
+  import { parseMarkdown } from "@noxlovette/svarog";
 
   onMount(async () => {
-    rendered = await parseMarkdown(task.markdown);
+    rendered = await parseMarkdown(task.markdown.slice(0, 100));
   });
   let { task } = $props();
 

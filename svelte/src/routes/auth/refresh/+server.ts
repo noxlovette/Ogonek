@@ -1,26 +1,19 @@
-import { env } from "$env/dynamic/private";
-import type { AuthResponse } from "$lib/types";
-import { parseCookieOptions } from "@noxlovette/svarog";
+import logger from "$lib/logger";
+import type { RefreshResponse } from "$lib/types";
 import { json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
 
-export const GET: RequestHandler = async ({ cookies, fetch }) => {
-  const refreshToken = cookies.get("refreshToken");
+export const POST: RequestHandler = async ({ cookies, fetch }) => {
+  const refreshToken = cookies.get("refresh_token");
+  logger.debug(refreshToken);
+  logger.debug("request has reached the server.ts");
   const response = await fetch("/axum/auth/refresh", {
-    headers: {
-      cookie: `refreshToken=${refreshToken}`,
-      "X-API-KEY": env.API_KEY_AXUM,
-    },
+    method: "POST",
+    body: JSON.stringify({ refreshToken }),
   });
-
-  response.headers.getSetCookie().forEach((cookie) => {
-    const [fullCookie, ...opts] = cookie.split(";");
-    const [name, value] = fullCookie.split("=");
-    const cookieOptions = parseCookieOptions(opts);
-    cookies.set(name, value, cookieOptions);
-  });
-
-  const { accessToken } = (await response.json()) as AuthResponse;
+  logger.debug("response on the server received");
+  logger.debug(response);
+  const { accessToken } = (await response.json()) as RefreshResponse;
 
   return json({ success: true, accessToken });
 };

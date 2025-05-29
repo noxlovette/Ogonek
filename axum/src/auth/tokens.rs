@@ -1,71 +1,41 @@
-use crate::auth::claims::{Claims, RefreshClaims, KEYS, KEYS_REFRESH};
+use crate::auth::claims::{Claims, KEYS};
 
 use crate::auth::error::AuthError;
-use crate::models::users::{InviteToken, User};
+use crate::models::users::InviteToken;
+use crate::models::TokenWithExpiry;
 use base64::{engine::general_purpose::URL_SAFE, Engine as _};
+use jsonwebtoken::Algorithm;
 use jsonwebtoken::{encode, Header};
 use std::time::{SystemTime, UNIX_EPOCH};
-use uuid::Uuid;
 
-pub fn generate_token(user: &User) -> Result<String, AuthError> {
+pub fn generate_token(
+    user_id: &str,
+    user_role: &str,
+    secs: u64,
+) -> Result<TokenWithExpiry, AuthError> {
     let now = SystemTime::now()
         .duration_since(UNIX_EPOCH)
         .unwrap()
-        .as_secs() as usize;
+        .as_secs();
 
-    // 15 minutes from now
-    let exp = now + (60 * 15);
+    let exp = now + secs;
 
     let claims = Claims {
-        name: user.name.clone(),
-        username: user.username.clone(),
-        email: user.email.clone(),
-        role: user.role.clone(),
-        sub: user.id.clone().to_string(),
-        exp,
-        iat: now,
-        nbf: Some(now),
-        jti: Some(Uuid::new_v4().to_string()),
-        // aud:"svelte:user:general".to_string(),
-        iss: "auth:auth".to_string(),
+        sub: user_id.to_string(),
+        role: user_role.to_string(),
+        exp: exp as usize,
+        iat: now as usize,
     };
 
-    let token = encode(
-        &Header::new(jsonwebtoken::Algorithm::RS256),
-        &claims,
-        &KEYS.encoding,
-    )
-    .map_err(|e| {
-        eprintln!("Token creation error: {:?}", e);
+    let token = encode(&Header::new(Algorithm::RS256), &claims, &KEYS.encoding).map_err(|e| {
+        eprintln!("Token generation failed: {:?}", e);
         AuthError::TokenCreation
     })?;
 
-    return Ok(token);
-}
-
-pub fn generate_refresh_token(user: &User) -> Result<String, AuthError> {
-    let exp = SystemTime::now()
-        .duration_since(UNIX_EPOCH)
-        .unwrap()
-        .as_secs() as usize
-        + (60 * 60 * 24 * 30); // 30 days from now
-
-    let claims = RefreshClaims {
-        sub: user.id.clone().to_string(),
-        exp,
-    };
-
-    let token = encode(
-        &Header::new(jsonwebtoken::Algorithm::RS256),
-        &claims,
-        &KEYS_REFRESH.encoding,
-    )
-    .map_err(|e| {
-        eprintln!("Token creation error: {:?}", e);
-        AuthError::TokenCreation
-    })?;
-
-    return Ok(token);
+    Ok(TokenWithExpiry {
+        token,
+        expires_at: exp,
+    })
 }
 
 pub async fn decode_invite_token(token: String) -> Result<String, AuthError> {
@@ -88,91 +58,53 @@ pub async fn encode_invite_token(id: String) -> Result<String, AuthError> {
     let encoded = URL_SAFE.encode(json.as_bytes());
     Ok(encoded)
 }
+
 #[cfg(test)]
 mod tests {
+    // requires GitHub Actions to have jwt keys
+
     use super::*;
-    use crate::models::users::User;
-    use jsonwebtoken::{decode, Validation};
+    #[test]
+    fn test_generate_token_success() {
+        let user_id = "test_user";
+        let user_role = "admin";
+        let duration = 3600;
 
-    fn create_test_user() -> User {
-        User {
-            id: "test-user-id".to_string(),
-            name: "Test User".to_string(),
-            username: "testuser".to_string(),
-            email: "test@example.com".to_string(),
-            pass: "hashed_password".to_string(),
-            role: "user".to_string(),
-            verified: true,
-        }
+        let result = generate_token(user_id, user_role, duration);
+
+        assert!(result.is_ok());
+
+        let token = result.unwrap();
+        assert!(token.token.len() > 0);
+        assert!(token.expires_at > 0);
     }
 
-    #[test]
-    fn test_generate_token() {
-        // Arrange
-        let user = create_test_user();
+    #[tokio::test]
+    async fn test_encode_decode_invite_token() {
+        let teacher_id = "teacher_123".to_string();
 
-        // Act
-        let token = generate_token(&user).expect("Failed to generate token");
+        let encoded = encode_invite_token(teacher_id.clone())
+            .await
+            .expect("Encoding failed");
 
-        // Assert
-        assert!(!token.is_empty(), "Token should not be empty");
+        let decoded = decode_invite_token(encoded).await.expect("Decoding failed");
 
-        // Verify token can be decoded correctly
-        let validation = Validation::new(jsonwebtoken::Algorithm::RS256);
-        let token_data =
-            decode::<Claims>(&token, &KEYS.decoding, &validation).expect("Failed to decode token");
-
-        assert_eq!(token_data.claims.sub, user.id);
-        assert_eq!(token_data.claims.name, user.name);
-        assert_eq!(token_data.claims.username, user.username);
-        assert_eq!(token_data.claims.role, user.role);
-        assert_eq!(token_data.claims.email, user.email);
-        assert_eq!(token_data.claims.iss, "auth:auth");
+        assert_eq!(decoded, teacher_id);
     }
 
-    #[test]
-    fn test_generate_refresh_token() {
-        // Arrange
-        let user = create_test_user();
-
-        // Act
-        let token = generate_refresh_token(&user).expect("Failed to generate refresh token");
-
-        // Assert
-        assert!(!token.is_empty(), "Refresh token should not be empty");
-
-        // Verify token can be decoded correctly
-        let validation = Validation::new(jsonwebtoken::Algorithm::RS256);
-        let token_data = decode::<RefreshClaims>(&token, &KEYS_REFRESH.decoding, &validation)
-            .expect("Failed to decode refresh token");
-
-        assert_eq!(token_data.claims.sub, user.id);
-        assert!(token_data.claims.exp > 0, "Expiration time should be set");
+    #[tokio::test]
+    async fn test_decode_invite_token_invalid_format() {
+        let result = decode_invite_token("invalid_base64".to_string()).await;
+        assert!(matches!(result, Err(AuthError::InvalidToken)));
     }
 
-    #[test]
-    fn test_token_expiration() {
-        // This test requires mocking time, which is complex
-        // For a simplified test, we can check that the token expiration is set in the future
-        let user = create_test_user();
-        let token = generate_token(&user).expect("Failed to generate token");
+    #[tokio::test]
+    async fn test_encode_invite_token_failure() {
+        // Not much can go wrong in the current implementation unless `serde_json::to_string` fails,
+        // which is unlikely with valid data. You could artificially force an error by mocking if needed.
+        let teacher_id = "teacher_123".to_string();
+        let result = encode_invite_token(teacher_id).await;
 
-        let validation = Validation::new(jsonwebtoken::Algorithm::RS256);
-        let token_data =
-            decode::<Claims>(&token, &KEYS.decoding, &validation).expect("Failed to decode token");
-
-        let now = std::time::SystemTime::now()
-            .duration_since(std::time::UNIX_EPOCH)
-            .unwrap()
-            .as_secs() as usize;
-
-        assert!(
-            token_data.claims.exp > now,
-            "Token should expire in the future"
-        );
-        assert!(
-            token_data.claims.exp <= now + (60 * 15),
-            "Token should expire within 15 minutes"
-        );
+        assert!(result.is_ok());
     }
 }

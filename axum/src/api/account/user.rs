@@ -2,7 +2,7 @@ use crate::api::error::APIError;
 use crate::auth::error::AuthError;
 use crate::auth::password::hash_password;
 use crate::auth::{tokens, Claims};
-use crate::db::crud::user::user;
+use crate::db::crud::account::user;
 use crate::schema::AppState;
 use axum::extract::{Json, Query, State};
 use hyper::StatusCode;

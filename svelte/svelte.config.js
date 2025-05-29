@@ -9,10 +9,6 @@ const config = {
       out: "build",
       precompress: false,
     }),
-
-    csrf: {
-      checkOrigin: true,
-    },
   },
 };
 

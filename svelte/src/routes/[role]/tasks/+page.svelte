@@ -25,8 +25,6 @@
   import { Eye, EyeClosed, Lightbulb, PlusCircle } from "lucide-svelte";
   import { formatDate } from "@noxlovette/svarog";
 
-  $inspect($teacherData);
-
   let { data } = $props();
   const { students } = data;
   let { data: tasks, total } = $derived(data.tasksPaginated);

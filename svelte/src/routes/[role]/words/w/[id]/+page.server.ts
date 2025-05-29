@@ -11,11 +11,9 @@ export const actions = {
     const formData = await request.formData();
 
     const isSubscribed = formData.get("isSubscribed") === "true";
-    console.log(isSubscribed);
     const response = await fetch(`/axum/deck/learn/subscribe/${id}`, {
       method: isSubscribed ? "DELETE" : "POST",
     });
-    console.log(response);
 
     const editResult = await handleApiResponse<EmptyResponse>(response);
 
