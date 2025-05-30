@@ -6,7 +6,6 @@
     href,
     title = "Title",
     subtitle = "Subtitle",
-    caption = "Caption",
     height = "150px",
     styling = "",
     prefetch = true,
@@ -16,7 +15,6 @@
     href: string;
     title?: string;
     subtitle?: string;
-    caption?: string;
     height?: string;
     styling?: string;
     prefetch?: boolean;
