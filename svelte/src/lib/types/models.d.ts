@@ -18,6 +18,8 @@ export interface TaskWithFiles {
   files: FileSmall[];
 }
 
+export type UrgencyLevel = "overdue" | "urgent" | "soon" | "normal";
+
 export interface FileSmall {
   id: string;
   name: string;
