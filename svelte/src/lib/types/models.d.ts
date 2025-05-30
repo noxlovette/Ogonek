@@ -84,22 +84,14 @@ export interface UserAndTeacher {
   teacher: Teacher;
 }
 
-export interface Lesson {
-  id: string;
-  title: string;
-  markdown: string;
-  createdAt: string;
+export interface Lesson extends LessonSmall {
   updatedAt: string;
-  topic: string;
   assignee: string;
   assigneeName: string;
 }
 
-export interface LessonSmall {
+export interface LessonSmall extends LessonStore {
   id: string;
-  title: string;
-  markdown: string;
-  topic: string;
   createdAt: string;
 }
 

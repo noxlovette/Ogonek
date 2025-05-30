@@ -15,8 +15,7 @@
       : `/s/words/w/${deck.id}`;
 
   const title = deck.name;
-  const subtitle = deck.description ?? "Deck Description";
-  const caption = "";
+  const badgeText = deck.description ?? "Deck Description";
 </script>
 
-<CardClickable {href} {title} {subtitle} {caption}></CardClickable>
+<CardClickable {href} {title} {badgeText} badgeIterate={true}></CardClickable>

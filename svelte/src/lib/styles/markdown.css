@@ -48,7 +48,7 @@
       @apply hover:bg-cacao-100/50 hover:text-cacao-700 dark:hover:bg-cacao-900/30 dark:hover:text-cacao-300 rounded px-1 py-0.5;
     }
     blockquote {
-      @apply border-cacao-400 bg-cacao-50/40 dark:border-cacao-500 dark:bg-cacao-900/20 my-4 rounded-md border-l-4 px-4 py-2 text-stone-700 italic dark:text-stone-300;
+      @apply border-cacao-400 bg-cacao-50/40 dark:border-cacao-500 dark:bg-cacao-900/20 my-4 border-l-4 px-4 py-2 text-stone-700 italic dark:text-stone-300;
       /* Sky quote icon */
       position: relative;
       padding-left: 3rem;

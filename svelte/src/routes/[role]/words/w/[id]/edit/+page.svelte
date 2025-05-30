@@ -153,6 +153,7 @@
         <div>
           <Input
             name="description"
+            labelName="Tag 1; Tag2"
             placeholder="What's this deck about?"
             type="textarea"
             value={deck.description}
