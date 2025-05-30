@@ -33,7 +33,7 @@
   <UniButton
     Icon={Pencil}
     href="/t/students/st/{student.id}/edit"
-    variant="outline">Edit</UniButton
+    variant="secondary">Edit</UniButton
   >
 </HeaderEmbellish>
 <grid class="grid gap-4 md:grid-cols-2">

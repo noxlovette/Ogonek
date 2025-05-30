@@ -21,7 +21,7 @@
   <button
     type="button"
     onclick={() => removeCard(index)}
-    class="absolute -top-2 -right-2 hidden rounded-full bg-red-500/90 p-1.5 text-white opacity-0 transition-all group-hover:opacity-100 hover:bg-red-600 focus:ring focus:ring-red-400 md:block"
+    class="absolute -top-2 -right-2 hidden rounded-full bg-red-500/90 p-1.5 text-stone-50 opacity-0 transition-all group-hover:opacity-100 hover:bg-red-600 focus:ring focus:ring-red-400 md:block"
     title="Remove card"
   >
     <Trash2 class="size-4" />

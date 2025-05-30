@@ -69,7 +69,7 @@
       <UniButton
         Icon={Pencil}
         href="/t/tasks/t/{data.task.id}/edit"
-        variant="outline">Edit</UniButton
+        variant="secondary">Edit</UniButton
       >
     {/if}
   </div>

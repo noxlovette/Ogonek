@@ -51,7 +51,7 @@
 >
   <!-- Title with glass effect -->
   <div class="relative z-10">
-    <H3 styling="text-stone-900 dark:text-white drop-shadow-sm">
+    <H3 styling="text-stone-900 dark:text-stone-50 drop-shadow-sm">
       {title}
     </H3>
   </div>

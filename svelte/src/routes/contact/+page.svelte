@@ -58,7 +58,7 @@
             {contactInfo.email}
           </span>
           <button
-            class="bg-cacao-500 hover:bg-cacao-600 ml-2 rounded-md px-3 py-1.5 text-sm text-white transition-colors"
+            class="bg-cacao-500 hover:bg-cacao-600 ml-2 rounded-md px-3 py-1.5 text-sm text-stone-50 transition-colors"
             onclick={() => copyToClipboard(contactInfo.email, "email")}
           >
             {copied && copiedType === "email" ? "Copied!" : "Copy"}
@@ -67,7 +67,7 @@
 
         <a
           href={`mailto:${contactInfo.email}`}
-          class="bg-cacao-500 hover:bg-cacao-600 mt-4 block w-full rounded-md py-3 text-center font-medium text-white transition-colors"
+          class="bg-cacao-500 hover:bg-cacao-600 mt-4 block w-full rounded-md py-3 text-center font-medium text-stone-50 transition-colors"
         >
           Send Email
         </a>
@@ -101,7 +101,7 @@
             {contactInfo.telegram}
           </span>
           <button
-            class="bg-cacao-500 hover:bg-cacao-600 ml-2 rounded-md px-3 py-1.5 text-sm text-white transition-colors"
+            class="bg-cacao-500 hover:bg-cacao-600 ml-2 rounded-md px-3 py-1.5 text-sm text-stone-50 transition-colors"
             onclick={() => copyToClipboard(contactInfo.telegram, "telegram")}
           >
             {copied && copiedType === "telegram" ? "Copied!" : "Copy"}
@@ -112,7 +112,7 @@
           href={`https://t.me/${contactInfo.telegram.replace("@", "")}`}
           target="_blank"
           rel="noopener noreferrer"
-          class="bg-cacao-500 hover:bg-cacao-600 mt-4 block w-full rounded-md py-3 text-center font-medium text-white transition-colors"
+          class="bg-cacao-500 hover:bg-cacao-600 mt-4 block w-full rounded-md py-3 text-center font-medium text-stone-50 transition-colors"
         >
           Message on Telegram
         </a>

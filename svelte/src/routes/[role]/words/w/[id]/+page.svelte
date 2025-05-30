@@ -66,12 +66,17 @@
         },
       })}
     >
-      <UniButton Icon={Share} fullWidth={true} type="submit" variant="outline">
+      <UniButton
+        Icon={Share}
+        fullWidth={true}
+        type="submit"
+        variant="secondary"
+      >
         Share Deck
       </UniButton>
     </form>
     {#if $user.id === deck.createdBy}
-      <UniButton variant="outline" href="{deck.id}/edit" Icon={Pencil}
+      <UniButton variant="secondary" href="{deck.id}/edit" Icon={Pencil}
         >Edit</UniButton
       >
     {/if}
@@ -98,7 +103,7 @@
         Icon={isSubscribed === true ? UserRoundMinus : UserRoundPlus}
         type="submit"
         fullWidth={true}
-        variant="outline"
+        variant="primary"
       >
         {isSubscribed ? "Unsubscribe" : "Subscribe"}
       </UniButton>
@@ -128,9 +133,7 @@
 
   <div class="h-full">
     <div class="sticky top-6">
-      <div
-        class="space-y-3 rounded-lg bg-white p-4 shadow-sm ring-1 ring-stone-300/40 dark:bg-stone-800"
-      >
+      <div class="bg-default ring-default space-y-3 rounded-lg p-3 shadow-sm">
         <Label>Description</Label>
         {#if deck.description}
           <p class="text-lg">{deck.description}</p>

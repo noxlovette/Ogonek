@@ -77,11 +77,11 @@
 
   const variantClasses = {
     primary:
-      "bg-gradient-to-br from-white/80 transition-colors to-stone-100/80 text-stone-900 shadow-sm ring-1 ring-stone-300/40 hover:from-white hover:to-stone-200 dark:from-stone-900/70 dark:to-stone-800/70 dark:text-white dark:hover:from-stone-800 dark:hover:to-stone-700",
+      "bg-gradient-to-br from-white/80 transition-colors to-stone-100/80 text-stone-900 shadow-sm ring-default  hover:from-white hover:to-stone-200 dark:from-stone-900/70 dark:to-stone-800/70 dark:text-stone-50 dark:hover:from-stone-800 dark:hover:to-stone-700",
     secondary:
-      "bg-white/70 text-stone-700 ring-1 ring-stone-300 hover:bg-white shadow-sm dark:bg-stone-900/80 dark:text-stone-200 hover:dark:bg-stone-800 dark:ring-stone-600/40",
+      "bg-white/70 text-stone-700 ring-default hover:bg-white shadow-sm dark:bg-stone-900/80 dark:text-stone-200 hover:dark:bg-stone-800 ",
     danger:
-      "bg-gradient-to-br from-red-100/80 transition-colors to-red-200/80 text-red-800 hover:from-red-200 hover:to-red-300 ring-1 ring-red-300/40 shadow-sm dark:from-red-700/70 dark:to-red-800/70 dark:text-white dark:hover:from-red-600 dark:hover:to-red-700",
+      "bg-gradient-to-br from-red-100/80 transition-colors to-red-200/80 text-red-800 hover:from-red-200 hover:to-red-300 ring ring-red-300/40 shadow-sm dark:from-red-700/70 dark:to-red-800/70 dark:text-stone-50 dark:hover:from-red-600 dark:hover:to-red-700",
     ghost:
       "text-stone-600 dark:text-stone-400 hover:bg-stone-100/60 dark:hover:bg-stone-800/60",
     link: "text-cacao-600 underline hover:text-cacao-800 p-0 ring-0 dark:text-cacao-300 dark:hover:text-cacao-100",
@@ -164,7 +164,7 @@
       </button>
       <button
         type="submit"
-        class="rounded-lg bg-gradient-to-br from-red-500 to-red-600 px-4 py-2 text-white ring-1 ring-red-300 transition-all hover:from-red-500 hover:to-red-700 focus:ring focus:ring-red-400 focus:ring-offset-2"
+        class="rounded-lg bg-gradient-to-br from-red-500 to-red-600 px-4 py-2 text-stone-50 ring-1 ring-red-300 transition-all hover:from-red-500 hover:to-red-700 focus:ring focus:ring-red-400 focus:ring-offset-2"
         {formaction}
       >
         Confirm
