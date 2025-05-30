@@ -1,11 +1,17 @@
 <script lang="ts">
-  import { UniButton, H1, H2, H3, HeaderEmbellish } from "$lib/components";
+  import {
+    UniButton,
+    H1,
+    H2,
+    H3,
+    HeaderEmbellish,
+    TableOfContents,
+  } from "$lib/components";
 
   import { formatDate } from "@noxlovette/svarog";
   import type { PageData } from "./$types";
   import { Pencil } from "lucide-svelte";
   import { page } from "$app/state";
-  import TableOfContents from "$lib/components/UI/TableOfContents.svelte";
 
   let role = $derived(page.params.role);
 

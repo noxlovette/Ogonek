@@ -5,7 +5,7 @@
 </script>
 
 <section
-  class="ring-default dark:bg-stone-950 max-w-xs space-y-2 rounded-md bg-white p-5 pb-12 shadow-sm "
+  class="ring-default max-w-xs space-y-2 rounded-md bg-white p-5 pb-12 shadow-sm dark:bg-stone-950"
 >
   <H1>
     {title}

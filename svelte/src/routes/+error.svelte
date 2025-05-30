@@ -80,7 +80,7 @@
 
       <!-- Fun error fact -->
       <div
-        class="mb-6 rounded-lg bg-stone-50/30 p-4 text-sm text-stone-700 dark:bg-stone-700/30 dark:text-stone-300"
+        class="bg-default mb-6 rounded-lg p-4 text-sm text-stone-700 dark:bg-stone-700/30 dark:text-stone-300"
         in:fly={{ y: 20, duration: 400, delay: 400 }}
       >
         <p class="flex items-start">

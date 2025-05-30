@@ -5,13 +5,13 @@
       <div class="hidden gap-3 text-stone-500 md:flex">
         <a
           href="/paperwork/privacy"
-          class="hover:text-cocoa-500 transition-colors">Privacy</a
+          class="hover:text-cacao-500 transition-colors">Privacy</a
         >
         <a
           href="/paperwork/terms"
-          class="hover:text-cocoa-500 transition-colors">Terms</a
+          class="hover:text-cacao-500 transition-colors">Terms</a
         >
-        <a href="/contact" class="hover:text-cocoa-500 transition-colors"
+        <a href="/contact" class="hover:text-cacao-500 transition-colors"
           >Contact</a
         >
       </div>
@@ -24,7 +24,7 @@
         <a
           href="https://github.com/noxlovette"
           aria-label="GitHub"
-          class="hover:text-cocoa-500 transition-colors"
+          class="hover:text-cacao-500 transition-colors"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -44,7 +44,7 @@
         <a
           href="https://t.me/noxlovette"
           aria-label="Telegram"
-          class="hover:text-cocoa-500 transition-colors"
+          class="hover:text-cacao-500 transition-colors"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

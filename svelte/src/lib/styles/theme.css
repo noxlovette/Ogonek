@@ -11,7 +11,7 @@
 
 @layer utilities {
   .ring-default {
-    @apply ring ring-stone-200/40 dark:ring-stone-800/60;
+    @apply ring ring-stone-100/60 dark:ring-stone-800/60;
   }
 
   .bg-default {

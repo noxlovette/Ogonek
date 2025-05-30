@@ -15,7 +15,7 @@
 </script>
 
 <div
-  class="group ring-default relative rounded-lg bg-white p-3 shadow-sm transition-all hover:ring-stone-300 dark:bg-stone-900  dark:hover:ring-stone-600"
+  class="group ring-default relative rounded-lg bg-white p-3 shadow-sm transition-all hover:ring-stone-300 dark:bg-stone-900 dark:hover:ring-stone-600"
   transition:fade
 >
   <button
@@ -70,7 +70,7 @@
         name={`cards[${index}][media_url]`}
         bind:value={card.mediaUrl}
         placeholder="https://example.com/image.jpg"
-        class="focus:ring-cocoa-500 focus:ring-cocoa-500 w-full rounded-md bg-transparent px-3 py-1.5 text-sm ring ring-stone-300 placeholder:text-stone-400 focus:ring-1 focus:outline-none dark:ring-stone-600 dark:placeholder:text-stone-500"
+        class="focus:ring-cacao-500 focus:ring-cacao-500 w-full rounded-md bg-transparent px-3 py-1.5 text-sm ring ring-stone-300 placeholder:text-stone-400 focus:ring-1 focus:outline-none dark:ring-stone-600 dark:placeholder:text-stone-500"
       />
     </div>
   {/if}

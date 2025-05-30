@@ -8,7 +8,7 @@
          rounded-lg bg-white
          px-2
          ring-stone-300/40 md:-mt-3 md:gap-4
-         dark:bg-stone-950 "
+         dark:bg-stone-950"
 >
   {@render children()}
 </div>

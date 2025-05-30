@@ -82,7 +82,7 @@
     <button
       type="submit"
       disabled={downloading}
-      class="group ring-default transition-colors relative flex h-40 w-full flex-col items-center justify-between overflow-clip rounded-md p-2 hover:bg-stone-100  dark:hover:bg-stone-800"
+      class="group ring-default relative flex h-40 w-full flex-col items-center justify-between overflow-clip rounded-md p-2 transition-colors hover:bg-stone-100 dark:hover:bg-stone-800"
     >
       <Label>
         {file.name.split(".").shift()?.slice(0, 15)}

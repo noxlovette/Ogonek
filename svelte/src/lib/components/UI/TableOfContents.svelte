@@ -21,7 +21,6 @@
   let headings: Heading[] = [];
   let activeId: string = "";
   let observer: IntersectionObserver | null = null;
-  let targetElement: HTMLElement | null = null;
 
   // Generate URL-friendly ID from text
   function generateId(text: string | null): string {
@@ -42,7 +41,6 @@
       return;
     }
 
-    targetElement = container;
     const headingSelectors = Array.from(
       { length: maxLevel - minLevel + 1 },
       (_, i) => `h${minLevel + i}`,
@@ -152,9 +150,9 @@
           <li class={getPaddingClass(heading.level)}>
             <a
               href="#{heading.id}"
-              class="block px-2 py-1.5 text-sm text-gray-700 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-gray-100
+              class="block px-2 py-1.5 text-sm text-stone-700 transition-colors hover:bg-stone-100 hover:text-stone-900 dark:text-stone-300 dark:hover:bg-stone-700 dark:hover:text-stone-100
                   {activeId === heading.id
-                ? 'border-l-2 border-sky-500 bg-sky-50 font-medium text-sky-700 dark:border-sky-400 dark:bg-sky-900/20 dark:text-sky-100'
+                ? 'border-cacao-500 bg-cacao-50 text-cacao-700 dark:border-cacao-400 dark:bg-cacao-900/20 dark:text-cacao-100 border-l-2 font-medium'
                 : ''}"
               on:click={(e) => scrollToHeading(heading.id, e)}
             >
@@ -165,7 +163,7 @@
       </ul>
     </nav>
   {:else}
-    <p class="text-sm text-gray-500 dark:text-gray-400">
+    <p class="text-sm text-stone-500 dark:text-stone-400">
       No headings found in {targetSelector}
     </p>
   {/if}

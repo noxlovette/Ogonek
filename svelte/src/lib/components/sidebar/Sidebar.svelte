@@ -9,9 +9,9 @@
 
 <div
   class={`
-   ring-default relative my-2 h-max flex-shrink-0 -translate-x-4 flex-col
-   rounded-r-lg  shadow-sm transition-all ease-in-out
-    bg-default
+   ring-default bg-default relative my-2 h-max flex-shrink-0 -translate-x-4
+   flex-col  rounded-r-lg shadow-sm transition-all
+    ease-in-out
    ${$sidebar ? "w-1/12" : "w-1/6"}
    hidden md:flex md:text-lg lg:text-xl xl:text-2xl
  `}

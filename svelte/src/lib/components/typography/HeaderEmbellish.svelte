@@ -6,7 +6,7 @@
 </script>
 
 <div
-  class="ring-default md:flex-row flex flex-col items-center justify-between gap-2 rounded-lg bg-default p-2 shadow-sm md:p-4 "
+  class="ring-default bg-default flex flex-col items-center justify-between gap-2 rounded-lg p-2 shadow-sm md:flex-row md:p-4"
   in:fly={{ x: 5, duration: 400, easing: cubicOut }}
 >
   {@render children?.()}

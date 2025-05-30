@@ -24,7 +24,7 @@
 
   {#if showPopover}
     <div
-      class="absolute right-0 z-50 mt-2 w-64 space-y-2 rounded-xl bg-white p-4 shadow-lg ring ring-stone-300/50 dark:bg-stone-900 "
+      class="absolute right-0 z-50 mt-2 w-64 space-y-2 rounded-xl bg-white p-4 shadow-lg ring ring-stone-300/50 dark:bg-stone-900"
       use:clickOutside={() => (showPopover = false)}
     >
       <div class="flex items-center justify-between">
