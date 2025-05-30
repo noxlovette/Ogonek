@@ -13,14 +13,14 @@
   <div class="fixed inset-0 z-50 flex flex-col items-center justify-end">
     <!-- Backdrop -->
     <button
-      class="absolute inset-0 bg-black/40 backdrop-blur-md transition-opacity"
+      class="absolute inset-0 transition-opacity"
       onclick={() => mobileMenuOpen.false()}
       aria-label="Close menu"
     ></button>
 
     <!-- Slide-up menu panel -->
     <div
-      class="relative z-10 w-full max-w-md rounded-t-3xl bg-white/80 shadow-2xl ring-1 ring-black/5 backdrop-blur-xl transition-all dark:bg-stone-900/90 dark:ring-white/10"
+      class="relative z-10 w-full max-w-md rounded-t-3xl bg-white/20 shadow-2xl ring-1 ring-black/5 backdrop-blur-md transition-all dark:bg-stone-900/50 dark:ring-white/10"
     >
       <!-- Drag handle indicator -->
       <div

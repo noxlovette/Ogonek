@@ -48,9 +48,9 @@
     </H2>
   </div>
 </HeaderEmbellish>
-<div class="md: grid grid-cols-4 gap-4">
+<div class="gap-4 md:grid md:grid-cols-4">
   <TableOfContents />
-  <div class="markdown col-span-3">
+  <div class="markdown md:col-span-3">
     <!-- Input is sanitized with rehype -->
     {@html data.rendered}
   </div>

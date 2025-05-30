@@ -21,7 +21,7 @@
     class="selection:bg-cacao-500/20 caret-cacao-800 relative flex h-full w-full flex-col items-center font-medium dark:caret-stone-200"
   >
     <Header />
-    <div id="main" class="flex w-full flex-1 flex-row px-4">
+    <div id="main" class="flex w-full flex-1 flex-col px-3 md:flex-row md:px-4">
       {@render children?.()}
     </div>
     <Footer />

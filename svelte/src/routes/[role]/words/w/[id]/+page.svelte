@@ -66,7 +66,7 @@
         },
       })}
     >
-      <UniButton Icon={Share} type="submit" variant="outline">
+      <UniButton Icon={Share} fullWidth={true} type="submit" variant="outline">
         Share Deck
       </UniButton>
     </form>
@@ -97,6 +97,7 @@
       <UniButton
         Icon={isSubscribed === true ? UserRoundMinus : UserRoundPlus}
         type="submit"
+        fullWidth={true}
         variant="outline"
       >
         {isSubscribed ? "Unsubscribe" : "Subscribe"}
