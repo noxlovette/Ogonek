@@ -40,7 +40,7 @@
       <UniButton
         Icon={Pencil}
         href="/t/lessons/l/{data.lesson.id}/edit"
-        variant="outline">Edit</UniButton
+        variant="secondary">Edit</UniButton
       >
     {/if}
     <H2>

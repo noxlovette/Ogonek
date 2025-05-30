@@ -107,7 +107,7 @@
       >
         <a
           href="/"
-          class="bg-cacao-500 hover:bg-cacao-600 rounded-lg px-4 py-2.5 text-center font-medium text-white shadow-sm transition-colors"
+          class="bg-cacao-500 hover:bg-cacao-600 rounded-lg px-4 py-2.5 text-center font-medium text-stone-50 shadow-sm transition-colors"
         >
           Back to Home Page
         </a>

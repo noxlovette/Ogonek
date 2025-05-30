@@ -113,7 +113,7 @@
             </p>
             <button
               type="button"
-              class="bg-cacao-500 hover:bg-cacao-600 focus:ring-cacao-500 dark:bg-cacao-600 dark:hover:bg-cacao-700 mt-6 inline-flex items-center rounded-lg px-4 py-2 text-sm font-medium text-white shadow-sm transition focus:ring-2 focus:ring-offset-2 focus:outline-none dark:focus:ring-offset-stone-900"
+              class="bg-cacao-500 hover:bg-cacao-600 focus:ring-cacao-500 dark:bg-cacao-600 dark:hover:bg-cacao-700 mt-6 inline-flex items-center rounded-lg px-4 py-2 text-sm font-medium text-stone-50 shadow-sm transition focus:ring-2 focus:ring-offset-2 focus:outline-none dark:focus:ring-offset-stone-900"
               onclick={addCard}
             >
               <Plus class="mr-2 h-4 w-4" />
@@ -181,7 +181,7 @@
             type="button"
             onclick={showImportModal}
             Icon={UploadCloud}
-            variant="outline">Import</UniButton
+            variant="ghost">Import</UniButton
           >
           <UniButton variant="secondary" Icon={Ban} href=".">Cancel</UniButton>
           <UniButton variant="primary" type="submit" Icon={Check}
