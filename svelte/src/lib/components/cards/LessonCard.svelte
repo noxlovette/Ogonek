@@ -22,8 +22,8 @@
   const href =
     role === "t" ? `/t/lessons/l/${lesson.id}` : `/s/lessons/l/${lesson.id}`;
 
-  const title = role == "t" ? lesson.title : formattedDate;
-  const subtitle = lesson.topic;
+  const subtitle = role == "t" ? lesson.title : formattedDate;
+  const title = lesson.topic;
   const caption = $derived(rendered);
 </script>
 
