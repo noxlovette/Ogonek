@@ -1,3 +1,4 @@
+import logger from "$lib/logger";
 import { json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
 
