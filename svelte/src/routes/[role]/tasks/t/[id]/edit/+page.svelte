@@ -80,7 +80,7 @@
       placeholder="Due Date"
     ></Input>
     <div class="mt-2 self-end">
-      <Toggler bind:value={task.completed} />
+      <Toggler value={task.completed} />
     </div>
   </div>
 </form>

@@ -1,9 +1,7 @@
 <script lang="ts">
-  import { studentStore } from "$lib/stores";
+  import { studentStore, assigneeStore, user } from "$lib/stores";
   import { Label } from "$lib/components/typography";
-
   type Assignable = { assignee?: string };
-
   let { item }: { item: Assignable } = $props();
 </script>
 
@@ -21,7 +19,9 @@
           assignee: student.id,
           studentTelegramId: student.studentTelegramId,
         })}
-        selected={student.id === item.assignee}
+        selected={item.assignee === $user.id
+          ? student.id === $assigneeStore
+          : student.id === item.assignee}
       >
         {student.name}
       </option>
