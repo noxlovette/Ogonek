@@ -25,8 +25,8 @@
       : `/s/tasks/t/${task.id}`;
 
   const title: string = task.title;
-  const subtitle: string = `Due ${formattedDate}`;
+  const badgeText: string = `Due ${formattedDate}`;
   const urgency = getUrgency(task);
 </script>
 
-<CardClickable {href} {title} {subtitle} {urgency} />
+<CardClickable {href} {title} {badgeText} {urgency} />

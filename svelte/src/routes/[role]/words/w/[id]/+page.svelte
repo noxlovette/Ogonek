@@ -14,6 +14,7 @@
   import { notification, user } from "$lib/stores";
   import { Pencil, Share, UserRoundMinus, UserRoundPlus } from "lucide-svelte";
   import { enhanceForm } from "$lib/utils";
+  import Badge from "$lib/components/cards/Badge.svelte";
 
   let { data } = $props();
 
@@ -133,30 +134,28 @@
 
   <div class="h-full">
     <div class="sticky top-6">
-      <div class="bg-default ring-default space-y-3 rounded-lg p-3 shadow-sm">
-        <Label>Description</Label>
+      <div
+        class="bg-default ring-default flex flex-col space-y-3 rounded-lg p-3 shadow-sm"
+      >
+        <Label>Tags</Label>
         {#if deck.description}
-          <p class="text-lg">{deck.description}</p>
+          <div class="flex flex-wrap gap-x-1 gap-y-2">
+            {#each deck.description.split(";") as deckTag, index (index)}
+              <Badge badgeText={deckTag}></Badge>
+            {/each}
+          </div>
         {:else}
           <p class="text-stone-500 italic dark:text-stone-400">
-            No description available
+            No tags available
           </p>
         {/if}
 
-        {#if deck.visibility}
-          <div class="border-t border-stone-100 pt-4 dark:border-stone-700">
-            <Label>Info</Label>
-            <div class="flex items-center gap-2">
-              <GreySpan>
-                {deck.visibility}
-              </GreySpan>
-              <GreySpan>
-                {cards.length}
-                {cards.length === 1 ? "card" : "cards"}
-              </GreySpan>
-            </div>
-          </div>
-        {/if}
+        <div class="border-t border-stone-100 pt-4 dark:border-stone-700">
+          <GreySpan>
+            {cards.length}
+            {cards.length === 1 ? "card" : "cards"}
+          </GreySpan>
+        </div>
       </div>
     </div>
   </div>

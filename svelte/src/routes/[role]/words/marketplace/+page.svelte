@@ -8,7 +8,7 @@
   <H1>Public Decks</H1>
 </HeaderEmbellish>
 {#if data.decks.length > 0}
-  <grid class="grid gap-4 md:grid-cols-2">
+  <grid class="grid gap-4 md:grid-cols-3">
     {#each data.decks as deck (deck.id)}
       <DeckCard {deck} />
     {/each}

@@ -1,11 +1,13 @@
 <script lang="ts">
   import H3 from "../typography/H3.svelte";
   import type { UrgencyLevel } from "$lib/types";
+  import Badge from "./Badge.svelte";
 
   let {
     href,
     title = "Title",
-    subtitle = "Subtitle",
+    badgeText = "Badge",
+    badgeIterate = false,
     height = "150px",
     styling = "",
     prefetch = true,
@@ -14,25 +16,14 @@
   }: {
     href: string;
     title?: string;
-    subtitle?: string;
+    badgeText?: string;
+    badgeIterate?: boolean;
     height?: string;
     styling?: string;
     prefetch?: boolean;
     ariaLabel?: string;
     urgency?: UrgencyLevel;
   } = $props();
-  function getBadgeClass(urgency: string): string {
-    return (
-      {
-        overdue: "bg-red-500/20 text-red-800 dark:text-red-300 ring-red-400",
-        urgent:
-          "bg-orange-500/20 text-orange-800 dark:text-orange-300 ring-orange-400",
-        soon: "bg-yellow-500/20 text-yellow-800 dark:text-yellow-300 ring-yellow-400",
-        normal: "bg-sky-500/20 text-sky-700 dark:text-sky-300 ring-sky-400",
-      }[urgency] ?? ""
-    );
-  }
-  const badgeClass = getBadgeClass(urgency);
 </script>
 
 <a
@@ -56,24 +47,17 @@
     </H3>
   </div>
 
-  <!-- Due Date Badge -->
-  <div class="top-3 right-3 z-10 flex">
-    <span
-      class={`
-      inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium
-      ring-1 backdrop-blur-sm ring-inset
-      ${badgeClass}
-    `}
-    >
-      {urgency === "overdue"
-        ? "⚠️ OVERDUE"
-        : urgency === "urgent"
-          ? "🔥 DUE TODAY"
-          : urgency === "soon"
-            ? "⏰ DUE SOON"
-            : subtitle}
-    </span>
-  </div>
+  {#if badgeIterate}
+    <div class="inline-flex gap-1">
+      {#each badgeText.split(";") as badgeCnunk, index (index)}
+        <Badge badgeText={badgeCnunk} {urgency}></Badge>
+      {:else}
+        <Badge {badgeText} {urgency}></Badge>
+      {/each}
+    </div>
+  {:else}
+    <Badge {badgeText} {urgency}></Badge>
+  {/if}
 
   <!-- Animated glass shimmer effect -->
   <div
