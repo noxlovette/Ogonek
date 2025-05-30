@@ -87,7 +87,7 @@
       <div class="space-y-6">
         {#if updatedCards.length === 0}
           <div
-            class="flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-stone-300/30 bg-stone-50/30 p-12 text-center dark:border-stone-600/30 dark:bg-stone-900/50"
+            class="bg-default flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-stone-300/30 p-12 text-center dark:border-stone-600/30 dark:bg-stone-900/50"
           >
             <div class="mb-4 rounded-full bg-stone-100 p-4 dark:bg-stone-800">
               <svg
@@ -130,7 +130,7 @@
           <button
             type="button"
             onclick={addCard}
-            class="group hover:border-cacao-300 hover:text-cacao-500 dark:hover:border-cacao-700 dark:hover:text-cacao-400 mt-4 flex w-full items-center justify-center rounded-lg border-2 border-dashed border-stone-300/30 bg-stone-50/30 py-4 text-stone-500 transition dark:border-stone-600/30 dark:bg-stone-900/50 dark:text-stone-400"
+            class="group hover:border-cacao-300 hover:text-cacao-500 dark:hover:border-cacao-700 dark:hover:text-cacao-400 bg-default mt-4 flex w-full items-center justify-center rounded-lg border-2 border-dashed border-stone-300/30 py-4 text-stone-500 transition dark:border-stone-600/30 dark:bg-stone-900/50 dark:text-stone-400"
           >
             <Plus class="mr-2 h-5 w-5 transition group-hover:scale-110" />
             <span>Add Another Card</span>

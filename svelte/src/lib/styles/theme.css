@@ -10,6 +10,14 @@
 }
 
 @layer utilities {
+  .ring-default {
+    @apply ring ring-stone-100/60 dark:ring-stone-800/60;
+  }
+
+  .bg-default {
+    @apply bg-stone-50/30 dark:bg-stone-900/30;
+  }
+
   .text-frosted {
     position: relative;
   }

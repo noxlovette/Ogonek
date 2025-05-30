@@ -25,7 +25,7 @@
          ? "hover:bg-cacao-500 justify-center dark:hover:bg-stone-800"
          : "md:hover:translate-x-1"
      }
-    ${isActive ? " bg-cacao-500 text-cacao-50 dark:bg-cacao-600 dark:text-cacao-100 ring-cacao-700/40 shadow-inner ring-1" : ""}
+    ${isActive ? " bg-cacao-500 gradient-to-br from-cacao-50 text-cacao-50 dark:bg-cacao-600 dark:text-cacao-50 ring-cacao-700/40 shadow-inner ring-1" : ""}
    `}
 >
   {#if $sidebar}

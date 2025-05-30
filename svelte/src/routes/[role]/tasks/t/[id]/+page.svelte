@@ -76,12 +76,6 @@
 </HeaderEmbellish>
 
 <grid class="grid gap-4 md:grid-cols-4">
-  <div class="markdown md:col-span-3">
-    <!-- eslint-disable-next-line svelte/no-at-html -->
-    <!-- Input is sanitized with rehype -->
-    {@html rendered}
-  </div>
-
   <div class="flex flex-col items-center space-y-2">
     {#if files.length > 0}
       <div class="flex w-full flex-col space-y-2">
@@ -99,5 +93,10 @@
         <Multipart taskId={data.task.id} notify={true} />
       </div>
     {/if}
+  </div>
+  <div class="markdown md:col-span-3">
+    <!-- eslint-disable-next-line svelte/no-at-html -->
+    <!-- Input is sanitized with rehype -->
+    {@html rendered}
   </div>
 </grid>

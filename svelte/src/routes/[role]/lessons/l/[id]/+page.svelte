@@ -1,5 +1,12 @@
 <script lang="ts">
-  import { UniButton, H1, H2, H3, HeaderEmbellish } from "$lib/components";
+  import {
+    UniButton,
+    H1,
+    H2,
+    H3,
+    HeaderEmbellish,
+    TableOfContents,
+  } from "$lib/components";
 
   import { formatDate } from "@noxlovette/svarog";
   import type { PageData } from "./$types";
@@ -41,11 +48,13 @@
     </H2>
   </div>
 </HeaderEmbellish>
-<div class="markdown">
-  <!-- Input is sanitized with rehype -->
-  {@html data.rendered}
+<div class="md: grid grid-cols-4 gap-4">
+  <TableOfContents />
+  <div class="markdown col-span-3">
+    <!-- Input is sanitized with rehype -->
+    {@html data.rendered}
+  </div>
 </div>
-
 <svelte:head>
   <title>Lesson From {formattedDate}</title>
 </svelte:head>

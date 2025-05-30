@@ -41,18 +41,17 @@
   data-sveltekit-prefetch={prefetch ? "" : null}
   class={[
     styling,
-    `hover:ring-opacity-80 group relative flex flex-col
-     justify-between overflow-hidden rounded-xl 
-     px-4 py-5 shadow-md ring ring-stone-300/60 backdrop-blur-md transition-all duration-300 ease-out
-     hover:scale-[1.02] hover:shadow-lg hover:backdrop-blur-lg dark:ring-stone-600/60
-     
+    `group ring-default bg-default relative flex
+     flex-col justify-between overflow-hidden 
+     rounded-xl px-4 py-5 shadow-md backdrop-blur-md transition-all duration-300 ease-out
+     hover:scale-[1.02] hover:shadow-lg hover:backdrop-blur-lg 
   `,
   ].join(" ")}
   style={`height: ${height};`}
 >
   <!-- Title with glass effect -->
   <div class="relative z-10">
-    <H3 styling="text-gray-900 dark:text-white drop-shadow-sm">
+    <H3 styling="text-stone-900 dark:text-white drop-shadow-sm">
       {title}
     </H3>
   </div>

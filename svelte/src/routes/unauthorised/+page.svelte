@@ -21,7 +21,7 @@
       pass!
     </p>
 
-    <div class="mb-8 rounded-lg bg-stone-50/30 p-4">
+    <div class="bg-default mb-8 rounded-lg p-4">
       <p class="text-stone-500 italic">
         "HTTP 403: The bouncer said no. Maybe try bringing cookies next time?
         🍪"
