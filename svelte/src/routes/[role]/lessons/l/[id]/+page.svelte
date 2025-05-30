@@ -5,6 +5,7 @@
   import type { PageData } from "./$types";
   import { Pencil } from "lucide-svelte";
   import { page } from "$app/state";
+  import TableOfContents from "$lib/components/UI/TableOfContents.svelte";
 
   let role = $derived(page.params.role);
 
@@ -41,11 +42,13 @@
     </H2>
   </div>
 </HeaderEmbellish>
-<div class="markdown">
-  <!-- Input is sanitized with rehype -->
-  {@html data.rendered}
+<div class="md: grid grid-cols-4 gap-4">
+  <TableOfContents />
+  <div class="markdown col-span-3">
+    <!-- Input is sanitized with rehype -->
+    {@html data.rendered}
+  </div>
 </div>
-
 <svelte:head>
   <title>Lesson From {formattedDate}</title>
 </svelte:head>

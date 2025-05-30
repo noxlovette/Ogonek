@@ -33,7 +33,7 @@
           type="text"
           bind:value={$searchTerm}
           placeholder="Search..."
-          class="focus:border-cacao-400 focus:ring-cacao-500/20 dark:focus:border-cacao-500 dark:focus:ring-cacao-500/30 w-full rounded-2xl bg-white py-2.5 pr-10 pl-10 shadow-sm ring ring-stone-300/50 placeholder:text-stone-400 focus:ring-2 focus:outline-none dark:border-stone-600/30 dark:bg-stone-950 dark:ring-stone-600/50 dark:placeholder:text-stone-600"
+          class="focus:border-cacao-400 focus:ring-cacao-500/20 dark:focus:border-cacao-500 dark:focus:ring-cacao-500/30 w-full rounded-2xl bg-white py-2.5 pr-10 pl-10 shadow-sm ring ring-stone-300/50 placeholder:text-stone-400 focus:ring-2 focus:outline-none dark:border-stone-600/30 dark:bg-stone-950  dark:placeholder:text-stone-600"
         />
         {#if $searchTerm}
           <button
@@ -52,7 +52,7 @@
     <EmptySpace>Nothing Here</EmptySpace>
   {:else}
     <div
-      class="overflow-hidden rounded-lg bg-white shadow-sm ring ring-stone-300/50 dark:border-stone-600/30 dark:bg-stone-950 dark:ring-stone-600/50"
+      class="overflow-hidden rounded-lg bg-white shadow-sm ring ring-stone-300/50 dark:border-stone-600/30 dark:bg-stone-950 "
     >
       <div class="overflow-x-auto">
         <table class="w-full table-auto">
@@ -94,7 +94,7 @@
       </div>
 
       <div
-        class="flex items-center justify-between border-t border-stone-300/30 bg-stone-50/30 px-6 py-3 text-sm text-stone-500 dark:border-stone-600/30 dark:bg-stone-900/30 dark:text-stone-400"
+        class="flex items-center justify-between border-t border-stone-300/30 bg-stone-50/30 px-6 py-3 text-sm text-stone-500 dark:border-stone-600/30 dark:text-stone-400"
       >
         <div>
           Showing <span class="font-medium text-stone-700 dark:text-stone-300"

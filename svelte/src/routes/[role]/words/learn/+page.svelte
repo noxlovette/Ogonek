@@ -110,7 +110,7 @@
       </span>
     </HeaderEmbellish>
     <div
-      class="h-2.5 w-full overflow-hidden rounded-full ring ring-stone-300/40 dark:bg-stone-700 dark:ring-stone-600/50"
+      class="ring-defaultdark:bg-stone-700 h-2.5 w-full overflow-hidden rounded-full "
     >
       <div
         class="bg-cacao-600 dark:bg-cacao-600 h-2.5 rounded-full transition-all duration-150"
@@ -122,7 +122,7 @@
 
     <!-- Card container -->
     <div
-      class="grid min-h-[350px] w-full gap-4 rounded-lg p-4 ring ring-stone-300/40 transition-all md:grid-cols-3 dark:ring-stone-600/50"
+      class="ring-default transition-allgrid min-h-[350px] w-full gap-4 rounded-lg p-4 md:grid-cols-3 "
       in:slide={{ duration: 100, easing: quintOut }}
     >
       <div
@@ -168,7 +168,7 @@
                 <img
                   src={currentCard.mediaUrl}
                   alt={currentCard.front}
-                  class="max-h-[200px] rounded-lg object-contain shadow-sm ring-1 ring-stone-300/40 dark:ring-stone-600/50"
+                  class="max-h-[200px] rounded-lg object-contain shadow-sm ring-1 ring-stone-300/40 "
                 />
               </div>
             {/if}
@@ -184,7 +184,7 @@
                 <img
                   src={currentCard.mediaUrl}
                   alt={currentCard.front}
-                  class="max-h-[200px] rounded-lg object-contain shadow-sm ring-1 ring-stone-300/40 dark:ring-stone-600/50"
+                  class="max-h-[200px] rounded-lg object-contain shadow-sm ring-1 ring-stone-300/40 "
                 />
               </div>
             {/if}
@@ -195,7 +195,7 @@
       <div class="col-span-2 flex h-full md:col-span-1">
         {#if !showAnswer}
           <button
-            class="flex w-full flex-col items-center justify-center space-y-2 rounded-lg bg-stone-50/30 ring ring-stone-300/40 transition-colors hover:bg-stone-100 dark:bg-stone-800/30 dark:ring-stone-600/50 dark:hover:bg-stone-900"
+            class="ring-defaulttransition-colors flex w-full flex-col items-center justify-center space-y-2 rounded-lg bg-stone-50/30 hover:bg-stone-100 dark:bg-stone-800/30  dark:hover:bg-stone-900"
             onclick={() => (showAnswer = !showAnswer)}
           >
             <p>Flip</p>

@@ -86,7 +86,7 @@
       "text-stone-600 dark:text-stone-400 hover:bg-stone-100/60 dark:hover:bg-stone-800/60",
     link: "text-cacao-600 underline hover:text-cacao-800 p-0 ring-0 dark:text-cacao-300 dark:hover:text-cacao-100",
     outline:
-      "bg-transparent text-stone-800 ring-1 ring-stone-300 hover:bg-stone-50 dark:text-stone-200 dark:ring-stone-600/50 dark:hover:bg-stone-800",
+      "bg-transparent text-stone-800 ring-1 ring-stone-300 hover:bg-stone-50 dark:text-stone-200  dark:hover:bg-stone-800",
   };
 
   const shapeClasses = $derived(rounded ? "rounded-full" : "rounded-lg");

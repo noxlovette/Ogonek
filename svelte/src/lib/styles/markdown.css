@@ -1,80 +1,134 @@
 @layer components {
   .markdown {
-    @apply mx-auto my-4 w-full rounded-xl px-4 md:my-0;
-
+    @apply mx-auto w-full rounded-xl;
     > *:first-child {
       @apply mt-0;
     }
-
     h1,
     h2,
     h3 {
       @apply font-semibold tracking-tight;
     }
-
     h1 {
       @apply mt-8 mb-4 text-4xl font-semibold text-stone-900 dark:text-stone-50;
+      /* Add sky accent border */
+      @apply border-l-4 border-sky-500 pl-4 dark:border-sky-400;
     }
     h2 {
       @apply mt-6 mb-3 text-2xl font-medium text-stone-800 dark:text-stone-100;
+      /* Subtle sky background highlight */
+      @apply rounded-md bg-sky-50/50 px-3 py-1 dark:bg-sky-950/30;
     }
     h3 {
       @apply mt-4 mb-2 text-lg font-medium text-stone-700 dark:text-stone-200;
+      /* Sky text color for emphasis */
+      @apply text-sky-800 dark:text-sky-300;
     }
-
     p {
       @apply mb-4 text-[17px] leading-relaxed text-stone-800 dark:text-stone-300;
     }
-
     ul,
     ol {
       @apply my-2 ml-5 list-disc space-y-1.5;
     }
-
     li {
       @apply text-stone-700 dark:text-stone-300;
+      /* Sky bullet points */
+      list-style-type: none;
+      position: relative;
+      padding-left: 1.5rem;
     }
-
+    li::before {
+      content: "•";
+      @apply absolute left-0 font-bold text-sky-600 dark:text-sky-400;
+    }
     a {
-      @apply text-cacao-600 dark:text-cacao-400 underline-offset-2 transition-colors duration-200 hover:underline;
+      @apply text-sky-600 underline-offset-2 transition-all duration-200 hover:underline dark:text-sky-400;
+      /* Enhanced hover with sky background */
+      @apply rounded px-1 py-0.5 hover:bg-sky-100/50 hover:text-sky-700 dark:hover:bg-sky-900/30 dark:hover:text-sky-300;
     }
-
     blockquote {
-      @apply my-4 rounded-md border-l-4 border-stone-300 bg-stone-50/30 px-4 py-2 text-stone-700 italic dark:border-stone-600 dark:bg-stone-800/50 dark:text-stone-300;
+      @apply my-4 rounded-md border-l-4 border-sky-400 bg-sky-50/40 px-4 py-2 text-stone-700 italic dark:border-sky-500 dark:bg-sky-900/20 dark:text-stone-300;
+      /* Sky quote icon */
+      position: relative;
+      padding-left: 3rem;
     }
-
+    blockquote::before {
+      content: "";
+      @apply absolute top-2 left-4 font-serif text-3xl text-sky-500 dark:text-sky-400;
+    }
     pre {
       @apply my-6 overflow-x-auto rounded-xl bg-stone-900 p-4 text-sm text-stone-100 dark:bg-stone-950 dark:text-stone-50;
+      /* Sky accent border for code blocks */
+      @apply border-t-2 border-sky-500 dark:border-sky-400;
     }
-
     code {
-      @apply rounded bg-stone-100 px-1.5 py-0.5 font-mono text-sm text-stone-900 dark:bg-stone-800 dark:text-stone-50;
+      @apply rounded bg-sky-100/70 px-1.5 py-0.5 font-mono text-sm text-sky-900 dark:bg-sky-900/40 dark:text-sky-100;
+      /* Sky border for inline code */
+      @apply border border-sky-200 dark:border-sky-700;
     }
-
     hr {
-      @apply my-8 border-t border-stone-300/30 dark:border-stone-700;
+      @apply my-8 border-t-2 border-sky-300/50 dark:border-sky-600/50;
+      /* Sky gradient divider */
+      background: linear-gradient(
+        to right,
+        transparent,
+        rgb(14 165 233 / 0.5),
+        transparent
+      );
+      height: 2px;
+      border: none;
     }
-
     table {
-      @apply my-6 w-full border-collapse rounded-md;
+      @apply my-6 w-full border-collapse overflow-hidden rounded-md;
+      /* Sky table border */
+      @apply border border-sky-200 dark:border-sky-700;
     }
-
     th {
-      @apply border-b border-stone-300 bg-stone-100 px-3 py-2 text-left text-sm font-medium text-stone-900 dark:border-stone-600 dark:bg-stone-800 dark:text-stone-50;
+      @apply border-b border-sky-300 bg-sky-100 px-3 py-2 text-left text-sm font-medium text-sky-900 dark:border-sky-600 dark:bg-sky-800 dark:text-sky-50;
     }
-
     td {
-      @apply border-b border-stone-300/30 px-3 py-2 text-sm text-stone-700 dark:border-stone-700 dark:text-stone-300;
+      @apply border-b border-sky-200/30 px-3 py-2 text-sm text-stone-700 dark:border-sky-700/30 dark:text-stone-300;
+      /* Alternating sky row backgrounds */
     }
-
+    tr:nth-child(even) td {
+      @apply bg-sky-50/30 dark:bg-sky-950/20;
+    }
+    tr:hover td {
+      @apply bg-sky-100/50 transition-colors duration-200 dark:bg-sky-900/30;
+    }
     img {
       @apply my-6 h-auto max-w-full rounded-lg;
+      /* Sky image border on hover */
+      @apply transition-all duration-200 hover:ring-2 hover:ring-sky-300 dark:hover:ring-sky-600;
     }
-
     input[type="checkbox"] {
-      @apply mr-2 accent-blue-600 dark:accent-blue-400;
+      @apply mr-2 accent-sky-600 dark:accent-sky-400;
+      /* Enhanced checkbox styling */
+      @apply h-4 w-4 rounded border-sky-300 dark:border-sky-600;
     }
-
+    /* Focus states with sky colors */
+    a:focus,
+    input:focus,
+    button:focus {
+      @apply ring-2 ring-sky-500 ring-offset-2 outline-none dark:ring-sky-400 dark:ring-offset-stone-800;
+    }
+    /* Info callouts with sky styling */
+    .info-callout {
+      @apply my-4 rounded-lg border border-sky-200 bg-sky-50/70 px-4 py-3 dark:border-sky-700 dark:bg-sky-900/30;
+    }
+    .info-callout::before {
+      content: "ℹ️";
+      @apply mr-2 text-sky-600 dark:text-sky-400;
+    }
+    /* Warning callouts */
+    .warning-callout {
+      @apply my-4 rounded-lg border border-amber-200 bg-amber-50/70 px-4 py-3 dark:border-amber-700 dark:bg-amber-900/30;
+    }
+    .warning-callout::before {
+      content: "⚠️";
+      @apply mr-2 text-amber-600 dark:text-amber-400;
+    }
     * {
       @apply transition-colors duration-200;
     }
@@ -82,70 +136,70 @@
 
   .markdown-mini {
     @apply max-w-[60ch] px-1 text-[12px] leading-snug;
-
     h1 {
       @apply mt-2 mb-1 text-lg font-semibold text-stone-900 dark:text-stone-50;
+      /* Mini sky accent */
+      @apply border-l-2 border-sky-500 pl-2 dark:border-sky-400;
     }
     h2 {
-      @apply mt-2 mb-1 text-base font-medium text-stone-800 dark:text-stone-100;
+      @apply mt-2 mb-1 text-base font-medium text-sky-800 dark:text-sky-200;
     }
     h3 {
-      @apply mt-1 mb-0.5 text-sm font-medium text-stone-700 dark:text-stone-200;
+      @apply mt-1 mb-0.5 text-sm font-medium text-sky-700 dark:text-sky-300;
     }
-
     p {
       @apply mb-2 text-[12px] leading-snug text-stone-700 dark:text-stone-300;
     }
-
     ul,
     ol {
       @apply my-1 ml-2 list-disc space-y-1;
     }
-
     li {
       @apply text-[12px] text-stone-700 dark:text-stone-300;
+      /* Mini sky bullets */
+      list-style-type: none;
+      position: relative;
+      padding-left: 1rem;
     }
-
+    li::before {
+      content: "•";
+      @apply absolute left-0 text-[10px] text-sky-600 dark:text-sky-400;
+    }
     a {
-      @apply text-cacao-600 dark:text-cacao-400 text-[12px] underline underline-offset-2;
+      @apply text-[12px] text-sky-600 underline underline-offset-2 dark:text-sky-400;
+      @apply rounded px-0.5 hover:bg-sky-100/50 dark:hover:bg-sky-900/30;
     }
-
     blockquote {
-      @apply my-2 rounded border-l-2 border-stone-300 bg-stone-100 px-2 py-1 text-[12px] text-stone-700 italic dark:border-stone-600 dark:bg-stone-800/40 dark:text-stone-300;
+      @apply my-2 rounded border-l-2 border-sky-400 bg-sky-100/40 px-2 py-1 text-[12px] text-stone-700 italic dark:border-sky-500 dark:bg-sky-900/20 dark:text-stone-300;
     }
-
     pre {
       @apply my-2 overflow-x-auto rounded-md bg-stone-900 p-2 text-[11px] text-stone-100 dark:bg-stone-950 dark:text-stone-50;
+      @apply border-t border-sky-500 dark:border-sky-400;
     }
-
     code {
-      @apply rounded bg-stone-100 px-1 py-0.5 font-mono text-[11px] text-stone-900 dark:bg-stone-800 dark:text-stone-50;
+      @apply rounded bg-sky-100/60 px-1 py-0.5 font-mono text-[11px] text-sky-900 dark:bg-sky-900/40 dark:text-sky-100;
     }
-
     hr {
-      @apply my-1 border-t border-stone-300/30 dark:border-stone-700;
+      @apply my-1 border-t border-sky-300/40 dark:border-sky-600/40;
     }
-
     table {
-      @apply my-2 w-full border-collapse text-[11px];
+      @apply my-2 w-full border-collapse rounded border border-sky-200 text-[11px] dark:border-sky-700;
     }
-
     th {
-      @apply border-b border-stone-300 bg-stone-100 px-2 py-1 text-left font-medium text-stone-900 dark:border-stone-600 dark:bg-stone-800 dark:text-stone-50;
+      @apply border-b border-sky-300 bg-sky-100 px-2 py-1 text-left font-medium text-sky-900 dark:border-sky-600 dark:bg-sky-800 dark:text-sky-50;
     }
-
     td {
-      @apply border-b border-stone-300/30 px-2 py-1 text-stone-700 dark:border-stone-700 dark:text-stone-300;
+      @apply border-b border-sky-200/30 px-2 py-1 text-stone-700 dark:border-sky-700/30 dark:text-stone-300;
     }
-
+    tr:nth-child(even) td {
+      @apply bg-sky-50/20 dark:bg-sky-950/10;
+    }
     img {
       @apply my-2 h-auto max-w-full rounded;
     }
-
     input[type="checkbox"] {
-      @apply mr-1 accent-blue-600 dark:accent-blue-400;
+      @apply mr-1 accent-sky-600 dark:accent-sky-400;
     }
-
     * {
       @apply transition-colors duration-200;
     }

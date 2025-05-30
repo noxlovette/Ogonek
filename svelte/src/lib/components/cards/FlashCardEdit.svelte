@@ -15,7 +15,7 @@
 </script>
 
 <div
-  class="group relative rounded-lg bg-white p-3 shadow-sm ring ring-stone-300/40 transition-all hover:ring-stone-300 dark:bg-stone-900 dark:ring-stone-600/50 dark:hover:ring-stone-600"
+  class="group ring-default relative rounded-lg bg-white p-3 shadow-sm transition-all hover:ring-stone-300 dark:bg-stone-900  dark:hover:ring-stone-600"
   transition:fade
 >
   <button
