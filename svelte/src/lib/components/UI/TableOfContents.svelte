@@ -133,7 +133,7 @@
 </script>
 
 <div
-  class="sticky top-4 z-10 h-fit max-h-[calc(100vh-4rem)] overflow-y-auto rounded-lg px-3 backdrop-blur-sm"
+  class="top-4 z-10 h-fit max-h-[calc(100vh-4rem)] overflow-y-auto rounded-lg px-3 backdrop-blur-sm md:sticky"
 >
   {#if title}
     <div class="mb-3">

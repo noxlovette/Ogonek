@@ -103,8 +103,11 @@
         navigate: true,
       })}
     >
-      <UniButton Icon={PlusCircle} type="submit" variant="primary"
-        >New</UniButton
+      <UniButton
+        fullWidth={true}
+        Icon={PlusCircle}
+        type="submit"
+        variant="primary">New</UniButton
       >
     </form>
     <UniButton
