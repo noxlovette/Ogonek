@@ -11,6 +11,14 @@ echo -e "${YELLOW}🦀 Running Rust checks in axum folder...${NC}"
 # Navigate to axum folder and run Rust commands
 cd axum || { echo -e "${RED}❌ axum folder not found${NC}"; exit 1; }
 
+echo -e "${YELLOW}Updating cargo index...${NC}"
+cargo update
+if [ $? -ne 0 ]; then
+    echo -e "${RED}❌ Updating Rust failed${NC}"
+    cargo fmt
+fi
+
+
 echo -e "${YELLOW}Running cargo fmt...${NC}"
 cargo fmt --check
 if [ $? -ne 0 ]; then
@@ -39,6 +47,13 @@ cd ..
 echo -e "${YELLOW}⚡ Running Svelte checks in svelte folder...${NC}"
 
 cd svelte || { echo -e "${RED}❌ svelte folder not found${NC}"; exit 1; }
+echo -e "${YELLOW}Running pnpm update${NC}"
+pnpm format
+if [ $? -ne 0 ]; then
+    echo -e "${RED}❌ Svelte update failed${NC}"
+    exit 1
+fi
+
 
 echo -e "${YELLOW}Running pnpm format...${NC}"
 pnpm format
