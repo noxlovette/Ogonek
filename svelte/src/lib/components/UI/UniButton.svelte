@@ -73,7 +73,7 @@
   };
 
   const baseClasses =
-    "flex items-center justify-center rounded-lg transition-all duration-150 ease-in-out font-medium select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-cacao-400 disabled:cursor-not-allowed disabled:opacity-50 backdrop-blur-md";
+    "flex active:scale-95 items-center justify-center rounded-lg transition-all duration-150 ease-in-out font-medium select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-cacao-400 disabled:cursor-not-allowed disabled:opacity-50 backdrop-blur-md";
 
   const variantClasses = {
     primary:
