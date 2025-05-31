@@ -9,6 +9,7 @@ use axum::extract::State;
 use axum::extract::{Json, Query};
 use hyper::StatusCode;
 
+#[tracing::instrument]
 pub async fn fetch_recent_lessons(
     State(state): State<AppState>,
     claims: Claims,

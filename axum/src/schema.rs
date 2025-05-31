@@ -2,7 +2,7 @@ use crate::db::init::init_db;
 use crate::s3::init::init_s3;
 use aws_sdk_s3::Client as S3Client;
 use sqlx::postgres::PgPool;
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct AppState {
     pub db: PgPool,
     pub s3: S3Client,
