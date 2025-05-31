@@ -19,32 +19,11 @@ use tracing::{error, info_span};
 
 const REQUEST_ID_HEADER: &str = "x-request-id";
 
-#[tokio::main]
-async fn main() -> anyhow::Result<()> {
-    let cors = std::env::var("CORS").expect("CORS needs to be set");
+async fn run_server() -> anyhow::Result<()> {
     let _ = init_logging().await;
-
     let state = AppState::new().await?;
+    let cors = std::env::var("CORS").expect("CORS needs to be set");
     let cleanup_state = state.clone();
-    tokio::spawn(async move {
-        daily_cleanup(cleanup_state).await;
-    });
-
-    let _guard = sentry::init((
-        std::env::var("SENTRY_DSN").expect("SENTRY_DSN must be set"),
-        sentry::ClientOptions {
-            release: sentry::release_name!(),
-            environment: Some(
-                std::env::var("APP_ENV")
-                    .expect("APP_ENV must be set")
-                    .into(),
-            ),
-            // Capture user IPs and potentially sensitive headers when using HTTP server integrations
-            // see https://docs.sentry.io/platforms/rust/data-management/data-collected for more info
-            send_default_pii: true,
-            ..Default::default()
-        },
-    ));
 
     let protected_routes = Router::new()
         .nest(
@@ -68,6 +47,10 @@ async fn main() -> anyhow::Result<()> {
         .nest("/file", ogonek::api::routes::file_routes::file_routes())
         .layer(axum::middleware::from_fn(validate_api_key));
 
+    tokio::spawn(async move {
+        daily_cleanup(cleanup_state).await;
+    });
+
     let app = Router::new()
         .merge(protected_routes)
         .route("/health", get(health_check))
@@ -76,7 +59,7 @@ async fn main() -> anyhow::Result<()> {
         .layer(
             ServiceBuilder::new()
                 .layer(SetRequestIdLayer::new(
-                    HeaderName::from_static(REQUEST_ID_HEADER).clone(),
+                    HeaderName::from_static(REQUEST_ID_HEADER),
                     MakeRequestUuid,
                 ))
                 .layer(
@@ -101,7 +84,10 @@ async fn main() -> anyhow::Result<()> {
                 .layer(axum::extract::DefaultBodyLimit::max(100 * 1024 * 1024))
                 .layer(
                     CorsLayer::new()
-                        .allow_origin(cors.parse::<HeaderValue>().unwrap())
+                        .allow_origin(
+                            cors.parse::<HeaderValue>()
+                                .expect("CORS header values parsing failed"),
+                        )
                         .allow_methods([
                             Method::GET,
                             Method::POST,
@@ -113,10 +99,34 @@ async fn main() -> anyhow::Result<()> {
         );
 
     let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await?;
-
     axum::serve(listener, app).await?;
-
     Ok(())
+}
+
+fn main() {
+    let _guard = sentry::init((
+        std::env::var("SENTRY_DSN").expect("SENTRY_DSN must be set"),
+        sentry::ClientOptions {
+            release: sentry::release_name!(),
+            environment: Some(
+                std::env::var("APP_ENV")
+                    .expect("APP_ENV must be set")
+                    .into(),
+            ),
+            // Capture user IPs and potentially sensitive headers when using HTTP server integrations
+            // see https://docs.sentry.io/platforms/rust/data-management/data-collected for more info
+            send_default_pii: true,
+            ..Default::default()
+        },
+    ));
+
+    tokio::runtime::Builder::new_multi_thread()
+        .enable_all()
+        .build()
+        .expect("Tokio build runtime failed")
+        .block_on(async {
+            let _ = run_server().await;
+        });
 }
 
 async fn handler_404() -> impl IntoResponse {
