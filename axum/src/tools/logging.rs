@@ -25,6 +25,7 @@ pub async fn init_logging() -> anyhow::Result<()> {
     if std::env::var("LOG_FORMAT").as_deref() == Ok("json") {
         registry
             .with(fmt::layer().json().with_current_span(false))
+            .with(sentry::integrations::tracing::layer())
             .try_init()
             .map_err(|e| anyhow::anyhow!("Failed to initialize JSON logging: {}", e))?;
     } else {
@@ -38,6 +39,7 @@ pub async fn init_logging() -> anyhow::Result<()> {
                     .with_ansi(atty::is(atty::Stream::Stdout))
                     .compact(),
             )
+            .with(sentry::integrations::tracing::layer())
             .try_init()
             .map_err(|e| anyhow::anyhow!("Failed to initialize pretty logging: {}", e))?;
     }

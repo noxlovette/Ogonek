@@ -1,5 +1,5 @@
 use axum::{
-    http::{HeaderName, HeaderValue, Method, Request, StatusCode},
+    http::{HeaderName, HeaderValue, Method, StatusCode},
     response::IntoResponse,
     routing::get,
     Router,
@@ -13,9 +13,7 @@ use tower_http::{
     cors::CorsLayer,
     request_id::{MakeRequestUuid, PropagateRequestIdLayer, SetRequestIdLayer},
     timeout::TimeoutLayer,
-    trace::TraceLayer,
 };
-use tracing::{error, info_span};
 
 const REQUEST_ID_HEADER: &str = "x-request-id";
 
@@ -62,21 +60,6 @@ async fn run_server() -> anyhow::Result<()> {
                     HeaderName::from_static(REQUEST_ID_HEADER),
                     MakeRequestUuid,
                 ))
-                .layer(
-                    TraceLayer::new_for_http().make_span_with(|request: &Request<_>| {
-                        let request_id = request.headers().get(REQUEST_ID_HEADER);
-                        match request_id {
-                            Some(request_id) => info_span!(
-                                "http_request",
-                                request_id = ?request_id
-                            ),
-                            None => {
-                                error!("could not extract request_id");
-                                info_span!("http_request")
-                            }
-                        }
-                    }),
-                )
                 .layer(PropagateRequestIdLayer::new(HeaderName::from_static(
                     REQUEST_ID_HEADER,
                 )))
@@ -95,7 +78,8 @@ async fn run_server() -> anyhow::Result<()> {
                             Method::PUT,
                             Method::PATCH,
                         ]),
-                ),
+                )
+                .layer(sentry_tower::SentryHttpLayer::new().enable_transaction()),
         );
 
     let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await?;
@@ -108,6 +92,10 @@ fn main() {
         std::env::var("SENTRY_DSN").expect("SENTRY_DSN must be set"),
         sentry::ClientOptions {
             release: sentry::release_name!(),
+            traces_sample_rate: std::env::var("SENTRY_TRACE_RATE")
+                .unwrap_or(1.0.to_string())
+                .parse::<f32>()
+                .unwrap_or(1.0),
             environment: Some(
                 std::env::var("APP_ENV")
                     .expect("APP_ENV must be set")

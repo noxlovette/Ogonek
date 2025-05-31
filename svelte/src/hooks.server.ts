@@ -1,3 +1,4 @@
+import { version } from "$app/environment";
 import { env } from "$env/dynamic/private";
 import logger from "$lib/logger";
 import redis from "$lib/redisClient";
@@ -13,13 +14,14 @@ import type {
 import { redirect } from "@sveltejs/kit";
 import { sequence } from "@sveltejs/kit/hooks";
 
-if (env.PUBLIC_APP_ENV !== "development") {
-  Sentry.init({
-    dsn: env.PUBLIC_SENTRY_DSN,
-    environment: env.PUBLIC_APP_ENV || "development",
-    tracesSampleRate: 1,
-  });
-}
+Sentry.init({
+  dsn: env.PUBLIC_SENTRY_DSN,
+  release: version,
+  environment: env.PUBLIC_APP_ENV || "development",
+  tracesSampleRate: env.PUBLIC_SENTRY_TRACING_RATE
+    ? Number(env.PUBLIC_SENTRY_TRACING_RATE)
+    : 1.0,
+});
 
 const PROTECTED_PATHS = new Set(["/t/", "/s/", "/auth/bind/"]);
 

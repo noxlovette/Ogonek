@@ -1,6 +1,6 @@
 [package]
 name = "ogonek"
-version = "1.3.0"
+version = "1.3.2"
 edition = "2021"
 
 
@@ -43,5 +43,6 @@ base64 = "0.22.1"
 aws-sdk-s3 = "1.79.0"
 aws-credential-types = "1.2.2"
 aws-config = "1.6.0"
-sentry = "0.38.1"
+sentry = {version ="0.38.1", features = ["tracing"]}
 atty = "0.2.14"
+sentry-tower = {version = "0.38.1", features = ["axum", "axum-matched-path", "http"]}
