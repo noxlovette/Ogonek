@@ -243,7 +243,7 @@
   {#if !preview}
     <!-- Toolbar -->
     <div
-      class="flex flex-wrap gap-2 rounded-lg border border-stone-300 bg-stone-50 p-2 dark:border-stone-700 dark:bg-stone-900"
+      class="bg-default bg-default ring-default flex flex-wrap gap-2 rounded-lg p-2"
     >
       <button
         onclick={() => insertMarkdown("**", "**", "bold text")}
@@ -350,7 +350,7 @@
           bind:value={markdownContent}
           onkeydown={handleKeyDown}
           class="
-          focus:border-cacao-500 focus:ring-cacao-500/20 min-h-[400px] w-full resize-none rounded-2xl border border-stone-300 bg-white px-4 py-2 font-mono text-base leading-relaxed text-stone-900 placeholder-stone-400 shadow-sm transition-all focus:shadow-md focus:ring-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60 dark:border-stone-700 dark:bg-stone-950 dark:text-stone-100
+          focus:border-cacao-500 focus:ring-cacao-500/20 ring-default min-h-[400px] w-full resize-none rounded-md bg-white px-4 py-2 font-mono text-base leading-relaxed text-stone-900 placeholder-stone-400 shadow-sm transition-all focus:shadow-md focus:ring-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60 dark:bg-stone-950 dark:text-stone-100
           "
           spellcheck="false"
           placeholder="Start typing your markdown here..."

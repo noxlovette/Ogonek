@@ -5,7 +5,7 @@
   let { item }: { item: Assignable } = $props();
 </script>
 
-<div class="flex flex-col space-y-1">
+<div class="relative flex flex-col space-y-1">
   <Label>Assignee</Label>
   <select
     id="assignee"

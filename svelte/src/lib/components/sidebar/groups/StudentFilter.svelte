@@ -17,7 +17,7 @@
       id="assignee"
       name="assignee"
       bind:value={$assigneeStore}
-      class="focus:border-cacao-500 focus:ring-cacao-500/20 dark:focus:border-cacao-500 dark:focus:ring-cacao-500/30 w-full appearance-none rounded-lg bg-white py-2 pr-10 pl-4 text-sm shadow-sm focus:ring-2 focus:outline-none dark:border-stone-600/30 dark:bg-stone-950"
+      class="focus:border-cacao-200 focus:ring-cacao-500/70 h-full w-full rounded-2xl border border-stone-100/60 bg-white px-4 py-2 text-base text-stone-900 placeholder-stone-400 shadow-sm transition-all focus:shadow-md focus:ring-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60 dark:border-stone-800/60 dark:bg-stone-950 dark:text-stone-100"
     >
       <option value="">All Students</option>
       {#each students as student (student.id)}

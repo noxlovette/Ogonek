@@ -7,15 +7,20 @@
   button {
     cursor: pointer;
   }
+  select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+  }
 }
 
 @layer utilities {
   .ring-default {
-    @apply ring ring-stone-100/60 dark:ring-stone-800/60;
+    @apply ring ring-stone-200/60 dark:ring-stone-800/60;
   }
 
   .bg-default {
-    @apply bg-stone-50/30 dark:bg-stone-900/30;
+    @apply bg-stone-100/20 dark:bg-stone-900/30;
   }
 
   .text-frosted {

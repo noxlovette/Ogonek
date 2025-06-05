@@ -246,7 +246,7 @@
       </p>
 
       <div
-        class="relative flex h-40 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-stone-300 bg-stone-50 px-4 py-6 dark:border-stone-700 dark:bg-stone-900"
+        class="bg-default relative flex h-40 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-stone-300 px-4 py-6 dark:border-stone-700"
       >
         <UploadCloud class="size-12 opacity-80" />
         <p class="text-stone-600 dark:text-stone-400">
