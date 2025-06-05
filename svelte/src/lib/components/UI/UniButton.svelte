@@ -72,21 +72,47 @@
     xl: "px-6 py-3 text-lg md:px-8",
   };
 
-  const baseClasses =
-    "flex active:scale-95 items-center justify-center rounded-lg transition-all duration-150 ease-in-out font-medium select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-cacao-400 disabled:cursor-not-allowed disabled:opacity-50 backdrop-blur-md";
+  const baseClasses = `
+  flex items-center justify-center
+  rounded-lg font-medium select-none
+  transition-all duration-200 ease-out
+  active:scale-[0.97] focus-visible:outline-none
+  focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-cacao-400
+  disabled:opacity-50 disabled:pointer-events-none
+  backdrop-blur-sm
+`;
 
   const variantClasses = {
-    primary:
-      "bg-gradient-to-br from-white/80 transition-colors to-stone-100/80 text-stone-900 shadow-sm ring-default  hover:from-white hover:to-stone-200 dark:from-stone-900/70 dark:to-stone-800/70 dark:text-stone-50 dark:hover:from-stone-800 dark:hover:to-stone-700",
-    secondary:
-      "bg-white/70 text-stone-700 ring-default hover:bg-white shadow-sm dark:bg-stone-900/80 dark:text-stone-200 hover:dark:bg-stone-800 ",
-    danger:
-      "bg-gradient-to-br from-red-100/80 transition-colors to-red-200/80 text-red-800 hover:from-red-200 hover:to-red-300 ring ring-red-300/40 shadow-sm dark:from-red-700/70 dark:to-red-800/70 dark:text-stone-50 dark:hover:from-red-600 dark:hover:to-red-700",
-    ghost:
-      "text-stone-600 dark:text-stone-400 hover:bg-stone-100/60 dark:hover:bg-stone-800/60",
-    link: "text-cacao-600 underline hover:text-cacao-800 p-0 ring-0 dark:text-cacao-300 dark:hover:text-cacao-100",
-    outline:
-      "bg-transparent text-stone-800 ring-1 ring-stone-300 hover:bg-stone-50 dark:text-stone-200  dark:hover:bg-stone-800",
+    primary: `
+    bg-stone-100/60 text-stone-900 ring-1 ring-stone-200 shadow-sm
+    hover:bg-stone-200/40
+    dark:bg-stone-800 dark:text-white dark:ring-stone-700 dark:hover:bg-stone-700
+  `,
+    secondary: `
+    bg-white text-stone-700 ring-1 ring-stone-200 shadow-sm
+    hover:bg-stone-50
+    dark:bg-stone-900 dark:text-stone-200 dark:ring-stone-700 dark:hover:bg-stone-800
+  `,
+    danger: `
+    bg-red-100 text-red-800 ring-1 ring-red-300 shadow-sm
+    hover:bg-red-200
+    dark:bg-red-700 dark:text-white dark:ring-red-600 dark:hover:bg-red-600
+  `,
+    ghost: `
+    bg-transparent text-stone-600
+    hover:bg-stone-100
+    dark:text-stone-400 dark:hover:bg-stone-800
+  `,
+    link: `
+    text-cacao-600 underline underline-offset-2 ring-0 p-0
+    hover:text-cacao-800
+    dark:text-cacao-300 dark:hover:text-cacao-100
+  `,
+    outline: `
+    bg-transparent text-stone-800 ring-1 ring-stone-300
+    hover:bg-stone-50
+    dark:text-stone-200 dark:ring-stone-600 dark:hover:bg-stone-800
+  `,
   };
 
   const shapeClasses = $derived(rounded ? "rounded-full" : "rounded-lg");

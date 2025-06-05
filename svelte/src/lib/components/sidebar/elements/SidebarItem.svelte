@@ -32,7 +32,7 @@
   {target}
   {rel}
   class={`
-     inline-flex items-center rounded-lg px-2 py-1 transition-all
+     inline-flex items-center rounded-lg px-2 py-1 transition-transform 
      ${
        $sidebar
          ? "hover:bg-cacao-400 hover:text-cacao-50 justify-center dark:hover:bg-stone-800"
