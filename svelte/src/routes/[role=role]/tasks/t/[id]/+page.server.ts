@@ -1,3 +1,4 @@
+import logger from "$lib/logger";
 import { handleApiResponse, isSuccessResponse } from "$lib/server";
 import type { EmptyResponse, URLResponse } from "$lib/types";
 import type { Actions } from "@sveltejs/kit";
@@ -31,7 +32,9 @@ export const actions = {
     const formData = request.formData();
     const key = (await formData).get("key") as string;
     const encodedKey = btoa(key);
-    const response = await fetch(`/axum/s3/presign/${encodedKey}`);
+    logger.debug(key);
+    logger.debug(encodedKey);
+    const response = await fetch(`/axum/file/presigned/${encodedKey}`);
 
     if (!response.ok) {
       return fail(400, { error: "Failed to fetch file url" });
