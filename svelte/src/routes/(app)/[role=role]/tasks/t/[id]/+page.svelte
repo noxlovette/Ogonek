@@ -29,7 +29,7 @@
 </svelte:head>
 
 <HeaderEmbellish>
-  <div>
+  <div class="flex flex-col items-baseline gap-3 md:flex-row md:gap-4">
     <H1>{data.task.title}</H1>
     {#if role === "t"}
       <H3>
@@ -37,7 +37,7 @@
       </H3>
     {/if}
   </div>
-  <div class="flex items-center space-x-3">
+  <div class="flex items-center gap-3 md:gap-4">
     <form
       class="flex"
       method="post"
