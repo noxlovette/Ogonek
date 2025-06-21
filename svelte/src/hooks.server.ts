@@ -61,18 +61,15 @@ export const handle: Handle = sequence(
       throw redirect(302, "/auth/login");
     }
 
-    event.locals.user = user;
-    logger.debug("set user as locals");
-
     const isTeacherRoute = role === "t";
     const isStudentRoute = role === "s";
 
     if (isTeacherRoute && user.role !== "teacher") {
-      logger.info({ user }, "Redirecting to unauthorised as student");
+      logger.info("Redirecting to unauthorised as student");
       throw redirect(303, "/unauthorised");
     }
     if (isStudentRoute && user.role !== "student") {
-      logger.info({ user }, "Redirecting to unauthorised as teacher");
+      logger.info("Redirecting to unauthorised as teacher");
       throw redirect(303, "/unauthorised");
     }
 
@@ -144,16 +141,16 @@ async function handleTokenRefresh(event: RequestEvent) {
 }
 
 async function getUserFromToken(event: RequestEvent) {
-  logger.debug("getting user from token");
+  logger.debug("Getting user from token");
   const accessToken = event.cookies.get("accessToken");
   let user = null;
 
   if (accessToken) {
     try {
-      logger.debug("validating user from token");
+      logger.debug("Validating user from token");
       user = await ValidateAccess(accessToken);
     } catch (error) {
-      logger.debug({ error }, "attempting to refresh user from token");
+      logger.debug({ error }, "Attempting to refresh user from token");
       user = await handleTokenRefresh(event);
     }
   } else if (event.cookies.get("refreshToken")) {
