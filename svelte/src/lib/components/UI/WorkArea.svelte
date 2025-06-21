@@ -7,7 +7,7 @@
          flex-col gap-2
          rounded-lg bg-white
          ring-stone-300/40
-         md:-mt-3 md:gap-4 md:px-2
+         md:gap-4 md:px-2
          dark:bg-stone-950"
 >
   {@render children()}

@@ -1,6 +1,7 @@
 <script lang="ts">
   import LessonLine from "$lib/components/sidebar/groups/LessonLine.svelte";
-  import H2 from "$lib/components/typography/H2.svelte";
+
+  import { H3 } from "$lib/components/typography";
   import Group from "./Group.svelte";
   import { lessonStore } from "$lib/stores";
   import UniButton from "$lib/components/UI/UniButton.svelte";
@@ -8,7 +9,7 @@
 </script>
 
 <Group>
-  <H2>Recent Lessons</H2>
+  <H3>Recent Lessons</H3>
 
   <div class="grid gap-4">
     {#if $lessonStore.length === 0}

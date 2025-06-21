@@ -1,19 +1,19 @@
 <script lang="ts">
   import { sidebar } from "$lib/stores";
-
   import SidebarToggler from "../UI/interactive/SidebarToggler.svelte";
-  import type { Component } from "svelte";
+  import type { Component, Snippet } from "svelte";
 
-  let { elements }: { elements: Component[] } = $props();
+  let { elements, children }: { elements: Component[]; children?: Snippet } =
+    $props();
 </script>
 
 <div
   class={`
-   ring-default bg-default relative my-2 h-max flex-shrink-0 -translate-x-4
-   flex-col  rounded-r-lg shadow-sm transition-all
-    ease-in-out
-   ${$sidebar ? "w-1/12" : "w-1/6"}
-   hidden md:flex md:text-lg lg:text-xl xl:text-2xl
+   ring-default bg-default relative my-2 hidden h-max w-full
+   flex-shrink-0  -translate-x-4 flex-col rounded-r-lg
+    shadow-sm
+transition-all
+   ease-in-out md:flex md:text-lg lg:text-xl xl:text-2xl
  `}
 >
   <div class="w-full overflow-hidden py-2">
@@ -26,6 +26,7 @@
       {#each elements as Element, index (index)}
         <Element />
       {/each}
+      {@render children?.()}
     </ul>
   </div>
 </div>
