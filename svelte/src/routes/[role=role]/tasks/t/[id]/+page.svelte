@@ -47,12 +47,16 @@
           success: completed ? "Not Completed" : "Marked As Completed",
           defaultError: "Failed to mark as completed",
         },
+        handlers: {
+          success: async () => {
+            completed = !completed;
+          },
+        },
       })}
     >
       <UniButton
         variant="primary"
         type="submit"
-        onclick={() => (completed = !completed)}
         Icon={completed ? CheckSquare : Square}
       >
         {#if completed}
@@ -62,7 +66,7 @@
         {/if}
       </UniButton>
 
-      <input type="hidden" name="completed" value={completed} />
+      <input type="hidden" name="completed" value={!completed} />
       <input type="hidden" name="id" value={data.task.id} />
     </form>
     {#if role === "t"}

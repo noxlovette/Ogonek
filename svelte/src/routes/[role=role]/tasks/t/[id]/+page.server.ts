@@ -6,61 +6,189 @@ import { fail } from "@sveltejs/kit";
 
 export const actions = {
   complete: async ({ request, fetch }) => {
-    const formData = await request.formData();
-    const id = formData.get("id");
-    const completed = formData.get("completed") === "true";
-    const body = {
-      completed,
-      id,
-    };
+    const startTime = performance.now();
 
-    const response = await fetch(`/axum/task/t/${id}`, {
-      method: "PATCH",
-      body: JSON.stringify(body),
-    });
+    try {
+      const formData = await request.formData();
+      const id = formData.get("id");
+      const completed = formData.get("completed") === "true";
+      logger.info({ id, completed }, "Form Data Received");
+      // Validate required fields early
+      if (!id) {
+        logger.warn("Task completion attempted without ID");
+        return fail(400, { message: "Task ID is required" });
+      }
 
-    const editResult = await handleApiResponse<EmptyResponse>(response);
-    if (!isSuccessResponse(editResult)) {
-      return fail(editResult.status, { message: editResult.message });
+      logger.info(
+        {
+          taskId: id,
+          completed,
+          timestamp: new Date().toISOString(),
+        },
+        "Updating task completion status",
+      );
+
+      const body = { completed, id };
+
+      const response = await fetch(`/axum/task/t/${id}`, {
+        method: "PATCH",
+        body: JSON.stringify(body),
+      });
+
+      const editResult = await handleApiResponse<EmptyResponse>(response);
+
+      if (!isSuccessResponse(editResult)) {
+        logger.error(
+          {
+            taskId: id,
+            completed,
+            status: editResult.status,
+            error: editResult.message,
+            duration: performance.now() - startTime,
+          },
+          "Task completion update failed",
+        );
+        return fail(editResult.status, { message: editResult.message });
+      }
+
+      logger.info(
+        {
+          taskId: id,
+          completed,
+          duration: performance.now() - startTime,
+        },
+        "Task completion updated successfully",
+      );
+
+      return { success: true };
+    } catch (error: any) {
+      logger.error("Unexpected error in task completion", {
+        error: error.message,
+        stack: error.stack,
+        duration: performance.now() - startTime,
+      });
+      return fail(500, { message: "Internal server error" });
     }
-
-    return {
-      success: true,
-    };
   },
+
   download: async ({ fetch, request }) => {
-    const formData = request.formData();
-    const key = (await formData).get("key") as string;
-    const encodedKey = btoa(key);
-    logger.debug(key);
-    logger.debug(encodedKey);
-    const response = await fetch(`/axum/file/presigned/${encodedKey}`);
+    const startTime = performance.now();
 
-    if (!response.ok) {
-      return fail(400, { error: "Failed to fetch file url" });
+    try {
+      const formData = await request.formData();
+      const key = formData.get("key") as string;
+
+      // Validate the key exists
+      if (!key) {
+        logger.warn("File download attempted without key");
+        return fail(400, { error: "File key is required" });
+      }
+
+      const encodedKey = btoa(key);
+
+      logger.info(
+        {
+          key: key.substring(0, 20) + "...", // Truncate for security
+          encodedKey: encodedKey.substring(0, 20) + "...",
+          timestamp: new Date().toISOString(),
+        },
+        "Generating presigned URL for file download",
+      );
+
+      const response = await fetch(`/axum/file/presigned/${encodedKey}`);
+
+      if (!response.ok) {
+        logger.error(
+          {
+            key: key.substring(0, 20) + "...",
+            status: response.status,
+            statusText: response.statusText,
+            duration: performance.now() - startTime,
+          },
+          "Failed to generate presigned URL",
+        );
+        return fail(response.status, {
+          error: "Failed to generate download URL",
+        });
+      }
+
+      const { url } = (await response.json()) as URLResponse;
+
+      logger.info(
+        {
+          key: key.substring(0, 20) + "...",
+          duration: performance.now() - startTime,
+        },
+        "Presigned URL generated successfully",
+      );
+
+      return { url, success: true };
+    } catch (error: any) {
+      logger.error(
+        {
+          error: error.message,
+          stack: error.stack,
+          duration: performance.now() - startTime,
+        },
+        "Unexpected error in file download",
+      );
+      return fail(500, { error: "Internal server error" });
     }
-
-    const { url } = (await response.json()) as URLResponse;
-    return {
-      url,
-      success: true,
-    };
   },
   deleteFile: async ({ request, fetch }) => {
-    const formData = await request.formData();
-    const id = formData.get("fileId");
+    const startTime = performance.now();
 
-    const response = await fetch(`/axum/file/${id}`, { method: "DELETE" });
+    try {
+      const formData = await request.formData();
+      const id = formData.get("fileId");
 
-    const deleteResult = await handleApiResponse<EmptyResponse>(response);
+      // More context = easier debugging
+      logger.info(
+        {
+          fileId: id,
+          userAgent: request.headers.get("user-agent"),
+          timestamp: new Date().toISOString(),
+        },
+        "Deleting file",
+      );
 
-    if (!isSuccessResponse(deleteResult)) {
-      return fail(deleteResult.status, { message: deleteResult.message });
+      const response = await fetch(`/axum/file/${id}`, { method: "DELETE" });
+      const deleteResult = await handleApiResponse<EmptyResponse>(response);
+
+      if (!isSuccessResponse(deleteResult)) {
+        // Log the actual error details - future you will thank you
+        logger.error(
+          {
+            fileId: id,
+            status: deleteResult.status,
+            error: deleteResult.message,
+            duration: performance.now() - startTime,
+          },
+          "File deletion failed",
+        );
+        return fail(deleteResult.status, { message: deleteResult.message });
+      }
+
+      logger.info(
+        {
+          fileId: id,
+          duration: performance.now() - startTime,
+        },
+        "File deleted successfully",
+      );
+
+      return { success: true, message: "File deleted" };
+    } catch (error: any) {
+      // Catch any unexpected errors
+      logger.error(
+        {
+          error: error.message,
+          stack: error.stack,
+          duration: performance.now() - startTime,
+        },
+        "Unexpected error in deleteFile",
+      );
+      return fail(500, { message: "Internal server error" });
     }
-
-    return {
-      success: true,
-      message: "Deleted File",
-    };
   },
 } satisfies Actions;
