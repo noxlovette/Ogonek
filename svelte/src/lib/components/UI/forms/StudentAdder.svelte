@@ -8,8 +8,9 @@
   import { Caption } from "$lib/components/typography";
   import H4 from "$lib/components/typography/H4.svelte";
   import Toggler from "../interactive/Toggler.svelte";
-
+  
   let showPopover = false;
+  let generatedLink = "";
 </script>
 
 <div class="relative inline-block">
@@ -21,7 +22,6 @@
   >
     Invite Students
   </UniButton>
-
   {#if showPopover}
     <div
       class="absolute right-0 z-50 mt-2 w-64 space-y-2 rounded-xl bg-white p-4 shadow-lg ring ring-stone-300/50 dark:bg-stone-900"
@@ -37,7 +37,6 @@
           <X size={16} />
         </button>
       </div>
-
       <form
         method="POST"
         class="space-y-2"
@@ -45,20 +44,11 @@
           messages: { failure: "Failed to generate link" },
           handlers: {
             success: async (result) => {
-              const link = String(result.data?.link);
-              try {
-                await navigator.clipboard.writeText(link);
-                notification.set({
-                  message: "Link copied!",
-                  type: "success",
-                });
-                showPopover = false;
-              } catch {
-                notification.set({
-                  message: "Copy failed",
-                  type: "error",
-                });
-              }
+              generatedLink = String(result.data?.link);
+              notification.set({
+                message: "Link generated!",
+                type: "success",
+              });
             },
           },
         })}
@@ -74,6 +64,15 @@
           Generate Link
         </UniButton>
       </form>
+      
+      {#if generatedLink}
+        <div class="mt-3 p-2">
+          <Caption>Invite Link:</Caption>
+          <div class="text-xs text-stone-600 dark:text-stone-400 break-all mt-1">
+            {generatedLink}
+          </div>
+        </div>
+      {/if}
     </div>
   {/if}
 </div>

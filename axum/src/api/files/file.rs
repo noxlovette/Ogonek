@@ -24,7 +24,6 @@ pub async fn fetch_file(
 
 pub async fn fetch_presigned_url(
     State(state): State<AppState>,
-    claims: Claims,
     Path(encoded_key): Path<String>,
 ) -> Result<impl IntoResponse, APIError> {
     tracing::debug!("Reached the presign url endpoint");
@@ -44,7 +43,7 @@ pub async fn fetch_presigned_url(
         .unwrap();
     tracing::debug!("File ID decyphered");
     tracing::debug!(file_id);
-    let file = file::find_by_id(&state.db, file_id, &claims.sub).await?;
+    let file = file::find_by_id_no_owner(&state.db, file_id).await?;
     let presigned_url =
         get_presigned_url(&state.bucket_name, &state.s3, key_str, file.name).await?;
 
