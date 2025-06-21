@@ -48,7 +48,7 @@ echo -e "${YELLOW}⚡ Running Svelte checks in svelte folder...${NC}"
 
 cd svelte || { echo -e "${RED}❌ svelte folder not found${NC}"; exit 1; }
 echo -e "${YELLOW}Running pnpm update${NC}"
-pnpm format
+pnpm update 
 if [ $? -ne 0 ]; then
     echo -e "${RED}❌ Svelte update failed${NC}"
     exit 1
@@ -69,6 +69,9 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
+echo -e "${YELLOW}🧹 Cleaning dependencies...${NC}"
+rm -rf node_modules/.cache
+pnpm install --frozen-lockfile
 echo -e "${YELLOW}Running pnpm test...${NC}"
 pnpm test
 if [ $? -ne 0 ]; then
