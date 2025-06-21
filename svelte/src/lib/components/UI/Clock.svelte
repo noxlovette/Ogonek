@@ -26,6 +26,8 @@
   });
 </script>
 
-<div class="text-stone-600 oldstyle-nums tabular-nums lg:text-xl">
+<div
+  class="hidden text-stone-600 oldstyle-nums tabular-nums lg:text-xl xl:flex"
+>
   {formattedTime}
 </div>

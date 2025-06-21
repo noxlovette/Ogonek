@@ -9,11 +9,11 @@
 
 <div
   class={`
-   ring-default bg-default relative my-2 hidden h-max w-full
-   flex-shrink-0  -translate-x-4 flex-col rounded-r-lg
-    shadow-sm
-transition-all
-   ease-in-out md:flex md:text-lg lg:text-xl xl:text-2xl
+   ring-default bg-default relative my-2 flex h-max
+   w-full  flex-shrink-0 -translate-x-4 flex-col
+    rounded-r-lg
+shadow-sm
+   transition-all ease-in-out md:text-lg lg:text-xl xl:text-2xl
  `}
 >
   <div class="w-full overflow-hidden py-2">

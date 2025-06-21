@@ -8,11 +8,11 @@
   class={`
       relative
       order-last
-     -mr-8 hidden
-     flex-shrink-0 -translate-y-3 flex-col
-     transition-all
-     duration-150 ease-in-out
-     md:flex
+     -mr-8 
+     flex flex-shrink-0 -translate-y-3
+     flex-col
+     transition-all duration-150
+     ease-in-out
      md:text-lg lg:text-xl
      xl:text-2xl
    `}

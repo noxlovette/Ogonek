@@ -4,7 +4,7 @@
   import { user } from "$lib/stores";
   import type { Task, UrgencyLevel } from "$lib/types";
   import Badge from "./Badge.svelte";
-  import { H1, H3 } from "../typography";
+  import { H3 } from "../typography";
 
   let { task } = $props();
   function getUrgency(task: Task): UrgencyLevel {
@@ -26,7 +26,6 @@
       ? `/t/tasks/t/${task.id}`
       : `/s/tasks/t/${task.id}`;
 
-  const title: string = task.title;
   const badgeText: string = `Due ${formattedDate}`;
   const urgency = getUrgency(task);
 </script>

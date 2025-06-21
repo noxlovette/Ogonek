@@ -27,7 +27,6 @@
     Icon: ComponentType | undefined;
     iconPosition?: "left" | "right";
     fullWidth?: boolean;
-    rounded?: boolean;
     confirmText?: string | undefined;
     confirmTitle?: string | undefined;
     customColors?: string | undefined;
@@ -46,7 +45,6 @@
     Icon = undefined,
     iconPosition = "left",
     fullWidth = false,
-    rounded = false,
     confirmText = undefined,
     confirmTitle = undefined,
     onclick = undefined,
