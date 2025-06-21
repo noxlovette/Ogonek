@@ -21,32 +21,34 @@
 </script>
 
 <HeaderEmbellish>
-  <div>
+  <div class="flex items-baseline gap-3 md:gap-4">
     <H1>
       {#if role === "t"}
         {data.lesson.title}
       {:else}
-        Lesson From {formattedDate}
+        {data.lesson.topic}
       {/if}
     </H1>
     {#if role === "t"}
       <H3>
         {data.lesson.assigneeName}
       </H3>
+    {:else}
+      {formattedDate}
     {/if}
   </div>
-  <div class="flex items-center space-x-3">
-    {#if role === "t"}
+  {#if role === "t"}
+    <div class="flex items-center gap-3 md:gap-4">
+      <H2>
+        {data.lesson.topic}
+      </H2>
       <UniButton
         Icon={Pencil}
         href="/t/lessons/l/{data.lesson.id}/edit"
         variant="secondary">Edit</UniButton
       >
-    {/if}
-    <H2>
-      {data.lesson.topic}
-    </H2>
-  </div>
+    </div>
+  {/if}
 </HeaderEmbellish>
 <div class="gap-4 md:grid md:grid-cols-4">
   <TableOfContents />

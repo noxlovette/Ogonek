@@ -68,7 +68,7 @@
 >
   <HeaderEmbellish>
     <H1>Settings</H1>
-    <div class="flex gap-2">
+    <div class="flex gap-3 md:gap-4">
       <UniButton
         Icon={Key}
         variant="primary"

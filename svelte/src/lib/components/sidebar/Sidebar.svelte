@@ -19,8 +19,7 @@ transition-all
   <div class="w-full overflow-hidden py-2">
     <SidebarToggler></SidebarToggler>
     <ul
-      class={`
-    flex flex-col space-y-5 py-3 ${$sidebar ? "items-center space-y-6 py-2" : " divide-stone-200/40 px-3 dark:divide-stone-600/80"}
+      class={`flex flex-col gap-3 ${$sidebar ? "items-center space-y-6 py-2" : " divide-stone-200/40 px-3 dark:divide-stone-600/80"}
   `}
     >
       {#each elements as Element, index (index)}

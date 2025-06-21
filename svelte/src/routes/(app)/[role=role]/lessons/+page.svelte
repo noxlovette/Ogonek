@@ -62,23 +62,25 @@
 </script>
 
 <HeaderEmbellish>
-  <H1>Lessons</H1>
-  {#if role === "t"}
-    <form
-      action="?/new"
-      method="post"
-      use:enhance={enhanceForm({
-        messages: {
-          redirect: "New Lesson Created",
-        },
-        navigate: true,
-      })}
-    >
-      <UniButton Icon={PlusCircle} type="submit" variant="primary"
-        >New</UniButton
+  <div class="flex flex-col gap-3 md:flex-row md:gap-4">
+    <H1>Lessons</H1>
+    {#if role === "t"}
+      <form
+        action="?/new"
+        method="post"
+        use:enhance={enhanceForm({
+          messages: {
+            redirect: "New Lesson Created",
+          },
+          navigate: true,
+        })}
       >
-    </form>
-  {/if}
+        <UniButton Icon={PlusCircle} type="submit" variant="primary"
+          >New</UniButton
+        >
+      </form>
+    {/if}
+  </div>
 </HeaderEmbellish>
 {#if role === "t"}
   <Table

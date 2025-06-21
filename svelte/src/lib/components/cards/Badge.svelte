@@ -8,7 +8,8 @@
         urgent:
           "bg-orange-500/20 text-orange-800 dark:text-orange-300 ring-orange-400",
         soon: "bg-yellow-500/20 text-yellow-800 dark:text-yellow-300 ring-yellow-400",
-        normal: "bg-sky-500/20 text-sky-700 dark:text-sky-300 ring-sky-400",
+        normal:
+          "bg-sky-500/20 text-sky-700 dark:text-sky-400 dark:bg-sky-700/20 dark:ring-sky-600 ring-sky-400",
       }[urgency] ?? ""
     );
   }

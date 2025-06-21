@@ -25,10 +25,10 @@
 {#if $notification.message}
   <div
     transition:fade={{ duration: 250 }}
-    class="fixed top-5 left-1/2 z-50 flex max-w-sm -translate-x-1/2 items-center gap-3 rounded-2xl
-    border border-stone-200 bg-white/70 px-5 py-3 capitalize
-    shadow-xl
-    ring-1 ring-black/5 backdrop-blur-md dark:border-stone-800 dark:bg-stone-900/70 dark:ring-white/10"
+    class="fixed top-5 left-1/2 z-50 flex max-w-sm -translate-x-1/2 items-center gap-3 rounded-full
+  bg-white/70 px-5 py-3 capitalize shadow-xl ring ring-stone-200 ring-offset-2 ring-offset-stone-100
+    backdrop-blur-md
+ dark:border-stone-800 dark:bg-stone-900/70 dark:ring-white/10 dark:ring-offset-stone-800"
   >
     {#if $notification.type === "success"}
       <Check class="size-5 text-green-500" />

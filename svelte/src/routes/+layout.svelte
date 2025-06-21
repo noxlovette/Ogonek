@@ -20,13 +20,19 @@
   <div
     class="selection:bg-cacao-500/20 caret-cacao-800 relative flex h-full w-full flex-col items-center font-medium dark:caret-stone-200"
   >
-    <div id="main" class="flex w-full flex-1 flex-col px-3 md:px-4">
+    <div id="main" class="flex h-full w-full flex-1 flex-col p-3">
       {@render children?.()}
     </div>
     <Footer />
   </div>
+
   <Notification />
 </main>
+<h1
+  class="w-full bg-stone-100 text-center font-serif text-[20rem] text-stone-200 select-none dark:bg-stone-900 dark:text-stone-800"
+>
+  Ogonek
+</h1>
 
 <svelte:head>
   <title>Ogonek</title>

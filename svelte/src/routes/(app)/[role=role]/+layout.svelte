@@ -23,6 +23,7 @@
     setUser,
     setProfile,
     setTeacherData,
+    sidebar,
   } from "$lib/stores";
 
   import { page } from "$app/state";
@@ -52,9 +53,8 @@
   setTeacherData(data.teacherData);
 </script>
 
-<div class="flex flex-row py-2">
-  <div class="flex w-1/6 flex-col">
-    <a href="/" class="font-serif text-2xl font-bold">Ogonek</a>
+<div class="flex flex-row">
+  <div class="flex flex-col {$sidebar ? 'w-max' : 'w-1/6'}">
     <Sidebar elements={elementsLeft} />
   </div>
   <WorkArea>

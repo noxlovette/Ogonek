@@ -81,14 +81,16 @@
 </svelte:head>
 
 <HeaderEmbellish>
-  <H1>Flashcards</H1>
-  <H3>
-    {#if data.cards?.length}
-      {data.cards.length} cards due today
-    {:else}
-      All Caught Up!
-    {/if}
-  </H3>
+  <div class="flex flex-row items-baseline gap-3 md:gap-4">
+    <H1>Flashcards</H1>
+    <H3>
+      {#if data.cards?.length}
+        {data.cards.length} cards due today
+      {:else}
+        All Caught Up!
+      {/if}
+    </H3>
+  </div>
 
   <div class="flex flex-col gap-3 md:flex-row md:gap-4">
     <form

@@ -81,33 +81,35 @@
 </script>
 
 <HeaderEmbellish>
-  <H1>Tasks</H1>
-  <div class="flex gap-2">
-    {#if role == "t"}
-      <form
-        action="?/new"
-        method="post"
-        use:enhance={enhanceForm({
-          messages: {
-            redirect: "New Task Created",
-          },
-          navigate: true,
-        })}
-      >
-        <UniButton Icon={PlusCircle} type="submit" variant="primary"
-          >New</UniButton
+  <div class="flex gap-3 md:flex-row md:gap-4">
+    <H1>Tasks</H1>
+    <div class="flex gap-2">
+      {#if role == "t"}
+        <form
+          action="?/new"
+          method="post"
+          use:enhance={enhanceForm({
+            messages: {
+              redirect: "New Task Created",
+            },
+            navigate: true,
+          })}
         >
-      </form>
-    {/if}
+          <UniButton Icon={PlusCircle} type="submit" variant="primary"
+            >New</UniButton
+          >
+        </form>
+      {/if}
 
-    <UniButton
-      type="button"
-      onclick={toggleCompletedTasks}
-      variant="primary"
-      Icon={$completedStore === true ? EyeClosed : Eye}
-    >
-      {$completedStore === true ? "Hide Completed" : "Show Completed"}
-    </UniButton>
+      <UniButton
+        type="button"
+        onclick={toggleCompletedTasks}
+        variant="primary"
+        Icon={$completedStore === true ? EyeClosed : Eye}
+      >
+        {$completedStore === true ? "Hide Completed" : "Show Completed"}
+      </UniButton>
+    </div>
   </div>
 </HeaderEmbellish>
 {#if role === "t"}
