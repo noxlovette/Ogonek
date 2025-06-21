@@ -3,13 +3,32 @@
   import { enhance } from "$app/forms";
   import { clickOutside } from "$lib/actions";
   import { notification } from "$lib/stores";
-  import { PersonStanding, X } from "lucide-svelte";
+  import { PersonStanding, X, Copy } from "lucide-svelte";
   import UniButton from "../UniButton.svelte";
   import { Caption } from "$lib/components/typography";
   import H4 from "$lib/components/typography/H4.svelte";
   import Toggler from "../interactive/Toggler.svelte";
 
   let showPopover = false;
+  let generatedLink = "";
+  let linkInput: HTMLInputElement;
+
+  async function copyLink() {
+    try {
+      await navigator.clipboard.writeText(generatedLink);
+      notification.set({
+        message: "Link copied!",
+        type: "success",
+      });
+    } catch {
+      // Fallback: select the text for manual copy
+      linkInput?.select();
+      notification.set({
+        message: "Please copy manually",
+        type: "info",
+      });
+    }
+  }
 </script>
 
 <div class="relative inline-block">
@@ -21,7 +40,6 @@
   >
     Invite Students
   </UniButton>
-
   {#if showPopover}
     <div
       class="absolute right-0 z-50 mt-2 w-64 space-y-2 rounded-xl bg-white p-4 shadow-lg ring ring-stone-300/50 dark:bg-stone-900"
@@ -37,7 +55,6 @@
           <X size={16} />
         </button>
       </div>
-
       <form
         method="POST"
         class="space-y-2"
@@ -45,20 +62,11 @@
           messages: { failure: "Failed to generate link" },
           handlers: {
             success: async (result) => {
-              const link = String(result.data?.link);
-              try {
-                await navigator.clipboard.writeText(link);
-                notification.set({
-                  message: "Link copied!",
-                  type: "success",
-                });
-                showPopover = false;
-              } catch {
-                notification.set({
-                  message: "Copy failed",
-                  type: "error",
-                });
-              }
+              generatedLink = String(result.data?.link);
+              notification.set({
+                message: "Link generated!",
+                type: "success",
+              });
             },
           },
         })}
@@ -74,6 +82,28 @@
           Generate Link
         </UniButton>
       </form>
+
+      {#if generatedLink}
+        <div class="mt-3 space-y-1">
+          <Caption>Invite Link:</Caption>
+          <div class="flex items-center gap-1">
+            <input
+              bind:this={linkInput}
+              readonly
+              value={generatedLink}
+              class="flex-1 rounded border border-stone-300 bg-stone-50 p-2 font-mono text-xs text-stone-700 dark:border-stone-600 dark:bg-stone-800 dark:text-stone-300"
+            />
+            <button
+              type="button"
+              onclick={copyLink}
+              class="rounded p-2 text-stone-500 transition-colors hover:bg-stone-100 hover:text-stone-700 dark:hover:bg-stone-700 dark:hover:text-stone-300"
+              title="Copy link"
+            >
+              <Copy size={14} />
+            </button>
+          </div>
+        </div>
+      {/if}
     </div>
   {/if}
 </div>

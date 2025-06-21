@@ -1,11 +1,16 @@
-import { sentrySvelteKit } from "@sentry/sveltekit";
 import { sveltekit } from "@sveltejs/kit/vite";
-import { defineConfig } from "vite";
 
-export default defineConfig({
-  plugins: [sentrySvelteKit(), sveltekit()],
-  server: {
-    host: true,
-    port: 5173,
+export default {
+  plugins: [sveltekit()],
+  optimizeDeps: {
+    exclude: ["fsevents"],
   },
-});
+  build: {
+    rollupOptions: {
+      external: ["fsevents"],
+    },
+  },
+  ssr: {
+    noExternal: process.env.NODE_ENV === "production" ? ["@carbon/charts"] : [],
+  },
+};

@@ -11,8 +11,8 @@
   } from "$lib/components";
   import { invalidate } from "$app/navigation";
 
-  import { notification, user } from "$lib/stores";
-  import { Pencil, Share, UserRoundMinus, UserRoundPlus } from "lucide-svelte";
+  import { user } from "$lib/stores";
+  import { Pencil, UserRoundMinus, UserRoundPlus } from "lucide-svelte";
   import { enhanceForm } from "$lib/utils";
   import Badge from "$lib/components/cards/Badge.svelte";
 
@@ -38,44 +38,8 @@
 </svelte:head>
 <HeaderEmbellish>
   <H1>{deck.name}</H1>
+
   <div class="flex flex-col gap-2 md:flex-row">
-    <form
-      class="w-full"
-      method="POST"
-      action="?/share"
-      use:enhance={enhanceForm({
-        messages: {
-          failure: "Failed to generate link",
-        },
-        handlers: {
-          success: async (result) => {
-            const link = String(result.data?.link);
-            try {
-              await navigator.clipboard.writeText(link);
-              notification.set({
-                message: "Link copied to clipboard!",
-                type: "success",
-              });
-            } catch (e) {
-              console.error(e);
-              notification.set({
-                message: "Failed to copy link",
-                type: "error",
-              });
-            }
-          },
-        },
-      })}
-    >
-      <UniButton
-        Icon={Share}
-        fullWidth={true}
-        type="submit"
-        variant="secondary"
-      >
-        Share Deck
-      </UniButton>
-    </form>
     {#if $user.id === deck.createdBy}
       <UniButton variant="secondary" href="{deck.id}/edit" Icon={Pencil}
         >Edit</UniButton
@@ -99,7 +63,6 @@
       })}
     >
       <input type="hidden" name="isSubscribed" value={isSubscribed} />
-
       <UniButton
         Icon={isSubscribed === true ? UserRoundMinus : UserRoundPlus}
         type="submit"

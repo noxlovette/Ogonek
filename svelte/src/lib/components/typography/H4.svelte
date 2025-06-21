@@ -1,5 +1,5 @@
 <script lang="ts">
-  let { children, styling } = $props();
+  let { children, styling = "" } = $props();
 </script>
 
 <h4

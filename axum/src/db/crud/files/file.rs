@@ -20,6 +20,22 @@ pub async fn find_by_id(db: &PgPool, id: &str, user_id: &str) -> Result<File, Db
     Ok(file)
 }
 
+pub async fn find_by_id_no_owner(db: &PgPool, id: &str) -> Result<File, DbError> {
+    let file = sqlx::query_as!(
+        File,
+        r#"
+            SELECT * FROM files
+            WHERE id = $1
+            "#,
+        id,
+    )
+    .fetch_optional(db)
+    .await?
+    .ok_or_else(|| DbError::NotFound("File not found".into()))?;
+
+    Ok(file)
+}
+
 pub async fn update(
     db: &PgPool,
     file_id: &str,
