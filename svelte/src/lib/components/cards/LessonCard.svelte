@@ -3,6 +3,8 @@
   import { formatDate } from "@noxlovette/svarog";
   import CardClickable from "./CardClickable.svelte";
   import { page } from "$app/state";
+  import Badge from "./Badge.svelte";
+  import { H3 } from "../typography";
   interface Props {
     lesson: LessonSmall;
   }
@@ -18,4 +20,9 @@
   const title = lesson.topic;
 </script>
 
-<CardClickable {href} {title} {badgeText}></CardClickable>
+<CardClickable {href}>
+  <H3>
+    {title}
+  </H3>
+  <Badge {badgeText} />
+</CardClickable>

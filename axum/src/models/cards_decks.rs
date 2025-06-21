@@ -70,6 +70,7 @@ pub struct Deck {
     pub description: Option<String>,
     pub visibility: String,
     pub assignee: Option<String>,
+    pub is_subscribed: Option<bool>,
     pub created_by: String,
     #[serde_as(as = "Rfc3339")]
     pub created_at: OffsetDateTime,

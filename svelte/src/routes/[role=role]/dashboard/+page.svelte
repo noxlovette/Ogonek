@@ -18,7 +18,7 @@
 </HeaderEmbellish>
 
 <section class="space-y-4">
-  <H3>Recent Tasks</H3>
+  <H3>Tasks</H3>
   <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
     {#if tasks.length < 1}
       <EmptySpace>No Tasks</EmptySpace>
@@ -32,7 +32,7 @@
 </section>
 
 <section class="space-y-4">
-  <H3>Latest Lessons</H3>
+  <H3>Lessons</H3>
   <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
     {#if lessons.length < 1}
       <EmptySpace>No Lessons</EmptySpace>

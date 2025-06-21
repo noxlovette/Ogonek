@@ -3,6 +3,8 @@
   import CardClickable from "./CardClickable.svelte";
   import { user } from "$lib/stores";
   import type { Task, UrgencyLevel } from "$lib/types";
+  import Badge from "./Badge.svelte";
+  import { H1, H3 } from "../typography";
 
   let { task } = $props();
   function getUrgency(task: Task): UrgencyLevel {
@@ -29,4 +31,9 @@
   const urgency = getUrgency(task);
 </script>
 
-<CardClickable {href} {title} {badgeText} {urgency} />
+<CardClickable {href}>
+  <H3>
+    {task.title}
+  </H3>
+  <Badge {badgeText} {urgency} />
+</CardClickable>

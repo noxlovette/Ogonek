@@ -121,6 +121,7 @@ export interface CompositeStudent {
 
 export interface DeckSmall {
   id: string;
+  isSubscribed?: boolean;
   name: string;
   description: string;
 }
@@ -161,6 +162,7 @@ export interface Deck {
   name: string;
   description?: string;
   assignee: string;
+  isSubscribed: boolean;
   visibility: "public" | "private" | "assigned";
   createdBy: string;
   createdAt: string;

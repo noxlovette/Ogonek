@@ -39,6 +39,7 @@ pub async fn fetch_deck(
             name: deck.name,
             description: deck.description,
             visibility: deck.visibility,
+            is_subscribed: deck.is_subscribed,
             created_by: deck.created_by,
             assignee: deck.assignee,
             created_at: deck.created_at,
