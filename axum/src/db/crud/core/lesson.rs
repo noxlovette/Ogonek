@@ -65,7 +65,7 @@ pub async fn find_recent(db: &PgPool, user_id: &str) -> Result<Vec<LessonSmall>,
         FROM lessons
         WHERE (assignee = $1 OR created_by = $1)
         ORDER BY created_at DESC
-        LIMIT 6
+        LIMIT 3
         "#,
         user_id
     )
@@ -422,7 +422,7 @@ mod tests {
         assert!(result.is_ok());
 
         let lessons = result.unwrap();
-        assert_eq!(lessons.len(), 6); // Should be limited to 6
+        assert_eq!(lessons.len(), 3); // Should be limited to 6
 
         // Check that markdown is truncated to 100 characters
         for lesson in lessons {

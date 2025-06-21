@@ -81,8 +81,10 @@
 </script>
 
 <HeaderEmbellish>
-  <H1>Tasks</H1>
-  <div class="flex gap-2">
+  <div
+    class="flex flex-col items-center gap-3 md:flex-row md:items-center md:gap-4"
+  >
+    <H1>Tasks</H1>
     {#if role == "t"}
       <form
         action="?/new"

@@ -1,8 +1,9 @@
 <script lang="ts">
-  import { IntroCard, UniButton } from "$lib/components";
+  import { Header, IntroCard, UniButton } from "$lib/components";
   import { Flame, FlameKindling } from "lucide-svelte";
 </script>
 
+<Header />
 <div class="flex w-full flex-col items-center space-y-4 md:p-6">
   <h1 class="text-3xl font-bold tracking-tighter md:text-4xl lg:text-6xl">
     Welcome to <span class="font-serif italic">Ogonek</span>

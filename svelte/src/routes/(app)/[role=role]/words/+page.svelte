@@ -81,7 +81,7 @@
 </svelte:head>
 
 <HeaderEmbellish>
-  <div class="flex flex-col items-center md:items-start">
+  <div class="flex flex-col gap-3 md:flex-row md:items-baseline md:gap-4">
     <H1>Flashcards</H1>
     <H3>
       {#if data.cards?.length}
@@ -92,7 +92,7 @@
     </H3>
   </div>
 
-  <div class="flex flex-col gap-2 md:flex-row">
+  <div class="flex flex-col gap-3 md:flex-row md:gap-4">
     <form
       action="?/new"
       method="post"

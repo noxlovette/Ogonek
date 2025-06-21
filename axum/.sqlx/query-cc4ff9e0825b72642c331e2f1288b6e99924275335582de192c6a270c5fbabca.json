@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "\n        SELECT id, name, description, visibility, assignee, created_by, created_at FROM decks\n        WHERE id = $1 AND (\n            created_by = $2\n            OR assignee = $2\n            OR visibility = 'public'\n        )\n        ",
+  "query": "\n        SELECT \n        d.id, \n        d.name, \n        d.description, \n        d.visibility, \n        d.assignee, \n        d.created_by, \n        d.created_at,\n        EXISTS (\n            SELECT 1 FROM deck_subscriptions\n            WHERE deck_id = d.id AND user_id = $2\n        ) AS \"is_subscribed!\"\n    FROM decks d\n    WHERE d.id = $1 AND (\n        d.created_by = $2\n        OR d.assignee = $2\n        OR d.visibility = 'public'\n        OR EXISTS (\n            SELECT 1 FROM deck_subscriptions\n            WHERE deck_id = $1 AND user_id = $2\n        )\n    )\n    ",
   "describe": {
     "columns": [
       {
@@ -37,6 +37,11 @@
         "ordinal": 6,
         "name": "created_at",
         "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 7,
+        "name": "is_subscribed!",
+        "type_info": "Bool"
       }
     ],
     "parameters": {
@@ -52,8 +57,9 @@
       false,
       true,
       false,
-      false
+      false,
+      null
     ]
   },
-  "hash": "aba4fb1aefbc3afe276cc6cea1bb69c5d20d89cda5c0b86cde46339c5f6a5070"
+  "hash": "cc4ff9e0825b72642c331e2f1288b6e99924275335582de192c6a270c5fbabca"
 }

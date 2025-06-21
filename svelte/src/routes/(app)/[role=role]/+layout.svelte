@@ -23,11 +23,16 @@
     setUser,
     setProfile,
     setTeacherData,
+    sidebar,
+    mobileMenuOpen,
   } from "$lib/stores";
 
   import { page } from "$app/state";
   import { setContext } from "svelte";
   import type { Word, Student } from "$lib/types";
+  import ThemeToggler from "$lib/components/UI/interactive/ThemeToggler.svelte";
+  import Clock from "$lib/components/UI/Clock.svelte";
+  import { Menu } from "lucide-svelte";
 
   let { data, children } = $props();
   const role = page.params.role;
@@ -50,14 +55,29 @@
   setTeacherData(data.teacherData);
 </script>
 
-<Sidebar elements={elementsLeft} />
-<WorkArea>
-  {@render children?.()}
-</WorkArea>
-
-<Rightbar elements={elementsRight}></Rightbar>
-<MobileMenu elements={elementsLeft} />
-
+<div class="flex flex-row">
+  <div class=" hidden flex-col md:block {$sidebar ? 'w-max' : 'w-1/6'}">
+    <Sidebar elements={elementsLeft} />
+  </div>
+  <WorkArea>
+    {@render children?.()}
+  </WorkArea>
+  <div class="hidden w-1/6 pl-4 md:block">
+    <div class="flex items-baseline justify-between pb-5">
+      <Clock></Clock>
+      <ThemeToggler />
+    </div>
+    <Rightbar elements={elementsRight}></Rightbar>
+  </div>
+  <button
+    aria-label={$mobileMenuOpen ? "Close menu" : "Open menu"}
+    class="absolute right-0 z-50 flex flex-col items-center justify-center rounded-md p-2 transition-colors hover:bg-stone-200 md:hidden dark:hover:bg-stone-700"
+    onclick={() => mobileMenuOpen.toggle()}
+  >
+    <Menu />
+  </button>
+  <MobileMenu elements={elementsLeft} />
+</div>
 <svelte:head>
   <title>Tasks</title>
 </svelte:head>

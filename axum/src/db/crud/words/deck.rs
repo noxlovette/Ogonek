@@ -10,13 +10,19 @@ pub async fn find_all(
     params: &DeckFilterParams,
 ) -> Result<Vec<Deck>, DbError> {
     let mut query_builder = sqlx::QueryBuilder::new(
-        "SELECT id, name, description, visibility, assignee, created_by, created_at
-         FROM decks
-         WHERE (created_by = ",
+        "SELECT d.id, d.name, d.description, d.visibility, d.assignee, d.created_by, d.created_at,
+                EXISTS (
+                    SELECT 1 FROM deck_subscriptions s 
+                    WHERE s.deck_id = d.id AND s.user_id = ",
     );
-
     query_builder.push_bind(user_id);
-    query_builder.push(" OR assignee = ");
+    query_builder.push(
+        ") as is_subscribed
+        FROM decks d
+        WHERE (d.created_by = ",
+    );
+    query_builder.push_bind(user_id);
+    query_builder.push(" OR d.assignee = ");
     query_builder.push_bind(user_id);
     query_builder.push(")");
 
@@ -44,13 +50,29 @@ pub async fn find_by_id(db: &PgPool, deck_id: &str, user_id: &str) -> Result<Dec
     let deck = sqlx::query_as!(
         Deck,
         r#"
-        SELECT id, name, description, visibility, assignee, created_by, created_at FROM decks
-        WHERE id = $1 AND (
-            created_by = $2
-            OR assignee = $2
-            OR visibility = 'public'
+        SELECT 
+        d.id, 
+        d.name, 
+        d.description, 
+        d.visibility, 
+        d.assignee, 
+        d.created_by, 
+        d.created_at,
+        EXISTS (
+            SELECT 1 FROM deck_subscriptions
+            WHERE deck_id = d.id AND user_id = $2
+        ) AS "is_subscribed!"
+    FROM decks d
+    WHERE d.id = $1 AND (
+        d.created_by = $2
+        OR d.assignee = $2
+        OR d.visibility = 'public'
+        OR EXISTS (
+            SELECT 1 FROM deck_subscriptions
+            WHERE deck_id = $1 AND user_id = $2
         )
-        "#,
+    )
+    "#,
         deck_id,
         user_id
     )
@@ -59,6 +81,7 @@ pub async fn find_by_id(db: &PgPool, deck_id: &str, user_id: &str) -> Result<Dec
 
     Ok(deck)
 }
+
 pub async fn find_all_public(db: &PgPool) -> Result<Vec<DeckSmall>, DbError> {
     let decks = sqlx::query_as!(
         DeckSmall,

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import H2 from "$lib/components/typography/H2.svelte";
+  import { H3 } from "$lib/components/typography";
   import {
     Forvo,
     Dictionary,
@@ -11,7 +11,7 @@
 </script>
 
 <Group>
-  <H2>Useful Links</H2>
+  <H3>Useful Links</H3>
   <div class="flex-row space-y-2">
     {#each elements as Element, index (index)}
       <Element />

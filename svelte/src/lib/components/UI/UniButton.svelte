@@ -27,7 +27,6 @@
     Icon: ComponentType | undefined;
     iconPosition?: "left" | "right";
     fullWidth?: boolean;
-    rounded?: boolean;
     confirmText?: string | undefined;
     confirmTitle?: string | undefined;
     customColors?: string | undefined;
@@ -46,7 +45,6 @@
     Icon = undefined,
     iconPosition = "left",
     fullWidth = false,
-    rounded = false,
     confirmText = undefined,
     confirmTitle = undefined,
     onclick = undefined,
@@ -74,29 +72,31 @@
 
   const baseClasses = `
   flex items-center justify-center
-  rounded-lg font-medium select-none
+  hover:scale-[1.02]
+  rounded-full font-medium select-none
   transition-all duration-200 ease-out
   active:scale-[0.97] focus-visible:outline-none
-  focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-cacao-400
+  ring-offset-2
+  focus-visible:ring-2 focus-visible:ring-offset-3 focus-visible:ring-cacao-400
   disabled:opacity-50 disabled:pointer-events-none
   backdrop-blur-sm
 `;
 
   const variantClasses = {
     primary: `
-    bg-stone-100/60 text-stone-900 ring-1 ring-stone-200 shadow-sm
+    bg-stone-100/60 text-stone-900 ring-1 ring-stone-200 ring-offset-stone-100 dark:ring-offset-stone-800 shadow-md 
     hover:bg-stone-200/40
-    dark:bg-stone-800 dark:text-white dark:ring-stone-700 dark:hover:bg-stone-700
+    dark:bg-stone-800 dark:text-white dark:ring-stone-900 dark:hover:bg-stone-700
   `,
     secondary: `
-    bg-white text-stone-700 ring-1 ring-stone-200 shadow-sm
+    bg-white text-stone-700 ring-1 ring-stone-200 shadow-md dark:ring-offset-stone-800
     hover:bg-stone-50
     dark:bg-stone-900 dark:text-stone-200 dark:ring-stone-700 dark:hover:bg-stone-800
   `,
     danger: `
-    bg-red-100 text-red-800 ring-1 ring-red-300 shadow-sm
+    bg-red-100 text-red-800 ring-1 ring-red-300 ring-offset-red-200 shadow-md
     hover:bg-red-200
-    dark:bg-red-700 dark:text-white dark:ring-red-600 dark:hover:bg-red-600
+    dark:bg-red-700 dark:text-white dark:ring-red-600 dark:ring-offset-red-500 dark:hover:bg-red-600
   `,
     ghost: `
     bg-transparent text-stone-600
@@ -115,7 +115,6 @@
   `,
   };
 
-  const shapeClasses = $derived(rounded ? "rounded-full" : "rounded-lg");
   const widthClasses = $derived(fullWidth ? "w-full" : "");
 
   const allClasses = $derived(
@@ -123,7 +122,6 @@
       baseClasses,
       variantClasses[variant],
       sizeClasses[size],
-      shapeClasses,
       widthClasses,
       styling,
     ].join(" "),

@@ -23,7 +23,25 @@
 
 <svelte:head>
   <title>{title}</title>
-
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta
+    name="apple-mobile-web-app-status-bar-style"
+    content="black-translucent"
+  />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, viewport-fit=cover"
+  />
+  <meta
+    name="theme-color"
+    content="#fafaf9"
+    media="(prefers-color-scheme: light)"
+  />
+  <meta
+    name="theme-color"
+    content="#0c0a09"
+    media="(prefers-color-scheme: dark)"
+  />
   <meta name="description" content={description} />
   <meta name="keywords" content={keywords} />
   <meta name="robots" content={robots} />

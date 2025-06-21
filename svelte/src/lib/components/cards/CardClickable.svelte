@@ -1,28 +1,20 @@
 <script lang="ts">
-  import H3 from "../typography/H3.svelte";
-  import type { UrgencyLevel } from "$lib/types";
-  import Badge from "./Badge.svelte";
+  import type { Snippet } from "svelte";
 
   let {
     href,
-    title = "Title",
-    badgeText = "Badge",
-    badgeIterate = false,
+    children,
     height = "150px",
     styling = "",
     prefetch = true,
     ariaLabel = "",
-    urgency = "normal" as UrgencyLevel,
   }: {
     href: string;
-    title?: string;
-    badgeText?: string;
-    badgeIterate?: boolean;
     height?: string;
     styling?: string;
     prefetch?: boolean;
     ariaLabel?: string;
-    urgency?: UrgencyLevel;
+    children?: Snippet;
   } = $props();
 </script>
 
@@ -40,31 +32,5 @@
   ].join(" ")}
   style={`height: ${height};`}
 >
-  <!-- Title with glass effect -->
-  <div class="relative z-10">
-    <H3 styling="text-stone-900 dark:text-stone-50 drop-shadow-sm">
-      {title}
-    </H3>
-  </div>
-
-  {#if badgeIterate}
-    <div class="inline-flex gap-1">
-      {#each badgeText.split(";") as badgeCnunk, index (index)}
-        <Badge badgeText={badgeCnunk} {urgency}></Badge>
-      {:else}
-        <Badge {badgeText} {urgency}></Badge>
-      {/each}
-    </div>
-  {:else}
-    <Badge {badgeText} {urgency}></Badge>
-  {/if}
-
-  <!-- Animated glass shimmer effect -->
-  <div
-    class="
-    absolute inset-0 -top-2 -bottom-2 bg-gradient-to-br from-transparent
-    via-stone-50/10 to-transparent opacity-0 transition-opacity duration-300
-     group-hover:opacity-100
-  "
-  ></div>
+  {@render children?.()}
 </a>

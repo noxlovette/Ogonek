@@ -34,4 +34,3 @@ const createSidebarStore = (key: string) => {
 };
 
 export const sidebar = createSidebarStore("sidebar_collapsed");
-export const rightbar = createSidebarStore("rightbar_collapsed");

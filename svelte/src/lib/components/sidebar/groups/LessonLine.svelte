@@ -13,7 +13,7 @@
 </script>
 
 <a
-  class="flex-inline items-end justify-between space-y-1.5 transition-all hover:translate-x-1"
+  class="flex-inline items-end justify-between space-y-1.5 transition-all hover:scale-[1.02]"
   {href}
 >
   <p>

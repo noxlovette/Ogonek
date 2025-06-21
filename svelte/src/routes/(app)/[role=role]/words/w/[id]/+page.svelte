@@ -8,6 +8,7 @@
     GreySpan,
     HeaderEmbellish,
     EmptySpace,
+    H3,
   } from "$lib/components";
   import { invalidate } from "$app/navigation";
 
@@ -24,6 +25,11 @@
 
   let isSubscribed = $state(data.isSubscribed);
 
+  const assigneeName = $derived(
+    data.students.find((student) => student.id === data.deck.assignee)?.name ||
+      "Unassigned",
+  );
+
   const toggleCard = (cardId: string) => {
     flippedCards = new Set(
       flippedCards.has(cardId)
@@ -37,9 +43,13 @@
   <title>{deck.name} | Flashcards</title>
 </svelte:head>
 <HeaderEmbellish>
-  <H1>{deck.name}</H1>
-
-  <div class="flex flex-col gap-2 md:flex-row">
+  <div class="flex items-baseline gap-3 md:gap-4">
+    <H1>{deck.name}</H1>
+    <H3>
+      {assigneeName}
+    </H3>
+  </div>
+  <div class="flex flex-col gap-3 md:flex-row md:gap-4">
     {#if $user.id === deck.createdBy}
       <UniButton variant="secondary" href="{deck.id}/edit" Icon={Pencil}
         >Edit</UniButton

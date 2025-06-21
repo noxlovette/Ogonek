@@ -67,25 +67,27 @@
   action="?/update"
 >
   <HeaderEmbellish>
-    <H1>Settings</H1>
-    <div class="flex gap-2">
-      <UniButton
-        Icon={Key}
-        variant="primary"
-        onclick={() => {
-          disabled = !disabled;
-        }}
-        type="button"
-      >
-        {disabled ? "Edit" : "Editing..."}
-      </UniButton>
-      <UniButton
-        Icon={Check}
-        type="submit"
-        variant="primary"
-        disable={disabled}
-        formaction="?/update">Save</UniButton
-      >
+    <div class="flex flex-col gap-3 md:flex-row md:gap-4">
+      <H1>Settings</H1>
+      <div class="flex gap-3 md:gap-4">
+        <UniButton
+          Icon={Key}
+          variant="primary"
+          onclick={() => {
+            disabled = !disabled;
+          }}
+          type="button"
+        >
+          {disabled ? "Edit" : "Editing..."}
+        </UniButton>
+        <UniButton
+          Icon={Check}
+          type="submit"
+          variant="primary"
+          disable={disabled}
+          formaction="?/update">Save</UniButton
+        >
+      </div>
     </div>
   </HeaderEmbellish>
 
