@@ -20,8 +20,10 @@
 </script>
 
 <HeaderEmbellish>
-  <H1>Students</H1>
-  <StudentAdder></StudentAdder>
+  <div class="flex flex-col gap-3 md:flex-row md:gap-4">
+    <H1>Students</H1>
+    <StudentAdder></StudentAdder>
+  </div>
 </HeaderEmbellish>
 <Table config={studentConfig} {href} items={students} {students} />
 
