@@ -13,6 +13,21 @@ services:
       - ./svelte/.env
     depends_on:
       - axum
+
+  notifications:
+    build:
+      context: ./notifications
+      dockerfile: Dockerfile.dev
+    container_name: notifications-ogonek-dev
+    ports:
+      - "8000:3000"
+    volumes:
+      - ./notifications:/app
+    env_file:
+      - ./notifications/.env
+    depends_on:
+      postgres:
+        condition: service_healthy
   redis:
     image: redis/redis-stack:latest
     container_name: redis-ogonek-dev

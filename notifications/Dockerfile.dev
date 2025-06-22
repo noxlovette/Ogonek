@@ -1,0 +1,21 @@
+# Start from the official Go image
+FROM golang:latest
+
+# Install Air for live reload
+RUN go install github.com/air-verse/air@latest
+
+# Set working directory
+WORKDIR /app
+
+# Copy go.mod and go.sum first for caching deps
+COPY go.mod go.sum ./
+RUN go mod download
+
+# Copy the rest of the app
+COPY . .
+
+# Expose the port your Gin app runs on
+EXPOSE 3000
+
+# Default command: use Air for live reload
+CMD ["air"]
