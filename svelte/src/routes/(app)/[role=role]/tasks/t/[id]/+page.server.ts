@@ -15,7 +15,7 @@ export const actions = {
 
     try {
       const formData = await request.formData();
-      const id = formData.get("id");
+      const id = formData.get("id") as string;
       const completed = formData.get("completed") === "true";
       const username = formData.get("username") as string;
       const task = formData.get("task") as string;
@@ -29,7 +29,7 @@ export const actions = {
 
       if (teacherTelegramId && completed) {
         const telegramResponse = await notifyTelegram(
-          messages.completed({ task, username }),
+          messages.completed({ task, username, id }),
           teacherTelegramId,
         );
         if (!telegramResponse.ok) {

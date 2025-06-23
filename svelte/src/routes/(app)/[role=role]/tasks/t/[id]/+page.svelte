@@ -15,6 +15,8 @@
   import { formatDate } from "@noxlovette/svarog";
   import Multipart from "$lib/components/UI/interactive/Multipart.svelte";
   import { user, teacherData } from "$lib/stores/user";
+  import Badge from "$lib/components/cards/Badge.svelte";
+  import { getUrgency } from "$lib/utils";
 
   let { data } = $props();
   const { files, rendered } = $derived(data);
@@ -23,6 +25,8 @@
   let completed = $state(data.task.completed);
 
   let formattedDate = formatDate(data.task.createdAt);
+
+  const urgency = getUrgency(data.task);
 </script>
 
 <svelte:head>
@@ -37,6 +41,7 @@
         {data.task.assigneeName}
       </H3>
     {/if}
+    <Badge badgeText={formattedDate} {urgency}></Badge>
   </div>
   <div class="flex items-center gap-3 md:gap-4">
     <form
@@ -102,7 +107,7 @@
     {#if page.params.role === "s"}
       <div class="flex w-full flex-col space-y-2">
         <Label>Upload your HW here</Label>
-        <Multipart taskId={data.task.id} notify={true} />
+        <Multipart taskId={data.task.id} />
       </div>
     {/if}
   </div>

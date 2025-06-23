@@ -1,15 +1,20 @@
 type MessageMap = {
   teacherNotify: (params: { username: string }) => string;
-  completed: (params: { task: string; username: string }) => string;
+  completed: (params: { task: string; username: string; id: string }) => string;
   reminder: (params: { task: string; dueDate: string }) => string;
   deckCreated: (params: { title: string; id: string }) => string;
   taskCreated: (params: { title: string; id: string; date: string }) => string;
 };
 
 export const messages: MessageMap = {
-  teacherNotify: ({ username }) => `${username} needs homework`,
-  completed: ({ task, username }) =>
-    `${task} for ${username} has been completed`,
+  teacherNotify: ({ username }) =>
+    escapeMarkdownV2(
+      `${username.toUpperCase} needs homework. Add more on [Ogonek](https://ogonek.app/t/tasks)`,
+    ),
+  completed: ({ task, username, id }) =>
+    escapeMarkdownV2(
+      `${task} for ${username} has been completed. View the result on [Ogonek](https://ogonek.app/t/tasks/t/${id})`,
+    ),
   reminder: ({ task, dueDate }) =>
     `Don't forget to complete "${task}" by ${dueDate}`,
   deckCreated: ({ title, id }) =>

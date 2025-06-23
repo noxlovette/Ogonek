@@ -18,3 +18,17 @@ export function shuffleArray<T>(array: T[]): T[] {
   }
   return newArray;
 }
+
+import type { Task, UrgencyLevel } from "$lib/types";
+export function getUrgency(task: Task): UrgencyLevel {
+  const now = new Date();
+  const due = new Date(task.dueDate);
+  const diffDays = Math.ceil(
+    (due.getTime() - now.getTime()) / (1000 * 60 * 60 * 24),
+  );
+
+  if (diffDays < 1) return "overdue";
+  if (diffDays <= 1) return "urgent";
+  if (diffDays <= 3) return "soon";
+  return "normal";
+}
