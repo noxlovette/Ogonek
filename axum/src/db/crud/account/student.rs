@@ -90,7 +90,7 @@ pub async fn find_by_id_and_data(
     let tasks = sqlx::query_as!(
         TaskSmall,
         r#"
-        SELECT id, title, markdown, completed, due_date
+        SELECT id, title, priority, completed, due_date
         FROM tasks
         WHERE (created_by = $1 AND assignee = $2 AND completed = false)
         LIMIT 2

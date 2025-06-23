@@ -4,6 +4,7 @@ use serde_with::serde_as;
 use sqlx::prelude::FromRow;
 use time::format_description::well_known::Rfc3339;
 use time::OffsetDateTime;
+use validator::Validate;
 
 #[derive(Debug, Deserialize)]
 pub struct TaskPaginationParams {
@@ -31,12 +32,13 @@ impl TaskPaginationParams {
 }
 
 #[serde_with::serde_as]
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Validate)]
 #[serde(rename_all = "camelCase")]
 pub struct Task {
     pub id: String,
     pub title: String,
     pub markdown: String,
+    #[validate(range(min = 1, max = 3))]
     pub priority: i16,
     pub completed: bool,
     #[serde_as(as = "Rfc3339")]
@@ -56,7 +58,7 @@ pub struct Task {
 pub struct TaskSmall {
     pub id: String,
     pub title: String,
-    pub markdown: String,
+    pub priority: i16,
     pub completed: bool,
     #[serde_as(as = "Option<Rfc3339>")]
     pub due_date: Option<OffsetDateTime>,

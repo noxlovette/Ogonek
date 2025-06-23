@@ -1,14 +1,10 @@
 import {
   handleApiResponse,
   isSuccessResponse,
+  messages,
   notifyTelegram,
 } from "$lib/server";
-import type {
-  EmptyResponse,
-  NewResponse,
-  PaginatedResponse,
-  Task,
-} from "$lib/types";
+import type { NewResponse, PaginatedResponse, Task } from "$lib/types";
 import { fail, redirect, type Actions } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 
@@ -65,39 +61,17 @@ export const actions: Actions = {
   },
   requestHW: async ({ request }) => {
     const formData = await request.formData();
-    const username = formData.get("username");
+    const username = formData.get("username") as string;
     const teacherTelegramId = formData.get("teacherTelegramId") as string;
 
     if (teacherTelegramId) {
-      const message = `${username} needs homework`;
-
-      const telegramResponse = await notifyTelegram(message, teacherTelegramId);
+      const telegramResponse = await notifyTelegram(
+        messages.teacherNotify({ username }),
+        teacherTelegramId,
+      );
       if (telegramResponse.status !== 200) {
         return fail(400);
       }
     }
-  },
-  completed: async ({ request, fetch }) => {
-    const formData = await request.formData();
-    const id = formData.get("id");
-    const completed = formData.get("completed") === "true";
-    const body = {
-      completed,
-      id,
-    };
-
-    const response = await fetch(`/axum/task/t/${id}`, {
-      method: "PATCH",
-      body: JSON.stringify(body),
-    });
-
-    const editResult = await handleApiResponse<EmptyResponse>(response);
-    if (!isSuccessResponse(editResult)) {
-      return fail(editResult.status, { message: editResult.message });
-    }
-
-    return {
-      success: true,
-    };
   },
 };

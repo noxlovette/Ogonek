@@ -8,13 +8,13 @@
     H1,
     UniButton,
     AssigneeSelector,
-    Toggler,
     HeaderEmbellish,
     GreySpan,
     Multipart,
     Input,
   } from "$lib/components";
   import type { PageData } from "./$types";
+  import PrioritySlider from "$lib/components/UI/forms/PrioritySlider.svelte";
 
   let { data }: { data: PageData } = $props();
   let { task, files } = data;
@@ -39,8 +39,6 @@
   use:enhance={enhanceForm({
     messages: {
       redirect: "Changes Saved",
-      error: "Error",
-      failure: "Something's off",
     },
   })}
 >
@@ -80,7 +78,7 @@
       placeholder="Due Date"
     ></Input>
     <div class="mt-2 self-end">
-      <Toggler value={task.completed} />
+      <PrioritySlider priority={task.priority} />
     </div>
   </div>
 </form>

@@ -47,8 +47,8 @@ export interface File {
 export interface TaskSmall {
   id: string;
   title: string;
-  markdown: string;
   dueDate: string;
+  priority: number;
 }
 export interface Toast {
   message: string | null;

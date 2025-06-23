@@ -1,5 +1,10 @@
 import logger from "$lib/logger";
-import { handleApiResponse, isSuccessResponse } from "$lib/server";
+import {
+  handleApiResponse,
+  isSuccessResponse,
+  messages,
+  notifyTelegram,
+} from "$lib/server";
 import type { EmptyResponse, URLResponse } from "$lib/types";
 import type { Actions } from "@sveltejs/kit";
 import { fail } from "@sveltejs/kit";
@@ -10,13 +15,29 @@ export const actions = {
 
     try {
       const formData = await request.formData();
-      const id = formData.get("id");
+      const id = formData.get("id") as string;
       const completed = formData.get("completed") === "true";
+      const username = formData.get("username") as string;
+      const task = formData.get("task") as string;
+      const teacherTelegramId = formData.get("teacherTelegramId") as string;
       logger.info({ id, completed }, "Form Data Received");
       // Validate required fields early
       if (!id) {
         logger.warn("Task completion attempted without ID");
         return fail(400, { message: "Task ID is required" });
+      }
+
+      if (teacherTelegramId && completed) {
+        const telegramResponse = await notifyTelegram(
+          messages.completed({ task, username, id }),
+          teacherTelegramId,
+        );
+        if (!telegramResponse.ok) {
+          logger.error(
+            { telegramResponse },
+            "Error in notifying teacher task completed",
+          );
+        }
       }
 
       logger.info(

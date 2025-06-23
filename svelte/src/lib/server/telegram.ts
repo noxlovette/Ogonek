@@ -27,6 +27,7 @@ export async function notifyTelegram(
   }
 
   try {
+    logger.info({ message, addressee }, "Sending message");
     const response = await fetch(
       `https://api.telegram.org/bot${env.TELEGRAM_API}/sendMessage`,
       {

@@ -81,6 +81,7 @@
   })}
 >
   <input type="hidden" value={deck.id} name="id" />
+  <input type="hidden" value={deck.assignee} name="initialAssignee" />
 
   <div class="grid grid-cols-1 gap-6 lg:grid-cols-4">
     <div class="lg:col-span-3">

@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "\n        SELECT id,\n            title,\n            LEFT(markdown, 100) as \"markdown!\",\n            completed,\n            due_date\n        FROM tasks\n        WHERE (assignee = $1 OR created_by = $1)\n        AND completed = false\n        ORDER BY created_at DESC\n        LIMIT 3\n        ",
+  "query": "\n        SELECT id,\n            title,\n            priority,\n            completed,\n            due_date\n        FROM tasks\n        WHERE (assignee = $1 OR created_by = $1)\n        AND completed = false\n        ORDER BY created_at DESC\n        LIMIT 3\n        ",
   "describe": {
     "columns": [
       {
@@ -15,8 +15,8 @@
       },
       {
         "ordinal": 2,
-        "name": "markdown!",
-        "type_info": "Text"
+        "name": "priority",
+        "type_info": "Int2"
       },
       {
         "ordinal": 3,
@@ -37,10 +37,10 @@
     "nullable": [
       false,
       false,
-      null,
+      false,
       false,
       true
     ]
   },
-  "hash": "e6d1c2be10052a47dbe91245f20f919ca009b3913aca9f349211cfe407e6a72c"
+  "hash": "469a8f01bb3036f0cf9612a5f459bff6065d30711428ab49f7d0985cbc068107"
 }

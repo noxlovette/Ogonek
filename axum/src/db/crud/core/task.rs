@@ -234,7 +234,7 @@ pub async fn fetch_recent(db: &PgPool, user_id: &str) -> Result<Vec<TaskSmall>, 
         r#"
         SELECT id,
             title,
-            LEFT(markdown, 100) as "markdown!",
+            priority,
             completed,
             due_date
         FROM tasks
@@ -654,11 +654,6 @@ mod tests {
         // All tasks should be incomplete
         for task in &tasks {
             assert_eq!(task.completed, false);
-        }
-
-        // Check that markdown is truncated to 100 characters
-        for task in tasks {
-            assert!(task.markdown.len() <= 100);
         }
     }
 
