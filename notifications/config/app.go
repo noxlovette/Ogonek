@@ -1,3 +1,4 @@
+// config/app.go
 package config
 
 import (
@@ -8,27 +9,23 @@ import (
 )
 
 type App struct {
-
-	Logger       *zap.Logger
-	Env          *Env
+	Logger *zap.Logger
+	Env    *Env
 }
 
 func InitAppState(ctx context.Context) (*App, error) {
-
 	env := &Env{
 		DatabaseURL: utils.GetEnvVar("DATABASE_URL"),
 		TelegramAPI: utils.GetEnvVar("TELEGRAM_API"),
 	}
 
-	logger, err := zap.NewDevelopment()
+	logger, err := utils.NewLogger()
 	if err != nil {
 		return nil, err
 	}
 
-	
-
 	return &App{
-		Logger:       logger,
-		Env:          env, 
-}, nil
+		Logger: logger,
+		Env:    env,
+	}, nil
 }
