@@ -17,6 +17,7 @@
   import { user, teacherData } from "$lib/stores/user";
   import Badge from "$lib/components/cards/Badge.svelte";
   import { getUrgency } from "$lib/utils";
+  import Priority from "$lib/components/cards/Priority.svelte";
 
   let { data } = $props();
   const { files, rendered } = $derived(data);
@@ -41,6 +42,7 @@
         {data.task.assigneeName}
       </H3>
     {/if}
+    <Priority priority={data.task.priority}></Priority>
     <Badge badgeText={formattedDate} {urgency}></Badge>
   </div>
   <div class="flex items-center gap-3 md:gap-4">
