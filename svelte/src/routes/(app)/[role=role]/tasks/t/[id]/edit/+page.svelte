@@ -39,8 +39,6 @@
   use:enhance={enhanceForm({
     messages: {
       redirect: "Changes Saved",
-      error: "Error",
-      failure: "Something's off",
     },
   })}
 >

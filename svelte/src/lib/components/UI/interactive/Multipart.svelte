@@ -3,7 +3,6 @@
   import UniButton from "../UniButton.svelte";
   import { Ban, Check, Upload, X } from "lucide-svelte";
   import { Label } from "$lib/components/typography";
-  import { teacherData } from "$lib/stores";
   import logger from "$lib/logger";
 
   type UploadStatus = "waiting" | "uploading" | "complete" | "error";
@@ -40,12 +39,7 @@
     abortController?: AbortController;
   }
 
-  let {
-    taskId = null,
-    notify = false,
-    folderId = null,
-    onComplete = () => {},
-  } = $props();
+  let { taskId = null, folderId = null, onComplete = () => {} } = $props();
 
   let fileUploads: FileUploadState[] = $state([]);
 
@@ -177,7 +171,7 @@
 
       // 3. Complete the multipart upload
       const completeResponse = await fetch(
-        `/api/multipart/complete?taskId=${taskId}&notify=${notify}&teacherTelegramId=${$teacherData.teacherTelegramId}`,
+        `/api/multipart/complete?taskId=${taskId}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

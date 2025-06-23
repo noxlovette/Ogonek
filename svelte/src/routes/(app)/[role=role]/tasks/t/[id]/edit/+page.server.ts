@@ -1,6 +1,8 @@
-import { handleApiResponse, isSuccessResponse } from "$lib/server";
+import logger from "$lib/logger";
+import { handleApiResponse, isSuccessResponse, messages } from "$lib/server";
 import { notifyTelegram } from "$lib/server/telegram";
 import type { EmptyResponse } from "$lib/types";
+import { formatDate } from "@noxlovette/svarog";
 import type { Actions } from "@sveltejs/kit";
 import { error, fail, redirect } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
@@ -13,12 +15,17 @@ export const load: PageServerLoad = async ({ params }) => {
 
 export const actions = {
   update: async ({ request, fetch, params }) => {
-    const id = params.id;
+    const id = params.id || "";
+    logger.info({ id }, "Starting task update");
 
     const formData = await request.formData();
     const markdown = formData.get("markdown")?.toString() || "";
     const title = formData.get("title")?.toString() || "";
-    const dueDate = formData.get("dueDate")?.toString() || "";
+    const dueDate = formData.get("dueDate")?.toString();
+    if (!dueDate) {
+      logger.error({ dueDate }, "No due date. bailing out");
+      return fail(400, { message: "Add due date" });
+    }
     const completed = formData.has("completed");
     const filePath = formData.get("filePath")?.toString() || "";
 
@@ -52,11 +59,13 @@ export const actions = {
       return error(code || 400, message);
     }
 
-    const message = `You have a new task: "${title}"\\. You can view it on [Ogonek](https://Ogonek\\.app/s/tasks/t/${id})\\.`;
-
     if (studentTelegramId && initialAssignee !== assignee) {
-      const telegramResponse = await notifyTelegram(message, studentTelegramId);
+      const telegramResponse = await notifyTelegram(
+        messages.taskCreated({ title, id, date: formatDate(dueDate) }),
+        studentTelegramId,
+      );
       if (telegramResponse.status !== 404 && telegramResponse.status !== 200) {
+        logger.error({ id }, "No notification sent for task");
         return fail(400);
       }
     }
