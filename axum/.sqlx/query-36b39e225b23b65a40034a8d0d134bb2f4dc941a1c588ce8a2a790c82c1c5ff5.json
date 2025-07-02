@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "\n        SELECT id, title, topic, markdown, created_at\n        FROM lessons\n        WHERE (created_by = $1 AND assignee = $2)\n        ORDER BY created_at desc\n        LIMIT 2\n        ",
+  "query": "\n        SELECT id, title, topic, created_at\n        FROM lessons\n        WHERE (created_by = $1 AND assignee = $2)\n        ORDER BY created_at desc\n        LIMIT 2\n        ",
   "describe": {
     "columns": [
       {
@@ -20,11 +20,6 @@
       },
       {
         "ordinal": 3,
-        "name": "markdown",
-        "type_info": "Text"
-      },
-      {
-        "ordinal": 4,
         "name": "created_at",
         "type_info": "Timestamptz"
       }
@@ -39,9 +34,8 @@
       false,
       false,
       false,
-      false,
       false
     ]
   },
-  "hash": "b2a70048c174c2c61af40de46338dba7183e1f9ea49cf365a72fb7caa880ef4c"
+  "hash": "36b39e225b23b65a40034a8d0d134bb2f4dc941a1c588ce8a2a790c82c1c5ff5"
 }
