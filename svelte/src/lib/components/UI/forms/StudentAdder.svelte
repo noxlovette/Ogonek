@@ -21,7 +21,6 @@
         type: "success",
       });
     } catch {
-      // Fallback: select the text for manual copy
       linkInput?.select();
       notification.set({
         message: "Please copy manually",

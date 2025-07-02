@@ -5,6 +5,7 @@ use crate::models::{
 };
 use sqlx::PgPool;
 
+/// Finds a list of mini-lessons (no markdown) according to passed Pagination params
 pub async fn find_all(
     db: &PgPool,
     user_id: &str,
@@ -53,6 +54,7 @@ pub async fn find_all(
     Ok(lessons)
 }
 
+/// Returns three lessons in mini-format and the number of new lessons
 pub async fn find_recent(db: &PgPool, user_id: &str) -> Result<Vec<LessonSmall>, DbError> {
     let lessons = sqlx::query_as!(
         LessonSmall,
@@ -75,6 +77,7 @@ pub async fn find_recent(db: &PgPool, user_id: &str) -> Result<Vec<LessonSmall>,
     Ok(lessons)
 }
 
+/// Finds one lesson by its id, will return null if the user doesn't have access to the data
 pub async fn find_by_id(
     db: &PgPool,
     lesson_id: &str,

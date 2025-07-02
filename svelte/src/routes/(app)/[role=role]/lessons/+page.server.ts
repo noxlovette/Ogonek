@@ -35,33 +35,28 @@ export const load: PageServerLoad = async ({ fetch, url }) => {
 
 export const actions: Actions = {
   new: async ({ fetch }) => {
-    try {
-      const body = {
-        title: "New Lesson",
-        markdown: "## Try adding some content here",
-        topic: "General",
-      };
+    const body = {
+      title: "New Lesson",
+      markdown: "## Try adding some content here",
+      topic: "General",
+    };
 
-      const response = await fetch(`/axum/lesson`, {
-        method: "POST",
-        body: JSON.stringify(body),
-      });
+    const response = await fetch(`/axum/lesson`, {
+      method: "POST",
+      body: JSON.stringify(body),
+    });
 
-      const newResult = await handleApiResponse<NewResponse>(response);
+    const newResult = await handleApiResponse<NewResponse>(response);
 
-      if (!isSuccessResponse(newResult)) {
-        logger.error({ newResult }, "Error creating a new task axum-side");
-        return fail(newResult.status, { message: newResult.message });
-      }
+    if (!isSuccessResponse(newResult)) {
+      logger.error({ newResult }, "Error creating a new task axum-side");
+      return fail(newResult.status, { message: newResult.message });
+    }
 
-      const { id } = newResult.data;
+    const { id } = newResult.data;
 
-      if (response.ok) {
-        return redirect(301, `/t/lessons/l/${id}/edit`);
-      }
-    } catch (err: any) {
-      logger.error({ err }, "Error creating a new task svelte-side");
-      return error(500);
+    if (response.ok) {
+      return redirect(301, `/t/lessons/l/${id}/edit`);
     }
   },
 };

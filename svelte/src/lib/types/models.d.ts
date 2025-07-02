@@ -51,11 +51,17 @@ export interface TaskSmall {
   priority: number;
 }
 
+interface BadgeWrapper<T> {
+  data: T[];
+  count: number;
+}
+
 export interface DashboardData {
   students: Student[];
   user: User;
-  lessons: LessonSmall[];
-  tasks: TaskSmall[];
+  lessons: BadgeWrapper<LessonSmall>;
+  tasks: BadgeWrapper<TaskSmall>;
+  deckCount: number;
   profile: ProfileComposite;
 }
 export interface Toast {

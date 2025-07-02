@@ -2,7 +2,7 @@ use crate::api::error::APIError;
 use crate::auth::password::hash_password;
 use crate::auth::{Claims, tokens};
 use crate::db::crud::account::user;
-use crate::models::User;
+use crate::models::{InviterQuery, User};
 use crate::schema::AppState;
 use axum::extract::{Json, Query, State};
 use hyper::StatusCode;
@@ -11,9 +11,9 @@ use crate::models::users::UserUpdate;
 
 pub async fn fetch_inviter(
     State(state): State<AppState>,
-    Query(invite): Query<String>,
+    query: Query<InviterQuery>,
 ) -> Result<Json<User>, APIError> {
-    let teacher_id = tokens::decode_invite_token(invite).await?;
+    let teacher_id = tokens::decode_invite_token(query.invite.clone()).await?;
     let inviter = user::find_by_id(&state.db, &teacher_id).await?;
 
     Ok(Json(inviter))

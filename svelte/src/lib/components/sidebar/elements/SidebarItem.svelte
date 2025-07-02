@@ -44,6 +44,8 @@
     if ($sidebar) return `${base} size-5`;
     return `${base} size-5 ${isActive ? "text-cacao-600 dark:text-cacao-400" : "text-stone-500 dark:text-stone-400"}`;
   });
+
+  const badgeVisible = $derived(badge && badge != 0 ? true : false);
 </script>
 
 <!-- Tooltip for collapsed sidebar -->
@@ -69,11 +71,11 @@
       <Icon class={iconClasses} />
 
       <!-- Badge for collapsed state -->
-      {#if badge !== undefined}
+      {#if badgeVisible}
         <div
           class="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white"
         >
-          {typeof badge === "number" && badge > 99 ? "99+" : badge}
+          {typeof badge === "number" && badge > 10 ? "10+" : badge}
         </div>
       {/if}
     </a>
@@ -103,11 +105,11 @@
       </H3>
 
       <!-- Badge for expanded state -->
-      {#if badge !== undefined}
+      {#if badgeVisible}
         <div
           class="ml-2 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-red-500 px-1.5 text-xs font-bold text-white"
         >
-          {typeof badge === "number" && badge > 99 ? "99+" : badge}
+          {typeof badge === "number" && badge > 10 ? "10+" : badge}
         </div>
       {/if}
 

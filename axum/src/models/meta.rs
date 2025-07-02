@@ -11,6 +11,13 @@ pub struct PaginatedResponse<T> {
     pub per_page: i64,
 }
 
+/// Generic wrapper with the badge count in it
+#[derive(Debug, Serialize)]
+pub struct BadgeWrapper<T> {
+    pub data: Vec<T>,
+    pub count: i64,
+}
+
 /// Simply contains one string, the created ID
 #[derive(Debug, Serialize)]
 pub struct CreationId {
@@ -22,8 +29,9 @@ pub struct CreationId {
 #[serde(rename_all = "camelCase")]
 pub struct DashboardData {
     pub students: Vec<Student>,
-    pub lessons: Vec<LessonSmall>,
-    pub tasks: Vec<TaskSmall>,
+    pub lessons: BadgeWrapper<LessonSmall>,
+    pub tasks: BadgeWrapper<TaskSmall>,
+    pub deck_count: i64,
     pub user: User,
     pub profile: ProfileWithTS,
 }

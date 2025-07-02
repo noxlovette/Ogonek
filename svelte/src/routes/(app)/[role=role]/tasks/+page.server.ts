@@ -64,39 +64,34 @@ export const load: PageServerLoad = async ({ fetch, url, depends }) => {
 export const actions: Actions = {
   new: async ({ fetch }) => {
     const startTime = performance.now();
-    try {
-      const body = {
-        title: "New Task",
-        markdown: "## Try adding some content here",
-      };
+    const body = {
+      title: "New Task",
+      markdown: "## Try adding some content here",
+    };
 
-      const response = await fetch(`/axum/task`, {
-        method: "POST",
-        body: JSON.stringify(body),
-      });
+    const response = await fetch(`/axum/task`, {
+      method: "POST",
+      body: JSON.stringify(body),
+    });
 
-      const newResult = await handleApiResponse<NewResponse>(response);
+    const newResult = await handleApiResponse<NewResponse>(response);
 
-      if (!isSuccessResponse(newResult)) {
-        logger.info(
-          { duration: performance.now() - startTime },
-          "Task creation failed axum-side",
-        );
-        return fail(newResult.status, { message: newResult.message });
-      }
+    if (!isSuccessResponse(newResult)) {
+      logger.info(
+        { duration: performance.now() - startTime },
+        "Task creation failed axum-side",
+      );
+      return fail(newResult.status, { message: newResult.message });
+    }
 
-      const { id } = newResult.data;
+    const { id } = newResult.data;
 
-      if (response.ok) {
-        logger.info(
-          { duration: performance.now() - startTime, id },
-          "Task creation completed",
-        );
-        return redirect(301, `/t/tasks/t/${id}/edit`);
-      }
-    } catch (err: any) {
-      logger.error({ err }, "Error creating a new task");
-      return error(500, "Internal Server Error");
+    if (response.ok) {
+      logger.info(
+        { duration: performance.now() - startTime, id },
+        "Task creation completed",
+      );
+      return redirect(301, `/t/tasks/t/${id}/edit`);
     }
   },
   requestHW: async ({ request }) => {

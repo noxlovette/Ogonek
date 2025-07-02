@@ -7,7 +7,7 @@
 
   let { data } = $props();
 
-  const { teacher } = data;
+  const { inviter } = data;
 </script>
 
 <div class="">
@@ -25,7 +25,7 @@
       class="flex max-w-md flex-col items-center justify-center space-y-3 rounded-sm px-6 py-4 text-center shadow-sm"
     >
       <HeaderEmbellish>
-        <H1 styling="text-center">{teacher.name}</H1>
+        <H1 styling="text-center">{inviter.name}</H1>
       </HeaderEmbellish>
 
       <H3>wants to add you to their students</H3>

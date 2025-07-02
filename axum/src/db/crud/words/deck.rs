@@ -4,6 +4,7 @@ use crate::models::{
 };
 use sqlx::PgPool;
 
+/// Find all decks WITHOUT cards, with subscription status
 pub async fn find_all(
     db: &PgPool,
     user_id: &str,
@@ -46,6 +47,7 @@ pub async fn find_all(
     Ok(decks)
 }
 
+/// Find a deck by id WITH cards and subscription status included
 pub async fn find_by_id(db: &PgPool, deck_id: &str, user_id: &str) -> Result<Deck, DbError> {
     let deck = sqlx::query_as!(
         Deck,
@@ -97,6 +99,41 @@ pub async fn find_all_public(db: &PgPool) -> Result<Vec<DeckSmall>, DbError> {
     Ok(decks)
 }
 
+/// Returns three decks
+pub async fn find_recent(db: &PgPool, user_id: &str) -> Result<Vec<Deck>, DbError> {
+    let decks = sqlx::query_as!(
+        Deck,
+        r#"
+        SELECT 
+        d.id, 
+        d.name, 
+        d.description, 
+        d.visibility, 
+        d.assignee, 
+        d.created_by, 
+        d.created_at,
+        EXISTS (
+            SELECT 1 FROM deck_subscriptions s
+            WHERE s.deck_id = d.id AND user_id = $1
+        ) AS "is_subscribed!"
+    FROM decks d
+    WHERE (
+        d.created_by = $1
+        OR d.assignee = $1
+    )
+    ORDER BY created_at DESC
+    LIMIT 3
+        
+    "#,
+        user_id,
+    )
+    .fetch_all(db)
+    .await?;
+
+    Ok(decks)
+}
+
+/// Creates a new deck
 pub async fn create(db: &PgPool, user_id: &str, create: DeckCreate) -> Result<CreationId, DbError> {
     let visibility = if create.assignee.is_some() {
         create.visibility.unwrap_or("assigned".to_string())
@@ -123,6 +160,7 @@ pub async fn create(db: &PgPool, user_id: &str, create: DeckCreate) -> Result<Cr
     Ok(id)
 }
 
+/// Deletes a deck
 pub async fn delete(db: &PgPool, deck_id: &str, user_id: &str) -> Result<(), DbError> {
     sqlx::query!(
         r#"
@@ -138,6 +176,7 @@ pub async fn delete(db: &PgPool, deck_id: &str, user_id: &str) -> Result<(), DbE
     Ok(())
 }
 
+/// Updates a deck
 pub async fn update(
     db: &PgPool,
     deck_id: &str,
@@ -211,6 +250,8 @@ pub async fn update(
 
     Ok(())
 }
+
+/// Count the overall number of deck
 pub async fn count(db: &PgPool, user_id: &str) -> Result<i64, DbError> {
     let count = sqlx::query_scalar!(
         "SELECT COUNT(*) FROM decks WHERE
