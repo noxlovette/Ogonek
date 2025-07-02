@@ -1,11 +1,11 @@
 use crate::db::error::DbError;
-use crate::models::{Profile, ProfileParams, ProfileUpdate, ProfileWithTS, TeacherData};
+use crate::models::{Profile, ProfileUpdate, ProfileWithTS, TeacherData};
 use sqlx::PgPool;
 
 pub async fn find_by_id(
     db: &PgPool,
     user_id: &str,
-    params: &ProfileParams,
+    is_student: bool,
 ) -> Result<ProfileWithTS, DbError> {
     let profile = sqlx::query_as!(
         Profile,
@@ -18,7 +18,7 @@ pub async fn find_by_id(
     .fetch_one(db)
     .await?;
 
-    let teacher_data = if params.is_student == "true" {
+    let teacher_data = if is_student {
         sqlx::query_as!(
             TeacherData,
             r#"
@@ -79,7 +79,7 @@ pub async fn upsert(db: &PgPool, user_id: &str, update: &ProfileUpdate) -> Resul
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::models::{Profile, ProfileParams, ProfileUpdate};
+    use crate::models::{Profile, ProfileUpdate};
     use crate::tests::create_test_user;
     use sqlx::PgPool;
 
@@ -88,13 +88,8 @@ mod tests {
         // Setup test data
         let user_id = create_test_user(&db, "testuser", "test@example.com").await;
 
-        // Test params for non-student
-        let params = ProfileParams {
-            is_student: "false".to_string(),
-        };
-
         // Call function
-        let result = find_by_id(&db, &user_id, &params).await;
+        let result = find_by_id(&db, &user_id, false).await;
 
         // Assertions
         assert!(result.is_ok());
@@ -105,11 +100,8 @@ mod tests {
     #[sqlx::test]
     async fn test_find_by_id_profile_not_found(db: PgPool) {
         let user_id = nanoid::nanoid!();
-        let params = ProfileParams {
-            is_student: "false".to_string(),
-        };
 
-        let result = find_by_id(&db, &user_id, &params).await;
+        let result = find_by_id(&db, &user_id, false).await;
 
         assert!(result.is_err());
     }
@@ -153,13 +145,8 @@ mod tests {
         .await
         .unwrap();
 
-        // Test params for student
-        let params = ProfileParams {
-            is_student: "true".to_string(),
-        };
-
         // Call function
-        let result = find_by_id(&db, &student_id, &params).await;
+        let result = find_by_id(&db, &student_id, true).await;
 
         // Assertions
         assert!(result.is_ok());
@@ -176,11 +163,7 @@ mod tests {
         // Setup student profile without teacher relationship
         let student_id = create_test_user(&db, "student", "student@ogonek.app").await;
 
-        let params = ProfileParams {
-            is_student: "true".to_string(),
-        };
-
-        let result = find_by_id(&db, &student_id, &params).await;
+        let result = find_by_id(&db, &student_id, false).await;
 
         assert!(result.is_ok());
         let profile_with_ts = result.unwrap();
@@ -267,19 +250,11 @@ mod tests {
     async fn test_find_by_id_with_different_is_student_values(db: PgPool) {
         let user_id = create_test_user(&db, "student", "student@ogonek.app").await;
 
-        // Test with is_student = "false"
-        let params_false = ProfileParams {
-            is_student: "false".to_string(),
-        };
-        let result = find_by_id(&db, &user_id, &params_false).await;
+        let result = find_by_id(&db, &user_id, false).await;
         assert!(result.is_ok());
         assert!(result.unwrap().teacher_data.is_none());
 
-        // Test with is_student = "TRUE" (case shouldn't matter for the logic, but testing edge case)
-        let params_other = ProfileParams {
-            is_student: "TRUE".to_string(),
-        };
-        let result = find_by_id(&db, &user_id, &params_other).await;
+        let result = find_by_id(&db, &user_id, false).await;
         assert!(result.is_ok());
         // Should be None since it's not exactly "true"
         assert!(result.unwrap().teacher_data.is_none());

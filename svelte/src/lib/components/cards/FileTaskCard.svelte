@@ -3,7 +3,7 @@
   import { isLoading, user } from "$lib/stores";
   import { enhance } from "$app/forms";
   import type { FileSmall } from "$lib/types";
-  import { formatFileSize, getFileExtension } from "$lib/utils";
+  import { getFileExtension } from "$lib/utils";
   import {
     FileText,
     Image,
@@ -61,7 +61,7 @@
     use:enhance={enhanceForm({
       messages: {
         failure: "Meow",
-        success: `${file.name} download started`,
+        success: "Download started",
       },
       handlers: {
         success: async (result) => {
@@ -71,9 +71,9 @@
           iframe.style.display = "none";
           iframe.src = url;
           document.body.appendChild(iframe);
-          setTimeout(() => {
-            document.body.removeChild(iframe);
-          }, 5000); // Give it some time to initiate the download
+
+          await new Promise((resolve) => setTimeout(resolve, 5000));
+          document.body.removeChild(iframe);
         },
       },
     })}
@@ -82,7 +82,7 @@
     <button
       type="submit"
       disabled={downloading}
-      class="group ring-default relative flex h-40 w-full flex-col items-center justify-between overflow-clip rounded-md p-2 transition-colors hover:bg-stone-100 dark:hover:bg-stone-800"
+      class="group ring-default relative flex w-full flex-col items-center justify-between gap-4 overflow-clip rounded-md p-2 transition-colors hover:bg-stone-100 dark:hover:bg-stone-800"
     >
       <Label>
         {file.name.split(".").shift()?.slice(0, 15)}
@@ -94,7 +94,6 @@
       <div
         class="flex items-center space-x-2 text-xs text-stone-500 dark:text-stone-400"
       >
-        <span>{formatFileSize(file.size)}</span>
         {#if getFileExtension(file.name)}
           <span
             class="rounded bg-stone-100 px-1.5 py-0.5 text-xs dark:bg-stone-800"

@@ -16,7 +16,7 @@ pub enum DbError {
 
 impl From<SqlxError> for DbError {
     fn from(error: SqlxError) -> Self {
-        eprintln!("Database error: {}", error);
+        eprintln!("Database error: {error}");
         Self::Database(error)
     }
 }

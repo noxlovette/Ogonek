@@ -1,6 +1,7 @@
 use crate::db::error::DbError;
 use crate::models::{
-    CreationId, LessonCreate, LessonSmall, LessonUpdate, LessonWithStudent, PaginationParams,
+    CreationId, LessonCreate, LessonSmall, LessonSmallWithStudent, LessonUpdate, LessonWithStudent,
+    PaginationParams,
 };
 use sqlx::PgPool;
 
@@ -8,9 +9,9 @@ pub async fn find_all(
     db: &PgPool,
     user_id: &str,
     params: &PaginationParams,
-) -> Result<Vec<LessonWithStudent>, DbError> {
+) -> Result<Vec<LessonSmallWithStudent>, DbError> {
     let mut query_builder = sqlx::QueryBuilder::new(
-        "SELECT l.id, l.title, l.topic, l.markdown, l.assignee, l.created_by, l.created_at, l.updated_at, u.name as assignee_name
+        "SELECT l.id, l.title, l.topic, l.assignee, l.created_by, l.created_at, l.updated_at, u.name as assignee_name
          FROM lessons l
          LEFT JOIN \"user\" u ON l.assignee = u.id
          WHERE (l.assignee = ");
@@ -22,11 +23,11 @@ pub async fn find_all(
 
     if let Some(search) = &params.search {
         query_builder.push(" AND (l.title ILIKE ");
-        query_builder.push_bind(format!("%{}%", search));
+        query_builder.push_bind(format!("%{search}%"));
         query_builder.push(" OR l.topic ILIKE ");
-        query_builder.push_bind(format!("%{}%", search));
+        query_builder.push_bind(format!("%{search}%"));
         query_builder.push(" OR l.markdown ILIKE ");
-        query_builder.push_bind(format!("%{}%", search));
+        query_builder.push_bind(format!("%{search}%"));
         query_builder.push(")");
     }
 
@@ -45,7 +46,7 @@ pub async fn find_all(
     query_builder.push_bind(params.offset());
 
     let lessons = query_builder
-        .build_query_as::<LessonWithStudent>()
+        .build_query_as::<LessonSmallWithStudent>()
         .fetch_all(db)
         .await?;
 
@@ -59,7 +60,6 @@ pub async fn find_recent(db: &PgPool, user_id: &str) -> Result<Vec<LessonSmall>,
         SELECT
             id,
             title,
-            LEFT(markdown, 100) as "markdown!",
             topic,
             created_at
         FROM lessons
@@ -423,11 +423,6 @@ mod tests {
 
         let lessons = result.unwrap();
         assert_eq!(lessons.len(), 3); // Should be limited to 6
-
-        // Check that markdown is truncated to 100 characters
-        for lesson in lessons {
-            assert!(lesson.markdown.len() <= 100);
-        }
     }
 
     #[sqlx::test]

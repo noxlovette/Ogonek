@@ -19,7 +19,7 @@ pub async fn init_multipart_s3(
         .content_type(content_type)
         .send()
         .await
-        .map_err(|e| AppError::Internal(format!("Failed to create multipart upload: {}", e)))?;
+        .map_err(|e| AppError::Internal(format!("Failed to create multipart upload: {e}")))?;
 
     let upload_id = response
         .upload_id()
@@ -39,7 +39,7 @@ pub async fn init_multipart_s3(
                 std::time::Duration::from_secs(3600),
             )?)
             .await
-            .map_err(|e| AppError::Internal(format!("Failed to generate presigned URL: {}", e)))?;
+            .map_err(|e| AppError::Internal(format!("Failed to generate presigned URL: {e}")))?;
 
         presigned_urls.push(PartUploadUrl {
             part_number,
@@ -93,8 +93,7 @@ pub async fn complete_multipart_s3(
                 tracing::error!("Inner error: {:?}", source);
             }
             Err(AppError::Internal(format!(
-                "Failed to complete multipart upload: {}",
-                e
+                "Failed to complete multipart upload: {e}"
             )))
         }
     }
@@ -113,7 +112,7 @@ pub async fn abort_multipart_s3(
         .upload_id(upload_id)
         .send()
         .await
-        .map_err(|e| AppError::Internal(format!("Failed to abort multipart upload: {}", e)))?;
+        .map_err(|e| AppError::Internal(format!("Failed to abort multipart upload: {e}")))?;
 
     Ok(())
 }

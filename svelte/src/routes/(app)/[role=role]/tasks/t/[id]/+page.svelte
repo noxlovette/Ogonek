@@ -97,7 +97,7 @@
 <grid class="grid gap-4 md:grid-cols-4">
   <div class="flex flex-col items-center space-y-2">
     {#if files.length > 0}
-      <div class="flex w-full flex-col space-y-2">
+      <div class="flex w-full flex-col gap-4">
         <Label>Attached Files</Label>
         {#each files as file (file.id)}
           <FileTaskCard {file} />

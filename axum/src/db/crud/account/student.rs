@@ -75,7 +75,7 @@ pub async fn find_by_id_and_data(
     let lessons = sqlx::query_as!(
         LessonSmall,
         r#"
-        SELECT id, title, topic, markdown, created_at
+        SELECT id, title, topic, created_at
         FROM lessons
         WHERE (created_by = $1 AND assignee = $2)
         ORDER BY created_at desc

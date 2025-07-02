@@ -1,5 +1,6 @@
 use serde::{Deserialize, Serialize};
 
+/// The default profile struct
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Profile {
@@ -9,7 +10,8 @@ pub struct Profile {
     pub telegram_id: Option<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+/// The profile that gets decoded
+#[derive(Debug, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct ProfileUpdate {
     pub video_call_url: Option<String>,
@@ -17,22 +19,19 @@ pub struct ProfileUpdate {
     pub telegram_id: Option<String>,
 }
 
-#[derive(Serialize)]
+/// This is sent along with dashboard data to
+/// include teacher video url and stuff if the user is a student
+#[derive(Serialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct ProfileWithTS {
     pub profile: Profile,
     pub teacher_data: Option<TeacherData>,
 }
 
-#[derive(Serialize)]
+/// Video Call URL and the teacher's TelegramID
+#[derive(Serialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct TeacherData {
     pub teacher_video_call_url: Option<String>,
     pub teacher_telegram_id: Option<String>,
-}
-
-#[derive(Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct ProfileParams {
-    pub is_student: String,
 }

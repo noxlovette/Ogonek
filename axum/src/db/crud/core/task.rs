@@ -36,9 +36,9 @@ pub async fn find_all(
     // Add search filter if provided
     if let Some(search) = &params.search {
         query_builder.push(" AND (t.title ILIKE ");
-        query_builder.push_bind(format!("%{}%", search));
+        query_builder.push_bind(format!("%{search}%"));
         query_builder.push(" OR t.markdown ILIKE ");
-        query_builder.push_bind(format!("%{}%", search));
+        query_builder.push_bind(format!("%{search}%"));
         query_builder.push(")");
     }
 

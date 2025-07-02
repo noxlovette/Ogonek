@@ -50,6 +50,14 @@ export interface TaskSmall {
   dueDate: string;
   priority: number;
 }
+
+export interface DashboardData {
+  students: Student[];
+  user: User;
+  lessons: LessonSmall[];
+  tasks: TaskSmall[];
+  profile: ProfileComposite;
+}
 export interface Toast {
   message: string | null;
   type: "success" | "error" | "info" | null;
@@ -79,15 +87,11 @@ export interface User {
   [key: string]: string | undefined;
 }
 
-export interface UserAndTeacher {
-  user: User;
-  teacher: Teacher;
-}
-
 export interface Lesson extends LessonSmall {
   updatedAt: string;
   assignee: string;
   assigneeName: string;
+  markdown: string;
 }
 
 export interface LessonSmall extends LessonStore {
@@ -97,7 +101,6 @@ export interface LessonSmall extends LessonStore {
 
 export interface LessonStore {
   title: string;
-  markdown: string;
   topic: string;
 }
 

@@ -1,4 +1,4 @@
-use tracing_subscriber::{fmt, layer::SubscriberExt, util::SubscriberInitExt, EnvFilter};
+use tracing_subscriber::{EnvFilter, fmt, layer::SubscriberExt, util::SubscriberInitExt};
 
 pub async fn init_logging() -> anyhow::Result<()> {
     if tracing::dispatcher::has_been_set() {

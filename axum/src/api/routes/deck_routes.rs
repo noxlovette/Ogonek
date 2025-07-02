@@ -1,7 +1,7 @@
 use crate::api::core::{decks, learning};
 use crate::schema::AppState;
-use axum::routing::{get, patch, post};
 use axum::Router;
+use axum::routing::{get, patch, post};
 
 pub fn deck_routes() -> Router<AppState> {
     Router::new()

@@ -1,34 +1,17 @@
 import { env } from "$env/dynamic/private";
 import logger from "$lib/logger";
 import redis from "$lib/redisClient";
-import type {
-  LessonSmall,
-  ProfileComposite,
-  Student,
-  TaskSmall,
-  UserAndTeacher,
-} from "$lib/types";
+import type { DashboardData } from "$lib/types";
 import { error } from "@sveltejs/kit";
 import type { LayoutServerLoad } from "./$types";
-export const load: LayoutServerLoad = async ({ fetch, params }) => {
+export const load: LayoutServerLoad = async ({ fetch }) => {
   const startTime = performance.now();
   try {
-    const [students, lessons, tasks, userAndTeacher, profileComposite] =
-      await Promise.all([
-        fetch("/axum/student").then((res) => res.json() as Promise<Student[]>),
-        fetch("/axum/lesson/recent").then(
-          (res) => res.json() as Promise<LessonSmall[]>,
-        ),
-        fetch("/axum/task/recent").then(
-          (res) => res.json() as Promise<TaskSmall[]>,
-        ),
-        fetch("/axum/user").then(
-          (res) => res.json() as Promise<UserAndTeacher>,
-        ),
-        fetch(
-          `/axum/profile?isStudent=${params.role === "t" ? false : true}`,
-        ).then((res) => res.json() as Promise<ProfileComposite>),
-      ]);
+    const dashboardData = (await fetch("/axum/dashboard").then((res) =>
+      res.json(),
+    )) as DashboardData;
+
+    console.log(dashboardData);
 
     const word = redis.get("wordAPI").then(async (cachedWord) => {
       if (cachedWord) {
@@ -50,20 +33,18 @@ export const load: LayoutServerLoad = async ({ fetch, params }) => {
       }
     });
 
-    const { user } = userAndTeacher;
-
     logger.info(
       { duration: performance.now() - startTime },
       "Fetching all the good dashboard stuff successful",
     );
     return {
-      students,
-      lessons,
-      tasks,
+      students: dashboardData.students,
+      lessons: dashboardData.lessons,
+      tasks: dashboardData.tasks,
       word,
-      profile: profileComposite.profile,
-      teacherData: profileComposite.teacherData,
-      user,
+      profile: dashboardData.profile.profile,
+      teacherData: dashboardData.profile.teacherData,
+      user: dashboardData.user,
     };
   } catch (err: any) {
     logger.error(
