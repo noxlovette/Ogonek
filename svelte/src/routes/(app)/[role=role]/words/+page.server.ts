@@ -1,3 +1,4 @@
+import logger from "$lib/logger";
 import { handleApiResponse, isSuccessResponse } from "$lib/server";
 import type { Deck, NewResponse } from "$lib/types";
 import { fail, redirect, type Actions } from "@sveltejs/kit";
@@ -22,6 +23,8 @@ export const load: PageServerLoad = async ({ fetch, url }) => {
 
 export const actions: Actions = {
   new: async ({ fetch }) => {
+    logger.info("Creating new Deck");
+
     const body = {
       name: "New Deck",
       description: "Your New Deck",
@@ -36,6 +39,7 @@ export const actions: Actions = {
     const newResult = await handleApiResponse<NewResponse>(response);
 
     if (!isSuccessResponse(newResult)) {
+      logger.error({ newResult }, "Deck creation failed");
       return fail(newResult.status, { message: newResult.message });
     }
 

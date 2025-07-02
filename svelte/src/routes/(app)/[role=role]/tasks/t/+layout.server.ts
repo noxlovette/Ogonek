@@ -9,6 +9,7 @@ export const load: LayoutServerLoad = async ({ params, fetch }) => {
   try {
     const response = await fetch(`/axum/task/t/${id}`);
     if (!response.ok) {
+      logger.error({ errorData: response.json(), id }, "Task load failed");
       throw redirect(303, `/${role}/tasks/`);
     }
     const taskWithFiles: TaskWithFiles = await response.json();
@@ -23,7 +24,7 @@ export const load: LayoutServerLoad = async ({ params, fetch }) => {
       rendered,
     };
   } catch (err) {
-    logger.warn({ err }, "task load failed");
+    logger.error({ err, id }, "Task load failed");
     throw redirect(303, `/${role}/tasks/`);
   }
 };

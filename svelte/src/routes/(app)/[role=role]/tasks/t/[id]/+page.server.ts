@@ -20,8 +20,6 @@ export const actions = {
       const username = formData.get("username") as string;
       const task = formData.get("task") as string;
       const teacherTelegramId = formData.get("teacherTelegramId") as string;
-      logger.info({ id, completed }, "Form Data Received");
-      // Validate required fields early
       if (!id) {
         logger.warn("Task completion attempted without ID");
         return fail(400, { message: "Task ID is required" });
@@ -39,16 +37,6 @@ export const actions = {
           );
         }
       }
-
-      logger.info(
-        {
-          taskId: id,
-          completed,
-          timestamp: new Date().toISOString(),
-        },
-        "Updating task completion status",
-      );
-
       const body = { completed, id };
 
       const response = await fetch(`/axum/task/t/${id}`, {
