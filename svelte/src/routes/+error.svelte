@@ -1,7 +1,9 @@
-<script lang="ts">
+ , id, id ;<script lang="ts">
   import { page } from "$app/state";
   import { fade, fly } from "svelte/transition";
   import { backOut } from "svelte/easing";
+    import UniButton from "$lib/components/UI/UniButton.svelte";
+    import { House, Send } from "lucide-svelte";
 
   // Determine error category for custom messaging
   const is404 = page.status === 404;
@@ -103,20 +105,11 @@
       <!-- Action buttons -->
       <div
         class="flex flex-col gap-3"
-        in:fly={{ y: 20, duration: 400, delay: 500 }}
       >
-        <a
-          href="/"
-          class="bg-cacao-500 hover:bg-cacao-600 rounded-lg px-4 py-2.5 text-center font-medium text-stone-50 shadow-sm transition-colors"
-        >
-          Back to Home Page
-        </a>
-        <a
-          href="https://t.me/noxlovette"
-          class="hover:text-cacao-500 dark:hover:text-cacao-400 text-center text-sm font-medium text-stone-600 transition-colors dark:text-stone-400"
-        >
-          Need help? Contact Support
-        </a>
+
+      <UniButton type="button" variant="primary" Icon={House} href="/${page.params.role}/dashboard">Back to Safety</UniButton>
+      <UniButton type="button" variant="ghost" Icon={Send} href="https://t.me/noxlovette">Contact Support</UniButton>
+      
       </div>
     </div>
   </div>

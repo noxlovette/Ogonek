@@ -83,11 +83,8 @@ export const actions = {
       );
 
       return redirect(303, `/t/tasks/t/${id}`);
-    } catch (error: any) {
-      logger.error(
-        { error, task_id: id },
-        "Svelte-side error updating the task",
-      );
+    } catch (err: any) {
+      logger.error({ err, task_id: id }, "Svelte-side error updating the task");
       return error(500, "Server Error");
     }
   },
@@ -110,11 +107,8 @@ export const actions = {
       }
 
       redirect(303, "/t/tasks");
-    } catch (error: any) {
-      logger.error(
-        { error, task_id: id },
-        "Error deleting the task svelte-side",
-      );
+    } catch (err: any) {
+      logger.error({ err, task_id: id }, "Error deleting the task svelte-side");
       return error(500, "Internal server error");
     }
   },

@@ -7,7 +7,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "start": "pnpm build/index.js",
-    "test": "playwright test",
+    "test": "playwright test && vitest",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
     "lint": "prettier --check . && eslint .",

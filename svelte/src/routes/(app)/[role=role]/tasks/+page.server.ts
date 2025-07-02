@@ -52,9 +52,9 @@ export const load: PageServerLoad = async ({ fetch, url, depends }) => {
     return {
       tasksPaginated,
     };
-  } catch (error: any) {
+  } catch (err: any) {
     logger.error(
-      { error, duration: performance.now() - startTime },
+      { err, duration: performance.now() - startTime },
       "Svelte error server-side",
     );
     return error(500);
@@ -94,8 +94,8 @@ export const actions: Actions = {
         );
         return redirect(301, `/t/tasks/t/${id}/edit`);
       }
-    } catch (error: any) {
-      logger.error({ error }, "Error creating a new task");
+    } catch (err: any) {
+      logger.error({ err }, "Error creating a new task");
       return error(500, "Internal Server Error");
     }
   },
