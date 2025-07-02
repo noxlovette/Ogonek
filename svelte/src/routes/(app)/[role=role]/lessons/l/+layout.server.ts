@@ -18,7 +18,7 @@ export const load: LayoutServerLoad = async ({ params, fetch }) => {
       rendered,
     };
   } catch (e) {
-    logger.warn({ e }, "lesson load failed");
+    logger.error({ e }, "lesson load failed");
     throw redirect(303, `/${params.role}/lessons/`);
   }
 };
