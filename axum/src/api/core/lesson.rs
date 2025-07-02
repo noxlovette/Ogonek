@@ -2,7 +2,10 @@ use crate::api::error::APIError;
 use crate::auth::Claims;
 use crate::db::crud::core::lesson;
 use crate::models::meta::{CreationId, PaginatedResponse};
-use crate::models::{LessonCreate, LessonSmall, LessonUpdate, LessonWithStudent, PaginationParams};
+use crate::models::{
+    LessonCreate, LessonSmall, LessonSmallWithStudent, LessonUpdate, LessonWithStudent,
+    PaginationParams,
+};
 use crate::schema::AppState;
 use axum::extract::Path;
 use axum::extract::State;
@@ -31,7 +34,7 @@ pub async fn list_lessons(
     State(state): State<AppState>,
     Query(params): Query<PaginationParams>,
     claims: Claims,
-) -> Result<Json<PaginatedResponse<LessonWithStudent>>, APIError> {
+) -> Result<Json<PaginatedResponse<LessonSmallWithStudent>>, APIError> {
     let lessons = lesson::find_all(&state.db, &claims.sub, &params).await?;
     let count = lesson::count(&state.db, &claims.sub).await?;
 

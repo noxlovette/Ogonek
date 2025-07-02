@@ -28,9 +28,9 @@ pub async fn find_all(
 
     if let Some(search) = &params.search {
         query_builder.push(" AND (name ILIKE ");
-        query_builder.push_bind(format!("%{}%", search));
+        query_builder.push_bind(format!("%{search}%"));
         query_builder.push(" OR description ILIKE ");
-        query_builder.push_bind(format!("%{}%", search));
+        query_builder.push_bind(format!("%{search}%"));
         query_builder.push(")");
     }
 

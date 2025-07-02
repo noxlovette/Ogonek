@@ -1,11 +1,11 @@
 use crate::auth::claims::{Claims, KEYS};
 
 use crate::auth::error::AuthError;
-use crate::models::users::InviteToken;
 use crate::models::TokenWithExpiry;
-use base64::{engine::general_purpose::URL_SAFE, Engine as _};
+use crate::models::users::InviteToken;
+use base64::{Engine as _, engine::general_purpose::URL_SAFE};
 
-use jsonwebtoken::{decode, encode, Algorithm, Header, Validation};
+use jsonwebtoken::{Algorithm, Header, Validation, decode, encode};
 use std::time::{SystemTime, UNIX_EPOCH};
 
 pub fn generate_token(
@@ -28,7 +28,7 @@ pub fn generate_token(
     };
 
     let token = encode(&Header::new(Algorithm::RS256), &claims, &KEYS.encoding).map_err(|e| {
-        eprintln!("Token generation failed: {:?}", e);
+        eprintln!("Token generation failed: {e:?}");
         AuthError::TokenCreation
     })?;
 
@@ -42,7 +42,7 @@ pub fn decode_token(token: &str) -> Result<Claims, AuthError> {
     let validation = Validation::new(Algorithm::RS256);
 
     let token_data = decode::<Claims>(token, &KEYS.decoding, &validation).map_err(|e| {
-        eprintln!("Token extraction error: {:?}", e);
+        eprintln!("Token extraction error: {e:?}");
         AuthError::InvalidToken
     })?;
 
@@ -261,11 +261,11 @@ mod tests {
         for teacher_id in test_cases {
             let encoded = encode_invite_token(teacher_id.clone())
                 .await
-                .expect(&format!("Encoding failed for: {}", teacher_id));
+                .expect(&format!("Encoding failed for: {teacher_id}"));
 
             let decoded = decode_invite_token(encoded)
                 .await
-                .expect(&format!("Decoding failed for: {}", teacher_id));
+                .expect(&format!("Decoding failed for: {teacher_id}"));
 
             assert_eq!(decoded, teacher_id);
         }
@@ -282,7 +282,7 @@ mod tests {
 
         for invalid_token in invalid_tokens {
             let result = decode_invite_token(invalid_token.clone()).await;
-            assert!(result.is_err(), "Should fail for token: {}", invalid_token);
+            assert!(result.is_err(), "Should fail for token: {invalid_token}");
             assert!(matches!(result.unwrap_err(), AuthError::InvalidToken));
         }
     }

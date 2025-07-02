@@ -1,13 +1,13 @@
 use axum::{
+    Router,
     http::{HeaderName, HeaderValue, Method, StatusCode},
     response::IntoResponse,
     routing::get,
-    Router,
 };
-use ogonek::schema::AppState;
 use ogonek::tools::daemons::task_cleanup::daily_cleanup;
 use ogonek::tools::logging::init_logging;
 use ogonek::tools::middleware::api_key::validate_api_key;
+use ogonek::{api::core::dashboard, schema::AppState};
 use tower::ServiceBuilder;
 use tower_http::{
     cors::CorsLayer,
@@ -43,6 +43,7 @@ async fn run_server() -> anyhow::Result<()> {
         .nest("/deck", ogonek::api::routes::deck_routes::deck_routes())
         .nest("/s3", ogonek::api::routes::s3_routes::s3_routes())
         .nest("/file", ogonek::api::routes::file_routes::file_routes())
+        .route("/dashboard", get(dashboard::fetch_dashboard))
         .layer(axum::middleware::from_fn(validate_api_key));
 
     tokio::spawn(async move {

@@ -1,7 +1,7 @@
 use crate::api::account;
 use crate::schema::AppState;
-use axum::routing::get;
 use axum::Router;
+use axum::routing::get;
 
 pub fn profile_routes() -> Router<AppState> {
     Router::new().route(

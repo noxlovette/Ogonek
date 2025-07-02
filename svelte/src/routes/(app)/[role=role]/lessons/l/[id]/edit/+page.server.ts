@@ -12,9 +12,9 @@ export const load: PageServerLoad = async ({ params }) => {
 export const actions = {
   update: async ({ request, fetch }) => {
     const formData = await request.formData();
+    const id = formData.get("id");
     const markdown = formData.get("markdown");
     const title = formData.get("title");
-    const id = formData.get("id");
     const topic = formData.get("topic");
     const assigneeData = formData.get("student")?.toString() || "{}";
     const { assignee = "" } = JSON.parse(assigneeData);
@@ -34,14 +34,14 @@ export const actions = {
 
     if (!response.ok) {
       const errorData = await response.json(); // Parse error details
-      logger.error("Error updating lesson:", errorData);
+      logger.error({ errorData, id }, "Error updating lesson axum-side");
       return {
         success: false,
         error: errorData,
       };
     }
 
-    redirect(303, `/t/lessons/l/${id}`);
+    throw redirect(303, `/t/lessons/l/${id}`);
   },
   delete: async ({ request, fetch }) => {
     const formData = await request.formData();
@@ -53,13 +53,13 @@ export const actions = {
 
     if (!response.ok) {
       const errorData = await response.json(); // Parse error details
-      logger.error("Error deleting lesson:", errorData);
+      logger.error("Error deleting lesson axum-side", errorData);
       return {
         success: false,
         error: errorData,
       };
     }
 
-    redirect(303, "/t/lessons");
+    return redirect(303, "/t/lessons");
   },
 } satisfies Actions;

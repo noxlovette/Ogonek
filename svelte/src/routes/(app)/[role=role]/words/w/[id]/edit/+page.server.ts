@@ -14,6 +14,7 @@ export const actions = {
     const formData = await request.formData();
 
     const { id } = params;
+
     const name = formData.get("name");
     const description = formData.get("description");
     const visibility = formData.get("visibility");
@@ -66,6 +67,7 @@ export const actions = {
     const editResult = await handleApiResponse<EmptyResponse>(response);
 
     if (!isSuccessResponse(editResult)) {
+      logger.error({ editResult }, "Axum-side error updating task");
       return fail(editResult.status, { message: editResult.message });
     }
 

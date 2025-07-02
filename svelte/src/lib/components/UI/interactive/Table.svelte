@@ -15,7 +15,12 @@
     showComplete?: boolean;
   }
 
-  let { items = [], config, href, total = items.length }: Props = $props();
+  let {
+    items = $bindable([]),
+    config,
+    href,
+    total = items.length,
+  }: Props = $props();
 </script>
 
 <div class="w-full space-y-4">

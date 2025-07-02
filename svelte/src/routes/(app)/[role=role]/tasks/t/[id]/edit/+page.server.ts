@@ -16,7 +16,7 @@ export const load: PageServerLoad = async ({ params }) => {
 export const actions = {
   update: async ({ request, fetch, params }) => {
     const id = params.id || "";
-    logger.info({ id }, "Starting task update");
+    const startTime = performance.now();
 
     const formData = await request.formData();
     const markdown = formData.get("markdown")?.toString() || "";
@@ -49,7 +49,6 @@ export const actions = {
       completed,
       filePath,
     };
-    logger.error({ body }, "Sending task update");
     const response = await fetch(`/axum/task/t/${id}`, {
       method: "PATCH",
       body: JSON.stringify(body),
@@ -73,6 +72,11 @@ export const actions = {
       }
     }
 
+    logger.info(
+      { task_id: id, duration: performance.now() - startTime },
+      "Successful task update",
+    );
+
     return redirect(303, `/t/tasks/t/${id}`);
   },
   delete: async ({ fetch, params }) => {
@@ -83,6 +87,8 @@ export const actions = {
 
     if (!response.ok) {
       const errorData = await response.json();
+
+      logger.error({ errorData, task_id: id }, "Error deleting backend-side");
 
       return {
         success: false,
@@ -106,6 +112,7 @@ export const actions = {
     const uploadResult = await handleApiResponse<EmptyResponse>(response);
 
     if (!isSuccessResponse(uploadResult)) {
+      logger.error({ uploadResult }, "Error uploading file");
       return fail(uploadResult.status, { message: uploadResult.message });
     }
 
@@ -123,6 +130,7 @@ export const actions = {
     const deleteResult = await handleApiResponse<EmptyResponse>(response);
 
     if (!isSuccessResponse(deleteResult)) {
+      logger.error({ deleteResult }, "Error deleting file");
       return fail(deleteResult.status, { message: deleteResult.message });
     }
 

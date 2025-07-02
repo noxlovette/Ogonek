@@ -1,11 +1,11 @@
 use crate::auth::error::AuthError;
-use axum::{extract::FromRequestParts, http::request::Parts, RequestPartsExt};
+use axum::{RequestPartsExt, extract::FromRequestParts, http::request::Parts};
 use axum_extra::{
-    headers::{authorization::Bearer, Authorization},
     TypedHeader,
+    headers::{Authorization, authorization::Bearer},
 };
 use dotenvy::dotenv;
-use jsonwebtoken::{decode, Algorithm, DecodingKey, EncodingKey, Validation};
+use jsonwebtoken::{Algorithm, DecodingKey, EncodingKey, Validation, decode};
 use serde::{Deserialize, Serialize};
 use std::sync::LazyLock;
 
@@ -27,14 +27,14 @@ where
             .extract::<TypedHeader<Authorization<Bearer>>>()
             .await
             .map_err(|e| {
-                eprintln!("Token extraction error: {:?}", e);
+                eprintln!("Token extraction error: {e:?}");
                 AuthError::InvalidToken
             })?;
         let validation = Validation::new(Algorithm::RS256);
 
         let token_data =
             decode::<Claims>(bearer.token(), &KEYS.decoding, &validation).map_err(|e| {
-                eprintln!("Token extraction error: {:?}", e);
+                eprintln!("Token extraction error: {e:?}");
                 AuthError::InvalidToken
             })?;
         Ok(token_data.claims)

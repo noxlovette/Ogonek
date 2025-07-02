@@ -38,7 +38,6 @@ async fn test_auth_flow_end_to_end(db: PgPool) {
     assert_eq!(signup_response.status(), StatusCode::OK);
     let body = signup_response.into_body();
     let bytes = axum::body::to_bytes(body, usize::MAX).await.unwrap();
-    let signup_result: serde_json::Value = serde_json::from_slice(&bytes).unwrap();
 
     // Test signin
     let signin_payload = json!({
@@ -70,7 +69,7 @@ async fn test_auth_flow_end_to_end(db: PgPool) {
     let protected_request = Request::builder()
         .method("GET")
         .uri("/user")
-        .header("authorization", format!("Bearer {}", access_token))
+        .header("authorization", format!("Bearer {access_token}"))
         .header(
             "x-api-key",
             std::env::var("API_KEY").unwrap_or("test-key".to_string()),

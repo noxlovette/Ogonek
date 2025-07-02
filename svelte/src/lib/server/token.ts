@@ -4,7 +4,9 @@ import logger from "../logger";
 
 const EXPIRY_BUFFER = 30;
 
-export async function ValidateAccess(jwt: string): Promise<JWTPayload> {
+export async function ValidateAccess(
+  jwt: string | undefined,
+): Promise<JWTPayload> {
   const spki = env.JWT_PUBLIC_KEY;
   const alg = env.JWT_ALG || "RS256";
 
@@ -13,9 +15,13 @@ export async function ValidateAccess(jwt: string): Promise<JWTPayload> {
     throw new Error("Server misconfigured: missing public key");
   }
 
+  if (!jwt) {
+    logger.error("ValidateAccess got empty JWT");
+    throw new Error("No JWT provided");
+  }
+
   const publicKey = await importSPKI(spki, alg);
 
-  logger.info("Verifying access token");
   let payload: JWTPayload;
 
   try {
@@ -25,7 +31,6 @@ export async function ValidateAccess(jwt: string): Promise<JWTPayload> {
     logger.error({ err }, "JWT verification failed");
     throw new Error("Invalid token");
   }
-  logger.info("Access verification complete");
 
   if (payload.exp && typeof payload.exp === "number") {
     const now = Math.floor(Date.now() / 1000);

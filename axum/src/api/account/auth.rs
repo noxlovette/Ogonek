@@ -1,10 +1,10 @@
 use crate::api::error::APIError;
+use crate::auth::Claims;
 use crate::auth::error::AuthError;
 use crate::auth::password::{hash_password, verify_password};
 use crate::auth::tokens::{self, decode_token, generate_token};
-use crate::auth::Claims;
 use crate::db::crud::account::auth;
-use crate::models::users::{AuthPayload, BindParams, BindPayload, SignUpPayload, TokenPair};
+use crate::models::users::{AuthPayload, BindPayload, SignUpPayload, TokenPair};
 use crate::models::{CreationId, RefreshTokenPayload, RefreshTokenResponse};
 use crate::schema::AppState;
 use axum::extract::{Json, Query, State};
@@ -19,7 +19,7 @@ pub async fn signup(
         return Err(APIError::InvalidCredentials);
     }
     payload.validate().map_err(|e| {
-        eprintln!("{:?}", e);
+        eprintln!("{e:?}");
         APIError::InvalidCredentials
     })?;
 
@@ -41,7 +41,7 @@ pub async fn authorize(
         return Err(APIError::InvalidCredentials);
     }
     payload.validate().map_err(|e| {
-        eprintln!("{:?}", e);
+        eprintln!("{e:?}");
         APIError::InvalidCredentials
     })?;
 
@@ -75,7 +75,7 @@ pub async fn refresh(
 
 pub async fn generate_invite_link(
     claims: Claims,
-    Query(params): Query<BindParams>,
+    Query(is_registered): Query<String>,
 ) -> Result<Json<String>, AuthError> {
     let frontend_url = std::env::var("FRONTEND_URL")
         .unwrap_or_else(|_| "http://localhost:5173".to_string())
@@ -84,16 +84,12 @@ pub async fn generate_invite_link(
 
     let encoded = tokens::encode_invite_token(claims.sub).await?;
 
-    if params.is_registered == "true" {
-        Ok(Json(format!(
-            "{}/auth/bind?invite={}",
-            frontend_url, encoded
-        )))
+    if is_registered == "true" {
+        Ok(Json(format!("{frontend_url}/auth/bind?invite={encoded}",)))
     } else {
-        Ok(Json(format!(
-            "{}/auth/signup?invite={}",
-            frontend_url, encoded
-        )))
+        Ok(Json(
+            format!("{frontend_url}/auth/signup?invite={encoded}",),
+        ))
     }
 }
 

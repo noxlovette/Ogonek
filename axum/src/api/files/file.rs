@@ -5,11 +5,11 @@ use crate::models::files::{File, FileListParams, FileUpdate};
 use crate::s3::get_presigned_url;
 use crate::s3::post::delete_s3;
 use crate::schema::AppState;
+use axum::Json;
 use axum::extract::{Path, Query, State};
 use axum::http::StatusCode;
 use axum::response::IntoResponse;
-use axum::Json;
-use base64::{engine::general_purpose::STANDARD as BASE64, Engine as _};
+use base64::{Engine as _, engine::general_purpose::STANDARD as BASE64};
 use serde_json::json;
 
 pub async fn fetch_file(

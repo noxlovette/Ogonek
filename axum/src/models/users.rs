@@ -121,22 +121,3 @@ pub struct BindPayload {
     pub student_id: String,
     pub invite_token: String,
 }
-
-#[derive(Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct BindParams {
-    pub is_registered: String,
-}
-
-#[derive(Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct InviteTokenParams {
-    pub invite: Option<String>,
-}
-
-#[derive(Serialize)]
-#[serde(rename_all = "camelCase")]
-pub struct UserWithInvite {
-    pub user: User,
-    pub teacher: Option<User>,
-}

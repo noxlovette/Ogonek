@@ -1,7 +1,7 @@
 use crate::api::files::file;
 use crate::schema::AppState;
-use axum::routing::get;
 use axum::Router;
+use axum::routing::get;
 
 pub fn file_routes() -> Router<AppState> {
     Router::new()

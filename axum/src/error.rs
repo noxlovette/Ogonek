@@ -1,8 +1,8 @@
 use axum::{
+    Json,
     extract::multipart::MultipartError,
     http::StatusCode,
     response::{IntoResponse, Response},
-    Json,
 };
 use serde_json::json;
 use thiserror::Error;
@@ -167,23 +167,23 @@ where
     fn from(err: SdkError<E>) -> Self {
         match &err {
             SdkError::ConstructionFailure(err) => {
-                tracing::error!("S3 client construction error: {:?}", err);
+                tracing::error!("S3 client construction error: {err:?}");
                 Self::Internal("Failed to construct S3 client".into())
             }
             SdkError::DispatchFailure(err) => {
-                tracing::error!("S3 dispatch error: {:?}", err);
+                tracing::error!("S3 dispatch error: {err:?}");
                 Self::Internal("Failed to dispatch S3 request".into())
             }
             SdkError::ResponseError(err) => {
-                tracing::error!("S3 response error: {:?}", err);
+                tracing::error!("S3 response error: {err:?}");
                 Self::Internal("S3 response error".into())
             }
             SdkError::ServiceError(service_err) => {
                 // Log the full error for debugging
-                tracing::error!("S3 service error: {:?}", service_err);
+                tracing::error!("S3 service error: {service_err:?}");
 
                 // Check error type using string matching as a fallback
-                let err_str = format!("{:?}", service_err);
+                let err_str = format!("{service_err:?}");
 
                 if err_str.contains("NoSuchKey") || err_str.contains("NoSuchBucket") {
                     Self::NotFound("S3 resource not found".into())
@@ -196,11 +196,11 @@ where
                 {
                     Self::AlreadyExists("S3 bucket already exists".into())
                 } else {
-                    Self::Internal(format!("S3 service error: {:?}", service_err.err()))
+                    Self::Internal(format!("S3 service error: {service_err:?}"))
                 }
             }
             SdkError::TimeoutError(_) => Self::Internal("S3 request timed out".into()),
-            _ => Self::Internal(format!("Unknown S3 error: {:?}", err)),
+            _ => Self::Internal(format!("Unknown S3 error: {err:?}")),
         }
     }
 }
@@ -209,7 +209,7 @@ where
 impl From<PresigningConfigError> for AppError {
     fn from(err: PresigningConfigError) -> Self {
         tracing::error!("S3 presigning error: {:?}", err);
-        Self::Internal(format!("Failed to generate presigned URL: {}", err))
+        Self::Internal(format!("Failed to generate presigned URL: {err}"))
     }
 }
 
@@ -226,16 +226,14 @@ impl From<crate::db::error::DbError> for AppError {
     fn from(err: crate::db::error::DbError) -> Self {
         match err {
             crate::db::error::DbError::Database(msg) => {
-                Self::Internal(format!("Database operation failed: {}", msg))
+                Self::Internal(format!("Database operation failed: {msg}"))
             }
-            crate::db::error::DbError::NotFound(msg) => {
-                Self::NotFound(format!("Not found: {}", msg))
-            }
+            crate::db::error::DbError::NotFound(msg) => Self::NotFound(format!("Not found: {msg}")),
             crate::db::error::DbError::TransactionFailed => {
                 Self::Internal("Transaction failed".into())
             }
             crate::db::error::DbError::AlreadyExists(msg) => {
-                Self::AlreadyExists(format!("Resource already exists: {}", msg))
+                Self::AlreadyExists(format!("Resource already exists: {msg}"))
             }
         }
     }

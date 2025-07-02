@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 use sqlx::prelude::FromRow;
-use time::format_description::well_known::Rfc3339;
 use time::OffsetDateTime;
+use time::format_description::well_known::Rfc3339;
 
 #[derive(Debug, Deserialize)]
 pub struct PaginationParams {
@@ -49,13 +49,25 @@ pub struct LessonSmall {
     pub id: String,
     pub title: String,
     pub topic: String,
-    pub markdown: String,
     #[serde_as(as = "Rfc3339")]
     pub created_at: OffsetDateTime,
 }
 
 #[serde_with::serde_as]
 #[derive(Serialize, Deserialize, Debug, FromRow)]
+#[serde(rename_all = "camelCase")]
+pub struct LessonSmallWithStudent {
+    pub id: String,
+    pub title: String,
+    pub topic: String,
+    pub assignee: String,
+    #[serde_as(as = "Rfc3339")]
+    pub created_at: OffsetDateTime,
+}
+
+/// The lesson response sent to the server with the name of the assignee
+#[serde_with::serde_as]
+#[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct LessonWithStudent {
     pub id: String,
@@ -68,7 +80,7 @@ pub struct LessonWithStudent {
     pub created_at: OffsetDateTime,
     #[serde_as(as = "Rfc3339")]
     pub updated_at: OffsetDateTime,
-    pub assignee_name: String, // New field for the joined name
+    pub assignee_name: String,
 }
 
 #[derive(Serialize, Deserialize, Debug)]

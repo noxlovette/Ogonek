@@ -20,8 +20,6 @@ export const actions = {
       const username = formData.get("username") as string;
       const task = formData.get("task") as string;
       const teacherTelegramId = formData.get("teacherTelegramId") as string;
-      logger.info({ id, completed }, "Form Data Received");
-      // Validate required fields early
       if (!id) {
         logger.warn("Task completion attempted without ID");
         return fail(400, { message: "Task ID is required" });
@@ -39,16 +37,6 @@ export const actions = {
           );
         }
       }
-
-      logger.info(
-        {
-          taskId: id,
-          completed,
-          timestamp: new Date().toISOString(),
-        },
-        "Updating task completion status",
-      );
-
       const body = { completed, id };
 
       const response = await fetch(`/axum/task/t/${id}`, {
@@ -82,10 +70,10 @@ export const actions = {
       );
 
       return { success: true };
-    } catch (error: any) {
+    } catch (err: any) {
       logger.error("Unexpected error in task completion", {
-        error: error.message,
-        stack: error.stack,
+        error: err.message,
+        stack: err.stack,
         duration: performance.now() - startTime,
       });
       return fail(500, { message: "Internal server error" });
@@ -144,11 +132,11 @@ export const actions = {
       );
 
       return { url, success: true };
-    } catch (error: any) {
+    } catch (err: any) {
       logger.error(
         {
-          error: error.message,
-          stack: error.stack,
+          error: err.message,
+          stack: err.stack,
           duration: performance.now() - startTime,
         },
         "Unexpected error in file download",
@@ -199,12 +187,12 @@ export const actions = {
       );
 
       return { success: true, message: "File deleted" };
-    } catch (error: any) {
+    } catch (err: any) {
       // Catch any unexpected errors
       logger.error(
         {
-          error: error.message,
-          stack: error.stack,
+          error: err.message,
+          stack: err.stack,
           duration: performance.now() - startTime,
         },
         "Unexpected error in deleteFile",

@@ -1,8 +1,8 @@
 use crate::api::files;
 use crate::s3::fetch;
 use crate::schema::AppState;
-use axum::routing::{get, post};
 use axum::Router;
+use axum::routing::{get, post};
 
 pub fn s3_routes() -> Router<AppState> {
     Router::new()

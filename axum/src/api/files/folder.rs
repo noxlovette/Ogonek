@@ -19,9 +19,9 @@ pub async fn create_folder(
     };
 
     let folder_path = if parent_path.ends_with('/') {
-        format!("{}{}", parent_path, payload.name)
+        format!("{parent_path}{payload.name}")
     } else {
-        format!("{}/{}", parent_path, payload.name)
+        format!("{parent_path}/{payload.name}")
     };
 
     let folder_id = nanoid::nanoid!();

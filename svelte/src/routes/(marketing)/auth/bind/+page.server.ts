@@ -4,20 +4,19 @@ import {
   ValidateAccess,
 } from "$lib/server";
 
-import type { UserAndTeacher } from "$lib/types";
+import type { User } from "$lib/types";
 import { fail, redirect } from "@sveltejs/kit";
 import type { Actions, PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async ({ fetch, url }) => {
   const invite = url.searchParams.get("invite");
-  const response = await fetch(`/axum/user?invite=${invite}`).then(
-    (res) => res.json() as Promise<UserAndTeacher>,
+  const response = await fetch(`/axum/inviter?invite=${invite}`).then(
+    (res) => res.json() as Promise<User>,
   );
 
-  const { teacher, user } = response;
+  const { inviter } = response;
   return {
-    user,
-    teacher,
+    inviter,
   };
 };
 

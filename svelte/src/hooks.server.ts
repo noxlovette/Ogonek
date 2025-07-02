@@ -65,11 +65,11 @@ export const handle: Handle = sequence(
     const isStudentRoute = role === "s";
 
     if (isTeacherRoute && user.role !== "teacher") {
-      logger.info("Redirecting to unauthorised as student");
+      logger.warn("Redirecting to unauthorised as student");
       throw redirect(303, "/unauthorised");
     }
     if (isStudentRoute && user.role !== "student") {
-      logger.info("Redirecting to unauthorised as teacher");
+      logger.warn("Redirecting to unauthorised as teacher");
       throw redirect(303, "/unauthorised");
     }
 
@@ -81,7 +81,7 @@ export const handle: Handle = sequence(
 async function handleTokenRefresh(event: RequestEvent) {
   const refreshToken = event.cookies.get("refreshToken");
   if (!refreshToken) {
-    logger.info("Redirecting unauthorised user");
+    logger.warn("Redirecting unauthorised user");
     throw redirect(302, "/auth/login");
   }
 
@@ -107,7 +107,6 @@ async function handleTokenRefresh(event: RequestEvent) {
   await redis.set(refreshCacheKey, "true", "EX", 5);
 
   try {
-    logger.info("Sending request to refresh token");
     const refreshRes = await event.fetch("/auth/refresh", {
       method: "POST",
       headers: {
@@ -141,13 +140,11 @@ async function handleTokenRefresh(event: RequestEvent) {
 }
 
 async function getUserFromToken(event: RequestEvent) {
-  logger.debug("Getting user from token");
   const accessToken = event.cookies.get("accessToken");
   let user = null;
 
   if (accessToken) {
     try {
-      logger.debug("Validating user from token");
       user = await ValidateAccess(accessToken);
     } catch (error) {
       logger.debug({ error }, "Attempting to refresh user from token");
