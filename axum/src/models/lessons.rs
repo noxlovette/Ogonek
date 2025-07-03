@@ -3,6 +3,7 @@ use sqlx::prelude::FromRow;
 use time::OffsetDateTime;
 use time::format_description::well_known::Rfc3339;
 
+/// Pagination for lessons
 #[derive(Debug, Deserialize)]
 pub struct PaginationParams {
     pub page: Option<i64>,
@@ -27,41 +28,14 @@ impl PaginationParams {
 }
 
 #[serde_with::serde_as]
-#[derive(Serialize, Deserialize, Debug)]
-#[serde(rename_all = "camelCase")]
-pub struct Lesson {
-    pub id: String,
-    pub title: String,
-    pub topic: String,
-    pub markdown: String,
-    pub assignee: String,
-    pub created_by: String,
-    #[serde_as(as = "Rfc3339")]
-    pub created_at: OffsetDateTime,
-    #[serde_as(as = "Rfc3339")]
-    pub updated_at: OffsetDateTime,
-}
-
-#[serde_with::serde_as]
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, FromRow)]
 #[serde(rename_all = "camelCase")]
 pub struct LessonSmall {
     pub id: String,
     pub title: String,
     pub topic: String,
-    #[serde_as(as = "Rfc3339")]
-    pub created_at: OffsetDateTime,
-}
-
-#[serde_with::serde_as]
-#[derive(Serialize, Deserialize, Debug, FromRow)]
-#[serde(rename_all = "camelCase")]
-pub struct LessonSmallWithStudent {
-    pub id: String,
-    pub title: String,
-    pub topic: String,
-    pub assignee: String,
     pub assignee_name: String,
+    pub seen: Option<bool>,
     #[serde_as(as = "Rfc3339")]
     pub created_at: OffsetDateTime,
 }
@@ -70,7 +44,7 @@ pub struct LessonSmallWithStudent {
 #[serde_with::serde_as]
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
-pub struct LessonWithStudent {
+pub struct LessonFull {
     pub id: String,
     pub title: String,
     pub topic: String,
@@ -104,6 +78,7 @@ pub struct LessonUpdate {
     pub created_by: Option<String>,
 }
 
+// NOT IMPLEMENTED
 #[serde_with::serde_as]
 #[derive(Debug, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -119,7 +94,6 @@ pub struct StudentNote {
     pub updated_at: Option<OffsetDateTime>,
 }
 
-// What the client can send (payload structure)
 #[derive(Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct StudentNoteUpdate {

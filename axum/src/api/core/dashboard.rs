@@ -8,6 +8,9 @@ use crate::schema::AppState;
 use axum::extract::Json;
 use axum::extract::State;
 
+/// This data populates the sidebar with badges,
+/// the dashboard view with data,
+/// and the stores for profile and user
 pub async fn fetch_dashboard(
     State(state): State<AppState>,
     claims: Claims,
