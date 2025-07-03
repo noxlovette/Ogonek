@@ -1,7 +1,8 @@
 use crate::api::error::APIError;
 use crate::auth::Claims;
+use crate::db::crud::core;
 use crate::db::crud::core::task::{
-    add_files, count, create, delete, fetch_recent, find_all, find_by_id, update,
+    add_files, count, create, delete, fetch_recent, find_all, find_assignee, find_by_id, update,
 };
 use crate::db::crud::files::file::fetch_files_task;
 
@@ -31,6 +32,7 @@ pub async fn fetch_task(
 ) -> Result<Json<TaskWithFilesResponse>, APIError> {
     let task = find_by_id(&state.db, &id, &claims.sub).await?;
     let files = fetch_files_task(&state.db, &id).await?;
+    core::seen::mark_as_seen(&state.db, &claims.sub, &id, core::seen::ModelType::Task).await?;
 
     Ok(Json(TaskWithFilesResponse { task, files }))
 }
@@ -95,8 +97,27 @@ pub async fn update_task(
     claims: Claims,
     Json(payload): Json<TaskUpdate>,
 ) -> Result<StatusCode, APIError> {
-    update(&state.db, &id, &claims.sub, payload).await?;
+    // fetch assignee before update
+    let current_assignee = find_assignee(&state.db, &id, &claims.sub).await?;
 
+    // update the task
+    update(&state.db, &id, &claims.sub, &payload).await?;
+
+    // check if assignee changed
+    let new_assignee = payload.assignee.clone();
+
+    if new_assignee != current_assignee {
+        // remove seen record for old assignee
+        if let Some(old_user) = current_assignee {
+            core::seen::delete_seen(&state.db, &old_user, &id, core::seen::ModelType::Task).await?;
+        }
+
+        // insert unseen for new assignee
+        if let Some(new_user) = new_assignee {
+            core::seen::insert_as_unseen(&state.db, &new_user, &id, core::seen::ModelType::Task)
+                .await?;
+        }
+    }
     Ok(StatusCode::NO_CONTENT)
 }
 

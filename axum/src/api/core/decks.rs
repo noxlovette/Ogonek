@@ -1,6 +1,7 @@
 use crate::api::error::APIError;
 use crate::auth::Claims;
-use crate::db::crud::words;
+use crate::db::crud::core;
+use crate::db::crud::words::{self, deck};
 use crate::models::{
     CreationId, Deck, DeckCreate, DeckFilterParams, DeckSmall, DeckWithCardsAndSubscription,
     DeckWithCardsUpdate,
@@ -32,6 +33,14 @@ pub async fn fetch_deck(
         words::subscribe::check_subscription(&state.db, &deck_id, &claims.sub).await?;
 
     let cards = words::card::find_all(&state.db, &deck_id).await?;
+
+    core::seen::mark_as_seen(
+        &state.db,
+        &claims.sub,
+        &deck_id,
+        core::seen::ModelType::Deck,
+    )
+    .await?;
 
     Ok(Json(Some(DeckWithCardsAndSubscription {
         deck: Deck {
@@ -72,7 +81,27 @@ pub async fn update_deck(
     Path(deck_id): Path<String>,
     Json(payload): Json<DeckWithCardsUpdate>,
 ) -> Result<StatusCode, APIError> {
+    let current_assignee = deck::find_assignee(&state.db, &deck_id, &claims.sub).await?;
+    let new_assignee = payload.deck.assignee.clone();
+
     words::deck::update(&state.db, &deck_id, &claims.sub, payload).await?;
+
+    if new_assignee != current_assignee {
+        if let Some(old_user) = current_assignee {
+            core::seen::delete_seen(&state.db, &old_user, &deck_id, core::seen::ModelType::Deck)
+                .await?;
+        }
+
+        if let Some(new_user) = new_assignee {
+            core::seen::insert_as_unseen(
+                &state.db,
+                &new_user,
+                &deck_id,
+                core::seen::ModelType::Deck,
+            )
+            .await?;
+        }
+    }
     Ok(StatusCode::NO_CONTENT)
 }
 

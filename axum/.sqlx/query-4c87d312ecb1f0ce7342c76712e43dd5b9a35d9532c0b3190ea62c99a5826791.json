@@ -1,0 +1,16 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        INSERT INTO seen_status (user_id, model_type, model_id, seen_at)\n        VALUES ($1, $2, $3, NULL)\n        ON CONFLICT (user_id, model_type, model_id) DO NOTHING;\n        ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Varchar",
+        "Text",
+        "Varchar"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "4c87d312ecb1f0ce7342c76712e43dd5b9a35d9532c0b3190ea62c99a5826791"
+}

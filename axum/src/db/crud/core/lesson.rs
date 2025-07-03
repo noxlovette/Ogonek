@@ -181,6 +181,29 @@ pub async fn update(
 
     Ok(())
 }
+
+/// Finds assignee for the lesson by its id, will return null if the user doesn't have access to the data
+pub async fn find_assignee(
+    db: &PgPool,
+    lesson_id: &str,
+    user_id: &str,
+) -> Result<Option<String>, DbError> {
+    let assignee = sqlx::query_scalar!(
+        r#"
+        SELECT assignee
+        FROM lessons
+        WHERE id = $1
+        AND (assignee = $2 OR created_by = $2)
+        "#,
+        lesson_id,
+        user_id
+    )
+    .fetch_optional(db) // in case lesson is not found
+    .await?;
+
+    Ok(assignee)
+}
+
 pub async fn count(db: &PgPool, user_id: &str) -> Result<i64, DbError> {
     let count = sqlx::query_scalar!(
         "SELECT COUNT(*) FROM lessons WHERE
@@ -450,7 +473,7 @@ mod tests {
             created_by: None,
         };
 
-        let result = update(&db, &creation_id.id, &user, lesson_update).await;
+        let result = update(&db, &creation_id.id, &user, &lesson_update).await;
         assert!(result.is_ok());
 
         // Verify the update
@@ -483,7 +506,7 @@ mod tests {
             created_by: None,
         };
 
-        let result = update(&db, &creation_id.id, &other_user, lesson_update).await;
+        let result = update(&db, &creation_id.id, &other_user, &lesson_update).await;
         assert!(result.is_ok()); // Query succeeds but affects 0 rows
 
         // Verify no changes were made

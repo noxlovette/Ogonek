@@ -27,6 +27,7 @@ pub async fn fetch_lesson(
     claims: Claims,
 ) -> Result<Json<LessonWithStudent>, APIError> {
     let lesson = lesson::find_by_id(&state.db, &id, &claims.sub).await?;
+    core::seen::mark_as_seen(&state.db, &claims.sub, &id, core::seen::ModelType::Lesson).await?;
     Ok(Json(lesson))
 }
 pub async fn list_lessons(
@@ -70,14 +71,28 @@ pub async fn update_lesson(
     claims: Claims,
     Json(payload): Json<LessonUpdate>,
 ) -> Result<StatusCode, APIError> {
+    // fetch assignee before update
+    let current_assignee = lesson::find_assignee(&state.db, &id, &claims.sub).await?;
+
+    // update the lesson
     lesson::update(&state.db, &id, &claims.sub, &payload).await?;
-    core::seen::insert_as_unseen(
-        &state.db,
-        &payload.assignee.unwrap_or("".to_string()),
-        &id,
-        core::seen::ModelType::Lesson,
-    )
-    .await?;
+
+    // check if assignee changed
+    let new_assignee = payload.assignee.clone();
+
+    if new_assignee != current_assignee {
+        // remove seen record for old assignee
+        if let Some(old_user) = current_assignee {
+            core::seen::delete_seen(&state.db, &old_user, &id, core::seen::ModelType::Lesson)
+                .await?;
+        }
+
+        // insert unseen for new assignee
+        if let Some(new_user) = new_assignee {
+            core::seen::insert_as_unseen(&state.db, &new_user, &id, core::seen::ModelType::Lesson)
+                .await?;
+        }
+    }
 
     Ok(StatusCode::NO_CONTENT)
 }

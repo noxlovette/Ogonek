@@ -176,6 +176,28 @@ pub async fn delete(db: &PgPool, deck_id: &str, user_id: &str) -> Result<(), DbE
     Ok(())
 }
 
+/// Finds the assignee for the deck
+pub async fn find_assignee(
+    db: &PgPool,
+    lesson_id: &str,
+    user_id: &str,
+) -> Result<Option<String>, DbError> {
+    let assignee = sqlx::query_scalar!(
+        r#"
+        SELECT assignee
+        FROM decks
+        WHERE id = $1
+        AND (assignee = $2 OR created_by = $2)
+        "#,
+        lesson_id,
+        user_id
+    )
+    .fetch_one(db) // in case lesson is not found
+    .await?;
+
+    Ok(assignee)
+}
+
 /// Updates a deck
 pub async fn update(
     db: &PgPool,

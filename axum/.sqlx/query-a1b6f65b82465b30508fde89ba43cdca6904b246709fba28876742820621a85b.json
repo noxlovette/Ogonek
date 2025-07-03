@@ -1,0 +1,16 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "DELETE FROM seen_status WHERE user_id = $1 AND model_type = $2 AND model_id = $3",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Text",
+        "Text"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "a1b6f65b82465b30508fde89ba43cdca6904b246709fba28876742820621a85b"
+}

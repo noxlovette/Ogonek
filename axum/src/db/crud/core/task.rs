@@ -185,11 +185,34 @@ pub async fn delete_system(db: &PgPool, id: &str, file_ids: Vec<String>) -> Resu
     Ok(())
 }
 
+/// Finds the assignee for the task
+pub async fn find_assignee(
+    db: &PgPool,
+    lesson_id: &str,
+    user_id: &str,
+) -> Result<Option<String>, DbError> {
+    let assignee = sqlx::query_scalar!(
+        r#"
+        SELECT assignee
+        FROM tasks
+        WHERE id = $1
+        AND (assignee = $2 OR created_by = $2)
+        "#,
+        lesson_id,
+        user_id
+    )
+    .fetch_optional(db) // in case lesson is not found
+    .await?;
+
+    Ok(assignee)
+}
+
+/// Updates the task and inserts associated files
 pub async fn update(
     db: &PgPool,
     id: &str,
     user_id: &str,
-    update: TaskUpdate,
+    update: &TaskUpdate,
 ) -> Result<(), DbError> {
     sqlx::query!(
         "UPDATE tasks
@@ -454,7 +477,7 @@ mod tests {
             due_date: None,
             assignee: None,
         };
-        update(&db, &task_id, &user_id, update_task).await.unwrap();
+        update(&db, &task_id, &user_id, &update_task).await.unwrap();
 
         // Create incomplete task
         create_test_task(&db, &user_id, &user_id).await;
@@ -517,7 +540,7 @@ mod tests {
             assignee: None,
         };
 
-        let result = update(&db, &task_id, &user_id, update_task).await;
+        let result = update(&db, &task_id, &user_id, &update_task).await;
         assert!(result.is_ok());
 
         // Verify the update
@@ -543,7 +566,7 @@ mod tests {
             assignee: None,
         };
 
-        let result = update(&db, &task_id, &other_user_id, update_task).await;
+        let result = update(&db, &task_id, &other_user_id, &update_task).await;
         assert!(result.is_ok()); // Query succeeds but affects 0 rows
 
         // Verify no changes were made
@@ -641,7 +664,7 @@ mod tests {
                     due_date: None,
                     assignee: None,
                 };
-                update(&db, &task_id, &user_id, update_task).await.unwrap();
+                update(&db, &task_id, &user_id, &update_task).await.unwrap();
             }
         }
 

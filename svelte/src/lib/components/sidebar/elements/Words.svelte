@@ -2,8 +2,11 @@
   import { WholeWord } from "lucide-svelte";
   import SidebarItem from "./SidebarItem.svelte";
   import { user } from "$lib/stores";
+  import { getContext } from "svelte";
 
   let href = $user.role === "teacher" ? "/t/words" : "/s/words";
+
+  const deckCount = getContext<number>("deckCount");
 </script>
 
-<SidebarItem {href} Icon={WholeWord} name="Words" />
+<SidebarItem {href} Icon={WholeWord} name="Words" badge={deckCount} />

@@ -47,6 +47,24 @@ pub async fn mark_as_seen(
     Ok(())
 }
 
+pub async fn delete_seen(
+    db: &PgPool,
+    user_id: &str,
+    model_id: &str,
+    model_type: ModelType,
+) -> Result<(), DbError> {
+    sqlx::query!(
+        "DELETE FROM seen_status WHERE user_id = $1 AND model_type = $2 AND model_id = $3",
+        user_id,
+        model_type.as_str(),
+        model_id
+    )
+    .execute(db)
+    .await?;
+
+    Ok(())
+}
+
 /// Will return how many of the selected model type and user have not been seen yet
 pub async fn get_seen_badge(
     db: &PgPool,
