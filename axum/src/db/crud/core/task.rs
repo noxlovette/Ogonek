@@ -1,33 +1,33 @@
 use crate::db::error::DbError;
 use crate::models::{
-    CreationId, TaskCreate, TaskPaginationParams, TaskSmall, TaskUpdate, TaskWithStudent,
+    CreationId, TaskCreate, TaskFull, TaskPaginationParams, TaskSmall, TaskUpdate,
 };
 use sqlx::PgPool;
 
+/// Mini-tasks
 pub async fn find_all(
     db: &PgPool,
     user_id: &str,
     params: &TaskPaginationParams,
-) -> Result<Vec<TaskWithStudent>, DbError> {
+) -> Result<Vec<TaskSmall>, DbError> {
     let mut query_builder = sqlx::QueryBuilder::new(
-        "SELECT
+        r#"SELECT
                 t.id,
                 t.title,
-                t.markdown,
                 t.priority,
                 t.completed,
                 t.due_date,
-                t.file_path,
-                t.assignee,
-                t.created_by,
-                t.created_at,
-                t.updated_at,
-                u.name as assignee_name
+                u.name as assignee_name,
+                COALESCE(s.seen_at IS NOT NULL, TRUE) as seen
             FROM tasks t
-            LEFT JOIN \"user\" u ON t.assignee = u.id
-            WHERE (t.assignee = ",
+            LEFT JOIN "user" u ON t.assignee = u.id
+            LEFT JOIN seen_status s ON s.model_id = t.id AND s.user_id = "#,
     );
-
+    query_builder.push_bind(user_id);
+    query_builder.push(
+        r#"
+            WHERE (t.assignee = "#,
+    );
     query_builder.push_bind(user_id);
     query_builder.push(" OR t.created_by = ");
     query_builder.push_bind(user_id);
@@ -70,16 +70,16 @@ pub async fn find_all(
 
     // Execute the query
     let tasks = query_builder
-        .build_query_as::<TaskWithStudent>()
+        .build_query_as::<TaskSmall>()
         .fetch_all(db)
         .await?;
-
     Ok(tasks)
 }
 
-pub async fn find_by_id(db: &PgPool, id: &str, user_id: &str) -> Result<TaskWithStudent, DbError> {
+/// Returns the full Task with all fields
+pub async fn find_by_id(db: &PgPool, id: &str, user_id: &str) -> Result<TaskFull, DbError> {
     let task = sqlx::query_as!(
-        TaskWithStudent,
+        TaskFull,
         r#"
             SELECT
                 t.id,
@@ -99,7 +99,7 @@ pub async fn find_by_id(db: &PgPool, id: &str, user_id: &str) -> Result<TaskWith
             AND (t.assignee = $2 OR t.created_by = $2)
             "#,
         id,
-        user_id
+        user_id,
     )
     .fetch_optional(db)
     .await?
@@ -108,6 +108,7 @@ pub async fn find_by_id(db: &PgPool, id: &str, user_id: &str) -> Result<TaskWith
     Ok(task)
 }
 
+/// Creates a task
 pub async fn create(
     db: &PgPool,
     task: &TaskCreate,
@@ -132,6 +133,8 @@ pub async fn create(
 
     Ok(id)
 }
+
+/// Deletes a task
 pub async fn delete(
     db: &PgPool,
     id: &str,
@@ -185,11 +188,34 @@ pub async fn delete_system(db: &PgPool, id: &str, file_ids: Vec<String>) -> Resu
     Ok(())
 }
 
+/// Finds the assignee for the task
+pub async fn find_assignee(
+    db: &PgPool,
+    lesson_id: &str,
+    user_id: &str,
+) -> Result<Option<String>, DbError> {
+    let assignee = sqlx::query_scalar!(
+        r#"
+        SELECT assignee
+        FROM tasks
+        WHERE id = $1
+        AND (assignee = $2 OR created_by = $2)
+        "#,
+        lesson_id,
+        user_id
+    )
+    .fetch_optional(db) // in case lesson is not found
+    .await?;
+
+    Ok(assignee)
+}
+
+/// Updates the task and inserts associated files
 pub async fn update(
     db: &PgPool,
     id: &str,
     user_id: &str,
-    update: TaskUpdate,
+    update: &TaskUpdate,
 ) -> Result<(), DbError> {
     sqlx::query!(
         "UPDATE tasks
@@ -228,16 +254,21 @@ pub async fn count(db: &PgPool, user_id: &str) -> Result<i64, DbError> {
     Ok(count.unwrap_or(0))
 }
 
-pub async fn fetch_recent(db: &PgPool, user_id: &str) -> Result<Vec<TaskSmall>, DbError> {
+pub async fn find_recent(db: &PgPool, user_id: &str) -> Result<Vec<TaskSmall>, DbError> {
     let tasks = sqlx::query_as!(
         TaskSmall,
         r#"
-        SELECT id,
-            title,
-            priority,
-            completed,
-            due_date
-        FROM tasks
+        SELECT
+                t.id,
+                t.title,
+                t.priority,
+                t.completed,
+                t.due_date,
+                u.name as assignee_name,
+               COALESCE(s.seen_at IS NOT NULL, TRUE) as seen
+            FROM tasks t
+            LEFT JOIN "user" u ON t.assignee = u.id
+            LEFT JOIN seen_status s ON s.model_id = t.id AND s.user_id = $1
         WHERE (assignee = $1 OR created_by = $1)
         AND completed = false
         ORDER BY created_at DESC
@@ -454,7 +485,7 @@ mod tests {
             due_date: None,
             assignee: None,
         };
-        update(&db, &task_id, &user_id, update_task).await.unwrap();
+        update(&db, &task_id, &user_id, &update_task).await.unwrap();
 
         // Create incomplete task
         create_test_task(&db, &user_id, &user_id).await;
@@ -499,7 +530,6 @@ mod tests {
 
         let tasks = result.unwrap();
         assert_eq!(tasks.len(), 1);
-        assert_eq!(tasks[0].assignee, assignee1_id);
     }
 
     #[sqlx::test]
@@ -517,7 +547,7 @@ mod tests {
             assignee: None,
         };
 
-        let result = update(&db, &task_id, &user_id, update_task).await;
+        let result = update(&db, &task_id, &user_id, &update_task).await;
         assert!(result.is_ok());
 
         // Verify the update
@@ -543,7 +573,7 @@ mod tests {
             assignee: None,
         };
 
-        let result = update(&db, &task_id, &other_user_id, update_task).await;
+        let result = update(&db, &task_id, &other_user_id, &update_task).await;
         assert!(result.is_ok()); // Query succeeds but affects 0 rows
 
         // Verify no changes were made
@@ -641,11 +671,11 @@ mod tests {
                     due_date: None,
                     assignee: None,
                 };
-                update(&db, &task_id, &user_id, update_task).await.unwrap();
+                update(&db, &task_id, &user_id, &update_task).await.unwrap();
             }
         }
 
-        let result = fetch_recent(&db, &user_id).await;
+        let result = find_recent(&db, &user_id).await;
         assert!(result.is_ok());
 
         let tasks = result.unwrap();

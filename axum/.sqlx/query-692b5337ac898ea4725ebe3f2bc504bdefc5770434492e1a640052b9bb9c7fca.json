@@ -1,0 +1,23 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        SELECT assignee\n        FROM lessons\n        WHERE id = $1\n        AND (assignee = $2 OR created_by = $2)\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "assignee",
+        "type_info": "Varchar"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Text"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "692b5337ac898ea4725ebe3f2bc504bdefc5770434492e1a640052b9bb9c7fca"
+}

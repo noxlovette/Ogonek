@@ -1,14 +1,15 @@
 <script lang="ts">
-  import type { Deck, DeckSmall } from "$lib/types";
+  import type { DeckSmall } from "$lib/types";
 
   import { user } from "$lib/stores";
   import CardClickable from "./CardClickable.svelte";
   import Badge from "./Badge.svelte";
   import { H3 } from "../typography";
   import { Circle, CircleCheckBig } from "lucide-svelte";
+  import SeenBadge from "./SeenBadge.svelte";
 
   interface Props {
-    deck: Deck | DeckSmall;
+    deck: DeckSmall;
   }
 
   let { deck }: Props = $props();
@@ -37,4 +38,6 @@
       <Badge badgeText={badgeCnunk}></Badge>
     {/each}
   </div>
+
+  <SeenBadge seen={deck.seen} />
 </CardClickable>

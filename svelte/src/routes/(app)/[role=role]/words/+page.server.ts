@@ -30,31 +30,26 @@ export const load: PageServerLoad = async ({ fetch, url }) => {
 export const actions: Actions = {
   // Creates a new deck
   new: async ({ fetch }) => {
-    try {
-      const body = {
-        name: "New Deck",
-        description: "Your New Deck",
-        shared: false,
-      };
+    const body = {
+      name: "New Deck",
+      description: "Your New Deck",
+      shared: false,
+    };
 
-      const response = await fetch(`/axum/deck`, {
-        method: "POST",
-        body: JSON.stringify(body),
-      });
+    const response = await fetch(`/axum/deck`, {
+      method: "POST",
+      body: JSON.stringify(body),
+    });
 
-      const newResult = await handleApiResponse<NewResponse>(response);
+    const newResult = await handleApiResponse<NewResponse>(response);
 
-      if (!isSuccessResponse(newResult)) {
-        logger.error({ newResult }, "Deck creation failed");
-        return fail(newResult.status, { message: newResult.message });
-      }
-
-      const { id } = newResult.data;
-
-      return redirect(301, `words/w/${id}/edit`);
-    } catch (err: any) {
-      logger.error({ err }, "Error creating new deck");
-      return error(500);
+    if (!isSuccessResponse(newResult)) {
+      logger.error({ newResult }, "Deck creation failed");
+      return fail(newResult.status, { message: newResult.message });
     }
+
+    const { id } = newResult.data;
+
+    return redirect(301, `words/w/${id}/edit`);
   },
 };

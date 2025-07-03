@@ -6,6 +6,7 @@
   import { H3 } from "../typography";
   import { getUrgency } from "$lib/utils";
   import Priority from "./Priority.svelte";
+  import SeenBadge from "./SeenBadge.svelte";
 
   let { task } = $props();
   const formattedDate: string = formatDate(task.dueDate);
@@ -25,4 +26,5 @@
     <Priority priority={task.priority} />
   </div>
   <Badge {badgeText} {urgency} />
+  <SeenBadge seen={task.seen} />
 </CardClickable>

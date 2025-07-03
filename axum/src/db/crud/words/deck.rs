@@ -1,6 +1,6 @@
 use crate::db::error::DbError;
 use crate::models::{
-    CreationId, Deck, DeckCreate, DeckFilterParams, DeckSmall, DeckWithCardsUpdate,
+    CreationId, DeckCreate, DeckFilterParams, DeckFull, DeckPublic, DeckSmall, DeckWithCardsUpdate,
 };
 use sqlx::PgPool;
 
@@ -8,18 +8,30 @@ pub async fn find_all(
     db: &PgPool,
     user_id: &str,
     params: &DeckFilterParams,
-) -> Result<Vec<Deck>, DbError> {
+) -> Result<Vec<DeckSmall>, DbError> {
     let mut query_builder = sqlx::QueryBuilder::new(
-        "SELECT d.id, d.name, d.description, d.visibility, d.assignee, d.created_by, d.created_at,
-                EXISTS (
-                    SELECT 1 FROM deck_subscriptions s 
-                    WHERE s.deck_id = d.id AND s.user_id = ",
+        r#"SELECT 
+            d.id, 
+            d.name, 
+            d.description, 
+            d.visibility,
+            u.name as assignee_name,
+            COALESCE(s.seen_at IS NOT NULL, TRUE) as seen,
+            EXISTS (
+                SELECT 1 FROM deck_subscriptions ds 
+                WHERE ds.deck_id = d.id AND ds.user_id = "#,
     );
     query_builder.push_bind(user_id);
     query_builder.push(
-        ") as is_subscribed
-        FROM decks d
-        WHERE (d.created_by = ",
+        r#") AS is_subscribed
+            FROM decks d
+            LEFT JOIN "user" u ON d.assignee = u.id
+            LEFT JOIN seen_status s ON s.model_id = d.id AND s.user_id = "#,
+    );
+    query_builder.push_bind(user_id);
+    query_builder.push(
+        r#"
+            WHERE (d.created_by = "#,
     );
     query_builder.push_bind(user_id);
     query_builder.push(" OR d.assignee = ");
@@ -27,28 +39,31 @@ pub async fn find_all(
     query_builder.push(")");
 
     if let Some(search) = &params.search {
-        query_builder.push(" AND (name ILIKE ");
+        query_builder.push(" AND (d.name ILIKE ");
         query_builder.push_bind(format!("%{search}%"));
-        query_builder.push(" OR description ILIKE ");
+        query_builder.push(" OR d.description ILIKE ");
         query_builder.push_bind(format!("%{search}%"));
         query_builder.push(")");
     }
 
     if let Some(assignee) = &params.assignee {
-        query_builder.push(" AND assignee = ");
+        query_builder.push(" AND d.assignee = ");
         query_builder.push_bind(assignee);
     }
 
-    query_builder.push(" ORDER BY created_at DESC");
+    query_builder.push(" ORDER BY d.created_at DESC");
 
-    let decks = query_builder.build_query_as::<Deck>().fetch_all(db).await?;
-
+    let decks = query_builder
+        .build_query_as::<DeckSmall>()
+        .fetch_all(db)
+        .await?;
     Ok(decks)
 }
 
-pub async fn find_by_id(db: &PgPool, deck_id: &str, user_id: &str) -> Result<Deck, DbError> {
+/// Find a deck by id WITH cards and subscription status included
+pub async fn find_by_id(db: &PgPool, deck_id: &str, user_id: &str) -> Result<DeckFull, DbError> {
     let deck = sqlx::query_as!(
-        Deck,
+        DeckFull,
         r#"
         SELECT 
         d.id, 
@@ -82,9 +97,9 @@ pub async fn find_by_id(db: &PgPool, deck_id: &str, user_id: &str) -> Result<Dec
     Ok(deck)
 }
 
-pub async fn find_all_public(db: &PgPool) -> Result<Vec<DeckSmall>, DbError> {
+pub async fn find_all_public(db: &PgPool) -> Result<Vec<DeckPublic>, DbError> {
     let decks = sqlx::query_as!(
-        DeckSmall,
+        DeckPublic,
         r#"
  SELECT id, name, description
  FROM decks
@@ -97,6 +112,42 @@ pub async fn find_all_public(db: &PgPool) -> Result<Vec<DeckSmall>, DbError> {
     Ok(decks)
 }
 
+/// Returns three decks
+pub async fn find_recent(db: &PgPool, user_id: &str) -> Result<Vec<DeckSmall>, DbError> {
+    tracing::info!("Fetching recent tasks for {user_id}");
+    let decks = sqlx::query_as!(
+        DeckSmall,
+        r#"
+        SELECT 
+        d.id, 
+        d.name, 
+        d.description, 
+        d.visibility,
+        COALESCE(u.name, NULL) AS assignee_name,
+        COALESCE(s.seen_at IS NOT NULL, TRUE) as seen,
+        EXISTS (
+            SELECT 1 FROM deck_subscriptions s
+            WHERE s.deck_id = d.id AND user_id = $1
+        ) AS "is_subscribed!"
+    FROM decks d
+    LEFT JOIN "user" u on d.assignee = u.id
+    LEFT JOIN seen_status s ON s.model_id = d.id AND s.user_id = $1
+    WHERE (
+        d.created_by = $1
+        OR d.assignee = $1
+    )
+    ORDER BY created_at DESC
+    LIMIT 3
+    "#,
+        user_id,
+    )
+    .fetch_all(db)
+    .await?;
+
+    Ok(decks)
+}
+
+/// Creates a new deck
 pub async fn create(db: &PgPool, user_id: &str, create: DeckCreate) -> Result<CreationId, DbError> {
     let visibility = if create.assignee.is_some() {
         create.visibility.unwrap_or("assigned".to_string())
@@ -123,6 +174,7 @@ pub async fn create(db: &PgPool, user_id: &str, create: DeckCreate) -> Result<Cr
     Ok(id)
 }
 
+/// Deletes a deck
 pub async fn delete(db: &PgPool, deck_id: &str, user_id: &str) -> Result<(), DbError> {
     sqlx::query!(
         r#"
@@ -138,6 +190,29 @@ pub async fn delete(db: &PgPool, deck_id: &str, user_id: &str) -> Result<(), DbE
     Ok(())
 }
 
+/// Finds the assignee for the deck
+pub async fn find_assignee(
+    db: &PgPool,
+    lesson_id: &str,
+    user_id: &str,
+) -> Result<Option<String>, DbError> {
+    let assignee = sqlx::query_scalar!(
+        r#"
+        SELECT assignee
+        FROM decks
+        WHERE id = $1
+        AND (assignee = $2 OR created_by = $2)
+        "#,
+        lesson_id,
+        user_id
+    )
+    .fetch_one(db) // in case lesson is not found
+    .await?;
+
+    Ok(assignee)
+}
+
+/// Updates a deck
 pub async fn update(
     db: &PgPool,
     deck_id: &str,
@@ -211,6 +286,8 @@ pub async fn update(
 
     Ok(())
 }
+
+/// Count the overall number of deck
 pub async fn count(db: &PgPool, user_id: &str) -> Result<i64, DbError> {
     let count = sqlx::query_scalar!(
         "SELECT COUNT(*) FROM decks WHERE
@@ -552,7 +629,6 @@ mod tests {
 
         let decks = result.unwrap();
         assert_eq!(decks.len(), 1);
-        assert_eq!(decks[0].assignee, Some(assignee_id));
     }
 
     #[sqlx::test]

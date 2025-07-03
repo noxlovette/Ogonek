@@ -34,7 +34,7 @@ impl TaskPaginationParams {
 #[serde_with::serde_as]
 #[derive(Serialize, Deserialize, Debug, Validate)]
 #[serde(rename_all = "camelCase")]
-pub struct Task {
+pub struct TaskFull {
     pub id: String,
     pub title: String,
     pub markdown: String,
@@ -47,41 +47,23 @@ pub struct Task {
     pub updated_at: OffsetDateTime,
     #[serde_as(as = "Option<Rfc3339>")]
     pub due_date: Option<OffsetDateTime>,
-    pub file_path: Option<String>,
     pub created_by: String,
     pub assignee: String,
+    pub assignee_name: String,
 }
 
 #[serde_with::serde_as]
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, FromRow)]
 #[serde(rename_all = "camelCase")]
 pub struct TaskSmall {
     pub id: String,
     pub title: String,
     pub priority: i16,
     pub completed: bool,
-    #[serde_as(as = "Option<Rfc3339>")]
-    pub due_date: Option<OffsetDateTime>,
-}
-
-#[serde_with::serde_as]
-#[derive(Serialize, Deserialize, Debug, FromRow)]
-#[serde(rename_all = "camelCase")]
-pub struct TaskWithStudent {
-    pub id: String,
-    pub title: String,
-    pub markdown: String,
-    pub priority: i16,
-    pub completed: bool,
-    #[serde_as(as = "Rfc3339")]
-    pub created_at: OffsetDateTime,
-    #[serde_as(as = "Rfc3339")]
-    pub updated_at: OffsetDateTime,
-    #[serde_as(as = "Option<Rfc3339>")]
-    pub due_date: Option<OffsetDateTime>,
-    pub created_by: String,
-    pub assignee: String,
     pub assignee_name: String,
+    pub seen: Option<bool>,
+    #[serde_as(as = "Option<Rfc3339>")]
+    pub due_date: Option<OffsetDateTime>,
 }
 
 #[serde_with::serde_as]
@@ -116,6 +98,6 @@ pub struct TaskFileBind {
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct TaskWithFilesResponse {
-    pub task: TaskWithStudent,
+    pub task: TaskFull,
     pub files: Vec<FileSmall>,
 }

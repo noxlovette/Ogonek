@@ -20,7 +20,6 @@
     assigneeStore,
   } from "$lib/stores";
   import { goto } from "$app/navigation";
-  import { formatDate } from "@noxlovette/svarog";
   import EmptySpace from "$lib/components/typography/EmptySpace.svelte";
 
   let { data }: { data: PageData } = $props();
@@ -65,12 +64,6 @@
               return String(value);
           }
         },
-      },
-      {
-        key: "createdAt",
-        label: "Created",
-        formatter: (value: string | boolean | undefined) =>
-          formatDate(String(value)),
       },
     ],
   };

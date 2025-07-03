@@ -10,11 +10,10 @@ import type { Actions, PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async ({ fetch, url }) => {
   const invite = url.searchParams.get("invite");
-  const response = await fetch(`/axum/inviter?invite=${invite}`).then(
+  const inviter = await fetch(`/axum/user/inviter?invite=${invite}`).then(
     (res) => res.json() as Promise<User>,
   );
 
-  const { inviter } = response;
   return {
     inviter,
   };

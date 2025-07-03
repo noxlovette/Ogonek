@@ -25,7 +25,7 @@
   class={[
     styling,
     `group ring-default bg-default relative flex
-     flex-col justify-between overflow-hidden 
+     flex-col justify-between 
      rounded-xl px-4 py-5 shadow-sm backdrop-blur-md transition-all duration-300 ease-out
      hover:scale-[1.02] hover:shadow-lg hover:backdrop-blur-lg 
   `,

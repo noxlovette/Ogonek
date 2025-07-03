@@ -1,29 +1,31 @@
 use crate::api::error::APIError;
 use crate::auth::Claims;
+use crate::db::crud::core;
 use crate::db::crud::core::task::{
-    add_files, count, create, delete, fetch_recent, find_all, find_by_id, update,
+    add_files, count, create, delete, find_all, find_assignee, find_by_id, find_recent, update,
 };
 use crate::db::crud::files::file::fetch_files_task;
 
 use crate::models::meta::{CreationId, PaginatedResponse};
 use crate::models::tasks::{
     TaskCreate, TaskFileBind, TaskPaginationParams, TaskSmall, TaskUpdate, TaskWithFilesResponse,
-    TaskWithStudent,
 };
 use crate::s3::post::delete_s3;
 use crate::schema::AppState;
 use axum::extract::{Json, Path, Query, State};
 use hyper::StatusCode;
 
+/// Three mini-tasks
 pub async fn fetch_recent_tasks(
     State(state): State<AppState>,
     claims: Claims,
 ) -> Result<Json<Vec<TaskSmall>>, APIError> {
-    let tasks = fetch_recent(&state.db, &claims.sub).await?;
+    let tasks = find_recent(&state.db, &claims.sub).await?;
 
     Ok(Json(tasks))
 }
 
+/// One Task
 pub async fn fetch_task(
     State(state): State<AppState>,
     Path(id): Path<String>,
@@ -31,6 +33,7 @@ pub async fn fetch_task(
 ) -> Result<Json<TaskWithFilesResponse>, APIError> {
     let task = find_by_id(&state.db, &id, &claims.sub).await?;
     let files = fetch_files_task(&state.db, &id).await?;
+    core::seen::mark_as_seen(&state.db, &claims.sub, &id, core::seen::ModelType::Task).await?;
 
     Ok(Json(TaskWithFilesResponse { task, files }))
 }
@@ -39,7 +42,7 @@ pub async fn list_tasks(
     State(state): State<AppState>,
     claims: Claims,
     Query(params): Query<TaskPaginationParams>,
-) -> Result<Json<PaginatedResponse<TaskWithStudent>>, APIError> {
+) -> Result<Json<PaginatedResponse<TaskSmall>>, APIError> {
     let tasks = find_all(&state.db, &claims.sub, &params).await?;
     let count = count(&state.db, &claims.sub).await?;
 
@@ -95,8 +98,27 @@ pub async fn update_task(
     claims: Claims,
     Json(payload): Json<TaskUpdate>,
 ) -> Result<StatusCode, APIError> {
-    update(&state.db, &id, &claims.sub, payload).await?;
+    // fetch assignee before update
+    let current_assignee = find_assignee(&state.db, &id, &claims.sub).await?;
 
+    // update the task
+    update(&state.db, &id, &claims.sub, &payload).await?;
+
+    // check if assignee changed
+    let new_assignee = payload.assignee.clone();
+
+    if new_assignee != current_assignee {
+        // remove seen record for old assignee
+        if let Some(old_user) = current_assignee {
+            core::seen::delete_seen(&state.db, &old_user, &id, core::seen::ModelType::Task).await?;
+        }
+
+        // insert unseen for new assignee
+        if let Some(new_user) = new_assignee {
+            core::seen::insert_as_unseen(&state.db, &new_user, &id, core::seen::ModelType::Task)
+                .await?;
+        }
+    }
     Ok(StatusCode::NO_CONTENT)
 }
 

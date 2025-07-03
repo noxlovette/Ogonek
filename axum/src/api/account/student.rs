@@ -1,7 +1,8 @@
 use crate::api::error::APIError;
 use crate::auth::Claims;
 use crate::db::crud::account::student;
-
+use crate::db::crud::core::{lesson, task};
+use crate::db::crud::words::deck;
 use crate::models::{CompositeStudent, Student, UpdateStudentRequest};
 use crate::schema::AppState;
 use axum::extract::{Json, Path, State};
@@ -44,9 +45,17 @@ pub async fn fetch_student(
     State(state): State<AppState>,
     Path(id): Path<String>,
 ) -> Result<Json<CompositeStudent>, APIError> {
-    let student = student::find_by_id_and_data(&state.db, &id, &claims.sub).await?;
+    let student = student::find_by_id(&state.db, &id, &claims.sub).await?;
+    let decks = deck::find_recent(&state.db, &student.id).await?;
+    let lessons = lesson::find_recent(&state.db, &student.id).await?;
+    let tasks = task::find_recent(&state.db, &student.id).await?;
 
-    Ok(Json(student))
+    Ok(Json(CompositeStudent {
+        student,
+        decks,
+        lessons,
+        tasks,
+    }))
 }
 
 pub async fn list_students(

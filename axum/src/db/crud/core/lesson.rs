@@ -1,21 +1,29 @@
 use crate::db::error::DbError;
 use crate::models::{
-    CreationId, LessonCreate, LessonSmall, LessonSmallWithStudent, LessonUpdate, LessonWithStudent,
-    PaginationParams,
+    CreationId, LessonCreate, LessonFull, LessonSmall, LessonUpdate, PaginationParams,
 };
 use sqlx::PgPool;
 
+/// Finds a list of mini-lessons (no markdown) according to passed Pagination params
 pub async fn find_all(
     db: &PgPool,
     user_id: &str,
     params: &PaginationParams,
-) -> Result<Vec<LessonSmallWithStudent>, DbError> {
+) -> Result<Vec<LessonSmall>, DbError> {
     let mut query_builder = sqlx::QueryBuilder::new(
-        "SELECT l.id, l.title, l.topic, l.assignee, l.created_by, l.created_at, l.updated_at, u.name as assignee_name
-         FROM lessons l
-         LEFT JOIN \"user\" u ON l.assignee = u.id
-         WHERE (l.assignee = ");
-
+        r#"
+        SELECT l.id, l.title, l.topic, l.created_at,
+               u.name as assignee_name,
+               COALESCE(s.seen_at IS NOT NULL, TRUE) as seen
+        FROM lessons l
+        LEFT JOIN "user" u ON l.assignee = u.id
+        LEFT JOIN seen_status s ON s.model_id = l.id
+            AND s.user_id = "#,
+    );
+    query_builder.push_bind(user_id);
+    query_builder.push(" AND s.model_type = ");
+    query_builder.push_bind("lesson");
+    query_builder.push(" WHERE (l.assignee = ");
     query_builder.push_bind(user_id);
     query_builder.push(" OR l.created_by = ");
     query_builder.push_bind(user_id);
@@ -46,23 +54,24 @@ pub async fn find_all(
     query_builder.push_bind(params.offset());
 
     let lessons = query_builder
-        .build_query_as::<LessonSmallWithStudent>()
+        .build_query_as::<LessonSmall>()
         .fetch_all(db)
         .await?;
 
     Ok(lessons)
 }
 
+/// Returns three lessons in mini-format
 pub async fn find_recent(db: &PgPool, user_id: &str) -> Result<Vec<LessonSmall>, DbError> {
     let lessons = sqlx::query_as!(
         LessonSmall,
         r#"
-        SELECT
-            id,
-            title,
-            topic,
-            created_at
-        FROM lessons
+        SELECT l.id, l.title, l.topic, l.created_at,
+               u.name as assignee_name,
+               COALESCE(s.seen_at IS NOT NULL, TRUE) as seen
+        FROM lessons l
+        LEFT JOIN "user" u ON l.assignee = u.id
+        LEFT JOIN seen_status s ON s.model_id = l.id AND s.user_id = $1
         WHERE (assignee = $1 OR created_by = $1)
         ORDER BY created_at DESC
         LIMIT 3
@@ -75,13 +84,14 @@ pub async fn find_recent(db: &PgPool, user_id: &str) -> Result<Vec<LessonSmall>,
     Ok(lessons)
 }
 
+/// Finds one lesson by its id, will return null if the user doesn't have access to the data
 pub async fn find_by_id(
     db: &PgPool,
     lesson_id: &str,
     user_id: &str,
-) -> Result<LessonWithStudent, DbError> {
+) -> Result<LessonFull, DbError> {
     let lesson = sqlx::query_as!(
-        LessonWithStudent,
+        LessonFull,
         r#"
         SELECT
             l.id,
@@ -155,7 +165,7 @@ pub async fn update(
     db: &PgPool,
     lesson_id: &str,
     user_id: &str,
-    update: LessonUpdate,
+    update: &LessonUpdate,
 ) -> Result<(), DbError> {
     sqlx::query!(
         "UPDATE lessons
@@ -178,6 +188,29 @@ pub async fn update(
 
     Ok(())
 }
+
+/// Finds assignee for the lesson by its id, will return null if the user doesn't have access to the data
+pub async fn find_assignee(
+    db: &PgPool,
+    lesson_id: &str,
+    user_id: &str,
+) -> Result<Option<String>, DbError> {
+    let assignee = sqlx::query_scalar!(
+        r#"
+        SELECT assignee
+        FROM lessons
+        WHERE id = $1
+        AND (assignee = $2 OR created_by = $2)
+        "#,
+        lesson_id,
+        user_id
+    )
+    .fetch_optional(db) // in case lesson is not found
+    .await?;
+
+    Ok(assignee)
+}
+
 pub async fn count(db: &PgPool, user_id: &str) -> Result<i64, DbError> {
     let count = sqlx::query_scalar!(
         "SELECT COUNT(*) FROM lessons WHERE
@@ -397,7 +430,6 @@ mod tests {
 
         let lessons = result.unwrap();
         assert_eq!(lessons.len(), 1);
-        assert_eq!(lessons[0].assignee, assignee);
     }
 
     #[sqlx::test]
@@ -447,7 +479,7 @@ mod tests {
             created_by: None,
         };
 
-        let result = update(&db, &creation_id.id, &user, lesson_update).await;
+        let result = update(&db, &creation_id.id, &user, &lesson_update).await;
         assert!(result.is_ok());
 
         // Verify the update
@@ -480,7 +512,7 @@ mod tests {
             created_by: None,
         };
 
-        let result = update(&db, &creation_id.id, &other_user, lesson_update).await;
+        let result = update(&db, &creation_id.id, &other_user, &lesson_update).await;
         assert!(result.is_ok()); // Query succeeds but affects 0 rows
 
         // Verify no changes were made

@@ -33,7 +33,6 @@
   const randomFact = errorFacts[Math.floor(Math.random() * errorFacts.length)];
 </script>
 
-, id, id ;
 <div
   class="flex min-h-[70vh] w-full flex-col items-center justify-center px-4 py-16"
   in:fade={{ duration: 300, delay: 150 }}
@@ -109,7 +108,7 @@
           type="button"
           variant="primary"
           Icon={House}
-          href="/${page.params.role}/dashboard">Back to Safety</UniButton
+          href="/{page.params.role}/dashboard">Back to Safety</UniButton
         >
         <UniButton
           type="button"

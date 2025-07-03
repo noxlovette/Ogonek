@@ -3,6 +3,7 @@ use sqlx::prelude::FromRow;
 use time::OffsetDateTime;
 use time::format_description::well_known::Rfc3339;
 
+/// Pagination for lessons
 #[derive(Debug, Deserialize)]
 pub struct PaginationParams {
     pub page: Option<i64>,
@@ -26,50 +27,25 @@ impl PaginationParams {
     }
 }
 
+/// Mini-lesson
 #[serde_with::serde_as]
-#[derive(Serialize, Deserialize, Debug)]
-#[serde(rename_all = "camelCase")]
-pub struct Lesson {
-    pub id: String,
-    pub title: String,
-    pub topic: String,
-    pub markdown: String,
-    pub assignee: String,
-    pub created_by: String,
-    #[serde_as(as = "Rfc3339")]
-    pub created_at: OffsetDateTime,
-    #[serde_as(as = "Rfc3339")]
-    pub updated_at: OffsetDateTime,
-}
-
-#[serde_with::serde_as]
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Debug, FromRow)]
 #[serde(rename_all = "camelCase")]
 pub struct LessonSmall {
     pub id: String,
     pub title: String,
     pub topic: String,
+    pub assignee_name: String,
+    pub seen: Option<bool>,
     #[serde_as(as = "Rfc3339")]
     pub created_at: OffsetDateTime,
 }
 
+/// Grown-up lesson
 #[serde_with::serde_as]
-#[derive(Serialize, Deserialize, Debug, FromRow)]
+#[derive(Serialize, Debug)]
 #[serde(rename_all = "camelCase")]
-pub struct LessonSmallWithStudent {
-    pub id: String,
-    pub title: String,
-    pub topic: String,
-    pub assignee: String,
-    #[serde_as(as = "Rfc3339")]
-    pub created_at: OffsetDateTime,
-}
-
-/// The lesson response sent to the server with the name of the assignee
-#[serde_with::serde_as]
-#[derive(Serialize, Deserialize, Debug)]
-#[serde(rename_all = "camelCase")]
-pub struct LessonWithStudent {
+pub struct LessonFull {
     pub id: String,
     pub title: String,
     pub topic: String,
@@ -83,7 +59,7 @@ pub struct LessonWithStudent {
     pub assignee_name: String,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct LessonCreate {
     pub title: String,
@@ -103,6 +79,7 @@ pub struct LessonUpdate {
     pub created_by: Option<String>,
 }
 
+// NOT IMPLEMENTED
 #[serde_with::serde_as]
 #[derive(Debug, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -118,7 +95,6 @@ pub struct StudentNote {
     pub updated_at: Option<OffsetDateTime>,
 }
 
-// What the client can send (payload structure)
 #[derive(Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct StudentNoteUpdate {

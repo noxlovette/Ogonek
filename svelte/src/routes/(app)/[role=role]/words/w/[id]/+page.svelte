@@ -16,6 +16,7 @@
   import { Pencil, UserRoundMinus, UserRoundPlus } from "lucide-svelte";
   import { enhanceForm } from "$lib/utils";
   import Badge from "$lib/components/cards/Badge.svelte";
+  import { page } from "$app/state";
 
   let { data } = $props();
 
@@ -45,9 +46,11 @@
 <HeaderEmbellish>
   <div class="flex items-baseline gap-3 md:gap-4">
     <H1>{deck.name}</H1>
-    <H3>
-      {assigneeName}
-    </H3>
+    {#if page.params.role == "t"}
+      <H3>
+        {assigneeName}
+      </H3>
+    {/if}
   </div>
   <div class="flex flex-col gap-3 md:flex-row md:gap-4">
     {#if $user.id === deck.createdBy}

@@ -41,6 +41,7 @@ export const load: LayoutServerLoad = async ({ fetch }) => {
       students: dashboardData.students,
       lessons: dashboardData.lessons,
       tasks: dashboardData.tasks,
+      decks: dashboardData.decks,
       word,
       profile: dashboardData.profile.profile,
       teacherData: dashboardData.profile.teacherData,

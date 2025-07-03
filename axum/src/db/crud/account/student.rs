@@ -1,7 +1,5 @@
 use crate::db::error::DbError;
-use crate::models::{
-    CompositeStudent, DeckSmall, LessonSmall, Student, TaskSmall, UpdateStudentRequest,
-};
+use crate::models::{Student, UpdateStudentRequest};
 use sqlx::PgPool;
 
 pub async fn upsert(db: &PgPool, user_id: &str, student_id: &str) -> Result<(), DbError> {
@@ -38,11 +36,7 @@ pub async fn find_all(db: &PgPool, user_id: &str) -> Result<Vec<Student>, DbErro
     Ok(students)
 }
 
-pub async fn find_by_id_and_data(
-    db: &PgPool,
-    student_id: &str,
-    user_id: &str,
-) -> Result<CompositeStudent, DbError> {
+pub async fn find_by_id(db: &PgPool, student_id: &str, user_id: &str) -> Result<Student, DbError> {
     let mut tx = db.begin().await?;
 
     let student = sqlx::query_as!(
@@ -59,56 +53,9 @@ pub async fn find_by_id_and_data(
     .fetch_one(&mut *tx)
     .await?;
 
-    let decks = sqlx::query_as!(
-        DeckSmall,
-        r#"
-        SELECT id, name, description FROM decks
-        WHERE (created_by = $1 AND assignee = $2)
-        LIMIT 2
-        "#,
-        user_id,
-        student.id
-    )
-    .fetch_all(&mut *tx)
-    .await?;
-
-    let lessons = sqlx::query_as!(
-        LessonSmall,
-        r#"
-        SELECT id, title, topic, created_at
-        FROM lessons
-        WHERE (created_by = $1 AND assignee = $2)
-        ORDER BY created_at desc
-        LIMIT 2
-        "#,
-        user_id,
-        student.id,
-    )
-    .fetch_all(&mut *tx)
-    .await?;
-
-    let tasks = sqlx::query_as!(
-        TaskSmall,
-        r#"
-        SELECT id, title, priority, completed, due_date
-        FROM tasks
-        WHERE (created_by = $1 AND assignee = $2 AND completed = false)
-        LIMIT 2
-        "#,
-        user_id,
-        student.id,
-    )
-    .fetch_all(&mut *tx)
-    .await?;
-
     tx.commit().await?;
 
-    Ok(CompositeStudent {
-        student,
-        decks,
-        lessons,
-        tasks,
-    })
+    Ok(student)
 }
 
 pub async fn delete(db: &PgPool, student_id: &str, user_id: &str) -> Result<(), DbError> {
@@ -261,15 +208,6 @@ mod tests {
 
         let students = result.unwrap();
         assert_eq!(students.len(), 0);
-    }
-
-    #[sqlx::test]
-    async fn test_find_by_id_and_data_not_found(db: PgPool) {
-        let teacher_id = create_test_user(&db, "teacher", "teacher@ogonek.app").await;
-        let student_id = create_test_user(&db, "student", "student@ogonek.app").await;
-
-        let result = find_by_id_and_data(&db, &student_id, &teacher_id).await;
-        assert!(result.is_err());
     }
 
     #[sqlx::test]

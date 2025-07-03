@@ -5,6 +5,7 @@
   import { page } from "$app/state";
   import Badge from "./Badge.svelte";
   import { H3 } from "../typography";
+  import SeenBadge from "./SeenBadge.svelte";
   interface Props {
     lesson: LessonSmall;
   }
@@ -25,4 +26,5 @@
     {title}
   </H3>
   <Badge {badgeText} />
+  <SeenBadge seen={lesson.seen} />
 </CardClickable>

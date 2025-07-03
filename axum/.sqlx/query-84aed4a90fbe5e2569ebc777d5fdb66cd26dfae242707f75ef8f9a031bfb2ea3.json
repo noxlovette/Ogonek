@@ -1,0 +1,58 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        SELECT \n        d.id, \n        d.name, \n        d.description, \n        d.visibility,\n        COALESCE(u.name, NULL) AS assignee_name,\n        COALESCE(s.seen_at IS NOT NULL, TRUE) as seen,\n        EXISTS (\n            SELECT 1 FROM deck_subscriptions s\n            WHERE s.deck_id = d.id AND user_id = $1\n        ) AS \"is_subscribed!\"\n    FROM decks d\n    LEFT JOIN \"user\" u on d.assignee = u.id\n    LEFT JOIN seen_status s ON s.model_id = d.id AND s.user_id = $1\n    WHERE (\n        d.created_by = $1\n        OR d.assignee = $1\n    )\n    ORDER BY created_at DESC\n    LIMIT 3\n    ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 1,
+        "name": "name",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 2,
+        "name": "description",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 3,
+        "name": "visibility",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 4,
+        "name": "assignee_name",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 5,
+        "name": "seen",
+        "type_info": "Bool"
+      },
+      {
+        "ordinal": 6,
+        "name": "is_subscribed!",
+        "type_info": "Bool"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      true,
+      false,
+      null,
+      null,
+      null
+    ]
+  },
+  "hash": "84aed4a90fbe5e2569ebc777d5fdb66cd26dfae242707f75ef8f9a031bfb2ea3"
+}

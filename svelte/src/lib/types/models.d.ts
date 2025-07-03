@@ -49,13 +49,21 @@ export interface TaskSmall {
   title: string;
   dueDate: string;
   priority: number;
+  assigneeName: string;
+  seen: boolean;
+}
+
+interface BadgeWrapper<T> {
+  data: T[];
+  count: number;
 }
 
 export interface DashboardData {
   students: Student[];
   user: User;
-  lessons: LessonSmall[];
-  tasks: TaskSmall[];
+  lessons: BadgeWrapper<LessonSmall>;
+  tasks: BadgeWrapper<TaskSmall>;
+  decks: BadgeWrapper<DeckSmall>;
   profile: ProfileComposite;
 }
 export interface Toast {
@@ -87,21 +95,24 @@ export interface User {
   [key: string]: string | undefined;
 }
 
-export interface Lesson extends LessonSmall {
+export interface Lesson {
+  id: string;
+  createdAt: string;
   updatedAt: string;
   assignee: string;
+  topic: string;
+  title: string;
   assigneeName: string;
   markdown: string;
 }
 
-export interface LessonSmall extends LessonStore {
+export interface LessonSmall {
   id: string;
   createdAt: string;
-}
-
-export interface LessonStore {
   title: string;
   topic: string;
+  assigneeName: string;
+  seen: boolean;
 }
 
 export interface Student {
@@ -127,6 +138,8 @@ export interface DeckSmall {
   isSubscribed?: boolean;
   name: string;
   description: string;
+  seen: boolean;
+  assigneeName: string;
 }
 
 export interface BaseTableItem {
