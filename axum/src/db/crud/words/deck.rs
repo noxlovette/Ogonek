@@ -114,6 +114,7 @@ pub async fn find_all_public(db: &PgPool) -> Result<Vec<DeckPublic>, DbError> {
 
 /// Returns three decks
 pub async fn find_recent(db: &PgPool, user_id: &str) -> Result<Vec<DeckSmall>, DbError> {
+    tracing::info!("Fetching recent tasks for {user_id}");
     let decks = sqlx::query_as!(
         DeckSmall,
         r#"
@@ -122,7 +123,7 @@ pub async fn find_recent(db: &PgPool, user_id: &str) -> Result<Vec<DeckSmall>, D
         d.name, 
         d.description, 
         d.visibility,
-        u.name as assignee_name,
+        COALESCE(u.name, NULL) AS assignee_name,
         COALESCE(s.seen_at IS NOT NULL, TRUE) as seen,
         EXISTS (
             SELECT 1 FROM deck_subscriptions s

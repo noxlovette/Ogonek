@@ -50,7 +50,7 @@
   setContext<Promise<Word>>("word", data.word);
   setContext<Student[]>("students", data.students);
   setContext<number>("lessonCount", data.lessons.count);
-  setContext<number>("deckCount", data.deckCount);
+  setContext<number>("deckCount", data.decks.count);
   setContext<number>("taskCount", data.tasks.count);
 
   setUser(data.user);

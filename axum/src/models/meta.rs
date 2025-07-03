@@ -1,6 +1,6 @@
 use serde::Serialize;
 
-use crate::models::{LessonSmall, ProfileWithTS, Student, TaskSmall, User};
+use crate::models::{DeckSmall, LessonSmall, ProfileWithTS, Student, TaskSmall, User};
 
 /// Generic response that stores paginated data
 #[derive(Debug, Serialize)]
@@ -31,7 +31,7 @@ pub struct DashboardData {
     pub students: Vec<Student>,
     pub lessons: BadgeWrapper<LessonSmall>,
     pub tasks: BadgeWrapper<TaskSmall>,
-    pub deck_count: i64,
+    pub decks: BadgeWrapper<DeckSmall>,
     pub user: User,
     pub profile: ProfileWithTS,
 }

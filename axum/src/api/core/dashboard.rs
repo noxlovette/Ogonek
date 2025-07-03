@@ -2,7 +2,7 @@ use crate::api::error::APIError;
 use crate::auth::Claims;
 use crate::db::crud::account::{student, user};
 use crate::db::crud::core::seen::ModelType;
-use crate::db::crud::{account, core};
+use crate::db::crud::{account, core, words};
 use crate::models::{BadgeWrapper, DashboardData};
 use crate::schema::AppState;
 use axum::extract::Json;
@@ -25,6 +25,7 @@ pub async fn fetch_dashboard(
     let task_count = core::seen::get_seen_badge(&state.db, &claims.sub, ModelType::Task).await?;
     let lesson_count =
         core::seen::get_seen_badge(&state.db, &claims.sub, ModelType::Lesson).await?;
+    let decks = words::deck::find_recent(&state.db, &claims.sub).await?;
     let deck_count = core::seen::get_seen_badge(&state.db, &claims.sub, ModelType::Deck).await?;
 
     Ok(Json(DashboardData {
@@ -37,7 +38,10 @@ pub async fn fetch_dashboard(
             count: task_count,
             data: tasks,
         },
-        deck_count,
+        decks: BadgeWrapper {
+            count: deck_count,
+            data: decks,
+        },
         user,
         profile,
     }))

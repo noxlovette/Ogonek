@@ -6,10 +6,9 @@
     TaskCard,
     H3,
     EmptySpace,
-    Lessons,
+    DeckCard,
   } from "$lib/components";
   import { fly } from "svelte/transition";
-  import type { TaskSmall, LessonSmall } from "$lib/types";
   import { getGreeting } from "$lib/utils";
   import { user } from "$lib/stores";
   import HeaderEmbellish from "$lib/components/typography/HeaderEmbellish.svelte";
@@ -46,6 +45,20 @@
     {#each data.lessons.data as lesson (lesson.id)}
       <div transition:fly={{ y: 20, duration: 300 }}>
         <LessonCard {lesson} />
+      </div>
+    {/each}
+  </div>
+</section>
+
+<section class="space-y-4">
+  <H3>Decks</H3>
+  <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+    {#if data.decks.data.length < 1}
+      <EmptySpace>No Decks</EmptySpace>
+    {/if}
+    {#each data.decks.data as deck (deck.id)}
+      <div transition:fly={{ y: 20, duration: 300 }}>
+        <DeckCard {deck} />
       </div>
     {/each}
   </div>

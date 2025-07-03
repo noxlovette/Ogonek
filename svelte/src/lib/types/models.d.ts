@@ -63,7 +63,7 @@ export interface DashboardData {
   user: User;
   lessons: BadgeWrapper<LessonSmall>;
   tasks: BadgeWrapper<TaskSmall>;
-  deckCount: number;
+  decks: BadgeWrapper<DeckSmall>;
   profile: ProfileComposite;
 }
 export interface Toast {

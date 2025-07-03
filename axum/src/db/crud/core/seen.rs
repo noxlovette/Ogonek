@@ -84,7 +84,7 @@ pub async fn get_seen_badge(
     .fetch_one(db)
     .await?;
 
-    return Ok(count.unwrap_or(0));
+    Ok(count.unwrap_or(0))
 }
 
 /// Insert a new entry into seen_status with seen_at set to NULL

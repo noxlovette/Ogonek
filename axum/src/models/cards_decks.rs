@@ -77,7 +77,7 @@ pub struct DeckSmall {
     pub id: String,
     pub name: String,
     pub assignee_name: Option<String>,
-    pub is_subscribed: bool,
+    pub is_subscribed: Option<bool>,
     pub seen: Option<bool>,
     pub visibility: String,
     pub description: Option<String>,
