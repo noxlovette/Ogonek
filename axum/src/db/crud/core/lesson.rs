@@ -14,7 +14,7 @@ pub async fn find_all(
         r#"
         SELECT l.id, l.title, l.topic, l.created_at,
                u.name as assignee_name,
-               COALESCE(s.seen_at IS NOT NULL, FALSE) as seen
+               COALESCE(s.seen_at IS NOT NULL, TRUE) as seen
         FROM lessons l
         LEFT JOIN "user" u ON l.assignee = u.id
         LEFT JOIN seen_status s ON s.model_id = l.id
@@ -68,10 +68,10 @@ pub async fn find_recent(db: &PgPool, user_id: &str) -> Result<Vec<LessonSmall>,
         r#"
         SELECT l.id, l.title, l.topic, l.created_at,
                u.name as assignee_name,
-               COALESCE(s.seen_at IS NOT NULL, FALSE) as seen
+               COALESCE(s.seen_at IS NOT NULL, TRUE) as seen
         FROM lessons l
         LEFT JOIN "user" u ON l.assignee = u.id
-        LEFT JOIN seen_status s ON s.model_id = l.id
+        LEFT JOIN seen_status s ON s.model_id = l.id AND s.user_id = $1
         WHERE (assignee = $1 OR created_by = $1)
         ORDER BY created_at DESC
         LIMIT 3

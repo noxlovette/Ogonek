@@ -27,8 +27,9 @@ impl PaginationParams {
     }
 }
 
+/// Mini-lesson
 #[serde_with::serde_as]
-#[derive(Serialize, Deserialize, Debug, FromRow)]
+#[derive(Serialize, Debug, FromRow)]
 #[serde(rename_all = "camelCase")]
 pub struct LessonSmall {
     pub id: String,
@@ -40,9 +41,9 @@ pub struct LessonSmall {
     pub created_at: OffsetDateTime,
 }
 
-/// The lesson response sent to the server with the name of the assignee
+/// Grown-up lesson
 #[serde_with::serde_as]
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct LessonFull {
     pub id: String,
@@ -58,7 +59,7 @@ pub struct LessonFull {
     pub assignee_name: String,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct LessonCreate {
     pub title: String,

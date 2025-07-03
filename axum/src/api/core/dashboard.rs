@@ -17,7 +17,7 @@ pub async fn fetch_dashboard(
 ) -> Result<Json<DashboardData>, APIError> {
     let user = user::find_by_id(&state.db, &claims.sub).await?;
     let students = student::find_all(&state.db, &claims.sub).await?;
-    let tasks = core::task::fetch_recent(&state.db, &claims.sub).await?;
+    let tasks = core::task::find_recent(&state.db, &claims.sub).await?;
     let lessons = core::lesson::find_recent(&state.db, &claims.sub).await?;
     let profile =
         account::profile::find_by_id(&state.db, &claims.sub, user.role == "student").await?;

@@ -2,29 +2,30 @@ use crate::api::error::APIError;
 use crate::auth::Claims;
 use crate::db::crud::core;
 use crate::db::crud::core::task::{
-    add_files, count, create, delete, fetch_recent, find_all, find_assignee, find_by_id, update,
+    add_files, count, create, delete, find_all, find_assignee, find_by_id, find_recent, update,
 };
 use crate::db::crud::files::file::fetch_files_task;
 
 use crate::models::meta::{CreationId, PaginatedResponse};
 use crate::models::tasks::{
     TaskCreate, TaskFileBind, TaskPaginationParams, TaskSmall, TaskUpdate, TaskWithFilesResponse,
-    TaskWithStudent,
 };
 use crate::s3::post::delete_s3;
 use crate::schema::AppState;
 use axum::extract::{Json, Path, Query, State};
 use hyper::StatusCode;
 
+/// Three mini-tasks
 pub async fn fetch_recent_tasks(
     State(state): State<AppState>,
     claims: Claims,
 ) -> Result<Json<Vec<TaskSmall>>, APIError> {
-    let tasks = fetch_recent(&state.db, &claims.sub).await?;
+    let tasks = find_recent(&state.db, &claims.sub).await?;
 
     Ok(Json(tasks))
 }
 
+/// One Task
 pub async fn fetch_task(
     State(state): State<AppState>,
     Path(id): Path<String>,
@@ -41,7 +42,7 @@ pub async fn list_tasks(
     State(state): State<AppState>,
     claims: Claims,
     Query(params): Query<TaskPaginationParams>,
-) -> Result<Json<PaginatedResponse<TaskWithStudent>>, APIError> {
+) -> Result<Json<PaginatedResponse<TaskSmall>>, APIError> {
     let tasks = find_all(&state.db, &claims.sub, &params).await?;
     let count = count(&state.db, &claims.sub).await?;
 

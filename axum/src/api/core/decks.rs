@@ -3,8 +3,8 @@ use crate::auth::Claims;
 use crate::db::crud::core;
 use crate::db::crud::words::{self, deck};
 use crate::models::{
-    CreationId, Deck, DeckCreate, DeckFilterParams, DeckSmall, DeckWithCardsAndSubscription,
-    DeckWithCardsUpdate,
+    CreationId, DeckCreate, DeckFilterParams, DeckFull, DeckPublic, DeckSmall,
+    DeckWithCardsAndSubscription, DeckWithCardsUpdate,
 };
 use crate::schema::AppState;
 use axum::extract::Json;
@@ -43,7 +43,7 @@ pub async fn fetch_deck(
     .await?;
 
     Ok(Json(Some(DeckWithCardsAndSubscription {
-        deck: Deck {
+        deck: DeckFull {
             id: deck.id,
             name: deck.name,
             description: deck.description,
@@ -62,14 +62,14 @@ pub async fn fetch_deck_list(
     State(state): State<AppState>,
     Query(params): Query<DeckFilterParams>,
     claims: Claims,
-) -> Result<Json<Vec<Deck>>, APIError> {
+) -> Result<Json<Vec<DeckSmall>>, APIError> {
     let decks = words::deck::find_all(&state.db, &claims.sub, &params).await?;
     Ok(Json(decks))
 }
 
 pub async fn fetch_deck_list_public(
     State(state): State<AppState>,
-) -> Result<Json<Vec<DeckSmall>>, APIError> {
+) -> Result<Json<Vec<DeckPublic>>, APIError> {
     let decks = words::deck::find_all_public(&state.db).await?;
 
     Ok(Json(decks))

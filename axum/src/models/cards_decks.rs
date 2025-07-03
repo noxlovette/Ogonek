@@ -39,19 +39,14 @@ pub struct CardUpdate {
     pub media_url: Option<String>,
 }
 
-#[derive(Deserialize, Serialize, Debug)]
+// DECK STRUCTS HERE
+
+#[derive(Serialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct DeckWithCardsAndSubscription {
-    pub deck: Deck,
+    pub deck: DeckFull,
     pub cards: Vec<Card>,
     pub is_subscribed: bool,
-}
-
-#[derive(Deserialize, Serialize, Debug)]
-#[serde(rename_all = "camelCase")]
-pub struct DeckWithCards {
-    pub deck: Deck,
-    pub cards: Vec<Card>,
 }
 
 #[derive(Deserialize, Debug)]
@@ -62,9 +57,9 @@ pub struct DeckWithCardsUpdate {
 }
 
 #[serde_with::serde_as]
-#[derive(Serialize, Deserialize, Debug, FromRow)]
+#[derive(Serialize, Debug, FromRow)]
 #[serde(rename_all = "camelCase")]
-pub struct Deck {
+pub struct DeckFull {
     pub id: String,
     pub name: String,
     pub description: Option<String>,
@@ -76,16 +71,26 @@ pub struct Deck {
     pub created_at: OffsetDateTime,
 }
 
-#[serde_with::serde_as]
-#[derive(Serialize, Deserialize, Debug, FromRow)]
+#[derive(Serialize, Debug, FromRow)]
 #[serde(rename_all = "camelCase")]
 pub struct DeckSmall {
+    pub id: String,
+    pub name: String,
+    pub assignee_name: Option<String>,
+    pub is_subscribed: bool,
+    pub seen: Option<bool>,
+    pub visibility: String,
+    pub description: Option<String>,
+}
+
+#[derive(Serialize, Debug)]
+pub struct DeckPublic {
     pub id: String,
     pub name: String,
     pub description: Option<String>,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct DeckCreate {
     pub name: String,
@@ -103,6 +108,7 @@ pub struct DeckUpdate {
     pub assignee: Option<String>,
 }
 
+// LEARNING HERE
 use validator::Validate;
 
 #[derive(Debug, Serialize, Deserialize, Clone, Validate)]
