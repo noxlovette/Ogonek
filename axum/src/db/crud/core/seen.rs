@@ -68,3 +68,26 @@ pub async fn get_seen_badge(
 
     return Ok(count.unwrap_or(0));
 }
+
+/// Insert a new entry into seen_status with seen_at set to NULL
+/// This marks an item as "not seen" when it's first created
+pub async fn insert_as_unseen(
+    db: &PgPool,
+    user_id: &str,
+    model_id: &str,
+    model_type: ModelType,
+) -> Result<(), DbError> {
+    sqlx::query!(
+        r#"
+        INSERT INTO seen_status (user_id, model_type, model_id, seen_at)
+        VALUES ($1, $2, $3, NULL)
+        ON CONFLICT (user_id, model_type, model_id) DO NOTHING;
+        "#,
+        user_id,
+        model_type.as_str(),
+        model_id
+    )
+    .execute(db)
+    .await?;
+    Ok(())
+}

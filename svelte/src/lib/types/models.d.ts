@@ -103,6 +103,7 @@ export interface Lesson extends LessonSmall {
 export interface LessonSmall extends LessonStore {
   id: string;
   createdAt: string;
+  assigneeName: string;
 }
 
 export interface LessonStore {

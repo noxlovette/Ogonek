@@ -109,7 +109,7 @@
           type="button"
           variant="primary"
           Icon={House}
-          href="/${page.params.role}/dashboard">Back to Safety</UniButton
+          href="/{page.params.role}/dashboard">Back to Safety</UniButton
         >
         <UniButton
           type="button"

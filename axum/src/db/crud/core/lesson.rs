@@ -158,7 +158,7 @@ pub async fn update(
     db: &PgPool,
     lesson_id: &str,
     user_id: &str,
-    update: LessonUpdate,
+    update: &LessonUpdate,
 ) -> Result<(), DbError> {
     sqlx::query!(
         "UPDATE lessons

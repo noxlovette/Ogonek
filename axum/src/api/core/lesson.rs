@@ -1,6 +1,6 @@
 use crate::api::error::APIError;
 use crate::auth::Claims;
-use crate::db::crud::core::lesson;
+use crate::db::crud::core::{self, lesson};
 use crate::models::meta::{CreationId, PaginatedResponse};
 use crate::models::{
     LessonCreate, LessonSmall, LessonSmallWithStudent, LessonUpdate, LessonWithStudent,
@@ -70,7 +70,14 @@ pub async fn update_lesson(
     claims: Claims,
     Json(payload): Json<LessonUpdate>,
 ) -> Result<StatusCode, APIError> {
-    lesson::update(&state.db, &id, &claims.sub, payload).await?;
+    lesson::update(&state.db, &id, &claims.sub, &payload).await?;
+    core::seen::insert_as_unseen(
+        &state.db,
+        &payload.assignee.unwrap_or("".to_string()),
+        &id,
+        core::seen::ModelType::Lesson,
+    )
+    .await?;
 
     Ok(StatusCode::NO_CONTENT)
 }

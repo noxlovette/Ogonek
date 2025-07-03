@@ -61,6 +61,7 @@ pub struct LessonSmallWithStudent {
     pub title: String,
     pub topic: String,
     pub assignee: String,
+    pub assignee_name: String,
     #[serde_as(as = "Rfc3339")]
     pub created_at: OffsetDateTime,
 }
