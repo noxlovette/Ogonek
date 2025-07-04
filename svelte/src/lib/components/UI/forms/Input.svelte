@@ -8,12 +8,14 @@
     labelName = name,
     value = $bindable(),
     disabled = $bindable(),
+    ref,
     type = "text",
   }: {
     placeholder: string;
     name: string;
     value: string | number | boolean | undefined;
     labelName?: string;
+    ref?: HTMLInputElement;
     disabled?: boolean;
     type?:
       | "text"
@@ -40,6 +42,7 @@
       {name}
       type="text"
       bind:value
+      bind:this={ref}
       {disabled}
       class={baseStyle}
       {placeholder}

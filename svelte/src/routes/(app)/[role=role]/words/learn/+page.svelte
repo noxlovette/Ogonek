@@ -5,13 +5,7 @@
   import { invalidate } from "$app/navigation";
   import { enhanceForm, qualityButtons } from "$lib/utils";
   import { CheckCheck, Home } from "lucide-svelte";
-  import {
-    HeaderEmbellish,
-    UniButton,
-    Label,
-    KBD,
-    Input,
-  } from "$lib/components";
+  import { HeaderEmbellish, UniButton, Label, KBD } from "$lib/components";
 
   let { data } = $props();
 
@@ -39,8 +33,10 @@
 
   function handleKeyPress(event: KeyboardEvent) {
     if (!showAnswer && !showCloze && event.key == " ") {
+      event.preventDefault();
       showAnswer = true;
     } else if (!showAnswer && showCloze && event.key == "Enter") {
+      event.preventDefault();
       showAnswer = true;
     }
 
@@ -55,6 +51,14 @@
       matchingButton.click();
     }
   }
+
+  let ref = $state<HTMLInputElement>();
+
+  $effect(() => {
+    if (ref) {
+      ref.focus();
+    }
+  });
 </script>
 
 {#snippet qualityButton(quality: {
@@ -134,11 +138,12 @@
 
           {#if showCloze}
             {#if !showAnswer}
-              <Input
-                name="Your version"
+              <input
+                bind:this={ref}
                 bind:value={userInput}
-                placeholder="Type your answer..."
-              ></Input>
+                class="focus:border-cacao-200 focus:ring-cacao-500/70 w-full rounded-2xl border border-stone-100/60 bg-white px-4 py-2 text-base text-stone-900 placeholder-stone-400 shadow-sm transition-all focus:shadow-md focus:ring-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60 dark:border-stone-800/60 dark:bg-stone-950 dark:text-stone-100"
+                placeholder="Type in your answer..."
+              />
             {:else}
               <div class="space-y-2">
                 <Label>Your Answer:</Label>
