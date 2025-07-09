@@ -7,7 +7,6 @@ export interface Task {
   updatedAt: string;
   dueDate: string;
   completed: boolean;
-  filePath: string;
   createdBy: string;
   assignee: string;
   assigneeName: string;
@@ -33,15 +32,9 @@ export interface File {
   id: string;
   name: string;
   s3Key: string;
-  path: string;
   mimeType?: string;
   size: number;
-  isFolder: boolean;
-  parentId: string;
   ownerId: string;
-  visibility: string;
-  createdAt: string;
-  updatedAt: string;
 }
 
 export interface TaskSmall {

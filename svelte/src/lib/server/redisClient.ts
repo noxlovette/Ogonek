@@ -1,5 +1,5 @@
-// redis.ts (or add types to your .js file)
 import { env } from "$env/dynamic/private";
+import { env as envPublic } from "$env/dynamic/public";
 import type { Redis } from "ioredis";
 
 interface MockRedis {
@@ -15,7 +15,7 @@ interface MockRedis {
 
 let redis: Redis | MockRedis;
 
-if (env.MOCK_MODE) {
+if (envPublic.PUBLIC_MOCK_MODE) {
   // Mock Redis for tests
   redis = {
     get: async () => null,
@@ -31,8 +31,8 @@ if (env.MOCK_MODE) {
   // Real Redis for dev/prod
   const Redis = (await import("ioredis")).default;
   redis = new Redis({
-    host: process.env.REDIS_HOST || "redis",
-    port: parseInt(process.env.REDIS_PORT || "6379", 10),
+    host: env.REDIS_HOST || "redis",
+    port: parseInt(env.REDIS_PORT || "6379", 10),
     lazyConnect: true,
   });
 }

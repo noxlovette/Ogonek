@@ -1,9 +1,10 @@
 import { version } from "$app/environment";
 import { env } from "$env/dynamic/private";
+import { env as envPublic } from "$env/dynamic/public";
 import logger from "$lib/logger";
 import { paraglideMiddleware } from "$lib/paraglide/server";
-import redis from "$lib/redisClient";
 import { ValidateAccess, setTokenCookie } from "$lib/server";
+import redis from "$lib/server/redisClient";
 import type { RefreshResponse } from "$lib/types";
 import * as Sentry from "@sentry/sveltekit";
 import type {
@@ -16,16 +17,16 @@ import { redirect } from "@sveltejs/kit";
 import { sequence } from "@sveltejs/kit/hooks";
 
 Sentry.init({
-  dsn: env.PUBLIC_SENTRY_DSN,
+  dsn: envPublic.PUBLIC_SENTRY_DSN,
   release: version,
-  environment: env.PUBLIC_APP_ENV || "development",
-  tracesSampleRate: env.PUBLIC_SENTRY_TRACING_RATE
-    ? Number(env.PUBLIC_SENTRY_TRACING_RATE)
+  environment: envPublic.PUBLIC_APP_ENV || "development",
+  tracesSampleRate: envPublic.PUBLIC_SENTRY_TRACING_RATE
+    ? Number(envPublic.PUBLIC_SENTRY_TRACING_RATE)
     : 1.0,
 });
 
 const PROTECTED_PATHS = new Set(["/t/", "/s/", "/auth/bind/"]);
-const mockModules = import.meta.glob("./mock/api/**/*.ts");
+const mockModules = import.meta.glob("./mock/api/**/*.ts", { eager: false });
 
 function isProtectedPath(path: string): boolean {
   return (
@@ -49,7 +50,7 @@ export const paraglideHandle: Handle = ({ event, resolve }) =>
 
 export const authenticationHandle: Handle = async ({ event, resolve }) => {
   // skip authentication if in dev mode
-  if (env.MOCK_MODE) return resolve(event);
+  if (envPublic.PUBLIC_MOCK_MODE) return resolve(event);
   const path = event.url.pathname;
   const role = event.params.role;
 
@@ -148,7 +149,7 @@ async function handleTokenRefresh(event: RequestEvent) {
 }
 
 async function getUserFromToken(event: RequestEvent) {
-  if (env.MOCK_MODE) {
+  if (envPublic.PUBLIC_MOCK_MODE) {
     return {
       id: "dev-user",
       email: "dev@example.com",
@@ -179,19 +180,19 @@ export const handleFetch: HandleFetch = async ({ event, request, fetch }) => {
   if (url.pathname.startsWith("/axum/")) {
     const cleanPath = url.pathname.replace("/axum/", "/");
 
-    if (env.MOCK_MODE) {
+    if (envPublic.PUBLIC_MOCK_MODE) {
       const mockPath = `./mock/api${cleanPath}.ts`;
 
-      const loader = mockModules[mockPath];
-      if (loader) {
-        const mod = await loader();
-        if (mod?.GET) {
-          return mod.GET(event); // optionally pass event if needed
+      try {
+        const loader = mockModules[mockPath];
+        if (loader) {
+          const mod = await loader();
+          return mod.GET(event);
         }
+      } catch {
+        logger.warn(`Mock not found: ${cleanPath}`);
+        return new Response("Mock Not Found", { status: 404 });
       }
-
-      logger.warn(`Mock not found: ${cleanPath}`);
-      return new Response("Mock Not Found", { status: 404 });
     } else {
       const newUrl = new URL(cleanPath, env.BACKEND_URL);
 

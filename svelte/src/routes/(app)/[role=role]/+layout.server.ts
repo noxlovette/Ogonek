@@ -1,6 +1,6 @@
 import { env } from "$env/dynamic/private";
 import logger from "$lib/logger";
-import redis from "$lib/redisClient";
+import redis from "$lib/server/redisClient";
 import type { DashboardData } from "$lib/types";
 import { error } from "@sveltejs/kit";
 import type { LayoutServerLoad } from "./$types";

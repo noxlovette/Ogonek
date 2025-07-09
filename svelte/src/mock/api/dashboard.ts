@@ -52,7 +52,7 @@ export const GET = async () => {
     tasks: {
       data: [
         {
-          id: "lXBEINPkPJH-SIreOIZAQ",
+          id: "task1",
           title: "Murrrrrr",
           priority: 3,
           completed: false,
@@ -61,7 +61,7 @@ export const GET = async () => {
           dueDate: "2025-07-15T23:59:59Z",
         },
         {
-          id: "0Wyqw5vwgM-eq2af8do_P",
+          id: "task2",
           title: "Kotya ASsisgmned",
           priority: 2,
           completed: false,
@@ -75,7 +75,7 @@ export const GET = async () => {
     decks: {
       data: [
         {
-          id: "hpSL740Zl-Mzqo4m6m1mY",
+          id: "task1",
           name: "New Deck",
           assigneeName: "Kotya",
           isSubscribed: true,
@@ -112,7 +112,5 @@ export const GET = async () => {
       teacherData: null,
     },
   };
-  return new Response(JSON.stringify(dashboardData), {
-    headers: { "Content-Type": "application/json" },
-  });
+  return new Response(JSON.stringify(dashboardData));
 };
