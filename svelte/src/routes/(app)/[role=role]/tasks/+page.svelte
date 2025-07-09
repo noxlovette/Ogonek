@@ -24,6 +24,7 @@
   } from "$lib/stores";
   import { Eye, EyeClosed, Lightbulb, PlusCircle } from "lucide-svelte";
   import { formatDate } from "@noxlovette/svarog";
+  import { m } from "$lib/paraglide/messages";
 
   let { data } = $props();
   const { students } = data;

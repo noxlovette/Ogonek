@@ -1,0 +1,1 @@
+{"$schema":"https://inlang.com/schema/inlang-message-format","dashboard":{"morningGreeting":"Buongiorno, {name}","afternoonGreeting":"Buona giornata, {name}","eveningGreeting":"Buona sera, {name}","nightGreeting":"Bouna notte, {name}"}}

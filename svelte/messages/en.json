@@ -1,0 +1,1 @@
+{"$schema":"https://inlang.com/schema/inlang-message-format","tasks":"Tasks","noTasks":"No Tasks","lessons":"Lessons","noLessons":"No Lessons","decks":"Decks","noDecks":"No Decks","dashboard":{"morningGreeting":"Good morning, {name}","afternoonGreeting":"Good afternoon, {name}","eveningGreeting":"Good evening, {name}","nightGreeting":"Good night, {name}"}}

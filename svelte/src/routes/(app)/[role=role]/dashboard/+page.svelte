@@ -12,21 +12,29 @@
   import { getGreeting } from "$lib/utils";
   import { user } from "$lib/stores";
   import HeaderEmbellish from "$lib/components/typography/HeaderEmbellish.svelte";
+  import { m } from "$lib/paraglide/messages";
 
-  const greeting = getGreeting();
+  const greetingType = getGreeting();
+
+  const greetings = {
+    morning: m["dashboard.morningGreeting"]({ name: $user.name! }),
+    afternoon: m["dashboard.afternoonGreeting"]({ name: $user.name! }),
+    evening: m["dashboard.eveningGreeting"]({ name: $user.name! }),
+    night: m["dashboard.nightGreeting"]({ name: $user.name! }),
+  };
 
   let { data }: { data: PageData } = $props();
 </script>
 
 <HeaderEmbellish>
-  <H1>Good {greeting}, {$user.name}</H1>
+  <H1>{greetings[greetingType]}</H1>
 </HeaderEmbellish>
 
 <section class="space-y-4">
-  <H3>Tasks</H3>
+  <H3>{m.tasks()}</H3>
   <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
     {#if data.tasks.data.length < 1}
-      <EmptySpace>No Tasks</EmptySpace>
+      <EmptySpace>{m.noTasks()}</EmptySpace>
     {/if}
     {#each data.tasks.data as task (task.id)}
       <div transition:fly={{ y: 20, duration: 300 }}>
@@ -37,10 +45,10 @@
 </section>
 
 <section class="space-y-4">
-  <H3>Lessons</H3>
+  <H3>{m.lessons()}</H3>
   <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
     {#if data.lessons.data.length < 1}
-      <EmptySpace>No Lessons</EmptySpace>
+      <EmptySpace>{m.noLessons}</EmptySpace>
     {/if}
     {#each data.lessons.data as lesson (lesson.id)}
       <div transition:fly={{ y: 20, duration: 300 }}>
@@ -51,10 +59,10 @@
 </section>
 
 <section class="space-y-4">
-  <H3>Decks</H3>
+  <H3>{m.decks()}</H3>
   <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
     {#if data.decks.data.length < 1}
-      <EmptySpace>No Decks</EmptySpace>
+      <EmptySpace>{m.noDecks()}</EmptySpace>
     {/if}
     {#each data.decks.data as deck (deck.id)}
       <div transition:fly={{ y: 20, duration: 300 }}>

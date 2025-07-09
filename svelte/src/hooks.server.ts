@@ -1,10 +1,12 @@
 import { version } from "$app/environment";
 import { env } from "$env/dynamic/private";
 import logger from "$lib/logger";
+import { paraglideMiddleware } from "$lib/paraglide/server";
 import redis from "$lib/redisClient";
 import { ValidateAccess, setTokenCookie } from "$lib/server";
 import type { RefreshResponse } from "$lib/types";
 import * as Sentry from "@sentry/sveltekit";
+
 import type {
   Handle,
   HandleFetch,
@@ -35,48 +37,55 @@ export const init: ServerInit = async () => {
   logger.info("App Booted");
 };
 
-export const handle: Handle = sequence(
-  Sentry.sentryHandle(),
-  async ({ event, resolve }) => {
-    const path = event.url.pathname;
-    const role = event.params.role;
+export const paraglideHandle: Handle = ({ event, resolve }) =>
+  paraglideMiddleware(event.request, ({ request, locale }) => {
+    event.request = request;
 
-    if (path === "/") {
-      const user = await getUserFromToken(event);
-      if (user) {
-        if (user.role === "student") {
-          throw redirect(303, "/s/dashboard");
-        } else if (user.role === "teacher") {
-          throw redirect(303, "/t/dashboard");
-        }
+    return resolve(event, {
+      transformPageChunk: ({ html }) =>
+        html.replace("%paraglide.lang%", locale),
+    });
+  });
+
+export const authenticationHandle: Handle = async ({ event, resolve }) => {
+  const path = event.url.pathname;
+  const role = event.params.role;
+
+  if (path === "/") {
+    const user = await getUserFromToken(event);
+    if (user) {
+      if (user.role === "student") {
+        throw redirect(303, "/s/dashboard");
+      } else if (user.role === "teacher") {
+        throw redirect(303, "/t/dashboard");
       }
     }
+  }
 
-    if (!isProtectedPath(path)) {
-      return resolve(event);
-    }
+  if (!isProtectedPath(path)) {
+    return resolve(event);
+  }
 
-    const user = await getUserFromToken(event);
-    if (!user) {
-      throw redirect(302, "/auth/login");
-    }
+  const user = await getUserFromToken(event);
+  if (!user) {
+    throw redirect(302, "/auth/login");
+  }
 
-    const isTeacherRoute = role === "t";
-    const isStudentRoute = role === "s";
+  const isTeacherRoute = role === "t";
+  const isStudentRoute = role === "s";
 
-    if (isTeacherRoute && user.role !== "teacher") {
-      logger.warn("Redirecting to unauthorised as student");
-      throw redirect(303, "/unauthorised");
-    }
-    if (isStudentRoute && user.role !== "student") {
-      logger.warn("Redirecting to unauthorised as teacher");
-      throw redirect(303, "/unauthorised");
-    }
+  if (isTeacherRoute && user.role !== "teacher") {
+    logger.warn("Redirecting to unauthorised as student");
+    throw redirect(303, "/unauthorised");
+  }
+  if (isStudentRoute && user.role !== "student") {
+    logger.warn("Redirecting to unauthorised as teacher");
+    throw redirect(303, "/unauthorised");
+  }
 
-    const response = await resolve(event);
-    return response;
-  },
-);
+  const response = await resolve(event);
+  return response;
+};
 
 async function handleTokenRefresh(event: RequestEvent) {
   const refreshToken = event.cookies.get("refreshToken");
@@ -99,11 +108,9 @@ async function handleTokenRefresh(event: RequestEvent) {
       }
     }
 
-    // If we waited too long, assume the other process failed and try again
     await redis.del(refreshCacheKey);
   }
 
-  // Mark refresh as in progress with expiration (5 seconds)
   await redis.set(refreshCacheKey, "true", "EX", 5);
 
   try {
@@ -134,7 +141,6 @@ async function handleTokenRefresh(event: RequestEvent) {
     logger.error("Token refresh failed:", error);
     throw redirect(302, "/auth/login");
   } finally {
-    // Clean up
     await redis.del(refreshCacheKey);
   }
 }
@@ -162,19 +168,16 @@ export const handleFetch: HandleFetch = async ({ event, request, fetch }) => {
 
   if (url.pathname.startsWith("/axum/")) {
     const cleanPath = url.pathname.replace("/axum/", "/");
-    // Create new URL with the base and path
     const newUrl = new URL(cleanPath, env.BACKEND_URL);
 
-    // IMPORTANT: Copy all search parameters from original URL
     url.searchParams.forEach((value, key) => {
       newUrl.searchParams.set(key, value);
     });
 
-    // Create new request with the full URL including query parameters
     request = new Request(newUrl, request);
   }
   request.headers.set("X-API-KEY", env.API_KEY_AXUM);
-  // Only set Content-Type for non-FormData requests
+
   if (!request.headers.get("Content-Type")?.includes("multipart/form-data")) {
     request.headers.set("Content-Type", "application/json");
   }
@@ -184,4 +187,10 @@ export const handleFetch: HandleFetch = async ({ event, request, fetch }) => {
   }
   return fetch(request);
 };
+
 export const handleError = Sentry.handleErrorWithSentry();
+
+export const handle: Handle = sequence(
+  Sentry.sentryHandle(),
+  authenticationHandle,
+);

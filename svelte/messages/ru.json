@@ -1,0 +1,9 @@
+{
+	"$schema": "https://inlang.com/schema/inlang-message-format",
+	"dashboard": {
+		"morningGreeting": "Доброе утро, {name}",
+		"afternoonGreeting": "Добрый день, {name}",
+		"eveningGreeting": "Добрый вечер, {name}",
+		"nightGreeting": "Чего не спим, {name}?"
+	}
+}
