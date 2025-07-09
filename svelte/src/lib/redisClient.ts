@@ -1,4 +1,5 @@
 // redis.ts (or add types to your .js file)
+import { env } from "$env/dynamic/private";
 import type { Redis } from "ioredis";
 
 interface MockRedis {
@@ -14,7 +15,7 @@ interface MockRedis {
 
 let redis: Redis | MockRedis;
 
-if (process.env.NODE_ENV === "test" || process.env.REDIS_DISABLED === "true") {
+if (env.MOCK_MODE) {
   // Mock Redis for tests
   redis = {
     get: async () => null,

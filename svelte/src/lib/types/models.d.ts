@@ -48,6 +48,7 @@ export interface TaskSmall {
   id: string;
   title: string;
   dueDate: string;
+  completed: boolean;
   priority: number;
   assigneeName: string;
   seen: boolean;
@@ -71,9 +72,11 @@ export interface Toast {
   type: "success" | "error" | "info" | null;
 }
 export interface Profile {
-  zoomUrl: string | null;
+  userId: string;
+  videoCallUrl: string | null;
   avatarUrl: string | null;
-  [key: string]: string | undefined;
+  telegramId: string | null;
+  [key: string]: string | undefined | null;
 }
 
 export interface TeacherData {
@@ -83,7 +86,7 @@ export interface TeacherData {
 
 export interface ProfileComposite {
   profile: Profile;
-  teacherData: TeacherData;
+  teacherData: TeacherData | null;
 }
 
 export interface User {
@@ -92,7 +95,7 @@ export interface User {
   role: string | null;
   email: string | null;
   id: string | null;
-  [key: string]: string | undefined;
+  [key: string]: string | undefined | null;
 }
 
 export interface Lesson {
@@ -120,10 +123,8 @@ export interface Student {
   name: string;
   username: string;
   email: string;
-  role: string;
-  markdown: string;
-  joined: string;
-  studentTelegramId: string;
+  markdown: string | null;
+  studentTelegramId: string | null;
 }
 
 export interface CompositeStudent {
@@ -138,6 +139,7 @@ export interface DeckSmall {
   isSubscribed?: boolean;
   name: string;
   description: string;
+  visibility: "private" | "assigned" | "public";
   seen: boolean;
   assigneeName: string;
 }

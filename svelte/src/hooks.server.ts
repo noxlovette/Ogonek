@@ -6,7 +6,6 @@ import redis from "$lib/redisClient";
 import { ValidateAccess, setTokenCookie } from "$lib/server";
 import type { RefreshResponse } from "$lib/types";
 import * as Sentry from "@sentry/sveltekit";
-
 import type {
   Handle,
   HandleFetch,
@@ -26,6 +25,7 @@ Sentry.init({
 });
 
 const PROTECTED_PATHS = new Set(["/t/", "/s/", "/auth/bind/"]);
+const mockModules = import.meta.glob("./mock/api/**/*.ts");
 
 function isProtectedPath(path: string): boolean {
   return (
@@ -48,6 +48,8 @@ export const paraglideHandle: Handle = ({ event, resolve }) =>
   });
 
 export const authenticationHandle: Handle = async ({ event, resolve }) => {
+  // skip authentication if in dev mode
+  if (env.MOCK_MODE) return resolve(event);
   const path = event.url.pathname;
   const role = event.params.role;
 
@@ -146,6 +148,14 @@ async function handleTokenRefresh(event: RequestEvent) {
 }
 
 async function getUserFromToken(event: RequestEvent) {
+  if (env.MOCK_MODE) {
+    return {
+      id: "dev-user",
+      email: "dev@example.com",
+      role: "teacher",
+      name: "Dev Mode User",
+    };
+  }
   const accessToken = event.cookies.get("accessToken");
   let user = null;
 
@@ -168,23 +178,41 @@ export const handleFetch: HandleFetch = async ({ event, request, fetch }) => {
 
   if (url.pathname.startsWith("/axum/")) {
     const cleanPath = url.pathname.replace("/axum/", "/");
-    const newUrl = new URL(cleanPath, env.BACKEND_URL);
 
-    url.searchParams.forEach((value, key) => {
-      newUrl.searchParams.set(key, value);
-    });
+    if (env.MOCK_MODE) {
+      const mockPath = `./mock/api${cleanPath}.ts`;
 
-    request = new Request(newUrl, request);
-  }
-  request.headers.set("X-API-KEY", env.API_KEY_AXUM);
+      const loader = mockModules[mockPath];
+      if (loader) {
+        const mod = await loader();
+        if (mod?.GET) {
+          return mod.GET(event); // optionally pass event if needed
+        }
+      }
 
-  if (!request.headers.get("Content-Type")?.includes("multipart/form-data")) {
-    request.headers.set("Content-Type", "application/json");
+      logger.warn(`Mock not found: ${cleanPath}`);
+      return new Response("Mock Not Found", { status: 404 });
+    } else {
+      const newUrl = new URL(cleanPath, env.BACKEND_URL);
+
+      url.searchParams.forEach((value, key) => {
+        newUrl.searchParams.set(key, value);
+      });
+
+      request = new Request(newUrl, request);
+    }
+
+    request.headers.set("X-API-KEY", env.API_KEY_AXUM);
+    if (!request.headers.get("Content-Type")?.includes("multipart/form-data")) {
+      request.headers.set("Content-Type", "application/json");
+    }
+
+    const accessToken = event.cookies.get("accessToken");
+    if (accessToken) {
+      request.headers.set("Authorization", `Bearer ${accessToken}`);
+    }
   }
-  const accessToken = event.cookies.get("accessToken");
-  if (accessToken) {
-    request.headers.set("Authorization", `Bearer ${accessToken}`);
-  }
+
   return fetch(request);
 };
 
