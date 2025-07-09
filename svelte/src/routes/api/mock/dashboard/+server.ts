@@ -23,7 +23,7 @@ export const GET = async () => {
     lessons: {
       data: [
         {
-          id: "tK_H-7cD7f7mJBFvvUns0",
+          id: "lesson1",
           title: "New Lesson",
           topic: "Meow!!!",
           assigneeName: "Kotya",
@@ -31,7 +31,7 @@ export const GET = async () => {
           createdAt: "2025-07-03T11:03:23.362306Z",
         },
         {
-          id: "pmdSfgR9zsPgiFTLrj8Vc",
+          id: "lesson2",
           title: "Dseded?",
           topic: "General",
           assigneeName: "dseded",
@@ -39,7 +39,7 @@ export const GET = async () => {
           createdAt: "2025-07-03T10:40:10.957506Z",
         },
         {
-          id: "BpASOxIc7pqMALGPYk334",
+          id: "lesson3",
           title: "Kotya!!!",
           topic: "Badges Test 3",
           assigneeName: "Kotya",

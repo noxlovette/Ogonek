@@ -42,7 +42,7 @@
         formaction="?/delete"
         Icon={Trash2}
         confirmText={lesson.title}
-        confirmTitle="Delete Lesson">{m.delete}</UniButton
+        confirmTitle="Delete Lesson">{m.delete()}</UniButton
       >
     </div>
   </HeaderEmbellish>

@@ -46,10 +46,16 @@ export const actions: Actions = {
       body: JSON.stringify(body),
     });
 
+    if (!response.ok) {
+      const errorData = await response.text();
+      logger.error({ errorData }, "ERROR SVELTE SIDE LESSON CREATION");
+      return fail(500);
+    }
+
     const newResult = await handleApiResponse<NewResponse>(response);
 
     if (!isSuccessResponse(newResult)) {
-      logger.error({ newResult }, "Error creating a new task axum-side");
+      logger.error({ newResult }, "ERROR AXUM SIDE LESSON CREATION");
       return fail(newResult.status, { message: newResult.message });
     }
 

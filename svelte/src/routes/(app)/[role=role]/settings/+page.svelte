@@ -81,7 +81,7 @@
           }}
           type="button"
         >
-          {disabled ? m.edit : m.editing()}
+          {disabled ? m.edit() : m.editing()}
         </UniButton>
         <UniButton
           Icon={Check}

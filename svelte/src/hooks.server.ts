@@ -181,18 +181,10 @@ export const handleFetch: HandleFetch = async ({ event, request, fetch }) => {
     const cleanPath = url.pathname.replace("/axum/", "/");
 
     if (envPublic.PUBLIC_MOCK_MODE) {
-      const mockPath = `./mock/api${cleanPath}.ts`;
+      const mockURL = `${env.ORIGIN}/api/mock${cleanPath}`;
+      request = new Request(mockURL, request);
 
-      try {
-        const loader = mockModules[mockPath];
-        if (loader) {
-          const mod = await loader();
-          return mod.GET(event);
-        }
-      } catch {
-        logger.warn(`Mock not found: ${cleanPath}`);
-        return new Response("Mock Not Found", { status: 404 });
-      }
+      return fetch(request);
     } else {
       const newUrl = new URL(cleanPath, env.BACKEND_URL);
 

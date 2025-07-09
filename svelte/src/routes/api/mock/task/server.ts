@@ -1,8 +1,8 @@
-import type { PaginatedResponse, Task } from "$lib/types";
+import logger from "$lib/logger";
+import type { PaginatedResponse, TaskSmall } from "$lib/types";
+import type { RequestHandler } from "@sveltejs/kit";
 
-const taskModules = import.meta.glob("./task/t/*.ts");
-
-export const GET = async () => {
+export const GET: RequestHandler = async () => {
   const tasks: TaskSmall[] = [
     {
       id: "task1",
@@ -24,7 +24,7 @@ export const GET = async () => {
     },
   ];
 
-  const paginatedResponse: PaginatedResponse<Task> = {
+  const paginatedResponse: PaginatedResponse<TaskSmall> = {
     data: tasks,
     perPage: 3,
     total: 10,
@@ -32,6 +32,18 @@ export const GET = async () => {
   };
 
   return new Response(JSON.stringify(paginatedResponse), {
+    headers: { "Content-Type": "application/json" },
+  });
+};
+
+export const POST: RequestHandler = async ({ request }) => {
+  const body = await request.json();
+
+  logger.warn("HIT POST TASK with body:", body);
+
+  const id = "task1";
+
+  return new Response(JSON.stringify(id), {
     headers: { "Content-Type": "application/json" },
   });
 };

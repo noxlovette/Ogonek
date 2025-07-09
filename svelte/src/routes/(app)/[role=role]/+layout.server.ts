@@ -11,8 +11,6 @@ export const load: LayoutServerLoad = async ({ fetch }) => {
       res.json(),
     )) as DashboardData;
 
-    console.log(dashboardData);
-
     const word = redis.get("wordAPI").then(async (cachedWord) => {
       if (cachedWord) {
         return JSON.parse(cachedWord);
