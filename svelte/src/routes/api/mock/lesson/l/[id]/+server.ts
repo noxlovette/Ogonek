@@ -42,7 +42,12 @@ export const GET: RequestHandler = async ({ params }) => {
   });
 };
 
-export const POST: RequestHandler = async () => {
-  logger.warn("HIT POST ENDPOINT");
-  return new Response(JSON.stringify({ id: "lesson1" }));
+export const PATCH: RequestHandler = async () => {
+  logger.warn("HIT PUT ENDPOINT");
+  return new Response(null, { status: 204 });
+};
+
+export const DELETE: RequestHandler = async () => {
+  logger.warn("HIT DELETE ENDPOINT");
+  return new Response(null, { status: 204 });
 };

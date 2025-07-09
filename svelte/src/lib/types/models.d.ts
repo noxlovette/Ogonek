@@ -183,7 +183,7 @@ export interface Card {
   id: string;
   front: string;
   back: string;
-  mediaUrl?: string;
+  mediaUrl?: string | null;
   deckId: string;
   createdAt?: string;
 }
@@ -209,7 +209,7 @@ export interface CardProgress {
   interval: number;
   front: string;
   back: string;
-  mediaUrl: string;
+  mediaUrl: string | null;
 }
 
 export interface PaginatedResponse<T> {

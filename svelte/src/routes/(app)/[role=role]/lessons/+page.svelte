@@ -107,5 +107,5 @@
 {/if}
 
 <svelte:head>
-  <title>{m.lessons}</title>
+  <title>{m.lessons()}</title>
 </svelte:head>
