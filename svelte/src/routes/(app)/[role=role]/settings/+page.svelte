@@ -24,6 +24,7 @@
   } from "$lib/stores";
 
   import { Check, LogOut, Key, Bell } from "lucide-svelte";
+  import { m } from "$lib/paraglide/messages";
 
   let disabled = $state(true);
 
@@ -42,7 +43,7 @@
     },
     {
       id: "videoCallUrl",
-      label: "Video Call Url",
+      label: m.warm_fit_antelope_bump(),
       type: "text",
       storeKey: "videoCallUrl",
     },
@@ -50,16 +51,18 @@
 </script>
 
 <svelte:head>
-  <title>Settings</title>
+  <title>{m.settings()}</title>
 </svelte:head>
 
 <form
   method="POST"
   class="flex flex-col gap-3"
   use:enhance={enhanceForm({
+    messages: {
+      success: m.changesSaved(),
+    },
     handlers: {
       success: async () => {
-        notification.set({ message: "Changes saved", type: "success" });
         disabled = true;
       },
     },
@@ -78,14 +81,14 @@
           }}
           type="button"
         >
-          {disabled ? "Edit" : "Editing..."}
+          {disabled ? m.edit : m.editing()}
         </UniButton>
         <UniButton
           Icon={Check}
           type="submit"
           variant="primary"
           disable={disabled}
-          formaction="?/update">Save</UniButton
+          formaction="?/update">{m.save()}</UniButton
         >
       </div>
     </div>
@@ -94,7 +97,7 @@
   <div class="grid gap-3 md:grid-cols-2">
     <Panel>
       <div>
-        <H2>Account Settings</H2>
+        <H2>{m.mellow_mild_pig_boil()}</H2>
       </div>
 
       <div class="grid gap-3">
@@ -116,7 +119,7 @@
     >
     {#if page.params.role === "t"}
       <Panel>
-        <H2>Teacher Settings</H2>
+        <H2>{m.real_best_gibbon_dazzle()}</H2>
         <div class="grid gap-3">
           {#each teacherFields as field, index (index)}
             <div>
@@ -142,17 +145,16 @@
 
   <Panel>
     <div class="flex items-center gap-3">
-      <H2>Telegram Notifications</H2>
+      <H2>{m.stale_quick_mantis_stab()}</H2>
     </div>
 
     <p class="text-sm text-stone-700 dark:text-stone-300">
-      Connect with our Telegram bot to receive instant notifications for new
-      tasks, due dates, and other important updates.
+      {m.broad_clear_snake_peel()}
     </p>
 
     <div class="flex">
       <UniButton variant="primary" Icon={Bell} href="https://t.me/fz_notif_bot">
-        Enable Notifications
+        {m.suave_teary_emu_expand()}
       </UniButton>
     </div>
   </Panel>
@@ -176,18 +178,15 @@
   })}
 >
   <Panel>
-    <H2>Account</H2>
-
     <p class="text-sm text-stone-700 dark:text-stone-300">
-      "I didn't say it was gonna be easy, Neo. I just said it would be the
-      truth."
+      {m.odd_tough_shell_dust()}
     </p>
     <div>
       <UniButton
         variant="danger"
         type="submit"
         Icon={LogOut}
-        formaction="?/logout">Log Out</UniButton
+        formaction="?/logout">{m.seemly_any_ostrich_believe()}</UniButton
       >
     </div>
   </Panel>

@@ -16,6 +16,7 @@
   import UniButton from "$lib/components/UI/UniButton.svelte";
   import { pushState } from "$app/navigation";
   import { onMount } from "svelte";
+  import { m } from "$lib/paraglide/messages.js";
 
   onMount(() => {
     if (updatedCards.length > 0) {
@@ -55,7 +56,7 @@
 </script>
 
 <svelte:head>
-  <title>{`Edit ${deck.name} | Flashcards`}</title>
+  <title>{`${m.edit()} ${deck.name} | Flashcards`}</title>
 </svelte:head>
 <HeaderEmbellish>
   <H1>{deck.name}</H1>
@@ -74,9 +75,7 @@
   class="space-y-8"
   use:enhance={enhanceForm({
     messages: {
-      redirect: "Deck updated successfully",
-      failure: "Failed to update deck",
-      error: "An error occurred",
+      redirect: m.changesSaved(),
     },
   })}
 >
@@ -107,10 +106,10 @@
               </svg>
             </div>
             <h3 class="text-lg font-medium text-stone-700 dark:text-stone-300">
-              No cards yet
+              {m.noFlashcards()}
             </h3>
             <p class="mt-1 max-w-md text-stone-500 dark:text-stone-400">
-              Create your first flashcard to get started
+              {m.deft_fuzzy_stingray_push()}
             </p>
             <button
               type="button"
@@ -118,7 +117,7 @@
               onclick={addCard}
             >
               <Plus class="mr-2 h-4 w-4" />
-              Add First Card
+              {m.new()}
             </button>
           </div>
         {:else}
@@ -134,7 +133,7 @@
             class="group hover:border-cacao-300 hover:text-cacao-500 dark:hover:border-cacao-700 dark:hover:text-cacao-400 bg-default mt-4 flex w-full items-center justify-center rounded-lg border-2 border-dashed border-stone-300/30 py-4 text-stone-500 transition dark:border-stone-600/30 dark:bg-stone-900/50 dark:text-stone-400"
           >
             <Plus class="mr-2 h-5 w-5 transition group-hover:scale-110" />
-            <span>Add Another Card</span>
+            <span>{m.new()}</span>
           </button>
         {/if}
       </div>
@@ -165,15 +164,15 @@
           <AssigneeSelector item={deck} />
 
           <div>
-            <Label>Visibility</Label>
+            <Label>{m.visibility()}</Label>
             <select
               name="visibility"
               value={deck.visibility}
               class="focus:border-cacao-500 focus:ring-cacao-500/20 h-full w-full rounded-2xl border border-stone-300 bg-white px-4 py-2 text-base text-stone-900 placeholder-stone-400 shadow-sm transition-all focus:shadow-md focus:ring-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60 dark:border-stone-700 dark:bg-stone-950 dark:text-stone-100"
             >
-              <option value="private">Private</option>
-              <option value="public">Public</option>
-              <option value="assigned">Assigned</option>
+              <option value="private">{m.private()}</option>
+              <option value="public">{m.public()}</option>
+              <option value="assigned">{m.assigned()}</option>
             </select>
           </div>
         {/if}
@@ -185,9 +184,11 @@
             Icon={UploadCloud}
             variant="ghost">Import</UniButton
           >
-          <UniButton variant="secondary" Icon={Ban} href=".">Cancel</UniButton>
+          <UniButton variant="secondary" Icon={Ban} href="."
+            >{m.cancel()}</UniButton
+          >
           <UniButton variant="primary" type="submit" Icon={Check}
-            >Save</UniButton
+            >{m.save()}</UniButton
           >
           <UniButton
             variant="danger"
@@ -196,7 +197,7 @@
             confirmText={deck.name}
             confirmTitle="Delete Deck"
           >
-            Delete</UniButton
+            {m.delete()}</UniButton
           >
         </div>
       </div>

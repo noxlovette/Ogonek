@@ -15,6 +15,7 @@
   } from "$lib/components";
   import type { PageData } from "./$types";
   import PrioritySlider from "$lib/components/UI/forms/PrioritySlider.svelte";
+  import { m } from "$lib/paraglide/messages";
 
   let { data }: { data: PageData } = $props();
   let { task, files } = data;
@@ -38,27 +39,31 @@
   class="mb-4 space-y-6"
   use:enhance={enhanceForm({
     messages: {
-      redirect: "Changes Saved",
+      redirect: m.changesSaved(),
+      defaultError: m.failedToSaveChanges(),
     },
   })}
 >
   <HeaderEmbellish>
     <div class="flex items-end space-x-4">
-      <H1>Edit Task</H1>
+      <H1>{m.editing()}</H1>
       <GreySpan>
         {files.length}
         {files.length === 1 ? "file" : "files"}
       </GreySpan>
     </div>
     <div class="flex items-center space-x-3">
-      <UniButton variant="secondary" Icon={Ban} href=".">Cancel</UniButton>
-      <UniButton variant="primary" type="submit" Icon={Check}>Save</UniButton>
+      <UniButton variant="secondary" Icon={Ban} href=".">{m.cancel()}</UniButton
+      >
+      <UniButton variant="primary" type="submit" Icon={Check}
+        >{m.save()}</UniButton
+      >
       <UniButton
         variant="danger"
         Icon={Trash2}
         formaction="?/delete"
         confirmText={task.title}
-        confirmTitle="Delete Task">Delete</UniButton
+        confirmTitle="Delete Task">{m.delete()}</UniButton
       >
     </div>
   </HeaderEmbellish>

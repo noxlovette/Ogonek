@@ -13,6 +13,7 @@
   import { page } from "$app/state";
   import type { TableConfig, Deck } from "$lib/types";
   import { ArrowBigRight, PlusCircle, ShoppingBag } from "lucide-svelte";
+  import { m } from "$lib/paraglide/messages";
   import {
     searchTerm,
     pageSize,
@@ -39,27 +40,27 @@
 
   const deckConfig: TableConfig<Deck> = {
     columns: [
-      { key: "name", label: "Deck Name" },
+      { key: "name", label: m.title() },
       {
         key: "description",
-        label: "Description",
+        label: m.equal_key_gazelle_attend(),
         formatter: (value: string | boolean | undefined) =>
           value
             ? String(value).substring(0, 50) +
               (String(value).length > 50 ? "..." : "")
-            : "No description",
+            : m.simple_east_crocodile_spark(),
       },
       {
         key: "visibility",
-        label: "Visibility",
+        label: m.visibility(),
         formatter: (value: string | boolean | undefined) => {
           switch (String(value)) {
             case "public":
-              return "Public 🌐";
+              return "Public";
             case "private":
-              return "Private 🔒";
+              return "Private";
             case "assigned":
-              return "Assigned 👤";
+              return "Assigned";
             default:
               return String(value);
           }
@@ -75,12 +76,12 @@
 
 <HeaderEmbellish>
   <div class="flex flex-col gap-3 md:flex-row md:items-baseline md:gap-4">
-    <H1>Flashcards</H1>
+    <H1>{m.flashcards()}</H1>
     <H3>
       {#if data.cards?.length}
-        {data.cards.length} cards due today
+        {data.cards.length} {m.blue_solid_wren_feel()}
       {:else}
-        All Caught Up!
+        {m.livid_trite_squirrel_cuddle()}
       {/if}
     </H3>
   </div>
@@ -91,7 +92,7 @@
       method="post"
       use:enhance={enhanceForm({
         messages: {
-          redirect: "New Deck Created",
+          redirect: m.newDeckCreated(),
         },
         navigate: true,
       })}
@@ -100,18 +101,18 @@
         fullWidth={true}
         Icon={PlusCircle}
         type="submit"
-        variant="primary">New</UniButton
+        variant="primary">{m.new()}</UniButton
       >
     </form>
     <UniButton
       Icon={ShoppingBag}
       variant="primary"
       href="words/marketplace"
-      styling="hidden md:flex">Marketplace</UniButton
+      styling="hidden md:flex">{m.marketplace()}</UniButton
     >
     {#if data.cards?.length}
       <UniButton variant="primary" Icon={ArrowBigRight} href="words/learn"
-        >Start Review</UniButton
+        >{m.helpful_slow_flea_catch()}</UniButton
       >
     {/if}
   </div>
@@ -126,7 +127,7 @@
       </div>
     {:else}
       <EmptySpace>
-        <H3>No decks</H3>
+        <H3>{m.noDecks()}</H3>
       </EmptySpace>
     {/if}
   </div>

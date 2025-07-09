@@ -33,20 +33,18 @@
 
   const taskConfig: TableConfig<Task> = {
     columns: [
-      { key: "title", label: "Title" },
+      { key: "title", label: m.title() },
       {
         key: "assigneeName",
-        label: "Assignee",
+        label: m.assignee(),
         formatter: (value: unknown): string =>
-          (value as string) === $user.name
-            ? "You"
-            : (value as string) || "Not Assigned", // Handle null/undefined
+          (value as string) || m.notAssigned(),
       },
       {
         key: "dueDate",
-        label: "Due",
+        label: m.less_arable_starfish_belong(),
         formatter: (value: unknown): string =>
-          value ? formatDate(value as string) : "No Due Date", // Explicitly return string
+          value ? formatDate(value as string) : m.arable_flat_emu_strive(),
       },
     ],
   };
@@ -66,39 +64,26 @@
   function toggleCompletedTasks() {
     completedStore.toggle();
   }
-
-  const buttonPhrases = [
-    "Feed Me Tasks!",
-    "More Work Please!",
-    "Task Drought... Help!",
-    "Bored Student Here!",
-    "Challenge Me!",
-    "My Brain Needs Exercise!",
-    "Send Homework My Way!",
-  ];
-
-  const randomPhrase =
-    buttonPhrases[Math.floor(Math.random() * buttonPhrases.length)];
 </script>
 
 <HeaderEmbellish>
   <div
     class="flex flex-col items-center gap-3 md:flex-row md:items-center md:gap-4"
   >
-    <H1>Tasks</H1>
+    <H1>{m.tasks()}</H1>
     {#if role == "t"}
       <form
         action="?/new"
         method="post"
         use:enhance={enhanceForm({
           messages: {
-            redirect: "New Task Created",
+            redirect: m.few_big_dachshund_scoop(),
           },
           navigate: true,
         })}
       >
         <UniButton Icon={PlusCircle} type="submit" variant="primary"
-          >New</UniButton
+          >{m.new()}</UniButton
         >
       </form>
     {/if}
@@ -109,7 +94,9 @@
       variant="primary"
       Icon={$completedStore === true ? EyeClosed : Eye}
     >
-      {$completedStore === true ? "Hide Completed" : "Show Completed"}
+      {$completedStore === true
+        ? m.steep_zany_tern_zip()
+        : m.direct_slow_bobcat_shine()}
     </UniButton>
   </div>
 </HeaderEmbellish>
@@ -131,13 +118,8 @@
 {:else}
   <EmptySpace>
     <h3 class="mb-2 text-2xl font-bold text-stone-800 dark:text-stone-200">
-      Task Inbox Zero
+      {m.noTasks()}
     </h3>
-
-    <p class="mb-6 max-w-md text-stone-600 dark:text-stone-400">
-      Wow, you've completed all your tasks! Time to either celebrate or ask for
-      more challenges.
-    </p>
 
     <form
       method="POST"
@@ -145,9 +127,7 @@
       class=""
       use:enhance={enhanceForm({
         messages: {
-          success: "Teacher Notified",
-          error: "Error",
-          failure: "Something's off",
+          success: m.minor_mad_hare_buzz(),
         },
       })}
     >
@@ -159,12 +139,12 @@
         name="teacherTelegramId"
       />
       <UniButton type="submit" variant="primary" Icon={Lightbulb}>
-        {randomPhrase}
+        {m.tense_mealy_kitten_aid()}
       </UniButton>
     </form>
   </EmptySpace>
 {/if}
 
 <svelte:head>
-  <title>Tasks</title>
+  <title>{m.tasks()}</title>
 </svelte:head>

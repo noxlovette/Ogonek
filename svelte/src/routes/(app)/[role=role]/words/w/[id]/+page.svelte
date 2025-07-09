@@ -17,6 +17,7 @@
   import { enhanceForm } from "$lib/utils";
   import Badge from "$lib/components/cards/Badge.svelte";
   import { page } from "$app/state";
+  import { m } from "$lib/paraglide/messages";
 
   let { data } = $props();
 
@@ -28,7 +29,7 @@
 
   const assigneeName = $derived(
     data.students.find((student) => student.id === data.deck.assignee)?.name ||
-      "Unassigned",
+      m.notAssigned(),
   );
 
   const toggleCard = (cardId: string) => {
@@ -55,7 +56,7 @@
   <div class="flex flex-col gap-3 md:flex-row md:gap-4">
     {#if $user.id === deck.createdBy}
       <UniButton variant="secondary" href="{deck.id}/edit" Icon={Pencil}
-        >Edit</UniButton
+        >{m.edit()}</UniButton
       >
     {/if}
     <form
@@ -63,9 +64,9 @@
       action="?/subscribe"
       use:enhance={enhanceForm({
         messages: {
-          success: isSubscribed ? "Unsubscribed!" : "Subscribed!",
-          failure: "Failed to update deck",
-          error: "An error occurred",
+          success: isSubscribed
+            ? m.elegant_small_gadfly_quell()
+            : m.stout_royal_macaw_fear(),
         },
         handlers: {
           success: async () => {
@@ -82,7 +83,9 @@
         fullWidth={true}
         variant="primary"
       >
-        {isSubscribed ? "Unsubscribe" : "Subscribe"}
+        {isSubscribed
+          ? m.fluffy_elegant_coyote_assure()
+          : m.fit_least_baboon_imagine()}
       </UniButton>
     </form>
   </div>
@@ -99,10 +102,10 @@
     {#if cards.length === 0}
       <EmptySpace>
         <p class="text-lg text-stone-500 dark:text-stone-400">
-          No flashcards available
+          {m.noFlashcards()}
         </p>
         <p class="mt-2 text-sm text-stone-400 dark:text-stone-500">
-          Add some cards by editing this deck
+          {m.deft_fuzzy_stingray_push()}
         </p>
       </EmptySpace>
     {/if}
@@ -113,7 +116,7 @@
       <div
         class="bg-default ring-default flex flex-col space-y-3 rounded-lg p-3 shadow-sm"
       >
-        <Label>Tags</Label>
+        <Label>{m.equal_key_gazelle_attend()}</Label>
         {#if deck.description}
           <div class="flex flex-wrap gap-x-1 gap-y-2">
             {#each deck.description.split(";") as deckTag, index (index)}
@@ -122,14 +125,14 @@
           </div>
         {:else}
           <p class="text-stone-500 italic dark:text-stone-400">
-            No tags available
+            {m.simple_east_crocodile_spark()}
           </p>
         {/if}
 
         <div class="border-t border-stone-100 pt-4 dark:border-stone-700">
           <GreySpan>
             {cards.length}
-            {cards.length === 1 ? "card" : "cards"}
+            {m.some_happy_cat({ count: cards.length })}
           </GreySpan>
         </div>
       </div>

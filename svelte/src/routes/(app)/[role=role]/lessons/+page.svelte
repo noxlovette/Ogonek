@@ -23,6 +23,7 @@
   } from "$lib/stores";
   import { goto } from "$app/navigation";
   import { PlusCircle } from "lucide-svelte";
+  import { m } from "$lib/paraglide/messages.js";
 
   let { data } = $props();
   let { students } = $derived(data);
@@ -33,17 +34,17 @@
 
   const lessonConfig: TableConfig<Lesson> = {
     columns: [
-      { key: "title", label: "Title" },
-      { key: "topic", label: "Topic" },
+      { key: "title", label: m.title() },
+      { key: "topic", label: m.topic() },
       {
         key: "assigneeName",
-        label: "Assignee",
+        label: m.assignee(),
         formatter: (value: string | boolean | undefined) =>
-          value === $user.name ? "Not Assigned" : String(value),
+          value === $user.name ? m.notAssigned() : String(value),
       },
       {
         key: "createdAt",
-        label: "Created",
+        label: m.created(),
         formatter: (value: string | boolean | undefined) =>
           formatDate(String(value)),
       },
@@ -63,20 +64,20 @@
 
 <HeaderEmbellish>
   <div class="flex flex-col gap-3 md:flex-row md:gap-4">
-    <H1>Lessons</H1>
+    <H1>{m.lessons}</H1>
     {#if role === "t"}
       <form
         action="?/new"
         method="post"
         use:enhance={enhanceForm({
           messages: {
-            redirect: "New Lesson Created",
+            redirect: m.newLessonCreated(),
           },
           navigate: true,
         })}
       >
         <UniButton Icon={PlusCircle} type="submit" variant="primary"
-          >New</UniButton
+          >{m.new()}</UniButton
         >
       </form>
     {/if}
@@ -93,7 +94,7 @@
 {:else}
   {#if lessons.length < 1}
     <EmptySpace>
-      <H3>No Lessons</H3>
+      <H3>{m.noLessons}</H3>
     </EmptySpace>
   {/if}
   <section class="space-y-4">
@@ -106,5 +107,5 @@
 {/if}
 
 <svelte:head>
-  <title>Lessons</title>
+  <title>{m.lessons}</title>
 </svelte:head>

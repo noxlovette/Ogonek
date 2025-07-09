@@ -7,6 +7,7 @@
   import { getUrgency } from "$lib/utils";
   import Priority from "./Priority.svelte";
   import SeenBadge from "./SeenBadge.svelte";
+  import { m } from "$lib/paraglide/messages";
 
   let { task } = $props();
   const formattedDate: string = formatDate(task.dueDate);
@@ -14,7 +15,7 @@
     $user.role === "teacher"
       ? `/t/tasks/t/${task.id}`
       : `/s/tasks/t/${task.id}`;
-  const badgeText: string = `Due ${formattedDate}`;
+  const badgeText: string = `${m.less_arable_starfish_belong()} ${formattedDate}`;
   const urgency = getUrgency(task);
 </script>
 

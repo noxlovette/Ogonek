@@ -1,5 +1,6 @@
 <script lang="ts">
   import { DeckCard, EmptySpace, H1, HeaderEmbellish } from "$lib/components";
+  import { m } from "$lib/paraglide/messages";
 
   let { data } = $props();
 </script>
@@ -14,5 +15,5 @@
     {/each}
   </grid>
 {:else}
-  <EmptySpace>No Public Cards</EmptySpace>
+  <EmptySpace>{m.noFlashcards}</EmptySpace>
 {/if}

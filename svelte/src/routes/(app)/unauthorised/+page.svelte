@@ -1,6 +1,6 @@
-<!-- Unauthorized.svelte -->
-<script>
+<script lang="ts">
   import { Lock, ArrowLeft } from "lucide-svelte";
+  import { m } from "$lib/paraglide/messages";
 </script>
 
 <div class="flex size-full items-center justify-center">
@@ -13,18 +13,12 @@
     </div>
 
     <h1 class="mb-4 text-4xl font-bold text-stone-800">
-      Woah there, partner! 🤠
+      {m.noisy_such_bear_achieve()}
     </h1>
-
-    <p class="mb-6 text-xl text-stone-600">
-      Looks like you're trying to sneak into the VIP section without a backstage
-      pass!
-    </p>
 
     <div class="bg-default mb-8 rounded-lg p-4">
       <p class="text-stone-500 italic">
-        "HTTP 403: The bouncer said no. Maybe try bringing cookies next time?
-        🍪"
+        {m.stale_vivid_dolphin_thrive()}
       </p>
     </div>
 
@@ -35,11 +29,11 @@
       <ArrowLeft
         class="group-hover:-transtone-x-1 transition-transform duration-200"
       />
-      Return to Safety
+      {m.level_low_angelfish_peel()}
     </button>
   </div>
 </div>
 
 <svelte:head>
-  <title>Unauthorised</title>
+  <title>{m.brave_fair_cobra_tear()}</title>
 </svelte:head>

@@ -18,6 +18,7 @@
   import Badge from "$lib/components/cards/Badge.svelte";
   import { getUrgency } from "$lib/utils";
   import Priority from "$lib/components/cards/Priority.svelte";
+  import { m } from "$lib/paraglide/messages.js";
 
   let { data } = $props();
   const { files, rendered } = $derived(data);
@@ -52,8 +53,8 @@
       action="?/complete"
       use:enhance={enhanceForm({
         messages: {
-          success: completed ? "Not Completed" : "Marked As Completed",
-          defaultError: "Failed to mark as completed",
+          success: completed ? m.notCompleted() : m.markedAsCompleted(),
+          defaultError: m.failedToSaveChanges(),
         },
         handlers: {
           success: async () => {
@@ -68,9 +69,9 @@
         Icon={completed ? CheckSquare : Square}
       >
         {#if completed}
-          <p class="">Completed</p>
+          <p class="">{m.completed()}</p>
         {:else}
-          <p class="">Done</p>
+          <p class="">{m.notCompleted()}</p>
         {/if}
       </UniButton>
 
@@ -88,7 +89,7 @@
       <UniButton
         Icon={Pencil}
         href="/t/tasks/t/{data.task.id}/edit"
-        variant="secondary">Edit</UniButton
+        variant="secondary">{m.edit()}</UniButton
       >
     {/if}
   </div>
@@ -98,23 +99,22 @@
   <div class="flex flex-col items-center space-y-2">
     {#if files.length > 0}
       <div class="flex w-full flex-col gap-4">
-        <Label>Attached Files</Label>
+        <Label>{m.stock_wise_cowfish_roam()}</Label>
         {#each files as file (file.id)}
           <FileTaskCard {file} />
         {/each}
       </div>
     {:else}
-      <EmptySpace>No files attached</EmptySpace>
+      <EmptySpace>{m.sleek_empty_zebra_harbor()}</EmptySpace>
     {/if}
     {#if page.params.role === "s"}
       <div class="flex w-full flex-col space-y-2">
-        <Label>Upload your HW here</Label>
+        <Label>{m.bright_helpful_firefox_stir()}</Label>
         <Multipart taskId={data.task.id} />
       </div>
     {/if}
   </div>
   <div class="markdown md:col-span-3">
-    <!-- eslint-disable-next-line svelte/no-at-html -->
     <!-- Input is sanitized with rehype -->
     {@html rendered}
   </div>

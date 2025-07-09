@@ -6,6 +6,7 @@
   import { enhanceForm, qualityButtons } from "$lib/utils";
   import { CheckCheck, Home } from "lucide-svelte";
   import { HeaderEmbellish, UniButton, Label, KBD } from "$lib/components";
+  import { m } from "$lib/paraglide/messages";
 
   let { data } = $props();
 
@@ -94,23 +95,22 @@
       </div>
       <h2 class="text-2xl font-bold">All caught up!</h2>
       <p class="max-w-md text-stone-600 dark:text-stone-400">
-        You've reviewed all your due cards. Come back later for new cards to
-        review.
+        {m.quiet_lost_whale_exhale()}
       </p>
 
-      <UniButton href="." Icon={Home} variant="primary">Words Page</UniButton>
+      <UniButton href="." Icon={Home} variant="primary">{m.decks()}</UniButton>
     </div>
   </div>
 {:else if currentCard}
   <div class="space-y-6" in:fade={{ duration: 100 }}>
     <HeaderEmbellish>
       <span class="text-sm text-stone-600 dark:text-stone-400">
-        Card {data.cards.indexOf(currentCard) + 1} of {data.cards.length}
+        {data.cards.indexOf(currentCard) + 1} / {data.cards.length}
       </span>
       <span class="text-cacao-600 dark:text-cacao-400 text-sm font-medium">
         {Math.round(
           ((data.cards.indexOf(currentCard) + 1) / data.cards.length) * 100,
-        )}% Complete
+        )}% {m.complete()}
       </span>
     </HeaderEmbellish>
     <div
@@ -134,7 +134,7 @@
       >
         <!-- Front side -->
         <div class="flex-grow">
-          <Label>{showCloze ? "" : "Question"}</Label>
+          <Label>{showCloze ? "" : m.cardFront()}</Label>
 
           {#if showCloze}
             {#if !showAnswer}
@@ -146,12 +146,12 @@
               />
             {:else}
               <div class="space-y-2">
-                <Label>Your Answer:</Label>
+                <Label>{m.cardFrontClozeUserInput()}</Label>
                 <div class="rounded-lg bg-stone-100 p-3 dark:bg-stone-800">
                   <span class="">{userInput}</span>
                 </div>
 
-                <Label>Correct Answer:</Label>
+                <Label>{m.cardFrontClozeCorrect()}</Label>
                 <div class="rounded-lg bg-green-100 p-3 dark:bg-green-900">
                   <span class="">{currentCard.front}</span>
                 </div>
@@ -180,7 +180,7 @@
           </div>
         {:else if showAnswer}
           <div class="flex-grow">
-            <Label>Answer</Label>
+            <Label>{m.cardBack()}</Label>
             <p>
               {currentCard.back}
             </p>
@@ -211,9 +211,6 @@
             method="POST"
             class="grid w-full grid-cols-3 gap-2 self-end md:h-full md:grid-cols-2"
             use:enhance={enhanceForm({
-              messages: {
-                failure: "Something's off",
-              },
               handlers: {
                 success: async () => {
                   nextCard();

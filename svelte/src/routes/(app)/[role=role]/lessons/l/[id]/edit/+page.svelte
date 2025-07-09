@@ -11,6 +11,7 @@
   import { enhanceForm } from "$lib/utils";
   import { Ban, Check, Trash2 } from "lucide-svelte";
   import Input from "$lib/components/UI/forms/Input.svelte";
+  import { m } from "$lib/paraglide/messages";
   let { data }: { data: PageData } = $props();
   let { lesson } = data;
 
@@ -23,22 +24,25 @@
   class="mb-4 space-y-4"
   use:enhance={enhanceForm({
     messages: {
-      redirect: "Changes Saved",
-      defaultError: "Failed to save changes",
+      redirect: m.changesSaved(),
+      defaultError: m.failedToSaveChanges(),
     },
   })}
 >
   <HeaderEmbellish>
-    <H1>Edit Lesson</H1>
+    <H1>{m.editing()}</H1>
     <div class="flex items-center space-x-3">
-      <UniButton variant="secondary" Icon={Ban} href=".">Cancel</UniButton>
-      <UniButton variant="primary" type="submit" Icon={Check}>Save</UniButton>
+      <UniButton variant="secondary" Icon={Ban} href=".">{m.cancel()}</UniButton
+      >
+      <UniButton variant="primary" type="submit" Icon={Check}
+        >{m.save()}</UniButton
+      >
       <UniButton
         variant="danger"
         formaction="?/delete"
         Icon={Trash2}
         confirmText={lesson.title}
-        confirmTitle="Delete Lesson">Delete</UniButton
+        confirmTitle="Delete Lesson">{m.delete}</UniButton
       >
     </div>
   </HeaderEmbellish>

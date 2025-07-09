@@ -1,6 +1,6 @@
 import logger from "$lib/logger";
 import { handleApiResponse, isSuccessResponse } from "$lib/server";
-import type { Deck, NewResponse } from "$lib/types";
+import type { DeckSmall, NewResponse } from "$lib/types";
 import { error, fail, redirect, type Actions } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 
@@ -16,7 +16,7 @@ export const load: PageServerLoad = async ({ fetch, url }) => {
 
     const response = await fetch(`/axum/deck?${params.toString()}`);
 
-    const decks: Deck[] = await response.json();
+    const decks: DeckSmall[] = await response.json();
 
     return {
       decks,

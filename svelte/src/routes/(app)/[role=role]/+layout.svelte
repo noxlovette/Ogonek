@@ -82,5 +82,5 @@
   <MobileMenu elements={elementsLeft} />
 </div>
 <svelte:head>
-  <title>Tasks</title>
+  <title>Ogonek | Main</title>
 </svelte:head>

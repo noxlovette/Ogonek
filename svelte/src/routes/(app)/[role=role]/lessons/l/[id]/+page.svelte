@@ -12,6 +12,7 @@
   import type { PageData } from "./$types";
   import { Pencil } from "lucide-svelte";
   import { page } from "$app/state";
+  import { m } from "$lib/paraglide/messages";
 
   let role = $derived(page.params.role);
 
@@ -45,7 +46,7 @@
       <UniButton
         Icon={Pencil}
         href="/t/lessons/l/{data.lesson.id}/edit"
-        variant="secondary">Edit</UniButton
+        variant="secondary">{m.edit()}</UniButton
       >
     </div>
   {/if}
