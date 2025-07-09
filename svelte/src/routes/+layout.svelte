@@ -4,6 +4,7 @@
   import { Footer, Notification, MetaData } from "$lib/components";
 
   import { keyEscape } from "$lib/actions";
+  import MockController from "$lib/components/MockController.svelte";
 
   function goBack() {
     window.history.back();
@@ -27,11 +28,7 @@
     <Footer />
   </div>
   {#if env.PUBLIC_MOCK_MODE}
-    <div
-      class="ring-default fixed right-10 bottom-10 rounded-xl bg-white/30 p-10 text-xl font-semibold backdrop-blur-md"
-    >
-      MOCK MODE ON
-    </div>
+    <MockController></MockController>
   {/if}
   <Notification />
 </main>

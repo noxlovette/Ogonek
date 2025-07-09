@@ -97,10 +97,10 @@ export const GET = async () => {
     },
     user: {
       id: "Ng4Dj62hTanaxauGWFrh1",
-      name: "danila",
-      username: "nox_dev",
-      email: "fefefe@nfefe.com",
-      role: "teacher",
+      name: "Michael",
+      username: "michael_developer",
+      email: "hahaha@icloud.com",
+      role: "student",
     },
     profile: {
       profile: {
