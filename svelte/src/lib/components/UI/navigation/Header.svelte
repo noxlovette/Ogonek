@@ -1,3 +1,7 @@
+<script>
+  import { m } from "$lib/paraglide/messages";
+</script>
+
 <header class="w-full items-baseline">
   <div
     class="relative mx-auto flex w-full items-center justify-between px-4 py-3"
@@ -10,10 +14,10 @@
 
     <div class="hidden min-w-fit items-center space-x-4 md:flex">
       <a href="/auth/login" class="font-serif text-sm font-bold md:text-lg"
-        >Login</a
+        >{m.logIn()}</a
       >
       <a href="/auth/signup" class="font-serif text-sm font-bold md:text-lg"
-        >Signup</a
+        >{m.signUp()}</a
       >
     </div>
   </div>

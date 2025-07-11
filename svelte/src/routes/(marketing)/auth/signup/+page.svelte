@@ -1,34 +1,33 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
-  import { Turnstile, UniButton, Input, Label } from "$lib/components";
+  import { Turnstile, UniButton, Input, Label, H1 } from "$lib/components";
   import { DoorOpen } from "lucide-svelte";
   import { enhanceForm } from "$lib/utils";
+  import { m } from "$lib/paraglide/messages";
 
   let password = $state("");
   let confirmPassword = $state("");
   let passwordMatch = $state(true);
 </script>
 
-<div
-  class="flex max-w-md flex-col items-center justify-center space-y-4 rounded-lg bg-white p-5 shadow-sm dark:bg-stone-900"
->
-  <div class="text-center">
-    <h2 class="text-cacao-600 text-3xl font-bold dark:text-stone-100">
-      Create Account
-    </h2>
+<div class="flex max-w-md flex-col gap-4">
+  <div class="flex flex-col items-center text-center">
+    <H1>
+      {m.bad_even_seahorse_rise()}
+    </H1>
     <p class="mt-2 text-sm text-stone-600">
-      Already have an account?
+      {m.dark_candid_octopus_compose()}
       <a
         href="/auth/login"
         class="text-cacao-500 hover:text-cacao-400 font-medium dark:text-stone-100"
-        >Sign in</a
+        >{m.logIn()}</a
       >
     </p>
   </div>
 
   <form
     method="post"
-    class="w flex flex-col items-center justify-center space-y-4"
+    class="ring-default items-center justify-center gap-4 rounded-lg p-6"
     use:enhance={enhanceForm({
       messages: {
         redirect: "Welcome on board",
@@ -72,7 +71,7 @@
       {/if}
     </div>
     <Turnstile />
-    <UniButton Icon={DoorOpen} type="submit" variant="primary"
+    <UniButton Icon={DoorOpen} type="submit" variant="primary" fullWidth={true}
       >Create Account</UniButton
     >
   </form>

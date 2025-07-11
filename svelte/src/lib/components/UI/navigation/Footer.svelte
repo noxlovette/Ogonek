@@ -1,26 +1,30 @@
+<script>
+  import { m } from "$lib/paraglide/messages";
+</script>
+
 <footer
   class="mt-12 flex w-full flex-col items-center justify-center bg-stone-100 select-none dark:bg-stone-900"
 >
   <div class="mx-auto flex w-full items-center justify-between px-3 py-2">
     <div class="flex flex-col gap-1 text-sm">
-      <p class="flex items-center">© 2025 Danila Volkov</p>
+      <p class="flex items-center">© 2024-2025 {m.danilaVolkov()}</p>
       <div class="hidden gap-3 text-stone-500 md:flex">
         <a
           href="/paperwork/privacy"
-          class="hover:text-cacao-500 transition-colors">Privacy</a
+          class="hover:text-cacao-500 transition-colors">{m.privacy()}</a
         >
         <a
           href="/paperwork/terms"
-          class="hover:text-cacao-500 transition-colors">Terms</a
+          class="hover:text-cacao-500 transition-colors">{m.terms()}</a
         >
         <a href="/contact" class="hover:text-cacao-500 transition-colors"
-          >Contact</a
+          >{m.contact()}</a
         >
       </div>
     </div>
     <div class="flex items-center gap-4">
-      <p class="text-xs md:text-sm">
-        For my students <span class="not-italic">💛</span>
+      <p class="text-xs italic md:text-sm">
+        {m.stale_empty_goat_trim()} <span class="not-italic">💛</span>
       </p>
       <div class="hidden gap-3 text-stone-500 md:flex">
         <a
