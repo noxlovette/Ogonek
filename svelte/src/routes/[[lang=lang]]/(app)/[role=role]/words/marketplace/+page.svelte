@@ -15,5 +15,5 @@
     {/each}
   </grid>
 {:else}
-  <EmptySpace>{m.noFlashcards}</EmptySpace>
+  <EmptySpace>{m.noFlashcards()}</EmptySpace>
 {/if}

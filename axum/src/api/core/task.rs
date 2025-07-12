@@ -70,6 +70,16 @@ pub async fn create_task(
 
     let id = create(&state.db, &payload, &claims.sub, assignee).await?;
 
+    log_activity(
+        &state.db,
+        &claims.sub,
+        &id.id,
+        ModelType::Task,
+        ActionType::Create,
+        None,
+    )
+    .await?;
+
     Ok(Json(id))
 }
 
@@ -151,11 +161,11 @@ pub async fn update_task(
             // treat as deletion
             log_activity(
                 &state.db,
-                &claims.sub,
+                &old_user,
                 &id,
                 ModelType::Task,
                 ActionType::Delete,
-                Some(&old_user),
+                None,
             )
             .await?;
         }
@@ -167,11 +177,11 @@ pub async fn update_task(
             // treat as creation
             log_activity(
                 &state.db,
-                &claims.sub,
+                &new_user,
                 &id,
                 ModelType::Task,
                 ActionType::Create,
-                Some(&new_user),
+                None,
             )
             .await?;
         }

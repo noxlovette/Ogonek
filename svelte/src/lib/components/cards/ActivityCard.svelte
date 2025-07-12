@@ -45,27 +45,27 @@
     {#if activity.action.startsWith("new")}
       <BookOpen class=" " />
     {:else if activity.action.startsWith("updated")}
-      <NotebookPen class="" />
+      <NotebookPen class="text-orange-600" />
     {:else if activity.action.startsWith("deleted")}
-      <Trash2 class=" " />
+      <Trash2 class="text-red-600" />
     {/if}
   {:else if activity.modelType.startsWith("task")}
     {#if activity.action.startsWith("new")}
       <ListTodo class=" " />
     {:else if activity.action.startsWith("updated")}
-      <SquarePen class=" text-blue-600" />
+      <SquarePen class=" text-orange-600" />
     {:else if activity.action.startsWith("deleted")}
-      <Trash2 class=" " />
+      <Trash2 class=" text-red-600" />
     {:else if activity.action.startsWith("completed")}
-      <CheckCircle2 class="" />
+      <CheckCircle2 class="text-green-600" />
     {/if}
   {:else if activity.modelType.startsWith("deck")}
     {#if activity.action.startsWith("new")}
       <WholeWord class=" " />
     {:else if activity.action.startsWith("updated")}
-      <SquarePen class=" text-blue-600" />
+      <SquarePen class=" text-oramge-600" />
     {:else if activity.action.startsWith("deleted")}
-      <Trash2 class=" " />
+      <Trash2 class="text-red-600"></Trash2>
     {:else if activity.action.startsWith("subscribed")}
       <Bell class=" text-green-600" />
     {:else if activity.action.startsWith("unsubscribed")}

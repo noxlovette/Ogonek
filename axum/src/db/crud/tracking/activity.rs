@@ -43,3 +43,16 @@ pub async fn get_activity(db: &PgPool, user_id: &str) -> Result<Vec<ActivityLog>
 
     Ok(activity)
 }
+pub async fn delete_activity(db: &PgPool, user_id: &str) -> Result<(), DbError> {
+    sqlx::query!(
+        r#"
+        DELETE FROM activity_logs
+        WHERE (user_id = $1 OR target_user_id = $1)
+        "#,
+        user_id,
+    )
+    .execute(db)
+    .await?;
+
+    Ok(())
+}

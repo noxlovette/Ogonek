@@ -52,6 +52,16 @@ pub async fn create_lesson(
 ) -> Result<Json<CreationId>, APIError> {
     let id = lesson::create(&state.db, &claims.sub, payload).await?;
 
+    log_activity(
+        &state.db,
+        &claims.sub,
+        &id.id,
+        ModelType::Deck,
+        ActionType::Create,
+        None,
+    )
+    .await?;
+
     Ok(Json(id))
 }
 

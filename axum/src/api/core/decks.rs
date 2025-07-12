@@ -22,6 +22,16 @@ pub async fn create_deck(
 ) -> Result<Json<CreationId>, APIError> {
     let id = words::deck::create(&state.db, &claims.sub, payload).await?;
 
+    log_activity(
+        &state.db,
+        &claims.sub,
+        &id.id,
+        ModelType::Deck,
+        ActionType::Create,
+        None,
+    )
+    .await?;
+
     Ok(Json(id))
 }
 
