@@ -11,7 +11,7 @@
 <Group>
   <H3>Recent Lessons</H3>
 
-  <div class="grid gap-4">
+  <div class="mt-4 grid gap-4">
     {#if $lessonStore.length === 0}
       <p>No lessons found</p>
     {:else}

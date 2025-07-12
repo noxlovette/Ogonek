@@ -1,5 +1,5 @@
 <script lang="ts">
-  import H2 from "$lib/components/typography/H2.svelte";
+  import { H3 } from "$lib/components/typography";
   import Group from "./Group.svelte";
   import UniButton from "$lib/components/UI/UniButton.svelte";
   import { BookOpenCheck, ListTodo, WholeWord } from "lucide-svelte";
@@ -7,7 +7,7 @@
 </script>
 
 <Group>
-  <H2>Quick Add</H2>
+  <H3>Quick Add</H3>
 
   <div class="mt-4 grid w-full grid-cols-1 gap-4">
     <form action="/t/tasks?/new" method="POST" class="" use:enhance>

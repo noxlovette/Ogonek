@@ -32,7 +32,6 @@ pub struct UserUpdate {
     pub email: Option<String>,
     pub pass: Option<String>,
     pub role: Option<String>,
-    pub verified: Option<bool>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -45,7 +44,6 @@ pub struct User {
     #[serde(skip_serializing)]
     pub pass: String,
     pub role: String,
-    pub verified: bool,
 }
 
 #[derive(Debug, Deserialize, Validate)]

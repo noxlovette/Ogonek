@@ -1,9 +1,8 @@
 <script lang="ts">
   import { sidebar } from "$lib/stores/sidebar";
   import { page } from "$app/state";
-  import H3 from "$lib/components/typography/H3.svelte";
-  import type { Component } from "svelte";
   import { SquareArrowUpRight } from "lucide-svelte";
+  import { H4 } from "$lib/components/typography";
 
   let {
     Icon,
@@ -14,7 +13,7 @@
     badge = undefined,
     disabled = false,
   }: {
-    Icon?: Component;
+    Icon?: any;
     href: string;
     name: string;
     external?: boolean;
@@ -30,7 +29,6 @@
       (href !== "/" && page.url.pathname.startsWith(href)),
   );
 
-  // Clean, modern styling without gradients
   const baseClasses =
     "group relative flex items-center gap-3 active:scale-[0.95] hover:scale-[1.02] px-3 py-3 text-sm font-medium transition-all duration-300 ease-out select-none";
 
@@ -48,7 +46,6 @@
   const badgeVisible = $derived(badge && badge != 0 ? true : false);
 </script>
 
-<!-- Collapsed sidebar with clean modern styling -->
 {#if $sidebar && !rightBar}
   <div class="group/tooltip relative">
     <a
@@ -72,7 +69,6 @@
       role={disabled ? "button" : "link"}
       aria-disabled={disabled}
     >
-      <!-- Clean active indicator -->
       {#if isActive}
         <div
           class="bg-cacao-500 dark:bg-cacao-400 shadow-cacao-500/40 absolute top-1/2 left-0 h-10
@@ -82,12 +78,10 @@
         ></div>
       {/if}
 
-      <!-- Icon with subtle enhancement -->
       <div class="relative">
         <Icon class={`${iconClasses} ${isActive ? "drop-shadow-sm" : ""}`} />
       </div>
 
-      <!-- Clean badge design -->
       {#if badgeVisible}
         <div
           class="absolute -top-1 -right-1 flex h-6 w-6 animate-pulse items-center justify-center
@@ -142,7 +136,6 @@
     role={disabled ? "button" : "link"}
     aria-disabled={disabled}
   >
-    <!-- Clean active indicator -->
     {#if isActive}
       <div
         class="bg-cacao-500 dark:bg-cacao-400 shadow-cacao-500/30 absolute top-1/2 left-0 h-8
@@ -157,11 +150,10 @@
     </div>
 
     <div class="flex min-w-0 flex-1 items-center justify-between">
-      <H3>
+      <H4>
         {name}
-      </H3>
+      </H4>
 
-      <!-- Clean badge for expanded state -->
       {#if badgeVisible}
         <div
           class="ml-2 flex h-6 min-w-[24px] animate-pulse items-center justify-center
@@ -176,7 +168,6 @@
         </div>
       {/if}
 
-      <!-- External link indicator -->
       {#if external}
         <div
           class="ml-2 flex h-4 w-4 items-center justify-center opacity-60 transition-opacity hover:opacity-100"

@@ -20,8 +20,6 @@
 
   const title = deck.name;
   const badgeText = deck.description ?? "Deck Description";
-
-  console.log(deck);
 </script>
 
 <CardClickable {href}>

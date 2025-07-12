@@ -4,12 +4,13 @@
   import { getContext } from "svelte";
   import type { Word } from "$lib/types";
   import Caption from "$lib/components/typography/Caption.svelte";
+  import { m } from "$lib/paraglide/messages";
 
   const word = getContext<Promise<Word>>("word");
 </script>
 
 <Group>
-  <H3>Word of the day</H3>
+  <H3>{m.neat_sound_ocelot_belong()}</H3>
 
   {#await word}
     <h3>Loading...</h3>

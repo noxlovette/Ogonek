@@ -40,7 +40,7 @@ pub async fn authorise(db: &PgPool, user: &AuthPayload) -> Result<User, AuthErro
     let user = sqlx::query_as!(
         User,
         r#"
-        SELECT username, email, role, id, name, pass, verified
+        SELECT username, email, role, id, name, pass
         FROM "user"
         WHERE username = $1
         "#,
@@ -71,7 +71,7 @@ pub async fn fetch_by_id(db: &PgPool, user_id: &str) -> Result<User, AuthError> 
     let user = sqlx::query_as!(
         User,
         r#"
-        SELECT username, email, role, id, name, pass, verified
+        SELECT username, email, role, id, name, pass 
         FROM "user"
         WHERE id = $1
         "#,
@@ -216,7 +216,6 @@ mod tests {
         assert_eq!(user.role, "teacher");
         assert_eq!(user.name, "Jane Doe");
         assert_eq!(user.id, creation_result.id);
-        assert!(!user.verified);
 
         Ok(())
     }
@@ -341,7 +340,6 @@ mod tests {
         assert_eq!(user.email, "alice@example.com");
         assert_eq!(user.role, "admin");
         assert_eq!(user.name, "Alice Cooper");
-        assert!(!user.verified);
 
         Ok(())
     }
