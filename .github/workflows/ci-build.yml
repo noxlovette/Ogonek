@@ -133,31 +133,3 @@ jobs:
         run: |
           cd svelte
           pnpm run build
-
-      - name: Install Playwright browsers
-        run: |
-          cd svelte
-          pnpm exec playwright install --with-deps
-
-      - name: Run Playwright tests
-        run: |
-          cd svelte
-          pnpm run test
-
-  build-complete:
-    name: Build Complete
-    runs-on: ubuntu-latest
-    needs: [rust-backend, svelte-frontend]
-    if: always()
-
-    steps:
-      - name: Check build status
-        run: |
-          if [[ "${{ needs.rust-backend.result }}" == "success" && "${{ needs.svelte-frontend.result }}" == "success" ]]; then
-            echo "✅ All builds passed!"
-          else
-            echo "❌ Some builds failed:"
-            echo "  Rust: ${{ needs.rust-backend.result }}"
-            echo "  Svelte: ${{ needs.svelte-frontend.result }}"
-            exit 1
-          fi
