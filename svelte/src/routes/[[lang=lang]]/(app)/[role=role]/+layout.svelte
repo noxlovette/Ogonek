@@ -38,7 +38,7 @@
   const role = page.params.role;
 
   let elementsLeft = $state([Dashboard, Todo, Lessons, Words, Zoom, Settings]);
-  let elementsRight = $state([UsefulLinks, WordOfTheDay, RecentLessons]);
+  let elementsRight = $state([UsefulLinks, WordOfTheDay]);
 
   if (role === "t") {
     elementsLeft = [Dashboard, Todo, Lessons, Students, Words, Settings];

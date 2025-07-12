@@ -3,10 +3,11 @@
   import SidebarItem from "./SidebarItem.svelte";
   import { user } from "$lib/stores";
   import { getContext } from "svelte";
+  import { m } from "$lib/paraglide/messages";
 
   let href = $user.role === "teacher" ? "/t/words" : "/s/words";
 
   const deckCount = getContext<number>("deckCount");
 </script>
 
-<SidebarItem {href} Icon={WholeWord} name="Words" badge={deckCount} />
+<SidebarItem {href} Icon={WholeWord} name={m.flashcards()} badge={deckCount} />

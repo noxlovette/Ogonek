@@ -16,7 +16,7 @@
   class="flex-inline items-end justify-between space-y-1.5 transition-all hover:scale-[1.02]"
   {href}
 >
-  <p>
+  <p class="text-base">
     {lesson.topic}
   </p>
   <Badge badgeText={formatDate(lesson.createdAt)}></Badge>

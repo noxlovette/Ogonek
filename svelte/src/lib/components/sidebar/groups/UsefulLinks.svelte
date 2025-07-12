@@ -6,15 +6,14 @@
     Thesaurus,
   } from "$lib/components/sidebar/elements";
   import Group from "./Group.svelte";
+  import { m } from "$lib/paraglide/messages";
 
   let elements = [Forvo, Dictionary, Thesaurus];
 </script>
 
 <Group>
-  <H3>Useful Links</H3>
-  <div class="flex-row space-y-2">
-    {#each elements as Element, index (index)}
-      <Element />
-    {/each}
-  </div>
+  <H3>{m.usefulLinks()}</H3>
+  {#each elements as Element, index (index)}
+    <Element />
+  {/each}
 </Group>

@@ -9,12 +9,8 @@
       relative
       order-last
      -mr-8 
-     flex flex-shrink-0 -translate-y-3
+     flex flex-shrink-0
      flex-col
-     transition-all duration-150
-     ease-in-out
-     md:text-lg lg:text-xl
-     xl:text-2xl
    `}
 >
   <ul
@@ -22,7 +18,7 @@
          flex h-full
          flex-col
          items-stretch justify-stretch
-        space-y-2 lg:space-y-3 xl:space-y-4
+        gap-4 xl:gap-6
        `}
   >
     {#each elements as Element, index (index)}

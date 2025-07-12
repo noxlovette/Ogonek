@@ -71,7 +71,7 @@
 >
   <HeaderEmbellish>
     <div class="flex flex-col gap-3 md:flex-row md:gap-4">
-      <H1>Settings</H1>
+      <H1>{m.settings()}</H1>
       <div class="flex gap-3 md:gap-4">
         <UniButton
           Icon={Key}
