@@ -1,19 +1,12 @@
 <script lang="ts">
   import type { PageData } from "./$types";
-  import {
-    LessonCard,
-    H1,
-    TaskCard,
-    H3,
-    EmptySpace,
-    DeckCard,
-  } from "$lib/components";
-  import { fly } from "svelte/transition";
+  import { H1, TaskCard, EmptySpace } from "$lib/components";
   import { getGreeting } from "$lib/utils";
   import { user } from "$lib/stores";
   import HeaderEmbellish from "$lib/components/typography/HeaderEmbellish.svelte";
   import { m } from "$lib/paraglide/messages";
   import ActivityFeed from "$lib/components/cards/ActivityFeed.svelte";
+  import RequestHw from "$lib/components/UI/interactive/RequestHW.svelte";
 
   const greetingType = getGreeting();
 
@@ -32,8 +25,11 @@
   <H1>{greetings[greetingType]}</H1>
 </HeaderEmbellish>
 
-<ActivityFeed activities={data.activity} />
+<div class="grid grid-cols-3 gap-8">
+  <ActivityFeed activities={data.activity} />
 
+  <RequestHw tasks={data.tasks.data} />
+</div>
 <svelte:head>
   <title>Dashboard | Ogonek</title>
 </svelte:head>

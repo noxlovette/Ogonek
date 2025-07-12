@@ -1,11 +1,12 @@
 import logger from "$lib/logger";
+
 import {
   handleApiResponse,
   isSuccessResponse,
   messages,
   notifyTelegram,
 } from "$lib/server";
-import type { NewResponse, PaginatedResponse, Task } from "$lib/types";
+import type { NewResponse, PaginatedResponse, TaskSmall } from "$lib/types";
 import { error, fail, redirect, type Actions } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 
@@ -30,11 +31,12 @@ export const load: PageServerLoad = async ({ fetch, url, depends }) => {
     const apiUrl = `/axum/task?${params.toString()}`;
 
     const tasksPaginated = await fetch(apiUrl).then(
-      (res) => res.json() as Promise<PaginatedResponse<Task>>,
+      (res) => res.json() as Promise<PaginatedResponse<TaskSmall>>,
     );
 
     const response = await fetch(apiUrl);
-    const result = await handleApiResponse<PaginatedResponse<Task>>(response);
+    const result =
+      await handleApiResponse<PaginatedResponse<TaskSmall>>(response);
 
     if (!isSuccessResponse(result)) {
       logger.error(
