@@ -7,6 +7,7 @@
     HeaderEmbellish,
     EmptySpace,
     H3,
+    SearchBar,
   } from "$lib/components";
   import { enhance } from "$app/forms";
   import { enhanceForm } from "$lib/utils";
@@ -92,6 +93,7 @@
     {students}
   />
 {:else}
+  <SearchBar />
   {#if lessons.length < 1}
     <EmptySpace>
       <H3>{m.noLessons}</H3>

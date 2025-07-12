@@ -60,11 +60,10 @@ pub async fn delete_lesson(
     Path(id): Path<String>,
     claims: Claims,
 ) -> Result<StatusCode, APIError> {
+    let assignee = lesson::find_assignee(&state.db, &id, &claims.sub).await?;
     lesson::delete(&state.db, &id, &claims.sub).await?;
 
-    let current_assignee = lesson::find_assignee(&state.db, &id, &claims.sub).await?;
-
-    if let Some(user) = current_assignee {
+    if let Some(user) = assignee {
         // clean up, otherwise you get hanging counts
         tracking::seen::delete_seen(&state.db, &user, &id, ModelType::Lesson).await?;
 
