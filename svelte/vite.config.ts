@@ -13,7 +13,7 @@ export default defineConfig({
     paraglideVitePlugin({
       project: "./project.inlang",
       outdir: "./src/lib/paraglide",
-      strategy: ["url", "preferredLanguage", "baseLocale"],
+      strategy: ["preferredLanguage", "baseLocale", "url"],
     }),
   ],
   optimizeDeps: { exclude: ["fsevents"] },
