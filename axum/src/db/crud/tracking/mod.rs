@@ -1,5 +1,6 @@
 use serde::Serialize;
 use time::OffsetDateTime;
+use time::format_description::well_known::Rfc3339;
 
 pub mod activity;
 pub mod seen;
@@ -36,24 +37,29 @@ pub enum ActionType {
     Create,
     Update,
     Complete,
+    Subscribe,
+    Unsubscribe,
 }
 
 impl ActionType {
     fn as_str(&self) -> &'static str {
         match self {
             ActionType::Delete => "deleted",
-            ActionType::Create => "created",
+            ActionType::Create => "new",
             ActionType::Update => "updated",
             ActionType::Complete => "completed",
+            ActionType::Subscribe => "subscribed",
+            ActionType::Unsubscribe => "unsubscribed",
         }
     }
 }
-
+#[serde_with::serde_as]
 #[derive(Debug, Serialize, sqlx::FromRow)]
 #[serde(rename_all = "camelCase")]
 pub struct ActivityLog {
     pub model_type: String,
     pub model_id: String,
     pub action: String,
+    #[serde_as(as = "Option<Rfc3339>")]
     pub created_at: Option<OffsetDateTime>,
 }

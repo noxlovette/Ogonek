@@ -1,6 +1,8 @@
 use crate::api::error::APIError;
 use crate::auth::Claims;
-use crate::db::crud::core;
+use crate::db::crud::tracking::activity::log_activity;
+use crate::db::crud::tracking::seen::{delete_seen, insert_as_unseen, mark_as_seen};
+use crate::db::crud::tracking::{self, ActionType, ModelType};
 use crate::db::crud::words::{self, deck};
 use crate::models::{
     CreationId, DeckCreate, DeckFilterParams, DeckFull, DeckPublic, DeckSmall,
@@ -34,13 +36,7 @@ pub async fn fetch_deck(
 
     let cards = words::card::find_all(&state.db, &deck_id).await?;
 
-    core::seen::mark_as_seen(
-        &state.db,
-        &claims.sub,
-        &deck_id,
-        core::seen::ModelType::Deck,
-    )
-    .await?;
+    mark_as_seen(&state.db, &claims.sub, &deck_id, ModelType::Deck).await?;
 
     Ok(Json(Some(DeckWithCardsAndSubscription {
         deck: DeckFull {
@@ -88,19 +84,41 @@ pub async fn update_deck(
 
     if new_assignee != current_assignee {
         if let Some(old_user) = current_assignee {
-            core::seen::delete_seen(&state.db, &old_user, &deck_id, core::seen::ModelType::Deck)
-                .await?;
-        }
-
-        if let Some(new_user) = new_assignee {
-            core::seen::insert_as_unseen(
+            delete_seen(&state.db, &old_user, &deck_id, ModelType::Deck).await?;
+            log_activity(
                 &state.db,
-                &new_user,
+                &claims.sub,
                 &deck_id,
-                core::seen::ModelType::Deck,
+                ModelType::Deck,
+                ActionType::Delete,
+                Some(&old_user),
             )
             .await?;
         }
+
+        if let Some(new_user) = new_assignee {
+            insert_as_unseen(&state.db, &new_user, &deck_id, ModelType::Deck).await?;
+            log_activity(
+                &state.db,
+                &claims.sub,
+                &deck_id,
+                ModelType::Deck,
+                ActionType::Create,
+                Some(&new_user),
+            )
+            .await?;
+        }
+    } else if let Some(assignee) = current_assignee {
+        // treat as update
+        log_activity(
+            &state.db,
+            &claims.sub,
+            &deck_id,
+            ModelType::Deck,
+            ActionType::Update,
+            Some(&assignee),
+        )
+        .await?;
     }
     Ok(StatusCode::NO_CONTENT)
 }
@@ -110,7 +128,26 @@ pub async fn delete_deck(
     claims: Claims,
     Path(deck_id): Path<String>,
 ) -> Result<StatusCode, APIError> {
+    let mut target_id: Option<String> = None;
+    let assignee = deck::find_assignee(&state.db, &deck_id, &claims.sub).await?;
+
     words::deck::delete(&state.db, &deck_id, &claims.sub).await?;
+    if let Some(user) = assignee {
+        tracking::seen::delete_seen(&state.db, &user, &deck_id, ModelType::Deck).await?;
+        target_id = Some(user);
+    }
+
+    // log deletion activity
+    log_activity(
+        &state.db,
+        &claims.sub,
+        &deck_id,
+        ModelType::Deck,
+        ActionType::Delete,
+        target_id.as_deref(),
+    )
+    .await?;
+
     Ok(StatusCode::NO_CONTENT)
 }
 
@@ -120,6 +157,15 @@ pub async fn subscribe_to_deck(
     Path(deck_id): Path<String>,
 ) -> Result<StatusCode, APIError> {
     words::subscribe::subscribe(&state.db, &deck_id, &claims.sub).await?;
+    log_activity(
+        &state.db,
+        &claims.sub,
+        &deck_id,
+        ModelType::Deck,
+        ActionType::Subscribe,
+        None,
+    )
+    .await?;
 
     Ok(StatusCode::NO_CONTENT)
 }
@@ -130,6 +176,14 @@ pub async fn unsubscribe_from_deck(
     Path(deck_id): Path<String>,
 ) -> Result<StatusCode, APIError> {
     words::subscribe::unsubscribe(&state.db, &deck_id, &claims.sub).await?;
-
+    log_activity(
+        &state.db,
+        &claims.sub,
+        &deck_id,
+        ModelType::Deck,
+        ActionType::Unsubscribe,
+        None,
+    )
+    .await?;
     Ok(StatusCode::NO_CONTENT)
 }

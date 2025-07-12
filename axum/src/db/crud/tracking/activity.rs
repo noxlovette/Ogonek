@@ -27,20 +27,16 @@ pub async fn log_activity(
     Ok(())
 }
 
-pub async fn get_activity(
-    db: &PgPool,
-    user_id: &str,
-    model_type: ModelType,
-) -> Result<Vec<ActivityLog>, DbError> {
+pub async fn get_activity(db: &PgPool, user_id: &str) -> Result<Vec<ActivityLog>, DbError> {
     let activity = sqlx::query_as!(
         ActivityLog,
         r#"
         SELECT model_type, model_id, action, created_at FROM activity_logs
-        WHERE (user_id = $1 OR target_user_id = $1) AND model_type = $2
-        LIMIT 5
+        WHERE (user_id = $1 OR target_user_id = $1)
+        ORDER BY created_at DESC 
+        LIMIT 10
         "#,
         user_id,
-        model_type.as_str(),
     )
     .fetch_all(db)
     .await?;

@@ -1,7 +1,8 @@
 use crate::api::error::APIError;
 use crate::auth::Claims;
 use crate::db::crud::core::task::{
-    add_files, count, create, delete, find_all, find_assignee, find_by_id, find_recent, update,
+    add_files, count, create, delete, find_all, find_assignee, find_by_id, find_recent, toggle,
+    update,
 };
 use crate::db::crud::files::file::fetch_files_task;
 
@@ -109,6 +110,25 @@ pub async fn delete_task(
     Ok(StatusCode::NO_CONTENT)
 }
 
+pub async fn toggle_task(
+    State(state): State<AppState>,
+    Path(id): Path<String>,
+    claims: Claims,
+) -> Result<StatusCode, APIError> {
+    let current_assignee = find_assignee(&state.db, &id, &claims.sub).await?;
+    toggle(&state.db, &id, &claims.sub).await?;
+
+    log_activity(
+        &state.db,
+        &claims.sub,
+        &id,
+        ModelType::Task,
+        ActionType::Complete,
+        current_assignee.as_deref(),
+    )
+    .await?;
+    Ok(StatusCode::NO_CONTENT)
+}
 pub async fn update_task(
     State(state): State<AppState>,
     Path(id): Path<String>,
@@ -149,7 +169,7 @@ pub async fn update_task(
                 &state.db,
                 &claims.sub,
                 &id,
-                ModelType::Lesson,
+                ModelType::Task,
                 ActionType::Create,
                 Some(&new_user),
             )
@@ -161,7 +181,7 @@ pub async fn update_task(
             &state.db,
             &claims.sub,
             &id,
-            ModelType::Lesson,
+            ModelType::Task,
             ActionType::Update,
             Some(&assignee),
         )

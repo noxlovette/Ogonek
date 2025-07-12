@@ -1,7 +1,7 @@
 use crate::api::error::APIError;
 use crate::auth::Claims;
 use crate::db::crud::account::{student, user};
-use crate::db::crud::core::seen::ModelType;
+use crate::db::crud::tracking::{ModelType, activity, seen};
 use crate::db::crud::{account, core, words};
 use crate::models::{BadgeWrapper, DashboardData};
 use crate::schema::AppState;
@@ -16,17 +16,18 @@ pub async fn fetch_dashboard(
     claims: Claims,
 ) -> Result<Json<DashboardData>, APIError> {
     let user = user::find_by_id(&state.db, &claims.sub).await?;
+
     let students = student::find_all(&state.db, &claims.sub).await?;
     let tasks = core::task::find_recent(&state.db, &claims.sub).await?;
     let lessons = core::lesson::find_recent(&state.db, &claims.sub).await?;
     let profile =
         account::profile::find_by_id(&state.db, &claims.sub, user.role == "student").await?;
 
-    let task_count = core::seen::get_seen_badge(&state.db, &claims.sub, ModelType::Task).await?;
-    let lesson_count =
-        core::seen::get_seen_badge(&state.db, &claims.sub, ModelType::Lesson).await?;
+    let task_count = seen::get_seen_badge(&state.db, &claims.sub, ModelType::Task).await?;
+    let lesson_count = seen::get_seen_badge(&state.db, &claims.sub, ModelType::Lesson).await?;
     let decks = words::deck::find_recent(&state.db, &claims.sub).await?;
-    let deck_count = core::seen::get_seen_badge(&state.db, &claims.sub, ModelType::Deck).await?;
+    let deck_count = seen::get_seen_badge(&state.db, &claims.sub, ModelType::Deck).await?;
+    let activity = activity::get_activity(&state.db, &claims.sub).await?;
 
     Ok(Json(DashboardData {
         students,
@@ -44,5 +45,6 @@ pub async fn fetch_dashboard(
         },
         user,
         profile,
+        activity,
     }))
 }

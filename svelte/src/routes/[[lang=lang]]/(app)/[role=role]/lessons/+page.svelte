@@ -96,7 +96,7 @@
   <SearchBar />
   {#if lessons.length < 1}
     <EmptySpace>
-      <H3>{m.noLessons}</H3>
+      <H3>{m.noLessons()}</H3>
     </EmptySpace>
   {/if}
   <section class="space-y-4">

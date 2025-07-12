@@ -13,6 +13,7 @@
   import { user } from "$lib/stores";
   import HeaderEmbellish from "$lib/components/typography/HeaderEmbellish.svelte";
   import { m } from "$lib/paraglide/messages";
+  import ActivityFeed from "$lib/components/cards/ActivityFeed.svelte";
 
   const greetingType = getGreeting();
 
@@ -24,12 +25,14 @@
   };
 
   let { data }: { data: PageData } = $props();
+  console.log(data);
 </script>
 
 <HeaderEmbellish>
   <H1>{greetings[greetingType]}</H1>
 </HeaderEmbellish>
 
+<ActivityFeed activities={data.activity} />
 <section class="space-y-4">
   <H3>{m.tasks()}</H3>
   <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
@@ -48,7 +51,7 @@
   <H3>{m.lessons()}</H3>
   <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
     {#if data.lessons.data.length < 1}
-      <EmptySpace>{m.noLessons}</EmptySpace>
+      <EmptySpace>{m.noLessons()}</EmptySpace>
     {/if}
     {#each data.lessons.data as lesson (lesson.id)}
       <div transition:fly={{ y: 20, duration: 300 }}>

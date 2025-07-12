@@ -1,3 +1,4 @@
+import { dev } from "$app/environment";
 import logger from "$lib/logger";
 import {
   handleApiResponse,
@@ -48,19 +49,20 @@ export const actions: Actions = {
       return fail(400, { message: passMatchValidation });
     }
 
-    const turnstileToken = data.get("cf-turnstile-response") as string;
-    if (!turnstileToken) {
-      return fail(400, {
-        message: "Please complete the CAPTCHA verification",
-      });
+    if (!dev) {
+      const turnstileToken = data.get("cf-turnstile-response") as string;
+      if (!turnstileToken) {
+        return fail(400, {
+          message: "Please complete the CAPTCHA verification",
+        });
+      }
+      const turnstileResponse = await turnstileVerify(turnstileToken);
+      if (!turnstileResponse.ok) {
+        return fail(400, {
+          message: "Turnstile verification failed",
+        });
+      }
     }
-    const turnstileResponse = await turnstileVerify(turnstileToken);
-    if (!turnstileResponse.ok) {
-      return fail(400, {
-        message: "Turnstile verification failed",
-      });
-    }
-
     // Signup API call
     const response = await fetch("/axum/auth/signup", {
       method: "POST",

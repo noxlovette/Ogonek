@@ -11,6 +11,7 @@ pub fn task_routes() -> Router<AppState> {
             "/t/{id}",
             get(core::fetch_task)
                 .patch(core::update_task)
-                .delete(core::delete_task),
+                .delete(core::delete_task)
+                .put(core::toggle_task),
         )
 }

@@ -44,6 +44,7 @@ export const load: LayoutServerLoad = async ({ fetch }) => {
       profile: dashboardData.profile.profile,
       teacherData: dashboardData.profile.teacherData,
       user: dashboardData.user,
+      activity: dashboardData.activity,
     };
   } catch (err: any) {
     logger.error(
