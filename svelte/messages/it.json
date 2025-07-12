@@ -54,9 +54,14 @@
   "simple_east_crocodile_spark": "Nessun tag",
   "some_happy_cat": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
+      "declarations": [
+        "input count",
+        "local countPlural = count: plural"
+      ],
       "selectors": [],
-      "match": ["carte"]
+      "match": [
+        "carte"
+      ]
     }
   ],
   "quiet_lost_whale_exhale": "Avete esaminato tutte le carte in scadenza. Tornate più tardi per rivedere nuove schede",

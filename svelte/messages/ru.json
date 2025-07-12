@@ -54,9 +54,16 @@
   "simple_east_crocodile_spark": "Нет меток",
   "some_happy_cat": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": [""]
+      "declarations": [
+        "input count",
+        "local countPlural = count: plural"
+      ],
+      "selectors": [
+        "countPlural"
+      ],
+      "match": [
+        ""
+      ]
     }
   ],
   "quiet_lost_whale_exhale": "Вы просмотрели все карточки. Возвращайтесь завтра за новой порцией",

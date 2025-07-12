@@ -55,8 +55,13 @@
   "simple_east_crocodile_spark": "No tags available",
   "some_happy_cat": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": [
+        "input count",
+        "local countPlural = count: plural"
+      ],
+      "selectors": [
+        "countPlural"
+      ],
       "match": {
         "countPlural=one": "card",
         "countPlural=other": "cards"
