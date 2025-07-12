@@ -1,8 +1,6 @@
 <script lang="ts">
   import { sidebar } from "$lib/stores/sidebar";
   import { page } from "$app/state";
-  import H3 from "$lib/components/typography/H3.svelte";
-  import type { Component } from "svelte";
   import { SquareArrowUpRight } from "lucide-svelte";
   import { H4 } from "$lib/components/typography";
 
@@ -15,7 +13,7 @@
     badge = undefined,
     disabled = false,
   }: {
-    Icon?: Component;
+    Icon?: any;
     href: string;
     name: string;
     external?: boolean;

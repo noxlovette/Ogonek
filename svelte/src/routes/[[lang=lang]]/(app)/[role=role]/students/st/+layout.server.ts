@@ -11,7 +11,7 @@ export const load: LayoutServerLoad = async ({ params, fetch }) => {
 
   const { student, tasks, lessons, decks } = data;
 
-  const rendered = await parseMarkdown(student.markdown);
+  const rendered = await parseMarkdown(student.markdown || "");
 
   return {
     student,

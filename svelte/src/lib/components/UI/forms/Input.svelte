@@ -13,7 +13,7 @@
   }: {
     placeholder: string;
     name: string;
-    value: string | number | boolean | undefined;
+    value: string | number | boolean | undefined | null;
     labelName?: string;
     ref?: HTMLInputElement;
     disabled?: boolean;

@@ -14,7 +14,7 @@
 
   let { data }: { data: PageData } = $props();
   let { student }: { student: Student } = data;
-  let markdown = $state(student.markdown);
+  let markdown = $state(student.markdown || "");
 </script>
 
 <form

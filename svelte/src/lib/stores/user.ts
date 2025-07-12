@@ -11,7 +11,9 @@ export const initialUser: User = {
 };
 
 const initialProfile: Profile = {
-  zoomUrl: "",
+  videoCallUrl: "",
+  telegramId: "",
+  userId: "",
   avatarUrl: "",
 };
 

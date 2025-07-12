@@ -3,24 +3,19 @@
   import { goto } from "$app/navigation";
   import { fade } from "svelte/transition";
   import { searchTerm } from "$lib/stores";
-  import type { Student, BaseTableItem, TableConfig } from "$lib/types";
+  import type { Student, TableConfig } from "$lib/types";
   import { EmptySpace } from "$lib/components/typography";
 
   interface Props {
-    items: BaseTableItem[];
-    config: TableConfig<BaseTableItem>;
+    items: any[];
+    config: TableConfig<any>;
     href: string;
     students?: Student[];
     total?: number;
     showComplete?: boolean;
   }
 
-  let {
-    items = $bindable([]),
-    config,
-    href,
-    total = items.length,
-  }: Props = $props();
+  let { items, config, href, total = items.length }: Props = $props();
 </script>
 
 <div class="w-full space-y-4">

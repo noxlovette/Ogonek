@@ -85,7 +85,7 @@
 </HeaderEmbellish>
 {#if role === "t"}
   <Table
-    bind:items={data.lessonsPaginated.data}
+    items={data.lessonsPaginated.data}
     config={lessonConfig}
     {href}
     {total}

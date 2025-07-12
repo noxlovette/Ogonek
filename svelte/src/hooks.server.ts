@@ -26,7 +26,6 @@ Sentry.init({
 });
 
 const PROTECTED_PATHS = new Set(["/t/", "/s/", "/auth/bind/"]);
-const mockModules = import.meta.glob("./mock/api/**/*.ts", { eager: false });
 
 function isProtectedPath(path: string): boolean {
   return (

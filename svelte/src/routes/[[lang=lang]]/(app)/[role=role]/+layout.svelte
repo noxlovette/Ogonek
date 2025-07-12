@@ -12,7 +12,6 @@
     UsefulLinks,
     WordOfTheDay,
     Rightbar,
-    RecentLessons,
     QuickAdd,
     MobileMenu,
     StudentFilter,
@@ -55,7 +54,12 @@
 
   setUser(data.user);
   setProfile(data.profile);
-  setTeacherData(data.teacherData);
+  setTeacherData(
+    data.teacherData || {
+      teacherVideoCallUrl: "",
+      teacherTelegramId: "",
+    },
+  );
 </script>
 
 <div class="flex flex-row">
