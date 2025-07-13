@@ -16,7 +16,7 @@
 <div class="flex flex-col gap-4">
   <H2>{m.any_lime_lemur_propel()}</H2>
   {#if tasks.length > 0}
-    <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+    <div class="grid grid-cols-1 gap-4">
       {#each tasks as task (task.id)}
         <TaskCard {task} />
       {/each}

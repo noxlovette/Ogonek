@@ -119,12 +119,9 @@
       "selectors": [
         "count"
       ],
-      "match": {
-        "0": "",
-        "count=1": "день",
-        "count=few": "дня",
-        "count=many": "дней"
-      }
+      "match": [
+        ""
+      ]
     }
   ]
 }
