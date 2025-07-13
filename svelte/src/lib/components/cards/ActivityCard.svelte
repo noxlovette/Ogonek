@@ -43,40 +43,38 @@
 {#snippet icon(activity: ActivityLog)}
   {#if activity.modelType.startsWith("lesson")}
     {#if activity.action.startsWith("new")}
-      <BookOpen class=" " />
+      <BookOpen strokeWidth="1" class="size-5" />
     {:else if activity.action.startsWith("updated")}
-      <NotebookPen class="text-orange-600" />
+      <NotebookPen strokeWidth="1" class="size-5 text-orange-600" />
     {:else if activity.action.startsWith("deleted")}
-      <Trash2 class="text-red-600" />
+      <Trash2 strokeWidth="1" class="size-5 text-red-600" />
     {/if}
   {:else if activity.modelType.startsWith("task")}
     {#if activity.action.startsWith("new")}
-      <ListTodo class=" " />
+      <ListTodo strokeWidth="1" class="size-5" />
     {:else if activity.action.startsWith("updated")}
-      <SquarePen class=" text-orange-600" />
+      <SquarePen strokeWidth="1" class="size-5 text-orange-600" />
     {:else if activity.action.startsWith("deleted")}
-      <Trash2 class=" text-red-600" />
+      <Trash2 strokeWidth="1" class=" size-5 text-red-600" />
     {:else if activity.action.startsWith("completed")}
-      <CheckCircle2 class="text-green-600" />
+      <CheckCircle2 strokeWidth="1" class="size-5 text-green-600" />
     {/if}
   {:else if activity.modelType.startsWith("deck")}
     {#if activity.action.startsWith("new")}
-      <WholeWord class="" />
-    {:else if activity.action.startsWith("updated")}
-      <SquarePen class=" text-oramge-600" />
-    {:else if activity.action.startsWith("deleted")}
-      <Trash2 class="text-red-600"></Trash2>
+      <WholeWord strokeWidth="1" class="size-5" />
+    {:else if activity.action.startsWith("updated")}{:else if activity.action.startsWith("deleted")}
+      <Trash2 strokeWidth="1" class="size-5 text-red-600"></Trash2>
     {:else if activity.action.startsWith("subscribed")}
-      <Bell class=" text-green-600" />
+      <Bell strokeWidth="1" class="size-5 text-green-600" />
     {:else if activity.action.startsWith("unsubscribed")}
-      <BellOff class=" text-stone-400" />
+      <BellOff strokeWidth="1" class="size-5 text-stone-400" />
     {/if}
   {:else}
     <Dot class=" " />
   {/if}
 {/snippet}
 <a
-  class="ring-default bg-default flex items-center justify-between gap-3 rounded-xl p-2 shadow-sm transition-shadow hover:shadow-md"
+  class="bg-default flex items-center justify-between gap-3 rounded-xl border border-stone-200 p-2 shadow-sm transition-shadow hover:shadow-md dark:border-stone-800"
   {href}
 >
   <!-- Icon -->

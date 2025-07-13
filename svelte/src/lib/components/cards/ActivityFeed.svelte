@@ -11,10 +11,10 @@
   } = $props();
 </script>
 
-<div class="col-span-2 flex flex-col gap-4">
+<div class="flex flex-col gap-4 lg:col-span-2">
   <H2>Recent Activity</H2>
   {#if activities.length > 0}
-    <div class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+    <div class="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
       {#each activities as activity, index (index)}
         <ActivityCard {activity} />
       {/each}

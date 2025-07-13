@@ -1,12 +1,6 @@
 <script lang="ts">
   import type { Task, TableConfig } from "$lib/types/index.js";
-  import {
-    H1,
-    Table,
-    TaskCard,
-    UniButton,
-    HeaderEmbellish,
-  } from "$lib/components";
+  import { H1, Table, UniButton, HeaderEmbellish } from "$lib/components";
 
   import { enhance } from "$app/forms";
   import { page } from "$app/state";

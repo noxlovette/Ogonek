@@ -17,6 +17,15 @@ pub async fn fetch_due_cards(
     Ok(Json(due))
 }
 
+pub async fn fetch_due_cards_number(
+    State(state): State<AppState>,
+    claims: Claims,
+) -> Result<Json<Option<i64>>, APIError> {
+    let due = words::learning::fetch_due_count(&state.db, &claims.sub).await?;
+
+    Ok(Json(due))
+}
+
 pub async fn update_card_progress(
     State(state): State<AppState>,
     claims: Claims,

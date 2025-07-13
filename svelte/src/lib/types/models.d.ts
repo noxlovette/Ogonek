@@ -67,6 +67,7 @@ export interface DashboardData {
   decks: BadgeWrapper<DeckSmall>;
   activity: Vec<ActivityLog>;
   profile: ProfileComposite;
+  learn: LearnDataDashboard;
 }
 export interface Toast {
   message: string | null;
@@ -225,4 +226,14 @@ export interface PaginatedResponse<T> {
   total: number;
   page: number;
   perPage: number;
+}
+
+export interface LearnDataDashboard {
+  dueCards: number;
+  stats: SimpleStats;
+}
+
+interface SimpleStats {
+  cardsStudiedToday: number;
+  currentSterak: number;
 }

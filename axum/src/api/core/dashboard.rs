@@ -3,7 +3,7 @@ use crate::auth::Claims;
 use crate::db::crud::account::{student, user};
 use crate::db::crud::tracking::{ModelType, activity, seen};
 use crate::db::crud::{account, core, words};
-use crate::models::{BadgeWrapper, DashboardData};
+use crate::models::{BadgeWrapper, DashboardData, LearnDataDashboard};
 use crate::schema::AppState;
 use axum::extract::Json;
 use axum::extract::State;
@@ -28,6 +28,8 @@ pub async fn fetch_dashboard(
     let decks = words::deck::find_recent(&state.db, &claims.sub).await?;
     let deck_count = seen::get_seen_badge(&state.db, &claims.sub, ModelType::Deck).await?;
     let activity = activity::get_activity(&state.db, &claims.sub).await?;
+    let due_cards = words::learning::fetch_due_count(&state.db, &claims.sub).await?;
+    let stats = words::learning::get_simple_stats(&state.db, &claims.sub).await?;
 
     Ok(Json(DashboardData {
         students,
@@ -46,5 +48,6 @@ pub async fn fetch_dashboard(
         user,
         profile,
         activity,
+        learn: LearnDataDashboard { due_cards, stats },
     }))
 }
