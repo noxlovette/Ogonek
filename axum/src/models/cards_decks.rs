@@ -1,6 +1,5 @@
 use serde::{Deserialize, Serialize};
 use sqlx::prelude::FromRow;
-use sqlx::types::uuid::fmt::Simple;
 use time::OffsetDateTime;
 use time::format_description::well_known::Rfc3339;
 

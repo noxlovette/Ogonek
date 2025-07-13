@@ -1,6 +1,12 @@
 <script lang="ts">
   import type { Task, TableConfig } from "$lib/types/index.js";
-  import { H1, Table, UniButton, HeaderEmbellish } from "$lib/components";
+  import {
+    H1,
+    Table,
+    UniButton,
+    HeaderEmbellish,
+    DueTasksWidget,
+  } from "$lib/components";
 
   import { enhance } from "$app/forms";
   import { page } from "$app/state";
@@ -16,7 +22,6 @@
   import { Eye, EyeClosed, PlusCircle } from "lucide-svelte";
   import { formatDate } from "@noxlovette/svarog";
   import { m } from "$lib/paraglide/messages";
-  import RequestHw from "$lib/components/UI/interactive/RequestHW.svelte";
 
   let { data } = $props();
   const { students } = data;
@@ -102,7 +107,7 @@
     showComplete={true}
   />
 {:else}
-  <RequestHw tasks={data.tasksPaginated.data} />
+  <DueTasksWidget tasks={data.tasksPaginated.data} />
 {/if}
 
 <svelte:head>

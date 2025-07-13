@@ -2,7 +2,7 @@
   import { m } from "$lib/paraglide/messages";
   import type { ActivityLog } from "$lib/types";
   import { EmptySpace, H2 } from "../typography";
-  import ActivityCard from "./ActivityCard.svelte";
+  import ActivityCard from "../cards/ActivityCard.svelte";
 
   const {
     activities = [],
@@ -11,17 +11,15 @@
   } = $props();
 </script>
 
-<div class="flex flex-col gap-4 lg:col-span-2">
-  <H2>Recent Activity</H2>
+<div class="flex flex-col gap-4">
+  <H2>{m.tired_even_polecat_slurp()}</H2>
   {#if activities.length > 0}
-    <div class="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
+    <div class="grid grid-cols-1 gap-3">
       {#each activities as activity, index (index)}
         <ActivityCard {activity} />
       {/each}
     </div>
   {:else}
-    <EmptySpace>
-      {m.noDecks()}
-    </EmptySpace>
+    <EmptySpace>{m.empty()}</EmptySpace>
   {/if}
 </div>

@@ -1,0 +1,16 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n       UPDATE tasks\n       SET\n        completed = $3\n         WHERE id = $1 AND (assignee = $2 OR created_by = $2)\n       ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Text",
+        "Bool"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "30d3e1199785ef7b30e0a5955129adb8486c51e9e88e7a4d2d49696dd53dfbfc"
+}

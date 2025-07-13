@@ -1,8 +1,6 @@
 <script lang="ts">
-  import { X, Search } from "lucide-svelte";
   import { goto } from "$app/navigation";
   import { fade } from "svelte/transition";
-  import { searchTerm } from "$lib/stores";
   import type { Student, TableConfig } from "$lib/types";
   import { EmptySpace } from "$lib/components/typography";
   import SearchBar from "./SearchBar.svelte";

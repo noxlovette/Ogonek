@@ -4,7 +4,6 @@
   import { page } from "$app/state";
   import { formatDateTime } from "@noxlovette/svarog";
   import {
-    ActivityIcon,
     Bell,
     BellOff,
     BookOpen,
@@ -45,27 +44,28 @@
     {#if activity.action.startsWith("new")}
       <BookOpen strokeWidth="1" class="size-5" />
     {:else if activity.action.startsWith("updated")}
-      <NotebookPen strokeWidth="1" class="size-5 text-orange-600" />
+      <NotebookPen strokeWidth="1" class="size-5 dark:text-orange-400" />
     {:else if activity.action.startsWith("deleted")}
-      <Trash2 strokeWidth="1" class="size-5 text-red-600" />
+      <Trash2 strokeWidth="1" class="size-5 text-red-600 dark:text-red-400" />
     {/if}
   {:else if activity.modelType.startsWith("task")}
     {#if activity.action.startsWith("new")}
       <ListTodo strokeWidth="1" class="size-5" />
     {:else if activity.action.startsWith("updated")}
-      <SquarePen strokeWidth="1" class="size-5 text-orange-600" />
+      <SquarePen strokeWidth="1" class="size-5 dark:text-orange-400" />
     {:else if activity.action.startsWith("deleted")}
-      <Trash2 strokeWidth="1" class=" size-5 text-red-600" />
+      <Trash2 strokeWidth="1" class=" size-5 text-red-600 dark:text-red-400" />
     {:else if activity.action.startsWith("completed")}
-      <CheckCircle2 strokeWidth="1" class="size-5 text-green-600" />
+      <CheckCircle2 strokeWidth="1" class="size-5 text-green-400" />
     {/if}
   {:else if activity.modelType.startsWith("deck")}
     {#if activity.action.startsWith("new")}
       <WholeWord strokeWidth="1" class="size-5" />
     {:else if activity.action.startsWith("updated")}{:else if activity.action.startsWith("deleted")}
-      <Trash2 strokeWidth="1" class="size-5 text-red-600"></Trash2>
+      <Trash2 strokeWidth="1" class="size-5 text-red-600 dark:text-red-400"
+      ></Trash2>
     {:else if activity.action.startsWith("subscribed")}
-      <Bell strokeWidth="1" class="size-5 text-green-600" />
+      <Bell strokeWidth="1" class="size-5 text-green-400" />
     {:else if activity.action.startsWith("unsubscribed")}
       <BellOff strokeWidth="1" class="size-5 text-stone-400" />
     {/if}
@@ -79,16 +79,18 @@
 >
   <!-- Icon -->
   <div
-    class="flex-shrink-0 rounded-full bg-stone-100 p-2 ring-1 ring-stone-300 ring-inset dark:bg-stone-800 dark:ring-stone-700"
+    class="flex-shrink-0 rounded-full bg-stone-100 p-2 dark:bg-stone-950 dark:ring-stone-700"
   >
     {@render icon(activity)}
   </div>
 
   <!-- Content -->
   <div class="flex flex-1 flex-col overflow-hidden">
-    <p class="truncate text-sm font-semibold capitalize">
+    <p
+      class="truncate text-sm font-semibold text-stone-600 capitalize dark:text-stone-400"
+    >
       {activity.action}
-      <span class="ml-1 font-normal text-stone-600 dark:text-stone-400">
+      <span class="ml-1 font-normal text-stone-600">
         {activity.modelType}
       </span>
     </p>

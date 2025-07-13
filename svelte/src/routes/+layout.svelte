@@ -1,10 +1,14 @@
 <script lang="ts">
   import "../app.css";
   import { env } from "$env/dynamic/public";
-  import { Footer, Notification, MetaData } from "$lib/components";
+  import {
+    Footer,
+    Notification,
+    MetaData,
+    MockController,
+  } from "$lib/components";
 
   import { keyEscape } from "$lib/actions";
-  import MockController from "$lib/components/MockController.svelte";
 
   function goBack() {
     window.history.back();

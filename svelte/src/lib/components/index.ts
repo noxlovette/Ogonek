@@ -4,3 +4,4 @@ export * from "./sidebar";
 export { default as Turnstile } from "./Turnstile.svelte";
 export * from "./typography";
 export * from "./UI";
+export * from "./widgets";

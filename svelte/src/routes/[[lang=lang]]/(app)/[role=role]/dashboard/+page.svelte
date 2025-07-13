@@ -1,13 +1,15 @@
 <script lang="ts">
   import type { PageData } from "./$types";
-  import { H1, TaskCard, EmptySpace, UniButton } from "$lib/components";
+  import {
+    H1,
+    DueTasksWidget,
+    ActivityFeedWidget,
+    LearnWidget,
+    HeaderEmbellish,
+  } from "$lib/components";
   import { getGreeting } from "$lib/utils";
   import { user } from "$lib/stores";
-  import HeaderEmbellish from "$lib/components/typography/HeaderEmbellish.svelte";
   import { m } from "$lib/paraglide/messages";
-  import ActivityFeed from "$lib/components/cards/ActivityFeed.svelte";
-  import RequestHw from "$lib/components/UI/interactive/RequestHW.svelte";
-  import Learn from "$lib/components/UI/interactive/Learn.svelte";
 
   const greetingType = getGreeting();
 
@@ -27,15 +29,14 @@
 </HeaderEmbellish>
 
 <div class="grid gap-8 lg:grid-cols-3">
-  <ActivityFeed activities={data.activity} />
+  <DueTasksWidget tasks={data.tasks.data} />
 
-  <RequestHw tasks={data.tasks.data} />
-
-  <Learn
+  <LearnWidget
     cardsCount={data.learn.dueCards}
     streakDays={data.learn.stats.currentSterak}
     todayStudied={data.learn.stats.cardsStudiedToday}
   />
+  <ActivityFeedWidget activities={data.activity} />
 </div>
 <svelte:head>
   <title>Dashboard | Ogonek</title>

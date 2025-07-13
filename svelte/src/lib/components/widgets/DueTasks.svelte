@@ -5,7 +5,7 @@
   import { enhance } from "$app/forms";
   import { m } from "$lib/paraglide/messages";
   import { Lightbulb } from "lucide-svelte";
-  import UniButton from "../UniButton.svelte";
+  import UniButton from "../UI/UniButton.svelte";
   import { page } from "$app/state";
   import type { TaskSmall } from "$lib/types";
   import { TaskCard } from "$lib/components/cards";
@@ -14,7 +14,7 @@
 </script>
 
 <div class="flex flex-col gap-4">
-  <H2>Due Tasks</H2>
+  <H2>{m.any_lime_lemur_propel()}</H2>
   {#if tasks.length > 0}
     <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
       {#each tasks as task (task.id)}
