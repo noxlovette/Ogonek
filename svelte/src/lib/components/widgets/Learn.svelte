@@ -47,7 +47,7 @@
     {:else}
       <div class="py-4 text-center">
         <Zap class="mx-auto mb-2 h-8 w-8 text-green-500" />
-        <p class="text-stone-600">{m.livid_small_gadfly_gulp()}</p>
+        <p class="text-stone-600">{m.livid_trite_squirrel_cuddle()}</p>
       </div>
     {/if}
   </div>
