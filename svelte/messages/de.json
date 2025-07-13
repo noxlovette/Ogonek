@@ -54,8 +54,13 @@
   "simple_east_crocodile_spark": "Kein Tag",
   "some_happy_cat": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": [
+        "input count",
+        "local countPlural = count: plural"
+      ],
+      "selectors": [
+        "countPlural"
+      ],
       "match": {
         "countPlural=one": "Karte",
         "countPlural=other": "Karten"
@@ -99,5 +104,25 @@
   "dashboardName": "Dashboard",
   "usefulLinks": "Nützliches",
   "dictionary": "Wörterbuch",
-  "neat_sound_ocelot_belong": "Wort des Tages"
+  "neat_sound_ocelot_belong": "Wort des Tages",
+  "empty": "Leer",
+  "tired_even_polecat_slurp": "Aktivität",
+  "sound_direct_tern_startle": "Fällig",
+  "today": "Heute",
+  "just_loose_canary_tear": "Streak",
+  "any_lime_lemur_propel": "Fällig",
+  "days": [
+    {
+      "declarations": [
+        "input count"
+      ],
+      "selectors": [
+        "count"
+      ],
+      "match": {
+        "count=*": "Tage",
+        "count=1": "Tag"
+      }
+    }
+  ]
 }

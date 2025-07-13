@@ -52,13 +52,22 @@ interface BadgeWrapper<T> {
   count: number;
 }
 
+export interface ActivityLog {
+  modelType: string;
+  modelId: string;
+  action: string;
+  createdAt: string;
+}
+
 export interface DashboardData {
   students: Student[];
   user: User;
   lessons: BadgeWrapper<LessonSmall>;
   tasks: BadgeWrapper<TaskSmall>;
   decks: BadgeWrapper<DeckSmall>;
+  activity: Vec<ActivityLog>;
   profile: ProfileComposite;
+  learn: LearnDataDashboard;
 }
 export interface Toast {
   message: string | null;
@@ -217,4 +226,14 @@ export interface PaginatedResponse<T> {
   total: number;
   page: number;
   perPage: number;
+}
+
+export interface LearnDataDashboard {
+  dueCards: number;
+  stats: SimpleStats;
+}
+
+interface SimpleStats {
+  cardsStudiedToday: number;
+  currentSterak: number;
 }

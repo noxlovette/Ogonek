@@ -16,7 +16,6 @@ export const actions = {
     try {
       const formData = await request.formData();
       const id = formData.get("id") as string;
-      const completed = formData.get("completed") === "true";
       const username = formData.get("username") as string;
       const task = formData.get("task") as string;
       const teacherTelegramId = formData.get("teacherTelegramId") as string;
@@ -25,7 +24,7 @@ export const actions = {
         return fail(400, { message: "Task ID is required" });
       }
 
-      if (teacherTelegramId && completed) {
+      if (teacherTelegramId) {
         const telegramResponse = await notifyTelegram(
           messages.completed({ task, username, id }),
           teacherTelegramId,
@@ -37,11 +36,9 @@ export const actions = {
           );
         }
       }
-      const body = { completed, id };
 
       const response = await fetch(`/axum/task/t/${id}`, {
-        method: "PATCH",
-        body: JSON.stringify(body),
+        method: "PUT",
       });
 
       const editResult = await handleApiResponse<EmptyResponse>(response);
@@ -50,7 +47,6 @@ export const actions = {
         logger.error(
           {
             taskId: id,
-            completed,
             status: editResult.status,
             error: editResult.message,
             duration: performance.now() - startTime,
@@ -63,7 +59,6 @@ export const actions = {
       logger.info(
         {
           taskId: id,
-          completed,
           duration: performance.now() - startTime,
         },
         "Task completion updated successfully",

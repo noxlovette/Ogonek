@@ -204,10 +204,42 @@ pub async fn find_assignee(
         lesson_id,
         user_id
     )
-    .fetch_optional(db) // in case lesson is not found
+    .fetch_optional(db)
     .await?;
 
     Ok(assignee)
+}
+
+/// Finds the assignee for the task
+pub async fn toggle(db: &PgPool, task_id: &str, user_id: &str) -> Result<(), DbError> {
+    let completed = sqlx::query_scalar!(
+        r#"
+        SELECT completed
+        FROM tasks
+        WHERE id = $1
+        AND (assignee = $2 OR created_by = $2)
+        "#,
+        task_id,
+        user_id
+    )
+    .fetch_one(db)
+    .await?;
+
+    sqlx::query!(
+        r#"
+       UPDATE tasks
+       SET
+        completed = $3
+         WHERE id = $1 AND (assignee = $2 OR created_by = $2)
+       "#,
+        task_id,
+        user_id,
+        !completed
+    )
+    .execute(db)
+    .await?;
+
+    Ok(())
 }
 
 /// Updates the task and inserts associated files

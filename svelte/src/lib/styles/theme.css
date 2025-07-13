@@ -16,7 +16,7 @@
 
 @layer utilities {
   .ring-default {
-    @apply ring ring-stone-200 ring-offset-2 ring-offset-stone-100 dark:ring-stone-900/60 dark:ring-offset-stone-800/60;
+    @apply border border-stone-200/40 ring ring-stone-200 ring-offset-2 ring-offset-stone-100 dark:border-stone-800/40 dark:ring-stone-900/60 dark:ring-offset-stone-800/60;
   }
 
   .bg-default {

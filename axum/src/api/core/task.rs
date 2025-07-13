@@ -1,11 +1,14 @@
 use crate::api::error::APIError;
 use crate::auth::Claims;
-use crate::db::crud::core;
 use crate::db::crud::core::task::{
-    add_files, count, create, delete, find_all, find_assignee, find_by_id, find_recent, update,
+    add_files, count, create, delete, find_all, find_assignee, find_by_id, find_recent, toggle,
+    update,
 };
 use crate::db::crud::files::file::fetch_files_task;
 
+use crate::db::crud::tracking::activity::log_activity;
+use crate::db::crud::tracking::seen::delete_seen;
+use crate::db::crud::tracking::{ActionType, ModelType, seen};
 use crate::models::meta::{CreationId, PaginatedResponse};
 use crate::models::tasks::{
     TaskCreate, TaskFileBind, TaskPaginationParams, TaskSmall, TaskUpdate, TaskWithFilesResponse,
@@ -33,7 +36,7 @@ pub async fn fetch_task(
 ) -> Result<Json<TaskWithFilesResponse>, APIError> {
     let task = find_by_id(&state.db, &id, &claims.sub).await?;
     let files = fetch_files_task(&state.db, &id).await?;
-    core::seen::mark_as_seen(&state.db, &claims.sub, &id, core::seen::ModelType::Task).await?;
+    seen::mark_as_seen(&state.db, &claims.sub, &id, ModelType::Task).await?;
 
     Ok(Json(TaskWithFilesResponse { task, files }))
 }
@@ -67,6 +70,16 @@ pub async fn create_task(
 
     let id = create(&state.db, &payload, &claims.sub, assignee).await?;
 
+    log_activity(
+        &state.db,
+        &claims.sub,
+        &id.id,
+        ModelType::Task,
+        ActionType::Create,
+        None,
+    )
+    .await?;
+
     Ok(Json(id))
 }
 
@@ -78,6 +91,7 @@ pub async fn delete_task(
     let files = fetch_files_task(&state.db, &id).await?;
 
     let file_ids: Vec<String> = files.iter().map(|f| f.id.clone()).collect();
+    let assignee = find_assignee(&state.db, &id, &claims.sub).await?;
 
     delete(&state.db, &id, &claims.sub, file_ids).await?;
 
@@ -89,9 +103,42 @@ pub async fn delete_task(
         }
     }
 
+    if let Some(user) = assignee {
+        delete_seen(&state.db, &user, &id, ModelType::Task).await?;
+
+        // log deletion activity
+        log_activity(
+            &state.db,
+            &claims.sub,
+            &id,
+            ModelType::Task,
+            ActionType::Delete,
+            Some(&user),
+        )
+        .await?;
+    }
     Ok(StatusCode::NO_CONTENT)
 }
 
+pub async fn toggle_task(
+    State(state): State<AppState>,
+    Path(id): Path<String>,
+    claims: Claims,
+) -> Result<StatusCode, APIError> {
+    let current_assignee = find_assignee(&state.db, &id, &claims.sub).await?;
+    toggle(&state.db, &id, &claims.sub).await?;
+
+    log_activity(
+        &state.db,
+        &claims.sub,
+        &id,
+        ModelType::Task,
+        ActionType::Complete,
+        current_assignee.as_deref(),
+    )
+    .await?;
+    Ok(StatusCode::NO_CONTENT)
+}
 pub async fn update_task(
     State(state): State<AppState>,
     Path(id): Path<String>,
@@ -110,14 +157,45 @@ pub async fn update_task(
     if new_assignee != current_assignee {
         // remove seen record for old assignee
         if let Some(old_user) = current_assignee {
-            core::seen::delete_seen(&state.db, &old_user, &id, core::seen::ModelType::Task).await?;
+            seen::delete_seen(&state.db, &old_user, &id, ModelType::Task).await?;
+            // treat as deletion
+            log_activity(
+                &state.db,
+                &old_user,
+                &id,
+                ModelType::Task,
+                ActionType::Delete,
+                None,
+            )
+            .await?;
         }
 
         // insert unseen for new assignee
         if let Some(new_user) = new_assignee {
-            core::seen::insert_as_unseen(&state.db, &new_user, &id, core::seen::ModelType::Task)
-                .await?;
+            seen::insert_as_unseen(&state.db, &new_user, &id, ModelType::Task).await?;
+
+            // treat as creation
+            log_activity(
+                &state.db,
+                &new_user,
+                &id,
+                ModelType::Task,
+                ActionType::Create,
+                None,
+            )
+            .await?;
         }
+    } else if let Some(assignee) = current_assignee {
+        // treat as update
+        log_activity(
+            &state.db,
+            &claims.sub,
+            &id,
+            ModelType::Task,
+            ActionType::Update,
+            Some(&assignee),
+        )
+        .await?;
     }
     Ok(StatusCode::NO_CONTENT)
 }

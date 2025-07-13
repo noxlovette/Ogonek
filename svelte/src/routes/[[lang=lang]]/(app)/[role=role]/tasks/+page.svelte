@@ -1,13 +1,11 @@
 <script lang="ts">
-  import { user } from "$lib/stores";
   import type { Task, TableConfig } from "$lib/types/index.js";
   import {
     H1,
     Table,
-    TaskCard,
     UniButton,
     HeaderEmbellish,
-    EmptySpace,
+    DueTasksWidget,
   } from "$lib/components";
 
   import { enhance } from "$app/forms";
@@ -20,9 +18,8 @@
     pageSize,
     currentPage,
     assigneeStore,
-    teacherData,
   } from "$lib/stores";
-  import { Eye, EyeClosed, Lightbulb, PlusCircle } from "lucide-svelte";
+  import { Eye, EyeClosed, PlusCircle } from "lucide-svelte";
   import { formatDate } from "@noxlovette/svarog";
   import { m } from "$lib/paraglide/messages";
 
@@ -109,40 +106,8 @@
     {total}
     showComplete={true}
   />
-{:else if tasks?.length > 0}
-  <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
-    {#each tasks as task (task.id)}
-      <TaskCard {task} />
-    {/each}
-  </div>
 {:else}
-  <EmptySpace>
-    <h3 class="mb-2 text-2xl font-bold text-stone-800 dark:text-stone-200">
-      {m.noTasks()}
-    </h3>
-
-    <form
-      method="POST"
-      action="?/requestHW"
-      class=""
-      use:enhance={enhanceForm({
-        messages: {
-          success: m.minor_mad_hare_buzz(),
-        },
-      })}
-    >
-      <input type="hidden" value={$user.username} name="username" />
-
-      <input
-        type="hidden"
-        value={$teacherData.teacherTelegramId}
-        name="teacherTelegramId"
-      />
-      <UniButton type="submit" variant="primary" Icon={Lightbulb}>
-        {m.tense_mealy_kitten_aid()}
-      </UniButton>
-    </form>
-  </EmptySpace>
+  <DueTasksWidget tasks={data.tasksPaginated.data} />
 {/if}
 
 <svelte:head>

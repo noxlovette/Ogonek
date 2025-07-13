@@ -9,6 +9,7 @@ services:
       - "5173:5173"
     volumes:
       - ./svelte/src:/app/src
+      - ./svelte/messages:/app/messages
     env_file:
       - ./svelte/.env
     depends_on:

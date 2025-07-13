@@ -8,7 +8,18 @@ pub struct DeckFilterParams {
     pub search: Option<String>,
     pub assignee: Option<String>,
 }
-
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct SimpleStats {
+    pub cards_studied_today: i32,
+    pub current_streak: i32,
+}
+#[derive(Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct LearnDataDashboard {
+    pub stats: SimpleStats,
+    pub due_cards: Option<i64>,
+}
 #[serde_with::serde_as]
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]

@@ -55,8 +55,13 @@
   "simple_east_crocodile_spark": "No tags available",
   "some_happy_cat": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": [
+        "input count",
+        "local countPlural = count: plural"
+      ],
+      "selectors": [
+        "countPlural"
+      ],
       "match": {
         "countPlural=one": "card",
         "countPlural=other": "cards"
@@ -111,5 +116,25 @@
   "dashboardName": "Dashboard",
   "usefulLinks": "Useful Links",
   "dictionary": "Dictionary",
-  "neat_sound_ocelot_belong": "Word of the day"
+  "neat_sound_ocelot_belong": "Word of the day",
+  "empty": "Empty",
+  "tired_even_polecat_slurp": "Recent Activity",
+  "sound_direct_tern_startle": "Due for Review",
+  "today": "Today",
+  "just_loose_canary_tear": "Streak",
+  "days": [
+    {
+      "declarations": [
+        "input count"
+      ],
+      "selectors": [
+        "count"
+      ],
+      "match": {
+        "count=1": "day",
+        "count=*": "days"
+      }
+    }
+  ],
+  "any_lime_lemur_propel": "Due Tasks"
 }

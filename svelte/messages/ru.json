@@ -54,9 +54,16 @@
   "simple_east_crocodile_spark": "Нет меток",
   "some_happy_cat": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": [""]
+      "declarations": [
+        "input count",
+        "local countPlural = count: plural"
+      ],
+      "selectors": [
+        "count"
+      ],
+      "match": [
+        ""
+      ]
     }
   ],
   "quiet_lost_whale_exhale": "Вы просмотрели все карточки. Возвращайтесь завтра за новой порцией",
@@ -97,5 +104,27 @@
   "dashboardName": "Главная",
   "usefulLinks": "Полезное",
   "dictionary": "Словарь",
-  "neat_sound_ocelot_belong": "Слово дня"
+  "neat_sound_ocelot_belong": "Слово дня",
+  "empty": "Пусто",
+  "tired_even_polecat_slurp": "Активность",
+  "sound_direct_tern_startle": "К просмотру",
+  "today": "Сегодня",
+  "just_loose_canary_tear": "Комбо",
+  "any_lime_lemur_propel": "Задания",
+  "days": [
+    {
+      "declarations": [
+        "input count"
+      ],
+      "selectors": [
+        "count"
+      ],
+      "match": {
+        "0": "",
+        "count=1": "день",
+        "count=few": "дня",
+        "count=many": "дней"
+      }
+    }
+  ]
 }

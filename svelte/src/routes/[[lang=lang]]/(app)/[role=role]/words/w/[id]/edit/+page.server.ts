@@ -20,7 +20,8 @@ export const actions = {
     const visibility = formData.get("visibility");
 
     const assigneeData = formData.get("student")?.toString() || "{}";
-    const { assignee = "", studentTelegramId = "" } = JSON.parse(assigneeData);
+    const { assignee = null, studentTelegramId = null } =
+      JSON.parse(assigneeData);
     const initialAssignee = formData.get("initialAssignee")?.toString() || "";
 
     const cards = [];

@@ -1,6 +1,8 @@
 use crate::api::error::APIError;
 use crate::auth::Claims;
-use crate::db::crud::core::{self, lesson};
+use crate::db::crud::core::lesson;
+use crate::db::crud::tracking::activity::log_activity;
+use crate::db::crud::tracking::{self, ActionType, ModelType};
 use crate::models::meta::{CreationId, PaginatedResponse};
 use crate::models::{LessonCreate, LessonFull, LessonSmall, LessonUpdate, PaginationParams};
 use crate::schema::AppState;
@@ -24,7 +26,7 @@ pub async fn fetch_lesson(
     claims: Claims,
 ) -> Result<Json<LessonFull>, APIError> {
     let lesson = lesson::find_by_id(&state.db, &id, &claims.sub).await?;
-    core::seen::mark_as_seen(&state.db, &claims.sub, &id, core::seen::ModelType::Lesson).await?;
+    tracking::seen::mark_as_seen(&state.db, &claims.sub, &id, tracking::ModelType::Lesson).await?;
     Ok(Json(lesson))
 }
 pub async fn list_lessons(
@@ -50,6 +52,16 @@ pub async fn create_lesson(
 ) -> Result<Json<CreationId>, APIError> {
     let id = lesson::create(&state.db, &claims.sub, payload).await?;
 
+    log_activity(
+        &state.db,
+        &claims.sub,
+        &id.id,
+        ModelType::Deck,
+        ActionType::Create,
+        None,
+    )
+    .await?;
+
     Ok(Json(id))
 }
 
@@ -58,7 +70,25 @@ pub async fn delete_lesson(
     Path(id): Path<String>,
     claims: Claims,
 ) -> Result<StatusCode, APIError> {
+    let assignee = lesson::find_assignee(&state.db, &id, &claims.sub).await?;
     lesson::delete(&state.db, &id, &claims.sub).await?;
+
+    if let Some(user) = assignee {
+        // clean up, otherwise you get hanging counts
+        tracking::seen::delete_seen(&state.db, &user, &id, ModelType::Lesson).await?;
+
+        // log deletion activity
+        log_activity(
+            &state.db,
+            &claims.sub,
+            &id,
+            ModelType::Lesson,
+            ActionType::Delete,
+            Some(&user),
+        )
+        .await?;
+    }
+
     Ok(StatusCode::NO_CONTENT)
 }
 
@@ -80,15 +110,51 @@ pub async fn update_lesson(
     if new_assignee != current_assignee {
         // remove seen record for old assignee
         if let Some(old_user) = current_assignee {
-            core::seen::delete_seen(&state.db, &old_user, &id, core::seen::ModelType::Lesson)
-                .await?;
+            tracking::seen::delete_seen(&state.db, &old_user, &id, ModelType::Lesson).await?;
+            // treat as deletion
+            log_activity(
+                &state.db,
+                &claims.sub,
+                &id,
+                ModelType::Lesson,
+                ActionType::Delete,
+                Some(&old_user),
+            )
+            .await?;
         }
 
         // insert unseen for new assignee
         if let Some(new_user) = new_assignee {
-            core::seen::insert_as_unseen(&state.db, &new_user, &id, core::seen::ModelType::Lesson)
-                .await?;
+            tracking::seen::insert_as_unseen(
+                &state.db,
+                &new_user,
+                &id,
+                tracking::ModelType::Lesson,
+            )
+            .await?;
+
+            // treat as creation
+            log_activity(
+                &state.db,
+                &claims.sub,
+                &id,
+                ModelType::Lesson,
+                ActionType::Create,
+                Some(&new_user),
+            )
+            .await?;
         }
+    } else if let Some(assignee) = current_assignee {
+        // treat as update
+        log_activity(
+            &state.db,
+            &claims.sub,
+            &id,
+            ModelType::Lesson,
+            ActionType::Update,
+            Some(&assignee),
+        )
+        .await?;
     }
 
     Ok(StatusCode::NO_CONTENT)

@@ -53,10 +53,15 @@
   "simple_east_crocodile_spark": "Aucune Étiquette",
   "some_happy_cat": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": [
+        "input count",
+        "local countPlural = count: plural"
+      ],
+      "selectors": [
+        "countPlural"
+      ],
       "match": {
-        "countPlural=*": "carte",
+        "countPlural=*": "cartes",
         "countPlural=one": "carte",
         "countPlural=many": "cartes",
         "countPlural=other": "cartes"
@@ -100,5 +105,12 @@
   "dashboardName": "Principal",
   "usefulLinks": "Liens utiles",
   "dictionary": "Dictionnaire",
-  "neat_sound_ocelot_belong": "Mot du jour"
+  "neat_sound_ocelot_belong": "Mot du jour",
+  "empty": "Vide",
+  "tired_even_polecat_slurp": "Activité récente",
+  "sound_direct_tern_startle": "À revoir",
+  "today": "Aujourd'hui",
+  "just_loose_canary_tear": "Trait",
+  "any_lime_lemur_propel": "Tâches à accomplir",
+  "days": "jours"
 }

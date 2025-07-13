@@ -1,28 +1,6 @@
+use super::ModelType;
 use crate::db::error::DbError;
 use sqlx::PgPool;
-
-/// This guy is a safeguard against arbitrary values in the database
-/// (as I have decided not to use an enum in postgres)
-#[derive(Debug, sqlx::Type)]
-#[sqlx(type_name = "text")]
-#[sqlx(rename_all = "lowercase")]
-pub enum ModelType {
-    Lesson,
-    Task,
-    Deck,
-    Word,
-}
-
-impl ModelType {
-    fn as_str(&self) -> &'static str {
-        match self {
-            ModelType::Lesson => "lesson",
-            ModelType::Task => "task",
-            ModelType::Deck => "deck",
-            ModelType::Word => "word",
-        }
-    }
-}
 
 /// Lets mark an object as seen
 pub async fn mark_as_seen(

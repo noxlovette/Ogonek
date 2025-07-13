@@ -1,0 +1,23 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        SELECT completed\n        FROM tasks\n        WHERE id = $1\n        AND (assignee = $2 OR created_by = $2)\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "completed",
+        "type_info": "Bool"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Text"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "d1eacd1c3e45f4a8b7d8b4d67360fea397feda377cdb6ce3e5571e65239a6155"
+}
