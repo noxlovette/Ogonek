@@ -2,6 +2,7 @@ pub mod auth_routes;
 pub mod deck_routes;
 pub mod file_routes;
 pub mod lesson_routes;
+pub mod preference_routes;
 pub mod profile_routes;
 pub mod s3_routes;
 pub mod student_routes;

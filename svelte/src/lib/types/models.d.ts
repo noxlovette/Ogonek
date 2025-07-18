@@ -17,6 +17,14 @@ export interface TaskWithFiles {
   files: FileSmall[];
 }
 
+export interface UserPreferences {
+  auto_subscribe: boolean;
+  email_notifications: boolean;
+  push_notifications: boolean;
+  theme: "light" | "dark" | "system";
+  language: "en" | "ru" | "fr" | "de" | "it";
+}
+
 export type UrgencyLevel = "overdue" | "urgent" | "soon" | "normal";
 
 export interface FileSmall {
@@ -68,6 +76,7 @@ export interface DashboardData {
   activity: Vec<ActivityLog>;
   profile: ProfileComposite;
   learn: LearnDataDashboard;
+  preferences: UserPreferences;
 }
 export interface Toast {
   message: string | null;

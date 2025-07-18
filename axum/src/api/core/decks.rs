@@ -95,6 +95,7 @@ pub async fn update_deck(
     if new_assignee != current_assignee {
         if let Some(old_user) = current_assignee {
             delete_seen(&state.db, &old_user, &deck_id, ModelType::Deck).await?;
+            words::subscribe::unsubscribe(&state.db, &deck_id, &old_user).await?;
             log_activity(
                 &state.db,
                 &claims.sub,
@@ -108,6 +109,7 @@ pub async fn update_deck(
 
         if let Some(new_user) = new_assignee {
             insert_as_unseen(&state.db, &new_user, &deck_id, ModelType::Deck).await?;
+            words::subscribe::subscribe(&state.db, &deck_id, &new_user).await?;
             log_activity(
                 &state.db,
                 &claims.sub,

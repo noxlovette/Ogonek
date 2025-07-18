@@ -1,0 +1,52 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n            INSERT INTO user_preferences (user_id)\n            VALUES ($1)\n            ON CONFLICT (user_id) DO UPDATE SET user_id = EXCLUDED.user_id\n            RETURNING *\n            ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "user_id",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 1,
+        "name": "auto_subscribe",
+        "type_info": "Bool"
+      },
+      {
+        "ordinal": 2,
+        "name": "email_notifications",
+        "type_info": "Bool"
+      },
+      {
+        "ordinal": 3,
+        "name": "push_notifications",
+        "type_info": "Bool"
+      },
+      {
+        "ordinal": 4,
+        "name": "theme",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 5,
+        "name": "language",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Varchar"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "82276668cc8477df6a474d986d9a18048fde4a734ff48421bf8e65ab7cba9b4a"
+}

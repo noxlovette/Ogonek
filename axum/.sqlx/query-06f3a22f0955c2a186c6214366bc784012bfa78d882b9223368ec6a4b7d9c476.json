@@ -1,0 +1,12 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "DELETE FROM profile WHERE user_id LIKE 'dev_%'",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": []
+    },
+    "nullable": []
+  },
+  "hash": "06f3a22f0955c2a186c6214366bc784012bfa78d882b9223368ec6a4b7d9c476"
+}

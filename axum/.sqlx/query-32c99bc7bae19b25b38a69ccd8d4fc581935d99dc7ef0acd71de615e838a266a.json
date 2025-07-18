@@ -1,0 +1,17 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n            UPDATE profile \n            SET video_call_url = $2, avatar_url = $3, telegram_id = $4\n            WHERE user_id = $1\n            ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Varchar",
+        "Varchar",
+        "Varchar"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "32c99bc7bae19b25b38a69ccd8d4fc581935d99dc7ef0acd71de615e838a266a"
+}

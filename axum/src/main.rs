@@ -4,10 +4,10 @@ use axum::{
     response::IntoResponse,
     routing::get,
 };
-use ogonek::tools::daemons::task_cleanup::daily_cleanup;
 use ogonek::tools::logging::init_logging;
 use ogonek::tools::middleware::api_key::validate_api_key;
 use ogonek::{api::core::dashboard, schema::AppState};
+use ogonek::{api::routes::preference_routes, tools::daemons::task_cleanup::daily_cleanup};
 use tower::ServiceBuilder;
 use tower_http::{
     cors::CorsLayer,
@@ -43,6 +43,7 @@ async fn run_server() -> anyhow::Result<()> {
         .nest("/deck", ogonek::api::routes::deck_routes::deck_routes())
         .nest("/s3", ogonek::api::routes::s3_routes::s3_routes())
         .nest("/file", ogonek::api::routes::file_routes::file_routes())
+        .nest("/preferences", preference_routes::preferences_routes())
         .route("/dashboard", get(dashboard::fetch_dashboard))
         .layer(axum::middleware::from_fn(validate_api_key));
 
