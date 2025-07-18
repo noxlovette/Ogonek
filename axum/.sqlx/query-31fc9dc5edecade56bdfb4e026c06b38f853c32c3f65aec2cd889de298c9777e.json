@@ -1,0 +1,14 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n                INSERT INTO user_preferences (user_id)\n                VALUES ($1)\n                ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Varchar"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "31fc9dc5edecade56bdfb4e026c06b38f853c32c3f65aec2cd889de298c9777e"
+}

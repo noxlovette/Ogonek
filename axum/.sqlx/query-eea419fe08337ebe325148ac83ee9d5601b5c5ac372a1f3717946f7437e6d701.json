@@ -1,0 +1,52 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        SELECT * FROM user_preferences\n        WHERE user_id = $1\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "user_id",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 1,
+        "name": "auto_subscribe",
+        "type_info": "Bool"
+      },
+      {
+        "ordinal": 2,
+        "name": "email_notifications",
+        "type_info": "Bool"
+      },
+      {
+        "ordinal": 3,
+        "name": "push_notifications",
+        "type_info": "Bool"
+      },
+      {
+        "ordinal": 4,
+        "name": "theme",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 5,
+        "name": "language",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "eea419fe08337ebe325148ac83ee9d5601b5c5ac372a1f3717946f7437e6d701"
+}
