@@ -123,13 +123,9 @@ async fn create_users(db: &PgPool) -> Result<Vec<String>> {
         .await?;
 
         user_ids.push(user_id);
-        println!(
-            "  ✓ Created user: {} ({}) with hashed password",
-            name, username
-        );
     }
 
-    println!("  🔑 All users created with password: {}", dev_password);
+    println!("  🔑 All users created with password: {dev_password}");
 
     Ok(user_ids)
 }
@@ -183,7 +179,6 @@ async fn create_profiles(db: &PgPool, user_ids: &[String]) -> Result<()> {
         .await?;
     }
 
-    println!("  ✓ Updated {} profiles", user_ids.len());
     Ok(())
 }
 
@@ -290,8 +285,6 @@ async fn create_lessons(db: &PgPool, user_ids: &[String]) -> Result<()> {
         )
         .execute(db)
         .await?;
-
-        println!("  ✓ Created lesson: {}", title);
     }
 
     Ok(())
@@ -362,8 +355,6 @@ async fn create_tasks(db: &PgPool, user_ids: &[String]) -> Result<()> {
         )
         .execute(db)
         .await?;
-
-        println!("  ✓ Created task: {}", title);
     }
 
     Ok(())
@@ -421,8 +412,6 @@ async fn create_decks(db: &PgPool, user_ids: &[String]) -> Result<()> {
         )
         .execute(db)
         .await?;
-
-        println!("  ✓ Created deck: {}", name);
     }
 
     Ok(())

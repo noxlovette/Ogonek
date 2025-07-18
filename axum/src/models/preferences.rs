@@ -3,7 +3,9 @@ use serde::{Deserialize, Serialize};
 use sqlx::FromRow;
 
 #[derive(Debug, Clone, FromRow, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct UserPreferences {
+    #[serde(skip_serializing)]
     pub user_id: String,
     pub auto_subscribe: bool,
     pub email_notifications: bool,
@@ -13,6 +15,7 @@ pub struct UserPreferences {
 }
 
 #[derive(Debug, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct UserPreferencesUpdate {
     pub auto_subscribe: Option<bool>,
     pub email_notifications: Option<bool>,
@@ -22,6 +25,7 @@ pub struct UserPreferencesUpdate {
 }
 
 #[derive(Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct UserPreferencesResponse {
     pub auto_subscribe: bool,
     pub email_notifications: bool,

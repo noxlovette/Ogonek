@@ -1,6 +1,6 @@
 use crate::api::error::APIError;
 use crate::auth::Claims;
-use crate::db::crud::account::{student, user};
+use crate::db::crud::account::{preferences, student, user};
 use crate::db::crud::tracking::{ModelType, activity, seen};
 use crate::db::crud::{account, core, words};
 use crate::models::{BadgeWrapper, DashboardData, LearnDataDashboard};
@@ -30,6 +30,7 @@ pub async fn fetch_dashboard(
     let activity = activity::get_activity(&state.db, &claims.sub).await?;
     let due_cards = words::learning::fetch_due_count(&state.db, &claims.sub).await?;
     let stats = words::learning::get_simple_stats(&state.db, &claims.sub).await?;
+    let preferences = preferences::get_or_create_defaults(&state.db, &claims.sub).await?;
 
     Ok(Json(DashboardData {
         students,
@@ -49,5 +50,6 @@ pub async fn fetch_dashboard(
         profile,
         activity,
         learn: LearnDataDashboard { due_cards, stats },
+        preferences,
     }))
 }
