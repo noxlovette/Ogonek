@@ -1,0 +1,19 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        UPDATE user_preferences \n        SET\n            auto_subscribe = COALESCE($2, auto_subscribe),\n            email_notifications = COALESCE($3, email_notifications),\n            push_notifications = COALESCE($4, push_notifications),\n            theme = COALESCE($5, theme),\n            language = COALESCE($6, language)\n        WHERE user_id = $1\n        ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Bool",
+        "Bool",
+        "Bool",
+        "Text",
+        "Text"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "b472af75d50d49dfcee3b550068606690249a53c4670f6fa2e877fd8b99806b9"
+}
