@@ -1,3 +1,4 @@
+import { tasks } from "$lib/server/mock";
 import type { DashboardData } from "$lib/types";
 
 export const GET = async () => {
@@ -50,47 +51,28 @@ export const GET = async () => {
       count: 0,
     },
     tasks: {
-      data: [
-        {
-          id: "task1",
-          title: "Murrrrrr",
-          priority: 3,
-          completed: false,
-          assigneeName: "Kotya",
-          seen: true,
-          dueDate: "2025-07-15T23:59:59Z",
-        },
-        {
-          id: "task2",
-          title: "Kotya ASsisgmned",
-          priority: 2,
-          completed: false,
-          assigneeName: "Kotya",
-          seen: true,
-          dueDate: "2025-07-17T23:59:59Z",
-        },
-      ],
+      data: tasks,
       count: 0,
     },
     decks: {
       data: [
         {
           id: "task1",
-          name: "New Deck",
-          assigneeName: "Kotya",
+          name: "Water the Flowers",
+          assigneeName: "Sasha",
           isSubscribed: true,
-          seen: true,
+          seen: false,
           visibility: "assigned",
-          description: "Your New Deck",
+          description: "love; 2046",
         },
         {
           id: "dbkX_RLB8sqIcj2j2PDT3",
-          name: "anew",
+          name: "Start Anew",
           assigneeName: "dseded",
           isSubscribed: false,
           seen: true,
           visibility: "assigned",
-          description: "FUCK YOU!",
+          description: "sacred; duty",
         },
       ],
       count: 0,
@@ -111,6 +93,40 @@ export const GET = async () => {
       },
       teacherData: null,
     },
+    learn: {
+      dueCards: 10,
+      stats: {
+        cardsStudiedToday: 3,
+        currentSterak: 5,
+      },
+    },
+    preferences: {
+      auto_subscribe: true,
+      email_notifications: false,
+      push_notifications: false,
+      theme: "system",
+      language: "en",
+    },
+    activity: [
+      {
+        modelType: "lesson",
+        modelId: "lesson1",
+        action: "updated",
+        createdAt: new Date().toISOString(),
+      },
+      {
+        modelType: "deck",
+        modelId: "lesson1",
+        action: "updated",
+        createdAt: new Date(Date.now() - 300000).toISOString(), // 5 min ago
+      },
+      {
+        modelType: "task",
+        modelId: "lesson1",
+        action: "updated",
+        createdAt: new Date(Date.now() - 600000).toISOString(), // 10 min ago
+      },
+    ],
   };
   return new Response(JSON.stringify(dashboardData));
 };

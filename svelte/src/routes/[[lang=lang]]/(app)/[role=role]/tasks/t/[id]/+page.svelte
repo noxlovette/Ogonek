@@ -43,8 +43,10 @@
         {data.task.assigneeName}
       </H3>
     {/if}
-    <Priority priority={data.task.priority}></Priority>
-    <Badge badgeText={formattedDate} {urgency}></Badge>
+    <div class="flex items-center justify-center gap-4">
+      <Priority priority={data.task.priority}></Priority>
+      <Badge badgeText={formattedDate} {urgency}></Badge>
+    </div>
   </div>
   <div class="flex items-center gap-3 md:gap-4">
     <form
@@ -96,7 +98,7 @@
 </HeaderEmbellish>
 
 <grid class="grid gap-4 md:grid-cols-4">
-  <div class="flex flex-col items-center space-y-2">
+  <div class="flex gap-4 md:flex-col">
     {#if files.length > 0}
       <div class="flex w-full flex-col gap-4">
         <Label>{m.stock_wise_cowfish_roam()}</Label>

@@ -6,8 +6,7 @@ declare global {
   namespace App {
     interface Error {
       message: string;
-      errorId?: number;
-      code?: number;
+      errorID: string;
     }
 
     interface Locals {

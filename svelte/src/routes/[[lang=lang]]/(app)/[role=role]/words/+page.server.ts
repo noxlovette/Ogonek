@@ -1,30 +1,25 @@
 import logger from "$lib/logger";
 import { handleApiResponse, isSuccessResponse } from "$lib/server";
 import type { DeckSmall, NewResponse } from "$lib/types";
-import { error, fail, redirect, type Actions } from "@sveltejs/kit";
+import { fail, redirect, type Actions } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 
 // Loads all decks
 export const load: PageServerLoad = async ({ fetch, url }) => {
-  try {
-    const search = url.searchParams.get("search") || "";
-    const assignee = url.searchParams.get("assignee") || "";
+  const search = url.searchParams.get("search") || "";
+  const assignee = url.searchParams.get("assignee") || "";
 
-    const params = new URLSearchParams();
-    if (search) params.append("search", search);
-    if (assignee) params.append("assignee", assignee);
+  const params = new URLSearchParams();
+  if (search) params.append("search", search);
+  if (assignee) params.append("assignee", assignee);
 
-    const response = await fetch(`/axum/deck?${params.toString()}`);
+  const response = await fetch(`/axum/deck?${params.toString()}`);
 
-    const decks: DeckSmall[] = await response.json();
+  const decks: DeckSmall[] = await response.json();
 
-    return {
-      decks,
-    };
-  } catch (err: any) {
-    logger.error({ err }, "Error getting decks");
-    return error(500);
-  }
+  return {
+    decks,
+  };
 };
 
 export const actions: Actions = {

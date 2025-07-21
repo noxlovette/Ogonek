@@ -12,55 +12,37 @@ import type { PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async ({ fetch, url, depends }) => {
   depends("tasks:completed");
-  const startTime = performance.now();
-  try {
-    const page = url.searchParams.get("page") || "1";
-    const per_page = url.searchParams.get("per_page") || "50";
-    const search = url.searchParams.get("search") || "";
-    const assignee = url.searchParams.get("assignee") || "";
-    const completed = url.searchParams.get("completed");
+  const page = url.searchParams.get("page") || "1";
+  const per_page = url.searchParams.get("per_page") || "50";
+  const search = url.searchParams.get("search") || "";
+  const assignee = url.searchParams.get("assignee") || "";
+  const completed = url.searchParams.get("completed");
 
-    const params = new URLSearchParams();
-    params.append("page", page);
-    params.append("per_page", per_page);
+  const params = new URLSearchParams();
+  params.append("page", page);
+  params.append("per_page", per_page);
 
-    if (search) params.append("search", search);
-    if (assignee) params.append("assignee", assignee);
-    if (completed) params.append("completed", completed);
+  if (search) params.append("search", search);
+  if (assignee) params.append("assignee", assignee);
+  if (completed) params.append("completed", completed);
 
-    const apiUrl = `/axum/task?${params.toString()}`;
+  const apiUrl = `/axum/task?${params.toString()}`;
 
-    const tasksPaginated = await fetch(apiUrl).then(
-      (res) => res.json() as Promise<PaginatedResponse<TaskSmall>>,
-    );
+  const tasksPaginated = await fetch(apiUrl).then(
+    (res) => res.json() as Promise<PaginatedResponse<TaskSmall>>,
+  );
 
-    const response = await fetch(apiUrl);
-    const result =
-      await handleApiResponse<PaginatedResponse<TaskSmall>>(response);
+  const response = await fetch(apiUrl);
+  const result =
+    await handleApiResponse<PaginatedResponse<TaskSmall>>(response);
 
-    if (!isSuccessResponse(result)) {
-      logger.error(
-        { duration: performance.now() - startTime, result },
-        "Backend side error in task list load",
-      );
-      return error(500, "Internal Server Error");
-    }
-
-    logger.info(
-      { duration: performance.now() - startTime },
-      "Task list load successful",
-    );
-
-    return {
-      tasksPaginated,
-    };
-  } catch (err: any) {
-    logger.error(
-      { err, duration: performance.now() - startTime },
-      "Svelte error server-side",
-    );
+  if (!isSuccessResponse(result)) {
     return error(500);
   }
+
+  return {
+    tasksPaginated,
+  };
 };
 
 export const actions: Actions = {

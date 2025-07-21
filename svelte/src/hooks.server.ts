@@ -10,6 +10,7 @@ import * as Sentry from "@sentry/sveltekit";
 import type {
   Handle,
   HandleFetch,
+  HandleServerError,
   RequestEvent,
   ServerInit,
 } from "@sveltejs/kit";
@@ -208,7 +209,30 @@ export const handleFetch: HandleFetch = async ({ event, request, fetch }) => {
   return fetch(request);
 };
 
-export const handleError = Sentry.handleErrorWithSentry();
+export const handleError: HandleServerError = async ({
+  error,
+  event,
+  status,
+  message,
+}) => {
+  const errorID = crypto.randomUUID();
+
+  logger.error({ message });
+
+  Sentry.captureException(error, {
+    extra: {
+      message,
+      event,
+      errorID,
+      status,
+    },
+  });
+
+  return {
+    message: "Whoops!",
+    errorID,
+  };
+};
 
 export const handle: Handle = sequence(
   Sentry.sentryHandle(),

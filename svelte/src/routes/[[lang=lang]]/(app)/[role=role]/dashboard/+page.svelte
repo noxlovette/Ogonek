@@ -21,7 +21,6 @@
   };
 
   let { data }: { data: PageData } = $props();
-  console.log(data);
 </script>
 
 <HeaderEmbellish>
