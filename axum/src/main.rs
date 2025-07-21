@@ -4,6 +4,7 @@ use axum::{
     response::IntoResponse,
     routing::get,
 };
+use ogonek::api::{openapi::ApiDoc, routes::lesson_routes::lesson_routes};
 use ogonek::tools::logging::init_logging;
 use ogonek::tools::middleware::api_key::validate_api_key;
 use ogonek::{api::core::dashboard, schema::AppState};
@@ -14,8 +15,12 @@ use tower_http::{
     request_id::{MakeRequestUuid, PropagateRequestIdLayer, SetRequestIdLayer},
     timeout::TimeoutLayer,
 };
-
+use utoipa::OpenApi;
 const REQUEST_ID_HEADER: &str = "x-request-id";
+
+async fn serve_docs() -> axum::Json<utoipa::openapi::OpenApi> {
+    axum::Json(ApiDoc::openapi())
+}
 
 async fn run_server() -> anyhow::Result<()> {
     let _ = init_logging().await;
@@ -24,10 +29,7 @@ async fn run_server() -> anyhow::Result<()> {
     let cleanup_state = state.clone();
 
     let protected_routes = Router::new()
-        .nest(
-            "/lesson",
-            ogonek::api::routes::lesson_routes::lesson_routes(),
-        )
+        .nest("/lesson", lesson_routes())
         .nest("/user", ogonek::api::routes::user_routes::user_routes())
         .nest("/task", ogonek::api::routes::task_routes::task_routes())
         // .nest("/notes", ogonek::api::routes::notes_routes::notes_routes())
@@ -55,6 +57,7 @@ async fn run_server() -> anyhow::Result<()> {
         .merge(protected_routes)
         .route("/health", get(health_check))
         .fallback(handler_404)
+        .route("/api-docs/openapi.json", get(serve_docs))
         .with_state(state)
         .layer(
             ServiceBuilder::new()
@@ -90,6 +93,7 @@ async fn run_server() -> anyhow::Result<()> {
 }
 
 fn main() {
+    dotenvy::dotenv().ok();
     let _guard = sentry::init((
         std::env::var("SENTRY_DSN").expect("SENTRY_DSN must be set"),
         sentry::ClientOptions {

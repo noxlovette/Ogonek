@@ -29,12 +29,6 @@ pub async fn update_preferences(
     claims: Claims,
     Json(payload): Json<UserPreferencesUpdate>,
 ) -> Result<StatusCode, APIError> {
-    tracing::info!(
-        "Updating preferences for user {}: {}",
-        claims.sub,
-        serde_json::to_string(&payload).unwrap_or_default()
-    );
-
     preferences::upsert(&state.db, &claims.sub, &payload).await?;
 
     Ok(StatusCode::NO_CONTENT)

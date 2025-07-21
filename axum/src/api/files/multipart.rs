@@ -1,6 +1,6 @@
+use crate::api::error::APIError;
 use crate::auth::Claims;
-use crate::db::crud::files::file;
-use crate::error::AppError;
+use crate::db::crud::files::{file, multipart};
 use crate::models::{
     AbortMultipartRequest, CompleteMultipartRequest, InitUploadRequest, MultipartInitResultS3,
     MultipartUploadInit,
@@ -28,63 +28,33 @@ pub async fn init_multipart_upload(
     State(state): State<AppState>,
     claims: Claims,
     Json(payload): Json<InitUploadRequest>,
-) -> Result<Json<MultipartUploadInit>, AppError> {
+) -> Result<Json<MultipartUploadInit>, APIError> {
+    // Validate parent folder if provided
     if let Some(ref parent_id) = payload.parent_id {
         file::check_file_exists(&state.db, parent_id, &claims.sub).await?;
-        Some(parent_id)
-    } else {
-        None
-    };
-
-    let file_id = nanoid::nanoid!();
-    let file_extension = payload.file_name.split('.').next_back().unwrap_or("");
-    let s3_key = if payload.task_id.is_some() {
-        format!("tasks/{}/{}.{}", claims.sub, file_id, file_extension)
-    } else {
-        format!("user-files/{}/{}.{}", claims.sub, file_id, file_extension)
-    };
-
-    let path = format!("/{}", payload.file_name);
-
-    let mut tx = state.db.begin().await?;
-
-    sqlx::query!(
-        r#"
-        INSERT INTO files (
-            id, name, s3_key, path, mime_type, size, is_folder, parent_id, owner_id, visibility, upload_status
-        )
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
-        "#,
-        file_id,
-        payload.file_name,
-        s3_key,
-        path,
-        Some(payload.content_type.clone()),
-        payload.file_size,
-        false,
-        payload.parent_id,
-        claims.sub,
-        "private",
-        "pending" // Mark as pending until upload is complete
-    )
-    .execute(&mut *tx)
-    .await?;
-
-    if let Some(task_id) = payload.task_id {
-        sqlx::query!(
-            r#"
-            INSERT INTO task_files (task_id, file_id)
-            VALUES ($1, $2)
-            ON CONFLICT DO NOTHING
-            "#,
-            task_id,
-            file_id
-        )
-        .execute(&mut *tx)
-        .await?;
     }
 
-    tx.commit().await?;
+    let file_id = nanoid::nanoid!();
+    let file_extension = payload.file_name.rsplit('.').next().unwrap_or("bin"); // More idiomatic than split().next_back()
+
+    let s3_key = match payload.task_id.is_some() {
+        true => format!("tasks/{}/{}.{}", claims.sub, file_id, file_extension),
+        false => format!("user-files/{}/{}.{}", claims.sub, file_id, file_extension),
+    };
+
+    // Use the new CRUD function
+    multipart::create_multipart_file(
+        &state.db,
+        &file_id,
+        &payload.file_name,
+        &s3_key,
+        &payload.content_type,
+        payload.file_size,
+        payload.parent_id.as_deref(),
+        &claims.sub,
+        payload.task_id.as_deref(),
+    )
+    .await?;
 
     let MultipartInitResultS3 { upload_id, parts } =
         init_multipart_s3(&state, &s3_key, &payload.content_type, payload.total_parts).await?;
@@ -96,6 +66,7 @@ pub async fn init_multipart_upload(
         parts,
     }))
 }
+
 #[utoipa::path(
     post,
     path = "/s3/multipart/complete",
@@ -113,24 +84,19 @@ pub async fn complete_multipart_upload(
     State(state): State<AppState>,
     claims: Claims,
     Json(payload): Json<CompleteMultipartRequest>,
-) -> Result<StatusCode, AppError> {
+) -> Result<StatusCode, APIError> {
+    // Verify file ownership first
     file::check_file_exists(&state.db, &payload.file_id, &claims.sub).await?;
+
+    // Complete S3 upload
     complete_multipart_s3(&state, &payload.s3_key, &payload.upload_id, payload.parts).await?;
 
-    sqlx::query!(
-        r#"
-        UPDATE files
-        SET upload_status = 'complete'
-        WHERE id = $1 AND owner_id = $2
-        "#,
-        payload.file_id,
-        claims.sub
-    )
-    .execute(&state.db)
-    .await?;
+    // Mark as complete in DB
+    multipart::mark_upload_complete(&state.db, &payload.file_id, &claims.sub).await?;
 
     Ok(StatusCode::CREATED)
 }
+
 #[utoipa::path(
     post,
     path = "/s3/multipart/abort",
@@ -148,9 +114,17 @@ pub async fn abort_multipart_upload(
     State(state): State<AppState>,
     claims: Claims,
     Json(payload): Json<AbortMultipartRequest>,
-) -> Result<StatusCode, AppError> {
+) -> Result<StatusCode, APIError> {
+    // Verify file ownership
     file::check_file_exists(&state.db, &payload.file_id, &claims.sub).await?;
-    abort_multipart_s3(&state, &payload.s3_key, &payload.upload_id).await?;
+
+    // Abort S3 upload first (if this fails, we still want to clean up the DB record)
+    if let Err(e) = abort_multipart_s3(&state, &payload.s3_key, &payload.upload_id).await {
+        // Log the S3 error but continue with DB cleanup
+        tracing::warn!("Failed to abort S3 multipart upload: {:?}", e);
+    }
+
+    // Always clean up the DB record
     file::delete(&state.db, &payload.file_id, &claims.sub).await?;
 
     Ok(StatusCode::OK)

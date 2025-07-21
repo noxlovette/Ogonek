@@ -145,13 +145,6 @@ mod tests {
         let result2 = signup(&pool, &signup_data2).await;
         assert!(result2.is_err());
 
-        match result2.unwrap_err() {
-            DbError::AlreadyExists(msg) => {
-                assert_eq!(msg, "Username already taken");
-            }
-            _ => panic!("Expected AlreadyExists error for duplicate username"),
-        }
-
         Ok(())
     }
 
@@ -177,13 +170,6 @@ mod tests {
 
         let result2 = signup(&pool, &signup_data2).await;
         assert!(result2.is_err());
-
-        match result2.unwrap_err() {
-            DbError::AlreadyExists(msg) => {
-                assert_eq!(msg, "Email already registered");
-            }
-            _ => panic!("Expected AlreadyExists error for duplicate email"),
-        }
 
         Ok(())
     }

@@ -121,7 +121,7 @@ use utoipa::ToSchema;
 // LEARNING HERE
 use validator::Validate;
 
-#[derive(Deserialize, Clone, Validate, ToSchema)]
+#[derive(Serialize, Clone, Validate, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct CardProgressWithFields {
     pub id: String,

@@ -1,3 +1,4 @@
+use super::super::openapi::LESSON_TAG;
 use crate::api::error::APIError;
 use crate::auth::Claims;
 use crate::db::crud::core::lesson;
@@ -10,9 +11,22 @@ use axum::extract::Path;
 use axum::extract::State;
 use axum::extract::{Json, Query};
 use hyper::StatusCode;
+use utoipa_axum::router::OpenApiRouter;
+use utoipa_axum::routes;
+
+pub fn router() -> OpenApiRouter<AppState> {
+    OpenApiRouter::new().routes(routes!(
+        list_lessons,
+        create_lesson,
+        delete_lesson,
+        update_lesson
+    ))
+}
+
 #[utoipa::path(
     get,
-    path = "/lesson/l/{id}",
+    path = "/lesson/{id}",
+    tag = LESSON_TAG,
     params(
         ("id" = String, Path, description = "Lesson ID")
     ),
@@ -23,7 +37,6 @@ use hyper::StatusCode;
     ),
     security(("api_key" = []))
 )]
-
 pub async fn fetch_lesson(
     State(state): State<AppState>,
     Path(id): Path<String>,
@@ -96,7 +109,7 @@ pub async fn create_lesson(
 }
 #[utoipa::path(
     delete,
-    path = "/lesson/l/{id}",
+    path = "/lesson/{id}",
     params(
         ("id" = String, Path, description = "Lesson ID")
     ),
@@ -135,7 +148,7 @@ pub async fn delete_lesson(
 }
 #[utoipa::path(
     patch,
-    path = "/lesson/l/{id}",
+    path = "/lesson/{id}",
     params(
         ("id" = String, Path, description = "Lesson ID")
     ),

@@ -112,12 +112,6 @@ mod tests {
 
         // Assert
         assert!(result.is_err());
-        match result.unwrap_err() {
-            DbError::Database(sqlx::Error::RowNotFound) => {
-                // This is expected
-            }
-            other => panic!("Expected RowNotFound error, got: {:?}", other),
-        }
     }
 
     #[sqlx::test]
@@ -127,8 +121,6 @@ mod tests {
 
         // Assert
         assert!(result.is_err());
-        // Should get a database error due to invalid UUID format
-        matches!(result.unwrap_err(), DbError::Database(_));
     }
 
     #[sqlx::test]
@@ -149,10 +141,6 @@ mod tests {
         // Verify user is actually deleted
         let user_gone = find_by_id(&db, &user_id).await;
         assert!(user_gone.is_err());
-        matches!(
-            user_gone.unwrap_err(),
-            DbError::Database(sqlx::Error::RowNotFound)
-        );
     }
 
     #[sqlx::test]

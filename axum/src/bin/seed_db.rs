@@ -1,9 +1,9 @@
 // src/bin/seed_db.rs
 use anyhow::Result;
+use chrono::Utc;
 use dotenvy::dotenv;
 use ogonek::{auth::password::hash_password, db::init::init_db, models::ProfileUpdate};
 use sqlx::PgPool;
-use chrono::{DateTime, Utc}
 
 #[tokio::main]
 async fn main() -> Result<()> {
