@@ -9,6 +9,19 @@ use hyper::StatusCode;
 
 use crate::models::users::UserUpdate;
 
+#[utoipa::path(
+    get,
+    path = "/inviter",
+    params(
+        ("invite" = Option<String>, Query, description = "Invite token")
+    ),
+    responses(
+        (status = 200, description = "Inviter details retrieved", body = User),
+        (status = 401, description = "Unauthorized"),
+        (status = 400, description = "Invalid invite token")
+    ),
+    security(("api_key" = []))
+)]
 pub async fn fetch_inviter(
     State(state): State<AppState>,
     query: Query<InviterQuery>,
@@ -18,6 +31,15 @@ pub async fn fetch_inviter(
 
     Ok(Json(inviter))
 }
+#[utoipa::path(
+    get,
+    path = "/me",
+    responses(
+        (status = 200, description = "User details retrieved", body = User),
+        (status = 401, description = "Unauthorized"),
+    ),
+    security(("api_key" = []))
+)]
 pub async fn fetch_me(
     State(state): State<AppState>,
     claims: Claims,
@@ -26,7 +48,15 @@ pub async fn fetch_me(
 
     Ok(Json(user))
 }
-
+#[utoipa::path(
+    delete,
+    path = "/user",
+    responses(
+        (status = 204, description = "User deleted successfully"),
+        (status = 401, description = "Unauthorized")
+    ),
+    security(("api_key" = []))
+)]
 pub async fn delete_user(
     State(state): State<AppState>,
     claims: Claims,
@@ -35,7 +65,17 @@ pub async fn delete_user(
 
     Ok(StatusCode::NO_CONTENT)
 }
-
+#[utoipa::path(
+    patch,
+    path = "/user",
+    request_body = UserUpdate,
+    responses(
+        (status = 204, description = "User updated successfully"),
+        (status = 400, description = "Bad request"),
+        (status = 401, description = "Unauthorized")
+    ),
+    security(("api_key" = []))
+)]
 pub async fn update_user(
     State(state): State<AppState>,
     claims: Claims,

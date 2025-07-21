@@ -1,5 +1,6 @@
 use chrono::{DateTime, Utc};
 use serde::Serialize;
+use utoipa::ToSchema;
 
 pub mod activity;
 pub mod seen;
@@ -53,7 +54,7 @@ impl ActionType {
     }
 }
 
-#[derive(Debug, Serialize, sqlx::FromRow)]
+#[derive(ToSchema, Serialize, sqlx::FromRow)]
 #[serde(rename_all = "camelCase")]
 pub struct ActivityLog {
     pub model_type: String,

@@ -1,14 +1,14 @@
 use crate::api::error::APIError;
 use crate::auth::Claims;
 use crate::db::crud::core::task::{
-    add_files, count, create, delete, find_all, find_assignee, find_by_id, find_recent, toggle,
-    update,
+    add_files, count, create, delete, find_all, find_assignee, find_by_id, toggle, update,
 };
 use crate::db::crud::files::file::fetch_files_task;
 
 use crate::db::crud::tracking::activity::log_activity;
 use crate::db::crud::tracking::seen::delete_seen;
 use crate::db::crud::tracking::{ActionType, ModelType, seen};
+use crate::models::TaskFull;
 use crate::models::meta::{CreationId, PaginatedResponse};
 use crate::models::tasks::{
     TaskCreate, TaskFileBind, TaskPaginationParams, TaskSmall, TaskUpdate, TaskWithFilesResponse,
@@ -19,9 +19,19 @@ use axum::extract::{Json, Path, Query, State};
 use hyper::StatusCode;
 
 /// One Task
-#[utoipa::path(get, path="/task/{id}", responses(
-    (status = 200, description = "Task found successfully", body = TaskWithFilesResponse)
-))]
+#[utoipa::path(
+    get,
+    path = "/task/t/{id}",
+    params(
+        ("id" = String, Path, description = "Task ID")
+    ),
+    responses(
+        (status = 200, description = "Task with files retrieved", body = TaskWithFilesResponse),
+        (status = 404, description = "Task not found"),
+        (status = 401, description = "Unauthorized")
+    ),
+    security(("api_key" = []))
+)]
 pub async fn fetch_task(
     State(state): State<AppState>,
     Path(id): Path<String>,
@@ -33,7 +43,23 @@ pub async fn fetch_task(
 
     Ok(Json(TaskWithFilesResponse { task, files }))
 }
-
+#[utoipa::path(
+    get,
+    path = "/task",
+    params(
+        ("page" = Option<u32>, Query, description = "Page number"),
+        ("per_page" = Option<u32>, Query, description = "Items per page"),
+        ("search" = Option<String>, Query, description = "Search term"),
+        ("assignee" = Option<String>, Query, description = "Filter by assignee"),
+        ("completed" = Option<bool>, Query, description = "Filter by completion status"),
+        ("priority" = Option<i32>, Query, description = "Filter by priority")
+    ),
+    responses(
+        (status = 200, description = "Tasks retrieved successfully", body = PaginatedResponse<TaskFull>),
+        (status = 401, description = "Unauthorized")
+    ),
+    security(("api_key" = []))
+)]
 pub async fn list_tasks(
     State(state): State<AppState>,
     claims: Claims,
@@ -49,7 +75,17 @@ pub async fn list_tasks(
         per_page: params.limit(),
     }))
 }
-
+#[utoipa::path(
+    post,
+    path = "/task",
+    request_body = TaskCreate,
+    responses(
+        (status = 201, description = "Task created successfully", body = CreationId),
+        (status = 400, description = "Bad request"),
+        (status = 401, description = "Unauthorized")
+    ),
+    security(("api_key" = []))
+)]
 pub async fn create_task(
     State(state): State<AppState>,
     claims: Claims,
@@ -75,7 +111,19 @@ pub async fn create_task(
 
     Ok(Json(id))
 }
-
+#[utoipa::path(
+    delete,
+    path = "/task/t/{id}",
+    params(
+        ("id" = String, Path, description = "Task ID")
+    ),
+    responses(
+        (status = 204, description = "Task deleted successfully"),
+        (status = 404, description = "Task not found"),
+        (status = 401, description = "Unauthorized")
+    ),
+    security(("api_key" = []))
+)]
 pub async fn delete_task(
     State(state): State<AppState>,
     Path(id): Path<String>,
@@ -132,6 +180,20 @@ pub async fn toggle_task(
     .await?;
     Ok(StatusCode::NO_CONTENT)
 }
+#[utoipa::path(
+    patch,
+    path = "/task/t/{id}",
+    params(
+        ("id" = String, Path, description = "Task ID")
+    ),
+    request_body = TaskUpdate,
+    responses(
+        (status = 204, description = "Task updated successfully"),
+        (status = 404, description = "Task not found"),
+        (status = 401, description = "Unauthorized")
+    ),
+    security(("api_key" = []))
+)]
 pub async fn update_task(
     State(state): State<AppState>,
     Path(id): Path<String>,

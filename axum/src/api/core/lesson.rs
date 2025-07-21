@@ -10,15 +10,19 @@ use axum::extract::Path;
 use axum::extract::State;
 use axum::extract::{Json, Query};
 use hyper::StatusCode;
-
-pub async fn fetch_recent_lessons(
-    State(state): State<AppState>,
-    claims: Claims,
-) -> Result<Json<Vec<LessonSmall>>, APIError> {
-    let lessons = lesson::find_recent(&state.db, &claims.sub).await?;
-
-    Ok(Json(lessons))
-}
+#[utoipa::path(
+    get,
+    path = "/lesson/l/{id}",
+    params(
+        ("id" = String, Path, description = "Lesson ID")
+    ),
+    responses(
+        (status = 200, description = "Lesson retrieved successfully", body = LessonFull),
+        (status = 404, description = "Lesson not found"),
+        (status = 401, description = "Unauthorized")
+    ),
+    security(("api_key" = []))
+)]
 
 pub async fn fetch_lesson(
     State(state): State<AppState>,
@@ -29,6 +33,22 @@ pub async fn fetch_lesson(
     tracking::seen::mark_as_seen(&state.db, &claims.sub, &id, tracking::ModelType::Lesson).await?;
     Ok(Json(lesson))
 }
+
+#[utoipa::path(
+    get,
+    path = "/lesson",
+    params(
+        ("page" = Option<u32>, Query, description = "Page number"),
+        ("per_page" = Option<u32>, Query, description = "Items per page"),
+        ("search" = Option<String>, Query, description = "Search term"),
+        ("assignee" = Option<String>, Query, description = "Filter by assignee")
+    ),
+    responses(
+        (status = 200, description = "Lessons retrieved successfully", body = PaginatedResponse<LessonFull>),
+        (status = 401, description = "Unauthorized")
+    ),
+    security(("api_key" = []))
+)]
 pub async fn list_lessons(
     State(state): State<AppState>,
     Query(params): Query<PaginationParams>,
@@ -44,7 +64,17 @@ pub async fn list_lessons(
         per_page: params.limit(),
     }))
 }
-
+#[utoipa::path(
+    post,
+    path = "/lesson",
+    request_body = LessonCreate,
+    responses(
+        (status = 201, description = "Lesson created successfully", body = CreationId),
+        (status = 400, description = "Bad request"),
+        (status = 401, description = "Unauthorized")
+    ),
+    security(("api_key" = []))
+)]
 pub async fn create_lesson(
     State(state): State<AppState>,
     claims: Claims,
@@ -64,7 +94,19 @@ pub async fn create_lesson(
 
     Ok(Json(id))
 }
-
+#[utoipa::path(
+    delete,
+    path = "/lesson/l/{id}",
+    params(
+        ("id" = String, Path, description = "Lesson ID")
+    ),
+    responses(
+        (status = 204, description = "Lesson deleted successfully"),
+        (status = 404, description = "Lesson not found"),
+        (status = 401, description = "Unauthorized")
+    ),
+    security(("api_key" = []))
+)]
 pub async fn delete_lesson(
     State(state): State<AppState>,
     Path(id): Path<String>,
@@ -91,7 +133,20 @@ pub async fn delete_lesson(
 
     Ok(StatusCode::NO_CONTENT)
 }
-
+#[utoipa::path(
+    patch,
+    path = "/lesson/l/{id}",
+    params(
+        ("id" = String, Path, description = "Lesson ID")
+    ),
+    request_body = LessonUpdate,
+    responses(
+        (status = 204, description = "Lesson updated successfully"),
+        (status = 404, description = "Lesson not found"),
+        (status = 401, description = "Unauthorized")
+    ),
+    security(("api_key" = []))
+)]
 pub async fn update_lesson(
     State(state): State<AppState>,
     Path(id): Path<String>,

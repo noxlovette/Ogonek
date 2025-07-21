@@ -1,9 +1,10 @@
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use sqlx::prelude::FromRow;
+use utoipa::ToSchema;
 
 /// Pagination for lessons
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, ToSchema)]
 pub struct PaginationParams {
     pub page: Option<i64>,
     pub per_page: Option<i64>,
@@ -27,7 +28,7 @@ impl PaginationParams {
 }
 
 /// Mini-lesson
-#[derive(Serialize, Debug, FromRow)]
+#[derive(Serialize, Debug, FromRow, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct LessonSmall {
     pub id: String,
@@ -39,7 +40,7 @@ pub struct LessonSmall {
 }
 
 /// Grown-up lesson
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Debug, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct LessonFull {
     pub id: String,
@@ -55,7 +56,7 @@ pub struct LessonFull {
     pub assignee_name: String,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct LessonCreate {
     pub title: String,
@@ -64,7 +65,7 @@ pub struct LessonCreate {
     pub assignee: Option<String>,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct LessonUpdate {
     pub id: Option<String>,

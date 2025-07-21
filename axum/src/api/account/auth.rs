@@ -10,7 +10,16 @@ use crate::schema::AppState;
 use axum::extract::{Json, Query, State};
 use hyper::StatusCode;
 use validator::Validate;
-
+#[utoipa::path(
+    post,
+    path = "/auth/signup",
+    request_body = SignUpPayload, 
+    responses(
+        (status = 201, description = "User registered successfully"),
+        (status = 400, description = "Invalid registration data"),
+        (status = 409, description = "User already exists")
+    )
+)]
 pub async fn signup(
     State(state): State<AppState>,
     Json(payload): Json<SignUpPayload>,
@@ -32,7 +41,15 @@ pub async fn signup(
 
     Ok(Json(id))
 }
-
+#[utoipa::path(
+    post,
+    path = "/auth/signin",
+    request_body = AuthPayload, 
+    responses(
+        (status = 200, description = "Authentication successful", body = TokenPair),
+        (status = 401, description = "Invalid credentials")
+    )
+)]
 pub async fn authorize(
     State(state): State<AppState>,
     Json(payload): Json<AuthPayload>,
@@ -58,6 +75,15 @@ pub async fn authorize(
 }
 
 /// Receives the refresh token as json, gets it, then decodes, finds the user id, and generates a new access token
+#[utoipa::path(
+    post,
+    path = "/auth/refresh",
+    request_body = RefreshTokenPayload,
+    responses(
+        (status = 200, description = "Token refreshed", body = RefreshTokenResponse),
+        (status = 401, description = "Invalid refresh token")
+    )
+)]
 pub async fn refresh(
     State(state): State<AppState>,
     Json(request): Json<RefreshTokenPayload>,
@@ -94,7 +120,16 @@ pub async fn generate_invite_link(
         ))
     }
 }
-
+#[utoipa::path(
+    post,
+    path = "/auth/bind",
+    request_body = BindPayload,
+    responses(
+        (status = 204, description = "Student bound to teacher successfully"),
+        (status = 400, description = "Invalid bind data"),
+        (status = 401, description = "Invalid invite token")
+    )
+)]
 pub async fn bind_student_to_teacher(
     State(state): State<AppState>,
     Json(payload): Json<BindPayload>,

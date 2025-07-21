@@ -1,6 +1,7 @@
 use crate::auth::error::PasswordHashError;
 use sqlx::error::Error as SqlxError;
 use thiserror::Error;
+use utoipa::ToSchema;
 
 #[derive(Error, Debug)]
 pub enum DbError {

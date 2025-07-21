@@ -8,7 +8,18 @@ use crate::schema::AppState;
 use axum::extract::{Json, Path, State};
 
 use axum::http::StatusCode;
-
+#[utoipa::path(
+    post,
+    path = "/student/{id}",
+    params(
+        ("id" = String, Path, description = "Student ID")
+    ),
+    responses(
+        (status = 201, description = "Student relationship created"),
+        (status = 401, description = "Unauthorized")
+    ),
+    security(("api_key" = []))
+)]
 pub async fn upsert_student(
     claims: Claims,
     State(state): State<AppState>,
@@ -18,7 +29,19 @@ pub async fn upsert_student(
 
     Ok(StatusCode::CREATED)
 }
-
+#[utoipa::path(
+    delete,
+    path = "/student/{id}",
+    params(
+        ("id" = String, Path, description = "Student ID")
+    ),
+    responses(
+        (status = 204, description = "Student relationship removed"),
+        (status = 404, description = "Student not found"),
+        (status = 401, description = "Unauthorized")
+    ),
+    security(("api_key" = []))
+)]
 pub async fn remove_student(
     State(state): State<AppState>,
     Path(id): Path<String>,
@@ -28,7 +51,20 @@ pub async fn remove_student(
 
     Ok(StatusCode::NO_CONTENT)
 }
-
+#[utoipa::path(
+    patch,
+    path = "/student/{id}",
+    params(
+        ("id" = String, Path, description = "Student ID")
+    ),
+    request_body = UpdateStudentRequest,
+    responses(
+        (status = 204, description = "Student updated successfully"),
+        (status = 404, description = "Student not found"),
+        (status = 401, description = "Unauthorized")
+    ),
+    security(("api_key" = []))
+)]
 pub async fn update_student(
     claims: Claims,
     State(state): State<AppState>,
@@ -39,7 +75,19 @@ pub async fn update_student(
 
     Ok(StatusCode::NO_CONTENT)
 }
-
+#[utoipa::path(
+    get,
+    path = "/student/{id}",
+    params(
+        ("id" = String, Path, description = "Student ID")
+    ),
+    responses(
+        (status = 200, description = "Student details retrieved", body = CompositeStudent),
+        (status = 404, description = "Student not found"),
+        (status = 401, description = "Unauthorized")
+    ),
+    security(("api_key" = []))
+)]
 pub async fn fetch_student(
     claims: Claims,
     State(state): State<AppState>,
@@ -57,7 +105,15 @@ pub async fn fetch_student(
         tasks,
     }))
 }
-
+#[utoipa::path(
+    get,
+    path = "/student",
+    responses(
+        (status = 200, description = "Students list retrieved", body = Vec<Student>),
+        (status = 401, description = "Unauthorized")
+    ),
+    security(("api_key" = []))
+)]
 pub async fn list_students(
     claims: Claims,
     State(state): State<AppState>,

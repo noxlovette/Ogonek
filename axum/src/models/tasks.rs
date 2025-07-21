@@ -30,7 +30,7 @@ impl TaskPaginationParams {
     }
 }
 
-#[derive(Serialize, ToSchema, Deserialize, Debug, Validate)]
+#[derive(Serialize, ToSchema, Debug, Validate)]
 #[serde(rename_all = "camelCase")]
 pub struct TaskFull {
     pub id: String,
@@ -47,7 +47,7 @@ pub struct TaskFull {
     pub assignee_name: String,
 }
 
-#[derive(Serialize, Deserialize, Debug, FromRow)]
+#[derive(Serialize, Debug, FromRow, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct TaskSmall {
     pub id: String,
@@ -59,7 +59,7 @@ pub struct TaskSmall {
     pub due_date: Option<DateTime<Utc>>,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Deserialize, Debug, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct TaskCreate {
     pub title: String,
@@ -69,7 +69,7 @@ pub struct TaskCreate {
     pub assignee: Option<String>,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct TaskUpdate {
     pub title: Option<String>,
@@ -85,7 +85,7 @@ pub struct TaskFileBind {
     pub file_ids: Vec<String>,
 }
 
-#[derive(ToSchema, Serialize, Deserialize, Debug)]
+#[derive(ToSchema, Serialize, Debug)]
 pub struct TaskWithFilesResponse {
     pub task: TaskFull,
     pub files: Vec<FileSmall>,
