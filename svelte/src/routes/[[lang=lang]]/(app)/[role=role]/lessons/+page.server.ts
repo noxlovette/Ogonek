@@ -1,36 +1,31 @@
 import logger from "$lib/logger";
 import { handleApiResponse, isSuccessResponse } from "$lib/server";
 import type { Lesson, NewResponse, PaginatedResponse } from "$lib/types";
-import { error, fail, redirect, type Actions } from "@sveltejs/kit";
+import { fail, redirect, type Actions } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async ({ fetch, url }) => {
-  try {
-    const page = url.searchParams.get("page") || "1";
-    const per_page = url.searchParams.get("per_page") || "50";
-    const search = url.searchParams.get("search") || "";
-    const assignee = url.searchParams.get("assignee") || "";
+  const page = url.searchParams.get("page") || "1";
+  const per_page = url.searchParams.get("per_page") || "50";
+  const search = url.searchParams.get("search") || "";
+  const assignee = url.searchParams.get("assignee") || "";
 
-    const params = new URLSearchParams();
-    params.append("page", page);
-    params.append("per_page", per_page);
+  const params = new URLSearchParams();
+  params.append("page", page);
+  params.append("per_page", per_page);
 
-    if (search) params.append("search", search);
-    if (assignee) params.append("assignee", assignee);
+  if (search) params.append("search", search);
+  if (assignee) params.append("assignee", assignee);
 
-    const apiUrl = `/axum/lesson?${params.toString()}`;
+  const apiUrl = `/axum/lesson?${params.toString()}`;
 
-    const lessonsPaginated = await fetch(apiUrl).then(
-      (res) => res.json() as Promise<PaginatedResponse<Lesson>>,
-    );
+  const lessonsPaginated = await fetch(apiUrl).then(
+    (res) => res.json() as Promise<PaginatedResponse<Lesson>>,
+  );
 
-    return {
-      lessonsPaginated,
-    };
-  } catch (err: any) {
-    logger.error({ err }, "Error loading tasks svelte-side");
-    return error(500);
-  }
+  return {
+    lessonsPaginated,
+  };
 };
 
 export const actions: Actions = {

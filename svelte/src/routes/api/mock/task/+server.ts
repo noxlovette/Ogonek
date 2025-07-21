@@ -1,29 +1,9 @@
 import logger from "$lib/logger";
+import { tasks } from "$lib/server/mock";
 import type { PaginatedResponse, TaskSmall } from "$lib/types";
 import type { RequestHandler } from "@sveltejs/kit";
 
 export const GET: RequestHandler = async () => {
-  const tasks: TaskSmall[] = [
-    {
-      id: "task1",
-      title: "Murrrrrr",
-      priority: 3,
-      completed: false,
-      assigneeName: "Kotya",
-      seen: true,
-      dueDate: "2025-07-15T23:59:59Z",
-    },
-    {
-      id: "task2",
-      title: "Kotya Assigned",
-      priority: 2,
-      completed: false,
-      assigneeName: "Kotya",
-      seen: true,
-      dueDate: "2025-07-17T23:59:59Z",
-    },
-  ];
-
   const paginatedResponse: PaginatedResponse<TaskSmall> = {
     data: tasks,
     perPage: 3,

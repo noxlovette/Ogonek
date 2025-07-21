@@ -10,8 +10,6 @@
     CheckCircle2,
     Dot,
     ListTodo,
-    NotebookPen,
-    SquarePen,
     Trash2,
     WholeWord,
   } from "lucide-svelte";
@@ -44,7 +42,10 @@
     {#if activity.action.startsWith("new")}
       <BookOpen strokeWidth="1" class="size-5" />
     {:else if activity.action.startsWith("updated")}
-      <NotebookPen strokeWidth="1" class="size-5 dark:text-orange-400" />
+      <BookOpen
+        strokeWidth="1"
+        class="size-5 text-orange-600 dark:text-orange-400"
+      />
     {:else if activity.action.startsWith("deleted")}
       <Trash2 strokeWidth="1" class="size-5 text-red-600 dark:text-red-400" />
     {/if}
@@ -52,7 +53,10 @@
     {#if activity.action.startsWith("new")}
       <ListTodo strokeWidth="1" class="size-5" />
     {:else if activity.action.startsWith("updated")}
-      <SquarePen strokeWidth="1" class="size-5 dark:text-orange-400" />
+      <ListTodo
+        strokeWidth="1"
+        class="size-5 text-orange-600 dark:text-orange-400"
+      />
     {:else if activity.action.startsWith("deleted")}
       <Trash2 strokeWidth="1" class=" size-5 text-red-600 dark:text-red-400" />
     {:else if activity.action.startsWith("completed")}
@@ -61,7 +65,12 @@
   {:else if activity.modelType.startsWith("deck")}
     {#if activity.action.startsWith("new")}
       <WholeWord strokeWidth="1" class="size-5" />
-    {:else if activity.action.startsWith("updated")}{:else if activity.action.startsWith("deleted")}
+    {:else if activity.action.startsWith("updated")}
+      <WholeWord
+        strokeWidth="1"
+        class="size-5 text-orange-600 dark:text-orange-400"
+      ></WholeWord>
+    {:else if activity.action.startsWith("deleted")}
       <Trash2 strokeWidth="1" class="size-5 text-red-600 dark:text-red-400"
       ></Trash2>
     {:else if activity.action.startsWith("subscribed")}

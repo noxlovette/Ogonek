@@ -57,8 +57,7 @@ export const actions = {
     if (!response.ok) {
       const errorData: App.Error = await response.json();
       logger.error({ errorData }, "Error updating task");
-      const { code, message } = errorData;
-      return error(code || 400, message);
+      return error(500);
     }
 
     if (studentTelegramId && initialAssignee !== assignee) {
