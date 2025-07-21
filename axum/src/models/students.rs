@@ -1,12 +1,9 @@
 use super::cards_decks::DeckSmall;
 use super::lessons::LessonSmall;
 use super::tasks::TaskSmall;
+use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
-use serde_with::serde_as;
-use time::OffsetDateTime;
-use time::format_description::well_known::Rfc3339;
 
-#[serde_with::serde_as]
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct TeacherStudent {
@@ -15,8 +12,7 @@ pub struct TeacherStudent {
     pub status: String,
     pub telegram_id: Option<String>,
     pub markdown: Option<String>,
-    #[serde_as(as = "Rfc3339")]
-    pub joined: OffsetDateTime,
+    pub joined: DateTime<Utc>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]

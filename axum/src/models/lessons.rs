@@ -1,7 +1,6 @@
+use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use sqlx::prelude::FromRow;
-use time::OffsetDateTime;
-use time::format_description::well_known::Rfc3339;
 
 /// Pagination for lessons
 #[derive(Debug, Deserialize)]
@@ -28,7 +27,6 @@ impl PaginationParams {
 }
 
 /// Mini-lesson
-#[serde_with::serde_as]
 #[derive(Serialize, Debug, FromRow)]
 #[serde(rename_all = "camelCase")]
 pub struct LessonSmall {
@@ -37,12 +35,10 @@ pub struct LessonSmall {
     pub topic: String,
     pub assignee_name: String,
     pub seen: Option<bool>,
-    #[serde_as(as = "Rfc3339")]
-    pub created_at: OffsetDateTime,
+    pub created_at: DateTime<Utc>,
 }
 
 /// Grown-up lesson
-#[serde_with::serde_as]
 #[derive(Serialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct LessonFull {
@@ -52,10 +48,10 @@ pub struct LessonFull {
     pub markdown: String,
     pub assignee: String,
     pub created_by: String,
-    #[serde_as(as = "Rfc3339")]
-    pub created_at: OffsetDateTime,
-    #[serde_as(as = "Rfc3339")]
-    pub updated_at: OffsetDateTime,
+
+    pub created_at: DateTime<Utc>,
+
+    pub updated_at: DateTime<Utc>,
     pub assignee_name: String,
 }
 
@@ -80,7 +76,7 @@ pub struct LessonUpdate {
 }
 
 // NOT IMPLEMENTED
-#[serde_with::serde_as]
+
 #[derive(Debug, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct StudentNote {
@@ -89,10 +85,8 @@ pub struct StudentNote {
     pub user_id: String,
     pub is_bookmarked: Option<bool>,
     pub notes: Option<String>,
-    #[serde_as(as = "Option<Rfc3339>")]
-    pub created_at: Option<OffsetDateTime>,
-    #[serde_as(as = "Option<Rfc3339>")]
-    pub updated_at: Option<OffsetDateTime>,
+    pub created_at: Option<DateTime<Utc>>,
+    pub updated_at: Option<DateTime<Utc>>,
 }
 
 #[derive(Deserialize)]

@@ -6,7 +6,7 @@ use crate::schema::AppState;
 use crate::tools::sm2::SM2Calculator;
 use axum::extract::{Json, Path, State};
 use axum::http::StatusCode;
-use time::{Duration, OffsetDateTime};
+use chrono::{Duration, Utc};
 
 pub async fn fetch_due_cards(
     State(state): State<AppState>,
@@ -47,8 +47,8 @@ pub async fn update_card_progress(
         review_count: new_review_count,
         ease_factor: new_ease,
         interval: new_interval,
-        last_reviewed: OffsetDateTime::now_utc(),
-        due_date: OffsetDateTime::now_utc() + Duration::days(new_interval.into()),
+        last_reviewed: Utc::now(),
+        due_date: Utc::now() + Duration::days(new_interval.into()),
     };
     words::learning::update(&state.db, &card_id, &claims.sub, update).await?;
 

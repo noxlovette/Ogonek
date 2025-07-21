@@ -1,6 +1,6 @@
 [package]
 name = "ogonek"
-version = "1.5.2"
+version = "1.5.3"
 edition = "2024"
 
 
@@ -12,7 +12,6 @@ sqlx = { version = "0.8.2", features = [
     "runtime-tokio",
     "tls-rustls-ring",
     "postgres",
-    "time",
     "uuid",
     "migrate",
     "chrono"] }
@@ -46,3 +45,5 @@ aws-config = "1.6.0"
 sentry = {version ="0.40", features = ["tracing"]}
 atty = "0.2.14"
 sentry-tower = {version = "0.38.1", features = ["axum", "axum-matched-path", "http"]}
+utoipa = {version ="5.4.0", features = ["chrono"]}
+utoipa-axum = "0.2.0"

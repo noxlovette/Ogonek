@@ -357,8 +357,8 @@ mod tests {
     use super::*;
     use crate::models::{TaskCreate, TaskPaginationParams, TaskUpdate};
     use crate::tests::create_test_user;
+    use chrono::Utc;
     use sqlx::PgPool;
-    use time::OffsetDateTime;
 
     // Helper function to create test files
     async fn create_test_file(db: &PgPool, user_id: &str) -> String {
@@ -394,7 +394,7 @@ mod tests {
         let task_create = TaskCreate {
             title: "test task".to_string(),
             markdown: format!("# {}\nTest task content", "test"),
-            due_date: Some(OffsetDateTime::now_utc()),
+            due_date: Some(Utc::now()),
             priority: Some(1),
             assignee: None,
         };
@@ -575,7 +575,7 @@ mod tests {
             markdown: Some("# Updated\nThis task has been updated.".to_string()),
             priority: Some(1),
             completed: Some(true),
-            due_date: Some(OffsetDateTime::now_utc()),
+            due_date: Some(Utc::now()),
             assignee: None,
         };
 

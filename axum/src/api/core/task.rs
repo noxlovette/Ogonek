@@ -18,17 +18,10 @@ use crate::schema::AppState;
 use axum::extract::{Json, Path, Query, State};
 use hyper::StatusCode;
 
-/// Three mini-tasks
-pub async fn fetch_recent_tasks(
-    State(state): State<AppState>,
-    claims: Claims,
-) -> Result<Json<Vec<TaskSmall>>, APIError> {
-    let tasks = find_recent(&state.db, &claims.sub).await?;
-
-    Ok(Json(tasks))
-}
-
 /// One Task
+#[utoipa::path(get, path="/task/{id}", responses(
+    (status = 200, description = "Task found successfully", body = TaskWithFilesResponse)
+))]
 pub async fn fetch_task(
     State(state): State<AppState>,
     Path(id): Path<String>,

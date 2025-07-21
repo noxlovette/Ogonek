@@ -1,7 +1,6 @@
+use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use sqlx::prelude::FromRow;
-use time::OffsetDateTime;
-use time::format_description::well_known::Rfc3339;
 
 #[derive(Deserialize)]
 pub struct DeckFilterParams {
@@ -20,7 +19,7 @@ pub struct LearnDataDashboard {
     pub stats: SimpleStats,
     pub due_cards: Option<i64>,
 }
-#[serde_with::serde_as]
+
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct Card {
@@ -29,8 +28,8 @@ pub struct Card {
     pub back: String,
     pub media_url: Option<String>,
     pub deck_id: String,
-    #[serde_as(as = "Rfc3339")]
-    pub created_at: OffsetDateTime,
+
+    pub created_at: DateTime<Utc>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -67,7 +66,6 @@ pub struct DeckWithCardsUpdate {
     pub cards: Vec<CardUpdate>,
 }
 
-#[serde_with::serde_as]
 #[derive(Serialize, Debug, FromRow)]
 #[serde(rename_all = "camelCase")]
 pub struct DeckFull {
@@ -78,8 +76,8 @@ pub struct DeckFull {
     pub assignee: Option<String>,
     pub is_subscribed: Option<bool>,
     pub created_by: String,
-    #[serde_as(as = "Rfc3339")]
-    pub created_at: OffsetDateTime,
+
+    pub created_at: DateTime<Utc>,
 }
 
 #[derive(Serialize, Debug, FromRow)]
@@ -130,8 +128,8 @@ pub struct CardProgressWithFields {
     pub card_id: String,
     #[validate(range(min = 0))]
     pub review_count: i32,
-    pub last_reviewed: Option<OffsetDateTime>,
-    pub due_date: Option<OffsetDateTime>,
+    pub last_reviewed: Option<DateTime<Utc>>,
+    pub due_date: Option<DateTime<Utc>>,
     #[validate(range(min = 1.3, max = 5.0))]
     pub ease_factor: f64,
     #[validate(range(min = 1))]
@@ -149,8 +147,8 @@ pub struct CardProgress {
     pub card_id: String,
     #[validate(range(min = 0))]
     pub review_count: i32,
-    pub last_reviewed: Option<OffsetDateTime>,
-    pub due_date: Option<OffsetDateTime>,
+    pub last_reviewed: Option<DateTime<Utc>>,
+    pub due_date: Option<DateTime<Utc>>,
     #[validate(range(min = 1.3, max = 5.0))]
     pub ease_factor: f64,
     #[validate(range(min = 1))]
@@ -160,10 +158,10 @@ pub struct CardProgress {
 #[derive(Serialize, Deserialize)]
 pub struct UpdateCardProgress {
     pub review_count: i32,
-    pub due_date: OffsetDateTime,
+    pub due_date: DateTime<Utc>,
     pub ease_factor: f64,
     pub interval: i32,
-    pub last_reviewed: OffsetDateTime,
+    pub last_reviewed: DateTime<Utc>,
 }
 
 #[derive(Debug, Deserialize, Validate)]

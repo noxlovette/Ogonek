@@ -1,4 +1,4 @@
-use sqlx::types::time::OffsetDateTime;
+use sqlx::types::chrono::{DateTime, Utc};
 
 use serde::{Deserialize, Serialize};
 
@@ -19,8 +19,8 @@ pub struct FileMetadata {
     pub parent_id: Option<String>,
     pub owner_id: String,
     pub visibility: String,
-    pub created_at: OffsetDateTime,
-    pub updated_at: OffsetDateTime,
+    pub created_at: DateTime<Utc>,
+    pub updated_at: DateTime<Utc>,
 }
 #[derive(Deserialize)]
 #[serde(rename_all = "camelCase")]

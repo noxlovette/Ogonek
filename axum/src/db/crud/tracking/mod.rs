@@ -1,6 +1,5 @@
+use chrono::{DateTime, Utc};
 use serde::Serialize;
-use time::OffsetDateTime;
-use time::format_description::well_known::Rfc3339;
 
 pub mod activity;
 pub mod seen;
@@ -53,13 +52,13 @@ impl ActionType {
         }
     }
 }
-#[serde_with::serde_as]
+
 #[derive(Debug, Serialize, sqlx::FromRow)]
 #[serde(rename_all = "camelCase")]
 pub struct ActivityLog {
     pub model_type: String,
     pub model_id: String,
     pub action: String,
-    #[serde_as(as = "Option<Rfc3339>")]
-    pub created_at: Option<OffsetDateTime>,
+
+    pub created_at: Option<DateTime<Utc>>,
 }

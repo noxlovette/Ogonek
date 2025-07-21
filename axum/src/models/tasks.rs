@@ -1,9 +1,8 @@
 use super::files::FileSmall;
+use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
-use serde_with::serde_as;
 use sqlx::prelude::FromRow;
-use time::OffsetDateTime;
-use time::format_description::well_known::Rfc3339;
+use utoipa::ToSchema;
 use validator::Validate;
 
 #[derive(Debug, Deserialize)]
@@ -31,8 +30,7 @@ impl TaskPaginationParams {
     }
 }
 
-#[serde_with::serde_as]
-#[derive(Serialize, Deserialize, Debug, Validate)]
+#[derive(Serialize, ToSchema, Deserialize, Debug, Validate)]
 #[serde(rename_all = "camelCase")]
 pub struct TaskFull {
     pub id: String,
@@ -41,18 +39,14 @@ pub struct TaskFull {
     #[validate(range(min = 1, max = 3))]
     pub priority: i16,
     pub completed: bool,
-    #[serde_as(as = "Rfc3339")]
-    pub created_at: OffsetDateTime,
-    #[serde_as(as = "Rfc3339")]
-    pub updated_at: OffsetDateTime,
-    #[serde_as(as = "Option<Rfc3339>")]
-    pub due_date: Option<OffsetDateTime>,
+    pub created_at: DateTime<Utc>,
+    pub updated_at: DateTime<Utc>,
+    pub due_date: Option<DateTime<Utc>>,
     pub created_by: String,
     pub assignee: String,
     pub assignee_name: String,
 }
 
-#[serde_with::serde_as]
 #[derive(Serialize, Deserialize, Debug, FromRow)]
 #[serde(rename_all = "camelCase")]
 pub struct TaskSmall {
@@ -62,23 +56,19 @@ pub struct TaskSmall {
     pub completed: bool,
     pub assignee_name: String,
     pub seen: Option<bool>,
-    #[serde_as(as = "Option<Rfc3339>")]
-    pub due_date: Option<OffsetDateTime>,
+    pub due_date: Option<DateTime<Utc>>,
 }
 
-#[serde_with::serde_as]
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct TaskCreate {
     pub title: String,
     pub markdown: String,
     pub priority: Option<i16>,
-    #[serde_as(as = "Option<Rfc3339>")]
-    pub due_date: Option<OffsetDateTime>,
+    pub due_date: Option<DateTime<Utc>>,
     pub assignee: Option<String>,
 }
 
-#[serde_with::serde_as]
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct TaskUpdate {
@@ -86,8 +76,7 @@ pub struct TaskUpdate {
     pub markdown: Option<String>,
     pub priority: Option<i16>,
     pub completed: Option<bool>,
-    #[serde_as(as = "Option<Rfc3339>")]
-    pub due_date: Option<OffsetDateTime>,
+    pub due_date: Option<DateTime<Utc>>,
     pub assignee: Option<String>,
 }
 
@@ -96,7 +85,7 @@ pub struct TaskFileBind {
     pub file_ids: Vec<String>,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(ToSchema, Serialize, Deserialize, Debug)]
 pub struct TaskWithFilesResponse {
     pub task: TaskFull,
     pub files: Vec<FileSmall>,

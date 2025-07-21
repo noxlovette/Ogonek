@@ -176,8 +176,8 @@ pub async fn reset(db: &PgPool, deck_id: &str, user_id: &str) -> Result<(), DbEr
 mod tests {
     use super::*;
     use crate::tests::create_test_user;
+    use chrono::{DateTime, Utc};
     use sqlx::PgPool;
-    use time::OffsetDateTime;
 
     // Helper function to create a test deck
     async fn create_test_deck(db: &PgPool, user_id: &str, name: &str) -> String {
@@ -216,10 +216,10 @@ mod tests {
         user_id: &str,
         card_id: &str,
         review_count: i32,
-        due_date: Option<OffsetDateTime>,
+        due_date: Option<DateTime<Utc>>,
     ) -> String {
         let progress_id = nanoid::nanoid!();
-        let due_date = due_date.unwrap_or_else(|| OffsetDateTime::now_utc());
+        let due_date = due_date.unwrap_or_else(|| Utc::now());
 
         sqlx::query!(
             r#"
@@ -247,8 +247,8 @@ mod tests {
         let card2_id = create_test_card(&db, &deck_id, "Front 2", "Back 2").await;
 
         // Create one due card and one not due card
-        let past_date = OffsetDateTime::now_utc() - time::Duration::hours(1);
-        let future_date = OffsetDateTime::now_utc() + time::Duration::hours(1);
+        let past_date = Utc::now() - chrono::Duration::hours(1);
+        let future_date = Utc::now() + chrono::Duration::hours(1);
 
         create_card_progress(&db, &user_id, &card1_id, 1, Some(past_date)).await;
         create_card_progress(&db, &user_id, &card2_id, 1, Some(future_date)).await;
@@ -291,8 +291,8 @@ mod tests {
         let card2_id = create_test_card(&db, &deck_id, "Card 2", "Back 2").await;
 
         // Create cards with different due dates (both in the past)
-        let earlier_date = OffsetDateTime::now_utc() - time::Duration::hours(2);
-        let later_date = OffsetDateTime::now_utc() - time::Duration::hours(1);
+        let earlier_date = Utc::now() - chrono::Duration::hours(2);
+        let later_date = Utc::now() - chrono::Duration::hours(1);
 
         create_card_progress(&db, &user_id, &card1_id, 1, Some(later_date)).await;
         create_card_progress(&db, &user_id, &card2_id, 1, Some(earlier_date)).await;
@@ -314,7 +314,7 @@ mod tests {
         let card_id = create_test_card(&db, &deck_id, "Future Card", "Future Back").await;
 
         // Create card with future due date
-        let future_date = OffsetDateTime::now_utc() + time::Duration::hours(1);
+        let future_date = Utc::now() + chrono::Duration::hours(1);
         create_card_progress(&db, &user_id, &card_id, 1, Some(future_date)).await;
 
         // Test
@@ -366,8 +366,8 @@ mod tests {
         let card_id = create_test_card(&db, &deck_id, "Test Card", "Test Back").await;
         let progress_id = create_card_progress(&db, &user_id, &card_id, 0, None).await;
 
-        let new_due_date = OffsetDateTime::now_utc() + time::Duration::days(3);
-        let last_reviewed = OffsetDateTime::now_utc();
+        let new_due_date = Utc::now() + chrono::Duration::days(3);
+        let last_reviewed = Utc::now();
 
         let update_card = UpdateCardProgress {
             review_count: 3,
@@ -391,8 +391,8 @@ mod tests {
             updated_progress
                 .due_date
                 .expect("due time should be set")
-                .unix_timestamp(),
-            new_due_date.unix_timestamp()
+                .timestamp(),
+            new_due_date.timestamp()
         );
     }
 
