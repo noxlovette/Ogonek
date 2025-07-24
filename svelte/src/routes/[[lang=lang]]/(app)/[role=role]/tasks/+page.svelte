@@ -29,7 +29,6 @@
   import { m } from "$lib/paraglide/messages";
 
   const { data } = $props();
-  const { students } = data;
   const role = page.params.role;
 
   const taskConfig: TableConfig<Task> = {
@@ -106,7 +105,7 @@
 {#await data.tasksPaginated}
   {#if role === "s"}
     <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
-      {#each Array(6) as _, index (index)}
+      {#each Array(6) as index (index)}
         <LoadingCard />
       {/each}
     </div>

@@ -1,5 +1,4 @@
 <script lang="ts">
-  import type { PageData } from "./$types";
   import {
     H1,
     H3,
@@ -15,7 +14,7 @@
   import { page } from "$app/state";
   import type { TableConfig, DeckSmall } from "$lib/types";
   import { ArrowBigRight, PlusCircle, ShoppingBag } from "lucide-svelte";
-  import { decks, m } from "$lib/paraglide/messages";
+  import { m } from "$lib/paraglide/messages";
   import {
     searchTerm,
     pageSize,
@@ -118,7 +117,7 @@
 {#await data.decksResponse}
   {#if role === "s"}
     <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
-      {#each Array(6) as _, index (index)}
+      {#each Array(6) as index (index)}
         <LoadingCard />
       {/each}
     </div>

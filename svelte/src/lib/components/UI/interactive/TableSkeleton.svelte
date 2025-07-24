@@ -6,7 +6,7 @@
 
 <div class="bg-default ring-default overflow-hidden rounded-lg">
   <div class="grid grid-cols-5 gap-4 bg-stone-200 px-6 py-4 dark:bg-stone-800">
-    {#each Array(columns) as _, i (i)}
+    {#each Array(columns) as i (i)}
       <div
         class="h-4 animate-pulse rounded bg-stone-50 dark:bg-stone-950"
         style="width:{i === 0 ? '75%' : i === columns - 1 ? '50%' : '66%'};"
@@ -14,13 +14,13 @@
     {/each}
   </div>
   <div class="divide-y divide-stone-100 dark:divide-stone-700">
-    {#each Array(rows) as _, rowIndex (rowIndex)}
+    {#each Array(rows) as rowIndex (rowIndex)}
       <div class="px-6 py-4 transition-colors">
         <div
           class="grid grid-cols-5
             items-center gap-4"
         >
-          {#each Array(columns) as _, colIndex (colIndex)}
+          {#each Array(columns) as colIndex (colIndex)}
             {@const widths = ["w-full", "w-5/6", "w-4/5", "w-3/4", "w-2/3"]}
             {@const randomWidth =
               widths[Math.floor(Math.random() * widths.length)]}

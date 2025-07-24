@@ -26,11 +26,9 @@
   import { goto } from "$app/navigation";
   import { PlusCircle } from "lucide-svelte";
   import { m } from "$lib/paraglide/messages.js";
-  import { datetime } from "$lib/paraglide/registry.js";
   import LoadingCard from "$lib/components/cards/LoadingCard.svelte";
 
   let { data } = $props();
-  let { students } = $derived(data);
 
   let role = page.params.role;
   let href = role === "t" ? "/t/lessons/l" : `/s/lessons/l`;
@@ -92,7 +90,7 @@
 {#await data.lessonsPaginated}
   {#if role === "s"}
     <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
-      {#each Array(6) as _, index (index)}
+      {#each Array(6) as index (index)}
         <LoadingCard />
       {/each}
     </div>

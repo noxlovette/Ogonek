@@ -27,7 +27,6 @@
     pageSize = 20,
   }: Props = $props();
 
-  const totalPages = $derived(Math.ceil(total / pageSize));
   const startItem = $derived((currentPage - 1) * pageSize + 1);
   const endItem = $derived(Math.min(currentPage * pageSize, total));
 
@@ -41,9 +40,6 @@
     }
     goto(`${href}/${item.id}`);
   }
-
-  // Generate skeleton rows for loading state
-  const skeletonRows = Array(pageSize).fill(null);
 </script>
 
 <div class="w-full space-y-4">
