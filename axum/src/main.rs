@@ -40,7 +40,6 @@ async fn run_server() -> anyhow::Result<()> {
         .nest("/s3", s3_routes())
         .nest("/files", file_routes())
         .nest("/learn", learn_routes()) // assuming you have this
-        .route("/dashboard", get(dashboard::fetch_dashboard))
         .layer(axum::middleware::from_fn(validate_api_key));
 
     // Public routes (no auth required)

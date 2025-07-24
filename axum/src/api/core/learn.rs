@@ -99,8 +99,7 @@ pub async fn fetch_due_cards(
 
 /// Updates the learn progress on a card
 #[utoipa::path(
-    get,
-    
+    put,
     path = "/{id}",
     tag = LEARN_TAG, params(
         ("id" = String, Path, description = "Card ID")

@@ -38,7 +38,7 @@ pub async fn fetch_inviter(
 #[utoipa::path(
     get,
    tag = USER_TAG,  
-    path = "/me",
+    path = "/",
     responses(
         (status = 200, description = "User details retrieved", body = User),
         (status = 401, description = "Unauthorized"),
