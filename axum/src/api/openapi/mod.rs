@@ -7,6 +7,7 @@ pub mod auth;
 pub mod deck;
 pub mod learn;
 pub mod lesson;
+pub mod s3;
 pub mod task;
 pub mod user;
 
@@ -40,6 +41,7 @@ impl Modify for SecurityAddon {
         (path = "/api/v1/users", api = user::UserApi),
         (path = "/api/v1/auth", api = auth::AuthApi),
         (path = "/api/v1/learn", api = learn::LearnApi),
+        (path = "/api/v1/s3", api = s3::S3Api)
     ),
     modifiers(&SecurityAddon),
     servers(

@@ -1,3 +1,4 @@
+use crate::api::USER_TAG;
 use crate::api::error::APIError;
 use crate::auth::Claims;
 use crate::db::crud::account::student;
@@ -14,7 +15,7 @@ use axum::http::StatusCode;
     params(
         ("id" = String, Path, description = "Student ID")
     ),
-    responses(
+    tag = USER_TAG, responses(
         (status = 201, description = "Student relationship created"),
         (status = 401, description = "Unauthorized")
     ),
@@ -35,7 +36,7 @@ pub async fn upsert_student(
     params(
         ("id" = String, Path, description = "Student ID")
     ),
-    responses(
+    tag = USER_TAG, responses(
         (status = 204, description = "Student relationship removed"),
         (status = 404, description = "Student not found"),
         (status = 401, description = "Unauthorized")
@@ -58,7 +59,7 @@ pub async fn remove_student(
         ("id" = String, Path, description = "Student ID")
     ),
     request_body = UpdateStudentRequest,
-    responses(
+    tag = USER_TAG, responses(
         (status = 204, description = "Student updated successfully"),
         (status = 404, description = "Student not found"),
         (status = 401, description = "Unauthorized")
@@ -81,7 +82,7 @@ pub async fn update_student(
     params(
         ("id" = String, Path, description = "Student ID")
     ),
-    responses(
+    tag = USER_TAG, responses(
         (status = 200, description = "Student details retrieved", body = CompositeStudent),
         (status = 404, description = "Student not found"),
         (status = 401, description = "Unauthorized")
@@ -108,7 +109,7 @@ pub async fn fetch_student(
 #[utoipa::path(
     get,
     path = "/student",
-    responses(
+    tag = USER_TAG, responses(
         (status = 200, description = "Students list retrieved", body = Vec<Student>),
         (status = 401, description = "Unauthorized")
     ),

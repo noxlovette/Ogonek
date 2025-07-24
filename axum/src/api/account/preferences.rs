@@ -33,12 +33,3 @@ pub async fn update_preferences(
 
     Ok(StatusCode::NO_CONTENT)
 }
-
-// Convenience endpoint to just get the auto_subscribe setting
-pub async fn get_auto_subscribe(
-    State(state): State<AppState>,
-    claims: Claims,
-) -> Result<Json<bool>, APIError> {
-    let prefs = preferences::get_or_create_defaults(&state.db, &claims.sub).await?;
-    Ok(Json(prefs.auto_subscribe))
-}

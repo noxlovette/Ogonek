@@ -2,7 +2,7 @@ use sqlx::types::chrono::{DateTime, Utc};
 
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
-
+#[derive(Serialize, ToSchema)]
 pub struct MultipartInitResultS3 {
     pub upload_id: String,
     pub parts: Vec<PartUploadUrl>,
@@ -36,7 +36,6 @@ pub struct InitUploadRequest {
 
 #[derive(Serialize, ToSchema)]
 #[serde(rename_all = "camelCase")]
-
 pub struct PartUploadUrl {
     pub part_number: i32,
     pub url: String,

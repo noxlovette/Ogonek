@@ -5,11 +5,11 @@ use axum::{
     routing::get,
 };
 use ogonek::api::openapi::ApiDoc;
+use ogonek::api::routes::*;
+use ogonek::tools::daemons::task_cleanup::daily_cleanup;
 use ogonek::tools::logging::init_logging;
 use ogonek::tools::middleware::api_key::validate_api_key;
 use ogonek::{api::core::dashboard, schema::AppState};
-use ogonek::{api::routes::preference_routes, tools::daemons::task_cleanup::daily_cleanup};
-use tower::ServiceBuilder;
 use tower_http::{
     cors::CorsLayer,
     request_id::{MakeRequestUuid, PropagateRequestIdLayer, SetRequestIdLayer},
@@ -31,28 +31,15 @@ async fn run_server() -> anyhow::Result<()> {
         daily_cleanup(cleanup_state).await;
     });
 
-    // Build API routes with proper versioning
     let api_v1 = Router::new()
-        .nest(
-            "/lessons",
-            ogonek::api::routes::lesson_routes::lesson_routes(),
-        )
-        .nest("/users", ogonek::api::routes::user_routes::user_routes())
-        .nest("/tasks", ogonek::api::routes::task_routes::task_routes())
-        .nest(
-            "/students",
-            ogonek::api::routes::student_routes::student_routes(),
-        )
-        .nest("/auth", ogonek::api::routes::auth_routes::auth_routes())
-        .nest(
-            "/profile",
-            ogonek::api::routes::profile_routes::profile_routes(),
-        )
-        .nest("/decks", ogonek::api::routes::deck_routes::deck_routes())
-        .nest("/s3", ogonek::api::routes::s3_routes::s3_routes())
-        .nest("/files", ogonek::api::routes::file_routes::file_routes())
-        .nest("/preferences", preference_routes::preferences_routes())
-        .nest("/learn", ogonek::api::routes::learn_routes::learn_routes()) // assuming you have this
+        .nest("/auth", auth_routes())
+        .nest("/users", user_routes())
+        .nest("/lessons", lesson_routes())
+        .nest("/tasks", task_routes())
+        .nest("/decks", deck_routes())
+        .nest("/s3", s3_routes())
+        .nest("/files", file_routes())
+        .nest("/learn", learn_routes()) // assuming you have this
         .route("/dashboard", get(dashboard::fetch_dashboard))
         .layer(axum::middleware::from_fn(validate_api_key));
 

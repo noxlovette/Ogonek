@@ -1,3 +1,4 @@
+use crate::api::USER_TAG;
 use crate::api::error::APIError;
 use crate::auth::Claims;
 use crate::db::crud::account::{preferences, student, user};
@@ -11,6 +12,15 @@ use axum::extract::State;
 /// This data populates the sidebar with badges,
 /// the dashboard view with data,
 /// and the stores for profile and user
+#[utoipa::path(
+    get, tag = USER_TAG,
+    path = "/dashboard",
+    responses(
+        (status = 200, description = "Dashboard data retrieved", body=DashboardData),
+        (status = 401, description = "Unauthorized")
+    ),
+    security(("api_key" = []))
+)]
 pub async fn fetch_dashboard(
     State(state): State<AppState>,
     claims: Claims,

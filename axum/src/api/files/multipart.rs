@@ -11,10 +11,14 @@ use axum::Json;
 use axum::extract::State;
 use axum::http::StatusCode;
 
+use crate::api::TASK_TAG;
+
+/// Multipart upload init endpoint
 #[utoipa::path(
     post,
-    path = "/s3/multipart/init",
+    path = "/init",
     request_body = InitUploadRequest,
+    tag = TASK_TAG, 
     responses(
         (status = 200, description = "Multipart upload initialized", body = MultipartUploadInit),
         (status = 400, description = "Bad request"),
@@ -66,10 +70,11 @@ pub async fn init_multipart_upload(
         parts,
     }))
 }
-
+/// Complete a part of the upload
 #[utoipa::path(
     post,
-    path = "/s3/multipart/complete",
+    path = "/complete",
+    tag = TASK_TAG, 
     request_body = CompleteMultipartRequest,
     responses(
         (status = 201, description = "Upload completed successfully"),
@@ -96,10 +101,11 @@ pub async fn complete_multipart_upload(
 
     Ok(StatusCode::CREATED)
 }
-
+/// Cancel multipart upload
 #[utoipa::path(
     post,
-    path = "/s3/multipart/abort",
+    tag = TASK_TAG, 
+    path = "/abort",
     request_body = AbortMultipartRequest,
     responses(
         (status = 200, description = "Upload aborted successfully"),
