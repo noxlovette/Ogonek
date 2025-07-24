@@ -11,7 +11,7 @@
   import { enhance } from "$app/forms";
   import { enhanceForm } from "$lib/utils";
   import { page } from "$app/state";
-  import type { TableConfig, Deck } from "$lib/types";
+  import type { TableConfig, DeckSmall } from "$lib/types";
   import { ArrowBigRight, PlusCircle, ShoppingBag } from "lucide-svelte";
   import { m } from "$lib/paraglide/messages";
   import {
@@ -38,7 +38,7 @@
     );
   });
 
-  const deckConfig: TableConfig<Deck> = {
+  const deckConfig: TableConfig<DeckSmall> = {
     columns: [
       { key: "name", label: m.title() },
       {
@@ -51,20 +51,13 @@
             : m.simple_east_crocodile_spark(),
       },
       {
-        key: "visibility",
-        label: m.visibility(),
-        formatter: (value: string | boolean | undefined) => {
-          switch (String(value)) {
-            case "public":
-              return "Public";
-            case "private":
-              return "Private";
-            case "assigned":
-              return "Assigned";
-            default:
-              return String(value);
-          }
-        },
+        key: "assigneeName",
+        label: m.assignee(),
+      },
+      {
+        key: "isSubscribed",
+        label: m.stout_royal_macaw_fear(),
+        formatter: (value: string | boolean | undefined) => (value ? "○" : "◉"),
       },
     ],
   };

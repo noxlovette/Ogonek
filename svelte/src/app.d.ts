@@ -20,7 +20,7 @@ declare global {
       paraglide: ParaglideLocals<AvailableLanguageTag>;
     }
 
-    // interface PageData {}
+    //interface PageData {}
     interface PageState {
       showImportModal?: boolean;
       searchOverlay?: boolean;

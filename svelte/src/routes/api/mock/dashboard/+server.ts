@@ -82,7 +82,7 @@ export const GET = async () => {
       name: "Michael",
       username: "michael_developer",
       email: "hahaha@icloud.com",
-      role: "student",
+      role: "teacher",
     },
     profile: {
       profile: {
