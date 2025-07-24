@@ -2,7 +2,7 @@ use crate::api::error::APIError;
 use crate::auth::Claims;
 use crate::db::crud::account::{preferences, student, user};
 use crate::db::crud::tracking::{ModelType, activity, seen};
-use crate::db::crud::{account, core, words};
+use crate::db::crud::{account, core, flashcards};
 use crate::models::{BadgeWrapper, DashboardData, LearnDataDashboard};
 use crate::schema::AppState;
 use axum::extract::Json;
@@ -25,11 +25,11 @@ pub async fn fetch_dashboard(
 
     let task_count = seen::get_seen_badge(&state.db, &claims.sub, ModelType::Task).await?;
     let lesson_count = seen::get_seen_badge(&state.db, &claims.sub, ModelType::Lesson).await?;
-    let decks = words::deck::find_recent(&state.db, &claims.sub).await?;
+    let decks = flashcards::deck::find_recent(&state.db, &claims.sub).await?;
     let deck_count = seen::get_seen_badge(&state.db, &claims.sub, ModelType::Deck).await?;
     let activity = activity::get_activity(&state.db, &claims.sub).await?;
-    let due_cards = words::learning::fetch_due_count(&state.db, &claims.sub).await?;
-    let stats = words::learning::get_simple_stats(&state.db, &claims.sub).await?;
+    let due_cards = flashcards::learning::fetch_due_count(&state.db, &claims.sub).await?;
+    let stats = flashcards::learning::get_simple_stats(&state.db, &claims.sub).await?;
     let preferences = preferences::get_or_create_defaults(&state.db, &claims.sub).await?;
 
     Ok(Json(DashboardData {

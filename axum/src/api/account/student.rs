@@ -2,7 +2,7 @@ use crate::api::error::APIError;
 use crate::auth::Claims;
 use crate::db::crud::account::student;
 use crate::db::crud::core::{lesson, task};
-use crate::db::crud::words::deck;
+use crate::db::crud::flashcards::deck;
 use crate::models::{CompositeStudent, Student, UpdateStudentRequest};
 use crate::schema::AppState;
 use axum::extract::{Json, Path, State};

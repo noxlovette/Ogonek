@@ -1,7 +1,7 @@
 use crate::api::error::APIError;
 use crate::auth::Claims;
+use crate::db::crud::flashcards;
 use crate::db::crud::tracking::{ActionType, ModelType, log_activity};
-use crate::db::crud::words;
 use crate::models::{CardProgressWithFields, ReviewPayload, UpdateCardProgress};
 use crate::schema::AppState;
 use crate::tools::sm2::SM2Calculator;
@@ -27,7 +27,7 @@ pub async fn subscribe_to_deck(
     claims: Claims,
     Path(id): Path<String>,
 ) -> Result<StatusCode, APIError> {
-    words::subscribe::subscribe(&state.db, &id, &claims.sub).await?;
+    flashcards::subscribe::subscribe(&state.db, &id, &claims.sub).await?;
     log_activity(
         &state.db,
         &claims.sub,
@@ -58,7 +58,7 @@ pub async fn unsubscribe_from_deck(
     claims: Claims,
     Path(id): Path<String>,
 ) -> Result<StatusCode, APIError> {
-    words::subscribe::unsubscribe(&state.db, &id, &claims.sub).await?;
+    flashcards::subscribe::unsubscribe(&state.db, &id, &claims.sub).await?;
     log_activity(
         &state.db,
         &claims.sub,
@@ -83,7 +83,7 @@ pub async fn fetch_due_cards(
     State(state): State<AppState>,
     claims: Claims,
 ) -> Result<Json<Vec<CardProgressWithFields>>, APIError> {
-    let due = words::learning::fetch_due(&state.db, &claims.sub).await?;
+    let due = flashcards::learning::fetch_due(&state.db, &claims.sub).await?;
 
     Ok(Json(due))
 }
@@ -108,7 +108,7 @@ pub async fn update_card_progress(
 ) -> Result<StatusCode, APIError> {
     let calculator = SM2Calculator::default();
 
-    let current_progress = words::learning::find_by_id(&state.db, &id, &claims.sub).await?;
+    let current_progress = flashcards::learning::find_by_id(&state.db, &id, &claims.sub).await?;
 
     let (new_ease, new_interval, new_review_count) = calculator.calculate_next_review(
         payload.quality,
@@ -124,7 +124,7 @@ pub async fn update_card_progress(
         last_reviewed: Utc::now(),
         due_date: Utc::now() + Duration::days(new_interval.into()),
     };
-    words::learning::update(&state.db, &id, &claims.sub, update).await?;
+    flashcards::learning::update(&state.db, &id, &claims.sub, update).await?;
 
     Ok(StatusCode::OK)
 }
@@ -146,7 +146,7 @@ pub async fn reset_deck_progress(
     claims: Claims,
     Path(deck_id): Path<String>,
 ) -> Result<StatusCode, APIError> {
-    words::learning::reset(&state.db, &deck_id, &claims.sub).await?;
+    flashcards::learning::reset(&state.db, &deck_id, &claims.sub).await?;
 
     Ok(StatusCode::OK)
 }

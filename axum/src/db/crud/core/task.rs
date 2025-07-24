@@ -435,6 +435,17 @@ mod tests {
     }
 
     #[sqlx::test]
+    async fn test_create_task_succes_with_defaults(db: PgPool) {
+        let user_id = create_test_user(&db, "testuser", "test@example.com").await;
+
+        let result = create_with_defaults(&db, &user_id).await;
+        assert!(result.is_ok());
+
+        let task_id = result.unwrap().id;
+        assert!(!task_id.is_empty());
+    }
+
+    #[sqlx::test]
     async fn test_find_by_id_as_creator(db: PgPool) {
         let creator_id = create_test_user(&db, "creator", "creator@test.com").await;
         let assignee_id = create_test_user(&db, "assignee", "assignee@test.com").await;

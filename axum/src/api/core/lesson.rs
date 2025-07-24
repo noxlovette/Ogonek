@@ -5,12 +5,12 @@ use crate::db::crud::core::lesson;
 use crate::db::crud::tracking::activity::log_activity;
 use crate::db::crud::tracking::{self, ActionType, ModelType};
 use crate::models::meta::{CreationId, PaginatedResponse};
-use crate::models::{LessonCreate, LessonFull, LessonSmall, LessonUpdate, PaginationParams};
+use crate::models::{LessonFull, LessonSmall, LessonUpdate, PaginationParams};
 use crate::schema::AppState;
 use axum::extract::Path;
 use axum::extract::State;
 use axum::extract::{Json, Query};
-use hyper::StatusCode;
+use axum::http::StatusCode;
 use utoipa_axum::router::OpenApiRouter;
 use utoipa_axum::routes;
 
@@ -23,6 +23,7 @@ pub fn router() -> OpenApiRouter<AppState> {
     ))
 }
 
+/// Fetches lesson by id
 #[utoipa::path(
     get,
     path = "/lesson/{id}",
@@ -46,7 +47,7 @@ pub async fn fetch_lesson(
     tracking::seen::mark_as_seen(&state.db, &claims.sub, &id, tracking::ModelType::Lesson).await?;
     Ok(Json(lesson))
 }
-
+/// Lessons belonging to a user
 #[utoipa::path(
     get,
     path = "/lesson",
@@ -78,11 +79,12 @@ pub async fn list_lessons(
         per_page: params.limit(),
     }))
 }
+
+/// Creates a lesson with user defaults specified elsewhere
 #[utoipa::path(
     post,
     path = "/lesson",
     tag = LESSON_TAG,
-    request_body = LessonCreate,
     responses(
         (status = 201, description = "Lesson created successfully", body = CreationId),
         (status = 400, description = "Bad request"),
@@ -93,15 +95,14 @@ pub async fn list_lessons(
 pub async fn create_lesson(
     State(state): State<AppState>,
     claims: Claims,
-    Json(payload): Json<LessonCreate>,
 ) -> Result<Json<CreationId>, APIError> {
-    let id = lesson::create(&state.db, &claims.sub, payload).await?;
+    let id = lesson::create_with_defaults(&state.db, &claims.sub).await?;
 
     log_activity(
         &state.db,
         &claims.sub,
         &id.id,
-        ModelType::Deck,
+        ModelType::Lesson,
         ActionType::Create,
         None,
     )
@@ -109,6 +110,7 @@ pub async fn create_lesson(
 
     Ok(Json(id))
 }
+/// Deletes lesson
 #[utoipa::path(
     delete,
     path = "/lesson/{id}",
@@ -149,6 +151,8 @@ pub async fn delete_lesson(
 
     Ok(StatusCode::NO_CONTENT)
 }
+
+/// Updates lesson
 #[utoipa::path(
     patch,
     tag = LESSON_TAG,

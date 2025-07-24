@@ -1,24 +1,22 @@
 use crate::api::error::APIError;
+use crate::api::openapi::DECK_TAG;
 use crate::auth::Claims;
+use crate::db::crud::flashcards::{self, deck};
 use crate::db::crud::tracking::activity::log_activity;
 use crate::db::crud::tracking::seen::{delete_seen, insert_as_unseen, mark_as_seen};
 use crate::db::crud::tracking::{self, ActionType, ModelType};
-use crate::db::crud::words::{self, deck};
 use crate::models::{
-    CreationId, DeckCreate, DeckFilterParams, DeckFull, DeckPublic, DeckSmall, DeckUpdate,
-    DeckWithCardsAndSubscription, DeckWithCardsUpdate,
+    CreationId, DeckFilterParams, DeckFull, DeckPublic, DeckSmall, DeckWithCardsAndSubscription,
+    DeckWithCardsUpdate,
 };
 use crate::schema::AppState;
-use axum::extract::Json;
-use axum::extract::Path;
-use axum::extract::Query;
-use axum::extract::State;
+use axum::extract::{Json, Path, Query, State};
 use axum::http::StatusCode;
-
+/// Creates a new Deck using user defaults
 #[utoipa::path(
     post,
+    tag = DECK_TAG,
     path = "/deck",
-    request_body = DeckCreate,
     responses(
         (status = 201, description = "Deck created successfully", body = CreationId),
         (status = 400, description = "Bad request"),
@@ -29,9 +27,8 @@ use axum::http::StatusCode;
 pub async fn create_deck(
     State(state): State<AppState>,
     claims: Claims,
-    Json(payload): Json<DeckCreate>,
 ) -> Result<Json<CreationId>, APIError> {
-    let id = words::deck::create(&state.db, &claims.sub, payload).await?;
+    let id = flashcards::deck::create_with_defaults(&state.db, &claims.sub).await?;
 
     log_activity(
         &state.db,
@@ -46,8 +43,10 @@ pub async fn create_deck(
     Ok(Json(id))
 }
 
+/// One deck
 #[utoipa::path(
     get,
+    tag = DECK_TAG,
     path = "/deck/{id}",
     params(
         ("id" = String, Path, description = "Deck ID")
@@ -64,10 +63,11 @@ pub async fn fetch_deck(
     claims: Claims,
     Path(id): Path<String>,
 ) -> Result<Json<Option<DeckWithCardsAndSubscription>>, APIError> {
-    let deck = words::deck::find_by_id(&state.db, &id, &claims.sub).await?;
-    let is_subscribed = words::subscribe::check_subscription(&state.db, &id, &claims.sub).await?;
+    let deck = flashcards::deck::find_by_id(&state.db, &id, &claims.sub).await?;
+    let is_subscribed =
+        flashcards::subscribe::check_subscription(&state.db, &id, &claims.sub).await?;
 
-    let cards = words::card::find_all(&state.db, &id).await?;
+    let cards = flashcards::card::find_all(&state.db, &id).await?;
 
     mark_as_seen(&state.db, &claims.sub, &id, ModelType::Deck).await?;
 
@@ -86,8 +86,11 @@ pub async fn fetch_deck(
         is_subscribed,
     })))
 }
+
+/// Decks the user has access to
 #[utoipa::path(
     get,
+    tag = DECK_TAG,
     path = "/deck",
     responses(
         (status = 200, description = "User decks retrieved"),
@@ -101,11 +104,14 @@ pub async fn fetch_deck_list(
     Query(params): Query<DeckFilterParams>,
     claims: Claims,
 ) -> Result<Json<Vec<DeckSmall>>, APIError> {
-    let decks = words::deck::find_all(&state.db, &claims.sub, &params).await?;
+    let decks = flashcards::deck::find_all(&state.db, &claims.sub, &params).await?;
     Ok(Json(decks))
 }
+
+/// Only public decks
 #[utoipa::path(
     get,
+    tag = DECK_TAG,
     path = "/deck/public",
     responses(
         (status = 200, description = "Public decks retrieved"),
@@ -117,12 +123,16 @@ pub async fn fetch_deck_list(
 pub async fn fetch_deck_list_public(
     State(state): State<AppState>,
 ) -> Result<Json<Vec<DeckPublic>>, APIError> {
-    let decks = words::deck::find_all_public(&state.db).await?;
+    let decks = flashcards::deck::find_all_public(&state.db).await?;
 
     Ok(Json(decks))
 }
+
+/// Updates a deck
 #[utoipa::path(
     patch,
+    tag = DECK_TAG,
+
     path = "/deck/{id}",
     params(
         ("id" = String, Path, description = "Deck ID")
@@ -144,12 +154,12 @@ pub async fn update_deck(
     let current_assignee = deck::find_assignee(&state.db, &id, &claims.sub).await?;
     let new_assignee = payload.deck.assignee.clone();
 
-    words::deck::update(&state.db, &id, &claims.sub, payload).await?;
+    flashcards::deck::update(&state.db, &id, &claims.sub, payload).await?;
 
     if new_assignee != current_assignee {
         if let Some(old_user) = current_assignee {
             delete_seen(&state.db, &old_user, &id, ModelType::Deck).await?;
-            words::subscribe::unsubscribe(&state.db, &id, &old_user).await?;
+            flashcards::subscribe::unsubscribe(&state.db, &id, &old_user).await?;
             log_activity(
                 &state.db,
                 &claims.sub,
@@ -163,7 +173,7 @@ pub async fn update_deck(
 
         if let Some(new_user) = new_assignee {
             insert_as_unseen(&state.db, &new_user, &id, ModelType::Deck).await?;
-            words::subscribe::subscribe(&state.db, &id, &new_user).await?;
+            flashcards::subscribe::subscribe(&state.db, &id, &new_user).await?;
             log_activity(
                 &state.db,
                 &claims.sub,
@@ -189,8 +199,10 @@ pub async fn update_deck(
     Ok(StatusCode::NO_CONTENT)
 }
 
+/// Deletes a deck
 #[utoipa::path(
     delete,
+    tag=DECK_TAG,
     path = "/deck/{id}",
     params(
         ("id" = String, Path, description = "Deck ID")
@@ -210,7 +222,7 @@ pub async fn delete_deck(
     let mut target_id: Option<String> = None;
     let assignee = deck::find_assignee(&state.db, &id, &claims.sub).await?;
 
-    words::deck::delete(&state.db, &id, &claims.sub).await?;
+    flashcards::deck::delete(&state.db, &id, &claims.sub).await?;
     if let Some(user) = assignee {
         tracking::seen::delete_seen(&state.db, &user, &id, ModelType::Deck).await?;
         target_id = Some(user);

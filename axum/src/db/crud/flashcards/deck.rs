@@ -147,7 +147,7 @@ pub async fn find_recent(db: &PgPool, user_id: &str) -> Result<Vec<DeckSmall>, D
     Ok(decks)
 }
 
-/// Creates a new deck
+/// Creates a new deck using fed data
 pub async fn create(db: &PgPool, user_id: &str, create: DeckCreate) -> Result<CreationId, DbError> {
     let visibility = if create.assignee.is_some() {
         create.visibility.unwrap_or("assigned".to_string())
@@ -167,6 +167,28 @@ pub async fn create(db: &PgPool, user_id: &str, create: DeckCreate) -> Result<Cr
         create.description,
         visibility,
         create.assignee
+    )
+    .fetch_one(db)
+    .await?;
+
+    Ok(id)
+}
+
+/// Creates a new deck with user defaults
+pub async fn create_with_defaults(db: &PgPool, user_id: &str) -> Result<CreationId, DbError> {
+    let id = sqlx::query_as!(
+        CreationId,
+        r#"
+        INSERT INTO decks (id, created_by, name, description, visibility, assignee)
+        VALUES ($1, $2, $3, $4, $5, $6)
+        RETURNING id
+        "#,
+        nanoid::nanoid!(),
+        user_id,
+        "Default Deck",
+        "Default Description",
+        "private",
+        user_id,
     )
     .fetch_one(db)
     .await?;
@@ -377,6 +399,17 @@ mod tests {
         };
 
         let result = create(&db, &user_id, deck_create).await;
+        assert!(result.is_ok());
+
+        let deck_id = result.unwrap().id;
+        assert!(!deck_id.is_empty());
+    }
+
+    #[sqlx::test]
+    async fn test_create_deck_succes_with_defaults(db: PgPool) {
+        let user_id = create_test_user(&db, "testuser", "test@example.com").await;
+
+        let result = create_with_defaults(&db, &user_id).await;
         assert!(result.is_ok());
 
         let deck_id = result.unwrap().id;

@@ -3,18 +3,18 @@ use crate::api::error::APIError;
 use crate::auth::Claims;
 use crate::db::crud::core::task::create_with_defaults;
 use crate::db::crud::{
-    core::task::{count, create, delete, find_all, find_assignee, find_by_id, toggle, update},
+    core::task::{count, delete, find_all, find_assignee, find_by_id, toggle, update},
     files::file::fetch_files_task,
     tracking::{ActionType, ModelType, delete_seen, log_activity, seen},
 };
 use crate::models::{
-    CreationId, PaginatedResponse, TaskCreate, TaskFull, TaskPaginationParams, TaskSmall,
-    TaskUpdate, TaskWithFilesResponse,
+    CreationId, PaginatedResponse, TaskFull, TaskPaginationParams, TaskSmall, TaskUpdate,
+    TaskWithFilesResponse,
 };
 use crate::s3::post::delete_s3;
 use crate::schema::AppState;
 use axum::extract::{Json, Path, Query, State};
-use hyper::StatusCode;
+use axum::http::StatusCode;
 /// One Task
 #[utoipa::path(
     get,
@@ -105,6 +105,8 @@ pub async fn create_task(
 
     Ok(Json(id))
 }
+
+/// Deletes a task
 #[utoipa::path(
     delete,
     tag = TASK_TAG,
@@ -155,7 +157,7 @@ pub async fn delete_task(
     }
     Ok(StatusCode::NO_CONTENT)
 }
-
+/// Toggles completed/not completed on a task
 #[utoipa::path(
     put,
     tag = TASK_TAG,
@@ -204,6 +206,7 @@ pub async fn toggle_task(
     ),
     security(("api_key" = []))
 )]
+/// Updates the task
 pub async fn update_task(
     State(state): State<AppState>,
     Path(id): Path<String>,

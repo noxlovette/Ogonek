@@ -5,7 +5,7 @@ use crate::models::ProfileWithTS;
 use crate::models::profiles::ProfileUpdate;
 use crate::schema::AppState;
 use axum::extract::{Json, State};
-use hyper::StatusCode;
+use axum::http::StatusCode;
 
 /// Update the profile, or create a new one if already there
 pub async fn upsert_profile(

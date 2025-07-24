@@ -8,7 +8,7 @@ use crate::models::users::{AuthPayload, BindPayload, SignUpPayload, TokenPair};
 use crate::models::{CreationId, InviteQuery, RefreshTokenPayload, RefreshTokenResponse};
 use crate::schema::AppState;
 use axum::extract::{Json, Query, State};
-use hyper::StatusCode;
+use axum::http::StatusCode;
 use validator::Validate;
 #[utoipa::path(
     post,

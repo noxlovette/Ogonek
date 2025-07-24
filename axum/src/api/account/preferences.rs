@@ -5,7 +5,7 @@ use crate::db::crud::account::preferences;
 use crate::models::preferences::{UserPreferencesResponse, UserPreferencesUpdate};
 use crate::schema::AppState;
 use axum::extract::{Json, State};
-use hyper::StatusCode;
+use axum::http::StatusCode;
 
 pub async fn get_preferences(
     State(state): State<AppState>,

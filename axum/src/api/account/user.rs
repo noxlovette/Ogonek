@@ -5,7 +5,7 @@ use crate::db::crud::account::user;
 use crate::models::{InviterQuery, User};
 use crate::schema::AppState;
 use axum::extract::{Json, Query, State};
-use hyper::StatusCode;
+use axum::http::StatusCode;
 
 use crate::models::users::UserUpdate;
 

@@ -2531,7 +2531,7 @@ dependencies = [
 
 [[package]]
 name = "ogonek"
-version = "1.5.3"
+version = "1.6.0"
 dependencies = [
  "anyhow",
  "argon2",
@@ -2544,7 +2544,6 @@ dependencies = [
  "base64 0.22.1",
  "chrono",
  "dotenvy",
- "hyper 1.6.0",
  "jsonwebtoken",
  "nanoid",
  "sentry",

@@ -146,6 +146,26 @@ pub async fn create(
     Ok(id)
 }
 
+/// Takes user preferences to define defaults
+pub async fn create_with_defaults(db: &PgPool, user_id: &str) -> Result<CreationId, DbError> {
+    let id = sqlx::query_as!(
+        CreationId,
+        "INSERT INTO lessons (id, title, topic, markdown, created_by, assignee)
+         VALUES ($1, $2, $3, $4, $5, $6)
+         RETURNING id",
+        nanoid::nanoid!(),
+        "Default Title",
+        "Default Topic",
+        "# Default Lesson",
+        user_id,
+        user_id
+    )
+    .fetch_one(db)
+    .await?;
+
+    Ok(id)
+}
+
 pub async fn delete(db: &PgPool, lesson_id: &str, user_id: &str) -> Result<(), DbError> {
     sqlx::query!(
         r#"
@@ -246,6 +266,17 @@ mod tests {
 
         let creation_id = result.unwrap();
         assert!(!creation_id.id.is_empty());
+    }
+
+    #[sqlx::test]
+    async fn test_create_lesson_succes_with_defaults(db: PgPool) {
+        let user_id = create_test_user(&db, "testuser", "test@example.com").await;
+
+        let result = create_with_defaults(&db, &user_id).await;
+        assert!(result.is_ok());
+
+        let lesson_id = result.unwrap().id;
+        assert!(!lesson_id.is_empty());
     }
 
     #[sqlx::test]
