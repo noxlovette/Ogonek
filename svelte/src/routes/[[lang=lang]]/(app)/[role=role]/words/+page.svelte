@@ -7,13 +7,15 @@
     Table,
     UniButton,
     HeaderEmbellish,
+    LoadingCard,
+    SearchBar,
   } from "$lib/components";
   import { enhance } from "$app/forms";
   import { enhanceForm } from "$lib/utils";
   import { page } from "$app/state";
   import type { TableConfig, DeckSmall } from "$lib/types";
   import { ArrowBigRight, PlusCircle, ShoppingBag } from "lucide-svelte";
-  import { m } from "$lib/paraglide/messages";
+  import { decks, m } from "$lib/paraglide/messages";
   import {
     searchTerm,
     pageSize,
@@ -22,9 +24,10 @@
   } from "$lib/stores";
   import { goto } from "$app/navigation";
   import EmptySpace from "$lib/components/typography/EmptySpace.svelte";
+  import TableSkeleton from "$lib/components/UI/interactive/TableSkeleton.svelte";
 
-  let { data }: { data: PageData } = $props();
-  let { decks, students } = $derived(data);
+  let { data } = $props();
+  let { students } = $derived(data);
 
   const role = page.params.role;
 
@@ -110,26 +113,40 @@
     {/if}
   </div>
 </HeaderEmbellish>
-{#if role === "s"}
-  <div class="space-y-4">
-    {#if decks.length}
-      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {#each decks as deck (deck.id)}
-          <DeckCard {deck} />
-        {/each}
-      </div>
-    {:else}
-      <EmptySpace>
-        <H3>{m.noDecks()}</H3>
-      </EmptySpace>
-    {/if}
-  </div>
-{:else}
-  <Table
-    config={deckConfig}
-    href="words/w"
-    {students}
-    items={decks}
-    total={decks.length}
-  />
-{/if}
+
+<SearchBar />
+{#await data.decksResponse}
+  {#if role === "s"}
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+      {#each Array(6) as _, index (index)}
+        <LoadingCard />
+      {/each}
+    </div>
+  {:else}
+    <TableSkeleton />
+  {/if}
+{:then decks}
+  {#if role === "s"}
+    <div class="space-y-4">
+      {#if decks.length}
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {#each decks as deck (deck.id)}
+            <DeckCard {deck} />
+          {/each}
+        </div>
+      {:else}
+        <EmptySpace>
+          <H3>{m.noDecks()}</H3>
+        </EmptySpace>
+      {/if}
+    </div>
+  {:else}
+    <Table
+      config={deckConfig}
+      href="words/w"
+      {students}
+      items={decks}
+      total={decks.length}
+    />
+  {/if}
+{/await}
