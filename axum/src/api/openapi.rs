@@ -1,4 +1,7 @@
-use super::core::{deck, learn, lesson, task};
+use super::{
+    account,
+    core::{deck, learn, lesson, task},
+};
 use utoipa::{
     Modify, OpenApi,
     openapi::security::{ApiKey, ApiKeyValue, SecurityScheme},
@@ -30,22 +33,38 @@ impl Modify for SecurityAddon {
         lesson::list_lessons,
         lesson::fetch_lesson,
         lesson::create_lesson,
-        lesson::delete_lesson,
         lesson::update_lesson,
-        task::fetch_task,
+        lesson::delete_lesson,
+
         task::list_tasks,
+        task::fetch_task,
         task::create_task,
-        task::delete_task,
         task::toggle_task,
         task::update_task,
-        deck::create_deck,
-        deck::fetch_deck,
+        task::delete_task,
+
         deck::fetch_deck_list,
         deck::fetch_deck_list_public,
+        deck::fetch_deck,
+        deck::create_deck,
         deck::update_deck,
         deck::delete_deck,
+
+        learn::fetch_due_cards,
+        learn::update_card_progress,
+        learn::reset_deck_progress,
         learn::subscribe_to_deck,
-        learn::unsubscribe_from_deck
+        learn::unsubscribe_from_deck,
+
+        account::fetch_me,
+        account::update_user,
+        account::delete_user,
+        account::fetch_inviter,
+        account::signup,
+        account::signin,
+        account::refresh,
+        account::bind_student_to_teacher,
+        account::generate_invite_link,
 
     ),
     tags(

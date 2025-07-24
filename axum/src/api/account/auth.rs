@@ -10,8 +10,10 @@ use crate::schema::AppState;
 use axum::extract::{Json, Query, State};
 use axum::http::StatusCode;
 use validator::Validate;
+use crate::api::AUTH_TAG;
 #[utoipa::path(
     post,
+    tag=AUTH_TAG,
     path = "/auth/signup",
     request_body = SignUpPayload, 
     responses(
@@ -43,6 +45,9 @@ pub async fn signup(
 }
 #[utoipa::path(
     post,
+
+    tag=AUTH_TAG,
+
     path = "/auth/signin",
     request_body = AuthPayload, 
     responses(
@@ -50,7 +55,7 @@ pub async fn signup(
         (status = 401, description = "Invalid credentials")
     )
 )]
-pub async fn authorize(
+pub async fn signin(
     State(state): State<AppState>,
     Json(payload): Json<AuthPayload>,
 ) -> Result<Json<TokenPair>, APIError> {
@@ -77,6 +82,7 @@ pub async fn authorize(
 /// Receives the refresh token as json, gets it, then decodes, finds the user id, and generates a new access token
 #[utoipa::path(
     post,
+    tag=AUTH_TAG,
     path = "/auth/refresh",
     request_body = RefreshTokenPayload,
     responses(
@@ -99,6 +105,21 @@ pub async fn refresh(
     }))
 }
 
+/// Generates the invite link for the teacher
+#[utoipa::path(
+    get,
+    tag=AUTH_TAG,
+    path = "/invite",
+    params(
+        ("invite" = InviteQuery, Query, description = "Invite token")
+    ),
+    responses(
+        (status = 200, description = "Invite link generated", body = String),
+        (status = 401, description = "Unauthorized"),
+        (status = 400, description = "Invalid invite token")
+    ),
+    security(("api_key" = []))
+)]
 pub async fn generate_invite_link(
     claims: Claims,
     query: Query<InviteQuery>,
@@ -120,8 +141,11 @@ pub async fn generate_invite_link(
         ))
     }
 }
+
+/// Binds the student to the teacher
 #[utoipa::path(
     post,
+    tag=AUTH_TAG,
     path = "/auth/bind",
     request_body = BindPayload,
     responses(

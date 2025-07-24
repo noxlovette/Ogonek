@@ -1,3 +1,4 @@
+use crate::api::LEARN_TAG;
 use crate::api::error::APIError;
 use crate::auth::Claims;
 use crate::db::crud::flashcards;
@@ -9,8 +10,10 @@ use axum::extract::{Json, Path, State};
 use axum::http::StatusCode;
 use chrono::{Duration, Utc};
 
+/// Subscribes the user to the deck
 #[utoipa::path(
     post,
+    tag=LEARN_TAG,
     path = "/learn/subscribe/{id}",
     params(
         ("id" = String, Path, description = "Deck ID")
@@ -40,8 +43,11 @@ pub async fn subscribe_to_deck(
 
     Ok(StatusCode::NO_CONTENT)
 }
+
+/// Unsubscribes the user from the deck
 #[utoipa::path(
     delete,
+    tag=LEARN_TAG,
     path = "/learn/subscribe/{id}",
     params(
         ("id" = String, Path, description = "Deck ID")
@@ -70,8 +76,11 @@ pub async fn unsubscribe_from_deck(
     .await?;
     Ok(StatusCode::NO_CONTENT)
 }
+
+/// Returns the list of all cards due for review
 #[utoipa::path(
     get,
+    tag = LEARN_TAG,
     path = "/learn",
     responses(
         (status = 204, description = "Due cards fetched successfully", body = Vec<CardProgressWithFields>),
@@ -83,13 +92,15 @@ pub async fn fetch_due_cards(
     State(state): State<AppState>,
     claims: Claims,
 ) -> Result<Json<Vec<CardProgressWithFields>>, APIError> {
-    let due = flashcards::learning::fetch_due(&state.db, &claims.sub).await?;
+    let due = flashcards::learn::fetch_due(&state.db, &claims.sub).await?;
 
     Ok(Json(due))
 }
 
+/// Updates the learn progress on a card
 #[utoipa::path(
     get,
+    tag = LEARN_TAG,
     path = "/learn/{id}",
     params(
         ("id" = String, Path, description = "Card ID")
@@ -108,7 +119,7 @@ pub async fn update_card_progress(
 ) -> Result<StatusCode, APIError> {
     let calculator = SM2Calculator::default();
 
-    let current_progress = flashcards::learning::find_by_id(&state.db, &id, &claims.sub).await?;
+    let current_progress = flashcards::learn::find_by_id(&state.db, &id, &claims.sub).await?;
 
     let (new_ease, new_interval, new_review_count) = calculator.calculate_next_review(
         payload.quality,
@@ -124,13 +135,14 @@ pub async fn update_card_progress(
         last_reviewed: Utc::now(),
         due_date: Utc::now() + Duration::days(new_interval.into()),
     };
-    flashcards::learning::update(&state.db, &id, &claims.sub, update).await?;
+    flashcards::learn::update(&state.db, &id, &claims.sub, update).await?;
 
     Ok(StatusCode::OK)
 }
-
+/// Resets the progress for a particular deck
 #[utoipa::path(
     delete,
+    tag = LEARN_TAG,
     path = "/learn/{id}",
     params(
         ("id" = String, Path, description = "Deck ID")
@@ -146,7 +158,7 @@ pub async fn reset_deck_progress(
     claims: Claims,
     Path(deck_id): Path<String>,
 ) -> Result<StatusCode, APIError> {
-    flashcards::learning::reset(&state.db, &deck_id, &claims.sub).await?;
+    flashcards::learn::reset(&state.db, &deck_id, &claims.sub).await?;
 
     Ok(StatusCode::OK)
 }

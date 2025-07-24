@@ -116,7 +116,7 @@ pub struct BindPayload {
     pub invite_token: String,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct InviteQuery {
     pub is_registered: String,
