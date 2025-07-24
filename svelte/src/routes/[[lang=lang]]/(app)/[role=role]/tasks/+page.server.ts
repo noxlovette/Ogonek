@@ -1,5 +1,6 @@
 import logger from "$lib/logger";
 
+import { dev } from "$app/environment";
 import {
   handleApiResponse,
   isSuccessResponse,
@@ -7,7 +8,8 @@ import {
   notifyTelegram,
 } from "$lib/server";
 import type { NewResponse, PaginatedResponse, TaskSmall } from "$lib/types";
-import { error, fail, redirect, type Actions } from "@sveltejs/kit";
+import { delay } from "$lib/utils";
+import { fail, redirect, type Actions } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async ({ fetch, url, depends }) => {
@@ -28,20 +30,10 @@ export const load: PageServerLoad = async ({ fetch, url, depends }) => {
 
   const apiUrl = `/axum/task?${params.toString()}`;
 
-  const tasksPaginated = await fetch(apiUrl).then(
-    (res) => res.json() as Promise<PaginatedResponse<TaskSmall>>,
-  );
-
-  const response = await fetch(apiUrl);
-  const result =
-    await handleApiResponse<PaginatedResponse<TaskSmall>>(response);
-
-  if (!isSuccessResponse(result)) {
-    return error(500);
-  }
-
   return {
-    tasksPaginated,
+    tasksPaginated: (dev ? delay(2000) : Promise.resolve())
+      .then(() => fetch(apiUrl))
+      .then((res) => res.json()) as Promise<PaginatedResponse<TaskSmall>>,
   };
 };
 

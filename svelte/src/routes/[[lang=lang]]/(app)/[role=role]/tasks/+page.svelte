@@ -5,7 +5,12 @@
     Table,
     UniButton,
     HeaderEmbellish,
-    DueTasksWidget,
+    SearchBar,
+    TableSkeleton,
+    LoadingCard,
+    TaskCard,
+    EmptySpace,
+    H3,
   } from "$lib/components";
 
   import { enhance } from "$app/forms";
@@ -23,10 +28,9 @@
   import { formatDate } from "@noxlovette/svarog";
   import { m } from "$lib/paraglide/messages";
 
-  let { data } = $props();
+  const { data } = $props();
   const { students } = data;
-  let { data: tasks, total } = $derived(data.tasksPaginated);
-  let role = page.params.role;
+  const role = page.params.role;
 
   const taskConfig: TableConfig<Task> = {
     columns: [
@@ -97,18 +101,36 @@
     </UniButton>
   </div>
 </HeaderEmbellish>
-{#if role === "t"}
-  <Table
-    items={tasks}
-    config={taskConfig}
-    {href}
-    {students}
-    {total}
-    showComplete={true}
-  />
-{:else}
-  <DueTasksWidget tasks={data.tasksPaginated.data} />
-{/if}
+
+<SearchBar />
+{#await data.tasksPaginated}
+  {#if role === "s"}
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+      {#each Array(6) as _, index (index)}
+        <LoadingCard />
+      {/each}
+    </div>
+  {:else}
+    <TableSkeleton />
+  {/if}
+{:then tasks}
+  {#if tasks.data.length < 1}
+    <EmptySpace>
+      <H3>{m.noTasks()}</H3>
+    </EmptySpace>
+  {/if}
+  {#if role === "s"}
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+      {#each tasks.data as task (task.id)}
+        <TaskCard {task} />
+      {/each}
+    </div>
+  {:else}
+    <Table items={tasks.data} total={tasks.total} {href} config={taskConfig} />
+  {/if}
+{:catch error: App.Error}
+  <p>Error loading lessons: {error.errorID}</p>
+{/await}
 
 <svelte:head>
   <title>{m.tasks()}</title>
