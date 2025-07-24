@@ -1,0 +1,152 @@
+use crate::api::error::APIError;
+use crate::auth::Claims;
+use crate::db::crud::tracking::{ActionType, ModelType, log_activity};
+use crate::db::crud::words;
+use crate::models::{CardProgressWithFields, ReviewPayload, UpdateCardProgress};
+use crate::schema::AppState;
+use crate::tools::sm2::SM2Calculator;
+use axum::extract::{Json, Path, State};
+use axum::http::StatusCode;
+use chrono::{Duration, Utc};
+
+#[utoipa::path(
+    post,
+    path = "/learn/subscribe/{id}",
+    params(
+        ("id" = String, Path, description = "Deck ID")
+    ),
+    responses(
+        (status = 204, description = "Deck subscribed to successfully"),
+        (status = 404, description = "Deck not found"),
+        (status = 401, description = "Unauthorized")
+    ),
+    security(("api_key" = []))
+)]
+pub async fn subscribe_to_deck(
+    State(state): State<AppState>,
+    claims: Claims,
+    Path(id): Path<String>,
+) -> Result<StatusCode, APIError> {
+    words::subscribe::subscribe(&state.db, &id, &claims.sub).await?;
+    log_activity(
+        &state.db,
+        &claims.sub,
+        &id,
+        ModelType::Deck,
+        ActionType::Subscribe,
+        None,
+    )
+    .await?;
+
+    Ok(StatusCode::NO_CONTENT)
+}
+#[utoipa::path(
+    delete,
+    path = "/learn/subscribe/{id}",
+    params(
+        ("id" = String, Path, description = "Deck ID")
+    ),
+    responses(
+        (status = 204, description = "Deck subscribed to successfully"),
+        (status = 404, description = "Deck not found"),
+        (status = 401, description = "Unauthorized")
+    ),
+    security(("api_key" = []))
+)]
+pub async fn unsubscribe_from_deck(
+    State(state): State<AppState>,
+    claims: Claims,
+    Path(id): Path<String>,
+) -> Result<StatusCode, APIError> {
+    words::subscribe::unsubscribe(&state.db, &id, &claims.sub).await?;
+    log_activity(
+        &state.db,
+        &claims.sub,
+        &id,
+        ModelType::Deck,
+        ActionType::Unsubscribe,
+        None,
+    )
+    .await?;
+    Ok(StatusCode::NO_CONTENT)
+}
+#[utoipa::path(
+    get,
+    path = "/learn",
+    responses(
+        (status = 204, description = "Due cards fetched successfully", body = Vec<CardProgressWithFields>),
+        (status = 401, description = "Unauthorized")
+    ),
+    security(("api_key" = []))
+)]
+pub async fn fetch_due_cards(
+    State(state): State<AppState>,
+    claims: Claims,
+) -> Result<Json<Vec<CardProgressWithFields>>, APIError> {
+    let due = words::learning::fetch_due(&state.db, &claims.sub).await?;
+
+    Ok(Json(due))
+}
+
+#[utoipa::path(
+    get,
+    path = "/learn/{id}",
+    params(
+        ("id" = String, Path, description = "Card ID")
+    ),
+    responses(
+        (status = 204, description = "Card progress updated successfully", body = Vec<CardProgressWithFields>),
+        (status = 401, description = "Unauthorized")
+    ),
+    security(("api_key" = []))
+)]
+pub async fn update_card_progress(
+    State(state): State<AppState>,
+    claims: Claims,
+    Path(id): Path<String>,
+    Json(payload): Json<ReviewPayload>,
+) -> Result<StatusCode, APIError> {
+    let calculator = SM2Calculator::default();
+
+    let current_progress = words::learning::find_by_id(&state.db, &id, &claims.sub).await?;
+
+    let (new_ease, new_interval, new_review_count) = calculator.calculate_next_review(
+        payload.quality,
+        current_progress.ease_factor,
+        current_progress.interval,
+        current_progress.review_count,
+    );
+
+    let update = UpdateCardProgress {
+        review_count: new_review_count,
+        ease_factor: new_ease,
+        interval: new_interval,
+        last_reviewed: Utc::now(),
+        due_date: Utc::now() + Duration::days(new_interval.into()),
+    };
+    words::learning::update(&state.db, &id, &claims.sub, update).await?;
+
+    Ok(StatusCode::OK)
+}
+
+#[utoipa::path(
+    delete,
+    path = "/learn/{id}",
+    params(
+        ("id" = String, Path, description = "Deck ID")
+    ),
+    responses(
+        (status = 204, description = "Card progress updated successfully", body = Vec<CardProgressWithFields>),
+        (status = 401, description = "Unauthorized")
+    ),
+    security(("api_key" = []))
+)]
+pub async fn reset_deck_progress(
+    State(state): State<AppState>,
+    claims: Claims,
+    Path(deck_id): Path<String>,
+) -> Result<StatusCode, APIError> {
+    words::learning::reset(&state.db, &deck_id, &claims.sub).await?;
+
+    Ok(StatusCode::OK)
+}

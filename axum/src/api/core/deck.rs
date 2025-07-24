@@ -5,7 +5,7 @@ use crate::db::crud::tracking::seen::{delete_seen, insert_as_unseen, mark_as_see
 use crate::db::crud::tracking::{self, ActionType, ModelType};
 use crate::db::crud::words::{self, deck};
 use crate::models::{
-    CreationId, DeckCreate, DeckFilterParams, DeckFull, DeckPublic, DeckSmall,
+    CreationId, DeckCreate, DeckFilterParams, DeckFull, DeckPublic, DeckSmall, DeckUpdate,
     DeckWithCardsAndSubscription, DeckWithCardsUpdate,
 };
 use crate::schema::AppState;
@@ -15,6 +15,17 @@ use axum::extract::Query;
 use axum::extract::State;
 use axum::http::StatusCode;
 
+#[utoipa::path(
+    post,
+    path = "/deck",
+    request_body = DeckCreate,
+    responses(
+        (status = 201, description = "Deck created successfully", body = CreationId),
+        (status = 400, description = "Bad request"),
+        (status = 401, description = "Unauthorized")
+    ),
+    security(("api_key" = []))
+)]
 pub async fn create_deck(
     State(state): State<AppState>,
     claims: Claims,
@@ -35,18 +46,30 @@ pub async fn create_deck(
     Ok(Json(id))
 }
 
+#[utoipa::path(
+    get,
+    path = "/deck/{id}",
+    params(
+        ("id" = String, Path, description = "Deck ID")
+    ),
+    responses(
+        (status = 200, description = "Deck retrieved"),
+        (status = 404, description = "Deck not found"),
+        (status = 401, description = "Unauthorized")
+    ),
+    security(("api_key" = []))
+)]
 pub async fn fetch_deck(
     State(state): State<AppState>,
     claims: Claims,
-    Path(deck_id): Path<String>,
+    Path(id): Path<String>,
 ) -> Result<Json<Option<DeckWithCardsAndSubscription>>, APIError> {
-    let deck = words::deck::find_by_id(&state.db, &deck_id, &claims.sub).await?;
-    let is_subscribed =
-        words::subscribe::check_subscription(&state.db, &deck_id, &claims.sub).await?;
+    let deck = words::deck::find_by_id(&state.db, &id, &claims.sub).await?;
+    let is_subscribed = words::subscribe::check_subscription(&state.db, &id, &claims.sub).await?;
 
-    let cards = words::card::find_all(&state.db, &deck_id).await?;
+    let cards = words::card::find_all(&state.db, &id).await?;
 
-    mark_as_seen(&state.db, &claims.sub, &deck_id, ModelType::Deck).await?;
+    mark_as_seen(&state.db, &claims.sub, &id, ModelType::Deck).await?;
 
     Ok(Json(Some(DeckWithCardsAndSubscription {
         deck: DeckFull {
@@ -63,7 +86,16 @@ pub async fn fetch_deck(
         is_subscribed,
     })))
 }
-
+#[utoipa::path(
+    get,
+    path = "/deck",
+    responses(
+        (status = 200, description = "User decks retrieved"),
+        (status = 404, description = "Deck not found"),
+        (status = 401, description = "Unauthorized")
+    ),
+    security(("api_key" = []))
+)]
 pub async fn fetch_deck_list(
     State(state): State<AppState>,
     Query(params): Query<DeckFilterParams>,
@@ -72,7 +104,16 @@ pub async fn fetch_deck_list(
     let decks = words::deck::find_all(&state.db, &claims.sub, &params).await?;
     Ok(Json(decks))
 }
-
+#[utoipa::path(
+    get,
+    path = "/deck/public",
+    responses(
+        (status = 200, description = "Public decks retrieved"),
+        (status = 404, description = "Deck not found"),
+        (status = 401, description = "Unauthorized")
+    ),
+    security(("api_key" = []))
+)]
 pub async fn fetch_deck_list_public(
     State(state): State<AppState>,
 ) -> Result<Json<Vec<DeckPublic>>, APIError> {
@@ -80,26 +121,39 @@ pub async fn fetch_deck_list_public(
 
     Ok(Json(decks))
 }
-
+#[utoipa::path(
+    patch,
+    path = "/deck/{id}",
+    params(
+        ("id" = String, Path, description = "Deck ID")
+    ),
+    request_body = DeckWithCardsUpdate,
+    responses(
+        (status = 204, description = "Deck updated successfully"),
+        (status = 404, description = "Deck not found"),
+        (status = 401, description = "Unauthorized")
+    ),
+    security(("api_key" = []))
+)]
 pub async fn update_deck(
     State(state): State<AppState>,
     claims: Claims,
-    Path(deck_id): Path<String>,
+    Path(id): Path<String>,
     Json(payload): Json<DeckWithCardsUpdate>,
 ) -> Result<StatusCode, APIError> {
-    let current_assignee = deck::find_assignee(&state.db, &deck_id, &claims.sub).await?;
+    let current_assignee = deck::find_assignee(&state.db, &id, &claims.sub).await?;
     let new_assignee = payload.deck.assignee.clone();
 
-    words::deck::update(&state.db, &deck_id, &claims.sub, payload).await?;
+    words::deck::update(&state.db, &id, &claims.sub, payload).await?;
 
     if new_assignee != current_assignee {
         if let Some(old_user) = current_assignee {
-            delete_seen(&state.db, &old_user, &deck_id, ModelType::Deck).await?;
-            words::subscribe::unsubscribe(&state.db, &deck_id, &old_user).await?;
+            delete_seen(&state.db, &old_user, &id, ModelType::Deck).await?;
+            words::subscribe::unsubscribe(&state.db, &id, &old_user).await?;
             log_activity(
                 &state.db,
                 &claims.sub,
-                &deck_id,
+                &id,
                 ModelType::Deck,
                 ActionType::Delete,
                 Some(&old_user),
@@ -108,12 +162,12 @@ pub async fn update_deck(
         }
 
         if let Some(new_user) = new_assignee {
-            insert_as_unseen(&state.db, &new_user, &deck_id, ModelType::Deck).await?;
-            words::subscribe::subscribe(&state.db, &deck_id, &new_user).await?;
+            insert_as_unseen(&state.db, &new_user, &id, ModelType::Deck).await?;
+            words::subscribe::subscribe(&state.db, &id, &new_user).await?;
             log_activity(
                 &state.db,
                 &claims.sub,
-                &deck_id,
+                &id,
                 ModelType::Deck,
                 ActionType::Create,
                 Some(&new_user),
@@ -125,7 +179,7 @@ pub async fn update_deck(
         log_activity(
             &state.db,
             &claims.sub,
-            &deck_id,
+            &id,
             ModelType::Deck,
             ActionType::Update,
             Some(&assignee),
@@ -135,17 +189,30 @@ pub async fn update_deck(
     Ok(StatusCode::NO_CONTENT)
 }
 
+#[utoipa::path(
+    delete,
+    path = "/deck/{id}",
+    params(
+        ("id" = String, Path, description = "Deck ID")
+    ),
+    responses(
+        (status = 204, description = "Deck deleted successfully"),
+        (status = 404, description = "Deck not found"),
+        (status = 401, description = "Unauthorized")
+    ),
+    security(("api_key" = []))
+)]
 pub async fn delete_deck(
     State(state): State<AppState>,
     claims: Claims,
-    Path(deck_id): Path<String>,
+    Path(id): Path<String>,
 ) -> Result<StatusCode, APIError> {
     let mut target_id: Option<String> = None;
-    let assignee = deck::find_assignee(&state.db, &deck_id, &claims.sub).await?;
+    let assignee = deck::find_assignee(&state.db, &id, &claims.sub).await?;
 
-    words::deck::delete(&state.db, &deck_id, &claims.sub).await?;
+    words::deck::delete(&state.db, &id, &claims.sub).await?;
     if let Some(user) = assignee {
-        tracking::seen::delete_seen(&state.db, &user, &deck_id, ModelType::Deck).await?;
+        tracking::seen::delete_seen(&state.db, &user, &id, ModelType::Deck).await?;
         target_id = Some(user);
     }
 
@@ -153,49 +220,12 @@ pub async fn delete_deck(
     log_activity(
         &state.db,
         &claims.sub,
-        &deck_id,
+        &id,
         ModelType::Deck,
         ActionType::Delete,
         target_id.as_deref(),
     )
     .await?;
 
-    Ok(StatusCode::NO_CONTENT)
-}
-
-pub async fn subscribe_to_deck(
-    State(state): State<AppState>,
-    claims: Claims,
-    Path(deck_id): Path<String>,
-) -> Result<StatusCode, APIError> {
-    words::subscribe::subscribe(&state.db, &deck_id, &claims.sub).await?;
-    log_activity(
-        &state.db,
-        &claims.sub,
-        &deck_id,
-        ModelType::Deck,
-        ActionType::Subscribe,
-        None,
-    )
-    .await?;
-
-    Ok(StatusCode::NO_CONTENT)
-}
-
-pub async fn unsubscribe_from_deck(
-    State(state): State<AppState>,
-    claims: Claims,
-    Path(deck_id): Path<String>,
-) -> Result<StatusCode, APIError> {
-    words::subscribe::unsubscribe(&state.db, &deck_id, &claims.sub).await?;
-    log_activity(
-        &state.db,
-        &claims.sub,
-        &deck_id,
-        ModelType::Deck,
-        ActionType::Unsubscribe,
-        None,
-    )
-    .await?;
     Ok(StatusCode::NO_CONTENT)
 }

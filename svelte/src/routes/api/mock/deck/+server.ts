@@ -9,6 +9,7 @@ export const GET: RequestHandler = async () => {
       description: "Murrrrrr",
       assigneeName: "Kotya",
       visibility: "assigned",
+      isSubscribed: true,
       seen: true,
     },
     {
@@ -17,6 +18,7 @@ export const GET: RequestHandler = async () => {
       description: "Kotya Assigned",
       assigneeName: "Kotya",
       visibility: "private",
+      isSubscribed: false,
       seen: true,
     },
   ];

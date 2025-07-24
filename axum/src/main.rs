@@ -16,11 +16,8 @@ use tower_http::{
     timeout::TimeoutLayer,
 };
 use utoipa::OpenApi;
+use utoipa_swagger_ui::SwaggerUi;
 const REQUEST_ID_HEADER: &str = "x-request-id";
-
-async fn serve_docs() -> axum::Json<utoipa::openapi::OpenApi> {
-    axum::Json(ApiDoc::openapi())
-}
 
 async fn run_server() -> anyhow::Result<()> {
     let _ = init_logging().await;
@@ -57,7 +54,7 @@ async fn run_server() -> anyhow::Result<()> {
         .merge(protected_routes)
         .route("/health", get(health_check))
         .fallback(handler_404)
-        .route("/api-docs/openapi.json", get(serve_docs))
+        .merge(SwaggerUi::new("/swagger-ui").url("/api-docs/openapi.json", ApiDoc::openapi()))
         .with_state(state)
         .layer(
             ServiceBuilder::new()

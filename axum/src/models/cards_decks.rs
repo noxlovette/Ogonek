@@ -28,7 +28,6 @@ pub struct Card {
     pub back: String,
     pub media_url: Option<String>,
     pub deck_id: String,
-
     pub created_at: DateTime<Utc>,
 }
 
@@ -99,7 +98,7 @@ pub struct DeckPublic {
     pub description: Option<String>,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct DeckCreate {
     pub name: String,

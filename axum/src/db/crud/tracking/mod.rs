@@ -5,6 +5,9 @@ use utoipa::ToSchema;
 pub mod activity;
 pub mod seen;
 
+pub use activity::*;
+pub use seen::*;
+
 /// This guy is a safeguard against arbitrary values in the database
 /// (as I have decided not to use an enum in postgres)
 #[derive(Debug, sqlx::Type)]

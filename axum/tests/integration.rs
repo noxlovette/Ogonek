@@ -37,7 +37,7 @@ async fn test_auth_flow_end_to_end(db: PgPool) {
     let signup_response = app.clone().oneshot(signup_request).await.unwrap();
     assert_eq!(signup_response.status(), StatusCode::OK);
     let body = signup_response.into_body();
-    let bytes = axum::body::to_bytes(body, usize::MAX).await.unwrap();
+    let _bytes = axum::body::to_bytes(body, usize::MAX).await.unwrap();
 
     // Test signin
     let signin_payload = json!({

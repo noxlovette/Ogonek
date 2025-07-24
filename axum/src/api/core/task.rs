@@ -1,27 +1,25 @@
+use crate::api::TASK_TAG;
 use crate::api::error::APIError;
 use crate::auth::Claims;
-use crate::db::crud::core::task::{
-    add_files, count, create, delete, find_all, find_assignee, find_by_id, toggle, update,
+use crate::db::crud::core::task::create_with_defaults;
+use crate::db::crud::{
+    core::task::{count, create, delete, find_all, find_assignee, find_by_id, toggle, update},
+    files::file::fetch_files_task,
+    tracking::{ActionType, ModelType, delete_seen, log_activity, seen},
 };
-use crate::db::crud::files::file::fetch_files_task;
-
-use crate::db::crud::tracking::activity::log_activity;
-use crate::db::crud::tracking::seen::delete_seen;
-use crate::db::crud::tracking::{ActionType, ModelType, seen};
-use crate::models::TaskFull;
-use crate::models::meta::{CreationId, PaginatedResponse};
-use crate::models::tasks::{
-    TaskCreate, TaskFileBind, TaskPaginationParams, TaskSmall, TaskUpdate, TaskWithFilesResponse,
+use crate::models::{
+    CreationId, PaginatedResponse, TaskCreate, TaskFull, TaskPaginationParams, TaskSmall,
+    TaskUpdate, TaskWithFilesResponse,
 };
 use crate::s3::post::delete_s3;
 use crate::schema::AppState;
 use axum::extract::{Json, Path, Query, State};
 use hyper::StatusCode;
-
 /// One Task
 #[utoipa::path(
     get,
-    path = "/task/t/{id}",
+    path = "/task/{id}",
+    tag = TASK_TAG,
     params(
         ("id" = String, Path, description = "Task ID")
     ),
@@ -43,8 +41,11 @@ pub async fn fetch_task(
 
     Ok(Json(TaskWithFilesResponse { task, files }))
 }
+
+/// Tasks belonging to a user (through assignment or direct ownership)
 #[utoipa::path(
     get,
+    tag = TASK_TAG,
     path = "/task",
     params(
         ("page" = Option<u32>, Query, description = "Page number"),
@@ -75,10 +76,11 @@ pub async fn list_tasks(
         per_page: params.limit(),
     }))
 }
+/// Creates a new task
 #[utoipa::path(
     post,
+    tag = TASK_TAG,
     path = "/task",
-    request_body = TaskCreate,
     responses(
         (status = 201, description = "Task created successfully", body = CreationId),
         (status = 400, description = "Bad request"),
@@ -89,16 +91,8 @@ pub async fn list_tasks(
 pub async fn create_task(
     State(state): State<AppState>,
     claims: Claims,
-    Json(payload): Json<TaskCreate>,
 ) -> Result<Json<CreationId>, APIError> {
-    let mut assignee = &claims.sub;
-
-    if payload.assignee.is_some() {
-        assignee = payload.assignee.as_ref().unwrap();
-    }
-
-    let id = create(&state.db, &payload, &claims.sub, assignee).await?;
-
+    let id = create_with_defaults(&state.db, &claims.sub).await?;
     log_activity(
         &state.db,
         &claims.sub,
@@ -113,7 +107,8 @@ pub async fn create_task(
 }
 #[utoipa::path(
     delete,
-    path = "/task/t/{id}",
+    tag = TASK_TAG,
+    path = "/task/{id}",
     params(
         ("id" = String, Path, description = "Task ID")
     ),
@@ -161,6 +156,20 @@ pub async fn delete_task(
     Ok(StatusCode::NO_CONTENT)
 }
 
+#[utoipa::path(
+    put,
+    tag = TASK_TAG,
+    path = "/task/{id}",
+    params(
+        ("id" = String, Path, description = "Task ID")
+    ),
+    responses(
+        (status = 200, description = "Task with files retrieved", body = TaskWithFilesResponse),
+        (status = 404, description = "Task not found"),
+        (status = 401, description = "Unauthorized")
+    ),
+    security(("api_key" = []))
+)]
 pub async fn toggle_task(
     State(state): State<AppState>,
     Path(id): Path<String>,
@@ -182,7 +191,8 @@ pub async fn toggle_task(
 }
 #[utoipa::path(
     patch,
-    path = "/task/t/{id}",
+    tag = TASK_TAG,
+    path = "/task/{id}",
     params(
         ("id" = String, Path, description = "Task ID")
     ),
@@ -253,14 +263,4 @@ pub async fn update_task(
         .await?;
     }
     Ok(StatusCode::NO_CONTENT)
-}
-
-pub async fn add_file_to_task(
-    State(state): State<AppState>,
-    Path(task_id): Path<String>,
-    Json(payload): Json<TaskFileBind>,
-) -> Result<StatusCode, APIError> {
-    add_files(&state.db, &task_id, payload.file_ids).await?;
-
-    Ok(StatusCode::CREATED)
 }

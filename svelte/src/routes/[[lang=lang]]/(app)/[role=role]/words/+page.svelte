@@ -59,7 +59,8 @@
       {
         key: "isSubscribed",
         label: m.stout_royal_macaw_fear(),
-        formatter: (value: string | boolean | undefined) => (value ? "○" : "◉"),
+        formatter: (value: string | boolean | undefined) =>
+          value === true ? "◉" : "○",
       },
     ],
   };

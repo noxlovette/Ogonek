@@ -50,6 +50,7 @@ pub async fn fetch_lesson(
 #[utoipa::path(
     get,
     path = "/lesson",
+    tag = LESSON_TAG,
     params(
         ("page" = Option<u32>, Query, description = "Page number"),
         ("per_page" = Option<u32>, Query, description = "Items per page"),
@@ -80,6 +81,7 @@ pub async fn list_lessons(
 #[utoipa::path(
     post,
     path = "/lesson",
+    tag = LESSON_TAG,
     request_body = LessonCreate,
     responses(
         (status = 201, description = "Lesson created successfully", body = CreationId),
@@ -110,6 +112,7 @@ pub async fn create_lesson(
 #[utoipa::path(
     delete,
     path = "/lesson/{id}",
+    tag = LESSON_TAG,
     params(
         ("id" = String, Path, description = "Lesson ID")
     ),
@@ -148,6 +151,7 @@ pub async fn delete_lesson(
 }
 #[utoipa::path(
     patch,
+    tag = LESSON_TAG,
     path = "/lesson/{id}",
     params(
         ("id" = String, Path, description = "Lesson ID")

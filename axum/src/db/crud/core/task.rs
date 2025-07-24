@@ -108,7 +108,7 @@ pub async fn find_by_id(db: &PgPool, id: &str, user_id: &str) -> Result<TaskFull
     Ok(task)
 }
 
-/// Creates a task
+/// Creates a task, needs data to create FROM
 pub async fn create(
     db: &PgPool,
     task: &TaskCreate,
@@ -126,6 +126,25 @@ pub async fn create(
         task.markdown,
         task.due_date,
         assignee,
+        user_id,
+    )
+    .fetch_one(db)
+    .await?;
+
+    Ok(id)
+}
+/// Creates a task based on user preferences, faster – no JSON
+pub async fn create_with_defaults(db: &PgPool, user_id: &str) -> Result<CreationId, DbError> {
+    let id = sqlx::query_as!(
+        CreationId,
+        "INSERT INTO tasks (id, title, markdown, assignee, created_by)
+         VALUES ($1, $2, $3, $4, $5 )
+         RETURNING id
+         ",
+        nanoid::nanoid!(),
+        "Default Title", // TODO: feed in preferred title
+        "# Default markdown",
+        user_id,
         user_id,
     )
     .fetch_one(db)

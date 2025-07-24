@@ -44,3 +44,4 @@ atty = "0.2.14"
 sentry-tower = {version = "0.38.1", features = ["axum", "axum-matched-path", "http"]}
 utoipa = {version ="5.4.0", features = ["chrono"]}
 utoipa-axum = {version ="0.2.0"}
+utoipa-swagger-ui = {version = "9.0.2", features = ["axum"]}
