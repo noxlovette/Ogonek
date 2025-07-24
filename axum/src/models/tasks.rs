@@ -5,7 +5,7 @@ use sqlx::prelude::FromRow;
 use utoipa::ToSchema;
 use validator::Validate;
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, ToSchema)]
 pub struct TaskPaginationParams {
     pub page: Option<i64>,
     pub per_page: Option<i64>,

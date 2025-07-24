@@ -1,4 +1,3 @@
-use crate::api::TASK_TAG;
 use crate::api::error::APIError;
 use crate::auth::Claims;
 use crate::db::crud::core::task::create_with_defaults;
@@ -15,11 +14,13 @@ use crate::s3::post::delete_s3;
 use crate::schema::AppState;
 use axum::extract::{Json, Path, Query, State};
 use axum::http::StatusCode;
+use crate::api::TASK_TAG;
+
 /// One Task
 #[utoipa::path(
     get,
-    path = "/task/{id}",
-    tag = TASK_TAG,
+    path = "/{id}", tag = TASK_TAG,
+    
     params(
         ("id" = String, Path, description = "Task ID")
     ),
@@ -45,8 +46,7 @@ pub async fn fetch_task(
 /// Tasks belonging to a user (through assignment or direct ownership)
 #[utoipa::path(
     get,
-    tag = TASK_TAG,
-    path = "/task",
+    path = "/", tag = TASK_TAG,
     params(
         ("page" = Option<u32>, Query, description = "Page number"),
         ("per_page" = Option<u32>, Query, description = "Items per page"),
@@ -79,8 +79,8 @@ pub async fn list_tasks(
 /// Creates a new task
 #[utoipa::path(
     post,
-    tag = TASK_TAG,
-    path = "/task",
+    
+    path = "/", tag = TASK_TAG,
     responses(
         (status = 201, description = "Task created successfully", body = CreationId),
         (status = 400, description = "Bad request"),
@@ -109,8 +109,8 @@ pub async fn create_task(
 /// Deletes a task
 #[utoipa::path(
     delete,
-    tag = TASK_TAG,
-    path = "/task/{id}",
+    
+    path = "/{id}", tag = TASK_TAG,
     params(
         ("id" = String, Path, description = "Task ID")
     ),
@@ -160,8 +160,8 @@ pub async fn delete_task(
 /// Toggles completed/not completed on a task
 #[utoipa::path(
     put,
-    tag = TASK_TAG,
-    path = "/task/{id}",
+    
+    path = "/{id}", tag = TASK_TAG,
     params(
         ("id" = String, Path, description = "Task ID")
     ),
@@ -193,8 +193,8 @@ pub async fn toggle_task(
 }
 #[utoipa::path(
     patch,
-    tag = TASK_TAG,
-    path = "/task/{id}",
+    
+    path = "/{id}", tag = TASK_TAG,
     params(
         ("id" = String, Path, description = "Task ID")
     ),

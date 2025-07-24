@@ -6,8 +6,21 @@ use crate::models::profiles::ProfileUpdate;
 use crate::schema::AppState;
 use axum::extract::{Json, State};
 use axum::http::StatusCode;
+use crate::api::USER_TAG;
 
 /// Update the profile, or create a new one if already there
+#[utoipa::path(
+    patch,
+   tag = USER_TAG,  
+    path = "/profile",
+    request_body = ProfileUpdate,
+    responses(
+        (status = 204, description = "Profile updated successfully"),
+        (status = 400, description = "Bad request"),
+        (status = 401, description = "Unauthorized")
+    ),
+    security(("api_key" = []))
+)]
 pub async fn upsert_profile(
     State(state): State<AppState>,
     claims: Claims,
@@ -20,6 +33,16 @@ pub async fn upsert_profile(
 }
 
 /// Fetch the profile, WITHOUT teacher data even if that's a student requesing
+#[utoipa::path(
+    get,
+   tag = USER_TAG,  
+    path = "/profile",
+    responses(
+        (status = 200, description = "Profile details retrieved", body = ProfileWithTS),
+        (status = 401, description = "Unauthorized"),
+    ),
+    security(("api_key" = []))
+)]
 pub async fn fetch_profile(
     State(state): State<AppState>,
     claims: Claims,

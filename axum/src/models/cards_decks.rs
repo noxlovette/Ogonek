@@ -49,7 +49,6 @@ pub struct CardUpdate {
 }
 
 // DECK STRUCTS HERE
-
 #[derive(Serialize, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct DeckWithCardsAndSubscription {
@@ -91,7 +90,7 @@ pub struct DeckSmall {
     pub description: Option<String>,
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, ToSchema)]
 pub struct DeckPublic {
     pub id: String,
     pub name: String,

@@ -1,5 +1,4 @@
 use crate::api::error::APIError;
-use crate::api::openapi::DECK_TAG;
 use crate::auth::Claims;
 use crate::db::crud::flashcards::{self, deck};
 use crate::db::crud::tracking::activity::log_activity;
@@ -12,11 +11,13 @@ use crate::models::{
 use crate::schema::AppState;
 use axum::extract::{Json, Path, Query, State};
 use axum::http::StatusCode;
+
+use crate::api::DECK_TAG;
 /// Creates a new Deck using user defaults
 #[utoipa::path(
-    post,
-    tag = DECK_TAG,
-    path = "/deck",
+    post, tag = DECK_TAG,
+    
+    path = "/",
     responses(
         (status = 201, description = "Deck created successfully", body = CreationId),
         (status = 400, description = "Bad request"),
@@ -45,9 +46,9 @@ pub async fn create_deck(
 
 /// One deck
 #[utoipa::path(
-    get,
-    tag = DECK_TAG,
-    path = "/deck/{id}",
+    get, tag = DECK_TAG,
+    
+    path = "/{id}",
     params(
         ("id" = String, Path, description = "Deck ID")
     ),
@@ -89,9 +90,9 @@ pub async fn fetch_deck(
 
 /// Decks the user has access to
 #[utoipa::path(
-    get,
-    tag = DECK_TAG,
-    path = "/deck",
+    get, tag = DECK_TAG,
+    
+    path = "/",
     responses(
         (status = 200, description = "User decks retrieved"),
         (status = 404, description = "Deck not found"),
@@ -110,11 +111,11 @@ pub async fn fetch_deck_list(
 
 /// Only public decks
 #[utoipa::path(
-    get,
-    tag = DECK_TAG,
-    path = "/deck/public",
+    get, tag = DECK_TAG,
+    
+    path = "/public",
     responses(
-        (status = 200, description = "Public decks retrieved"),
+        (status = 200, description = "Public decks retrieved", body=Vec<DeckPublic>),
         (status = 404, description = "Deck not found"),
         (status = 401, description = "Unauthorized")
     ),
@@ -131,12 +132,13 @@ pub async fn fetch_deck_list_public(
 /// Updates a deck
 #[utoipa::path(
     patch,
-    tag = DECK_TAG,
+    
 
-    path = "/deck/{id}",
+    path = "/{id}",
     params(
         ("id" = String, Path, description = "Deck ID")
     ),
+    tag = DECK_TAG,
     request_body = DeckWithCardsUpdate,
     responses(
         (status = 204, description = "Deck updated successfully"),
@@ -202,8 +204,8 @@ pub async fn update_deck(
 /// Deletes a deck
 #[utoipa::path(
     delete,
-    tag=DECK_TAG,
-    path = "/deck/{id}",
+    tag = DECK_TAG,
+    path = "/{id}",
     params(
         ("id" = String, Path, description = "Deck ID")
     ),

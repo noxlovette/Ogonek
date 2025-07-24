@@ -1,4 +1,3 @@
-use super::super::openapi::LESSON_TAG;
 use crate::api::error::APIError;
 use crate::auth::Claims;
 use crate::db::crud::core::lesson;
@@ -13,6 +12,7 @@ use axum::extract::{Json, Query};
 use axum::http::StatusCode;
 use utoipa_axum::router::OpenApiRouter;
 use utoipa_axum::routes;
+use crate::api::LESSON_TAG;
 
 pub fn router() -> OpenApiRouter<AppState> {
     OpenApiRouter::new().routes(routes!(
@@ -26,12 +26,12 @@ pub fn router() -> OpenApiRouter<AppState> {
 /// Fetches lesson by id
 #[utoipa::path(
     get,
-    path = "/lesson/{id}",
-    tag = LESSON_TAG,
+    path = "/{id}",
+    
     params(
         ("id" = String, Path, description = "Lesson ID")
     ),
-    responses(
+    tag = LESSON_TAG, responses(
         (status = 200, description = "Lesson retrieved successfully", body = LessonFull),
         (status = 404, description = "Lesson not found"),
         (status = 401, description = "Unauthorized")
@@ -50,15 +50,15 @@ pub async fn fetch_lesson(
 /// Lessons belonging to a user
 #[utoipa::path(
     get,
-    path = "/lesson",
-    tag = LESSON_TAG,
+    path = "/",
+    
     params(
         ("page" = Option<u32>, Query, description = "Page number"),
         ("per_page" = Option<u32>, Query, description = "Items per page"),
         ("search" = Option<String>, Query, description = "Search term"),
         ("assignee" = Option<String>, Query, description = "Filter by assignee")
     ),
-    responses(
+    tag = LESSON_TAG, responses(
         (status = 200, description = "Lessons retrieved successfully", body = PaginatedResponse<LessonFull>),
         (status = 401, description = "Unauthorized")
     ),
@@ -83,9 +83,9 @@ pub async fn list_lessons(
 /// Creates a lesson with user defaults specified elsewhere
 #[utoipa::path(
     post,
-    path = "/lesson",
-    tag = LESSON_TAG,
-    responses(
+    path = "/",
+    
+    tag = LESSON_TAG, responses(
         (status = 201, description = "Lesson created successfully", body = CreationId),
         (status = 400, description = "Bad request"),
         (status = 401, description = "Unauthorized")
@@ -113,12 +113,12 @@ pub async fn create_lesson(
 /// Deletes lesson
 #[utoipa::path(
     delete,
-    path = "/lesson/{id}",
-    tag = LESSON_TAG,
+    path = "/{id}",
+    
     params(
         ("id" = String, Path, description = "Lesson ID")
     ),
-    responses(
+    tag = LESSON_TAG, responses(
         (status = 204, description = "Lesson deleted successfully"),
         (status = 404, description = "Lesson not found"),
         (status = 401, description = "Unauthorized")
@@ -155,13 +155,13 @@ pub async fn delete_lesson(
 /// Updates lesson
 #[utoipa::path(
     patch,
-    tag = LESSON_TAG,
-    path = "/lesson/{id}",
+    
+    path = "/{id}",
     params(
         ("id" = String, Path, description = "Lesson ID")
     ),
     request_body = LessonUpdate,
-    responses(
+    tag = LESSON_TAG, responses(
         (status = 204, description = "Lesson updated successfully"),
         (status = 404, description = "Lesson not found"),
         (status = 401, description = "Unauthorized")

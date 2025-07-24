@@ -1,7 +1,7 @@
 use crate::api::core::{deck, learn};
 use crate::schema::AppState;
 use axum::Router;
-use axum::routing::{get, patch, post};
+use axum::routing::get;
 
 pub fn deck_routes() -> Router<AppState> {
     Router::new()
@@ -14,10 +14,4 @@ pub fn deck_routes() -> Router<AppState> {
                 .post(learn::reset_deck_progress),
         )
         .route("/public", get(deck::fetch_deck_list_public))
-        .route(
-            "/learn/subscribe/{id}",
-            post(learn::subscribe_to_deck).delete(learn::unsubscribe_from_deck),
-        )
-        .route("/learn/{id}", patch(learn::update_card_progress))
-        .route("/learn", get(learn::fetch_due_cards))
 }

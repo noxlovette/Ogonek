@@ -94,7 +94,7 @@ impl TokenPair {
 }
 
 // Simple struct to hold the invite data
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, ToSchema)]
 pub struct InviteToken {
     pub teacher_id: String,
     pub created_at: DateTime<Utc>,
@@ -122,7 +122,7 @@ pub struct InviteQuery {
     pub is_registered: String,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct InviterQuery {
     pub invite: String,

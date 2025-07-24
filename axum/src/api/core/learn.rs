@@ -1,4 +1,3 @@
-use crate::api::LEARN_TAG;
 use crate::api::error::APIError;
 use crate::auth::Claims;
 use crate::db::crud::flashcards;
@@ -9,13 +8,14 @@ use crate::tools::sm2::SM2Calculator;
 use axum::extract::{Json, Path, State};
 use axum::http::StatusCode;
 use chrono::{Duration, Utc};
+use crate::api::LEARN_TAG;
 
 /// Subscribes the user to the deck
 #[utoipa::path(
     post,
-    tag=LEARN_TAG,
-    path = "/learn/subscribe/{id}",
-    params(
+    
+    path = "/subscribe/{id}",
+    tag = LEARN_TAG, params(
         ("id" = String, Path, description = "Deck ID")
     ),
     responses(
@@ -47,9 +47,9 @@ pub async fn subscribe_to_deck(
 /// Unsubscribes the user from the deck
 #[utoipa::path(
     delete,
-    tag=LEARN_TAG,
-    path = "/learn/subscribe/{id}",
-    params(
+    
+    path = "/subscribe/{id}",
+    tag = LEARN_TAG, params(
         ("id" = String, Path, description = "Deck ID")
     ),
     responses(
@@ -80,8 +80,8 @@ pub async fn unsubscribe_from_deck(
 /// Returns the list of all cards due for review
 #[utoipa::path(
     get,
-    tag = LEARN_TAG,
-    path = "/learn",
+    tag = LEARN_TAG, 
+    path = "/",
     responses(
         (status = 204, description = "Due cards fetched successfully", body = Vec<CardProgressWithFields>),
         (status = 401, description = "Unauthorized")
@@ -100,9 +100,9 @@ pub async fn fetch_due_cards(
 /// Updates the learn progress on a card
 #[utoipa::path(
     get,
-    tag = LEARN_TAG,
-    path = "/learn/{id}",
-    params(
+    
+    path = "/{id}",
+    tag = LEARN_TAG, params(
         ("id" = String, Path, description = "Card ID")
     ),
     responses(
@@ -142,9 +142,9 @@ pub async fn update_card_progress(
 /// Resets the progress for a particular deck
 #[utoipa::path(
     delete,
-    tag = LEARN_TAG,
-    path = "/learn/{id}",
-    params(
+    
+    path = "/{id}",
+    tag = LEARN_TAG, params(
         ("id" = String, Path, description = "Deck ID")
     ),
     responses(

@@ -13,10 +13,9 @@ use validator::Validate;
 use crate::api::AUTH_TAG;
 #[utoipa::path(
     post,
-    tag=AUTH_TAG,
-    path = "/auth/signup",
+    path = "/signup",
     request_body = SignUpPayload, 
-    responses(
+    tag = AUTH_TAG,  responses(
         (status = 201, description = "User registered successfully"),
         (status = 400, description = "Invalid registration data"),
         (status = 409, description = "User already exists")
@@ -46,11 +45,9 @@ pub async fn signup(
 #[utoipa::path(
     post,
 
-    tag=AUTH_TAG,
-
-    path = "/auth/signin",
+    path = "/signin",
     request_body = AuthPayload, 
-    responses(
+    tag = AUTH_TAG,  responses(
         (status = 200, description = "Authentication successful", body = TokenPair),
         (status = 401, description = "Invalid credentials")
     )
@@ -82,10 +79,9 @@ pub async fn signin(
 /// Receives the refresh token as json, gets it, then decodes, finds the user id, and generates a new access token
 #[utoipa::path(
     post,
-    tag=AUTH_TAG,
-    path = "/auth/refresh",
+        path = "/refresh",
     request_body = RefreshTokenPayload,
-    responses(
+    tag = AUTH_TAG,  responses(
         (status = 200, description = "Token refreshed", body = RefreshTokenResponse),
         (status = 401, description = "Invalid refresh token")
     )
@@ -108,12 +104,11 @@ pub async fn refresh(
 /// Generates the invite link for the teacher
 #[utoipa::path(
     get,
-    tag=AUTH_TAG,
     path = "/invite",
     params(
         ("invite" = InviteQuery, Query, description = "Invite token")
     ),
-    responses(
+    tag = AUTH_TAG,  responses(
         (status = 200, description = "Invite link generated", body = String),
         (status = 401, description = "Unauthorized"),
         (status = 400, description = "Invalid invite token")
@@ -134,10 +129,10 @@ pub async fn generate_invite_link(
     tracing::info!("Encoded token: {encoded}");
 
     if query.is_registered == "true" {
-        Ok(Json(format!("{frontend_url}/auth/bind?invite={encoded}",)))
+        Ok(Json(format!("{frontend_url}/bind?invite={encoded}",)))
     } else {
         Ok(Json(
-            format!("{frontend_url}/auth/signup?invite={encoded}",),
+            format!("{frontend_url}/signup?invite={encoded}",),
         ))
     }
 }
@@ -145,10 +140,9 @@ pub async fn generate_invite_link(
 /// Binds the student to the teacher
 #[utoipa::path(
     post,
-    tag=AUTH_TAG,
-    path = "/auth/bind",
+    path = "/bind",
     request_body = BindPayload,
-    responses(
+    tag = AUTH_TAG,  responses(
         (status = 204, description = "Student bound to teacher successfully"),
         (status = 400, description = "Invalid bind data"),
         (status = 401, description = "Invalid invite token")

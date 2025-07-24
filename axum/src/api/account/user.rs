@@ -1,4 +1,3 @@
-use crate::api::USER_TAG;
 use crate::api::error::APIError;
 use crate::auth::password::hash_password;
 use crate::auth::{Claims, tokens};
@@ -7,14 +6,14 @@ use crate::models::{InviterQuery, User};
 use crate::schema::AppState;
 use axum::extract::{Json, Query, State};
 use axum::http::StatusCode;
+use crate::api::USER_TAG;
 
 use crate::models::users::UserUpdate;
 /// Gets the inviter's credentials
 #[utoipa::path(
     get,
-    tag=USER_TAG,
     path = "/inviter",
-    params(
+    tag = USER_TAG, params(
         ("invite" = Option<String>, Query, description = "Invite token")
     ),
     responses(
@@ -38,7 +37,7 @@ pub async fn fetch_inviter(
 /// Fetches self for the user
 #[utoipa::path(
     get,
-    tag=USER_TAG,
+   tag = USER_TAG,  
     path = "/me",
     responses(
         (status = 200, description = "User details retrieved", body = User),
@@ -57,9 +56,8 @@ pub async fn fetch_me(
 
 /// Deletes user by their claims
 #[utoipa::path(
-    delete,
-    tag=USER_TAG,
-    path = "/user",
+    delete,tag = USER_TAG, 
+    path = "/",
     responses(
         (status = 204, description = "User deleted successfully"),
         (status = 401, description = "Unauthorized")
@@ -77,8 +75,8 @@ pub async fn delete_user(
 /// Updates the user by their claims
 #[utoipa::path(
     patch,
-    tag=USER_TAG,
-    path = "/user",
+   tag = USER_TAG,  
+    path = "/",
     request_body = UserUpdate,
     responses(
         (status = 204, description = "User updated successfully"),
