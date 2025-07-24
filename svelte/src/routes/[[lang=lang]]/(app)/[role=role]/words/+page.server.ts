@@ -1,6 +1,8 @@
+import { dev } from "$app/environment";
 import logger from "$lib/logger";
 import { handleApiResponse, isSuccessResponse } from "$lib/server";
 import type { DeckSmall, NewResponse } from "$lib/types";
+import { delay } from "$lib/utils";
 import { fail, redirect, type Actions } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 
@@ -13,17 +15,16 @@ export const load: PageServerLoad = async ({ fetch, url }) => {
   if (search) params.append("search", search);
   if (assignee) params.append("assignee", assignee);
 
-  const response = await fetch(`/axum/deck?${params.toString()}`);
-
-  const decks: DeckSmall[] = await response.json();
+  const apiUrl = `/axum/deck?${params.toString()}`;
 
   return {
-    decks,
+    decksResponse: (dev ? delay(2500) : Promise.resolve())
+      .then(() => fetch(apiUrl))
+      .then((res) => res.json()) as Promise<DeckSmall[]>,
   };
 };
 
 export const actions: Actions = {
-  // Creates a new deck
   new: async ({ fetch }) => {
     const body = {
       name: "New Deck",

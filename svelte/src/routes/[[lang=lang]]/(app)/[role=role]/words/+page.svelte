@@ -1,5 +1,4 @@
 <script lang="ts">
-  import type { PageData } from "./$types";
   import {
     H1,
     H3,
@@ -7,11 +6,13 @@
     Table,
     UniButton,
     HeaderEmbellish,
+    LoadingCard,
+    SearchBar,
   } from "$lib/components";
   import { enhance } from "$app/forms";
   import { enhanceForm } from "$lib/utils";
   import { page } from "$app/state";
-  import type { TableConfig, Deck } from "$lib/types";
+  import type { TableConfig, DeckSmall } from "$lib/types";
   import { ArrowBigRight, PlusCircle, ShoppingBag } from "lucide-svelte";
   import { m } from "$lib/paraglide/messages";
   import {
@@ -22,9 +23,10 @@
   } from "$lib/stores";
   import { goto } from "$app/navigation";
   import EmptySpace from "$lib/components/typography/EmptySpace.svelte";
+  import TableSkeleton from "$lib/components/UI/interactive/TableSkeleton.svelte";
 
-  let { data }: { data: PageData } = $props();
-  let { decks, students } = $derived(data);
+  let { data } = $props();
+  let { students } = $derived(data);
 
   const role = page.params.role;
 
@@ -38,7 +40,7 @@
     );
   });
 
-  const deckConfig: TableConfig<Deck> = {
+  const deckConfig: TableConfig<DeckSmall> = {
     columns: [
       { key: "name", label: m.title() },
       {
@@ -51,20 +53,13 @@
             : m.simple_east_crocodile_spark(),
       },
       {
-        key: "visibility",
-        label: m.visibility(),
-        formatter: (value: string | boolean | undefined) => {
-          switch (String(value)) {
-            case "public":
-              return "Public";
-            case "private":
-              return "Private";
-            case "assigned":
-              return "Assigned";
-            default:
-              return String(value);
-          }
-        },
+        key: "assigneeName",
+        label: m.assignee(),
+      },
+      {
+        key: "isSubscribed",
+        label: m.stout_royal_macaw_fear(),
+        formatter: (value: string | boolean | undefined) => (value ? "○" : "◉"),
       },
     ],
   };
@@ -117,26 +112,40 @@
     {/if}
   </div>
 </HeaderEmbellish>
-{#if role === "s"}
-  <div class="space-y-4">
-    {#if decks.length}
-      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {#each decks as deck (deck.id)}
-          <DeckCard {deck} />
-        {/each}
-      </div>
-    {:else}
-      <EmptySpace>
-        <H3>{m.noDecks()}</H3>
-      </EmptySpace>
-    {/if}
-  </div>
-{:else}
-  <Table
-    config={deckConfig}
-    href="words/w"
-    {students}
-    items={decks}
-    total={decks.length}
-  />
-{/if}
+
+<SearchBar />
+{#await data.decksResponse}
+  {#if role === "s"}
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+      {#each Array(6) as index (index)}
+        <LoadingCard />
+      {/each}
+    </div>
+  {:else}
+    <TableSkeleton />
+  {/if}
+{:then decks}
+  {#if role === "s"}
+    <div class="space-y-4">
+      {#if decks.length}
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {#each decks as deck (deck.id)}
+            <DeckCard {deck} />
+          {/each}
+        </div>
+      {:else}
+        <EmptySpace>
+          <H3>{m.noDecks()}</H3>
+        </EmptySpace>
+      {/if}
+    </div>
+  {:else}
+    <Table
+      config={deckConfig}
+      href="words/w"
+      {students}
+      items={decks}
+      total={decks.length}
+    />
+  {/if}
+{/await}

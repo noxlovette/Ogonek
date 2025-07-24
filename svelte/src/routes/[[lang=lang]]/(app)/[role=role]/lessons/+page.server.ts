@@ -1,6 +1,8 @@
+import { dev } from "$app/environment";
 import logger from "$lib/logger";
 import { handleApiResponse, isSuccessResponse } from "$lib/server";
-import type { Lesson, NewResponse, PaginatedResponse } from "$lib/types";
+import type { LessonSmall, NewResponse, PaginatedResponse } from "$lib/types";
+import { delay } from "$lib/utils";
 import { fail, redirect, type Actions } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 
@@ -19,12 +21,10 @@ export const load: PageServerLoad = async ({ fetch, url }) => {
 
   const apiUrl = `/axum/lesson?${params.toString()}`;
 
-  const lessonsPaginated = await fetch(apiUrl).then(
-    (res) => res.json() as Promise<PaginatedResponse<Lesson>>,
-  );
-
   return {
-    lessonsPaginated,
+    lessonsPaginated: (dev ? delay(2500) : Promise.resolve())
+      .then(() => fetch(apiUrl))
+      .then((res) => res.json()) as Promise<PaginatedResponse<LessonSmall>>,
   };
 };
 

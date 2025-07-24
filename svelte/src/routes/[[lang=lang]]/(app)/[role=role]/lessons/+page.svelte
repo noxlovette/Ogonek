@@ -8,11 +8,12 @@
     EmptySpace,
     H3,
     SearchBar,
+    TableSkeleton,
   } from "$lib/components";
   import { enhance } from "$app/forms";
   import { enhanceForm } from "$lib/utils";
   import { page } from "$app/state";
-  import type { TableConfig, Lesson } from "$lib/types/index.js";
+  import type { TableConfig, LessonSmall } from "$lib/types/index.js";
   import { formatDate } from "@noxlovette/svarog";
 
   import {
@@ -25,15 +26,14 @@
   import { goto } from "$app/navigation";
   import { PlusCircle } from "lucide-svelte";
   import { m } from "$lib/paraglide/messages.js";
+  import LoadingCard from "$lib/components/cards/LoadingCard.svelte";
 
   let { data } = $props();
-  let { students } = $derived(data);
-  let { data: lessons, total } = $derived(data.lessonsPaginated);
 
   let role = page.params.role;
   let href = role === "t" ? "/t/lessons/l" : `/s/lessons/l`;
 
-  const lessonConfig: TableConfig<Lesson> = {
+  const lessonConfig: TableConfig<LessonSmall> = {
     columns: [
       { key: "title", label: m.title() },
       { key: "topic", label: m.topic() },
@@ -84,29 +84,42 @@
     {/if}
   </div>
 </HeaderEmbellish>
-{#if role === "t"}
-  <Table
-    items={data.lessonsPaginated.data}
-    config={lessonConfig}
-    {href}
-    {total}
-    {students}
-  />
-{:else}
-  <SearchBar />
-  {#if lessons.length < 1}
+
+<SearchBar />
+
+{#await data.lessonsPaginated}
+  {#if role === "s"}
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+      {#each Array(6) as index (index)}
+        <LoadingCard />
+      {/each}
+    </div>
+  {:else}
+    <TableSkeleton />
+  {/if}
+{:then lessons}
+  {#if lessons.data.length < 1}
     <EmptySpace>
       <H3>{m.noLessons()}</H3>
     </EmptySpace>
   {/if}
-  <section class="space-y-4">
+  {#if role === "s"}
     <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
-      {#each lessons as lesson (lesson.id)}
+      {#each lessons.data as lesson (lesson.id)}
         <LessonCard {lesson} />
       {/each}
     </div>
-  </section>
-{/if}
+  {:else}
+    <Table
+      items={lessons.data}
+      total={lessons.total}
+      {href}
+      config={lessonConfig}
+    />
+  {/if}
+{:catch error: App.Error}
+  <p>Error loading lessons: {error.errorID}</p>
+{/await}
 
 <svelte:head>
   <title>{m.lessons()}</title>
