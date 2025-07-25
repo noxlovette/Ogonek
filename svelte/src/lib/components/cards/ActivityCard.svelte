@@ -21,13 +21,13 @@
 
     switch (activity.modelType) {
       case "lesson":
-        base = "lessons/l";
+        base = "lessons";
         break;
       case "task":
-        base = "tasks/t";
+        base = "tasks";
         break;
       case "deck":
-        base = "words/w";
+        base = "words";
         break;
       default:
         base = "dashboard";

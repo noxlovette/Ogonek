@@ -15,7 +15,7 @@
   const role = page.params.role;
 
   const href =
-    role === "t" ? `/t/lessons/l/${lesson.id}` : `/s/lessons/l/${lesson.id}`;
+    role === "t" ? `/t/lessons/${lesson.id}` : `/s/lessons/${lesson.id}`;
 
   const badgeText = role == "t" ? lesson.title : formattedDate;
   const title = lesson.topic;

@@ -1,4 +1,5 @@
 import logger from "$lib/logger";
+import { routes } from "$lib/routes";
 import { fail, redirect } from "@sveltejs/kit";
 import type { Actions, PageServerLoad } from "./$types";
 
@@ -14,10 +15,9 @@ export const actions: Actions = {
     const isRegistered = formData.has("isRegistered") || false;
 
     logger.info({ formData });
-    const response = await fetch(
-      `/axum/auth/invite?isRegistered=${isRegistered}`,
-      { method: "POST" },
-    );
+    const response = await fetch(routes.auth.invite(isRegistered), {
+      method: "POST",
+    });
 
     if (!response.ok) {
       logger.error({ response }, "Failed to generate invite link");

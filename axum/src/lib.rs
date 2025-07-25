@@ -5,5 +5,4 @@ pub mod error;
 pub mod models;
 pub mod s3;
 pub mod schema;
-pub mod tests;
 pub mod tools;

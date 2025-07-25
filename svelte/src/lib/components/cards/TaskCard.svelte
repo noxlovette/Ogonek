@@ -12,9 +12,7 @@
   let { task } = $props();
   const formattedDate: string = formatDate(task.dueDate);
   const href: string =
-    $user.role === "teacher"
-      ? `/t/tasks/t/${task.id}`
-      : `/s/tasks/t/${task.id}`;
+    $user.role === "teacher" ? `/t/tasks/${task.id}` : `/s/tasks/${task.id}`;
   const badgeText: string = `${m.less_arable_starfish_belong()} ${formattedDate}`;
   const urgency = getUrgency(task);
 </script>

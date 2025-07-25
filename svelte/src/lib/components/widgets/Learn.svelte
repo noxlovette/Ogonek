@@ -41,7 +41,7 @@
     </div>
 
     {#if cardsCount > 0}
-      <UniButton variant="primary" Icon={ArrowBigRight} href="words/learn">
+      <UniButton variant="primary" Icon={ArrowBigRight} href="flashcards/learn">
         {m.helpful_slow_flea_catch()}
       </UniButton>
     {:else}

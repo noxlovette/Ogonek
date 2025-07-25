@@ -38,7 +38,6 @@ async fn run_server() -> anyhow::Result<()> {
         .nest("/tasks", task_routes())
         .nest("/decks", deck_routes())
         .nest("/s3", s3_routes())
-        .nest("/files", file_routes())
         .nest("/learn", learn_routes()) // assuming you have this
         .layer(axum::middleware::from_fn(validate_api_key));
 

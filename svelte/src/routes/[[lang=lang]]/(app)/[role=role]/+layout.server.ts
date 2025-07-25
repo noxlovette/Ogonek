@@ -1,9 +1,10 @@
 import { env } from "$env/dynamic/private";
+import { routes } from "$lib/routes";
 import redis from "$lib/server/redisClient";
 import type { DashboardData } from "$lib/types";
 import type { LayoutServerLoad } from "./$types";
 export const load: LayoutServerLoad = async ({ fetch }) => {
-  const dashboardData = (await fetch("/axum/dashboard").then((res) =>
+  const dashboardData = (await fetch(routes.users.dashboard()).then((res) =>
     res.json(),
   )) as DashboardData;
 

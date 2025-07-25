@@ -28,7 +28,7 @@
         variant="primary">Add Lesson</UniButton
       >
     </form>
-    <form action="/t/words?/new" method="POST" class="" use:enhance>
+    <form action="/t/flashcards?/new" method="POST" class="" use:enhance>
       <UniButton
         size="sm"
         Icon={WholeWord}

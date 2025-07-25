@@ -1,0 +1,3339 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Ogonek API",
+    "description": "",
+    "contact": {
+      "name": "API Support",
+      "email": "danila.volkov@noxlovette.com"
+    },
+    "license": {
+      "name": ""
+    },
+    "version": "1.6.0"
+  },
+  "servers": [
+    {
+      "url": "/",
+      "description": "Current server"
+    }
+  ],
+  "paths": {
+    "/api/v1/auth/bind": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Binds the student to the teacher",
+        "operationId": "bind_student_to_teacher",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BindPayload"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Student bound to teacher successfully"
+          },
+          "400": {
+            "description": "Invalid bind data"
+          },
+          "401": {
+            "description": "Invalid invite token"
+          }
+        }
+      }
+    },
+    "/api/v1/auth/invite": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Generates the invite link for the teacher",
+        "operationId": "generate_invite_link",
+        "parameters": [
+          {
+            "name": "invite",
+            "in": "query",
+            "description": "Invite token",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/InviteQuery"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Invite link generated",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid invite token"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/api/v1/auth/refresh": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Receives the refresh token as json, gets it, then decodes, finds the user id, and generates a new access token",
+        "operationId": "refresh",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefreshTokenPayload"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Token refreshed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RefreshTokenResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid refresh token"
+          }
+        }
+      }
+    },
+    "/api/v1/auth/signin": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "operationId": "signin",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthPayload"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Authentication successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenPair"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials"
+          }
+        }
+      }
+    },
+    "/api/v1/auth/signup": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "operationId": "signup",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignUpPayload"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "User registered successfully"
+          },
+          "400": {
+            "description": "Invalid registration data"
+          },
+          "409": {
+            "description": "User already exists"
+          }
+        }
+      }
+    },
+    "/api/v1/decks/": {
+      "get": {
+        "tags": [
+          "Deck"
+        ],
+        "summary": "Decks the user has access to",
+        "operationId": "fetch_deck_list",
+        "responses": {
+          "200": {
+            "description": "User decks retrieved"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Deck not found"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Deck"
+        ],
+        "summary": "Creates a new Deck using user defaults",
+        "operationId": "create_deck",
+        "responses": {
+          "201": {
+            "description": "Deck created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreationId"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/api/v1/decks/public": {
+      "get": {
+        "tags": [
+          "Deck"
+        ],
+        "summary": "Only public decks",
+        "operationId": "fetch_deck_list_public",
+        "responses": {
+          "200": {
+            "description": "Public decks retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DeckPublic"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Deck not found"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/api/v1/decks/{id}": {
+      "get": {
+        "tags": [
+          "Deck"
+        ],
+        "summary": "One deck",
+        "operationId": "fetch_deck",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Deck ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Deck retrieved"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Deck not found"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Deck"
+        ],
+        "summary": "Deletes a deck",
+        "operationId": "delete_deck",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Deck ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Deck deleted successfully"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Deck not found"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "Deck"
+        ],
+        "summary": "Updates a deck",
+        "operationId": "update_deck",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Deck ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeckWithCardsUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Deck updated successfully"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Deck not found"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/api/v1/learn/": {
+      "get": {
+        "tags": [
+          "Learn"
+        ],
+        "summary": "Returns the list of all cards due for review",
+        "operationId": "fetch_due_cards",
+        "responses": {
+          "204": {
+            "description": "Due cards fetched successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CardProgressWithFields"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/api/v1/learn/subscribe/{id}": {
+      "post": {
+        "tags": [
+          "Learn"
+        ],
+        "summary": "Subscribes the user to the deck",
+        "operationId": "subscribe_to_deck",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Deck ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Deck subscribed to successfully"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Deck not found"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Learn"
+        ],
+        "summary": "Unsubscribes the user from the deck",
+        "operationId": "unsubscribe_from_deck",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Deck ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Deck subscribed to successfully"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Deck not found"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/api/v1/learn/{id}": {
+      "put": {
+        "tags": [
+          "Learn"
+        ],
+        "summary": "Updates the learn progress on a card",
+        "operationId": "update_card_progress",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Card ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Card progress updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CardProgressWithFields"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Learn"
+        ],
+        "summary": "Resets the progress for a particular deck",
+        "operationId": "reset_deck_progress",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Deck ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Card progress updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CardProgressWithFields"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/api/v1/lessons/": {
+      "get": {
+        "tags": [
+          "Lesson"
+        ],
+        "summary": "Lessons belonging to a user",
+        "operationId": "list_lessons",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 0
+            }
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "description": "Items per page",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 0
+            }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "description": "Search term",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "assignee",
+            "in": "query",
+            "description": "Filter by assignee",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lessons retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponse_LessonFull"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Lesson"
+        ],
+        "summary": "Creates a lesson with user defaults specified elsewhere",
+        "operationId": "create_lesson",
+        "responses": {
+          "201": {
+            "description": "Lesson created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreationId"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/api/v1/lessons/{id}": {
+      "get": {
+        "tags": [
+          "Lesson"
+        ],
+        "summary": "Fetches lesson by id",
+        "operationId": "fetch_lesson",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Lesson ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lesson retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LessonFull"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Lesson not found"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Lesson"
+        ],
+        "summary": "Deletes lesson",
+        "operationId": "delete_lesson",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Lesson ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Lesson deleted successfully"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Lesson not found"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "Lesson"
+        ],
+        "summary": "Updates lesson",
+        "operationId": "update_lesson",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Lesson ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LessonUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Lesson updated successfully"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Lesson not found"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/api/v1/s3/abort": {
+      "post": {
+        "tags": [
+          "Task"
+        ],
+        "summary": "Cancel multipart upload",
+        "operationId": "abort_multipart_upload",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AbortMultipartRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Upload aborted successfully"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "404": {
+            "description": "File not found"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/api/v1/s3/complete": {
+      "post": {
+        "tags": [
+          "Task"
+        ],
+        "summary": "Complete a part of the upload",
+        "operationId": "complete_multipart_upload",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CompleteMultipartRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Upload completed successfully"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "404": {
+            "description": "File not found"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/api/v1/s3/init": {
+      "post": {
+        "tags": [
+          "Task"
+        ],
+        "summary": "Multipart upload init endpoint",
+        "operationId": "init_multipart_upload",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InitUploadRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Multipart upload initialized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MultipartUploadInit"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "404": {
+            "description": "Parent folder not found"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/api/v1/tasks/": {
+      "get": {
+        "tags": [
+          "Task"
+        ],
+        "summary": "Tasks belonging to a user (through assignment or direct ownership)",
+        "operationId": "list_tasks",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 0
+            }
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "description": "Items per page",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 0
+            }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "description": "Search term",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "assignee",
+            "in": "query",
+            "description": "Filter by assignee",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "completed",
+            "in": "query",
+            "description": "Filter by completion status",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "priority",
+            "in": "query",
+            "description": "Filter by priority",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Tasks retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponse_TaskFull"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Task"
+        ],
+        "summary": "Creates a new task",
+        "operationId": "create_task",
+        "responses": {
+          "201": {
+            "description": "Task created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreationId"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/api/v1/tasks/{id}": {
+      "get": {
+        "tags": [
+          "Task"
+        ],
+        "summary": "One Task",
+        "operationId": "fetch_task",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Task ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Task with files retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaskWithFilesResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Task not found"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Task"
+        ],
+        "summary": "Toggles completed/not completed on a task",
+        "operationId": "toggle_task",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Task ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Task with files retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaskWithFilesResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Task not found"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Task"
+        ],
+        "summary": "Deletes a task",
+        "operationId": "delete_task",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Task ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Task deleted successfully"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Task not found"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "Task"
+        ],
+        "summary": "Updates the task",
+        "operationId": "update_task",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Task ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TaskUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Task updated successfully"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Task not found"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/api/v1/users/": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Fetches self for the user",
+        "operationId": "fetch_me",
+        "responses": {
+          "200": {
+            "description": "User details retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Deletes user by their claims",
+        "operationId": "delete_user",
+        "responses": {
+          "204": {
+            "description": "User deleted successfully"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Updates the user by their claims",
+        "operationId": "update_user",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "User updated successfully"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/api/v1/users/dashboard": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "This data populates the sidebar with badges,\nthe dashboard view with data,\nand the stores for profile and user",
+        "operationId": "fetch_dashboard",
+        "responses": {
+          "200": {
+            "description": "Dashboard data retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DashboardData"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/api/v1/users/inviter": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Gets the inviter's credentials",
+        "operationId": "fetch_inviter",
+        "parameters": [
+          {
+            "name": "invite",
+            "in": "query",
+            "description": "Invite token",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Inviter details retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid invite token"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/api/v1/users/profile": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Fetch the profile, WITHOUT teacher data even if that's a student requesing",
+        "operationId": "fetch_profile",
+        "responses": {
+          "200": {
+            "description": "Profile details retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProfileWithTS"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Update the profile, or create a new one if already there",
+        "operationId": "upsert_profile",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProfileUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Profile updated successfully"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/api/v1/users/student": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "operationId": "list_students",
+        "responses": {
+          "200": {
+            "description": "Students list retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Student"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/api/v1/users/student/{id}": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "operationId": "fetch_student",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Student ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Student details retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompositeStudent"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Student not found"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "operationId": "upsert_student",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Student ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Student relationship created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "User"
+        ],
+        "operationId": "remove_student",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Student ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Student relationship removed"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Student not found"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "User"
+        ],
+        "operationId": "update_student",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Student ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateStudentRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Student updated successfully"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Student not found"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AbortMultipartRequest": {
+        "type": "object",
+        "required": [
+          "uploadId",
+          "fileId",
+          "s3Key"
+        ],
+        "properties": {
+          "fileId": {
+            "type": "string"
+          },
+          "s3Key": {
+            "type": "string"
+          },
+          "uploadId": {
+            "type": "string"
+          }
+        }
+      },
+      "ActivityLog": {
+        "type": "object",
+        "required": [
+          "modelType",
+          "modelId",
+          "action"
+        ],
+        "properties": {
+          "action": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "modelId": {
+            "type": "string"
+          },
+          "modelType": {
+            "type": "string"
+          }
+        }
+      },
+      "AuthPayload": {
+        "type": "object",
+        "required": [
+          "username",
+          "pass"
+        ],
+        "properties": {
+          "pass": {
+            "type": "string"
+          },
+          "username": {
+            "type": "string"
+          }
+        }
+      },
+      "BadgeWrapper_DeckSmall": {
+        "type": "object",
+        "description": "Generic wrapper with the badge count in it",
+        "required": [
+          "data",
+          "count"
+        ],
+        "properties": {
+          "count": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "name",
+                "visibility"
+              ],
+              "properties": {
+                "assigneeName": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "description": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "id": {
+                  "type": "string"
+                },
+                "isSubscribed": {
+                  "type": [
+                    "boolean",
+                    "null"
+                  ]
+                },
+                "name": {
+                  "type": "string"
+                },
+                "seen": {
+                  "type": [
+                    "boolean",
+                    "null"
+                  ]
+                },
+                "visibility": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "BadgeWrapper_LessonSmall": {
+        "type": "object",
+        "description": "Generic wrapper with the badge count in it",
+        "required": [
+          "data",
+          "count"
+        ],
+        "properties": {
+          "count": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "description": "Mini-lesson",
+              "required": [
+                "id",
+                "title",
+                "topic",
+                "assigneeName",
+                "createdAt"
+              ],
+              "properties": {
+                "assigneeName": {
+                  "type": "string"
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "id": {
+                  "type": "string"
+                },
+                "seen": {
+                  "type": [
+                    "boolean",
+                    "null"
+                  ]
+                },
+                "title": {
+                  "type": "string"
+                },
+                "topic": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "BadgeWrapper_TaskSmall": {
+        "type": "object",
+        "description": "Generic wrapper with the badge count in it",
+        "required": [
+          "data",
+          "count"
+        ],
+        "properties": {
+          "count": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "title",
+                "priority",
+                "completed",
+                "assigneeName"
+              ],
+              "properties": {
+                "assigneeName": {
+                  "type": "string"
+                },
+                "completed": {
+                  "type": "boolean"
+                },
+                "dueDate": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "format": "date-time"
+                },
+                "id": {
+                  "type": "string"
+                },
+                "priority": {
+                  "type": "integer",
+                  "format": "int32"
+                },
+                "seen": {
+                  "type": [
+                    "boolean",
+                    "null"
+                  ]
+                },
+                "title": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "BindPayload": {
+        "type": "object",
+        "required": [
+          "studentId",
+          "inviteToken"
+        ],
+        "properties": {
+          "inviteToken": {
+            "type": "string"
+          },
+          "studentId": {
+            "type": "string"
+          }
+        }
+      },
+      "CardProgressWithFields": {
+        "type": "object",
+        "required": [
+          "id",
+          "userId",
+          "cardId",
+          "reviewCount",
+          "easeFactor",
+          "interval",
+          "front",
+          "back"
+        ],
+        "properties": {
+          "back": {
+            "type": "string"
+          },
+          "cardId": {
+            "type": "string"
+          },
+          "dueDate": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "easeFactor": {
+            "type": "number",
+            "format": "double"
+          },
+          "front": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "interval": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "lastReviewed": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "mediaUrl": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "reviewCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "userId": {
+            "type": "string"
+          }
+        }
+      },
+      "CardUpdate": {
+        "type": "object",
+        "properties": {
+          "back": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "front": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "mediaUrl": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      },
+      "CompleteMultipartRequest": {
+        "type": "object",
+        "required": [
+          "uploadId",
+          "fileId",
+          "s3Key",
+          "parts"
+        ],
+        "properties": {
+          "fileId": {
+            "type": "string"
+          },
+          "parts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CompletedPart"
+            }
+          },
+          "s3Key": {
+            "type": "string"
+          },
+          "uploadId": {
+            "type": "string"
+          }
+        }
+      },
+      "CompletedPart": {
+        "type": "object",
+        "required": [
+          "partNumber",
+          "etag"
+        ],
+        "properties": {
+          "etag": {
+            "type": "string"
+          },
+          "partNumber": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "CompositeStudent": {
+        "type": "object",
+        "required": [
+          "student",
+          "decks",
+          "lessons",
+          "tasks"
+        ],
+        "properties": {
+          "decks": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DeckSmall"
+            }
+          },
+          "lessons": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LessonSmall"
+            }
+          },
+          "student": {
+            "$ref": "#/components/schemas/Student"
+          },
+          "tasks": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TaskSmall"
+            }
+          }
+        }
+      },
+      "CreationId": {
+        "type": "object",
+        "description": "Simply contains one string, the created ID",
+        "required": [
+          "id"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        }
+      },
+      "DashboardData": {
+        "type": "object",
+        "description": "A big response that powers the dashboard view",
+        "required": [
+          "students",
+          "lessons",
+          "tasks",
+          "decks",
+          "user",
+          "profile",
+          "activity",
+          "learn",
+          "preferences"
+        ],
+        "properties": {
+          "activity": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ActivityLog"
+            }
+          },
+          "decks": {
+            "$ref": "#/components/schemas/BadgeWrapper_DeckSmall"
+          },
+          "learn": {
+            "$ref": "#/components/schemas/LearnDataDashboard"
+          },
+          "lessons": {
+            "$ref": "#/components/schemas/BadgeWrapper_LessonSmall"
+          },
+          "preferences": {
+            "$ref": "#/components/schemas/UserPreferences"
+          },
+          "profile": {
+            "$ref": "#/components/schemas/ProfileWithTS"
+          },
+          "students": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Student"
+            }
+          },
+          "tasks": {
+            "$ref": "#/components/schemas/BadgeWrapper_TaskSmall"
+          },
+          "user": {
+            "$ref": "#/components/schemas/User"
+          }
+        }
+      },
+      "DeckFull": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "visibility",
+          "createdBy",
+          "createdAt"
+        ],
+        "properties": {
+          "assignee": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdBy": {
+            "type": "string"
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "id": {
+            "type": "string"
+          },
+          "isSubscribed": {
+            "type": [
+              "boolean",
+              "null"
+            ]
+          },
+          "name": {
+            "type": "string"
+          },
+          "visibility": {
+            "type": "string"
+          }
+        }
+      },
+      "DeckPublic": {
+        "type": "object",
+        "required": [
+          "id",
+          "name"
+        ],
+        "properties": {
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "DeckSmall": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "visibility"
+        ],
+        "properties": {
+          "assigneeName": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "id": {
+            "type": "string"
+          },
+          "isSubscribed": {
+            "type": [
+              "boolean",
+              "null"
+            ]
+          },
+          "name": {
+            "type": "string"
+          },
+          "seen": {
+            "type": [
+              "boolean",
+              "null"
+            ]
+          },
+          "visibility": {
+            "type": "string"
+          }
+        }
+      },
+      "DeckUpdate": {
+        "type": "object",
+        "properties": {
+          "assignee": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "visibility": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      },
+      "DeckWithCardsUpdate": {
+        "type": "object",
+        "required": [
+          "deck",
+          "cards"
+        ],
+        "properties": {
+          "cards": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CardUpdate"
+            }
+          },
+          "deck": {
+            "$ref": "#/components/schemas/DeckUpdate"
+          }
+        }
+      },
+      "FileSmall": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "size",
+          "ownerId"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "mimeType": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "name": {
+            "type": "string"
+          },
+          "ownerId": {
+            "type": "string"
+          },
+          "s3Key": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "size": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "InitUploadRequest": {
+        "type": "object",
+        "required": [
+          "fileName",
+          "contentType",
+          "fileSize",
+          "totalParts"
+        ],
+        "properties": {
+          "contentType": {
+            "type": "string"
+          },
+          "fileName": {
+            "type": "string"
+          },
+          "fileSize": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "parentId": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "taskId": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "totalParts": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "InviteQuery": {
+        "type": "object",
+        "required": [
+          "isRegistered"
+        ],
+        "properties": {
+          "isRegistered": {
+            "type": "string"
+          }
+        }
+      },
+      "InviteToken": {
+        "type": "object",
+        "required": [
+          "teacher_id",
+          "created_at"
+        ],
+        "properties": {
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "teacher_id": {
+            "type": "string"
+          }
+        }
+      },
+      "InviterQuery": {
+        "type": "object",
+        "required": [
+          "invite"
+        ],
+        "properties": {
+          "invite": {
+            "type": "string"
+          }
+        }
+      },
+      "LearnDataDashboard": {
+        "type": "object",
+        "required": [
+          "stats"
+        ],
+        "properties": {
+          "dueCards": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int64"
+          },
+          "stats": {
+            "$ref": "#/components/schemas/SimpleStats"
+          }
+        }
+      },
+      "LessonFull": {
+        "type": "object",
+        "description": "Grown-up lesson",
+        "required": [
+          "id",
+          "title",
+          "topic",
+          "markdown",
+          "assignee",
+          "createdBy",
+          "createdAt",
+          "updatedAt",
+          "assigneeName"
+        ],
+        "properties": {
+          "assignee": {
+            "type": "string"
+          },
+          "assigneeName": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdBy": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "markdown": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "topic": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "LessonSmall": {
+        "type": "object",
+        "description": "Mini-lesson",
+        "required": [
+          "id",
+          "title",
+          "topic",
+          "assigneeName",
+          "createdAt"
+        ],
+        "properties": {
+          "assigneeName": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "id": {
+            "type": "string"
+          },
+          "seen": {
+            "type": [
+              "boolean",
+              "null"
+            ]
+          },
+          "title": {
+            "type": "string"
+          },
+          "topic": {
+            "type": "string"
+          }
+        }
+      },
+      "LessonUpdate": {
+        "type": "object",
+        "properties": {
+          "assignee": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "createdBy": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "markdown": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "title": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "topic": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      },
+      "MultipartUploadInit": {
+        "type": "object",
+        "required": [
+          "uploadId",
+          "fileId",
+          "s3Key",
+          "parts"
+        ],
+        "properties": {
+          "fileId": {
+            "type": "string"
+          },
+          "parts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PartUploadUrl"
+            }
+          },
+          "s3Key": {
+            "type": "string"
+          },
+          "uploadId": {
+            "type": "string"
+          }
+        }
+      },
+      "PaginatedResponse_LessonFull": {
+        "type": "object",
+        "description": "Generic response that stores paginated data",
+        "required": [
+          "data",
+          "total",
+          "page",
+          "per_page"
+        ],
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "description": "Grown-up lesson",
+              "required": [
+                "id",
+                "title",
+                "topic",
+                "markdown",
+                "assignee",
+                "createdBy",
+                "createdAt",
+                "updatedAt",
+                "assigneeName"
+              ],
+              "properties": {
+                "assignee": {
+                  "type": "string"
+                },
+                "assigneeName": {
+                  "type": "string"
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "createdBy": {
+                  "type": "string"
+                },
+                "id": {
+                  "type": "string"
+                },
+                "markdown": {
+                  "type": "string"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "topic": {
+                  "type": "string"
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              }
+            }
+          },
+          "page": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "per_page": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "PaginatedResponse_LessonSmall": {
+        "type": "object",
+        "description": "Generic response that stores paginated data",
+        "required": [
+          "data",
+          "total",
+          "page",
+          "per_page"
+        ],
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "description": "Mini-lesson",
+              "required": [
+                "id",
+                "title",
+                "topic",
+                "assigneeName",
+                "createdAt"
+              ],
+              "properties": {
+                "assigneeName": {
+                  "type": "string"
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "id": {
+                  "type": "string"
+                },
+                "seen": {
+                  "type": [
+                    "boolean",
+                    "null"
+                  ]
+                },
+                "title": {
+                  "type": "string"
+                },
+                "topic": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "page": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "per_page": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "PaginatedResponse_TaskFull": {
+        "type": "object",
+        "description": "Generic response that stores paginated data",
+        "required": [
+          "data",
+          "total",
+          "page",
+          "per_page"
+        ],
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "title",
+                "markdown",
+                "priority",
+                "completed",
+                "createdAt",
+                "updatedAt",
+                "createdBy",
+                "assignee",
+                "assigneeName"
+              ],
+              "properties": {
+                "assignee": {
+                  "type": "string"
+                },
+                "assigneeName": {
+                  "type": "string"
+                },
+                "completed": {
+                  "type": "boolean"
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "createdBy": {
+                  "type": "string"
+                },
+                "dueDate": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "format": "date-time"
+                },
+                "id": {
+                  "type": "string"
+                },
+                "markdown": {
+                  "type": "string"
+                },
+                "priority": {
+                  "type": "integer",
+                  "format": "int32"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              }
+            }
+          },
+          "page": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "per_page": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "PartUploadUrl": {
+        "type": "object",
+        "required": [
+          "partNumber",
+          "url"
+        ],
+        "properties": {
+          "partNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "url": {
+            "type": "string"
+          }
+        }
+      },
+      "Profile": {
+        "type": "object",
+        "description": "The default profile struct",
+        "required": [
+          "userId"
+        ],
+        "properties": {
+          "avatarUrl": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "telegramId": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "userId": {
+            "type": "string"
+          },
+          "videoCallUrl": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      },
+      "ProfileUpdate": {
+        "type": "object",
+        "description": "The profile that gets decoded",
+        "properties": {
+          "avatarUrl": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "telegramId": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "videoCallUrl": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      },
+      "ProfileWithTS": {
+        "type": "object",
+        "description": "This is sent along with dashboard data to\ninclude teacher video url and stuff if the user is a student",
+        "required": [
+          "profile"
+        ],
+        "properties": {
+          "profile": {
+            "$ref": "#/components/schemas/Profile"
+          },
+          "teacherData": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/TeacherData"
+              }
+            ]
+          }
+        }
+      },
+      "RefreshTokenPayload": {
+        "type": "object",
+        "required": [
+          "refreshToken"
+        ],
+        "properties": {
+          "refreshToken": {
+            "type": "string"
+          }
+        }
+      },
+      "RefreshTokenResponse": {
+        "type": "object",
+        "required": [
+          "accessToken"
+        ],
+        "properties": {
+          "accessToken": {
+            "$ref": "#/components/schemas/TokenWithExpiry"
+          }
+        }
+      },
+      "SignUpPayload": {
+        "type": "object",
+        "required": [
+          "name",
+          "email",
+          "pass",
+          "username",
+          "role"
+        ],
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "pass": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "username": {
+            "type": "string"
+          }
+        }
+      },
+      "SimpleStats": {
+        "type": "object",
+        "required": [
+          "cardsStudiedToday",
+          "currentStreak"
+        ],
+        "properties": {
+          "cardsStudiedToday": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "currentStreak": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "Student": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "username",
+          "email"
+        ],
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "markdown": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "name": {
+            "type": "string"
+          },
+          "studentTelegramId": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "username": {
+            "type": "string"
+          }
+        }
+      },
+      "TaskFull": {
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "markdown",
+          "priority",
+          "completed",
+          "createdAt",
+          "updatedAt",
+          "createdBy",
+          "assignee",
+          "assigneeName"
+        ],
+        "properties": {
+          "assignee": {
+            "type": "string"
+          },
+          "assigneeName": {
+            "type": "string"
+          },
+          "completed": {
+            "type": "boolean"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdBy": {
+            "type": "string"
+          },
+          "dueDate": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "id": {
+            "type": "string"
+          },
+          "markdown": {
+            "type": "string"
+          },
+          "priority": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "title": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "TaskPaginationParams": {
+        "type": "object",
+        "properties": {
+          "assignee": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "completed": {
+            "type": [
+              "boolean",
+              "null"
+            ]
+          },
+          "page": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int64"
+          },
+          "per_page": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int64"
+          },
+          "priority": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int32"
+          },
+          "search": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      },
+      "TaskSmall": {
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "priority",
+          "completed",
+          "assigneeName"
+        ],
+        "properties": {
+          "assigneeName": {
+            "type": "string"
+          },
+          "completed": {
+            "type": "boolean"
+          },
+          "dueDate": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "id": {
+            "type": "string"
+          },
+          "priority": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "seen": {
+            "type": [
+              "boolean",
+              "null"
+            ]
+          },
+          "title": {
+            "type": "string"
+          }
+        }
+      },
+      "TaskUpdate": {
+        "type": "object",
+        "properties": {
+          "assignee": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "completed": {
+            "type": [
+              "boolean",
+              "null"
+            ]
+          },
+          "dueDate": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "markdown": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "priority": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int32"
+          },
+          "title": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      },
+      "TaskWithFilesResponse": {
+        "type": "object",
+        "required": [
+          "task",
+          "files"
+        ],
+        "properties": {
+          "files": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FileSmall"
+            }
+          },
+          "task": {
+            "$ref": "#/components/schemas/TaskFull"
+          }
+        }
+      },
+      "TeacherData": {
+        "type": "object",
+        "description": "Video Call URL and the teacher's TelegramID",
+        "properties": {
+          "teacherTelegramId": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "teacherVideoCallUrl": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      },
+      "TokenPair": {
+        "type": "object",
+        "required": [
+          "accessToken",
+          "refreshToken"
+        ],
+        "properties": {
+          "accessToken": {
+            "$ref": "#/components/schemas/TokenWithExpiry"
+          },
+          "refreshToken": {
+            "$ref": "#/components/schemas/TokenWithExpiry"
+          }
+        }
+      },
+      "TokenWithExpiry": {
+        "type": "object",
+        "required": [
+          "token",
+          "expiresAt"
+        ],
+        "properties": {
+          "expiresAt": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0
+          },
+          "token": {
+            "type": "string"
+          }
+        }
+      },
+      "UpdateCardProgress": {
+        "type": "object",
+        "required": [
+          "review_count",
+          "due_date",
+          "ease_factor",
+          "interval",
+          "last_reviewed"
+        ],
+        "properties": {
+          "due_date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ease_factor": {
+            "type": "number",
+            "format": "double"
+          },
+          "interval": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "last_reviewed": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "review_count": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "UpdateStudentRequest": {
+        "type": "object",
+        "properties": {
+          "markdown": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "studentTelegramId": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "username",
+          "email",
+          "role"
+        ],
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "username": {
+            "type": "string"
+          }
+        }
+      },
+      "UserPreferences": {
+        "type": "object",
+        "required": [
+          "autoSubscribe",
+          "emailNotifications",
+          "pushNotifications",
+          "theme",
+          "language"
+        ],
+        "properties": {
+          "autoSubscribe": {
+            "type": "boolean"
+          },
+          "emailNotifications": {
+            "type": "boolean"
+          },
+          "language": {
+            "type": "string"
+          },
+          "pushNotifications": {
+            "type": "boolean"
+          },
+          "theme": {
+            "type": "string"
+          }
+        }
+      },
+      "UserUpdate": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "pass": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "role": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "username": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "api_key": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key"
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Lesson",
+      "description": "Lesson API"
+    },
+    {
+      "name": "Task",
+      "description": "Task API"
+    },
+    {
+      "name": "Deck",
+      "description": "Deck API"
+    },
+    {
+      "name": "User",
+      "description": "User API"
+    },
+    {
+      "name": "Auth",
+      "description": "Auth API"
+    },
+    {
+      "name": "Learn",
+      "description": "Learn API"
+    }
+  ]
+}
