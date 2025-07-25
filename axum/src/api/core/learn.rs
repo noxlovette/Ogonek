@@ -1,3 +1,4 @@
+use crate::api::LEARN_TAG;
 use crate::api::error::APIError;
 use crate::auth::Claims;
 use crate::db::crud::flashcards;
@@ -8,7 +9,6 @@ use crate::tools::sm2::SM2Calculator;
 use axum::extract::{Json, Path, State};
 use axum::http::StatusCode;
 use chrono::{Duration, Utc};
-use crate::api::LEARN_TAG;
 
 /// Subscribes the user to the deck
 #[utoipa::path(

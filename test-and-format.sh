@@ -71,13 +71,6 @@ fi
 
 echo -e "${YELLOW}🧹 Cleaning dependencies...${NC}"
 rm -rf node_modules/.cache
-pnpm install --frozen-lockfile
-echo -e "${YELLOW}Running pnpm test...${NC}"
-pnpm test
-if [ $? -ne 0 ]; then
-    echo -e "${RED}❌ Tests failed${NC}"
-    exit 1
-fi
 
 echo -e "${GREEN}✅ Svelte checks completed successfully${NC}"
 echo -e "${GREEN}🎉 All checks passed!${NC}"

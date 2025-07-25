@@ -1,11 +1,12 @@
 import logger from "$lib/logger";
+import { routes } from "$lib/routes";
 import { json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
 
 export const POST: RequestHandler = async ({ request, fetch }) => {
   const payload = await request.json();
 
-  const response = await fetch("/axum/s3/multipart/init", {
+  const response = await fetch(routes.s3.multipart.init(), {
     method: "POST",
     body: JSON.stringify(payload),
   });

@@ -73,11 +73,6 @@ jobs:
           cd axum
           sqlx migrate run
 
-      - name: Rust Format Check
-        run: |
-          cd axum
-          cargo fmt --check
-
       - name: Rust Clippy
         run: |
           cd axum

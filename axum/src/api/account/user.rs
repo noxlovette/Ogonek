@@ -1,3 +1,4 @@
+use crate::api::USER_TAG;
 use crate::api::error::APIError;
 use crate::auth::password::hash_password;
 use crate::auth::{Claims, tokens};
@@ -6,7 +7,6 @@ use crate::models::{InviterQuery, User};
 use crate::schema::AppState;
 use axum::extract::{Json, Query, State};
 use axum::http::StatusCode;
-use crate::api::USER_TAG;
 
 use crate::models::users::UserUpdate;
 /// Gets the inviter's credentials

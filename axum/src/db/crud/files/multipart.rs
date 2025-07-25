@@ -1,18 +1,65 @@
 use crate::db::error::DbError;
 use sqlx::{PgPool, Postgres, Transaction};
 
+/// File creation parameters - groups all the file metadata together
+#[derive(Debug, Clone)]
+pub struct FileCreateParams {
+    pub file_id: String,
+    pub file_name: String,
+    pub s3_key: String,
+    pub content_type: String,
+    pub file_size: i64,
+    pub parent_id: Option<String>,
+    pub owner_id: String,
+}
+
+/// Optional linking parameters for files
+#[derive(Debug, Clone, Default)]
+pub struct FileLinkOptions {
+    pub task_id: Option<String>,
+}
+
+impl FileCreateParams {
+    /// Builder pattern for cleaner construction
+    pub fn new(file_id: String, file_name: String, owner_id: String) -> Self {
+        Self {
+            file_id,
+            file_name: file_name.clone(),
+            s3_key: String::new(), // Will be set later
+            content_type: "application/octet-stream".to_string(),
+            file_size: 0,
+            parent_id: None,
+            owner_id,
+        }
+    }
+
+    pub fn with_s3_key(mut self, s3_key: String) -> Self {
+        self.s3_key = s3_key;
+        self
+    }
+
+    pub fn with_content_type(mut self, content_type: String) -> Self {
+        self.content_type = content_type;
+        self
+    }
+
+    pub fn with_size(mut self, file_size: i64) -> Self {
+        self.file_size = file_size;
+        self
+    }
+
+    pub fn with_parent(mut self, parent_id: Option<String>) -> Self {
+        self.parent_id = parent_id;
+        self
+    }
+}
+
 /// Creates a new file record in the database with pending upload status
 pub async fn create_pending_file(
     tx: &mut Transaction<'_, Postgres>,
-    file_id: &str,
-    file_name: &str,
-    s3_key: &str,
-    content_type: &str,
-    file_size: i64,
-    parent_id: Option<&str>,
-    owner_id: &str,
+    params: &FileCreateParams,
 ) -> Result<(), DbError> {
-    let path = format!("/{}", file_name);
+    let path = format!("/{}", params.file_name);
 
     sqlx::query!(
         r#"
@@ -22,15 +69,15 @@ pub async fn create_pending_file(
         )
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
         "#,
-        file_id,
-        file_name,
-        s3_key,
+        params.file_id,
+        params.file_name,
+        params.s3_key,
         path,
-        Some(content_type),
-        file_size,
+        Some(&params.content_type),
+        params.file_size,
         false,
-        parent_id,
-        owner_id,
+        params.parent_id,
+        params.owner_id,
         "private",
         "pending"
     )
@@ -80,7 +127,6 @@ pub async fn mark_upload_complete(
     .await?
     .rows_affected();
 
-    // Ensure the file actually existed and was updated
     if rows_affected == 0 {
         return Err(DbError::NotFound(
             "File not found or unauthorized".to_string(),
@@ -94,31 +140,15 @@ pub async fn mark_upload_complete(
 /// This is a higher-level function that combines file creation and optional task linking
 pub async fn create_multipart_file(
     db: &PgPool,
-    file_id: &str,
-    file_name: &str,
-    s3_key: &str,
-    content_type: &str,
-    file_size: i64,
-    parent_id: Option<&str>,
-    owner_id: &str,
-    task_id: Option<&str>,
+    params: FileCreateParams,
+    options: FileLinkOptions,
 ) -> Result<(), DbError> {
     let mut tx = db.begin().await?;
 
-    create_pending_file(
-        &mut tx,
-        file_id,
-        file_name,
-        s3_key,
-        content_type,
-        file_size,
-        parent_id,
-        owner_id,
-    )
-    .await?;
+    create_pending_file(&mut tx, &params).await?;
 
-    if let Some(task_id) = task_id {
-        link_file_to_task(&mut tx, task_id, file_id).await?;
+    if let Some(task_id) = options.task_id {
+        link_file_to_task(&mut tx, &task_id, &params.file_id).await?;
     }
 
     tx.commit().await?;

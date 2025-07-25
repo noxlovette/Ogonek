@@ -6,10 +6,10 @@ use axum::{
 };
 use ogonek::api::openapi::ApiDoc;
 use ogonek::api::routes::*;
+use ogonek::schema::AppState;
 use ogonek::tools::daemons::task_cleanup::daily_cleanup;
 use ogonek::tools::logging::init_logging;
 use ogonek::tools::middleware::api_key::validate_api_key;
-use ogonek::{api::core::dashboard, schema::AppState};
 use tower_http::{
     cors::CorsLayer,
     request_id::{MakeRequestUuid, PropagateRequestIdLayer, SetRequestIdLayer},

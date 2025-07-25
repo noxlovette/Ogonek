@@ -1,4 +1,5 @@
 import logger from "$lib/logger";
+import { routes } from "$lib/routes";
 import type { RequestHandler } from "./$types";
 
 export const POST: RequestHandler = async ({ request, fetch, url }) => {
@@ -7,7 +8,7 @@ export const POST: RequestHandler = async ({ request, fetch, url }) => {
 
   logger.debug(`Processing multipart completion with taskId: ${taskId}`);
 
-  const response = await fetch("/axum/s3/multipart/complete", {
+  const response = await fetch(routes.s3.multipart.complete(), {
     method: "POST",
     body: JSON.stringify(payload),
   });

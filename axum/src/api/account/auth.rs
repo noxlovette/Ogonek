@@ -1,3 +1,4 @@
+use crate::api::AUTH_TAG;
 use crate::api::error::APIError;
 use crate::auth::Claims;
 use crate::auth::error::AuthError;
@@ -10,7 +11,6 @@ use crate::schema::AppState;
 use axum::extract::{Json, Query, State};
 use axum::http::StatusCode;
 use validator::Validate;
-use crate::api::AUTH_TAG;
 #[utoipa::path(
     post,
     path = "/signup",
@@ -129,10 +129,10 @@ pub async fn generate_invite_link(
     tracing::info!("Encoded token: {encoded}");
 
     if query.is_registered == "true" {
-        Ok(Json(format!("{frontend_url}/bind?invite={encoded}",)))
+        Ok(Json(format!("{frontend_url}/auth/bind?invite={encoded}",)))
     } else {
         Ok(Json(
-            format!("{frontend_url}/signup?invite={encoded}",),
+            format!("{frontend_url}/auth/signup?invite={encoded}",),
         ))
     }
 }

@@ -84,7 +84,7 @@ pub async fn update_file(
 
     Ok(StatusCode::NO_CONTENT)
 }
-/// Deletes file 
+/// Deletes file
 #[utoipa::path(
     delete,
     path = "/{id}",

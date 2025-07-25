@@ -1,5 +1,6 @@
 use crate::api::error::APIError;
 use crate::auth::Claims;
+use crate::db::crud::files::multipart::{FileCreateParams, FileLinkOptions};
 use crate::db::crud::files::{file, multipart};
 use crate::models::{
     AbortMultipartRequest, CompleteMultipartRequest, InitUploadRequest, MultipartInitResultS3,
@@ -46,19 +47,17 @@ pub async fn init_multipart_upload(
         false => format!("user-files/{}/{}.{}", claims.sub, file_id, file_extension),
     };
 
-    // Use the new CRUD function
-    multipart::create_multipart_file(
-        &state.db,
-        &file_id,
-        &payload.file_name,
-        &s3_key,
-        &payload.content_type,
-        payload.file_size,
-        payload.parent_id.as_deref(),
-        &claims.sub,
-        payload.task_id.as_deref(),
-    )
-    .await?;
+    let file_params = FileCreateParams::new(file_id.clone(), payload.file_name, claims.sub)
+        .with_s3_key(s3_key.clone())
+        .with_content_type(payload.content_type.clone())
+        .with_size(payload.file_size)
+        .with_parent(payload.parent_id);
+
+    let link_options = FileLinkOptions {
+        task_id: payload.task_id,
+    };
+
+    multipart::create_multipart_file(&state.db, file_params, link_options).await?;
 
     let MultipartInitResultS3 { upload_id, parts } =
         init_multipart_s3(&state, &s3_key, &payload.content_type, payload.total_parts).await?;

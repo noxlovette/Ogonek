@@ -27,7 +27,7 @@
         base = "tasks";
         break;
       case "deck":
-        base = "words";
+        base = "flashcards";
         break;
       default:
         base = "dashboard";

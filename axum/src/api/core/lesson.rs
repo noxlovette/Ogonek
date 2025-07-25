@@ -1,3 +1,4 @@
+use crate::api::LESSON_TAG;
 use crate::api::error::APIError;
 use crate::auth::Claims;
 use crate::db::crud::core::lesson;
@@ -12,7 +13,6 @@ use axum::extract::{Json, Query};
 use axum::http::StatusCode;
 use utoipa_axum::router::OpenApiRouter;
 use utoipa_axum::routes;
-use crate::api::LESSON_TAG;
 
 pub fn router() -> OpenApiRouter<AppState> {
     OpenApiRouter::new().routes(routes!(
