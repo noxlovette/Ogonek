@@ -1,13 +1,11 @@
 use super::cards_decks::DeckSmall;
 use super::lessons::LessonSmall;
 use super::tasks::TaskSmall;
+use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
-use serde_with::serde_as;
-use time::OffsetDateTime;
-use time::format_description::well_known::Rfc3339;
+use utoipa::ToSchema;
 
-#[serde_with::serde_as]
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Serialize, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct TeacherStudent {
     pub teacher_id: String,
@@ -15,11 +13,10 @@ pub struct TeacherStudent {
     pub status: String,
     pub telegram_id: Option<String>,
     pub markdown: Option<String>,
-    #[serde_as(as = "Rfc3339")]
-    pub joined: OffsetDateTime,
+    pub joined: DateTime<Utc>,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct Student {
     pub id: String,
@@ -30,19 +27,19 @@ pub struct Student {
     pub student_telegram_id: Option<String>,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, ToSchema)]
 pub struct AddStudentRequest {
     pub student_id: String,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct UpdateStudentRequest {
     pub markdown: Option<String>,
     pub student_telegram_id: Option<String>,
 }
 
-#[derive(Serialize, Debug)]
+#[derive(Serialize, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct CompositeStudent {
     pub student: Student,

@@ -1,3 +1,4 @@
+use crate::api::USER_TAG;
 use crate::api::error::APIError;
 use crate::auth::password::hash_password;
 use crate::auth::{Claims, tokens};
@@ -5,9 +6,23 @@ use crate::db::crud::account::user;
 use crate::models::{InviterQuery, User};
 use crate::schema::AppState;
 use axum::extract::{Json, Query, State};
-use hyper::StatusCode;
+use axum::http::StatusCode;
 
 use crate::models::users::UserUpdate;
+/// Gets the inviter's credentials
+#[utoipa::path(
+    get,
+    path = "/inviter",
+    tag = USER_TAG, params(
+        ("invite" = Option<String>, Query, description = "Invite token")
+    ),
+    responses(
+        (status = 200, description = "Inviter details retrieved", body = User),
+        (status = 401, description = "Unauthorized"),
+        (status = 400, description = "Invalid invite token")
+    ),
+    security(("api_key" = []))
+)]
 
 pub async fn fetch_inviter(
     State(state): State<AppState>,
@@ -18,6 +33,18 @@ pub async fn fetch_inviter(
 
     Ok(Json(inviter))
 }
+
+/// Fetches self for the user
+#[utoipa::path(
+    get,
+   tag = USER_TAG,  
+    path = "/",
+    responses(
+        (status = 200, description = "User details retrieved", body = User),
+        (status = 401, description = "Unauthorized"),
+    ),
+    security(("api_key" = []))
+)]
 pub async fn fetch_me(
     State(state): State<AppState>,
     claims: Claims,
@@ -27,6 +54,16 @@ pub async fn fetch_me(
     Ok(Json(user))
 }
 
+/// Deletes user by their claims
+#[utoipa::path(
+    delete,tag = USER_TAG, 
+    path = "/",
+    responses(
+        (status = 204, description = "User deleted successfully"),
+        (status = 401, description = "Unauthorized")
+    ),
+    security(("api_key" = []))
+)]
 pub async fn delete_user(
     State(state): State<AppState>,
     claims: Claims,
@@ -35,7 +72,19 @@ pub async fn delete_user(
 
     Ok(StatusCode::NO_CONTENT)
 }
-
+/// Updates the user by their claims
+#[utoipa::path(
+    patch,
+   tag = USER_TAG,  
+    path = "/",
+    request_body = UserUpdate,
+    responses(
+        (status = 204, description = "User updated successfully"),
+        (status = 400, description = "Bad request"),
+        (status = 401, description = "Unauthorized")
+    ),
+    security(("api_key" = []))
+)]
 pub async fn update_user(
     State(state): State<AppState>,
     claims: Claims,

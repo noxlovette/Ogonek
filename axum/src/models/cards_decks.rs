@@ -1,27 +1,26 @@
+use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use sqlx::prelude::FromRow;
-use time::OffsetDateTime;
-use time::format_description::well_known::Rfc3339;
 
 #[derive(Deserialize)]
 pub struct DeckFilterParams {
     pub search: Option<String>,
     pub assignee: Option<String>,
 }
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Serialize, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct SimpleStats {
     pub cards_studied_today: i32,
     pub current_streak: i32,
 }
-#[derive(Debug, Serialize)]
+#[derive(ToSchema, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct LearnDataDashboard {
     pub stats: SimpleStats,
     pub due_cards: Option<i64>,
 }
-#[serde_with::serde_as]
-#[derive(Serialize, Deserialize, Debug)]
+
+#[derive(Serialize, Deserialize, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct Card {
     pub id: String,
@@ -29,11 +28,10 @@ pub struct Card {
     pub back: String,
     pub media_url: Option<String>,
     pub deck_id: String,
-    #[serde_as(as = "Rfc3339")]
-    pub created_at: OffsetDateTime,
+    pub created_at: DateTime<Utc>,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Deserialize, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct CardCreate {
     pub front: String,
@@ -41,7 +39,7 @@ pub struct CardCreate {
     pub media_url: Option<String>,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct CardUpdate {
     pub id: Option<String>,
@@ -51,8 +49,7 @@ pub struct CardUpdate {
 }
 
 // DECK STRUCTS HERE
-
-#[derive(Serialize, Debug)]
+#[derive(Serialize, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct DeckWithCardsAndSubscription {
     pub deck: DeckFull,
@@ -60,15 +57,14 @@ pub struct DeckWithCardsAndSubscription {
     pub is_subscribed: bool,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct DeckWithCardsUpdate {
     pub deck: DeckUpdate,
     pub cards: Vec<CardUpdate>,
 }
 
-#[serde_with::serde_as]
-#[derive(Serialize, Debug, FromRow)]
+#[derive(Serialize, FromRow, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct DeckFull {
     pub id: String,
@@ -78,11 +74,11 @@ pub struct DeckFull {
     pub assignee: Option<String>,
     pub is_subscribed: Option<bool>,
     pub created_by: String,
-    #[serde_as(as = "Rfc3339")]
-    pub created_at: OffsetDateTime,
+
+    pub created_at: DateTime<Utc>,
 }
 
-#[derive(Serialize, Debug, FromRow)]
+#[derive(Serialize, ToSchema, FromRow)]
 #[serde(rename_all = "camelCase")]
 pub struct DeckSmall {
     pub id: String,
@@ -94,14 +90,14 @@ pub struct DeckSmall {
     pub description: Option<String>,
 }
 
-#[derive(Serialize, Debug)]
+#[derive(Serialize, ToSchema)]
 pub struct DeckPublic {
     pub id: String,
     pub name: String,
     pub description: Option<String>,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct DeckCreate {
     pub name: String,
@@ -110,7 +106,7 @@ pub struct DeckCreate {
     pub assignee: Option<String>,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct DeckUpdate {
     pub name: Option<String>,
@@ -119,10 +115,11 @@ pub struct DeckUpdate {
     pub assignee: Option<String>,
 }
 
+use utoipa::ToSchema;
 // LEARNING HERE
 use validator::Validate;
 
-#[derive(Debug, Serialize, Deserialize, Clone, Validate)]
+#[derive(Serialize, Clone, Validate, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct CardProgressWithFields {
     pub id: String,
@@ -130,8 +127,8 @@ pub struct CardProgressWithFields {
     pub card_id: String,
     #[validate(range(min = 0))]
     pub review_count: i32,
-    pub last_reviewed: Option<OffsetDateTime>,
-    pub due_date: Option<OffsetDateTime>,
+    pub last_reviewed: Option<DateTime<Utc>>,
+    pub due_date: Option<DateTime<Utc>>,
     #[validate(range(min = 1.3, max = 5.0))]
     pub ease_factor: f64,
     #[validate(range(min = 1))]
@@ -141,7 +138,7 @@ pub struct CardProgressWithFields {
     pub media_url: Option<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize, Clone, Validate)]
+#[derive(Serialize, Clone, Validate, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct CardProgress {
     pub id: String,
@@ -149,24 +146,24 @@ pub struct CardProgress {
     pub card_id: String,
     #[validate(range(min = 0))]
     pub review_count: i32,
-    pub last_reviewed: Option<OffsetDateTime>,
-    pub due_date: Option<OffsetDateTime>,
+    pub last_reviewed: Option<DateTime<Utc>>,
+    pub due_date: Option<DateTime<Utc>>,
     #[validate(range(min = 1.3, max = 5.0))]
     pub ease_factor: f64,
     #[validate(range(min = 1))]
     pub interval: i32,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(ToSchema, Deserialize)]
 pub struct UpdateCardProgress {
     pub review_count: i32,
-    pub due_date: OffsetDateTime,
+    pub due_date: DateTime<Utc>,
     pub ease_factor: f64,
     pub interval: i32,
-    pub last_reviewed: OffsetDateTime,
+    pub last_reviewed: DateTime<Utc>,
 }
 
-#[derive(Debug, Deserialize, Validate)]
+#[derive(ToSchema, Deserialize, Validate)]
 pub struct ReviewPayload {
     #[validate(range(min = 0, max = 5))]
     pub quality: i32,

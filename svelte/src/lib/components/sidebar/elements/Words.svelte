@@ -5,7 +5,7 @@
   import { getContext } from "svelte";
   import { m } from "$lib/paraglide/messages";
 
-  let href = $user.role === "teacher" ? "/t/words" : "/s/words";
+  let href = $user.role === "teacher" ? "/t/flashcards" : "/s/flashcards";
 
   const deckCount = getContext<number>("deckCount");
 </script>

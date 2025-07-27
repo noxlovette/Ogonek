@@ -1,8 +1,8 @@
-// src/models/user_preferences.rs
 use serde::{Deserialize, Serialize};
 use sqlx::FromRow;
+use utoipa::ToSchema;
 
-#[derive(Debug, Clone, FromRow, Serialize, Deserialize)]
+#[derive(ToSchema, Clone, FromRow, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct UserPreferences {
     #[serde(skip_serializing)]
@@ -14,7 +14,7 @@ pub struct UserPreferences {
     pub language: String,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct UserPreferencesUpdate {
     pub auto_subscribe: Option<bool>,
@@ -24,7 +24,7 @@ pub struct UserPreferencesUpdate {
     pub language: Option<String>,
 }
 
-#[derive(Debug, Serialize)]
+#[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct UserPreferencesResponse {
     pub auto_subscribe: bool,

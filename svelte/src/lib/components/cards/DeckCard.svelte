@@ -15,8 +15,8 @@
   let { deck }: Props = $props();
   let href =
     $user.role === "teacher"
-      ? `/t/words/w/${deck.id}`
-      : `/s/words/w/${deck.id}`;
+      ? `/t/flashcards/${deck.id}`
+      : `/s/flashcards/${deck.id}`;
 
   const title = deck.name;
   const badgeText = deck.description ?? "Deck Description";

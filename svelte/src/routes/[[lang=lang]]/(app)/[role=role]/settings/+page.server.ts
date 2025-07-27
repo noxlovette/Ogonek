@@ -1,3 +1,4 @@
+import { routes } from "$lib/routes";
 import { handleApiResponse, isSuccessResponse } from "$lib/server";
 import type { EmptyResponse } from "$lib/types";
 import { fail, redirect, type Actions } from "@sveltejs/kit";
@@ -35,11 +36,11 @@ export const actions = {
     };
 
     const [profileRes, userRes] = await Promise.all([
-      fetch("/axum/profile", {
+      fetch(routes.users.profile(), {
         method: "PATCH",
         body: JSON.stringify(profileBody),
       }),
-      fetch("/axum/user", {
+      fetch(routes.users.self(), {
         method: "PATCH",
         body: JSON.stringify(userBody),
       }),

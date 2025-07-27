@@ -178,7 +178,7 @@ export const handleFetch: HandleFetch = async ({ event, request, fetch }) => {
   const url = new URL(request.url);
 
   if (url.pathname.startsWith("/axum/")) {
-    const cleanPath = url.pathname.replace("/axum/", "/");
+    const cleanPath = url.pathname.replace("/axum/", "/api/v1/");
 
     if (envPublic.PUBLIC_MOCK_MODE) {
       const mockURL = `${env.ORIGIN}/api/mock${cleanPath}`;

@@ -1,4 +1,5 @@
 import type { DeckSmall } from "$lib/types";
+import { json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
 
 export const GET: RequestHandler = async () => {
@@ -9,6 +10,7 @@ export const GET: RequestHandler = async () => {
       description: "Murrrrrr",
       assigneeName: "Kotya",
       visibility: "assigned",
+      isSubscribed: true,
       seen: true,
     },
     {
@@ -17,18 +19,14 @@ export const GET: RequestHandler = async () => {
       description: "Kotya Assigned",
       assigneeName: "Kotya",
       visibility: "private",
+      isSubscribed: false,
       seen: true,
     },
   ];
-
-  return new Response(JSON.stringify(decks), {
-    headers: { "Content-Type": "application/json" },
-  });
+  return json(decks);
 };
 export const POST: RequestHandler = async () => {
   const id = "deck1";
 
-  return new Response(JSON.stringify({ id }), {
-    headers: { "Content-Type": "application/json" },
-  });
+  return json(id);
 };

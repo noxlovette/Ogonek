@@ -1,5 +1,6 @@
 import { env } from "$env/dynamic/public";
 import logger from "$lib/logger";
+import { routes } from "$lib/routes";
 import {
   handleApiResponse,
   isSuccessResponse,
@@ -49,7 +50,7 @@ export const actions: Actions = {
       }
     }
 
-    const response = await fetch("/axum/auth/signin", {
+    const response = await fetch(routes.auth.login(), {
       method: "POST",
       body: JSON.stringify({ username, pass }),
     });

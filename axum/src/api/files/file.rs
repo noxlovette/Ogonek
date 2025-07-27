@@ -1,3 +1,4 @@
+use crate::api::TASK_TAG;
 use crate::api::error::APIError;
 use crate::auth::Claims;
 use crate::db::crud::files::file;
@@ -22,6 +23,19 @@ pub async fn fetch_file(
     Ok(Json(file))
 }
 
+/// Presigns url for frontend download
+#[utoipa::path(
+    get,
+    path = "/presigned/{encoded_key}",
+    params(
+        ("encoded_key" = String, Path, description = "File ID")
+    ),
+    tag = TASK_TAG, responses(
+        (status = 200, description = "Presigned URL generated successfully"),
+        (status = 401, description = "Unauthorized")
+    ),
+    security(("api_key" = []))
+)]
 pub async fn fetch_presigned_url(
     State(state): State<AppState>,
     Path(encoded_key): Path<String>,
@@ -70,7 +84,21 @@ pub async fn update_file(
 
     Ok(StatusCode::NO_CONTENT)
 }
-
+/// Deletes file
+#[utoipa::path(
+    delete,
+    path = "/{id}",
+    
+    params(
+        ("id" = String, Path, description = "File ID")
+    ),
+    tag = TASK_TAG, responses(
+        (status = 204, description = "File deleted successfully"),
+        (status = 404, description = "File not found"),
+        (status = 401, description = "Unauthorized")
+    ),
+    security(("api_key" = []))
+)]
 pub async fn delete_file(
     State(state): State<AppState>,
     claims: Claims,

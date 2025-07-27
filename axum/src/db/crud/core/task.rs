@@ -108,7 +108,7 @@ pub async fn find_by_id(db: &PgPool, id: &str, user_id: &str) -> Result<TaskFull
     Ok(task)
 }
 
-/// Creates a task
+/// Creates a task, needs data to create FROM
 pub async fn create(
     db: &PgPool,
     task: &TaskCreate,
@@ -126,6 +126,25 @@ pub async fn create(
         task.markdown,
         task.due_date,
         assignee,
+        user_id,
+    )
+    .fetch_one(db)
+    .await?;
+
+    Ok(id)
+}
+/// Creates a task based on user preferences, faster – no JSON
+pub async fn create_with_defaults(db: &PgPool, user_id: &str) -> Result<CreationId, DbError> {
+    let id = sqlx::query_as!(
+        CreationId,
+        "INSERT INTO tasks (id, title, markdown, assignee, created_by)
+         VALUES ($1, $2, $3, $4, $5 )
+         RETURNING id
+         ",
+        nanoid::nanoid!(),
+        "Default Title", // TODO: feed in preferred title
+        "# Default markdown",
+        user_id,
         user_id,
     )
     .fetch_one(db)
@@ -357,8 +376,8 @@ mod tests {
     use super::*;
     use crate::models::{TaskCreate, TaskPaginationParams, TaskUpdate};
     use crate::tests::create_test_user;
+    use chrono::Utc;
     use sqlx::PgPool;
-    use time::OffsetDateTime;
 
     // Helper function to create test files
     async fn create_test_file(db: &PgPool, user_id: &str) -> String {
@@ -394,7 +413,7 @@ mod tests {
         let task_create = TaskCreate {
             title: "test task".to_string(),
             markdown: format!("# {}\nTest task content", "test"),
-            due_date: Some(OffsetDateTime::now_utc()),
+            due_date: Some(Utc::now()),
             priority: Some(1),
             assignee: None,
         };
@@ -413,6 +432,17 @@ mod tests {
         let id = create_test_task(&db, &creator_id, &assignee_id).await;
 
         assert!(!id.is_empty());
+    }
+
+    #[sqlx::test]
+    async fn test_create_task_succes_with_defaults(db: PgPool) {
+        let user_id = create_test_user(&db, "testuser", "test@example.com").await;
+
+        let result = create_with_defaults(&db, &user_id).await;
+        assert!(result.is_ok());
+
+        let task_id = result.unwrap().id;
+        assert!(!task_id.is_empty());
     }
 
     #[sqlx::test]
@@ -575,7 +605,7 @@ mod tests {
             markdown: Some("# Updated\nThis task has been updated.".to_string()),
             priority: Some(1),
             completed: Some(true),
-            due_date: Some(OffsetDateTime::now_utc()),
+            due_date: Some(Utc::now()),
             assignee: None,
         };
 

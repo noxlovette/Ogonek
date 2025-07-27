@@ -31,7 +31,7 @@
   let { data } = $props();
 
   let role = page.params.role;
-  let href = role === "t" ? "/t/lessons/l" : `/s/lessons/l`;
+  let href = role === "t" ? "/t/lessons" : `/s/lessons`;
 
   const lessonConfig: TableConfig<LessonSmall> = {
     columns: [
@@ -53,13 +53,21 @@
   };
 
   $effect(() => {
-    goto(
-      `?search=${$searchTerm}&page_size=${$pageSize}&page=${$currentPage}&assignee=${$assigneeStore}`,
-      {
-        noScroll: true,
-        keepFocus: true,
-      },
-    );
+    const params = new URLSearchParams();
+
+    // Only add params if they have actual values
+    if ($searchTerm?.trim()) params.set("search", $searchTerm);
+    if ($pageSize > 0) params.set("page_size", $pageSize.toString());
+    if ($currentPage > 1) params.set("page", $currentPage.toString()); // Skip page=1 since it's default
+    if ($assigneeStore?.trim()) params.set("assignee", $assigneeStore);
+
+    const queryString = params.toString();
+    const newUrl = queryString ? `?${queryString}` : window.location.pathname;
+
+    goto(newUrl, {
+      noScroll: true,
+      keepFocus: true,
+    });
   });
 </script>
 

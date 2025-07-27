@@ -1,8 +1,9 @@
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
+use utoipa::ToSchema;
 use validator::Validate;
 
-#[derive(Serialize, Deserialize, Debug, Validate)]
+#[derive(Deserialize, Validate, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct SignUpPayload {
     #[validate(length(min = 3))]
@@ -19,12 +20,7 @@ pub struct SignUpPayload {
     pub role: String,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
-pub struct SignUpBody {
-    pub id: String,
-}
-
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct UserUpdate {
     pub name: Option<String>,
@@ -34,7 +30,7 @@ pub struct UserUpdate {
     pub role: Option<String>,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct User {
     pub id: String,
@@ -46,7 +42,7 @@ pub struct User {
     pub role: String,
 }
 
-#[derive(Debug, Deserialize, Validate)]
+#[derive(Deserialize, Validate, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct AuthPayload {
     #[validate(length(min = 3, max = 16))]
@@ -55,26 +51,26 @@ pub struct AuthPayload {
     pub pass: String,
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, ToSchema)]
 pub struct TokenWithExpiry {
     pub token: String,
     #[serde(rename = "expiresAt")]
     pub expires_at: u64,
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, ToSchema)]
 pub struct RefreshTokenResponse {
     #[serde(rename = "accessToken")]
     pub access_token: TokenWithExpiry,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, ToSchema)]
 pub struct RefreshTokenPayload {
     #[serde(rename = "refreshToken")]
     pub refresh_token: String,
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, ToSchema)]
 pub struct TokenPair {
     #[serde(rename = "accessToken")]
     pub access_token: TokenWithExpiry,
@@ -98,7 +94,7 @@ impl TokenPair {
 }
 
 // Simple struct to hold the invite data
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, ToSchema)]
 pub struct InviteToken {
     pub teacher_id: String,
     pub created_at: DateTime<Utc>,
@@ -113,20 +109,20 @@ impl InviteToken {
     }
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct BindPayload {
     pub student_id: String,
     pub invite_token: String,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct InviteQuery {
     pub is_registered: String,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct InviterQuery {
     pub invite: String,

@@ -1,6 +1,6 @@
 [package]
 name = "ogonek"
-version = "1.5.2"
+version = "1.6.0"
 edition = "2024"
 
 
@@ -12,7 +12,6 @@ sqlx = { version = "0.8.2", features = [
     "runtime-tokio",
     "tls-rustls-ring",
     "postgres",
-    "time",
     "uuid",
     "migrate",
     "chrono"] }
@@ -22,11 +21,8 @@ tokio = { version = "1", features = ["full"] }
 chrono = { version = "0.4", features = ["serde"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1.0"
-serde_with = { version = "3.0.0", features = ["time_0_3"] }
 jsonwebtoken = { version = "9.3.0", features = ["use_pem"] }
-hyper = "1.6.0"
 argon2 = "0.5.3"
-
 
 # Auxiliary Crates
 thiserror = "2.0.12"
@@ -37,12 +33,14 @@ anyhow = "1.0.95"
 validator = { version = "0.20.0", features = ["derive"] }
 dotenvy = "0.15"
 nanoid = "0.4.0"
-time = "0.3.37"
 tower = { version = "0.5.2", features = ["full"] }
 base64 = "0.22.1"
 aws-sdk-s3 = "1.79.0"
 aws-credential-types = "1.2.2"
 aws-config = "1.6.0"
-sentry = {version ="0.40", features = ["tracing"]}
+sentry = {version ="0.41", features = ["tracing"]}
 atty = "0.2.14"
 sentry-tower = {version = "0.38.1", features = ["axum", "axum-matched-path", "http"]}
+utoipa = {version ="5.4.0", features = ["chrono"]}
+utoipa-axum = {version ="0.2.0"}
+utoipa-swagger-ui = {version = "9.0.2", features = ["axum"]}

@@ -49,16 +49,23 @@
     ],
   };
 
-  let href = `/${role}/tasks/t`;
-
+  let href = `/${role}/tasks`;
   $effect(() => {
-    goto(
-      `?search=${$searchTerm}&page_size=${$pageSize}&page=${$currentPage}&assignee=${$assigneeStore}&completed=${$completedStore}`,
-      {
-        noScroll: true,
-        keepFocus: true,
-      },
-    );
+    const params = new URLSearchParams();
+
+    if ($searchTerm?.trim()) params.set("search", $searchTerm);
+    if ($pageSize > 0) params.set("page_size", $pageSize.toString());
+    if ($currentPage > 1) params.set("page", $currentPage.toString());
+    if ($assigneeStore?.trim()) params.set("assignee", $assigneeStore);
+    if ($completedStore) params.set("completed", String($completedStore));
+
+    const queryString = params.toString();
+    const newUrl = queryString ? `?${queryString}` : window.location.pathname;
+
+    goto(newUrl, {
+      noScroll: true,
+      keepFocus: true,
+    });
   });
 
   function toggleCompletedTasks() {

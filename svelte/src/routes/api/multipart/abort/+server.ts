@@ -1,10 +1,11 @@
 import logger from "$lib/logger";
+import { routes } from "$lib/routes";
 import type { RequestHandler } from "./$types";
 
 export const POST: RequestHandler = async ({ request, fetch }) => {
   const payload = await request.json();
   logger.debug("hit abort");
-  const response = await fetch("/axum/s3/multipart/abort", {
+  const response = await fetch(routes.s3.multipart.abort(), {
     method: "POST",
     body: JSON.stringify(payload),
   });

@@ -1,5 +1,6 @@
 import { dev } from "$app/environment";
 import logger from "$lib/logger";
+import { routes } from "$lib/routes";
 import { handleApiResponse, isSuccessResponse } from "$lib/server";
 import type { LessonSmall, NewResponse, PaginatedResponse } from "$lib/types";
 import { delay } from "$lib/utils";
@@ -12,33 +13,17 @@ export const load: PageServerLoad = async ({ fetch, url }) => {
   const search = url.searchParams.get("search") || "";
   const assignee = url.searchParams.get("assignee") || "";
 
-  const params = new URLSearchParams();
-  params.append("page", page);
-  params.append("per_page", per_page);
-
-  if (search) params.append("search", search);
-  if (assignee) params.append("assignee", assignee);
-
-  const apiUrl = `/axum/lesson?${params.toString()}`;
-
   return {
     lessonsPaginated: (dev ? delay(2500) : Promise.resolve())
-      .then(() => fetch(apiUrl))
+      .then(() => fetch(routes.lessons.all(page, per_page, search, assignee)))
       .then((res) => res.json()) as Promise<PaginatedResponse<LessonSmall>>,
   };
 };
 
 export const actions: Actions = {
   new: async ({ fetch }) => {
-    const body = {
-      title: "New Lesson",
-      markdown: "## Try adding some content here",
-      topic: "General",
-    };
-
-    const response = await fetch(`/axum/lesson`, {
+    const response = await fetch(routes.lessons.new(), {
       method: "POST",
-      body: JSON.stringify(body),
     });
 
     if (!response.ok) {
@@ -57,7 +42,7 @@ export const actions: Actions = {
     const { id } = newResult.data;
 
     if (response.ok) {
-      return redirect(301, `/t/lessons/l/${id}/edit`);
+      return redirect(301, `/t/lessons/${id}/edit`);
     }
   },
 };

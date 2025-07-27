@@ -16,7 +16,7 @@
     ],
   };
 
-  let href = "/t/students/st";
+  let href = "/t/students";
 </script>
 
 <HeaderEmbellish>

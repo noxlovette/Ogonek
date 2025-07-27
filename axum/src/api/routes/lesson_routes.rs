@@ -6,9 +6,8 @@ use axum::routing::get;
 pub fn lesson_routes() -> Router<AppState> {
     Router::new()
         .route("/", get(core::list_lessons).post(core::create_lesson))
-        .route("/recent", get(core::fetch_recent_lessons))
         .route(
-            "/l/{id}",
+            "/{id}",
             get(core::fetch_lesson)
                 .patch(core::update_lesson)
                 .delete(core::delete_lesson),

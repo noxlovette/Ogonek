@@ -13,17 +13,17 @@ export const messages: MessageMap = {
     ),
   completed: ({ task, username, id }) =>
     escapeMarkdownV2(
-      `${task} for ${username} has been completed. View the result on [Ogonek](https://ogonek.app/t/tasks/t/${id})`,
+      `${task} for ${username} has been completed. View the result on [Ogonek](https://ogonek.app/t/tasks/${id})`,
     ),
   reminder: ({ task, dueDate }) =>
     `Don't forget to complete "${task}" by ${dueDate}`,
   deckCreated: ({ title, id }) =>
     escapeMarkdownV2(
-      `A new deck has been added: "${title}". View it on [Ogonek](https://ogonek.app/s/words/w/${id}).`,
+      `A new deck has been added: "${title}". View it on [Ogonek](https://ogonek.app/s/flashcards/${id}).`,
     ),
   taskCreated: ({ title, id, date }) =>
     escapeMarkdownV2(
-      `A new task *has* been added: "${title}". Due Date: ${date}. View it on [Ogonek](https://ogonek.app/s/tasks/t/${id}).`,
+      `A new task *has* been added: "${title}". Due Date: ${date}. View it on [Ogonek](https://ogonek.app/s/tasks/${id}).`,
     ),
 };
 

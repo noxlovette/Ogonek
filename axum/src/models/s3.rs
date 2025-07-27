@@ -1,7 +1,8 @@
-use sqlx::types::time::OffsetDateTime;
+use sqlx::types::chrono::{DateTime, Utc};
 
 use serde::{Deserialize, Serialize};
-
+use utoipa::ToSchema;
+#[derive(Serialize, ToSchema)]
 pub struct MultipartInitResultS3 {
     pub upload_id: String,
     pub parts: Vec<PartUploadUrl>,
@@ -19,10 +20,10 @@ pub struct FileMetadata {
     pub parent_id: Option<String>,
     pub owner_id: String,
     pub visibility: String,
-    pub created_at: OffsetDateTime,
-    pub updated_at: OffsetDateTime,
+    pub created_at: DateTime<Utc>,
+    pub updated_at: DateTime<Utc>,
 }
-#[derive(Deserialize)]
+#[derive(Deserialize, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct InitUploadRequest {
     pub file_name: String,
@@ -33,14 +34,14 @@ pub struct InitUploadRequest {
     pub task_id: Option<String>,
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct PartUploadUrl {
     pub part_number: i32,
     pub url: String,
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct MultipartUploadInit {
     pub upload_id: String,
@@ -49,7 +50,7 @@ pub struct MultipartUploadInit {
     pub parts: Vec<PartUploadUrl>,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct CompleteMultipartRequest {
     pub upload_id: String,
@@ -58,14 +59,14 @@ pub struct CompleteMultipartRequest {
     pub parts: Vec<CompletedPart>,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct AbortMultipartRequest {
     pub upload_id: String,
     pub file_id: String,
     pub s3_key: String,
 }
-#[derive(Deserialize)]
+#[derive(Deserialize, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct CompletedPart {
     pub part_number: i32,

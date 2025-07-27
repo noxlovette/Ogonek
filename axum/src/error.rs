@@ -7,7 +7,7 @@ use axum::{
 use serde_json::json;
 use thiserror::Error;
 
-#[derive(Debug, Error)]
+#[derive(Debug, Error, ToSchema)]
 pub enum AppError {
     // Authentication errors
     #[error("Invalid credentials")]
@@ -32,10 +32,6 @@ pub enum AppError {
     // Validation errors
     #[error("Validation error: {0}")]
     Validation(String),
-
-    // Database errors
-    #[error("Database error")]
-    Database(#[from] sqlx::Error),
 
     // Password handling errors
     #[error("Password hashing error")]
@@ -65,28 +61,6 @@ impl IntoResponse for AppError {
             // Validation errors -> 400
             Self::Validation(_) => (StatusCode::BAD_REQUEST, self.to_string()),
             Self::BadRequest(e) => (StatusCode::BAD_REQUEST, e.to_string()),
-
-            // Database errors -> 500 (or map specific DB errors to more appropriate codes)
-            Self::Database(db_err) => {
-                // Log detailed DB error for internal visibility
-                tracing::error!("Database error: {:?}", db_err);
-
-                // Map certain DB errors to specific status codes
-                if let sqlx::Error::Database(dbe) = db_err {
-                    if let Some(constraint) = dbe.constraint() {
-                        if constraint.contains("_key") || constraint.contains("_unique") {
-                            return Self::AlreadyExists(
-                                "Resource with this property already exists".to_string(),
-                            )
-                            .into_response();
-                        }
-                    }
-                }
-                (
-                    StatusCode::INTERNAL_SERVER_ERROR,
-                    "Database operation failed".to_string(),
-                )
-            }
 
             // Password handling errors -> 500
             Self::PasswordHash => (
@@ -158,6 +132,7 @@ impl From<MultipartError> for AppError {
 use aws_credential_types::provider::error::CredentialsError;
 use aws_sdk_s3::error::SdkError;
 use aws_sdk_s3::presigning::PresigningConfigError;
+use utoipa::ToSchema;
 
 // Generic handler for all S3 SDK errors
 impl<E> From<SdkError<E>> for AppError

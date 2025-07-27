@@ -1,5 +1,6 @@
 import { dev } from "$app/environment";
 import logger from "$lib/logger";
+import { routes } from "$lib/routes";
 import {
   handleApiResponse,
   isSuccessResponse,
@@ -64,7 +65,7 @@ export const actions: Actions = {
       }
     }
     // Signup API call
-    const response = await fetch("/axum/auth/signup", {
+    const response = await fetch(routes.auth.signup(), {
       method: "POST",
       body: JSON.stringify({ username, pass, email, role, name }),
     });

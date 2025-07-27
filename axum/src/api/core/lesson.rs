@@ -1,25 +1,43 @@
+use crate::api::LESSON_TAG;
 use crate::api::error::APIError;
 use crate::auth::Claims;
 use crate::db::crud::core::lesson;
 use crate::db::crud::tracking::activity::log_activity;
 use crate::db::crud::tracking::{self, ActionType, ModelType};
 use crate::models::meta::{CreationId, PaginatedResponse};
-use crate::models::{LessonCreate, LessonFull, LessonSmall, LessonUpdate, PaginationParams};
+use crate::models::{LessonFull, LessonSmall, LessonUpdate, PaginationParams};
 use crate::schema::AppState;
 use axum::extract::Path;
 use axum::extract::State;
 use axum::extract::{Json, Query};
-use hyper::StatusCode;
+use axum::http::StatusCode;
+use utoipa_axum::router::OpenApiRouter;
+use utoipa_axum::routes;
 
-pub async fn fetch_recent_lessons(
-    State(state): State<AppState>,
-    claims: Claims,
-) -> Result<Json<Vec<LessonSmall>>, APIError> {
-    let lessons = lesson::find_recent(&state.db, &claims.sub).await?;
-
-    Ok(Json(lessons))
+pub fn router() -> OpenApiRouter<AppState> {
+    OpenApiRouter::new().routes(routes!(
+        list_lessons,
+        create_lesson,
+        delete_lesson,
+        update_lesson
+    ))
 }
 
+/// Fetches lesson by id
+#[utoipa::path(
+    get,
+    path = "/{id}",
+    
+    params(
+        ("id" = String, Path, description = "Lesson ID")
+    ),
+    tag = LESSON_TAG, responses(
+        (status = 200, description = "Lesson retrieved successfully", body = LessonFull),
+        (status = 404, description = "Lesson not found"),
+        (status = 401, description = "Unauthorized")
+    ),
+    security(("api_key" = []))
+)]
 pub async fn fetch_lesson(
     State(state): State<AppState>,
     Path(id): Path<String>,
@@ -29,6 +47,23 @@ pub async fn fetch_lesson(
     tracking::seen::mark_as_seen(&state.db, &claims.sub, &id, tracking::ModelType::Lesson).await?;
     Ok(Json(lesson))
 }
+/// Lessons belonging to a user
+#[utoipa::path(
+    get,
+    path = "/",
+    
+    params(
+        ("page" = Option<u32>, Query, description = "Page number"),
+        ("per_page" = Option<u32>, Query, description = "Items per page"),
+        ("search" = Option<String>, Query, description = "Search term"),
+        ("assignee" = Option<String>, Query, description = "Filter by assignee")
+    ),
+    tag = LESSON_TAG, responses(
+        (status = 200, description = "Lessons retrieved successfully", body = PaginatedResponse<LessonFull>),
+        (status = 401, description = "Unauthorized")
+    ),
+    security(("api_key" = []))
+)]
 pub async fn list_lessons(
     State(state): State<AppState>,
     Query(params): Query<PaginationParams>,
@@ -45,18 +80,29 @@ pub async fn list_lessons(
     }))
 }
 
+/// Creates a lesson with user defaults specified elsewhere
+#[utoipa::path(
+    post,
+    path = "/",
+    
+    tag = LESSON_TAG, responses(
+        (status = 201, description = "Lesson created successfully", body = CreationId),
+        (status = 400, description = "Bad request"),
+        (status = 401, description = "Unauthorized")
+    ),
+    security(("api_key" = []))
+)]
 pub async fn create_lesson(
     State(state): State<AppState>,
     claims: Claims,
-    Json(payload): Json<LessonCreate>,
 ) -> Result<Json<CreationId>, APIError> {
-    let id = lesson::create(&state.db, &claims.sub, payload).await?;
+    let id = lesson::create_with_defaults(&state.db, &claims.sub).await?;
 
     log_activity(
         &state.db,
         &claims.sub,
         &id.id,
-        ModelType::Deck,
+        ModelType::Lesson,
         ActionType::Create,
         None,
     )
@@ -64,7 +110,21 @@ pub async fn create_lesson(
 
     Ok(Json(id))
 }
-
+/// Deletes lesson
+#[utoipa::path(
+    delete,
+    path = "/{id}",
+    
+    params(
+        ("id" = String, Path, description = "Lesson ID")
+    ),
+    tag = LESSON_TAG, responses(
+        (status = 204, description = "Lesson deleted successfully"),
+        (status = 404, description = "Lesson not found"),
+        (status = 401, description = "Unauthorized")
+    ),
+    security(("api_key" = []))
+)]
 pub async fn delete_lesson(
     State(state): State<AppState>,
     Path(id): Path<String>,
@@ -92,6 +152,22 @@ pub async fn delete_lesson(
     Ok(StatusCode::NO_CONTENT)
 }
 
+/// Updates lesson
+#[utoipa::path(
+    patch,
+    
+    path = "/{id}",
+    params(
+        ("id" = String, Path, description = "Lesson ID")
+    ),
+    request_body = LessonUpdate,
+    tag = LESSON_TAG, responses(
+        (status = 204, description = "Lesson updated successfully"),
+        (status = 404, description = "Lesson not found"),
+        (status = 401, description = "Unauthorized")
+    ),
+    security(("api_key" = []))
+)]
 pub async fn update_lesson(
     State(state): State<AppState>,
     Path(id): Path<String>,

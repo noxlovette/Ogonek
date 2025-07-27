@@ -1,34 +1,36 @@
+use crate::api::TASK_TAG;
 use crate::api::error::APIError;
 use crate::auth::Claims;
-use crate::db::crud::core::task::{
-    add_files, count, create, delete, find_all, find_assignee, find_by_id, find_recent, toggle,
-    update,
+use crate::db::crud::core::task::create_with_defaults;
+use crate::db::crud::{
+    core::task::{count, delete, find_all, find_assignee, find_by_id, toggle, update},
+    files::file::fetch_files_task,
+    tracking::{ActionType, ModelType, delete_seen, log_activity, seen},
 };
-use crate::db::crud::files::file::fetch_files_task;
-
-use crate::db::crud::tracking::activity::log_activity;
-use crate::db::crud::tracking::seen::delete_seen;
-use crate::db::crud::tracking::{ActionType, ModelType, seen};
-use crate::models::meta::{CreationId, PaginatedResponse};
-use crate::models::tasks::{
-    TaskCreate, TaskFileBind, TaskPaginationParams, TaskSmall, TaskUpdate, TaskWithFilesResponse,
+use crate::models::{
+    CreationId, PaginatedResponse, TaskFull, TaskPaginationParams, TaskSmall, TaskUpdate,
+    TaskWithFilesResponse,
 };
 use crate::s3::post::delete_s3;
 use crate::schema::AppState;
 use axum::extract::{Json, Path, Query, State};
-use hyper::StatusCode;
-
-/// Three mini-tasks
-pub async fn fetch_recent_tasks(
-    State(state): State<AppState>,
-    claims: Claims,
-) -> Result<Json<Vec<TaskSmall>>, APIError> {
-    let tasks = find_recent(&state.db, &claims.sub).await?;
-
-    Ok(Json(tasks))
-}
+use axum::http::StatusCode;
 
 /// One Task
+#[utoipa::path(
+    get,
+    path = "/{id}", tag = TASK_TAG,
+    
+    params(
+        ("id" = String, Path, description = "Task ID")
+    ),
+    responses(
+        (status = 200, description = "Task with files retrieved", body = TaskWithFilesResponse),
+        (status = 404, description = "Task not found"),
+        (status = 401, description = "Unauthorized")
+    ),
+    security(("api_key" = []))
+)]
 pub async fn fetch_task(
     State(state): State<AppState>,
     Path(id): Path<String>,
@@ -41,6 +43,24 @@ pub async fn fetch_task(
     Ok(Json(TaskWithFilesResponse { task, files }))
 }
 
+/// Tasks belonging to a user (through assignment or direct ownership)
+#[utoipa::path(
+    get,
+    path = "/", tag = TASK_TAG,
+    params(
+        ("page" = Option<u32>, Query, description = "Page number"),
+        ("per_page" = Option<u32>, Query, description = "Items per page"),
+        ("search" = Option<String>, Query, description = "Search term"),
+        ("assignee" = Option<String>, Query, description = "Filter by assignee"),
+        ("completed" = Option<bool>, Query, description = "Filter by completion status"),
+        ("priority" = Option<i32>, Query, description = "Filter by priority")
+    ),
+    responses(
+        (status = 200, description = "Tasks retrieved successfully", body = PaginatedResponse<TaskFull>),
+        (status = 401, description = "Unauthorized")
+    ),
+    security(("api_key" = []))
+)]
 pub async fn list_tasks(
     State(state): State<AppState>,
     claims: Claims,
@@ -56,20 +76,23 @@ pub async fn list_tasks(
         per_page: params.limit(),
     }))
 }
-
+/// Creates a new task
+#[utoipa::path(
+    post,
+    
+    path = "/", tag = TASK_TAG,
+    responses(
+        (status = 201, description = "Task created successfully", body = CreationId),
+        (status = 400, description = "Bad request"),
+        (status = 401, description = "Unauthorized")
+    ),
+    security(("api_key" = []))
+)]
 pub async fn create_task(
     State(state): State<AppState>,
     claims: Claims,
-    Json(payload): Json<TaskCreate>,
 ) -> Result<Json<CreationId>, APIError> {
-    let mut assignee = &claims.sub;
-
-    if payload.assignee.is_some() {
-        assignee = payload.assignee.as_ref().unwrap();
-    }
-
-    let id = create(&state.db, &payload, &claims.sub, assignee).await?;
-
+    let id = create_with_defaults(&state.db, &claims.sub).await?;
     log_activity(
         &state.db,
         &claims.sub,
@@ -83,6 +106,21 @@ pub async fn create_task(
     Ok(Json(id))
 }
 
+/// Deletes a task
+#[utoipa::path(
+    delete,
+    
+    path = "/{id}", tag = TASK_TAG,
+    params(
+        ("id" = String, Path, description = "Task ID")
+    ),
+    responses(
+        (status = 204, description = "Task deleted successfully"),
+        (status = 404, description = "Task not found"),
+        (status = 401, description = "Unauthorized")
+    ),
+    security(("api_key" = []))
+)]
 pub async fn delete_task(
     State(state): State<AppState>,
     Path(id): Path<String>,
@@ -119,7 +157,21 @@ pub async fn delete_task(
     }
     Ok(StatusCode::NO_CONTENT)
 }
-
+/// Toggles completed/not completed on a task
+#[utoipa::path(
+    put,
+    
+    path = "/{id}", tag = TASK_TAG,
+    params(
+        ("id" = String, Path, description = "Task ID")
+    ),
+    responses(
+        (status = 200, description = "Task with files retrieved", body = TaskWithFilesResponse),
+        (status = 404, description = "Task not found"),
+        (status = 401, description = "Unauthorized")
+    ),
+    security(("api_key" = []))
+)]
 pub async fn toggle_task(
     State(state): State<AppState>,
     Path(id): Path<String>,
@@ -139,6 +191,22 @@ pub async fn toggle_task(
     .await?;
     Ok(StatusCode::NO_CONTENT)
 }
+#[utoipa::path(
+    patch,
+    
+    path = "/{id}", tag = TASK_TAG,
+    params(
+        ("id" = String, Path, description = "Task ID")
+    ),
+    request_body = TaskUpdate,
+    responses(
+        (status = 204, description = "Task updated successfully"),
+        (status = 404, description = "Task not found"),
+        (status = 401, description = "Unauthorized")
+    ),
+    security(("api_key" = []))
+)]
+/// Updates the task
 pub async fn update_task(
     State(state): State<AppState>,
     Path(id): Path<String>,
@@ -198,14 +266,4 @@ pub async fn update_task(
         .await?;
     }
     Ok(StatusCode::NO_CONTENT)
-}
-
-pub async fn add_file_to_task(
-    State(state): State<AppState>,
-    Path(task_id): Path<String>,
-    Json(payload): Json<TaskFileBind>,
-) -> Result<StatusCode, APIError> {
-    add_files(&state.db, &task_id, payload.file_ids).await?;
-
-    Ok(StatusCode::CREATED)
 }

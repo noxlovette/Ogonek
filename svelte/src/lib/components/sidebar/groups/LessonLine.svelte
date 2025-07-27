@@ -9,7 +9,7 @@
   }
 
   let { lesson }: Props = $props();
-  const href = `/${page.params.role}/lessons/l/${lesson.id}`;
+  const href = `/${page.params.role}/lessons/${lesson.id}`;
 </script>
 
 <a

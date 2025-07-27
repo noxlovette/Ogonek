@@ -1,0 +1,26 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "INSERT INTO tasks (id, title, markdown, assignee, created_by)\n         VALUES ($1, $2, $3, $4, $5 )\n         RETURNING id\n         ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Varchar"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Varchar",
+        "Varchar",
+        "Text",
+        "Varchar",
+        "Varchar"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "5bf3f8eef3d629c581baa7a49bdb6daaeb2497a50d19e000695a5cdd5584571a"
+}

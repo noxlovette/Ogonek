@@ -1,9 +1,9 @@
 // src/bin/seed_db.rs
 use anyhow::Result;
+use chrono::Utc;
 use dotenvy::dotenv;
 use ogonek::{auth::password::hash_password, db::init::init_db, models::ProfileUpdate};
 use sqlx::PgPool;
-use time::OffsetDateTime;
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -299,7 +299,7 @@ async fn create_tasks(db: &PgPool, user_ids: &[String]) -> Result<()> {
     let student2 = &user_ids[3];
     let student3 = &user_ids[4];
 
-    let now = OffsetDateTime::now_utc();
+    let now = Utc::now();
 
     let tasks = vec![
         (
@@ -308,7 +308,7 @@ async fn create_tasks(db: &PgPool, user_ids: &[String]) -> Result<()> {
             "Complete Ownership Exercise",
             "# Ownership Exercise\n\nImplement a simple string manipulation function that demonstrates ownership transfer.\n\n## Requirements\n- Take ownership of a String\n- Return modified String\n- No cloning allowed",
             false,
-            Some(now + time::Duration::days(7)),
+            Some(now + chrono::Duration::days(7)),
         ),
         (
             teacher1,
@@ -316,7 +316,7 @@ async fn create_tasks(db: &PgPool, user_ids: &[String]) -> Result<()> {
             "Build Async Web Scraper",
             "# Web Scraper Project\n\nCreate an async web scraper using reqwest and tokio.\n\n## Features\n- Concurrent requests\n- Error handling\n- Rate limiting",
             false,
-            Some(now + time::Duration::days(14)),
+            Some(now + chrono::Duration::days(14)),
         ),
         (
             teacher2,
@@ -332,7 +332,7 @@ async fn create_tasks(db: &PgPool, user_ids: &[String]) -> Result<()> {
             "SQL Practice Queries",
             "# SQL Exercises\n\nComplete the following SQL queries:\n\n1. Join tables\n2. Aggregate functions\n3. Subqueries\n4. Window functions",
             false,
-            Some(now + time::Duration::days(3)),
+            Some(now + chrono::Duration::days(3)),
         ),
     ];
 

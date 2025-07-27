@@ -1,4 +1,5 @@
 use serde::Serialize;
+use utoipa::ToSchema;
 
 use crate::{
     db::crud::tracking::ActivityLog,
@@ -9,7 +10,7 @@ use crate::{
 };
 
 /// Generic response that stores paginated data
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, ToSchema)]
 pub struct PaginatedResponse<T> {
     pub data: Vec<T>,
     pub total: i64,
@@ -18,20 +19,20 @@ pub struct PaginatedResponse<T> {
 }
 
 /// Generic wrapper with the badge count in it
-#[derive(Debug, Serialize)]
+#[derive(Serialize, ToSchema)]
 pub struct BadgeWrapper<T> {
     pub data: Vec<T>,
     pub count: i64,
 }
 
 /// Simply contains one string, the created ID
-#[derive(Debug, Serialize)]
+#[derive(Serialize, ToSchema)]
 pub struct CreationId {
     pub id: String,
 }
 
 /// A big response that powers the dashboard view
-#[derive(Serialize, Debug)]
+#[derive(Serialize, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct DashboardData {
     pub students: Vec<Student>,
