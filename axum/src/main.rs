@@ -4,7 +4,6 @@ use axum::{
     response::IntoResponse,
     routing::get,
 };
-use ogonek::api::openapi::ApiDoc;
 use ogonek::api::routes::*;
 use ogonek::schema::AppState;
 use ogonek::tools::daemons::task_cleanup::daily_cleanup;
@@ -15,8 +14,6 @@ use tower_http::{
     request_id::{MakeRequestUuid, PropagateRequestIdLayer, SetRequestIdLayer},
     timeout::TimeoutLayer,
 };
-use utoipa::OpenApi;
-use utoipa_swagger_ui::SwaggerUi;
 
 const REQUEST_ID_HEADER: &str = "x-request-id";
 
@@ -46,15 +43,10 @@ async fn run_server() -> anyhow::Result<()> {
         .route("/health", get(health_check))
         .route("/", get(|| async { "Ogonek API v1.0.0" }));
 
-    // Documentation routes
-    let docs = Router::new()
-        .merge(SwaggerUi::new("/docs").url("/api-docs/openapi.json", ApiDoc::openapi()));
-
     // Main app assembly
     let app = Router::new()
         .nest("/api/v1", api_v1)
         .merge(public_routes)
-        .merge(docs)
         .fallback(handler_404)
         .with_state(state)
         .layer(SetRequestIdLayer::new(
