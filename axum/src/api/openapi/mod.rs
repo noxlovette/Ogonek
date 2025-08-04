@@ -45,15 +45,16 @@ impl Modify for SecurityAddon {
     ),
     modifiers(&SecurityAddon),
     servers(
-        (url = "/", description = "Current server")
+        (url = "https://api.ogonek.app", description = "Production server"),
+        (url = "http://localhost:3000", description = "Local development server")
     ),
     tags(
-        (name = LESSON_TAG, description = "Lesson API"),
-        (name = TASK_TAG, description = "Task API"),
-        (name = DECK_TAG, description = "Deck API"),
-        (name = USER_TAG, description = "User API"),
-        (name = AUTH_TAG, description = "Auth API"),
-        (name = LEARN_TAG, description = "Learn API")
+        (name = LESSON_TAG,description = "Lesson API"),
+        (name = TASK_TAG,description = "Task API"),
+        (name = DECK_TAG,description = "Deck API"),
+        (name = USER_TAG,description = "User API"),
+        (name = AUTH_TAG,description = "Auth API"),
+        (name = LEARN_TAG,description = "Learn API")
     ),
     info(
         title = "Ogonek API",

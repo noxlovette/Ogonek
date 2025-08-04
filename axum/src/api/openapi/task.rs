@@ -1,4 +1,7 @@
-use crate::api::core::task;
+use crate::{
+    api::core::task,
+    models::{TaskFull, TaskPaginationParams, TaskSmall, TaskUpdate, TaskWithFilesResponse},
+};
 use utoipa::OpenApi;
 
 #[derive(OpenApi)]
@@ -12,11 +15,11 @@ use utoipa::OpenApi;
         task::delete_task,
     ),
     components(schemas(
-        crate::models::TaskSmall,
-        crate::models::TaskFull,
-        crate::models::TaskPaginationParams,
-        crate::models::TaskUpdate,
-        crate::models::TaskWithFilesResponse,
+        TaskSmall,
+        TaskFull,
+        TaskPaginationParams,
+        TaskUpdate,
+        TaskWithFilesResponse,
     ))
 )]
 pub struct TaskApi;

@@ -1,7 +1,7 @@
+use crate::models::datetime_serialization;
 use chrono::{DateTime, Utc};
 use serde::Serialize;
 use utoipa::ToSchema;
-
 pub mod activity;
 pub mod seen;
 
@@ -63,6 +63,6 @@ pub struct ActivityLog {
     pub model_type: String,
     pub model_id: String,
     pub action: String,
-
+    #[serde(with = "datetime_serialization::option")]
     pub created_at: Option<DateTime<Utc>>,
 }

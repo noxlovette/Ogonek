@@ -30,7 +30,8 @@ pub async fn fetch_file(
     params(
         ("encoded_key" = String, Path, description = "File ID")
     ),
-    tag = TASK_TAG, responses(
+    tag = TASK_TAG,
+    responses(
         (status = 200, description = "Presigned URL generated successfully"),
         (status = 401, description = "Unauthorized")
     ),
@@ -88,11 +89,11 @@ pub async fn update_file(
 #[utoipa::path(
     delete,
     path = "/{id}",
-    
     params(
         ("id" = String, Path, description = "File ID")
     ),
-    tag = TASK_TAG, responses(
+    tag = TASK_TAG,
+    responses(
         (status = 204, description = "File deleted successfully"),
         (status = 404, description = "File not found"),
         (status = 401, description = "Unauthorized")

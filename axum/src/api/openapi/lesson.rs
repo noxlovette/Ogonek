@@ -1,4 +1,4 @@
-use crate::{api::core::lesson, models::LessonSmall};
+use crate::api::core::lesson;
 use utoipa::OpenApi;
 
 #[derive(OpenApi)]
@@ -10,14 +10,10 @@ use utoipa::OpenApi;
         lesson::update_lesson,
         lesson::delete_lesson,
     ),
-    components(
-        schemas(
-            crate::models::LessonFull,
-            crate::models::LessonSmall,
-            crate::models::LessonUpdate,
-            crate::models::PaginatedResponse<LessonSmall>,
-        )
-    ),
-  
+    components(schemas(
+        crate::models::LessonFull,
+        crate::models::LessonSmall,
+        crate::models::LessonUpdate,
+    ))
 )]
 pub struct LessonApi;

@@ -14,8 +14,12 @@
   },
   "servers": [
     {
-      "url": "/",
-      "description": "Current server"
+      "url": "https://api.ogonek.app",
+      "description": "Production server"
+    },
+    {
+      "url": "http://localhost:3000",
+      "description": "Local development server"
     }
   ],
   "paths": {
@@ -188,22 +192,29 @@
         }
       }
     },
-    "/api/v1/decks/": {
+    "/api/v1/decks": {
       "get": {
         "tags": [
           "Deck"
         ],
         "summary": "Decks the user has access to",
-        "operationId": "fetch_deck_list",
+        "operationId": "list_decks",
         "responses": {
           "200": {
-            "description": "User decks retrieved"
+            "description": "User decks retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DeckSmall"
+                  }
+                }
+              }
+            }
           },
           "401": {
             "description": "Unauthorized"
-          },
-          "404": {
-            "description": "Deck not found"
           }
         },
         "security": [
@@ -249,7 +260,7 @@
           "Deck"
         ],
         "summary": "Only public decks",
-        "operationId": "fetch_deck_list_public",
+        "operationId": "list_decks_public",
         "responses": {
           "200": {
             "description": "Public decks retrieved",
@@ -266,9 +277,6 @@
           },
           "401": {
             "description": "Unauthorized"
-          },
-          "404": {
-            "description": "Deck not found"
           }
         },
         "security": [
@@ -298,7 +306,14 @@
         ],
         "responses": {
           "200": {
-            "description": "Deck retrieved"
+            "description": "Deck retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeckWithCardsAndSubscription"
+                }
+              }
+            }
           },
           "401": {
             "description": "Unauthorized"
@@ -392,7 +407,7 @@
         ]
       }
     },
-    "/api/v1/learn/": {
+    "/api/v1/learn": {
       "get": {
         "tags": [
           "Learn"
@@ -400,7 +415,7 @@
         "summary": "Returns the list of all cards due for review",
         "operationId": "fetch_due_cards",
         "responses": {
-          "204": {
+          "200": {
             "description": "Due cards fetched successfully",
             "content": {
               "application/json": {
@@ -514,17 +529,7 @@
         ],
         "responses": {
           "204": {
-            "description": "Card progress updated successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/CardProgressWithFields"
-                  }
-                }
-              }
-            }
+            "description": "Card progress updated successfully"
           },
           "401": {
             "description": "Unauthorized"
@@ -578,7 +583,7 @@
         ]
       }
     },
-    "/api/v1/lessons/": {
+    "/api/v1/lessons": {
       "get": {
         "tags": [
           "Lesson"
@@ -633,7 +638,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PaginatedResponse_LessonFull"
+                  "$ref": "#/components/schemas/PaginatedLessons"
                 }
               }
             }
@@ -912,7 +917,76 @@
         ]
       }
     },
-    "/api/v1/tasks/": {
+    "/api/v1/s3/presigned/{encoded_key}": {
+      "get": {
+        "tags": [
+          "Task"
+        ],
+        "summary": "Presigns url for frontend download",
+        "operationId": "fetch_presigned_url",
+        "parameters": [
+          {
+            "name": "encoded_key",
+            "in": "path",
+            "description": "File ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Presigned URL generated successfully"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/api/v1/s3/{id}": {
+      "delete": {
+        "tags": [
+          "Task"
+        ],
+        "summary": "Deletes file",
+        "operationId": "delete_file",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "File ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "File deleted successfully"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "File not found"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/api/v1/tasks": {
       "get": {
         "tags": [
           "Task"
@@ -986,7 +1060,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PaginatedResponse_TaskFull"
+                  "$ref": "#/components/schemas/PaginatedTasks"
                 }
               }
             }
@@ -1194,7 +1268,7 @@
         ]
       }
     },
-    "/api/v1/users/": {
+    "/api/v1/users": {
       "get": {
         "tags": [
           "User"
@@ -1652,9 +1726,8 @@
           }
         }
       },
-      "BadgeWrapper_DeckSmall": {
+      "BadgeWrapperDecks": {
         "type": "object",
-        "description": "Generic wrapper with the badge count in it",
         "required": [
           "data",
           "count"
@@ -1667,54 +1740,13 @@
           "data": {
             "type": "array",
             "items": {
-              "type": "object",
-              "required": [
-                "id",
-                "name",
-                "visibility"
-              ],
-              "properties": {
-                "assigneeName": {
-                  "type": [
-                    "string",
-                    "null"
-                  ]
-                },
-                "description": {
-                  "type": [
-                    "string",
-                    "null"
-                  ]
-                },
-                "id": {
-                  "type": "string"
-                },
-                "isSubscribed": {
-                  "type": [
-                    "boolean",
-                    "null"
-                  ]
-                },
-                "name": {
-                  "type": "string"
-                },
-                "seen": {
-                  "type": [
-                    "boolean",
-                    "null"
-                  ]
-                },
-                "visibility": {
-                  "type": "string"
-                }
-              }
+              "$ref": "#/components/schemas/DeckSmall"
             }
           }
         }
       },
-      "BadgeWrapper_LessonSmall": {
+      "BadgeWrapperLessons": {
         "type": "object",
-        "description": "Generic wrapper with the badge count in it",
         "required": [
           "data",
           "count"
@@ -1727,46 +1759,13 @@
           "data": {
             "type": "array",
             "items": {
-              "type": "object",
-              "description": "Mini-lesson",
-              "required": [
-                "id",
-                "title",
-                "topic",
-                "assigneeName",
-                "createdAt"
-              ],
-              "properties": {
-                "assigneeName": {
-                  "type": "string"
-                },
-                "createdAt": {
-                  "type": "string",
-                  "format": "date-time"
-                },
-                "id": {
-                  "type": "string"
-                },
-                "seen": {
-                  "type": [
-                    "boolean",
-                    "null"
-                  ]
-                },
-                "title": {
-                  "type": "string"
-                },
-                "topic": {
-                  "type": "string"
-                }
-              }
+              "$ref": "#/components/schemas/LessonSmall"
             }
           }
         }
       },
-      "BadgeWrapper_TaskSmall": {
+      "BadgeWrapperTasks": {
         "type": "object",
-        "description": "Generic wrapper with the badge count in it",
         "required": [
           "data",
           "count"
@@ -1779,45 +1778,7 @@
           "data": {
             "type": "array",
             "items": {
-              "type": "object",
-              "required": [
-                "id",
-                "title",
-                "priority",
-                "completed",
-                "assigneeName"
-              ],
-              "properties": {
-                "assigneeName": {
-                  "type": "string"
-                },
-                "completed": {
-                  "type": "boolean"
-                },
-                "dueDate": {
-                  "type": [
-                    "string",
-                    "null"
-                  ],
-                  "format": "date-time"
-                },
-                "id": {
-                  "type": "string"
-                },
-                "priority": {
-                  "type": "integer",
-                  "format": "int32"
-                },
-                "seen": {
-                  "type": [
-                    "boolean",
-                    "null"
-                  ]
-                },
-                "title": {
-                  "type": "string"
-                }
-              }
+              "$ref": "#/components/schemas/TaskSmall"
             }
           }
         }
@@ -1834,6 +1795,40 @@
           },
           "studentId": {
             "type": "string"
+          }
+        }
+      },
+      "Card": {
+        "type": "object",
+        "required": [
+          "id",
+          "front",
+          "back",
+          "deckId",
+          "createdAt"
+        ],
+        "properties": {
+          "back": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "deckId": {
+            "type": "string"
+          },
+          "front": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "mediaUrl": {
+            "type": [
+              "string",
+              "null"
+            ]
           }
         }
       },
@@ -2036,13 +2031,13 @@
             }
           },
           "decks": {
-            "$ref": "#/components/schemas/BadgeWrapper_DeckSmall"
+            "$ref": "#/components/schemas/BadgeWrapperDecks"
           },
           "learn": {
             "$ref": "#/components/schemas/LearnDataDashboard"
           },
           "lessons": {
-            "$ref": "#/components/schemas/BadgeWrapper_LessonSmall"
+            "$ref": "#/components/schemas/BadgeWrapperLessons"
           },
           "preferences": {
             "$ref": "#/components/schemas/UserPreferences"
@@ -2057,7 +2052,7 @@
             }
           },
           "tasks": {
-            "$ref": "#/components/schemas/BadgeWrapper_TaskSmall"
+            "$ref": "#/components/schemas/BadgeWrapperTasks"
           },
           "user": {
             "$ref": "#/components/schemas/User"
@@ -2200,6 +2195,28 @@
               "string",
               "null"
             ]
+          }
+        }
+      },
+      "DeckWithCardsAndSubscription": {
+        "type": "object",
+        "required": [
+          "deck",
+          "cards",
+          "isSubscribed"
+        ],
+        "properties": {
+          "cards": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Card"
+            }
+          },
+          "deck": {
+            "$ref": "#/components/schemas/DeckFull"
+          },
+          "isSubscribed": {
+            "type": "boolean"
           }
         }
       },
@@ -2498,9 +2515,8 @@
           }
         }
       },
-      "PaginatedResponse_LessonFull": {
+      "PaginatedLessons": {
         "type": "object",
-        "description": "Generic response that stores paginated data",
         "required": [
           "data",
           "total",
@@ -2511,50 +2527,7 @@
           "data": {
             "type": "array",
             "items": {
-              "type": "object",
-              "description": "Grown-up lesson",
-              "required": [
-                "id",
-                "title",
-                "topic",
-                "markdown",
-                "assignee",
-                "createdBy",
-                "createdAt",
-                "updatedAt",
-                "assigneeName"
-              ],
-              "properties": {
-                "assignee": {
-                  "type": "string"
-                },
-                "assigneeName": {
-                  "type": "string"
-                },
-                "createdAt": {
-                  "type": "string",
-                  "format": "date-time"
-                },
-                "createdBy": {
-                  "type": "string"
-                },
-                "id": {
-                  "type": "string"
-                },
-                "markdown": {
-                  "type": "string"
-                },
-                "title": {
-                  "type": "string"
-                },
-                "topic": {
-                  "type": "string"
-                },
-                "updatedAt": {
-                  "type": "string",
-                  "format": "date-time"
-                }
-              }
+              "$ref": "#/components/schemas/LessonSmall"
             }
           },
           "page": {
@@ -2571,9 +2544,8 @@
           }
         }
       },
-      "PaginatedResponse_LessonSmall": {
+      "PaginatedTasks": {
         "type": "object",
-        "description": "Generic response that stores paginated data",
         "required": [
           "data",
           "total",
@@ -2584,123 +2556,7 @@
           "data": {
             "type": "array",
             "items": {
-              "type": "object",
-              "description": "Mini-lesson",
-              "required": [
-                "id",
-                "title",
-                "topic",
-                "assigneeName",
-                "createdAt"
-              ],
-              "properties": {
-                "assigneeName": {
-                  "type": "string"
-                },
-                "createdAt": {
-                  "type": "string",
-                  "format": "date-time"
-                },
-                "id": {
-                  "type": "string"
-                },
-                "seen": {
-                  "type": [
-                    "boolean",
-                    "null"
-                  ]
-                },
-                "title": {
-                  "type": "string"
-                },
-                "topic": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "page": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "per_page": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "total": {
-            "type": "integer",
-            "format": "int64"
-          }
-        }
-      },
-      "PaginatedResponse_TaskFull": {
-        "type": "object",
-        "description": "Generic response that stores paginated data",
-        "required": [
-          "data",
-          "total",
-          "page",
-          "per_page"
-        ],
-        "properties": {
-          "data": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "required": [
-                "id",
-                "title",
-                "markdown",
-                "priority",
-                "completed",
-                "createdAt",
-                "updatedAt",
-                "createdBy",
-                "assignee",
-                "assigneeName"
-              ],
-              "properties": {
-                "assignee": {
-                  "type": "string"
-                },
-                "assigneeName": {
-                  "type": "string"
-                },
-                "completed": {
-                  "type": "boolean"
-                },
-                "createdAt": {
-                  "type": "string",
-                  "format": "date-time"
-                },
-                "createdBy": {
-                  "type": "string"
-                },
-                "dueDate": {
-                  "type": [
-                    "string",
-                    "null"
-                  ],
-                  "format": "date-time"
-                },
-                "id": {
-                  "type": "string"
-                },
-                "markdown": {
-                  "type": "string"
-                },
-                "priority": {
-                  "type": "integer",
-                  "format": "int32"
-                },
-                "title": {
-                  "type": "string"
-                },
-                "updatedAt": {
-                  "type": "string",
-                  "format": "date-time"
-                }
-              }
+              "$ref": "#/components/schemas/TaskSmall"
             }
           },
           "page": {

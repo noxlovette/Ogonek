@@ -1,6 +1,8 @@
+use crate::db::crud::flashcards::card::{self, batch_upsert};
 use crate::db::error::DbError;
 use crate::models::{
-    CreationId, DeckCreate, DeckFilterParams, DeckFull, DeckPublic, DeckSmall, DeckWithCardsUpdate,
+    CardUpsert, CreationId, DeckCreate, DeckFilterParams, DeckFull, DeckPublic, DeckSmall,
+    DeckWithCardsUpdate,
 };
 use sqlx::PgPool;
 
@@ -61,7 +63,11 @@ pub async fn find_all(
 }
 
 /// Find a deck by id WITH cards and subscription status included
-pub async fn find_by_id(db: &PgPool, deck_id: &str, user_id: &str) -> Result<DeckFull, DbError> {
+pub async fn find_by_id(
+    db: impl sqlx::Executor<'_, Database = sqlx::Postgres>,
+    deck_id: &str,
+    user_id: &str,
+) -> Result<DeckFull, DbError> {
     let deck = sqlx::query_as!(
         DeckFull,
         r#"
@@ -148,7 +154,11 @@ pub async fn find_recent(db: &PgPool, user_id: &str) -> Result<Vec<DeckSmall>, D
 }
 
 /// Creates a new deck using fed data
-pub async fn create(db: &PgPool, user_id: &str, create: DeckCreate) -> Result<CreationId, DbError> {
+pub async fn create(
+    db: impl sqlx::Executor<'_, Database = sqlx::Postgres>,
+    user_id: &str,
+    create: DeckCreate,
+) -> Result<CreationId, DbError> {
     let visibility = if create.assignee.is_some() {
         create.visibility.unwrap_or("assigned".to_string())
     } else {
@@ -172,6 +182,38 @@ pub async fn create(db: &PgPool, user_id: &str, create: DeckCreate) -> Result<Cr
     .await?;
 
     Ok(id)
+}
+
+/// Creates a copy of a deck
+pub async fn duplicate(db: &PgPool, user_id: &str, deck_id: &str) -> Result<CreationId, DbError> {
+    let mut tx = db.begin().await?;
+
+    let deck_to_copy = find_by_id(db, deck_id, user_id).await?;
+    let create_payload = DeckCreate {
+        name: format!("{} (Copy)", deck_to_copy.name),
+        description: deck_to_copy.description,
+        visibility: Some("private".to_string()),
+        assignee: None,
+    };
+
+    let cards = card::find_all(&mut *tx, deck_id).await?;
+
+    let new_id = create(&mut *tx, user_id, create_payload).await?;
+    let new_cards: Vec<CardUpsert> = cards
+        .into_iter()
+        .map(|card| CardUpsert {
+            id: None,
+            front: card.front,
+            back: card.back,
+            media_url: card.media_url,
+        })
+        .collect();
+
+    batch_upsert(&mut *tx, &new_id.id, new_cards).await?;
+
+    tx.commit().await?;
+
+    Ok(new_id)
 }
 
 /// Creates a new deck with user defaults
@@ -279,30 +321,7 @@ pub async fn update(
     .execute(&mut *tx)
     .await?;
 
-    // Step 3: Upsert (Insert or Update) Cards
-    for card in update.cards {
-        let card_id = card.id.clone().unwrap_or_else(|| nanoid::nanoid!());
-        sqlx::query!(
-            r#"
-        INSERT INTO cards (id, deck_id, front, back, media_url)
-        VALUES ($1, $2, $3, $4, $5)
-        ON CONFLICT (id) DO UPDATE
-        SET
-            front = EXCLUDED.front,
-            back = EXCLUDED.back,
-            deck_id = EXCLUDED.deck_id,
-            media_url = EXCLUDED.media_url
-        RETURNING *
-        "#,
-            card_id,
-            deck_id,
-            card.front,
-            card.back,
-            card.media_url,
-        )
-        .fetch_one(&mut *tx)
-        .await?;
-    }
+    batch_upsert(&mut *tx, deck_id, update.cards).await?;
 
     tx.commit().await?;
 
@@ -325,7 +344,7 @@ pub async fn count(db: &PgPool, user_id: &str) -> Result<i64, DbError> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::models::{CardUpdate, DeckUpdate};
+    use crate::models::{CardUpsert, DeckUpdate};
     use crate::tests::create_test_user;
     use sqlx::PgPool;
 
@@ -794,16 +813,16 @@ mod tests {
                 assignee: None,
             },
             cards: vec![
-                CardUpdate {
+                CardUpsert {
                     id: None, // New card
-                    front: Some("Question 1".to_string()),
-                    back: Some("Answer 1".to_string()),
+                    front: "Question 1".to_string(),
+                    back: "Answer 1".to_string(),
                     media_url: None,
                 },
-                CardUpdate {
+                CardUpsert {
                     id: None, // New card
-                    front: Some("Question 2".to_string()),
-                    back: Some("Answer 2".to_string()),
+                    front: "Question 2".to_string(),
+                    back: "Answer 2".to_string(),
                     media_url: Some("http://example.com/image.jpg".to_string()),
                 },
             ],
@@ -843,16 +862,16 @@ mod tests {
                 assignee: None,
             },
             cards: vec![
-                CardUpdate {
+                CardUpsert {
                     id: Some(card_ids[0].clone()),
-                    front: Some("Updated Q1".to_string()),
-                    back: Some("Updated A1".to_string()),
+                    front: "Updated Q1".to_string(),
+                    back: "Updated A1".to_string(),
                     media_url: None,
                 },
-                CardUpdate {
+                CardUpsert {
                     id: Some(card_ids[1].clone()),
-                    front: Some("Updated Q2".to_string()),
-                    back: Some("Updated A2".to_string()),
+                    front: "Updated Q2".to_string(),
+                    back: "Updated A2".to_string(),
                     media_url: Some("http://example.com/updated.jpg".to_string()),
                 },
             ],
@@ -905,10 +924,10 @@ mod tests {
                 visibility: None,
                 assignee: None,
             },
-            cards: vec![CardUpdate {
+            cards: vec![CardUpsert {
                 id: Some(card_ids[0].clone()),
-                front: Some("Updated Q1".to_string()),
-                back: Some("Updated A1".to_string()),
+                front: "Updated Q1".to_string(),
+                back: "Updated A1".to_string(),
                 media_url: None,
             }],
         };

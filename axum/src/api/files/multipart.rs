@@ -19,7 +19,7 @@ use crate::api::TASK_TAG;
     post,
     path = "/init",
     request_body = InitUploadRequest,
-    tag = TASK_TAG, 
+    tag = TASK_TAG,
     responses(
         (status = 200, description = "Multipart upload initialized", body = MultipartUploadInit),
         (status = 400, description = "Bad request"),
@@ -73,7 +73,7 @@ pub async fn init_multipart_upload(
 #[utoipa::path(
     post,
     path = "/complete",
-    tag = TASK_TAG, 
+    tag = TASK_TAG,
     request_body = CompleteMultipartRequest,
     responses(
         (status = 201, description = "Upload completed successfully"),
@@ -103,7 +103,7 @@ pub async fn complete_multipart_upload(
 /// Cancel multipart upload
 #[utoipa::path(
     post,
-    tag = TASK_TAG, 
+    tag = TASK_TAG,
     path = "/abort",
     request_body = AbortMultipartRequest,
     responses(

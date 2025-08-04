@@ -4,7 +4,9 @@ use crate::auth::Claims;
 use crate::db::crud::account::{preferences, student, user};
 use crate::db::crud::tracking::{ModelType, activity, seen};
 use crate::db::crud::{account, core, flashcards};
-use crate::models::{BadgeWrapper, DashboardData, LearnDataDashboard};
+use crate::models::{
+    BadgeWrapperDecks, BadgeWrapperLessons, BadgeWrapperTasks, DashboardData, LearnDataDashboard,
+};
 use crate::schema::AppState;
 use axum::extract::Json;
 use axum::extract::State;
@@ -13,7 +15,8 @@ use axum::extract::State;
 /// the dashboard view with data,
 /// and the stores for profile and user
 #[utoipa::path(
-    get, tag = USER_TAG,
+    get,
+    tag = USER_TAG,
     path = "/dashboard",
     responses(
         (status = 200, description = "Dashboard data retrieved", body=DashboardData),
@@ -44,15 +47,15 @@ pub async fn fetch_dashboard(
 
     Ok(Json(DashboardData {
         students,
-        lessons: BadgeWrapper {
+        lessons: BadgeWrapperLessons {
             count: lesson_count,
             data: lessons,
         },
-        tasks: BadgeWrapper {
+        tasks: BadgeWrapperTasks {
             count: task_count,
             data: tasks,
         },
-        decks: BadgeWrapper {
+        decks: BadgeWrapperDecks {
             count: deck_count,
             data: decks,
         },

@@ -1,6 +1,6 @@
 [package]
 name = "ogonek"
-version = "1.6.0"
+version = "1.6.1"
 edition = "2024"
 
 
@@ -20,7 +20,7 @@ tokio = { version = "1.47", features = ["full"] }
 # Secondary Crates
 chrono = { version = "0.4", features = ["serde"] }
 serde = { version = "1", features = ["derive"] }
-serde_json = "1.0"
+serde_json = "1.0.142"
 jsonwebtoken = { version = "9.3.0", features = ["use_pem"] }
 argon2 = "0.5.3"
 
@@ -42,3 +42,4 @@ atty = "0.2.14"
 sentry-tower = {version = "0.38.1", features = ["axum", "axum-matched-path", "http"]}
 utoipa = {version ="5.4.0", features = ["chrono"]}
 utoipa-axum = {version ="0.2.0"}
+serde_yaml = "0.9.34"

@@ -14,8 +14,8 @@ use validator::Validate;
 #[utoipa::path(
     post,
     path = "/signup",
-    request_body = SignUpPayload, 
-    tag = AUTH_TAG,  responses(
+    request_body = SignUpPayload,
+    tag = AUTH_TAG, responses(
         (status = 201, description = "User registered successfully"),
         (status = 400, description = "Invalid registration data"),
         (status = 409, description = "User already exists")
@@ -44,10 +44,10 @@ pub async fn signup(
 }
 #[utoipa::path(
     post,
-
     path = "/signin",
-    request_body = AuthPayload, 
-    tag = AUTH_TAG,  responses(
+    request_body = AuthPayload,
+    tag = AUTH_TAG,
+    responses(
         (status = 200, description = "Authentication successful", body = TokenPair),
         (status = 401, description = "Invalid credentials")
     )
@@ -79,9 +79,10 @@ pub async fn signin(
 /// Receives the refresh token as json, gets it, then decodes, finds the user id, and generates a new access token
 #[utoipa::path(
     post,
-        path = "/refresh",
+    path = "/refresh",
     request_body = RefreshTokenPayload,
-    tag = AUTH_TAG,  responses(
+    tag = AUTH_TAG,
+    responses(
         (status = 200, description = "Token refreshed", body = RefreshTokenResponse),
         (status = 401, description = "Invalid refresh token")
     )
@@ -108,7 +109,8 @@ pub async fn refresh(
     params(
         ("invite" = InviteQuery, Query, description = "Invite token")
     ),
-    tag = AUTH_TAG,  responses(
+    tag = AUTH_TAG,
+    responses(
         (status = 200, description = "Invite link generated", body = String),
         (status = 401, description = "Unauthorized"),
         (status = 400, description = "Invalid invite token")
@@ -142,7 +144,8 @@ pub async fn generate_invite_link(
     post,
     path = "/bind",
     request_body = BindPayload,
-    tag = AUTH_TAG,  responses(
+    tag = AUTH_TAG,
+    responses(
         (status = 204, description = "Student bound to teacher successfully"),
         (status = 400, description = "Invalid bind data"),
         (status = 401, description = "Invalid invite token")

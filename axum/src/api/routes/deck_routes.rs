@@ -5,7 +5,7 @@ use axum::routing::get;
 
 pub fn deck_routes() -> Router<AppState> {
     Router::new()
-        .route("/", get(deck::fetch_deck_list).post(deck::create_deck))
+        .route("/", get(deck::list_decks).post(deck::create_deck))
         .route(
             "/{id}",
             get(deck::fetch_deck)
@@ -13,5 +13,5 @@ pub fn deck_routes() -> Router<AppState> {
                 .delete(deck::delete_deck)
                 .post(learn::reset_deck_progress),
         )
-        .route("/public", get(deck::fetch_deck_list_public))
+        .route("/public", get(deck::list_decks_public))
 }

@@ -1,4 +1,5 @@
 use super::files::FileSmall;
+use crate::models::datetime_serialization;
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use sqlx::prelude::FromRow;
@@ -39,8 +40,11 @@ pub struct TaskFull {
     #[validate(range(min = 1, max = 3))]
     pub priority: i16,
     pub completed: bool,
+    #[serde(with = "datetime_serialization")]
     pub created_at: DateTime<Utc>,
+    #[serde(with = "datetime_serialization")]
     pub updated_at: DateTime<Utc>,
+    #[serde(with = "datetime_serialization::option")]
     pub due_date: Option<DateTime<Utc>>,
     pub created_by: String,
     pub assignee: String,
@@ -56,6 +60,7 @@ pub struct TaskSmall {
     pub completed: bool,
     pub assignee_name: String,
     pub seen: Option<bool>,
+    #[serde(with = "datetime_serialization::option")]
     pub due_date: Option<DateTime<Utc>>,
 }
 
@@ -65,6 +70,7 @@ pub struct TaskCreate {
     pub title: String,
     pub markdown: String,
     pub priority: Option<i16>,
+    #[serde(with = "datetime_serialization::option")]
     pub due_date: Option<DateTime<Utc>>,
     pub assignee: Option<String>,
 }
@@ -76,6 +82,7 @@ pub struct TaskUpdate {
     pub markdown: Option<String>,
     pub priority: Option<i16>,
     pub completed: Option<bool>,
+    #[serde(with = "datetime_serialization::option")]
     pub due_date: Option<DateTime<Utc>>,
     pub assignee: Option<String>,
 }

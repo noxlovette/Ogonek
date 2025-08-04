@@ -13,9 +13,8 @@ use chrono::{Duration, Utc};
 /// Subscribes the user to the deck
 #[utoipa::path(
     post,
-    
     path = "/subscribe/{id}",
-    tag = LEARN_TAG, params(
+    tag = LEARN_TAG,params(
         ("id" = String, Path, description = "Deck ID")
     ),
     responses(
@@ -47,9 +46,8 @@ pub async fn subscribe_to_deck(
 /// Unsubscribes the user from the deck
 #[utoipa::path(
     delete,
-    
     path = "/subscribe/{id}",
-    tag = LEARN_TAG, params(
+    tag = LEARN_TAG,params(
         ("id" = String, Path, description = "Deck ID")
     ),
     responses(
@@ -80,10 +78,10 @@ pub async fn unsubscribe_from_deck(
 /// Returns the list of all cards due for review
 #[utoipa::path(
     get,
-    tag = LEARN_TAG, 
-    path = "/",
+    tag = LEARN_TAG,
+    path = "",
     responses(
-        (status = 204, description = "Due cards fetched successfully", body = Vec<CardProgressWithFields>),
+        (status = 200, description = "Due cards fetched successfully", body = Vec<CardProgressWithFields>),
         (status = 401, description = "Unauthorized")
     ),
     security(("api_key" = []))
@@ -101,11 +99,11 @@ pub async fn fetch_due_cards(
 #[utoipa::path(
     put,
     path = "/{id}",
-    tag = LEARN_TAG, params(
+    tag = LEARN_TAG,params(
         ("id" = String, Path, description = "Card ID")
     ),
     responses(
-        (status = 204, description = "Card progress updated successfully", body = Vec<CardProgressWithFields>),
+        (status = 204, description = "Card progress updated successfully"),
         (status = 401, description = "Unauthorized")
     ),
     security(("api_key" = []))
@@ -141,9 +139,8 @@ pub async fn update_card_progress(
 /// Resets the progress for a particular deck
 #[utoipa::path(
     delete,
-    
     path = "/{id}",
-    tag = LEARN_TAG, params(
+    tag = LEARN_TAG,params(
         ("id" = String, Path, description = "Deck ID")
     ),
     responses(
