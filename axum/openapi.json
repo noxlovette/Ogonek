@@ -10,7 +10,7 @@
     "license": {
       "name": ""
     },
-    "version": "1.6.0"
+    "version": "1.6.1"
   },
   "servers": [
     {
@@ -230,7 +230,7 @@
         "summary": "Creates a new Deck using user defaults",
         "operationId": "create_deck",
         "responses": {
-          "201": {
+          "200": {
             "description": "Deck created successfully",
             "content": {
               "application/json": {
@@ -310,7 +310,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/DeckWithCardsAndSubscription"
+                  "$ref": "#/components/schemas/DeckWithCards"
                 }
               }
             }
@@ -1894,20 +1894,18 @@
           }
         }
       },
-      "CardUpdate": {
+      "CardUpsert": {
         "type": "object",
+        "required": [
+          "front",
+          "back"
+        ],
         "properties": {
           "back": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           },
           "front": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           },
           "id": {
             "type": [
@@ -2198,12 +2196,11 @@
           }
         }
       },
-      "DeckWithCardsAndSubscription": {
+      "DeckWithCards": {
         "type": "object",
         "required": [
           "deck",
-          "cards",
-          "isSubscribed"
+          "cards"
         ],
         "properties": {
           "cards": {
@@ -2214,9 +2211,6 @@
           },
           "deck": {
             "$ref": "#/components/schemas/DeckFull"
-          },
-          "isSubscribed": {
-            "type": "boolean"
           }
         }
       },
@@ -2230,7 +2224,7 @@
           "cards": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/CardUpdate"
+              "$ref": "#/components/schemas/CardUpsert"
             }
           },
           "deck": {
