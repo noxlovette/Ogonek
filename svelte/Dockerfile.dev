@@ -18,4 +18,4 @@ COPY . .
 
 EXPOSE 5173
 
-CMD ["pnpm", "run", "dev:docker"]
+CMD ["pnpm", "run", "dev"]

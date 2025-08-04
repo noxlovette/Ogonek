@@ -25,7 +25,7 @@
   let deck = $derived(data.deck);
   let flippedCards = $state(new Set<string>());
 
-  let isSubscribed = $state(data.isSubscribed);
+  let isSubscribed = $state(data.deck.isSubscribed);
 
   const assigneeName = $derived(
     data.students.find((student) => student.id === data.deck.assignee)?.name ||
