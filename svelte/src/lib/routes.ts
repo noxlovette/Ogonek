@@ -26,6 +26,7 @@ export const routes = {
       return `${API_BASE}/decks${query ? `?${query}` : ""}`;
     },
     single: (id: string) => `${API_BASE}/decks/${id}`,
+    duplicate: (id: string) => `${API_BASE}/decks/${id}/duplicate`,
     new: () => `${API_BASE}/decks`,
   },
 

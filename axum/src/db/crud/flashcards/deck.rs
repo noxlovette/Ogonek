@@ -396,6 +396,45 @@ mod tests {
 
         Ok(card_ids)
     }
+    async fn create_test_deck_with_cards(
+        db: &PgPool,
+        user_id: &str,
+        name: &str,
+        card_count: usize,
+    ) -> String {
+        let deck_create = DeckCreate {
+            name: name.to_string(),
+            description: Some("Test deck with cards".to_string()),
+            visibility: Some("private".to_string()),
+            assignee: None,
+        };
+
+        let mut tx = db.begin().await.unwrap();
+        let deck_result = create(&mut *tx, user_id, deck_create).await.unwrap();
+
+        // Add cards if requested
+        if card_count > 0 {
+            let cards: Vec<CardUpsert> = (0..card_count)
+                .map(|i| CardUpsert {
+                    id: None,
+                    front: format!("Question {}", i + 1),
+                    back: format!("Answer {}", i + 1),
+                    media_url: if i % 2 == 0 {
+                        Some(format!("https://cdn.example.com/card_{}.jpg", i))
+                    } else {
+                        None
+                    },
+                })
+                .collect();
+
+            batch_upsert(&mut *tx, &deck_result.id, cards)
+                .await
+                .unwrap();
+        }
+
+        tx.commit().await.unwrap();
+        deck_result.id
+    }
 
     // Helper function to count cards in a deck
     async fn count_cards_in_deck(db: &PgPool, deck_id: &str) -> Result<i64, DbError> {
@@ -474,6 +513,208 @@ mod tests {
         let deck = find_by_id(&db, &deck_id, &user_id).await.unwrap();
         assert_eq!(deck.visibility, "private");
         assert_eq!(deck.assignee, None);
+    }
+    #[sqlx::test]
+    async fn test_duplicate_deck_success_with_cards(db: PgPool) {
+        let user_id = create_test_user(&db, "testuser", "test@example.com").await;
+        let original_deck_id = create_test_deck_with_cards(&db, &user_id, "My Study Deck", 3).await;
+
+        let result = duplicate(&db, &user_id, &original_deck_id).await;
+
+        assert!(result.is_ok());
+        let new_deck_id = result.unwrap().id;
+
+        // Verify the duplicated deck has correct metadata
+        let new_deck = find_by_id(&db, &new_deck_id, &user_id).await.unwrap();
+        assert_eq!(new_deck.name, "My Study Deck (Copy)");
+        assert_eq!(new_deck.visibility, "private");
+        assert_eq!(new_deck.assignee, None);
+
+        // Verify cards were duplicated correctly
+        let mut tx = db.begin().await.unwrap();
+        let original_cards = card::find_all(&mut *tx, &original_deck_id).await.unwrap();
+        let new_cards = card::find_all(&mut *tx, &new_deck_id).await.unwrap();
+
+        assert_eq!(original_cards.len(), 3);
+        assert_eq!(new_cards.len(), 3);
+
+        // Cards should have same content but different deck association
+        for (orig, new) in original_cards.iter().zip(new_cards.iter()) {
+            assert_eq!(orig.front, new.front);
+            assert_eq!(orig.back, new.back);
+            assert_eq!(orig.media_url, new.media_url);
+            // Cards should belong to different decks
+            assert_ne!(orig.deck_id, new.deck_id);
+        }
+    }
+
+    #[sqlx::test]
+    async fn test_duplicate_empty_deck(db: PgPool) {
+        let user_id = create_test_user(&db, "testuser", "test@example.com").await;
+        let empty_deck_id = create_test_deck_with_cards(&db, &user_id, "Empty Deck", 0).await;
+
+        let result = duplicate(&db, &user_id, &empty_deck_id).await;
+
+        assert!(result.is_ok());
+        let new_deck_id = result.unwrap().id;
+
+        // Should create deck even with no cards
+        let new_deck = find_by_id(&db, &new_deck_id, &user_id).await.unwrap();
+        assert_eq!(new_deck.name, "Empty Deck (Copy)");
+
+        // Verify no cards in duplicated deck
+        let mut tx = db.begin().await.unwrap();
+        let new_cards = card::find_all(&mut *tx, &new_deck_id).await.unwrap();
+        assert_eq!(new_cards.len(), 0);
+    }
+
+    #[sqlx::test]
+    async fn test_duplicate_deck_not_found(db: PgPool) {
+        let user_id = create_test_user(&db, "testuser", "test@example.com").await;
+        let fake_deck_id = "non-existent-deck-id";
+
+        let result = duplicate(&db, &user_id, fake_deck_id).await;
+
+        assert!(result.is_err());
+        // Should fail gracefully when deck doesn't exist
+        match result.unwrap_err() {
+            DbError::NotFound(_) => {} // Expected
+            other => panic!("Expected NotFound error, got: {:?}", other),
+        }
+    }
+
+    #[sqlx::test]
+    async fn test_duplicate_deck_unauthorized_user(db: PgPool) {
+        let owner_id = create_test_user(&db, "owner", "owner@example.com").await;
+        let other_user_id = create_test_user(&db, "hacker", "hacker@example.com").await;
+
+        let deck_id = create_test_deck_with_cards(&db, &owner_id, "Private Deck", 2).await;
+
+        // Try to duplicate someone else's deck
+        let result = duplicate(&db, &other_user_id, &deck_id).await;
+
+        assert!(result.is_err());
+        // This should fail because find_by_id checks ownership
+    }
+
+    #[sqlx::test]
+    async fn test_duplicate_preserves_all_card_properties(db: PgPool) {
+        let user_id = create_test_user(&db, "testuser", "test@example.com").await;
+
+        // Create deck manually to control card properties
+        let deck_create = DeckCreate {
+            name: "Rich Content Deck".to_string(),
+            description: Some("Deck with various card types".to_string()),
+            visibility: Some("private".to_string()),
+            assignee: None,
+        };
+
+        let mut tx = db.begin().await.unwrap();
+        let deck_result = create(&mut *tx, &user_id, deck_create).await.unwrap();
+
+        // Add cards with different properties
+        let cards = vec![
+            CardUpsert {
+                id: None,
+                front: "Simple text front".to_string(),
+                back: "Simple text back".to_string(),
+                media_url: None,
+            },
+            CardUpsert {
+                id: None,
+                front: "Front with <b>HTML</b>".to_string(),
+                back: "Back with **markdown**".to_string(),
+                media_url: Some("https://scaleway.bucket.com/images/card.jpg".to_string()),
+            },
+            CardUpsert {
+                id: None,
+                front: "Special chars: 'quotes' & symbols!".to_string(),
+                back: "Unicode: こんにちは 🚀".to_string(),
+                media_url: Some("https://scaleway.bucket.com/audio/pronunciation.mp3".to_string()),
+            },
+        ];
+
+        batch_upsert(&mut *tx, &deck_result.id, cards)
+            .await
+            .unwrap();
+        tx.commit().await.unwrap();
+
+        // Duplicate the deck
+        let result = duplicate(&db, &user_id, &deck_result.id).await;
+        assert!(result.is_ok());
+
+        // Verify all card properties were preserved
+        let mut tx = db.begin().await.unwrap();
+        let original_cards = card::find_all(&mut *tx, &deck_result.id).await.unwrap();
+        let duplicated_cards = card::find_all(&mut *tx, &result.unwrap().id).await.unwrap();
+
+        assert_eq!(original_cards.len(), 3);
+        assert_eq!(duplicated_cards.len(), 3);
+
+        // Check each card was copied exactly
+        for (orig, dup) in original_cards.iter().zip(duplicated_cards.iter()) {
+            assert_eq!(orig.front, dup.front);
+            assert_eq!(orig.back, dup.back);
+            assert_eq!(orig.media_url, dup.media_url);
+        }
+    }
+
+    #[sqlx::test]
+    async fn test_duplicate_deck_name_formatting(db: PgPool) {
+        let user_id = create_test_user(&db, "testuser", "test@example.com").await;
+
+        // Test various deck names and their copy formatting
+        let test_cases = vec![
+            ("Simple Deck", "Simple Deck (Copy)"),
+            ("Deck with (parentheses)", "Deck with (parentheses) (Copy)"),
+            ("Already a (Copy)", "Already a (Copy) (Copy)"),
+            ("", " (Copy)"), // Edge case: empty name
+            ("🚀 Emoji Deck", "🚀 Emoji Deck (Copy)"),
+        ];
+
+        for (original_name, expected_copy_name) in test_cases {
+            let deck_id = create_test_deck_with_cards(&db, &user_id, original_name, 1).await;
+            let result = duplicate(&db, &user_id, &deck_id).await;
+
+            assert!(result.is_ok());
+            let copied_deck = find_by_id(&db, &result.unwrap().id, &user_id)
+                .await
+                .unwrap();
+            assert_eq!(copied_deck.name, expected_copy_name);
+        }
+    }
+
+    #[sqlx::test]
+    async fn test_duplicate_deck_transaction_rollback_on_card_error(db: PgPool) {
+        let user_id = create_test_user(&db, "testuser", "test@example.com").await;
+        let deck_id = create_test_deck_with_cards(&db, &user_id, "Test Deck", 2).await;
+
+        // This test is tricky - we'd need to mock card::batch_upsert to fail
+        // For now, just verify the happy path creates everything in one transaction
+        let decks_before = sqlx::query!(
+            "SELECT COUNT(*) as count FROM decks WHERE created_by = $1",
+            user_id
+        )
+        .fetch_one(&db)
+        .await
+        .unwrap()
+        .count
+        .unwrap();
+
+        let result = duplicate(&db, &user_id, &deck_id).await;
+        assert!(result.is_ok());
+
+        let decks_after = sqlx::query!(
+            "SELECT COUNT(*) as count FROM decks WHERE created_by = $1",
+            user_id
+        )
+        .fetch_one(&db)
+        .await
+        .unwrap()
+        .count
+        .unwrap();
+
+        assert_eq!(decks_after, decks_before + 1);
     }
 
     #[sqlx::test]

@@ -91,14 +91,13 @@
 
     <form
       method="POST"
-      action="?/copy"
+      action="?/duplicate"
       use:enhance={enhanceForm({
         messages: {
           success: "Deck Duplicated",
         },
       })}
     >
-      <input type="hidden" name="isSubscribed" value={isSubscribed} />
       <UniButton Icon={Copy} type="submit" variant="secondary">
         Duplicate
       </UniButton>

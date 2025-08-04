@@ -17,7 +17,7 @@
   "type": "module",
   "dependencies": {
     "@noxlovette/svarog": "^0.0.7",
-    "@sentry/sveltekit": "^9.44.0",
+    "@sentry/sveltekit": "^9.44.1",
     "@sveltejs/adapter-node": "^5.2.13",
     "@types/papaparse": "^5.3.16",
     "fflate": "^0.8.2",

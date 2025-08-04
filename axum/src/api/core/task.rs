@@ -8,8 +8,8 @@ use crate::db::crud::{
     tracking::{ActionType, ModelType, delete_seen, log_activity, seen},
 };
 use crate::models::{
-    CreationId, PaginatedResponse, PaginatedTasks, TaskFull, TaskPaginationParams, TaskSmall,
-    TaskUpdate, TaskWithFilesResponse,
+    CreationId, PaginatedResponse, PaginatedTasks, TaskPaginationParams, TaskSmall, TaskUpdate,
+    TaskWithFilesResponse,
 };
 use crate::s3::post::delete_s3;
 use crate::schema::AppState;

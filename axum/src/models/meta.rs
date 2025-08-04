@@ -85,7 +85,7 @@ impl From<PaginatedResponse<LessonSmall>> for PaginatedLessons {
 }
 
 /// Simply contains one string, the created ID
-#[derive(Serialize, ToSchema)]
+#[derive(Debug, Serialize, ToSchema)]
 pub struct CreationId {
     pub id: String,
 }

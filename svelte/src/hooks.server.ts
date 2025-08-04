@@ -217,19 +217,40 @@ export const handleError: HandleServerError = async ({
 }) => {
   const errorID = crypto.randomUUID();
 
-  logger.error({ message });
+  const requestContext = {
+    method: event.request.method,
+    url: event.url.pathname + event.url.search,
+    userAgent: event.request.headers.get("user-agent"),
+    ip: event.getClientAddress(),
+    timestamp: new Date().toISOString(),
+    userId: event.locals.user?.id || "anonymous",
+  };
+
+  logger.error({
+    errorID,
+    message: error.message ?? message,
+    status,
+    request: requestContext,
+  });
 
   Sentry.captureException(error, {
-    extra: {
-      message,
-      event,
+    tags: {
       errorID,
+      endpoint: event.url.pathname,
+      method: event.request.method,
+    },
+    extra: {
+      ...requestContext,
+      originalMessage: message,
       status,
+    },
+    user: {
+      ip_address: event.getClientAddress(),
     },
   });
 
   return {
-    message: "Whoops!",
+    message: "Something went sideways on our end",
     errorID,
   };
 };
