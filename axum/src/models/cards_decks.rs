@@ -2,6 +2,8 @@ use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use sqlx::prelude::FromRow;
 
+use crate::models::datetime_serialization;
+
 #[derive(Deserialize)]
 pub struct DeckFilterParams {
     pub search: Option<String>,
@@ -28,40 +30,31 @@ pub struct Card {
     pub back: String,
     pub media_url: Option<String>,
     pub deck_id: String,
+    #[serde(with = "datetime_serialization")]
     pub created_at: DateTime<Utc>,
 }
-
 #[derive(Deserialize, ToSchema)]
 #[serde(rename_all = "camelCase")]
-pub struct CardCreate {
+pub struct CardUpsert {
+    pub id: Option<String>,
     pub front: String,
     pub back: String,
-    pub media_url: Option<String>,
-}
-
-#[derive(Deserialize, ToSchema)]
-#[serde(rename_all = "camelCase")]
-pub struct CardUpdate {
-    pub id: Option<String>,
-    pub front: Option<String>,
-    pub back: Option<String>,
     pub media_url: Option<String>,
 }
 
 // DECK STRUCTS HERE
 #[derive(Serialize, ToSchema)]
 #[serde(rename_all = "camelCase")]
-pub struct DeckWithCardsAndSubscription {
+pub struct DeckWithCards {
     pub deck: DeckFull,
     pub cards: Vec<Card>,
-    pub is_subscribed: bool,
 }
 
 #[derive(Deserialize, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct DeckWithCardsUpdate {
     pub deck: DeckUpdate,
-    pub cards: Vec<CardUpdate>,
+    pub cards: Vec<CardUpsert>,
 }
 
 #[derive(Serialize, FromRow, ToSchema)]
@@ -75,6 +68,7 @@ pub struct DeckFull {
     pub is_subscribed: Option<bool>,
     pub created_by: String,
 
+    #[serde(with = "datetime_serialization")]
     pub created_at: DateTime<Utc>,
 }
 
@@ -127,7 +121,9 @@ pub struct CardProgressWithFields {
     pub card_id: String,
     #[validate(range(min = 0))]
     pub review_count: i32,
+    #[serde(with = "datetime_serialization::option")]
     pub last_reviewed: Option<DateTime<Utc>>,
+    #[serde(with = "datetime_serialization::option")]
     pub due_date: Option<DateTime<Utc>>,
     #[validate(range(min = 1.3, max = 5.0))]
     pub ease_factor: f64,
@@ -146,7 +142,9 @@ pub struct CardProgress {
     pub card_id: String,
     #[validate(range(min = 0))]
     pub review_count: i32,
+    #[serde(with = "datetime_serialization::option")]
     pub last_reviewed: Option<DateTime<Utc>>,
+    #[serde(with = "datetime_serialization::option")]
     pub due_date: Option<DateTime<Utc>>,
     #[validate(range(min = 1.3, max = 5.0))]
     pub ease_factor: f64,
@@ -157,9 +155,11 @@ pub struct CardProgress {
 #[derive(ToSchema, Deserialize)]
 pub struct UpdateCardProgress {
     pub review_count: i32,
+    #[serde(with = "datetime_serialization")]
     pub due_date: DateTime<Utc>,
     pub ease_factor: f64,
     pub interval: i32,
+    #[serde(with = "datetime_serialization")]
     pub last_reviewed: DateTime<Utc>,
 }
 

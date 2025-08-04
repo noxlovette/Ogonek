@@ -5,7 +5,7 @@ use crate::db::crud::tracking::activity::log_activity;
 use crate::db::crud::tracking::seen::{delete_seen, insert_as_unseen, mark_as_seen};
 use crate::db::crud::tracking::{self, ActionType, ModelType};
 use crate::models::{
-    CreationId, DeckFilterParams, DeckFull, DeckPublic, DeckSmall, DeckWithCardsAndSubscription,
+    CreationId, DeckFilterParams, DeckFull, DeckPublic, DeckSmall, DeckWithCards,
     DeckWithCardsUpdate,
 };
 use crate::schema::AppState;
@@ -15,11 +15,11 @@ use axum::http::StatusCode;
 use crate::api::DECK_TAG;
 /// Creates a new Deck using user defaults
 #[utoipa::path(
-    post, tag = DECK_TAG,
-    
-    path = "/",
+    post,
+    tag = DECK_TAG,
+    path = "",
     responses(
-        (status = 201, description = "Deck created successfully", body = CreationId),
+        (status = 200, description = "Deck created successfully", body = CreationId),
         (status = 400, description = "Bad request"),
         (status = 401, description = "Unauthorized")
     ),
@@ -44,16 +44,48 @@ pub async fn create_deck(
     Ok(Json(id))
 }
 
+/// Duplicates a deck, returns new id
+#[utoipa::path(
+    post,
+    tag = DECK_TAG,
+    path = "{id}/duplicate",
+    responses(
+        (status = 200, description = "Deck duplicated successfully", body = CreationId),
+        (status = 400, description = "Bad request"),
+        (status = 401, description = "Unauthorized")
+    ),
+    security(("api_key" = []))
+)]
+pub async fn duplicate_deck(
+    State(state): State<AppState>,
+    claims: Claims,
+    Path(id): Path<String>,
+) -> Result<Json<CreationId>, APIError> {
+    let new_id = flashcards::deck::duplicate(&state.db, &claims.sub, &id).await?;
+
+    log_activity(
+        &state.db,
+        &claims.sub,
+        &new_id.id,
+        ModelType::Deck,
+        ActionType::Create,
+        None,
+    )
+    .await?;
+
+    Ok(Json(new_id))
+}
+
 /// One deck
 #[utoipa::path(
-    get, tag = DECK_TAG,
-    
+    get,
+    tag = DECK_TAG,
     path = "/{id}",
     params(
         ("id" = String, Path, description = "Deck ID")
     ),
     responses(
-        (status = 200, description = "Deck retrieved"),
+        (status = 200, description = "Deck retrieved", body = DeckWithCards),
         (status = 404, description = "Deck not found"),
         (status = 401, description = "Unauthorized")
     ),
@@ -63,16 +95,13 @@ pub async fn fetch_deck(
     State(state): State<AppState>,
     claims: Claims,
     Path(id): Path<String>,
-) -> Result<Json<Option<DeckWithCardsAndSubscription>>, APIError> {
+) -> Result<Json<Option<DeckWithCards>>, APIError> {
     let deck = flashcards::deck::find_by_id(&state.db, &id, &claims.sub).await?;
-    let is_subscribed =
-        flashcards::subscribe::check_subscription(&state.db, &id, &claims.sub).await?;
-
     let cards = flashcards::card::find_all(&state.db, &id).await?;
 
     mark_as_seen(&state.db, &claims.sub, &id, ModelType::Deck).await?;
 
-    Ok(Json(Some(DeckWithCardsAndSubscription {
+    Ok(Json(Some(DeckWithCards {
         deck: DeckFull {
             id: deck.id,
             name: deck.name,
@@ -84,23 +113,21 @@ pub async fn fetch_deck(
             created_at: deck.created_at,
         },
         cards,
-        is_subscribed,
     })))
 }
 
 /// Decks the user has access to
 #[utoipa::path(
-    get, tag = DECK_TAG,
-    
-    path = "/",
+    get,
+    tag = DECK_TAG,
+    path = "",
     responses(
-        (status = 200, description = "User decks retrieved"),
-        (status = 404, description = "Deck not found"),
+        (status = 200, description = "User decks retrieved", body = Vec<DeckSmall>),
         (status = 401, description = "Unauthorized")
     ),
     security(("api_key" = []))
 )]
-pub async fn fetch_deck_list(
+pub async fn list_decks(
     State(state): State<AppState>,
     Query(params): Query<DeckFilterParams>,
     claims: Claims,
@@ -111,17 +138,16 @@ pub async fn fetch_deck_list(
 
 /// Only public decks
 #[utoipa::path(
-    get, tag = DECK_TAG,
-    
+    get,
+    tag = DECK_TAG,
     path = "/public",
     responses(
         (status = 200, description = "Public decks retrieved", body=Vec<DeckPublic>),
-        (status = 404, description = "Deck not found"),
         (status = 401, description = "Unauthorized")
     ),
     security(("api_key" = []))
 )]
-pub async fn fetch_deck_list_public(
+pub async fn list_decks_public(
     State(state): State<AppState>,
 ) -> Result<Json<Vec<DeckPublic>>, APIError> {
     let decks = flashcards::deck::find_all_public(&state.db).await?;
@@ -132,8 +158,6 @@ pub async fn fetch_deck_list_public(
 /// Updates a deck
 #[utoipa::path(
     patch,
-    
-
     path = "/{id}",
     params(
         ("id" = String, Path, description = "Deck ID")

@@ -41,8 +41,6 @@ export const actions: Actions = {
 
     const { id } = newResult.data;
 
-    if (response.ok) {
-      return redirect(301, `/t/lessons/${id}/edit`);
-    }
+    return redirect(301, `/t/lessons/${id}/edit`);
   },
 };

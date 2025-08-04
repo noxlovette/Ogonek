@@ -16,8 +16,13 @@ pub enum DbError {
 
 impl From<SqlxError> for DbError {
     fn from(error: SqlxError) -> Self {
-        eprintln!("Database error: {error}");
-        Self::Database(error)
+        match error {
+            SqlxError::RowNotFound => Self::NotFound("Resource not found".to_string()),
+            other => {
+                eprintln!("Database error: {other}");
+                Self::Database(other)
+            }
+        }
     }
 }
 

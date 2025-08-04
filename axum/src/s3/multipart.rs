@@ -56,7 +56,8 @@ pub async fn init_multipart_s3(
 #[utoipa::path(
     post,
     path = "/complete",
-   tag = TASK_TAG, responses(
+   tag = TASK_TAG,
+   responses(
         (status = 200, description = "Upload part completed successfully"),
         (status = 401, description = "Unauthorized")
     ),
@@ -110,8 +111,8 @@ pub async fn complete_multipart_s3(
 #[utoipa::path(
     post,
     path = "/abort",
-    
-    tag = TASK_TAG, responses(
+    tag = TASK_TAG,
+    responses(
         (status = 200, description = "Upload aborted"),
         (status = 401, description = "Unauthorized")
     ),

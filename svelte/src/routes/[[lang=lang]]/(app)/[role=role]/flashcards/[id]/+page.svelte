@@ -13,7 +13,7 @@
   import { invalidate } from "$app/navigation";
 
   import { user } from "$lib/stores";
-  import { Pencil, UserRoundMinus, UserRoundPlus } from "lucide-svelte";
+  import { Copy, Pencil, UserRoundMinus, UserRoundPlus } from "lucide-svelte";
   import { enhanceForm } from "$lib/utils";
   import Badge from "$lib/components/cards/Badge.svelte";
   import { page } from "$app/state";
@@ -86,6 +86,20 @@
         {isSubscribed
           ? m.fluffy_elegant_coyote_assure()
           : m.fit_least_baboon_imagine()}
+      </UniButton>
+    </form>
+
+    <form
+      method="POST"
+      action="?/duplicate"
+      use:enhance={enhanceForm({
+        messages: {
+          success: "Deck Duplicated",
+        },
+      })}
+    >
+      <UniButton Icon={Copy} type="submit" variant="secondary">
+        Duplicate
       </UniButton>
     </form>
   </div>

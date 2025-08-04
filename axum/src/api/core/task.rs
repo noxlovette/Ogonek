@@ -8,7 +8,7 @@ use crate::db::crud::{
     tracking::{ActionType, ModelType, delete_seen, log_activity, seen},
 };
 use crate::models::{
-    CreationId, PaginatedResponse, TaskFull, TaskPaginationParams, TaskSmall, TaskUpdate,
+    CreationId, PaginatedResponse, PaginatedTasks, TaskPaginationParams, TaskSmall, TaskUpdate,
     TaskWithFilesResponse,
 };
 use crate::s3::post::delete_s3;
@@ -20,7 +20,6 @@ use axum::http::StatusCode;
 #[utoipa::path(
     get,
     path = "/{id}", tag = TASK_TAG,
-    
     params(
         ("id" = String, Path, description = "Task ID")
     ),
@@ -46,7 +45,8 @@ pub async fn fetch_task(
 /// Tasks belonging to a user (through assignment or direct ownership)
 #[utoipa::path(
     get,
-    path = "/", tag = TASK_TAG,
+    path = "", 
+    tag = TASK_TAG,
     params(
         ("page" = Option<u32>, Query, description = "Page number"),
         ("per_page" = Option<u32>, Query, description = "Items per page"),
@@ -56,7 +56,7 @@ pub async fn fetch_task(
         ("priority" = Option<i32>, Query, description = "Filter by priority")
     ),
     responses(
-        (status = 200, description = "Tasks retrieved successfully", body = PaginatedResponse<TaskFull>),
+        (status = 200, description = "Tasks retrieved successfully", body = PaginatedTasks),
         (status = 401, description = "Unauthorized")
     ),
     security(("api_key" = []))
@@ -79,8 +79,8 @@ pub async fn list_tasks(
 /// Creates a new task
 #[utoipa::path(
     post,
-    
-    path = "/", tag = TASK_TAG,
+    path = "", 
+    tag = TASK_TAG,
     responses(
         (status = 201, description = "Task created successfully", body = CreationId),
         (status = 400, description = "Bad request"),
@@ -109,8 +109,8 @@ pub async fn create_task(
 /// Deletes a task
 #[utoipa::path(
     delete,
-    
-    path = "/{id}", tag = TASK_TAG,
+    path = "/{id}",
+    tag = TASK_TAG,
     params(
         ("id" = String, Path, description = "Task ID")
     ),
@@ -160,8 +160,8 @@ pub async fn delete_task(
 /// Toggles completed/not completed on a task
 #[utoipa::path(
     put,
-    
-    path = "/{id}", tag = TASK_TAG,
+    path = "/{id}", 
+    tag = TASK_TAG,
     params(
         ("id" = String, Path, description = "Task ID")
     ),
@@ -193,8 +193,8 @@ pub async fn toggle_task(
 }
 #[utoipa::path(
     patch,
-    
-    path = "/{id}", tag = TASK_TAG,
+    path = "/{id}",
+    tag = TASK_TAG,
     params(
         ("id" = String, Path, description = "Task ID")
     ),

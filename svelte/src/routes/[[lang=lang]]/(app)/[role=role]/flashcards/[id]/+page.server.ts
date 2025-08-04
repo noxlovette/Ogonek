@@ -1,8 +1,9 @@
 import { env } from "$env/dynamic/private";
+import logger from "$lib/logger";
 import { routes } from "$lib/routes";
 import { handleApiResponse, isSuccessResponse } from "$lib/server";
-import type { EmptyResponse } from "$lib/types";
-import { fail } from "@sveltejs/kit";
+import type { EmptyResponse, NewResponse } from "$lib/types";
+import { fail, redirect } from "@sveltejs/kit";
 import type { Actions } from "./$types";
 
 export const actions = {
@@ -30,5 +31,29 @@ export const actions = {
     const link = `${env.ORIGIN}/s/flashcards/${id}`;
 
     return { link };
+  },
+  duplicate: async ({ params, fetch }) => {
+    const { id } = params;
+
+    const response = await fetch(routes.decks.duplicate(id), {
+      method: "POST",
+    });
+
+    if (!response.ok) {
+      const errorData = await response.text();
+      logger.error({ errorData }, "ERROR SVELTE SIDE LESSON CREATION");
+      return fail(500);
+    }
+
+    const newResult = await handleApiResponse<NewResponse>(response);
+
+    if (!isSuccessResponse(newResult)) {
+      logger.error({ newResult }, "ERROR AXUM SIDE LESSON CREATION");
+      return fail(newResult.status, { message: newResult.message });
+    }
+
+    const { id: new_id } = newResult.data;
+
+    return redirect(301, `../flashcards/${new_id}/edit`);
   },
 } satisfies Actions;

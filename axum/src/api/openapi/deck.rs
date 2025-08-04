@@ -4,8 +4,8 @@ use utoipa::OpenApi;
 #[derive(OpenApi)]
 #[openapi(
     paths(
-        deck::fetch_deck_list,
-        deck::fetch_deck_list_public,
+        deck::list_decks,
+        deck::list_decks_public,
         deck::fetch_deck,
         deck::create_deck,
         deck::update_deck,

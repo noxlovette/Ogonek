@@ -13,7 +13,8 @@ use crate::models::users::UserUpdate;
 #[utoipa::path(
     get,
     path = "/inviter",
-    tag = USER_TAG, params(
+    tag = USER_TAG,
+    params(
         ("invite" = Option<String>, Query, description = "Invite token")
     ),
     responses(
@@ -37,8 +38,8 @@ pub async fn fetch_inviter(
 /// Fetches self for the user
 #[utoipa::path(
     get,
-   tag = USER_TAG,  
-    path = "/",
+   tag = USER_TAG,
+    path = "",
     responses(
         (status = 200, description = "User details retrieved", body = User),
         (status = 401, description = "Unauthorized"),
@@ -56,8 +57,9 @@ pub async fn fetch_me(
 
 /// Deletes user by their claims
 #[utoipa::path(
-    delete,tag = USER_TAG, 
-    path = "/",
+    delete,
+    tag = USER_TAG,
+    path = "",
     responses(
         (status = 204, description = "User deleted successfully"),
         (status = 401, description = "Unauthorized")
@@ -75,8 +77,8 @@ pub async fn delete_user(
 /// Updates the user by their claims
 #[utoipa::path(
     patch,
-   tag = USER_TAG,  
-    path = "/",
+    tag = USER_TAG,
+    path = "",
     request_body = UserUpdate,
     responses(
         (status = 204, description = "User updated successfully"),

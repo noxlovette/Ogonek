@@ -11,7 +11,7 @@ use axum::http::StatusCode;
 /// Update the profile, or create a new one if already there
 #[utoipa::path(
     patch,
-   tag = USER_TAG,  
+    tag = USER_TAG,
     path = "/profile",
     request_body = ProfileUpdate,
     responses(
@@ -35,7 +35,7 @@ pub async fn upsert_profile(
 /// Fetch the profile, WITHOUT teacher data even if that's a student requesing
 #[utoipa::path(
     get,
-   tag = USER_TAG,  
+    tag = USER_TAG,
     path = "/profile",
     responses(
         (status = 200, description = "Profile details retrieved", body = ProfileWithTS),

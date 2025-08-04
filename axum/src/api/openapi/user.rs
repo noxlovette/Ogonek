@@ -1,5 +1,6 @@
 use crate::api::account::*;
 use crate::api::core::dashboard;
+use crate::models::DashboardData;
 use utoipa::OpenApi;
 
 #[derive(OpenApi)]
@@ -18,6 +19,6 @@ use utoipa::OpenApi;
         list_students,
         dashboard::fetch_dashboard,
     ),
-    components(schemas(crate::models::User, crate::models::InviteToken,))
+    components(schemas(crate::models::User, crate::models::InviteToken, DashboardData))
 )]
 pub struct UserApi;

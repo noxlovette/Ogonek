@@ -6,7 +6,7 @@
 
 <div class="bg-default ring-default overflow-hidden rounded-lg">
   <div class="grid grid-cols-5 gap-4 bg-stone-200 px-6 py-4 dark:bg-stone-800">
-    {#each Array(columns) as i}
+    {#each Array(columns) as i, index (index)}
       <div
         class="h-4 animate-pulse rounded bg-stone-50 dark:bg-stone-950"
         style="width:{i === 0 ? '75%' : i === columns - 1 ? '50%' : '66%'};"

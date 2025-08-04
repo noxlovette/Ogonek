@@ -15,7 +15,8 @@ use axum::http::StatusCode;
     params(
         ("id" = String, Path, description = "Student ID")
     ),
-    tag = USER_TAG, responses(
+    tag = USER_TAG,
+    responses(
         (status = 201, description = "Student relationship created"),
         (status = 401, description = "Unauthorized")
     ),
@@ -36,7 +37,8 @@ pub async fn upsert_student(
     params(
         ("id" = String, Path, description = "Student ID")
     ),
-    tag = USER_TAG, responses(
+    tag = USER_TAG,
+    responses(
         (status = 204, description = "Student relationship removed"),
         (status = 404, description = "Student not found"),
         (status = 401, description = "Unauthorized")
@@ -59,7 +61,8 @@ pub async fn remove_student(
         ("id" = String, Path, description = "Student ID")
     ),
     request_body = UpdateStudentRequest,
-    tag = USER_TAG, responses(
+    tag = USER_TAG,
+    responses(
         (status = 204, description = "Student updated successfully"),
         (status = 404, description = "Student not found"),
         (status = 401, description = "Unauthorized")
@@ -82,7 +85,8 @@ pub async fn update_student(
     params(
         ("id" = String, Path, description = "Student ID")
     ),
-    tag = USER_TAG, responses(
+    tag = USER_TAG,
+    responses(
         (status = 200, description = "Student details retrieved", body = CompositeStudent),
         (status = 404, description = "Student not found"),
         (status = 401, description = "Unauthorized")
@@ -109,7 +113,8 @@ pub async fn fetch_student(
 #[utoipa::path(
     get,
     path = "/student",
-    tag = USER_TAG, responses(
+    tag = USER_TAG,
+    responses(
         (status = 200, description = "Students list retrieved", body = Vec<Student>),
         (status = 401, description = "Unauthorized")
     ),

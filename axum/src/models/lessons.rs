@@ -1,8 +1,8 @@
+use crate::models::datetime_serialization;
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use sqlx::prelude::FromRow;
 use utoipa::ToSchema;
-
 /// Pagination for lessons
 #[derive(Debug, Deserialize, ToSchema)]
 pub struct PaginationParams {
@@ -36,6 +36,7 @@ pub struct LessonSmall {
     pub topic: String,
     pub assignee_name: String,
     pub seen: Option<bool>,
+    #[serde(with = "datetime_serialization")]
     pub created_at: DateTime<Utc>,
 }
 
@@ -50,8 +51,10 @@ pub struct LessonFull {
     pub assignee: String,
     pub created_by: String,
 
+    #[serde(with = "datetime_serialization")]
     pub created_at: DateTime<Utc>,
 
+    #[serde(with = "datetime_serialization")]
     pub updated_at: DateTime<Utc>,
     pub assignee_name: String,
 }
