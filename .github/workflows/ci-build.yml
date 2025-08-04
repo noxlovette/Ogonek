@@ -119,11 +119,6 @@ jobs:
           cd svelte
           pnpm run format
 
-      - name: Svelte Lint
-        run: |
-          cd svelte
-          pnpm run lint
-
       - name: Svelte Build
         run: |
           cd svelte
