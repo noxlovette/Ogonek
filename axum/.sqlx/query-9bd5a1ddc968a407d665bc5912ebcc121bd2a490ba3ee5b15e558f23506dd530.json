@@ -1,0 +1,18 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        INSERT INTO cards (id, deck_id, front, back, media_url)\n        SELECT \n            UNNEST($1::text[]),\n            $2,\n            UNNEST($3::text[]),\n            UNNEST($4::text[]),\n            UNNEST($5::text[])\n        ON CONFLICT (id) DO UPDATE SET\n            front = EXCLUDED.front,\n            back = EXCLUDED.back,\n            deck_id = EXCLUDED.deck_id,\n            media_url = EXCLUDED.media_url\n        ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "TextArray",
+        "Varchar",
+        "TextArray",
+        "TextArray",
+        "TextArray"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "9bd5a1ddc968a407d665bc5912ebcc121bd2a490ba3ee5b15e558f23506dd530"
+}
