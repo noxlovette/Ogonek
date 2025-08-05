@@ -46,11 +46,12 @@ export async function notifyTelegram(
     const data = (await response.json()) as TelegramResponse;
 
     if (!response.ok) {
-      logger.error("Telegram API error:", data.description);
+      const { description } = data;
+      logger.error({ description }, "Telegram API error:");
       return new Response(
         JSON.stringify({
           message: "Failed to send message",
-          error: data.description,
+          error: description,
         }),
         { status: 404 },
       );
