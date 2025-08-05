@@ -118,28 +118,26 @@
 {#await data.decksResponse}
   {#if role === "s"}
     <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
-      {#each Array(6) as index (index)}
-        <LoadingCard />
-      {/each}
+      <LoadingCard />
+      <LoadingCard />
+      <LoadingCard />
     </div>
   {:else}
     <TableSkeleton />
   {/if}
 {:then decks}
   {#if role === "s"}
-    <div class="space-y-4">
-      {#if decks.length}
-        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {#each decks as deck (deck.id)}
-            <DeckCard {deck} />
-          {/each}
-        </div>
-      {:else}
-        <EmptySpace>
-          <H3>{m.noDecks()}</H3>
-        </EmptySpace>
-      {/if}
-    </div>
+    {#if decks.length}
+      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {#each decks as deck (deck.id)}
+          <DeckCard {deck} />
+        {/each}
+      </div>
+    {:else}
+      <EmptySpace>
+        <H3>{m.noDecks()}</H3>
+      </EmptySpace>
+    {/if}
   {:else}
     <Table
       config={deckConfig}
@@ -149,4 +147,6 @@
       total={decks.length}
     />
   {/if}
+{:catch error: App.Error}
+  <p>Error loading decks: {error.errorID}</p>
 {/await}

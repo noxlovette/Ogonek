@@ -112,9 +112,9 @@
 {#await data.tasksPaginated}
   {#if role === "s"}
     <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
-      {#each Array(6) as index (index)}
-        <LoadingCard />
-      {/each}
+      <LoadingCard />
+      <LoadingCard />
+      <LoadingCard />
     </div>
   {:else}
     <TableSkeleton />

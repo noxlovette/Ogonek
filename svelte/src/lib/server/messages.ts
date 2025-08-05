@@ -8,30 +8,27 @@ type MessageMap = {
 
 export const messages: MessageMap = {
   teacherNotify: ({ username }) =>
-    escapeMarkdownV2(
-      `${username.toUpperCase} needs homework. Add more on [Ogonek](https://ogonek.app/t/tasks)`,
-    ),
+    `${escapeMarkdownV2(username)} needs homework\\. Add more on [Ogonek](https://ogonek\\.app/t/tasks)`,
+
   completed: ({ task, username, id }) =>
-    escapeMarkdownV2(
-      `${task} for ${username} has been completed. View the result on [Ogonek](https://ogonek.app/t/tasks/${id})`,
-    ),
+    `${escapeMarkdownV2(task)} for ${escapeMarkdownV2(username)} has been completed\\. View the result on [Ogonek](https://ogonek\\.app/t/tasks/${id})`,
+
   reminder: ({ task, dueDate }) =>
-    `Don't forget to complete "${task}" by ${dueDate}`,
+    `Don't forget to complete "${escapeMarkdownV2(task)}" by ${escapeMarkdownV2(dueDate)}`,
+
   deckCreated: ({ title, id }) =>
-    escapeMarkdownV2(
-      `A new deck has been added: "${title}". View it on [Ogonek](https://ogonek.app/s/flashcards/${id}).`,
-    ),
+    `A new deck has been added: "${escapeMarkdownV2(title)}"\\. View it on [Ogonek](https://ogonek\\.app/s/flashcards/${id})\\.`,
+
   taskCreated: ({ title, id, date }) =>
-    escapeMarkdownV2(
-      `A new task *has* been added: "${title}". Due Date: ${date}. View it on [Ogonek](https://ogonek.app/s/tasks/${id}).`,
-    ),
+    `A new task has been added: "${escapeMarkdownV2(title)}"\\. Due Date: ${escapeMarkdownV2(date)}\\. View it on [Ogonek](https://ogonek\\.app/s/tasks/${id})\\.`,
 };
 
 /**
- * Escapes only unsafe characters for Telegram MarkdownV2
- * Leaves formatting characters (*, _, [, ], (, )) intact
- * Escapes: ~ ` > # + = | { } . ! - \
+ * Escapes user content for Telegram MarkdownV2
+ * ONLY escapes characters that can break parsing in user input
+ * Does NOT escape markdown formatting characters like [], (), etc.
  */
 export function escapeMarkdownV2(text: string): string {
-  return text.replace(/[~`>#+=|{}.!\\-]/g, (char) => `\\${char}`);
+  // Only escape these specific chars that break MarkdownV2 in user content
+  return text.replace(/[_*[\]~`>#+=|{}.!\\]/g, "\\$&");
 }
