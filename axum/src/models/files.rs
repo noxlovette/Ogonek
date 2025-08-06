@@ -63,3 +63,24 @@ pub struct CreateFolderRequest {
     pub name: String,
     pub parent_id: Option<String>,
 }
+
+// Add this response schema
+#[derive(Serialize, ToSchema, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct PresignedUrlResponse {
+    pub url: String,
+}
+
+// For batch requests, you might also want this:
+#[derive(Serialize, ToSchema, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct BatchPresignedUrlResponse {
+    pub urls: Vec<PresignedFileUrl>,
+}
+
+#[derive(Serialize, ToSchema, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct PresignedFileUrl {
+    pub file_id: String,
+    pub url: String,
+}

@@ -1,8 +1,11 @@
 use crate::api::TASK_TAG;
 use crate::api::error::APIError;
 use crate::auth::Claims;
-use crate::db::crud::files::file;
-use crate::models::files::{File, FileListParams, FileUpdate};
+use crate::db::crud::files::file::{self, fetch_files_task};
+use crate::models::files::{
+    BatchPresignedUrlResponse, File, FileListParams, FileUpdate, PresignedFileUrl,
+    PresignedUrlResponse,
+};
 use crate::s3::get_presigned_url;
 use crate::s3::post::delete_s3;
 use crate::schema::AppState;
@@ -11,7 +14,6 @@ use axum::extract::{Path, Query, State};
 use axum::http::StatusCode;
 use axum::response::IntoResponse;
 use base64::{Engine as _, engine::general_purpose::STANDARD as BASE64};
-use serde_json::json;
 
 pub async fn fetch_file(
     State(state): State<AppState>,
@@ -23,17 +25,18 @@ pub async fn fetch_file(
     Ok(Json(file))
 }
 
-/// Presigns url for frontend download
 #[utoipa::path(
     get,
     path = "/presigned/{encoded_key}",
     params(
-        ("encoded_key" = String, Path, description = "File ID")
+        ("encoded_key" = String, Path, description = "Base64 encoded file key")
     ),
     tag = TASK_TAG,
     responses(
-        (status = 200, description = "Presigned URL generated successfully"),
-        (status = 401, description = "Unauthorized")
+        (status = 200, description = "Presigned URL generated successfully", body = PresignedUrlResponse),
+        (status = 400, description = "Bad request - Invalid encoding or key"),
+        (status = 401, description = "Unauthorized"),
+        (status = 404, description = "File not found")
     ),
     security(("api_key" = []))
 )]
@@ -42,10 +45,13 @@ pub async fn fetch_presigned_url(
     Path(encoded_key): Path<String>,
 ) -> Result<impl IntoResponse, APIError> {
     tracing::debug!("Reached the presign url endpoint");
+
     let key = BASE64
         .decode(encoded_key)
         .map_err(|_| APIError::BadRequest("Invalid base64 encoding".into()))?;
+
     tracing::debug!("Decyphered base64 into url");
+
     let key_str = String::from_utf8(key)
         .map_err(|_| APIError::BadRequest("Invalid UTF-8 in decoded key".into()))?;
 
@@ -56,13 +62,68 @@ pub async fn fetch_presigned_url(
         .split(".")
         .next()
         .unwrap();
-    tracing::debug!("File ID decyphered");
-    tracing::debug!(file_id);
+
+    tracing::debug!("File ID decyphered: {}", file_id);
+
     let file = file::find_by_id_no_owner(&state.db, file_id).await?;
     let presigned_url =
         get_presigned_url(&state.bucket_name, &state.s3, key_str, file.name).await?;
 
-    Ok((StatusCode::OK, Json(json!({ "url": presigned_url }))))
+    // Return the structured response instead of raw JSON
+    Ok((
+        StatusCode::OK,
+        Json(PresignedUrlResponse { url: presigned_url }),
+    ))
+}
+
+/// Fetches all the files associated with a task and returns their presigned URLs
+#[utoipa::path(
+    post,
+    path = "/presigned/batch/{file_id}",
+    params(
+        ("file_id" = String, Path, description = "The DB id of the task the files belong to")
+    ),
+    tag = TASK_TAG,
+    responses(
+        (status = 200, description = "Presigned URLs generated successfully", body = BatchPresignedUrlResponse),
+        (status = 400, description = "Bad request"),
+        (status = 401, description = "Unauthorized")
+    ),
+    security(("api_key" = []))
+)]
+pub async fn fetch_presigned_urls_batch(
+    State(state): State<AppState>,
+    Path(task_id): Path<String>,
+) -> Result<impl IntoResponse, APIError> {
+    let mut presigned_urls = Vec::new();
+
+    let files = fetch_files_task(&state.db, &task_id).await?;
+
+    for file_id in files.iter().map(|task| task.id.clone()) {
+        // Get file info
+        let file = file::find_by_id_no_owner(&state.db, &file_id).await?;
+
+        // Generate presigned URL using the file's s3_key
+        let presigned_url = get_presigned_url(
+            &state.bucket_name,
+            &state.s3,
+            file.s3_key.clone(),
+            file.name.clone(),
+        )
+        .await?;
+
+        presigned_urls.push(PresignedFileUrl {
+            file_id: file_id.clone(),
+            url: presigned_url,
+        });
+    }
+
+    Ok((
+        StatusCode::OK,
+        Json(BatchPresignedUrlResponse {
+            urls: presigned_urls,
+        }),
+    ))
 }
 
 pub async fn list_files(
