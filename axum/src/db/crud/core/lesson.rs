@@ -1,6 +1,6 @@
 use crate::db::error::DbError;
 use crate::models::{
-    CreationId, LessonCreate, LessonFull, LessonSmall, LessonUpdate, PaginationParams,
+    CreationId, LessonCreate, LessonFull, LessonPaginationParams, LessonSmall, LessonUpdate,
 };
 use sqlx::PgPool;
 
@@ -8,7 +8,7 @@ use sqlx::PgPool;
 pub async fn find_all(
     db: &PgPool,
     user_id: &str,
-    params: &PaginationParams,
+    params: &LessonPaginationParams,
 ) -> Result<Vec<LessonSmall>, DbError> {
     let mut query_builder = sqlx::QueryBuilder::new(
         r#"
@@ -246,7 +246,7 @@ pub async fn count(db: &PgPool, user_id: &str) -> Result<i64, DbError> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::models::{LessonCreate, LessonUpdate, PaginationParams};
+    use crate::models::{LessonCreate, LessonPaginationParams, LessonUpdate};
     use crate::tests::create_test_user;
     use sqlx::PgPool;
 
@@ -377,7 +377,7 @@ mod tests {
             create(&db, &user, lesson_create).await.unwrap();
         }
 
-        let params = PaginationParams {
+        let params = LessonPaginationParams {
             page: Some(1),
             per_page: Some(10),
             search: None,
@@ -412,7 +412,7 @@ mod tests {
         create(&db, &user, lesson_create1).await.unwrap();
         create(&db, &user, lesson_create2).await.unwrap();
 
-        let params = PaginationParams {
+        let params = LessonPaginationParams {
             page: Some(1),
             per_page: Some(10),
             search: Some("Rust".to_string()),
@@ -449,7 +449,7 @@ mod tests {
         create(&db, &creator, lesson_create1).await.unwrap();
         create(&db, &creator, lesson_create2).await.unwrap();
 
-        let params = PaginationParams {
+        let params = LessonPaginationParams {
             page: Some(1),
             per_page: Some(10),
             search: None,
@@ -643,7 +643,7 @@ mod tests {
         }
 
         // Test first page
-        let params1 = PaginationParams {
+        let params1 = LessonPaginationParams {
             page: Some(1),
             per_page: Some(5),
             search: None,
@@ -654,7 +654,7 @@ mod tests {
         assert_eq!(result1.len(), 5);
 
         // Test second page
-        let params2 = PaginationParams {
+        let params2 = LessonPaginationParams {
             page: Some(2),
             per_page: Some(5),
             search: None,
@@ -665,7 +665,7 @@ mod tests {
         assert_eq!(result2.len(), 5);
 
         // Test third page
-        let params3 = PaginationParams {
+        let params3 = LessonPaginationParams {
             page: Some(3),
             per_page: Some(5),
             search: None,
@@ -676,7 +676,7 @@ mod tests {
         assert_eq!(result3.len(), 5);
 
         // Test fourth page (should have no results)
-        let params4 = PaginationParams {
+        let params4 = LessonPaginationParams {
             page: Some(4),
             per_page: Some(5),
             search: None,

@@ -102,6 +102,7 @@ pub async fn fetch_due_cards(
     tag = LEARN_TAG,params(
         ("id" = String, Path, description = "Card ID")
     ),
+    request_body = ReviewPayload,
     responses(
         (status = 204, description = "Card progress updated successfully"),
         (status = 401, description = "Unauthorized")
@@ -134,7 +135,7 @@ pub async fn update_card_progress(
     };
     flashcards::learn::update(&state.db, &id, &claims.sub, update).await?;
 
-    Ok(StatusCode::OK)
+    Ok(StatusCode::NO_CONTENT)
 }
 /// Resets the progress for a particular deck
 #[utoipa::path(

@@ -124,6 +124,35 @@ paths:
       - Deck
       summary: Decks the user has access to
       operationId: list_decks
+      parameters:
+      - name: page
+        in: query
+        description: Page number
+        required: false
+        schema:
+          type: integer
+          format: int32
+          minimum: 0
+      - name: per_page
+        in: query
+        description: Items per page
+        required: false
+        schema:
+          type: integer
+          format: int32
+          minimum: 0
+      - name: search
+        in: query
+        description: Search term
+        required: false
+        schema:
+          type: string
+      - name: assignee
+        in: query
+        description: Filter by assignee
+        required: false
+        schema:
+          type: string
       responses:
         '200':
           description: User decks retrieved
@@ -323,6 +352,12 @@ paths:
         required: true
         schema:
           type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReviewPayload'
+        required: true
       responses:
         '204':
           description: Card progress updated successfully
@@ -1340,12 +1375,16 @@ components:
       - name
       - visibility
       - createdBy
+      - cardCount
       - createdAt
       properties:
         assignee:
           type:
           - string
           - 'null'
+        cardCount:
+          type: integer
+          format: int64
         createdAt:
           type: string
           format: date-time
@@ -1385,11 +1424,15 @@ components:
       - id
       - name
       - visibility
+      - cardCount
       properties:
         assigneeName:
           type:
           - string
           - 'null'
+        cardCount:
+          type: integer
+          format: int64
         description:
           type:
           - string
@@ -1777,6 +1820,14 @@ components:
       properties:
         accessToken:
           $ref: '#/components/schemas/TokenWithExpiry'
+    ReviewPayload:
+      type: object
+      required:
+      - quality
+      properties:
+        quality:
+          type: integer
+          format: int32
     SignUpPayload:
       type: object
       required:

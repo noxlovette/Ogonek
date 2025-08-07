@@ -5,8 +5,7 @@ use crate::db::crud::tracking::activity::log_activity;
 use crate::db::crud::tracking::seen::{delete_seen, insert_as_unseen, mark_as_seen};
 use crate::db::crud::tracking::{self, ActionType, ModelType};
 use crate::models::{
-    CreationId, DeckFilterParams, DeckFull, DeckPublic, DeckSmall, DeckWithCards,
-    DeckWithCardsUpdate,
+    CreationId, DeckPaginationParams, DeckPublic, DeckSmall, DeckWithCards, DeckWithCardsUpdate,
 };
 use crate::schema::AppState;
 use axum::extract::{Json, Path, Query, State};
@@ -95,25 +94,13 @@ pub async fn fetch_deck(
     State(state): State<AppState>,
     claims: Claims,
     Path(id): Path<String>,
-) -> Result<Json<Option<DeckWithCards>>, APIError> {
-    let deck = flashcards::deck::find_by_id(&state.db, &id, &claims.sub).await?;
-    let cards = flashcards::card::find_all(&state.db, &id).await?;
+) -> Result<Json<DeckWithCards>, APIError> {
+    let deck_with_cards =
+        flashcards::deck::get_deck_with_cards(&state.db, &id, &claims.sub).await?;
 
     mark_as_seen(&state.db, &claims.sub, &id, ModelType::Deck).await?;
 
-    Ok(Json(Some(DeckWithCards {
-        deck: DeckFull {
-            id: deck.id,
-            name: deck.name,
-            description: deck.description,
-            visibility: deck.visibility,
-            is_subscribed: deck.is_subscribed,
-            created_by: deck.created_by,
-            assignee: deck.assignee,
-            created_at: deck.created_at,
-        },
-        cards,
-    })))
+    Ok(Json(deck_with_cards))
 }
 
 /// Decks the user has access to
@@ -121,6 +108,12 @@ pub async fn fetch_deck(
     get,
     tag = DECK_TAG,
     path = "",
+    params(
+        ("page" = Option<u32>, Query, description = "Page number"),
+        ("per_page" = Option<u32>, Query, description = "Items per page"),
+        ("search" = Option<String>, Query, description = "Search term"),
+        ("assignee" = Option<String>, Query, description = "Filter by assignee")
+    ),
     responses(
         (status = 200, description = "User decks retrieved", body = Vec<DeckSmall>),
         (status = 401, description = "Unauthorized")
@@ -129,7 +122,7 @@ pub async fn fetch_deck(
 )]
 pub async fn list_decks(
     State(state): State<AppState>,
-    Query(params): Query<DeckFilterParams>,
+    Query(params): Query<DeckPaginationParams>,
     claims: Claims,
 ) -> Result<Json<Vec<DeckSmall>>, APIError> {
     let decks = flashcards::deck::find_all(&state.db, &claims.sub, &params).await?;

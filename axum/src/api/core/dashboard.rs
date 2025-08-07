@@ -6,6 +6,7 @@ use crate::db::crud::tracking::{ModelType, activity, seen};
 use crate::db::crud::{account, core, flashcards};
 use crate::models::{
     BadgeWrapperDecks, BadgeWrapperLessons, BadgeWrapperTasks, DashboardData, LearnDataDashboard,
+    LessonPaginationParams, TaskPaginationParams,
 };
 use crate::schema::AppState;
 use axum::extract::Json;
@@ -31,8 +32,34 @@ pub async fn fetch_dashboard(
     let user = user::find_by_id(&state.db, &claims.sub).await?;
 
     let students = student::find_all(&state.db, &claims.sub).await?;
-    let tasks = core::task::find_recent(&state.db, &claims.sub).await?;
-    let lessons = core::lesson::find_recent(&state.db, &claims.sub).await?;
+
+    // Limit to three tasks
+    let tasks = core::task::find_all(
+        &state.db,
+        &claims.sub,
+        &TaskPaginationParams {
+            page: Some(1),
+            per_page: Some(3),
+            search: None,
+            assignee: None,
+            priority: None,
+            completed: Some(false),
+        },
+    )
+    .await?;
+
+    // Limit to three lessons
+    let lessons = core::lesson::find_all(
+        &state.db,
+        &claims.sub,
+        &LessonPaginationParams {
+            page: Some(1),
+            per_page: Some(3),
+            search: None,
+            assignee: None,
+        },
+    )
+    .await?;
     let profile =
         account::profile::find_by_id(&state.db, &claims.sub, user.role == "student").await?;
 

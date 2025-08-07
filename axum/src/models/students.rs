@@ -1,4 +1,4 @@
-use super::cards_decks::DeckSmall;
+use super::flashcards::DeckSmall;
 use super::lessons::LessonSmall;
 use super::tasks::TaskSmall;
 use chrono::{DateTime, Utc};

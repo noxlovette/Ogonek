@@ -1,6 +1,7 @@
 use crate::db::error::DbError;
 use crate::models::{Card, CardUpsert};
 
+/// Find all cards belonging to a deck
 pub async fn find_all(
     executor: impl sqlx::Executor<'_, Database = sqlx::Postgres>,
     deck_id: &str,
@@ -20,6 +21,7 @@ pub async fn find_all(
     Ok(cards)
 }
 
+/// Updates a batch of cards. Used in the update deck function
 pub async fn batch_upsert(
     executor: impl sqlx::Executor<'_, Database = sqlx::Postgres>,
     deck_id: &str,
@@ -61,6 +63,28 @@ pub async fn batch_upsert(
         &fronts,
         &backs,
         &media_urls as &[Option<String>]
+    )
+    .execute(executor)
+    .await?;
+
+    Ok(())
+}
+
+/// Deletes cards by deck ID. Used in the update deck implementation
+pub async fn delete_cards(
+    executor: impl sqlx::Executor<'_, Database = sqlx::Postgres>,
+    deck_id: &str,
+    card_ids: &Vec<String>,
+) -> Result<(), DbError> {
+    sqlx::query!(
+        r#"
+        DELETE FROM cards
+        WHERE deck_id = $1 AND id NOT IN (
+            SELECT UNNEST($2::text[])
+        )
+        "#,
+        deck_id,
+        card_ids,
     )
     .execute(executor)
     .await?;
