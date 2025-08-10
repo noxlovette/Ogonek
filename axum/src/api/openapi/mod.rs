@@ -46,6 +46,7 @@ impl Modify for SecurityAddon {
     modifiers(&SecurityAddon),
     servers(
         (url = "https://api.ogonek.app", description = "Production server"),
+        (url = "https://api.staging.ogonek.app", description = "Staging server"),
         (url = "http://localhost:3000", description = "Local development server")
     ),
     tags(
