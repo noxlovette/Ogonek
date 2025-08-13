@@ -10,12 +10,16 @@
     "license": {
       "name": ""
     },
-    "version": "1.6.1"
+    "version": "1.6.2"
   },
   "servers": [
     {
       "url": "https://api.ogonek.app",
       "description": "Production server"
+    },
+    {
+      "url": "https://api.staging.ogonek.app",
+      "description": "Staging server"
     },
     {
       "url": "http://localhost:3000",
@@ -199,6 +203,48 @@
         ],
         "summary": "Decks the user has access to",
         "operationId": "list_decks",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 0
+            }
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "description": "Items per page",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 0
+            }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "description": "Search term",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "assignee",
+            "in": "query",
+            "description": "Filter by assignee",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "User decks retrieved",
@@ -527,6 +573,16 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewPayload"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "204": {
             "description": "Card progress updated successfully"
@@ -917,18 +973,18 @@
         ]
       }
     },
-    "/api/v1/s3/presigned/{encoded_key}": {
-      "get": {
+    "/api/v1/s3/presigned/batch/{file_id}": {
+      "post": {
         "tags": [
           "Task"
         ],
-        "summary": "Presigns url for frontend download",
-        "operationId": "fetch_presigned_url",
+        "summary": "Fetches all the files associated with a task and returns their presigned URLs",
+        "operationId": "fetch_presigned_urls_batch",
         "parameters": [
           {
-            "name": "encoded_key",
+            "name": "file_id",
             "in": "path",
-            "description": "File ID",
+            "description": "The DB id of the task the files belong to",
             "required": true,
             "schema": {
               "type": "string"
@@ -937,10 +993,65 @@
         ],
         "responses": {
           "200": {
-            "description": "Presigned URL generated successfully"
+            "description": "Presigned URLs generated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BatchPresignedUrlResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
           },
           "401": {
             "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/api/v1/s3/presigned/{encoded_key}": {
+      "get": {
+        "tags": [
+          "Task"
+        ],
+        "operationId": "fetch_presigned_url",
+        "parameters": [
+          {
+            "name": "encoded_key",
+            "in": "path",
+            "description": "Base64 encoded file key",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Presigned URL generated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PresignedUrlResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid encoding or key"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "File not found"
           }
         },
         "security": [
@@ -1783,6 +1894,20 @@
           }
         }
       },
+      "BatchPresignedUrlResponse": {
+        "type": "object",
+        "required": [
+          "urls"
+        ],
+        "properties": {
+          "urls": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PresignedFileUrl"
+            }
+          }
+        }
+      },
       "BindPayload": {
         "type": "object",
         "required": [
@@ -2064,6 +2189,7 @@
           "name",
           "visibility",
           "createdBy",
+          "cardCount",
           "createdAt"
         ],
         "properties": {
@@ -2072,6 +2198,10 @@
               "string",
               "null"
             ]
+          },
+          "cardCount": {
+            "type": "integer",
+            "format": "int64"
           },
           "createdAt": {
             "type": "string",
@@ -2129,7 +2259,8 @@
         "required": [
           "id",
           "name",
-          "visibility"
+          "visibility",
+          "cardCount"
         ],
         "properties": {
           "assigneeName": {
@@ -2137,6 +2268,10 @@
               "string",
               "null"
             ]
+          },
+          "cardCount": {
+            "type": "integer",
+            "format": "int64"
           },
           "description": {
             "type": [
@@ -2583,6 +2718,32 @@
           }
         }
       },
+      "PresignedFileUrl": {
+        "type": "object",
+        "required": [
+          "fileId",
+          "url"
+        ],
+        "properties": {
+          "fileId": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          }
+        }
+      },
+      "PresignedUrlResponse": {
+        "type": "object",
+        "required": [
+          "url"
+        ],
+        "properties": {
+          "url": {
+            "type": "string"
+          }
+        }
+      },
       "Profile": {
         "type": "object",
         "description": "The default profile struct",
@@ -2678,6 +2839,18 @@
         "properties": {
           "accessToken": {
             "$ref": "#/components/schemas/TokenWithExpiry"
+          }
+        }
+      },
+      "ReviewPayload": {
+        "type": "object",
+        "required": [
+          "quality"
+        ],
+        "properties": {
+          "quality": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },

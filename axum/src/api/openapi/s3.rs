@@ -7,6 +7,7 @@ use utoipa::OpenApi;
     complete_multipart_upload,
     abort_multipart_upload,
     fetch_presigned_url,
+    fetch_presigned_urls_batch,
     delete_file,
 ))]
 pub struct S3Api;

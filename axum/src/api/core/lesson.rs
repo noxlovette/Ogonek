@@ -5,7 +5,9 @@ use crate::db::crud::core::lesson;
 use crate::db::crud::tracking::activity::log_activity;
 use crate::db::crud::tracking::{self, ActionType, ModelType};
 use crate::models::meta::{CreationId, PaginatedResponse};
-use crate::models::{LessonFull, LessonSmall, LessonUpdate, PaginatedLessons, PaginationParams};
+use crate::models::{
+    LessonFull, LessonPaginationParams, LessonSmall, LessonUpdate, PaginatedLessons,
+};
 use crate::schema::AppState;
 use axum::extract::Path;
 use axum::extract::State;
@@ -64,7 +66,7 @@ pub async fn fetch_lesson(
 )]
 pub async fn list_lessons(
     State(state): State<AppState>,
-    Query(params): Query<PaginationParams>,
+    Query(params): Query<LessonPaginationParams>,
     claims: Claims,
 ) -> Result<Json<PaginatedResponse<LessonSmall>>, APIError> {
     let lessons = lesson::find_all(&state.db, &claims.sub, &params).await?;

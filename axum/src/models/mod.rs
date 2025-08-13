@@ -1,5 +1,5 @@
-pub mod cards_decks;
 pub mod files;
+pub mod flashcards;
 pub mod lessons;
 pub mod meta;
 pub mod preferences;
@@ -9,8 +9,8 @@ pub mod students;
 pub mod tasks;
 pub mod users;
 
-pub use cards_decks::*;
 pub use files::*;
+pub use flashcards::*;
 pub use lessons::*;
 pub use meta::*;
 pub use preferences::*;

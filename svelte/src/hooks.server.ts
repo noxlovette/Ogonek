@@ -195,7 +195,6 @@ export const handleFetch: HandleFetch = async ({ event, request, fetch }) => {
       request = new Request(newUrl, request);
     }
 
-    request.headers.set("X-API-KEY", env.API_KEY_AXUM);
     if (!request.headers.get("Content-Type")?.includes("multipart/form-data")) {
       request.headers.set("Content-Type", "application/json");
     }
