@@ -2,7 +2,6 @@
   import { goto } from "$app/navigation";
   import { fade, fly } from "svelte/transition";
   import type { Student, TableConfig } from "$lib/types";
-  import { EmptySpace } from "$lib/components/typography";
 
   interface Props {
     items: any[];
@@ -26,9 +25,6 @@
     currentPage = 1,
     pageSize = 20,
   }: Props = $props();
-
-  const startItem = $derived((currentPage - 1) * pageSize + 1);
-  const endItem = $derived(Math.min(currentPage * pageSize, total));
 
   function handleRowClick(item: any, event: KeyboardEvent | MouseEvent) {
     if (

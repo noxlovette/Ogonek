@@ -8,6 +8,9 @@ NC='\033[0m' # No Color
 
 echo -e "${YELLOW}🦀 Running Rust checks in axum folder...${NC}"
 
+export DATABASE_URL="
+postgres://postgres:H8QheSCRFCKejvDsbu@localhost:5433/pg-ogonek-dev"
+
 # Navigate to axum folder and run Rust commands
 cd axum || { echo -e "${RED}❌ axum folder not found${NC}"; exit 1; }
 

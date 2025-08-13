@@ -7,10 +7,12 @@ info:
     email: danila.volkov@noxlovette.com
   license:
     name: ''
-  version: 1.6.1
+  version: 1.6.2
 servers:
 - url: https://api.ogonek.app
   description: Production server
+- url: https://api.staging.ogonek.app
+  description: Staging server
 - url: http://localhost:3000
   description: Local development server
 paths:

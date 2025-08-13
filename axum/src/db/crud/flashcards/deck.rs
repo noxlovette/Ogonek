@@ -331,6 +331,8 @@ pub async fn update(
     .await?;
     batch_upsert(db, deck_id, update.cards).await?;
 
+    tx.commit().await?;
+
     Ok(())
 }
 
