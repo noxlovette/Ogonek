@@ -8,7 +8,6 @@ use ogonek::api::routes::*;
 use ogonek::schema::AppState;
 use ogonek::tools::daemons::task_cleanup::daily_cleanup;
 use ogonek::tools::logging::init_logging;
-use ogonek::tools::middleware::api_key::validate_api_key;
 use tower_http::{
     cors::CorsLayer,
     request_id::{MakeRequestUuid, PropagateRequestIdLayer, SetRequestIdLayer},
@@ -35,8 +34,7 @@ async fn run_server() -> anyhow::Result<()> {
         .nest("/tasks", task_routes())
         .nest("/decks", deck_routes())
         .nest("/s3", s3_routes())
-        .nest("/learn", learn_routes()) // assuming you have this
-        .layer(axum::middleware::from_fn(validate_api_key));
+        .nest("/learn", learn_routes());
 
     // Public routes (no auth required)
     let public_routes = Router::new()
