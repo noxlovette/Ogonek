@@ -1,5 +1,5 @@
 use crate::db::error::DbError;
-use crate::models::preferences::{UserPreferences, UserPreferencesUpdate};
+use crate::types::preferences::{UserPreferences, UserPreferencesUpdate};
 use sqlx::PgPool;
 
 pub async fn find_by_user_id(
@@ -70,7 +70,7 @@ pub async fn get_or_create_defaults(
 #[cfg(test)]
 mod additional_tests {
     use super::*;
-    use crate::models::preferences::UserPreferencesUpdate;
+    use crate::types::preferences::UserPreferencesUpdate;
     use crate::tests::create_test_user;
     use sqlx::PgPool;
 

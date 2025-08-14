@@ -1,13 +1,10 @@
-use crate::models::datetime_serialization;
+use crate::types::datetime_serialization;
 use chrono::{DateTime, Utc};
 use serde::Serialize;
 use utoipa::ToSchema;
 
 /// This guy is a safeguard against arbitrary values in the database
 /// (as I have decided not to use an enum in postgres)
-#[derive(Debug, sqlx::Type)]
-#[sqlx(type_name = "text")]
-#[sqlx(rename_all = "lowercase")]
 pub enum ModelType {
     Lesson,
     Task,
@@ -27,9 +24,6 @@ impl ModelType {
 }
 
 /// Safeguard for Action Types
-#[derive(Debug, sqlx::Type)]
-#[sqlx(type_name = "text")]
-#[sqlx(rename_all = "lowercase")]
 pub enum ActionType {
     Delete,
     Create,

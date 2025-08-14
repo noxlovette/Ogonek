@@ -1,10 +1,10 @@
 use crate::api::USER_TAG;
 use crate::api::error::APIError;
 use crate::auth::Claims;
-use crate::db::crud::account::student;
+use crate::db::crud::core::account::student;
+use crate::db::crud::core::flashcards::deck;
 use crate::db::crud::core::{lesson, task};
-use crate::db::crud::flashcards::deck;
-use crate::models::{CompositeStudent, Student, UpdateStudentRequest};
+use crate::types::{CompositeStudent, Student, UpdateStudentRequest};
 use crate::schema::AppState;
 use axum::extract::{Json, Path, State};
 

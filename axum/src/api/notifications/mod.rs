@@ -1,7 +1,7 @@
 use crate::api::error::APIError;
 use crate::auth::Claims;
 use crate::db::crud::notifications::device_tokens::*;
-use crate::models::DeviceTokenPayload;
+use crate::types::DeviceTokenPayload;
 use crate::schema::AppState;
 use axum::extract::{Json, State};
 use axum::http::StatusCode;

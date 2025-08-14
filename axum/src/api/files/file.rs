@@ -1,8 +1,8 @@
 use crate::api::TASK_TAG;
 use crate::api::error::APIError;
 use crate::auth::Claims;
-use crate::db::crud::files::file::{self, fetch_files_task};
-use crate::models::files::{
+use crate::db::crud::core::files::file::{self, fetch_files_task};
+use crate::types::files::{
     BatchPresignedUrlResponse, File, FileListParams, FileUpdate, PresignedFileUrl,
     PresignedUrlResponse,
 };

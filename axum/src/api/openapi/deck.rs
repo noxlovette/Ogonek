@@ -12,10 +12,10 @@ use utoipa::OpenApi;
         deck::delete_deck,
     ),
     components(schemas(
-        crate::models::DeckSmall,
-        crate::models::DeckFull,
-        crate::models::DeckUpdate,
-        crate::models::DeckPublic,
+        crate::types::DeckSmall,
+        crate::types::DeckFull,
+        crate::types::DeckUpdate,
+        crate::types::DeckPublic,
     ))
 )]
 pub struct DeckApi;

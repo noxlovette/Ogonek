@@ -1,27 +1,16 @@
-pub mod files;
-pub mod flashcards;
-pub mod lessons;
+pub mod core;
 pub mod notifications;
 pub mod preferences;
-pub mod profiles;
 pub mod s3;
-pub mod students;
-pub mod tasks;
 pub mod tracking;
-pub mod users;
 
-pub use files::*;
-pub use flashcards::*;
-pub use lessons::*;
+pub use core::*;
 pub use notifications::*;
 pub use preferences::*;
-pub use profiles::*;
 pub use s3::*;
 use serde::Serialize;
-pub use students::*;
-pub use tasks::*;
 pub use tracking::*;
-pub use users::*;
+
 use utoipa::ToSchema;
 
 /// Generic response that stores paginated data

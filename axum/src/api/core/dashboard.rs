@@ -1,10 +1,13 @@
 use crate::api::USER_TAG;
 use crate::api::error::APIError;
 use crate::auth::Claims;
-use crate::db::crud::account::{preferences, student, user};
+use crate::db::crud::core::{
+    account,
+    account::{preferences, student, user},
+    flashcards, lesson, task,
+};
 use crate::db::crud::tracking::{activity, seen};
-use crate::db::crud::{account, core, flashcards};
-use crate::models::{
+use crate::types::{
     BadgeWrapperDecks, BadgeWrapperLessons, BadgeWrapperTasks, DashboardData, LearnDataDashboard,
     LessonPaginationParams, ModelType, TaskPaginationParams,
 };
@@ -33,7 +36,7 @@ pub async fn fetch_dashboard(
     let students = student::find_all(&state.db, &claims.sub).await?;
 
     // Limit to three tasks
-    let tasks = core::task::find_all(
+    let tasks = task::find_all(
         &state.db,
         &claims.sub,
         &TaskPaginationParams {
@@ -48,7 +51,7 @@ pub async fn fetch_dashboard(
     .await?;
 
     // Limit to three lessons
-    let lessons = core::lesson::find_all(
+    let lessons = lesson::find_all(
         &state.db,
         &claims.sub,
         &LessonPaginationParams {

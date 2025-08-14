@@ -1,4 +1,4 @@
-use crate::models::datetime_serialization;
+use crate::types::datetime_serialization;
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use sqlx::prelude::FromRow;

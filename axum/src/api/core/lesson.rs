@@ -3,11 +3,11 @@ use crate::api::error::APIError;
 use crate::auth::Claims;
 use crate::db::crud::core::lesson;
 use crate::db::crud::tracking::{self, activity::log_activity};
-use crate::models::{
+use crate::types::{
     ActionType, LessonFull, LessonPaginationParams, LessonSmall, LessonUpdate, ModelType,
     PaginatedLessons,
 };
-use crate::models::{CreationId, PaginatedResponse};
+use crate::types::{CreationId, PaginatedResponse};
 use crate::schema::AppState;
 use axum::extract::Path;
 use axum::extract::State;

@@ -1,9 +1,9 @@
 use crate::api::USER_TAG;
 use crate::api::error::APIError;
 use crate::auth::Claims;
-use crate::db::crud::account::profile;
-use crate::models::ProfileWithTS;
-use crate::models::profiles::ProfileUpdate;
+use crate::db::crud::core::account::profile;
+use crate::types::ProfileWithTS;
+use crate::types::profiles::ProfileUpdate;
 use crate::schema::AppState;
 use axum::extract::{Json, State};
 use axum::http::StatusCode;

@@ -1,8 +1,8 @@
 use crate::api::error::APIError;
 use crate::auth::Claims;
-use crate::db::crud::flashcards::{self, deck};
+use crate::db::crud::core::flashcards::{self, deck};
 use crate::db::crud::tracking::{delete_seen, insert_as_unseen, log_activity, mark_as_seen};
-use crate::models::{
+use crate::types::{
     ActionType, CreationId, DeckPaginationParams, DeckPublic, DeckSmall, DeckWithCards,
     DeckWithCardsUpdate, ModelType,
 };

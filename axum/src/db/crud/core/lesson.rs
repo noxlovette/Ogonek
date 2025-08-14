@@ -1,5 +1,5 @@
 use crate::db::error::DbError;
-use crate::models::{
+use crate::types::{
     CreationId, LessonCreate, LessonFull, LessonPaginationParams, LessonSmall, LessonUpdate,
 };
 use sqlx::PgPool;
@@ -246,8 +246,8 @@ pub async fn count(db: &PgPool, user_id: &str) -> Result<i64, DbError> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::models::{LessonCreate, LessonPaginationParams, LessonUpdate};
     use crate::tests::create_test_user;
+    use crate::types::{LessonCreate, LessonPaginationParams, LessonUpdate};
     use sqlx::PgPool;
 
     #[sqlx::test]

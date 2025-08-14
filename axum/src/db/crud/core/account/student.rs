@@ -1,5 +1,5 @@
 use crate::db::error::DbError;
-use crate::models::{Student, UpdateStudentRequest};
+use crate::types::{Student, UpdateStudentRequest};
 use sqlx::PgPool;
 
 pub async fn upsert(db: &PgPool, user_id: &str, student_id: &str) -> Result<(), DbError> {
@@ -102,7 +102,7 @@ pub async fn update(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::models::UpdateStudentRequest;
+    use crate::types::UpdateStudentRequest;
     use crate::tests::create_test_user;
     use sqlx::PgPool;
 

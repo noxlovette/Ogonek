@@ -1,6 +1,6 @@
 use crate::{
     api::core::task,
-    models::{TaskFull, TaskPaginationParams, TaskSmall, TaskUpdate, TaskWithFilesResponse},
+    types::{TaskFull, TaskPaginationParams, TaskSmall, TaskUpdate, TaskWithFilesResponse},
 };
 use utoipa::OpenApi;
 

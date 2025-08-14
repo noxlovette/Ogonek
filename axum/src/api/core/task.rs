@@ -3,11 +3,11 @@ use crate::api::error::APIError;
 use crate::auth::Claims;
 use crate::db::crud::core::task::create_with_defaults;
 use crate::db::crud::{
+    core::files::file::fetch_files_task,
     core::task::{count, delete, find_all, find_assignee, find_by_id, toggle, update},
-    files::file::fetch_files_task,
     tracking::{delete_seen, log_activity, seen},
 };
-use crate::models::{
+use crate::types::{
     ActionType, CreationId, ModelType, PaginatedResponse, PaginatedTasks, TaskPaginationParams,
     TaskSmall, TaskUpdate, TaskWithFilesResponse,
 };

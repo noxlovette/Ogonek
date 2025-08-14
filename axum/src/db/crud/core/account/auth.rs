@@ -1,6 +1,6 @@
 use crate::auth::error::AuthError;
 use crate::db::error::DbError;
-use crate::models::{AuthPayload, CreationId, SignUpPayload, User};
+use crate::types::{AuthPayload, CreationId, SignUpPayload, User};
 use nanoid::nanoid;
 use sqlx::PgPool;
 
@@ -86,7 +86,7 @@ pub async fn fetch_by_id(db: &PgPool, user_id: &str) -> Result<User, AuthError> 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::models::{AuthPayload, SignUpPayload};
+    use crate::types::{AuthPayload, SignUpPayload};
     use sqlx::PgPool;
 
     #[sqlx::test]

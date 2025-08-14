@@ -1,5 +1,5 @@
 use crate::db::error::DbError;
-use crate::models::{Profile, ProfileUpdate, ProfileWithTS, TeacherData};
+use crate::types::{Profile, ProfileUpdate, ProfileWithTS, TeacherData};
 use sqlx::PgPool;
 
 pub async fn find_by_id(
@@ -79,7 +79,7 @@ pub async fn upsert(db: &PgPool, user_id: &str, update: &ProfileUpdate) -> Resul
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::models::{Profile, ProfileUpdate};
+    use crate::types::{Profile, ProfileUpdate};
     use crate::tests::create_test_user;
     use sqlx::PgPool;
 

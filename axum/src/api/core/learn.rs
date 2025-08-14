@@ -1,9 +1,9 @@
 use crate::api::LEARN_TAG;
 use crate::api::error::APIError;
 use crate::auth::Claims;
-use crate::db::crud::flashcards;
+use crate::db::crud::core::flashcards;
 use crate::db::crud::tracking::log_activity;
-use crate::models::{
+use crate::types::{
     ActionType, CardProgressWithFields, ModelType, ReviewPayload, UpdateCardProgress,
 };
 use crate::schema::AppState;

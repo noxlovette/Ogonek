@@ -1,8 +1,8 @@
 use crate::api::error::APIError;
 use crate::auth::Claims;
-use crate::db::crud::files::multipart::{FileCreateParams, FileLinkOptions};
-use crate::db::crud::files::{file, multipart};
-use crate::models::{
+use crate::db::crud::core::files::multipart::{FileCreateParams, FileLinkOptions};
+use crate::db::crud::core::files::{file, multipart};
+use crate::types::{
     AbortMultipartRequest, CompleteMultipartRequest, InitUploadRequest, MultipartInitResultS3,
     MultipartUploadInit,
 };

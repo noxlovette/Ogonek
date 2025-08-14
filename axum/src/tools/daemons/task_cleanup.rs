@@ -3,7 +3,7 @@ use crate::error::AppError;
 use crate::s3::delete_s3;
 use crate::schema::AppState;
 
-use crate::db::crud::files::file::fetch_files_task;
+use crate::db::crud::core::files::file::fetch_files_task;
 pub async fn daily_cleanup(state: AppState) {
     loop {
         tracing::info!("Starting daily cleanup job...");

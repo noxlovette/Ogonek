@@ -1,5 +1,5 @@
 use crate::db::error::DbError;
-use crate::models::{
+use crate::types::{
     CreationId, TaskCreate, TaskFull, TaskPaginationParams, TaskSmall, TaskUpdate,
 };
 use sqlx::PgPool;
@@ -374,7 +374,7 @@ pub async fn fetch_old_tasks(db: &PgPool) -> Result<Vec<CreationId>, DbError> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::models::{TaskCreate, TaskPaginationParams, TaskUpdate};
+    use crate::types::{TaskCreate, TaskPaginationParams, TaskUpdate};
     use crate::tests::create_test_user;
     use chrono::Utc;
     use sqlx::PgPool;

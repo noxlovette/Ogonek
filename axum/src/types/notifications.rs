@@ -2,14 +2,14 @@ use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
 
 #[derive(Serialize)]
-struct APNsPayload {
+pub struct APNsPayload {
     pub aps: APSData,
     #[serde(flatten)]
     pub custom_data: serde_json::Value,
 }
 
 #[derive(Serialize)]
-struct APSData {
+pub struct APSData {
     pub alert: AlertData,
     pub badge: Option<u32>,
     pub sound: Option<String>,
@@ -18,7 +18,7 @@ struct APSData {
 }
 
 #[derive(Serialize)]
-struct AlertData {
+pub struct AlertData {
     pub title: String,
     pub body: String,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -26,7 +26,7 @@ struct AlertData {
 }
 
 #[derive(Serialize)]
-struct TaskNotificationData {
+pub struct TaskNotificationData {
     #[serde(rename = "type")]
     pub notification_type: String, // "new_task", "lesson_added", etc.
     pub task_id: String,
@@ -37,4 +37,22 @@ struct TaskNotificationData {
 pub struct DeviceTokenPayload {
     pub token: String,
     pub platform: String,
+}
+
+pub enum NotificationType {
+    NewTask,
+    NewLesson,
+    NewDeck,
+    TaskCompleted,
+}
+
+impl NotificationType {
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::NewDeck => "deck",
+            Self::NewLesson => "lesson",
+            Self::NewTask => "task",
+            Self::TaskCompleted => "task_completed",
+        }
+    }
 }
