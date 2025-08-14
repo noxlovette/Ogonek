@@ -43,3 +43,4 @@ sentry-tower = {version = "0.38.1", features = ["axum", "axum-matched-path", "ht
 utoipa = {version ="5.4.0", features = ["chrono"]}
 utoipa-axum = {version ="0.2.0"}
 serde_yaml = "0.9.34"
+reqwest = "0.12.23"

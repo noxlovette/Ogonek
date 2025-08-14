@@ -99,11 +99,30 @@ pub async fn update(
     Ok(())
 }
 
+pub async fn get_telegram_id(
+    db: &PgPool,
+    user_id: &str,
+    student_id: &str,
+) -> Result<Option<String>, DbError> {
+    let telegram_id = sqlx::query_scalar!(
+        r#"
+        SELECT student_telegram_id FROM teacher_student
+        WHERE teacher_id = $1 AND student_id = $2
+        "#,
+        user_id,
+        student_id,
+    )
+    .fetch_one(db)
+    .await?;
+
+    Ok(telegram_id)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::types::UpdateStudentRequest;
     use crate::tests::create_test_user;
+    use crate::types::UpdateStudentRequest;
     use sqlx::PgPool;
 
     #[sqlx::test]

@@ -1,3 +1,4 @@
+use crate::notifications::messages::NotificationType;
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
 
@@ -28,7 +29,7 @@ pub struct AlertData {
 #[derive(Serialize)]
 pub struct TaskNotificationData {
     #[serde(rename = "type")]
-    pub notification_type: String, // "new_task", "lesson_added", etc.
+    pub notification_type: NotificationType,
     pub task_id: String,
     pub assignee: String,
 }
@@ -37,22 +38,4 @@ pub struct TaskNotificationData {
 pub struct DeviceTokenPayload {
     pub token: String,
     pub platform: String,
-}
-
-pub enum NotificationType {
-    NewTask,
-    NewLesson,
-    NewDeck,
-    TaskCompleted,
-}
-
-impl NotificationType {
-    pub fn as_str(&self) -> &'static str {
-        match self {
-            Self::NewDeck => "deck",
-            Self::NewLesson => "lesson",
-            Self::NewTask => "task",
-            Self::TaskCompleted => "task_completed",
-        }
-    }
 }

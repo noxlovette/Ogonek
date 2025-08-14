@@ -76,11 +76,25 @@ pub async fn upsert(db: &PgPool, user_id: &str, update: &ProfileUpdate) -> Resul
     Ok(())
 }
 
+pub async fn get_telegram_id(db: &PgPool, user_id: &str) -> Result<Option<String>, DbError> {
+    let telegram_id = sqlx::query_scalar!(
+        r#"
+        SELECT telegram_id FROM profile
+        WHERE user_id = $1
+        "#,
+        user_id
+    )
+    .fetch_one(db)
+    .await?;
+
+    Ok(telegram_id)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::types::{Profile, ProfileUpdate};
     use crate::tests::create_test_user;
+    use crate::types::{Profile, ProfileUpdate};
     use sqlx::PgPool;
 
     #[sqlx::test]

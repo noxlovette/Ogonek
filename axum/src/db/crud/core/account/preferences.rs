@@ -70,8 +70,8 @@ pub async fn get_or_create_defaults(
 #[cfg(test)]
 mod additional_tests {
     use super::*;
-    use crate::types::preferences::UserPreferencesUpdate;
     use crate::tests::create_test_user;
+    use crate::types::preferences::UserPreferencesUpdate;
     use sqlx::PgPool;
 
     #[sqlx::test]

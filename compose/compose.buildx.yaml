@@ -2,14 +2,14 @@ name: ogonek-build
 services:
   svelte:
     build:
-      context: ./svelte
+      context: ../svelte
       dockerfile: Dockerfile
       tags:
         - ${SVELTE_IMAGE}
     image: ${SVELTE_IMAGE}
   axum:
     build:
-      context: ./axum
+      context: ../axum
       dockerfile: Dockerfile
       tags:
         - ${AXUM_IMAGE}

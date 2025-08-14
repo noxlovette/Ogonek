@@ -22,6 +22,7 @@ echo "🔧 Setting DATABASE_URL environment variable..."
 export DATABASE_URL="postgres://postgres:H8QheSCRFCKejvDsbu@localhost:5433/pg-ogonek-dev"
 
 # Step 3: Run migrations
+cd axum
 echo "🚀 Running database migrations..."
 sqlx migrate run
 

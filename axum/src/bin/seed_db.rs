@@ -137,27 +137,27 @@ async fn create_profiles(db: &PgPool, user_ids: &[String]) -> Result<()> {
         ProfileUpdate {
             video_call_url: Some("https://zoom.us/j/alice123".to_string()),
             avatar_url: Some("https://avatars.dev/alice.png".to_string()),
-            telegram_id: Some("@alice_teacher".to_string()),
+            telegram_id: Some("900828558".to_string()),
         },
         ProfileUpdate {
             video_call_url: Some("https://meet.google.com/bob-room".to_string()),
             avatar_url: Some("https://avatars.dev/bob.png".to_string()),
-            telegram_id: Some("@bob_instructor".to_string()),
+            telegram_id: Some("900828558".to_string()),
         },
         ProfileUpdate {
             video_call_url: None,
             avatar_url: Some("https://avatars.dev/charlie.png".to_string()),
-            telegram_id: Some("@charlie_student".to_string()),
+            telegram_id: Some("900828558".to_string()),
         },
         ProfileUpdate {
             video_call_url: None,
             avatar_url: Some("https://avatars.dev/diana.png".to_string()),
-            telegram_id: Some("@diana_learner".to_string()),
+            telegram_id: Some("900828558".to_string()),
         },
         ProfileUpdate {
             video_call_url: None,
             avatar_url: Some("https://avatars.dev/eve.png".to_string()),
-            telegram_id: Some("@eve_pupil".to_string()),
+            telegram_id: Some("900828558".to_string()),
         },
     ];
 
@@ -213,8 +213,8 @@ async fn create_teacher_student_relationships(db: &PgPool, user_ids: &[String]) 
     for (teacher_id, student_id, markdown) in relationships {
         sqlx::query!(
             r#"
-            INSERT INTO teacher_student (teacher_id, student_id, status, markdown)
-            VALUES ($1, $2, 'active', $3)
+            INSERT INTO teacher_student (teacher_id, student_id, status, markdown, student_telegram_id)
+            VALUES ($1, $2, 'active', $3, '900828558')
             "#,
             teacher_id,
             student_id,

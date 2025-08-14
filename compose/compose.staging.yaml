@@ -2,7 +2,7 @@ name: ogonek-staging
 services:
   axum:
     build:
-      context: ./axum
+      context: ../axum
       dockerfile: Dockerfile
     container_name: axum-ogonek-staging
     ports:
@@ -29,7 +29,7 @@ services:
     volumes:
       - db-data:/var/lib/postgresql/data
     env_file:
-      - ./.env
+      - ../.env
     healthcheck:
       test: ["CMD", "pg_isready"]
       interval: 10s

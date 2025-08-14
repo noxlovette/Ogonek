@@ -2,7 +2,7 @@ name: ogonek-dev
 services:
   svelte:
     build:
-      context: ./svelte
+      context: ../svelte
       dockerfile: Dockerfile.dev
     container_name: svelte-ogonek-dev
     ports:
@@ -11,7 +11,7 @@ services:
       - ./svelte/src:/app/src
       - ./svelte/messages:/app/messages
     env_file:
-      - ./svelte/.env
+      - ../svelte/.env
     depends_on:
       - axum
   redis:
@@ -28,7 +28,7 @@ services:
       start_period: 30s
   axum:
     build:
-      context: ./axum
+      context: ../axum
       dockerfile: Dockerfile.dev
     container_name: axum-ogonek-dev
     ports:
@@ -38,7 +38,7 @@ services:
       - cargo-cache:/usr/local/cargo/registry
       - cargo-target:/app/target
     env_file:
-      - ./axum/.env
+      - ../axum/.env
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
       interval: 10s
@@ -56,7 +56,7 @@ services:
     volumes:
       - db-data:/var/lib/postgresql/data
     env_file:
-      - ./.env
+      - ../.env
     ports:
       - "5433:5432"
     healthcheck:
