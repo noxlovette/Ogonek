@@ -1,5 +1,5 @@
-use super::ModelType;
 use crate::db::error::DbError;
+use crate::models::ModelType;
 use sqlx::PgPool;
 
 /// Lets mark an object as seen

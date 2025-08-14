@@ -37,8 +37,7 @@ pub async fn fetch_file(
         (status = 400, description = "Bad request - Invalid encoding or key"),
         (status = 401, description = "Unauthorized"),
         (status = 404, description = "File not found")
-    ),
-    security(("api_key" = []))
+    )
 )]
 pub async fn fetch_presigned_url(
     State(state): State<AppState>,
@@ -88,8 +87,7 @@ pub async fn fetch_presigned_url(
         (status = 200, description = "Presigned URLs generated successfully", body = BatchPresignedUrlResponse),
         (status = 400, description = "Bad request"),
         (status = 401, description = "Unauthorized")
-    ),
-    security(("api_key" = []))
+    )
 )]
 pub async fn fetch_presigned_urls_batch(
     State(state): State<AppState>,
@@ -158,8 +156,7 @@ pub async fn update_file(
         (status = 204, description = "File deleted successfully"),
         (status = 404, description = "File not found"),
         (status = 401, description = "Unauthorized")
-    ),
-    security(("api_key" = []))
+    )
 )]
 pub async fn delete_file(
     State(state): State<AppState>,

@@ -1,11 +1,10 @@
 use crate::api::error::APIError;
 use crate::auth::Claims;
 use crate::db::crud::flashcards::{self, deck};
-use crate::db::crud::tracking::activity::log_activity;
-use crate::db::crud::tracking::seen::{delete_seen, insert_as_unseen, mark_as_seen};
-use crate::db::crud::tracking::{self, ActionType, ModelType};
+use crate::db::crud::tracking::{delete_seen, insert_as_unseen, log_activity, mark_as_seen};
 use crate::models::{
-    CreationId, DeckPaginationParams, DeckPublic, DeckSmall, DeckWithCards, DeckWithCardsUpdate,
+    ActionType, CreationId, DeckPaginationParams, DeckPublic, DeckSmall, DeckWithCards,
+    DeckWithCardsUpdate, ModelType,
 };
 use crate::schema::AppState;
 use axum::extract::{Json, Path, Query, State};
@@ -21,8 +20,7 @@ use crate::api::DECK_TAG;
         (status = 200, description = "Deck created successfully", body = CreationId),
         (status = 400, description = "Bad request"),
         (status = 401, description = "Unauthorized")
-    ),
-    security(("api_key" = []))
+    )
 )]
 pub async fn create_deck(
     State(state): State<AppState>,
@@ -52,8 +50,7 @@ pub async fn create_deck(
         (status = 200, description = "Deck duplicated successfully", body = CreationId),
         (status = 400, description = "Bad request"),
         (status = 401, description = "Unauthorized")
-    ),
-    security(("api_key" = []))
+    )
 )]
 pub async fn duplicate_deck(
     State(state): State<AppState>,
@@ -87,8 +84,7 @@ pub async fn duplicate_deck(
         (status = 200, description = "Deck retrieved", body = DeckWithCards),
         (status = 404, description = "Deck not found"),
         (status = 401, description = "Unauthorized")
-    ),
-    security(("api_key" = []))
+    )
 )]
 pub async fn fetch_deck(
     State(state): State<AppState>,
@@ -117,8 +113,7 @@ pub async fn fetch_deck(
     responses(
         (status = 200, description = "User decks retrieved", body = Vec<DeckSmall>),
         (status = 401, description = "Unauthorized")
-    ),
-    security(("api_key" = []))
+    )
 )]
 pub async fn list_decks(
     State(state): State<AppState>,
@@ -137,8 +132,7 @@ pub async fn list_decks(
     responses(
         (status = 200, description = "Public decks retrieved", body=Vec<DeckPublic>),
         (status = 401, description = "Unauthorized")
-    ),
-    security(("api_key" = []))
+    )
 )]
 pub async fn list_decks_public(
     State(state): State<AppState>,
@@ -161,8 +155,7 @@ pub async fn list_decks_public(
         (status = 204, description = "Deck updated successfully"),
         (status = 404, description = "Deck not found"),
         (status = 401, description = "Unauthorized")
-    ),
-    security(("api_key" = []))
+    )
 )]
 pub async fn update_deck(
     State(state): State<AppState>,
@@ -230,8 +223,7 @@ pub async fn update_deck(
         (status = 204, description = "Deck deleted successfully"),
         (status = 404, description = "Deck not found"),
         (status = 401, description = "Unauthorized")
-    ),
-    security(("api_key" = []))
+    )
 )]
 pub async fn delete_deck(
     State(state): State<AppState>,
@@ -243,7 +235,7 @@ pub async fn delete_deck(
 
     flashcards::deck::delete(&state.db, &id, &claims.sub).await?;
     if let Some(user) = assignee {
-        tracking::seen::delete_seen(&state.db, &user, &id, ModelType::Deck).await?;
+        delete_seen(&state.db, &user, &id, ModelType::Deck).await?;
         target_id = Some(user);
     }
 

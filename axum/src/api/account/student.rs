@@ -19,8 +19,7 @@ use axum::http::StatusCode;
     responses(
         (status = 201, description = "Student relationship created"),
         (status = 401, description = "Unauthorized")
-    ),
-    security(("api_key" = []))
+    )
 )]
 pub async fn upsert_student(
     claims: Claims,
@@ -42,8 +41,7 @@ pub async fn upsert_student(
         (status = 204, description = "Student relationship removed"),
         (status = 404, description = "Student not found"),
         (status = 401, description = "Unauthorized")
-    ),
-    security(("api_key" = []))
+    )
 )]
 pub async fn remove_student(
     State(state): State<AppState>,
@@ -66,8 +64,7 @@ pub async fn remove_student(
         (status = 204, description = "Student updated successfully"),
         (status = 404, description = "Student not found"),
         (status = 401, description = "Unauthorized")
-    ),
-    security(("api_key" = []))
+    )
 )]
 pub async fn update_student(
     claims: Claims,
@@ -90,8 +87,7 @@ pub async fn update_student(
         (status = 200, description = "Student details retrieved", body = CompositeStudent),
         (status = 404, description = "Student not found"),
         (status = 401, description = "Unauthorized")
-    ),
-    security(("api_key" = []))
+    )
 )]
 pub async fn fetch_student(
     claims: Claims,
@@ -117,8 +113,7 @@ pub async fn fetch_student(
     responses(
         (status = 200, description = "Students list retrieved", body = Vec<Student>),
         (status = 401, description = "Unauthorized")
-    ),
-    security(("api_key" = []))
+    )
 )]
 pub async fn list_students(
     claims: Claims,

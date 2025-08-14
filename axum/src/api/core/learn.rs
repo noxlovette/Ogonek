@@ -2,8 +2,10 @@ use crate::api::LEARN_TAG;
 use crate::api::error::APIError;
 use crate::auth::Claims;
 use crate::db::crud::flashcards;
-use crate::db::crud::tracking::{ActionType, ModelType, log_activity};
-use crate::models::{CardProgressWithFields, ReviewPayload, UpdateCardProgress};
+use crate::db::crud::tracking::log_activity;
+use crate::models::{
+    ActionType, CardProgressWithFields, ModelType, ReviewPayload, UpdateCardProgress,
+};
 use crate::schema::AppState;
 use crate::tools::sm2::SM2Calculator;
 use axum::extract::{Json, Path, State};
@@ -21,8 +23,7 @@ use chrono::{Duration, Utc};
         (status = 204, description = "Deck subscribed to successfully"),
         (status = 404, description = "Deck not found"),
         (status = 401, description = "Unauthorized")
-    ),
-    security(("api_key" = []))
+    )
 )]
 pub async fn subscribe_to_deck(
     State(state): State<AppState>,
@@ -54,8 +55,7 @@ pub async fn subscribe_to_deck(
         (status = 204, description = "Deck subscribed to successfully"),
         (status = 404, description = "Deck not found"),
         (status = 401, description = "Unauthorized")
-    ),
-    security(("api_key" = []))
+    )
 )]
 pub async fn unsubscribe_from_deck(
     State(state): State<AppState>,
@@ -83,8 +83,7 @@ pub async fn unsubscribe_from_deck(
     responses(
         (status = 200, description = "Due cards fetched successfully", body = Vec<CardProgressWithFields>),
         (status = 401, description = "Unauthorized")
-    ),
-    security(("api_key" = []))
+    )
 )]
 pub async fn fetch_due_cards(
     State(state): State<AppState>,
@@ -106,8 +105,7 @@ pub async fn fetch_due_cards(
     responses(
         (status = 204, description = "Card progress updated successfully"),
         (status = 401, description = "Unauthorized")
-    ),
-    security(("api_key" = []))
+    )
 )]
 pub async fn update_card_progress(
     State(state): State<AppState>,
@@ -147,8 +145,7 @@ pub async fn update_card_progress(
     responses(
         (status = 204, description = "Card progress updated successfully", body = Vec<CardProgressWithFields>),
         (status = 401, description = "Unauthorized")
-    ),
-    security(("api_key" = []))
+    )
 )]
 pub async fn reset_deck_progress(
     State(state): State<AppState>,

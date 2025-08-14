@@ -114,8 +114,7 @@ pub async fn refresh(
         (status = 200, description = "Invite link generated", body = String),
         (status = 401, description = "Unauthorized"),
         (status = 400, description = "Invalid invite token")
-    ),
-    security(("api_key" = []))
+    )
 )]
 pub async fn generate_invite_link(
     claims: Claims,

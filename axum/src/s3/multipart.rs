@@ -60,8 +60,7 @@ pub async fn init_multipart_s3(
    responses(
         (status = 200, description = "Upload part completed successfully"),
         (status = 401, description = "Unauthorized")
-    ),
-    security(("api_key" = []))
+    )
 )]
 pub async fn complete_multipart_s3(
     state: &AppState,
@@ -115,8 +114,7 @@ pub async fn complete_multipart_s3(
     responses(
         (status = 200, description = "Upload aborted"),
         (status = 401, description = "Unauthorized")
-    ),
-    security(("api_key" = []))
+    )
 )]
 pub async fn abort_multipart_s3(
     state: &AppState,

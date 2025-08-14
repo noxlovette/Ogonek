@@ -1,6 +1,6 @@
 {
   "name": "ogonek",
-  "version": "1.6.3",
+  "version": "1.7.0",
   "private": true,
   "scripts": {
     "dev": "vite dev",

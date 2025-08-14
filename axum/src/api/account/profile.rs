@@ -18,8 +18,7 @@ use axum::http::StatusCode;
         (status = 204, description = "Profile updated successfully"),
         (status = 400, description = "Bad request"),
         (status = 401, description = "Unauthorized")
-    ),
-    security(("api_key" = []))
+    )
 )]
 pub async fn upsert_profile(
     State(state): State<AppState>,
@@ -40,8 +39,7 @@ pub async fn upsert_profile(
     responses(
         (status = 200, description = "Profile details retrieved", body = ProfileWithTS),
         (status = 401, description = "Unauthorized"),
-    ),
-    security(("api_key" = []))
+    )
 )]
 pub async fn fetch_profile(
     State(state): State<AppState>,

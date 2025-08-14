@@ -2,11 +2,11 @@ use crate::api::USER_TAG;
 use crate::api::error::APIError;
 use crate::auth::Claims;
 use crate::db::crud::account::{preferences, student, user};
-use crate::db::crud::tracking::{ModelType, activity, seen};
+use crate::db::crud::tracking::{activity, seen};
 use crate::db::crud::{account, core, flashcards};
 use crate::models::{
     BadgeWrapperDecks, BadgeWrapperLessons, BadgeWrapperTasks, DashboardData, LearnDataDashboard,
-    LessonPaginationParams, TaskPaginationParams,
+    LessonPaginationParams, ModelType, TaskPaginationParams,
 };
 use crate::schema::AppState;
 use axum::extract::Json;
@@ -22,8 +22,7 @@ use axum::extract::State;
     responses(
         (status = 200, description = "Dashboard data retrieved", body=DashboardData),
         (status = 401, description = "Unauthorized")
-    ),
-    security(("api_key" = []))
+    )
 )]
 pub async fn fetch_dashboard(
     State(state): State<AppState>,

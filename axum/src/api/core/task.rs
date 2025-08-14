@@ -5,11 +5,11 @@ use crate::db::crud::core::task::create_with_defaults;
 use crate::db::crud::{
     core::task::{count, delete, find_all, find_assignee, find_by_id, toggle, update},
     files::file::fetch_files_task,
-    tracking::{ActionType, ModelType, delete_seen, log_activity, seen},
+    tracking::{delete_seen, log_activity, seen},
 };
 use crate::models::{
-    CreationId, PaginatedResponse, PaginatedTasks, TaskPaginationParams, TaskSmall, TaskUpdate,
-    TaskWithFilesResponse,
+    ActionType, CreationId, ModelType, PaginatedResponse, PaginatedTasks, TaskPaginationParams,
+    TaskSmall, TaskUpdate, TaskWithFilesResponse,
 };
 use crate::s3::post::delete_s3;
 use crate::schema::AppState;
@@ -27,8 +27,7 @@ use axum::http::StatusCode;
         (status = 200, description = "Task with files retrieved", body = TaskWithFilesResponse),
         (status = 404, description = "Task not found"),
         (status = 401, description = "Unauthorized")
-    ),
-    security(("api_key" = []))
+    )
 )]
 pub async fn fetch_task(
     State(state): State<AppState>,
@@ -58,8 +57,7 @@ pub async fn fetch_task(
     responses(
         (status = 200, description = "Tasks retrieved successfully", body = PaginatedTasks),
         (status = 401, description = "Unauthorized")
-    ),
-    security(("api_key" = []))
+    )
 )]
 pub async fn list_tasks(
     State(state): State<AppState>,
@@ -85,8 +83,7 @@ pub async fn list_tasks(
         (status = 201, description = "Task created successfully", body = CreationId),
         (status = 400, description = "Bad request"),
         (status = 401, description = "Unauthorized")
-    ),
-    security(("api_key" = []))
+    )
 )]
 pub async fn create_task(
     State(state): State<AppState>,
@@ -118,8 +115,7 @@ pub async fn create_task(
         (status = 204, description = "Task deleted successfully"),
         (status = 404, description = "Task not found"),
         (status = 401, description = "Unauthorized")
-    ),
-    security(("api_key" = []))
+    )
 )]
 pub async fn delete_task(
     State(state): State<AppState>,
@@ -169,8 +165,7 @@ pub async fn delete_task(
         (status = 200, description = "Task with files retrieved", body = TaskWithFilesResponse),
         (status = 404, description = "Task not found"),
         (status = 401, description = "Unauthorized")
-    ),
-    security(("api_key" = []))
+    )
 )]
 pub async fn toggle_task(
     State(state): State<AppState>,
@@ -203,8 +198,7 @@ pub async fn toggle_task(
         (status = 204, description = "Task updated successfully"),
         (status = 404, description = "Task not found"),
         (status = 401, description = "Unauthorized")
-    ),
-    security(("api_key" = []))
+    )
 )]
 /// Updates the task
 pub async fn update_task(
