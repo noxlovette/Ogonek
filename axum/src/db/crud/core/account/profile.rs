@@ -52,8 +52,9 @@ pub async fn get_teacher_telegram_id(
         "#,
         user_id,
     )
-    .fetch_one(db)
-    .await?;
+    .fetch_optional(db)
+    .await?
+    .flatten();
 
     Ok(td)
 }

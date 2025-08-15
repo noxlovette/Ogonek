@@ -10,7 +10,7 @@ pub async fn send_telegram_notification(
     notification: &NotificationType,
 ) -> Result<(), NotificationError> {
     let message = notification.to_message();
-    let url = format!("https://api.telegram.org/bot{}/sendMessage", bot_token);
+    let url = format!("https://api.telegram.org/bot{bot_token}/sendMessage");
 
     let response = client
         .post(&url)
@@ -35,7 +35,7 @@ pub async fn send_telegram_notification(
         .text()
         .await
         .map_err(|e| NotificationError::NetworkError {
-            message: format!("Failed to read response: {}", e),
+            message: format!("Failed to read response: {e}"),
         })?;
 
     // Parse the Telegram API response

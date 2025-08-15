@@ -1,11 +1,6 @@
 import logger from "$lib/logger";
 import { routes } from "$lib/routes";
-import {
-  handleApiResponse,
-  isSuccessResponse,
-  messages,
-  notifyTelegram,
-} from "$lib/server";
+import { handleApiResponse, isSuccessResponse } from "$lib/server";
 import type { EmptyResponse } from "$lib/types";
 import { fail, redirect } from "@sveltejs/kit";
 import type { Actions } from "./$types";
@@ -16,14 +11,10 @@ export const actions = {
 
     const { id } = params;
 
-    const name = formData.get("name");
+    const title = formData.get("title");
     const description = formData.get("description");
     const visibility = formData.get("visibility");
-
-    const assigneeData = formData.get("student")?.toString() || "{}";
-    const { assignee = null, studentTelegramId = null } =
-      JSON.parse(assigneeData);
-    const initialAssignee = formData.get("initialAssignee")?.toString() || "";
+    const assignee = formData.get("assignee") || "";
 
     const cards = [];
     let index = 0;
@@ -37,9 +28,9 @@ export const actions = {
       index++;
     }
 
-    if (!name || typeof name !== "string") {
+    if (!title || typeof title !== "string") {
       return fail(400, {
-        message: "Deck name is required",
+        message: "Deck title is required",
       });
     }
 
@@ -53,7 +44,7 @@ export const actions = {
 
     const body = {
       deck: {
-        name,
+        title,
         description,
         visibility,
         assignee,
@@ -71,17 +62,6 @@ export const actions = {
     if (!isSuccessResponse(editResult)) {
       logger.error({ editResult }, "Axum-side error updating task");
       return fail(editResult.status, { message: editResult.message });
-    }
-
-    if (studentTelegramId && initialAssignee !== assignee) {
-      const telegramResponse = await notifyTelegram(
-        messages.deckCreated({ title: name, id }),
-        studentTelegramId,
-      );
-      if (telegramResponse.status !== 404 && telegramResponse.status !== 200) {
-        logger.error({ id }, "No notification sent for deck");
-        return fail(400);
-      }
     }
 
     return redirect(301, ".");

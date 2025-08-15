@@ -68,7 +68,6 @@
     </div>
   </HeaderEmbellish>
 
-  <input type="hidden" name="initialAssignee" value={task.assignee} />
   <input type="hidden" name="markdown" value={markdown} />
 
   <div class="grid grid-cols-1 gap-5 md:grid-cols-4">

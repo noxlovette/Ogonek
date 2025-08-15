@@ -13,7 +13,7 @@ use crate::notifications::messages::NotificationType;
 use crate::s3::post::delete_s3;
 use crate::schema::AppState;
 use crate::types::{
-    ActionType, ModelType, PaginatedResponse, PaginatedTasks, PaginationParams, TaskSmall,
+    ActionType, ModelType, PaginatedResponse, PaginatedTasks, TaskPaginationParams, TaskSmall,
     TaskUpdate, TaskWithFilesResponse,
 };
 use axum::extract::{Json, Path, Query, State};
@@ -65,7 +65,7 @@ pub async fn fetch_task(
 pub async fn list_tasks(
     State(state): State<AppState>,
     claims: Claims,
-    Query(params): Query<PaginationParams>,
+    Query(params): Query<TaskPaginationParams>,
 ) -> Result<Json<PaginatedResponse<TaskSmall>>, APIError> {
     let tasks = find_all(&state.db, &claims.sub, &params).await?;
 
@@ -176,17 +176,17 @@ pub async fn toggle_task(
     let current_assignee = find_assignee(&state.db, &id, &claims.sub).await?;
     let should_notify = toggle(&state.db, &id, &claims.sub).await?;
 
-    log_activity(
-        &state.db,
-        &claims.sub,
-        &id,
-        ModelType::Task,
-        ActionType::Complete,
-        current_assignee.as_deref(),
-    )
-    .await?;
-
     if should_notify {
+        log_activity(
+            &state.db,
+            &claims.sub,
+            &id,
+            ModelType::Task,
+            ActionType::Complete,
+            current_assignee.as_deref(),
+        )
+        .await?;
+
         let telegram_id = profile::get_teacher_telegram_id(&state.db, &claims.sub).await?;
         let task = task::find_by_id(&state.db, &id, &claims.sub).await?;
         if let Some(telegram_id) = telegram_id {

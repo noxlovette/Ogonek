@@ -9,7 +9,10 @@ use crate::db::crud::core::{
 };
 use crate::db::crud::tracking::{activity, seen};
 use crate::schema::AppState;
-use crate::types::{AppContext, DashboardData, ModelType, NotificationBadges, PaginationParams};
+use crate::types::{
+    AppContext, DashboardData, ModelType, NotificationBadges, PaginationParams,
+    TaskPaginationParams,
+};
 use axum::extract::Json;
 use axum::extract::State;
 
@@ -31,9 +34,10 @@ pub async fn fetch_dashboard(
     let tasks = task::find_all(
         &state.db,
         &claims.sub,
-        &PaginationParams {
+        &TaskPaginationParams {
             page: Some(1),
             per_page: Some(3),
+            completed: Some(false),
             search: None,
             assignee: None,
         },

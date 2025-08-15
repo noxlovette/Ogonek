@@ -21,8 +21,7 @@
 
   let { data } = $props();
 
-  let cards = $derived(data.cards);
-  let deck = $derived(data.deck);
+  const { deck, cards } = data;
   let flippedCards = $state(new Set<string>());
 
   let isSubscribed = $state(data.deck.isSubscribed);
@@ -42,11 +41,11 @@
 </script>
 
 <svelte:head>
-  <title>{deck.name} | Flashcards</title>
+  <title>{deck.title} | Flashcards</title>
 </svelte:head>
 <HeaderEmbellish>
   <div class="flex items-baseline gap-3 md:gap-4">
-    <H1>{deck.name}</H1>
+    <H1>{deck.title}</H1>
     {#if page.params.role == "t"}
       <H3>
         {assigneeName}

@@ -1,12 +1,12 @@
 use crate::db::error::DbError;
-use crate::types::{PaginationParams, TaskCreate, TaskFull, TaskSmall, TaskUpdate};
+use crate::types::{TaskCreate, TaskFull, TaskPaginationParams, TaskSmall, TaskUpdate};
 use sqlx::PgPool;
 
 /// Mini-tasks
 pub async fn find_all(
     db: &PgPool,
     user_id: &str,
-    params: &PaginationParams,
+    params: &TaskPaginationParams,
 ) -> Result<Vec<TaskSmall>, DbError> {
     let mut query_builder = sqlx::QueryBuilder::new(
         r#"SELECT
@@ -38,6 +38,11 @@ pub async fn find_all(
         query_builder.push(" OR t.markdown ILIKE ");
         query_builder.push_bind(format!("%{search}%"));
         query_builder.push(")");
+    }
+
+    if let Some(completed) = &params.completed {
+        query_builder.push(" AND t.completed = ");
+        query_builder.push_bind(completed);
     }
 
     if let Some(assignee) = &params.assignee {
@@ -358,7 +363,7 @@ pub async fn fetch_old_tasks(db: &PgPool) -> Result<Vec<String>, DbError> {
 mod tests {
     use super::*;
     use crate::tests::create_test_user;
-    use crate::types::{PaginationParams, TaskCreate, TaskUpdate};
+    use crate::types::{TaskCreate, TaskPaginationParams, TaskUpdate};
     use chrono::Utc;
     use sqlx::PgPool;
 
@@ -477,10 +482,11 @@ mod tests {
             create_test_task(&db, &user_id, &user_id).await;
         }
 
-        let params = PaginationParams {
+        let params = TaskPaginationParams {
             page: Some(1),
             per_page: Some(10),
             search: None,
+            completed: None,
             assignee: None,
         };
 
@@ -498,11 +504,11 @@ mod tests {
         create_test_task(&db, &user_id, &user_id).await;
         create_test_task(&db, &user_id, &user_id).await;
 
-        let params = PaginationParams {
+        let params = TaskPaginationParams {
             page: Some(1),
             per_page: Some(10),
             search: Some("test".to_string()),
-
+            completed: None,
             assignee: None,
         };
 
@@ -523,11 +529,11 @@ mod tests {
         create_test_task(&db, &creator_id, &assignee1_id).await;
         create_test_task(&db, &creator_id, &assignee2_id).await;
 
-        let params = PaginationParams {
+        let params = TaskPaginationParams {
             page: Some(1),
             per_page: Some(10),
             search: None,
-
+            completed: None,
             assignee: Some(assignee1_id.clone()),
         };
 

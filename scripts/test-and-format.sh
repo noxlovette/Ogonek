@@ -43,6 +43,18 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
+
+echo -e "${YELLOW}📋 Generating OpenAPI spec...${NC}"
+cargo run --bin generate_types
+cp -p openapi.yaml ~/Development/ogonek-swift/
+
+
+echo -e "${YELLOW}Creating sqlx queries...${NC}"
+export DATABASE_URL="
+postgres://postgres:H8QheSCRFCKejvDsbu@localhost:5433/pg-ogonek-dev"
+cargo sqlx prepare
+
+
 echo -e "${GREEN}✅ Rust checks completed successfully${NC}"
 
 # Navigate back to root and then to svelte folder

@@ -9,14 +9,6 @@ export type ApiResult<T> =
   | { success: true; data: T }
   | { success: false; status: number; message: string };
 
-export interface SignupResponse {
-  id: string;
-}
-
-export interface NewResponse {
-  id: string;
-}
-
 export interface AuthResponse {
   accessToken: {
     token: string;

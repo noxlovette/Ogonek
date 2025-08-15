@@ -1,10 +1,10 @@
 <script lang="ts">
   import { Video } from "lucide-svelte";
   import SidebarItem from "./SidebarItem.svelte";
-  import { teacherData } from "$lib/stores";
+  import { getContext } from "svelte";
 
-  let href = $teacherData.teacherVideoCallUrl
-    ? $teacherData.teacherVideoCallUrl
+  let href = getContext<string>("callURL")
+    ? getContext<string>("callURL")
     : "https://zoom.us";
 </script>
 

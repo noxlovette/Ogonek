@@ -63,24 +63,17 @@ impl NotificationType {
                     id
                 )
             }
-            Self::LessonCreated => {
-                format!("You have a new Lesson")
-            }
+            Self::LessonCreated => "You have a new lesson".to_string(),
         }
     }
 }
 
 /// Escapes user content for Telegram MarkdownV2
-/// ONLY escapes characters that can break parsing in user input
-/// Does NOT escape markdown formatting characters like [], (), etc.
 fn escape_markdown_v2(text: &str) -> String {
-    // Only escape these specific chars that break MarkdownV2 in user content
     text.chars()
         .map(|c| match c {
-            '_' | '*' | '[' | ']' | '~' | '`' | '>' | '#' | '+' | '=' | '|' | '{' | '}' | '.'
-            | '!' | '\\' => {
-                format!("\\{}", c)
-            }
+            '_' | '*' | '[' | ']' | '(' | ')' | '~' | '`' | '>' | '#' | '+' | '-' | '=' | '|'
+            | '{' | '}' | '.' | '!' | '\\' => format!("\\{c}"),
             _ => c.to_string(),
         })
         .collect()

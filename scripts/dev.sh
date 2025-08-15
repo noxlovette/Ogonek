@@ -10,6 +10,9 @@ echo -e "${BLUE}🚀 Starting Ogonek development environment...${NC}"
 
 echo -e "${YELLOW}📋 Generating OpenAPI spec...${NC}"
 cd axum
+cargo run --bin generate_types
+cp -p openapi.yaml ~/Development/ogonek-swift/
+
 echo -e "${YELLOW}💾 Setting up environment...${NC}"
 export DATABASE_URL="
 postgres://postgres:H8QheSCRFCKejvDsbu@postgres:5432/pg-ogonek-dev"
@@ -17,7 +20,7 @@ postgres://postgres:H8QheSCRFCKejvDsbu@postgres:5432/pg-ogonek-dev"
 echo -e "${GREEN}🐳 Starting Docker Compose...${NC}"
 cd ..
 
-docker compose -f compose.dev.yaml up -d
+docker compose -f ./compose/compose.dev.yaml up -d
 
 cd axum
 echo -e "${YELLOW}Creating sqlx queries...${NC}"

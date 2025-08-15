@@ -1,0 +1,137 @@
+export interface Task {
+  id: string;
+  title: string;
+  markdown: string;
+  priority: number;
+  createdAt: string;
+  updatedAt: string;
+  dueDate: string;
+  completed: boolean;
+  createdBy: string;
+  assignee: string;
+  assigneeName: string;
+}
+
+export interface FileSmall {
+  id: string;
+  name: string;
+  s3Key: string;
+  mimeType?: string;
+  size: number;
+  ownerId: string;
+}
+
+export interface File {
+  id: string;
+  name: string;
+  s3Key: string;
+  mimeType?: string;
+  size: number;
+  ownerId: string;
+}
+
+export interface TaskSmall {
+  id: string;
+  title: string;
+  dueDate: string;
+  completed: boolean;
+  priority: number;
+  assigneeName: string;
+  seen: boolean;
+}
+
+export interface ActivityLog {
+  modelType: string;
+  modelId: string;
+  action: string;
+  createdAt: string;
+}
+
+export interface Profile {
+  userId: string;
+  videoCallUrl: string | null;
+  avatarUrl: string | null;
+  telegramId: string | null;
+  [key: string]: string | undefined | null;
+}
+
+export interface User {
+  name: string | null;
+  username: string | null;
+  role: string | null;
+  email: string | null;
+  id: string | null;
+  [key: string]: string | undefined | null;
+}
+
+export interface Lesson {
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+  assignee: string;
+  topic: string;
+  title: string;
+  assigneeName: string;
+  markdown: string;
+}
+
+export interface LessonSmall {
+  id: string;
+  createdAt: string;
+  title: string;
+  topic: string;
+  assigneeName: string;
+  seen: boolean;
+}
+
+export interface Student {
+  id: string;
+  name: string;
+  username: string;
+  email: string;
+  markdown: string | null;
+  studentTelegramId: string | null;
+}
+
+export interface Deck {
+  id: string;
+  title: string;
+  description?: string;
+  assignee: string;
+  isSubscribed: boolean;
+  visibility: "public" | "private" | "assigned";
+  createdBy: string;
+  createdAt: string;
+}
+
+export interface DeckSmall {
+  id: string;
+  isSubscribed?: boolean;
+  title: string;
+  description: string;
+  visibility: "private" | "assigned" | "public";
+  seen: boolean;
+  assigneeName: string;
+}
+export interface Card {
+  id: string;
+  front: string;
+  back: string;
+  mediaUrl?: string | null;
+  deckId: string;
+  createdAt?: string;
+}
+
+export interface CardProgress {
+  id: string;
+  cardId: string;
+  userId: string;
+  reviewCount: number;
+  lastReviewed: string | null;
+  dueDate: string;
+  easeFactor: number;
+  interval: number;
+  front: string;
+  back: string;
+  mediaUrl: string | null;
+}

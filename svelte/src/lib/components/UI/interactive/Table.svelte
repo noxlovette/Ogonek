@@ -17,14 +17,7 @@
     sortOrder?: "asc" | "desc";
   }
 
-  let {
-    items,
-    config,
-    href,
-    total = items.length,
-    currentPage = 1,
-    pageSize = 20,
-  }: Props = $props();
+  let { items, config, href }: Props = $props();
 
   function handleRowClick(item: any, event: KeyboardEvent | MouseEvent) {
     if (

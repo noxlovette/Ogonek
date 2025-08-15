@@ -8,8 +8,8 @@ services:
     ports:
       - "5173:5173"
     volumes:
-      - ./svelte/src:/app/src
-      - ./svelte/messages:/app/messages
+      - ../svelte/src:/app/src
+      - ../svelte/messages:/app/messages
     env_file:
       - ../svelte/.env
     depends_on:
@@ -34,7 +34,7 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - ./axum:/app
+      - ../axum:/app
       - cargo-cache:/usr/local/cargo/registry
       - cargo-target:/app/target
     env_file:

@@ -1,12 +1,16 @@
 import { env } from "$env/dynamic/private";
 import { routes } from "$lib/routes";
 import redis from "$lib/server/redisClient";
-import type { DashboardData } from "$lib/types";
+import type { AppContext, NotificationBadges } from "$lib/types";
 import type { LayoutServerLoad } from "./$types";
 export const load: LayoutServerLoad = async ({ fetch }) => {
-  const dashboardData = (await fetch(routes.users.dashboard()).then((res) =>
+  const context = (await fetch(routes.state.context()).then((res) =>
     res.json(),
-  )) as DashboardData;
+  )) as AppContext;
+
+  const badges = (await fetch(routes.state.badges()).then((res) =>
+    res.json(),
+  )) as NotificationBadges;
 
   const word = redis.get("wordAPI").then(async (cachedWord) => {
     if (cachedWord) {
@@ -29,16 +33,12 @@ export const load: LayoutServerLoad = async ({ fetch }) => {
   });
 
   return {
-    students: dashboardData.students,
-    lessons: dashboardData.lessons,
-    tasks: dashboardData.tasks,
-    decks: dashboardData.decks,
     word,
-    profile: dashboardData.profile.profile,
-    teacherData: dashboardData.profile.teacherData,
-    user: dashboardData.user,
-    activity: dashboardData.activity,
-    learn: dashboardData.learn,
-    preferences: dashboardData.preferences,
+    badges,
+    context,
+    user: context.user,
+    profile: context.profile,
+    callURL: context.callUrl,
+    students: context.students,
   };
 };
