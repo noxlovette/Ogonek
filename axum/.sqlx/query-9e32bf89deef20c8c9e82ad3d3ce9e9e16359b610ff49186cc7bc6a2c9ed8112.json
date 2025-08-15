@@ -1,0 +1,19 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "UPDATE decks\n         SET\n            title = COALESCE($1, title),\n            description = COALESCE($2, description),\n            visibility = COALESCE($3, visibility),\n            assignee = COALESCE($4, assignee)\n         WHERE id = $5 AND created_by = $6",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Varchar",
+        "Text",
+        "Varchar",
+        "Varchar",
+        "Text",
+        "Text"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "9e32bf89deef20c8c9e82ad3d3ce9e9e16359b610ff49186cc7bc6a2c9ed8112"
+}

@@ -16,17 +16,7 @@
       {
         "ordinal": 2,
         "name": "role",
-        "type_info": {
-          "Custom": {
-            "name": "user_role",
-            "kind": {
-              "Enum": [
-                "teacher",
-                "student"
-              ]
-            }
-          }
-        }
+        "type_info": "Varchar"
       },
       {
         "ordinal": 3,

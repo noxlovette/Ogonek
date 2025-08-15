@@ -1,0 +1,22 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        SELECT\n            p.telegram_id\n        FROM teacher_student ts\n        JOIN profile p ON ts.teacher_id = p.user_id\n        WHERE ts.student_id = $1\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "telegram_id",
+        "type_info": "Varchar"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text"
+      ]
+    },
+    "nullable": [
+      true
+    ]
+  },
+  "hash": "a6551a721fe7b41867f8074563c6492611bc04fdbd1cc25abd80aa2a4006def4"
+}

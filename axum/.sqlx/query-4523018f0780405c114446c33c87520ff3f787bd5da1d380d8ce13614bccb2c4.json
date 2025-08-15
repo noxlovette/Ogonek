@@ -1,0 +1,22 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        SELECT\n            p.video_call_url\n        FROM teacher_student ts\n        JOIN profile p ON ts.teacher_id = p.user_id\n        WHERE ts.student_id = $1\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "video_call_url",
+        "type_info": "Varchar"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text"
+      ]
+    },
+    "nullable": [
+      true
+    ]
+  },
+  "hash": "4523018f0780405c114446c33c87520ff3f787bd5da1d380d8ce13614bccb2c4"
+}
