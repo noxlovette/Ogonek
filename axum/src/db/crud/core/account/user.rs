@@ -54,14 +54,14 @@ pub async fn update(db: &PgPool, user_id: &str, update: &UserUpdate) -> Result<(
     .execute(db)
     .await
     .map_err(|e| {
-        if let sqlx::Error::Database(dbe) = &e {
-            if let Some(constraint) = dbe.constraint() {
-                if constraint == "user_username_key" {
-                    return DbError::AlreadyExists("Username already taken".into());
-                }
-                if constraint == "user_email_key" {
-                    return DbError::AlreadyExists("Email already taken".into());
-                }
+        if let sqlx::Error::Database(dbe) = &e
+            && let Some(constraint) = dbe.constraint()
+        {
+            if constraint == "user_username_key" {
+                return DbError::AlreadyExists("Username already taken".into());
+            }
+            if constraint == "user_email_key" {
+                return DbError::AlreadyExists("Email already taken".into());
             }
         }
         tracing::error!("Database error when updating user: {:?}", e);

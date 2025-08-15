@@ -34,10 +34,10 @@ async fn cleanup_task(state: &AppState, id: String) -> Result<(), AppError> {
     delete_system(&state.db, &id, file_ids).await?;
 
     for file in files {
-        if let Some(s3_key) = file.s3_key {
-            if let Err(e) = delete_s3(&s3_key, state).await {
-                tracing::error!("Failed to delete file from S3: {}, error: {:?}", s3_key, e);
-            }
+        if let Some(s3_key) = file.s3_key
+            && let Err(e) = delete_s3(&s3_key, state).await
+        {
+            tracing::error!("Failed to delete file from S3: {}, error: {:?}", s3_key, e);
         }
     }
 
