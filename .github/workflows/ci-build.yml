@@ -1,19 +1,22 @@
-name: CI Build
+name: CI/CD Pipeline
 
 on:
   push:
-    branches: [main]
+    branches: [main, develop]
   pull_request:
-    branches: [main]
+    branches: [main, develop]
+
+env:
+  CARGO_TERM_COLOR: always
 
 jobs:
   rust-backend:
-    name: Rust Backend Tests
+    name: 🦀 Rust Backend
     runs-on: ubuntu-latest
 
     services:
       postgres:
-        image: postgres:alpine
+        image: postgres:15-alpine
         env:
           POSTGRES_DB: test_db
           POSTGRES_USER: testuser
@@ -44,15 +47,15 @@ jobs:
       API_KEY: ${{ secrets.API_KEY }}
 
     steps:
-      - name: Checkout
+      - name: 📥 Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Rust
+      - name: 🦀 Setup Rust toolchain
         uses: dtolnay/rust-toolchain@stable
         with:
           components: rustfmt, clippy
 
-      - name: Cache Rust dependencies
+      - name: 📦 Cache Rust dependencies
         uses: actions/cache@v4
         with:
           path: |
@@ -65,61 +68,79 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-cargo-
 
-      - name: Install sqlx-cli
+      - name: 🔧 Install sqlx-cli
         run: cargo install sqlx-cli --version 0.8.6 --no-default-features --features native-tls,postgres --force
 
-      - name: Run database migrations
-        run: |
-          cd axum
-          sqlx migrate run
+      - name: 🗄️  Run database migrations
+        working-directory: axum
+        run: sqlx migrate run
 
-      - name: Rust Clippy
-        run: |
-          cd axum
-          cargo clippy -- -D warnings
+      - name: 🎨 Check Rust formatting
+        working-directory: axum
+        run: cargo fmt --check
 
-      - name: Rust Tests
-        run: |
-          cd axum
-          cargo test
+      - name: 🔍 Run Clippy linter
+        working-directory: axum
+        run: cargo clippy -- -D warnings
+
+      - name: 🧪 Run Rust tests
+        working-directory: axum
+        run: cargo test
+
+      - name: 🗄️  Prepare sqlx queries
+        working-directory: axum
+        run: cargo sqlx prepare --check
+
+      - name: 📋 Generate OpenAPI spec
+        working-directory: axum
+        run: cargo run --bin generate_types
+
+      - name: 📤 Upload OpenAPI spec
+        uses: actions/upload-artifact@v4
+        with:
+          name: openapi-spec
+          path: axum/openapi.yaml
+          retention-days: 30
 
   svelte-frontend:
-    name: Svelte Frontend Tests
+    name: ⚡ Svelte Frontend
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: 📥 Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
+      - name: 📦 Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "24"
+          node-version: "22"
+          cache: "pnpm"
+          cache-dependency-path: svelte/pnpm-lock.yaml
 
-      - name: Install pnpm
+      - name: 📦 Install pnpm
         uses: pnpm/action-setup@v4
         with:
           package_json_file: svelte/package.json
 
-      - name: Cache pnpm dependencies
-        uses: actions/cache@v4
+      - name: 📦 Install dependencies
+        working-directory: svelte
+        run: pnpm install --frozen-lockfile
+
+      - name: 🎨 Check formatting
+        working-directory: svelte
+        run: pnpm format:check
+
+      #- name: 🔍 Type check
+      #  working-directory: svelte
+      #  run: pnpm check
+
+      - name: 🏗️  Build application
+        working-directory: svelte
+        run: pnpm build
+
+      - name: 📤 Upload build artifacts
+        uses: actions/upload-artifact@v4
         with:
-          path: ~/.pnpm-store
-          key: ${{ runner.os }}-pnpm-${{ hashFiles('svelte/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-
-
-      - name: Install Svelte dependencies
-        run: |
-          cd svelte
-          pnpm install --frozen-lockfile
-
-      - name: Svelte Format Check
-        run: |
-          cd svelte
-          pnpm run format
-
-      - name: Svelte Build
-        run: |
-          cd svelte
-          pnpm run build
+          name: svelte-build
+          path: svelte/build/
+          retention-days: 7

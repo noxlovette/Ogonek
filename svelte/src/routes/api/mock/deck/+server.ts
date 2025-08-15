@@ -6,7 +6,7 @@ export const GET: RequestHandler = async () => {
   const decks: DeckSmall[] = [
     {
       id: "deck1",
-      name: "Hello there",
+      title: "Hello there",
       description: "Murrrrrr",
       assigneeName: "Kotya",
       visibility: "assigned",
@@ -15,7 +15,7 @@ export const GET: RequestHandler = async () => {
     },
     {
       id: "deck2",
-      name: "Hello there",
+      title: "Hello there",
       description: "Kotya Assigned",
       assigneeName: "Kotya",
       visibility: "private",
