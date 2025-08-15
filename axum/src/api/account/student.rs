@@ -4,8 +4,8 @@ use crate::auth::Claims;
 use crate::db::crud::core::account::student;
 use crate::db::crud::core::flashcards::deck;
 use crate::db::crud::core::{lesson, task};
-use crate::types::{CompositeStudent, Student, UpdateStudentRequest};
 use crate::schema::AppState;
+use crate::types::{CompositeStudent, Student, UpdateStudentRequest};
 use axum::extract::{Json, Path, State};
 
 use axum::http::StatusCode;

@@ -1,14 +1,13 @@
 use crate::auth::error::AuthError;
 use crate::db::error::DbError;
-use crate::types::{AuthPayload, CreationId, SignUpPayload, User};
+use crate::types::{AuthPayload, SignUpPayload, User};
 use nanoid::nanoid;
 use sqlx::PgPool;
 
-pub async fn signup(db: &PgPool, create: &SignUpPayload) -> Result<CreationId, DbError> {
+pub async fn signup(db: &PgPool, create: &SignUpPayload) -> Result<String, DbError> {
     let id = nanoid!();
 
-    let id = sqlx::query_as!(
-        CreationId,
+    let id = sqlx::query_scalar!(
         r#"
             INSERT INTO "user" (name, username, email, role, pass, verified, id)
             VALUES ($1, $2, $3, $4, $5, false, $6)
@@ -71,7 +70,7 @@ pub async fn fetch_by_id(db: &PgPool, user_id: &str) -> Result<User, AuthError> 
     let user = sqlx::query_as!(
         User,
         r#"
-        SELECT username, email, role, id, name, pass 
+        SELECT username, email, role, id, name, pass
         FROM "user"
         WHERE id = $1
         "#,
@@ -103,12 +102,12 @@ mod tests {
         assert!(result.is_ok());
 
         let creation_id = result.unwrap();
-        assert!(!creation_id.id.is_empty());
+        assert!(!creation_id.is_empty());
 
         // Verify user was created in database
         let user = sqlx::query!(
             r#"SELECT name, username, email, role, verified FROM "user" WHERE id = $1"#,
-            creation_id.id
+            creation_id
         )
         .fetch_one(&pool)
         .await?;
@@ -201,7 +200,7 @@ mod tests {
         assert_eq!(user.email, "jane@example.com");
         assert_eq!(user.role, "teacher");
         assert_eq!(user.name, "Jane Doe");
-        assert_eq!(user.id, creation_result.id);
+        assert_eq!(user.id, creation_result);
 
         Ok(())
     }
@@ -229,7 +228,7 @@ mod tests {
             role: "teacher".to_string(),
             pass: "hashedpass".to_string(),
         };
-        let teacher_id = signup(&pool, &teacher_signup).await.unwrap().id;
+        let teacher_id = signup(&pool, &teacher_signup).await.unwrap();
 
         // Create student
         let student_signup = SignUpPayload {
@@ -239,7 +238,7 @@ mod tests {
             role: "student".to_string(),
             pass: "hashedpass".to_string(),
         };
-        let student_id = signup(&pool, &student_signup).await.unwrap().id;
+        let student_id = signup(&pool, &student_signup).await.unwrap();
 
         // Test binding
         let result = bind(&pool, &teacher_id, &student_id).await;
@@ -270,7 +269,7 @@ mod tests {
             role: "teacher".to_string(),
             pass: "hashedpass".to_string(),
         };
-        let teacher_id = signup(&pool, &teacher_signup).await.unwrap().id;
+        let teacher_id = signup(&pool, &teacher_signup).await.unwrap();
 
         let student_signup = SignUpPayload {
             name: "Student Jones".to_string(),
@@ -279,7 +278,7 @@ mod tests {
             role: "student".to_string(),
             pass: "hashedpass".to_string(),
         };
-        let student_id = signup(&pool, &student_signup).await.unwrap().id;
+        let student_id = signup(&pool, &student_signup).await.unwrap();
 
         // First binding should succeed
         let result1 = bind(&pool, &teacher_id, &student_id).await;
@@ -317,11 +316,11 @@ mod tests {
         let creation_result = signup(&pool, &signup_data).await.unwrap();
 
         // Test fetch by ID
-        let result = fetch_by_id(&pool, &creation_result.id).await;
+        let result = fetch_by_id(&pool, &creation_result).await;
         assert!(result.is_ok());
 
         let user = result.unwrap();
-        assert_eq!(user.id, creation_result.id);
+        assert_eq!(user.id, creation_result);
         assert_eq!(user.username, "alice");
         assert_eq!(user.email, "alice@example.com");
         assert_eq!(user.role, "admin");

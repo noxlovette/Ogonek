@@ -46,8 +46,8 @@ pub async fn get_simple_stats(db: &PgPool, user_id: &str) -> Result<SimpleStats,
     let cards_today = sqlx::query_scalar!(
         r#"
         SELECT COUNT(*)::int
-        FROM card_progress 
-        WHERE user_id = $1 
+        FROM card_progress
+        WHERE user_id = $1
         AND last_reviewed::date = CURRENT_DATE
         "#,
         user_id
@@ -61,13 +61,13 @@ pub async fn get_simple_stats(db: &PgPool, user_id: &str) -> Result<SimpleStats,
         r#"
         WITH daily_reviews AS (
             SELECT DISTINCT last_reviewed::date as review_date
-            FROM card_progress 
-            WHERE user_id = $1 
+            FROM card_progress
+            WHERE user_id = $1
             AND last_reviewed IS NOT NULL
             ORDER BY review_date DESC
         ),
         consecutive_days AS (
-            SELECT 
+            SELECT
                 review_date,
                 ROW_NUMBER() OVER (ORDER BY review_date DESC) as rn,
                 review_date - (ROW_NUMBER() OVER (ORDER BY review_date DESC) * interval '1 day') as group_date
@@ -77,9 +77,9 @@ pub async fn get_simple_stats(db: &PgPool, user_id: &str) -> Result<SimpleStats,
         SELECT COUNT(*)::int
         FROM consecutive_days
         WHERE group_date = (
-            SELECT group_date 
-            FROM consecutive_days 
-            WHERE review_date = CURRENT_DATE 
+            SELECT group_date
+            FROM consecutive_days
+            WHERE review_date = CURRENT_DATE
             OR review_date = CURRENT_DATE - interval '1 day'
             LIMIT 1
         )
@@ -183,7 +183,7 @@ mod tests {
     async fn create_test_deck(db: &PgPool, user_id: &str, name: &str) -> String {
         let deck_id = nanoid::nanoid!();
         sqlx::query!(
-            "INSERT INTO decks (id, name, created_by) VALUES ($1, $2, $3)",
+            "INSERT INTO decks (id, title, created_by) VALUES ($1, $2, $3)",
             deck_id,
             name,
             user_id
@@ -336,7 +336,6 @@ mod tests {
         let result = find_by_id(&db, &progress_id, &user_id).await.unwrap();
 
         // Assert
-        assert_eq!(result.id, progress_id);
         assert_eq!(result.user_id, user_id);
         assert_eq!(result.card_id, card_id);
         assert_eq!(result.review_count, 5);
@@ -411,8 +410,8 @@ mod tests {
         // Modify the progress to have advanced values
         sqlx::query!(
             r#"
-            UPDATE card_progress 
-            SET review_count = 10, ease_factor = 3.0, interval = 30, 
+            UPDATE card_progress
+            SET review_count = 10, ease_factor = 3.0, interval = 30,
                 last_reviewed = CURRENT_TIMESTAMP, due_date = CURRENT_TIMESTAMP + INTERVAL '30 days'
             WHERE id = $1
             "#,
@@ -424,8 +423,8 @@ mod tests {
 
         sqlx::query!(
             r#"
-            UPDATE card_progress 
-            SET review_count = 5, ease_factor = 2.8, interval = 15, 
+            UPDATE card_progress
+            SET review_count = 5, ease_factor = 2.8, interval = 15,
                 last_reviewed = CURRENT_TIMESTAMP, due_date = CURRENT_TIMESTAMP + INTERVAL '15 days'
             WHERE id = $1
             "#,

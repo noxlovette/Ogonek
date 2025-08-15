@@ -10,9 +10,6 @@ use utoipa::OpenApi;
         learn::subscribe_to_deck,
         learn::unsubscribe_from_deck,
     ),
-    components(schemas(
-        crate::types::CardProgressWithFields,
-        crate::types::UpdateCardProgress,
-    ))
+    components(schemas(crate::types::CardProgressWithFields, crate::types::UpdateCardProgress,))
 )]
 pub struct LearnApi;

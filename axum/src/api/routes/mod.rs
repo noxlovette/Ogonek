@@ -5,6 +5,7 @@ pub mod lesson_routes;
 pub mod notification_routes;
 pub mod preference_routes;
 pub mod s3_routes;
+pub mod state_routes;
 pub mod task_routes;
 pub mod user_routes;
 
@@ -14,5 +15,6 @@ pub use learn_routes::learn_routes;
 pub use lesson_routes::lesson_routes;
 pub use notification_routes::notification_routes;
 pub use s3_routes::s3_routes;
+pub use state_routes::*;
 pub use task_routes::task_routes;
 pub use user_routes::user_routes;

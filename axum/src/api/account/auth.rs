@@ -5,9 +5,9 @@ use crate::auth::error::AuthError;
 use crate::auth::password::{hash_password, verify_password};
 use crate::auth::tokens::{self, decode_token, generate_token};
 use crate::db::crud::core::account::auth;
-use crate::types::users::{AuthPayload, BindPayload, SignUpPayload, TokenPair};
-use crate::types::{CreationId, InviteQuery, RefreshTokenPayload, RefreshTokenResponse};
 use crate::schema::AppState;
+use crate::types::users::{AuthPayload, BindPayload, SignUpPayload, TokenPair};
+use crate::types::{InviteQuery, RefreshTokenPayload, RefreshTokenResponse};
 use axum::extract::{Json, Query, State};
 use axum::http::StatusCode;
 use validator::Validate;
@@ -24,7 +24,7 @@ use validator::Validate;
 pub async fn signup(
     State(state): State<AppState>,
     Json(payload): Json<SignUpPayload>,
-) -> Result<Json<CreationId>, APIError> {
+) -> Result<Json<String>, APIError> {
     if payload.username.is_empty() || payload.pass.is_empty() {
         return Err(APIError::InvalidCredentials);
     }

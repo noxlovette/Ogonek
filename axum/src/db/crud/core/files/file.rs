@@ -168,8 +168,8 @@ pub async fn fetch_files_task(db: &PgPool, id: &str) -> Result<Vec<FileSmall>, D
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::types::{FileListParams, FileUpdate};
     use crate::tests::create_test_user;
+    use crate::types::{FileListParams, FileUpdate};
     use sqlx::PgPool;
 
     async fn create_test_file(

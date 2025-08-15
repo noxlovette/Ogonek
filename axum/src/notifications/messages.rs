@@ -1,4 +1,3 @@
-// src/notifications/types.rs
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

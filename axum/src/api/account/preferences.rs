@@ -2,8 +2,8 @@
 use crate::api::error::APIError;
 use crate::auth::Claims;
 use crate::db::crud::core::account::preferences;
-use crate::types::preferences::{UserPreferencesResponse, UserPreferencesUpdate};
 use crate::schema::AppState;
+use crate::types::preferences::{UserPreferencesResponse, UserPreferencesUpdate};
 use axum::extract::{Json, State};
 use axum::http::StatusCode;
 

@@ -19,20 +19,3 @@ pub struct ProfileUpdate {
     pub avatar_url: Option<String>,
     pub telegram_id: Option<String>,
 }
-
-/// This is sent along with dashboard data to
-/// include teacher video url and stuff if the user is a student
-#[derive(Serialize, ToSchema)]
-#[serde(rename_all = "camelCase")]
-pub struct ProfileWithTS {
-    pub profile: Profile,
-    pub teacher_data: Option<TeacherData>,
-}
-
-/// Video Call URL and the teacher's TelegramID
-#[derive(Serialize, ToSchema)]
-#[serde(rename_all = "camelCase")]
-pub struct TeacherData {
-    pub teacher_video_call_url: Option<String>,
-    pub teacher_telegram_id: Option<String>,
-}

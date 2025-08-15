@@ -137,7 +137,7 @@ impl From<crate::auth::error::AuthError> for AppError {
 }
 
 impl From<reqwest::Error> for AppError {
-    fn from(err: reqwest::Error) -> Self {
+    fn from(_err: reqwest::Error) -> Self {
         Self::BadRequest("HTTP client error".into())
     }
 }

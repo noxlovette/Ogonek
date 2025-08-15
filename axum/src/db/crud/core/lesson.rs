@@ -1,14 +1,12 @@
 use crate::db::error::DbError;
-use crate::types::{
-    CreationId, LessonCreate, LessonFull, LessonPaginationParams, LessonSmall, LessonUpdate,
-};
+use crate::types::{LessonCreate, LessonFull, LessonSmall, LessonUpdate, PaginationParams};
 use sqlx::PgPool;
 
 /// Finds a list of mini-lessons (no markdown) according to passed Pagination params
 pub async fn find_all(
     db: &PgPool,
     user_id: &str,
-    params: &LessonPaginationParams,
+    params: &PaginationParams,
 ) -> Result<Vec<LessonSmall>, DbError> {
     let mut query_builder = sqlx::QueryBuilder::new(
         r#"
@@ -117,19 +115,14 @@ pub async fn find_by_id(
     Ok(lesson)
 }
 
-pub async fn create(
-    db: &PgPool,
-    user_id: &str,
-    create: LessonCreate,
-) -> Result<CreationId, DbError> {
+pub async fn create(db: &PgPool, user_id: &str, create: LessonCreate) -> Result<String, DbError> {
     let mut assignee = user_id;
 
     if create.assignee.is_some() {
         assignee = create.assignee.as_ref().unwrap();
     }
 
-    let id = sqlx::query_as!(
-        CreationId,
+    let id = sqlx::query_scalar!(
         "INSERT INTO lessons (id, title, topic, markdown, created_by, assignee)
          VALUES ($1, $2, $3, $4, $5, $6)
          RETURNING id",
@@ -147,9 +140,8 @@ pub async fn create(
 }
 
 /// Takes user preferences to define defaults
-pub async fn create_with_defaults(db: &PgPool, user_id: &str) -> Result<CreationId, DbError> {
-    let id = sqlx::query_as!(
-        CreationId,
+pub async fn create_with_defaults(db: &PgPool, user_id: &str) -> Result<String, DbError> {
+    let id = sqlx::query_scalar!(
         "INSERT INTO lessons (id, title, topic, markdown, created_by, assignee)
          VALUES ($1, $2, $3, $4, $5, $6)
          RETURNING id",
@@ -247,7 +239,7 @@ pub async fn count(db: &PgPool, user_id: &str) -> Result<i64, DbError> {
 mod tests {
     use super::*;
     use crate::tests::create_test_user;
-    use crate::types::{LessonCreate, LessonPaginationParams, LessonUpdate};
+    use crate::types::{LessonCreate, LessonUpdate, PaginationParams};
     use sqlx::PgPool;
 
     #[sqlx::test]
@@ -265,7 +257,7 @@ mod tests {
         assert!(result.is_ok());
 
         let creation_id = result.unwrap();
-        assert!(!creation_id.id.is_empty());
+        assert!(!creation_id.is_empty());
     }
 
     #[sqlx::test]
@@ -275,7 +267,7 @@ mod tests {
         let result = create_with_defaults(&db, &user_id).await;
         assert!(result.is_ok());
 
-        let lesson_id = result.unwrap().id;
+        let lesson_id = result.unwrap();
         assert!(!lesson_id.is_empty());
     }
 
@@ -295,7 +287,7 @@ mod tests {
         assert!(result.is_ok());
 
         // Verify the lesson was created with correct assignee
-        let lesson = find_by_id(&db, &result.unwrap().id, &assignee).await;
+        let lesson = find_by_id(&db, &result.unwrap(), &assignee).await;
         assert!(lesson.is_ok());
         assert_eq!(lesson.unwrap().assignee, assignee);
     }
@@ -313,7 +305,7 @@ mod tests {
 
         let creation_id = create(&db, &user, lesson_create).await.unwrap();
 
-        let result = find_by_id(&db, &creation_id.id, &user).await;
+        let result = find_by_id(&db, &creation_id, &user).await;
         assert!(result.is_ok());
 
         let lesson = result.unwrap();
@@ -336,7 +328,7 @@ mod tests {
 
         let creation_id = create(&db, &creator, lesson_create).await.unwrap();
 
-        let result = find_by_id(&db, &creation_id.id, &assignee).await;
+        let result = find_by_id(&db, &creation_id, &assignee).await;
         assert!(result.is_ok());
 
         let lesson = result.unwrap();
@@ -358,7 +350,7 @@ mod tests {
 
         let creation_id = create(&db, &creator, lesson_create).await.unwrap();
 
-        let result = find_by_id(&db, &creation_id.id, &other_user).await;
+        let result = find_by_id(&db, &creation_id, &other_user).await;
         assert!(result.is_err());
     }
 
@@ -377,7 +369,7 @@ mod tests {
             create(&db, &user, lesson_create).await.unwrap();
         }
 
-        let params = LessonPaginationParams {
+        let params = PaginationParams {
             page: Some(1),
             per_page: Some(10),
             search: None,
@@ -412,7 +404,7 @@ mod tests {
         create(&db, &user, lesson_create1).await.unwrap();
         create(&db, &user, lesson_create2).await.unwrap();
 
-        let params = LessonPaginationParams {
+        let params = PaginationParams {
             page: Some(1),
             per_page: Some(10),
             search: Some("Rust".to_string()),
@@ -449,7 +441,7 @@ mod tests {
         create(&db, &creator, lesson_create1).await.unwrap();
         create(&db, &creator, lesson_create2).await.unwrap();
 
-        let params = LessonPaginationParams {
+        let params = PaginationParams {
             page: Some(1),
             per_page: Some(10),
             search: None,
@@ -510,11 +502,11 @@ mod tests {
             created_by: None,
         };
 
-        let result = update(&db, &creation_id.id, &user, &lesson_update).await;
+        let result = update(&db, &creation_id, &user, &lesson_update).await;
         assert!(result.is_ok());
 
         // Verify the update
-        let updated_lesson = find_by_id(&db, &creation_id.id, &user).await.unwrap();
+        let updated_lesson = find_by_id(&db, &creation_id, &user).await.unwrap();
         assert_eq!(updated_lesson.title, "Updated Title");
         assert_eq!(updated_lesson.topic, "Updated Topic");
         assert_eq!(updated_lesson.markdown, "# Original Content"); // Should remain unchanged
@@ -543,11 +535,11 @@ mod tests {
             created_by: None,
         };
 
-        let result = update(&db, &creation_id.id, &other_user, &lesson_update).await;
+        let result = update(&db, &creation_id, &other_user, &lesson_update).await;
         assert!(result.is_ok()); // Query succeeds but affects 0 rows
 
         // Verify no changes were made
-        let lesson = find_by_id(&db, &creation_id.id, &creator).await.unwrap();
+        let lesson = find_by_id(&db, &creation_id, &creator).await.unwrap();
         assert_eq!(lesson.title, "Private Lesson");
     }
 
@@ -564,11 +556,11 @@ mod tests {
 
         let creation_id = create(&db, &user, lesson_create).await.unwrap();
 
-        let delete_result = delete(&db, &creation_id.id, &user).await;
+        let delete_result = delete(&db, &creation_id, &user).await;
         assert!(delete_result.is_ok());
 
         // Verify lesson is deleted
-        let find_result = find_by_id(&db, &creation_id.id, &user).await;
+        let find_result = find_by_id(&db, &creation_id, &user).await;
         assert!(find_result.is_err());
     }
 
@@ -586,11 +578,11 @@ mod tests {
 
         let creation_id = create(&db, &creator, lesson_create).await.unwrap();
 
-        let delete_result = delete(&db, &creation_id.id, &other_user).await;
+        let delete_result = delete(&db, &creation_id, &other_user).await;
         assert!(delete_result.is_ok()); // Query succeeds but affects 0 rows
 
         // Verify lesson still exists
-        let find_result = find_by_id(&db, &creation_id.id, &creator).await;
+        let find_result = find_by_id(&db, &creation_id, &creator).await;
         assert!(find_result.is_ok());
     }
 
@@ -643,7 +635,7 @@ mod tests {
         }
 
         // Test first page
-        let params1 = LessonPaginationParams {
+        let params1 = PaginationParams {
             page: Some(1),
             per_page: Some(5),
             search: None,
@@ -654,7 +646,7 @@ mod tests {
         assert_eq!(result1.len(), 5);
 
         // Test second page
-        let params2 = LessonPaginationParams {
+        let params2 = PaginationParams {
             page: Some(2),
             per_page: Some(5),
             search: None,
@@ -665,7 +657,7 @@ mod tests {
         assert_eq!(result2.len(), 5);
 
         // Test third page
-        let params3 = LessonPaginationParams {
+        let params3 = PaginationParams {
             page: Some(3),
             per_page: Some(5),
             search: None,
@@ -676,7 +668,7 @@ mod tests {
         assert_eq!(result3.len(), 5);
 
         // Test fourth page (should have no results)
-        let params4 = LessonPaginationParams {
+        let params4 = PaginationParams {
             page: Some(4),
             per_page: Some(5),
             search: None,

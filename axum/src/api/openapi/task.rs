@@ -1,6 +1,6 @@
 use crate::{
     api::core::task,
-    types::{TaskFull, TaskPaginationParams, TaskSmall, TaskUpdate, TaskWithFilesResponse},
+    types::{PaginationParams, TaskFull, TaskSmall, TaskUpdate, TaskWithFilesResponse},
 };
 use utoipa::OpenApi;
 
@@ -17,7 +17,7 @@ use utoipa::OpenApi;
     components(schemas(
         TaskSmall,
         TaskFull,
-        TaskPaginationParams,
+        PaginationParams,
         TaskUpdate,
         TaskWithFilesResponse,
     ))

@@ -11,8 +11,8 @@ pub async fn daily_cleanup(state: AppState) {
         match fetch_old_tasks(&state.db).await {
             Ok(tasks) => {
                 for task in tasks {
-                    if let Err(e) = cleanup_task(&state, task.id.clone()).await {
-                        tracing::error!("Failed to clean up task {}: {:?}", task.id, e);
+                    if let Err(e) = cleanup_task(&state, task.clone()).await {
+                        tracing::error!("Failed to clean up task {}: {:?}", task, e);
                     }
                 }
             }

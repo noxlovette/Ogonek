@@ -8,10 +8,9 @@ use crate::notifications::dispatch_notification;
 use crate::notifications::messages::NotificationType;
 use crate::schema::AppState;
 use crate::types::{
-    ActionType, LessonFull, LessonPaginationParams, LessonSmall, LessonUpdate, ModelType,
-    PaginatedLessons,
+    ActionType, LessonFull, LessonSmall, LessonUpdate, ModelType, PaginatedLessons,
+    PaginatedResponse, PaginationParams,
 };
-use crate::types::{CreationId, PaginatedResponse};
 use axum::extract::Path;
 use axum::extract::State;
 use axum::extract::{Json, Query};
@@ -67,15 +66,13 @@ pub async fn fetch_lesson(
 )]
 pub async fn list_lessons(
     State(state): State<AppState>,
-    Query(params): Query<LessonPaginationParams>,
+    Query(params): Query<PaginationParams>,
     claims: Claims,
 ) -> Result<Json<PaginatedResponse<LessonSmall>>, APIError> {
     let lessons = lesson::find_all(&state.db, &claims.sub, &params).await?;
-    let count = lesson::count(&state.db, &claims.sub).await?;
 
     Ok(Json(PaginatedResponse {
         data: lessons,
-        total: count,
         page: params.page(),
         per_page: params.limit(),
     }))
@@ -86,7 +83,7 @@ pub async fn list_lessons(
     post,
     path = "",
     tag = LESSON_TAG,responses(
-        (status = 201, description = "Lesson created successfully", body = CreationId),
+        (status = 201, description = "Lesson created successfully", body = String),
         (status = 400, description = "Bad request"),
         (status = 401, description = "Unauthorized")
     )
@@ -94,13 +91,13 @@ pub async fn list_lessons(
 pub async fn create_lesson(
     State(state): State<AppState>,
     claims: Claims,
-) -> Result<Json<CreationId>, APIError> {
+) -> Result<Json<String>, APIError> {
     let id = lesson::create_with_defaults(&state.db, &claims.sub).await?;
 
     log_activity(
         &state.db,
         &claims.sub,
-        &id.id,
+        &id,
         ModelType::Lesson,
         ActionType::Create,
         None,

@@ -3,8 +3,8 @@ use crate::api::error::APIError;
 use crate::auth::password::hash_password;
 use crate::auth::{Claims, tokens};
 use crate::db::crud::core::account::user;
-use crate::types::{InviterQuery, User};
 use crate::schema::AppState;
+use crate::types::{InviterQuery, User};
 use axum::extract::{Json, Query, State};
 use axum::http::StatusCode;
 

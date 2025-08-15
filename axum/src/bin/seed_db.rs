@@ -166,7 +166,7 @@ async fn create_profiles(db: &PgPool, user_ids: &[String]) -> Result<()> {
 
         sqlx::query!(
             r#"
-            UPDATE profile 
+            UPDATE profile
             SET video_call_url = $2, avatar_url = $3, telegram_id = $4
             WHERE user_id = $1
             "#,
@@ -401,7 +401,7 @@ async fn create_decks(db: &PgPool, user_ids: &[String]) -> Result<()> {
 
         sqlx::query!(
             r#"
-            INSERT INTO decks (id, name, description, created_by, assignee)
+            INSERT INTO decks (id, title, description, created_by, assignee)
             VALUES ($1, $2, $3, $4, $5)
             "#,
             deck_id,

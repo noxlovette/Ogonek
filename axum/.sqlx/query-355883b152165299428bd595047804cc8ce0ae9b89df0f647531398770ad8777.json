@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "\n                SELECT\n                    p.telegram_id as teacher_telegram_id,\n                    p.video_call_url as teacher_video_call_url\n                FROM teacher_student ts\n                JOIN profile p ON ts.teacher_id = p.user_id\n                WHERE ts.student_id = $1\n                ",
+  "query": "\n        SELECT\n            p.telegram_id as teacher_telegram_id,\n            p.video_call_url as teacher_video_call_url\n        FROM teacher_student ts                JOIN profile p ON ts.teacher_id = p.user_id\n        WHERE ts.student_id = $1\n        ",
   "describe": {
     "columns": [
       {
@@ -24,5 +24,5 @@
       true
     ]
   },
-  "hash": "7c72c893335a85a79f0fd4b3f4b0cca663f809a1eaedf1c7ae41123fc6bdfe1b"
+  "hash": "355883b152165299428bd595047804cc8ce0ae9b89df0f647531398770ad8777"
 }

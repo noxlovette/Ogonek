@@ -1,12 +1,15 @@
 use crate::api::error::APIError;
 use crate::auth::Claims;
+use crate::db::crud::core::account::student;
 use crate::db::crud::core::flashcards::{self, deck};
 use crate::db::crud::tracking::{delete_seen, insert_as_unseen, log_activity, mark_as_seen};
-use crate::types::{
-    ActionType, CreationId, DeckPaginationParams, DeckPublic, DeckSmall, DeckWithCards,
-    DeckWithCardsUpdate, ModelType,
-};
+use crate::notifications::dispatch_notification;
+use crate::notifications::messages::NotificationType;
 use crate::schema::AppState;
+use crate::types::{
+    ActionType, DeckPublic, DeckSmall, DeckWithCards, DeckWithCardsUpdate, ModelType,
+    PaginatedDecks, PaginatedResponse, PaginationParams,
+};
 use axum::extract::{Json, Path, Query, State};
 use axum::http::StatusCode;
 
@@ -17,7 +20,7 @@ use crate::api::DECK_TAG;
     tag = DECK_TAG,
     path = "",
     responses(
-        (status = 200, description = "Deck created successfully", body = CreationId),
+        (status = 200, description = "Deck created successfully", body = String),
         (status = 400, description = "Bad request"),
         (status = 401, description = "Unauthorized")
     )
@@ -25,13 +28,13 @@ use crate::api::DECK_TAG;
 pub async fn create_deck(
     State(state): State<AppState>,
     claims: Claims,
-) -> Result<Json<CreationId>, APIError> {
+) -> Result<Json<String>, APIError> {
     let id = flashcards::deck::create_with_defaults(&state.db, &claims.sub).await?;
 
     log_activity(
         &state.db,
         &claims.sub,
-        &id.id,
+        &id,
         ModelType::Deck,
         ActionType::Create,
         None,
@@ -47,7 +50,7 @@ pub async fn create_deck(
     tag = DECK_TAG,
     path = "{id}/duplicate",
     responses(
-        (status = 200, description = "Deck duplicated successfully", body = CreationId),
+        (status = 200, description = "Deck duplicated successfully", body = String),
         (status = 400, description = "Bad request"),
         (status = 401, description = "Unauthorized")
     )
@@ -56,13 +59,13 @@ pub async fn duplicate_deck(
     State(state): State<AppState>,
     claims: Claims,
     Path(id): Path<String>,
-) -> Result<Json<CreationId>, APIError> {
+) -> Result<Json<String>, APIError> {
     let new_id = flashcards::deck::duplicate(&state.db, &claims.sub, &id).await?;
 
     log_activity(
         &state.db,
         &claims.sub,
-        &new_id.id,
+        &new_id,
         ModelType::Deck,
         ActionType::Create,
         None,
@@ -111,17 +114,22 @@ pub async fn fetch_deck(
         ("assignee" = Option<String>, Query, description = "Filter by assignee")
     ),
     responses(
-        (status = 200, description = "User decks retrieved", body = Vec<DeckSmall>),
+        (status = 200, description = "User decks retrieved", body = PaginatedDecks),
         (status = 401, description = "Unauthorized")
     )
 )]
 pub async fn list_decks(
     State(state): State<AppState>,
-    Query(params): Query<DeckPaginationParams>,
+    Query(params): Query<PaginationParams>,
     claims: Claims,
-) -> Result<Json<Vec<DeckSmall>>, APIError> {
+) -> Result<Json<PaginatedResponse<DeckSmall>>, APIError> {
     let decks = flashcards::deck::find_all(&state.db, &claims.sub, &params).await?;
-    Ok(Json(decks))
+
+    Ok(Json(PaginatedResponse {
+        data: decks,
+        page: params.page(),
+        per_page: params.limit(),
+    }))
 }
 
 /// Only public decks
@@ -195,6 +203,22 @@ pub async fn update_deck(
                 Some(&new_user),
             )
             .await?;
+
+            let telegram_id = student::get_telegram_id(&state.db, &claims.sub, &new_user).await?;
+            let deck = flashcards::deck::get_deck(&state.db, &id, &claims.sub).await?;
+
+            if let Some(telegram_id) = telegram_id {
+                dispatch_notification(
+                    &state.bot_token,
+                    &state.http_client,
+                    &telegram_id,
+                    NotificationType::DeckCreated {
+                        title: deck.title,
+                        id: deck.id,
+                    },
+                )
+                .await?;
+            }
         }
     } else if let Some(assignee) = current_assignee {
         // treat as update

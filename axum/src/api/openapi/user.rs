@@ -1,5 +1,4 @@
 use crate::api::account::*;
-use crate::api::core::dashboard;
 use crate::types::DashboardData;
 use utoipa::OpenApi;
 
@@ -17,7 +16,6 @@ use utoipa::OpenApi;
         update_student,
         fetch_student,
         list_students,
-        dashboard::fetch_dashboard,
     ),
     components(schemas(crate::types::User, crate::types::InviteToken, DashboardData))
 )]

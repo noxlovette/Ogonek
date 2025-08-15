@@ -13,7 +13,7 @@ pub async fn create_test_user(db: &PgPool, username: &str, email: &str) -> Strin
         email,
         "Test Name",
         "hashed_password",
-        "user",
+        "student",
         false
     )
     .execute(db)

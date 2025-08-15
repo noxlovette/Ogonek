@@ -6,7 +6,7 @@ pub async fn find_by_id(db: &PgPool, user_id: &str) -> Result<User, DbError> {
     let user = sqlx::query_as!(
         User,
         r#"
-        SELECT username, email, role, id, name, pass 
+        SELECT username, email, role, id, name, pass
         FROM "user"
         WHERE id = $1
         "#,
@@ -42,15 +42,13 @@ pub async fn update(db: &PgPool, user_id: &str, update: &UserUpdate) -> Result<(
             name = COALESCE($1, name),
             username = COALESCE($2, username),
             email = COALESCE($3, email),
-            pass = COALESCE($4, pass),
-            role = COALESCE($5, role)
-        WHERE id = $6
+            pass = COALESCE($4, pass)
+        WHERE id = $5
         "#,
         update.name,
         update.username,
         update.email,
         update.pass,
-        update.role,
         user_id
     )
     .execute(db)
@@ -77,8 +75,8 @@ pub async fn update(db: &PgPool, user_id: &str, update: &UserUpdate) -> Result<(
 mod tests {
     use super::*;
     use crate::db::error::DbError;
-    use crate::types::UserUpdate;
     use crate::tests::{cleanup_user, create_test_user};
+    use crate::types::UserUpdate;
     use sqlx::PgPool;
 
     #[sqlx::test]
@@ -96,7 +94,6 @@ mod tests {
         assert_eq!(user.username, "testuser");
         assert_eq!(user.email, "test@example.com");
         assert_eq!(user.name, "Test Name");
-        assert_eq!(user.role, "user");
 
         // Cleanup
         cleanup_user(&db, &user_id).await;
@@ -165,7 +162,6 @@ mod tests {
             username: None,
             email: None,
             pass: None,
-            role: Some("admin".to_string()),
         };
 
         // Act
@@ -179,7 +175,6 @@ mod tests {
         assert_eq!(updated_user.name, "Updated Name");
         assert_eq!(updated_user.username, "updateuser"); // Should remain unchanged
         assert_eq!(updated_user.email, "update@example.com"); // Should remain unchanged
-        assert_eq!(updated_user.role, "admin");
 
         // Cleanup
         cleanup_user(&db, &user_id).await;
@@ -194,7 +189,6 @@ mod tests {
             username: Some("newusername".to_string()),
             email: Some("new@example.com".to_string()),
             pass: Some("new_hashed_password".to_string()),
-            role: Some("moderator".to_string()),
         };
 
         // Act
@@ -209,7 +203,6 @@ mod tests {
         assert_eq!(updated_user.username, "newusername");
         assert_eq!(updated_user.email, "new@example.com");
         assert_eq!(updated_user.pass, "new_hashed_password");
-        assert_eq!(updated_user.role, "moderator");
 
         // Cleanup
         cleanup_user(&db, &user_id).await;
@@ -226,7 +219,6 @@ mod tests {
             username: None,
             email: None,
             pass: None,
-            role: None,
         };
 
         // Act
@@ -258,7 +250,6 @@ mod tests {
             username: Some("user1".to_string()), // Try to use existing username
             email: None,
             pass: None,
-            role: None,
         };
 
         // Act
@@ -289,7 +280,6 @@ mod tests {
             username: None,
             email: Some("duplicate@example.com".to_string()), // Try to use existing email
             pass: None,
-            role: None,
         };
 
         // Act
@@ -318,7 +308,6 @@ mod tests {
             username: None,
             email: None,
             pass: None,
-            role: None,
         };
 
         // Act
@@ -340,7 +329,6 @@ mod tests {
             username: None,
             email: None,
             pass: None,
-            role: None,
         };
 
         let upd2 = UserUpdate {
@@ -348,7 +336,6 @@ mod tests {
             username: None,
             email: None,
             pass: None,
-            role: None,
         };
 
         let (result1, result2) =

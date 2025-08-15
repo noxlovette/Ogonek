@@ -4,22 +4,11 @@ use sqlx::prelude::FromRow;
 
 use crate::types::datetime_serialization;
 
-#[derive(Deserialize)]
-pub struct DeckPaginationParams {
-    pub search: Option<String>,
-    pub assignee: Option<String>,
-}
 #[derive(Serialize, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct SimpleStats {
     pub cards_studied_today: i32,
     pub current_streak: i32,
-}
-#[derive(ToSchema, Serialize)]
-#[serde(rename_all = "camelCase")]
-pub struct LearnDataDashboard {
-    pub stats: SimpleStats,
-    pub due_cards: Option<i64>,
 }
 
 #[derive(Serialize, Deserialize, ToSchema)]
@@ -61,7 +50,7 @@ pub struct DeckWithCardsUpdate {
 #[serde(rename_all = "camelCase")]
 pub struct DeckFull {
     pub id: String,
-    pub name: String,
+    pub title: String,
     pub description: Option<String>,
     pub visibility: String,
     pub assignee: Option<String>,
@@ -77,7 +66,7 @@ pub struct DeckFull {
 #[serde(rename_all = "camelCase")]
 pub struct DeckSmall {
     pub id: String,
-    pub name: String,
+    pub title: String,
     pub assignee_name: Option<String>,
     pub is_subscribed: Option<bool>,
     pub seen: Option<bool>,
@@ -89,14 +78,14 @@ pub struct DeckSmall {
 #[derive(Serialize, ToSchema)]
 pub struct DeckPublic {
     pub id: String,
-    pub name: String,
+    pub title: String,
     pub description: Option<String>,
 }
 
 #[derive(Deserialize, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct DeckCreate {
-    pub name: String,
+    pub title: String,
     pub description: Option<String>,
     pub visibility: Option<String>,
     pub assignee: Option<String>,
@@ -105,7 +94,7 @@ pub struct DeckCreate {
 #[derive(Deserialize, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct DeckUpdate {
-    pub name: Option<String>,
+    pub title: Option<String>,
     pub description: Option<String>,
     pub visibility: Option<String>,
     pub assignee: Option<String>,
@@ -136,7 +125,7 @@ pub struct CardProgressWithFields {
     pub media_url: Option<String>,
 }
 
-#[derive(Serialize, Clone, Validate, ToSchema)]
+#[derive(Serialize, Clone, Validate, ToSchema, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct CardProgress {
     pub id: String,

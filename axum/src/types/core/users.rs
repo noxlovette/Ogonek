@@ -27,7 +27,6 @@ pub struct UserUpdate {
     pub username: Option<String>,
     pub email: Option<String>,
     pub pass: Option<String>,
-    pub role: Option<String>,
 }
 
 #[derive(Serialize, ToSchema)]

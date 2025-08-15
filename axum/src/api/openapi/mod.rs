@@ -1,7 +1,4 @@
-use utoipa::{
-    Modify, OpenApi,
-    openapi::security::{ApiKey, ApiKeyValue, SecurityScheme},
-};
+use utoipa::OpenApi;
 
 pub mod auth;
 pub mod deck;
@@ -9,28 +6,17 @@ pub mod learn;
 pub mod lesson;
 pub mod notifications;
 pub mod s3;
+pub mod state;
 pub mod task;
 pub mod user;
 
 pub const LESSON_TAG: &str = "Lesson";
 pub const TASK_TAG: &str = "Task"; // files are here
 pub const DECK_TAG: &str = "Deck";
-pub const USER_TAG: &str = "User"; // preferences, profile, self, student
+pub const USER_TAG: &str = "User"; // profile, self, student
+pub const STATE_TAG: &str = "State"; // preferences, badges, dashboard
 pub const AUTH_TAG: &str = "Auth";
 pub const LEARN_TAG: &str = "Learn";
-
-pub struct SecurityAddon;
-
-impl Modify for SecurityAddon {
-    fn modify(&self, openapi: &mut utoipa::openapi::OpenApi) {
-        if let Some(components) = openapi.components.as_mut() {
-            components.add_security_scheme(
-                "api_key",
-                SecurityScheme::ApiKey(ApiKey::Header(ApiKeyValue::new("X-API-Key"))),
-            )
-        }
-    }
-}
 
 // Main API doc that aggregates everything
 #[derive(OpenApi)]
@@ -44,8 +30,8 @@ impl Modify for SecurityAddon {
         (path = "/api/v1/learn", api = learn::LearnApi),
         (path = "/api/v1/s3", api = s3::S3Api),
         (path = "/api/v1/notifications", api = notifications::NotificationApi),
+        (path = "/api/v1/state", api = state::StateApi),
     ),
-    modifiers(&SecurityAddon),
     servers(
         (url = "https://api.ogonek.app", description = "Production server"),
         (url = "https://api.staging.ogonek.app", description = "Staging server"),
@@ -57,7 +43,8 @@ impl Modify for SecurityAddon {
         (name = DECK_TAG,description = "Deck API"),
         (name = USER_TAG,description = "User API"),
         (name = AUTH_TAG,description = "Auth API"),
-        (name = LEARN_TAG,description = "Learn API")
+        (name = LEARN_TAG,description = "Learn API"),
+        (name = STATE_TAG,description = "State API"),
     ),
     info(
         title = "Ogonek API",

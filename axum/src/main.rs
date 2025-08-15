@@ -35,7 +35,8 @@ async fn run_server() -> anyhow::Result<()> {
         .nest("/decks", deck_routes())
         .nest("/s3", s3_routes())
         .nest("/learn", learn_routes())
-        .nest("/notification", notification_routes());
+        .nest("/notification", notification_routes())
+        .nest("/state", state_routes());
 
     // Public routes (no auth required)
     let public_routes = Router::new()

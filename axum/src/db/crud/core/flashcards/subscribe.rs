@@ -113,7 +113,7 @@ mod tests {
         let deck_id = nanoid::nanoid!();
         sqlx::query!(
             r#"
-            INSERT INTO decks (id, name, description, created_by)
+            INSERT INTO decks (id, title, description, created_by)
             VALUES ($1, $2, $3, $4)
             "#,
             deck_id,
