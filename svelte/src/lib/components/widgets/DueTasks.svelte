@@ -1,6 +1,5 @@
 <script lang="ts">
   import { EmptySpace, H2 } from "$lib/components/typography";
-  import { user, teacherData } from "$lib/stores";
   import { enhanceForm } from "$lib/utils";
   import { enhance } from "$app/forms";
   import { m } from "$lib/paraglide/messages";
@@ -33,13 +32,6 @@
           },
         })}
       >
-        <input type="hidden" value={$user.username} name="username" />
-
-        <input
-          type="hidden"
-          value={$teacherData.teacherTelegramId}
-          name="teacherTelegramId"
-        />
         <UniButton type="submit" variant="primary" Icon={Lightbulb}>
           {m.tense_mealy_kitten_aid()}
         </UniButton>

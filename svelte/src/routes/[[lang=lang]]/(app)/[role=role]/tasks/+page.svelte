@@ -24,7 +24,7 @@
     currentPage,
     assigneeStore,
   } from "$lib/stores";
-  import { Eye, EyeClosed, PlusCircle } from "lucide-svelte";
+  import { Bell, Eye, EyeClosed, PlusCircle } from "lucide-svelte";
   import { formatDate } from "@noxlovette/svarog";
   import { m } from "$lib/paraglide/messages";
 
@@ -91,6 +91,20 @@
       >
         <UniButton Icon={PlusCircle} type="submit" variant="primary"
           >{m.new()}</UniButton
+        >
+      </form>
+    {:else if role == "s"}
+      <form
+        action="?/requestHW"
+        method="post"
+        use:enhance={enhanceForm({
+          messages: {
+            success: m.minor_mad_hare_buzz(),
+          },
+        })}
+      >
+        <UniButton Icon={Bell} type="submit" variant="primary"
+          >{m.tense_mealy_kitten_aid()}</UniButton
         >
       </form>
     {/if}

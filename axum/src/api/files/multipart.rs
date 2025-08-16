@@ -1,13 +1,13 @@
 use crate::api::error::APIError;
 use crate::auth::Claims;
-use crate::db::crud::files::multipart::{FileCreateParams, FileLinkOptions};
-use crate::db::crud::files::{file, multipart};
-use crate::models::{
+use crate::db::crud::core::files::multipart::{FileCreateParams, FileLinkOptions};
+use crate::db::crud::core::files::{file, multipart};
+use crate::s3::{abort_multipart_s3, complete_multipart_s3, init_multipart_s3};
+use crate::schema::AppState;
+use crate::types::{
     AbortMultipartRequest, CompleteMultipartRequest, InitUploadRequest, MultipartInitResultS3,
     MultipartUploadInit,
 };
-use crate::s3::{abort_multipart_s3, complete_multipart_s3, init_multipart_s3};
-use crate::schema::AppState;
 use axum::Json;
 use axum::extract::State;
 use axum::http::StatusCode;

@@ -1,0 +1,22 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        WITH daily_reviews AS (\n            SELECT DISTINCT last_reviewed::date as review_date\n            FROM card_progress\n            WHERE user_id = $1\n            AND last_reviewed IS NOT NULL\n            ORDER BY review_date DESC\n        ),\n        consecutive_days AS (\n            SELECT\n                review_date,\n                ROW_NUMBER() OVER (ORDER BY review_date DESC) as rn,\n                review_date - (ROW_NUMBER() OVER (ORDER BY review_date DESC) * interval '1 day') as group_date\n            FROM daily_reviews\n            WHERE review_date >= CURRENT_DATE - interval '365 days'  -- reasonable limit\n        )\n        SELECT COUNT(*)::int\n        FROM consecutive_days\n        WHERE group_date = (\n            SELECT group_date\n            FROM consecutive_days\n            WHERE review_date = CURRENT_DATE\n            OR review_date = CURRENT_DATE - interval '1 day'\n            LIMIT 1\n        )\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "count",
+        "type_info": "Int4"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text"
+      ]
+    },
+    "nullable": [
+      null
+    ]
+  },
+  "hash": "3909da93f3cecb3e70073d8b447fc4eabc0d54e4fcebb6c3ada2cad075981ff6"
+}

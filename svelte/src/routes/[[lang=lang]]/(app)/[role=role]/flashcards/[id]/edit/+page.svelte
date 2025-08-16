@@ -56,10 +56,10 @@
 </script>
 
 <svelte:head>
-  <title>{`${m.edit()} ${deck.name} | Flashcards`}</title>
+  <title>{`${m.edit()} ${deck.title} | Flashcards`}</title>
 </svelte:head>
 <HeaderEmbellish>
-  <H1>{deck.name}</H1>
+  <H1>{deck.title}</H1>
   <div class="hidden md:block">
     <div class="flex items-center gap-3">
       <span class="text-sm text-stone-500 dark:text-stone-400">
@@ -79,9 +79,6 @@
     },
   })}
 >
-  <input type="hidden" value={deck.id} name="id" />
-  <input type="hidden" value={deck.assignee} name="initialAssignee" />
-
   <div class="grid grid-cols-1 gap-6 lg:grid-cols-4">
     <div class="lg:col-span-3">
       <div class="space-y-6">
@@ -142,11 +139,11 @@
       <div class="sticky top-6 space-y-6">
         <div>
           <Input
-            labelName="Deck Name"
-            name="name"
+            labelName="Deck Title"
+            name="title"
             type="text"
-            placeholder="Give your deck a name"
-            value={deck.name}
+            placeholder="Give your deck a title"
+            value={deck.title}
           />
         </div>
 
@@ -194,7 +191,7 @@
             variant="danger"
             Icon={Trash2}
             formaction="?/delete"
-            confirmText={deck.name}
+            confirmText={deck.title}
             confirmTitle="Delete Deck"
           >
             {m.delete()}</UniButton

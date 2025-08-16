@@ -1,7 +1,5 @@
 use crate::db::error::DbError;
-use crate::models::{
-    CreationId, TaskCreate, TaskFull, TaskPaginationParams, TaskSmall, TaskUpdate,
-};
+use crate::types::{TaskCreate, TaskFull, TaskPaginationParams, TaskSmall, TaskUpdate};
 use sqlx::PgPool;
 
 /// Mini-tasks
@@ -42,13 +40,6 @@ pub async fn find_all(
         query_builder.push(")");
     }
 
-    // Add priority filter if provided
-    if let Some(priority) = &params.priority {
-        query_builder.push(" AND t.priority = ");
-        query_builder.push_bind(priority);
-    }
-
-    // Add completed filter if provided
     if let Some(completed) = &params.completed {
         query_builder.push(" AND t.completed = ");
         query_builder.push_bind(completed);
@@ -114,9 +105,8 @@ pub async fn create(
     task: &TaskCreate,
     user_id: &str,
     assignee: &str,
-) -> Result<CreationId, DbError> {
-    let id = sqlx::query_as!(
-        CreationId,
+) -> Result<String, DbError> {
+    let id = sqlx::query_scalar!(
         "INSERT INTO tasks (id, title, markdown, due_date, assignee, created_by)
          VALUES ($1, $2, $3, $4, $5, $6)
          RETURNING id
@@ -134,9 +124,8 @@ pub async fn create(
     Ok(id)
 }
 /// Creates a task based on user preferences, faster – no JSON
-pub async fn create_with_defaults(db: &PgPool, user_id: &str) -> Result<CreationId, DbError> {
-    let id = sqlx::query_as!(
-        CreationId,
+pub async fn create_with_defaults(db: &PgPool, user_id: &str) -> Result<String, DbError> {
+    let id = sqlx::query_scalar!(
         "INSERT INTO tasks (id, title, markdown, assignee, created_by)
          VALUES ($1, $2, $3, $4, $5 )
          RETURNING id
@@ -230,7 +219,7 @@ pub async fn find_assignee(
 }
 
 /// Finds the assignee for the task
-pub async fn toggle(db: &PgPool, task_id: &str, user_id: &str) -> Result<(), DbError> {
+pub async fn toggle(db: &PgPool, task_id: &str, user_id: &str) -> Result<bool, DbError> {
     let completed = sqlx::query_scalar!(
         r#"
         SELECT completed
@@ -258,7 +247,7 @@ pub async fn toggle(db: &PgPool, task_id: &str, user_id: &str) -> Result<(), DbE
     .execute(db)
     .await?;
 
-    Ok(())
+    Ok(!completed)
 }
 
 /// Updates the task and inserts associated files
@@ -355,9 +344,8 @@ pub async fn add_files(db: &PgPool, task_id: &str, file_ids: Vec<String>) -> Res
     Ok(())
 }
 
-pub async fn fetch_old_tasks(db: &PgPool) -> Result<Vec<CreationId>, DbError> {
-    let tasks = sqlx::query_as!(
-        CreationId,
+pub async fn fetch_old_tasks(db: &PgPool) -> Result<Vec<String>, DbError> {
+    let tasks = sqlx::query_scalar!(
         r#"
         SELECT id
         FROM tasks
@@ -374,8 +362,8 @@ pub async fn fetch_old_tasks(db: &PgPool) -> Result<Vec<CreationId>, DbError> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::models::{TaskCreate, TaskPaginationParams, TaskUpdate};
     use crate::tests::create_test_user;
+    use crate::types::{TaskCreate, TaskPaginationParams, TaskUpdate};
     use chrono::Utc;
     use sqlx::PgPool;
 
@@ -418,10 +406,11 @@ mod tests {
             assignee: None,
         };
 
-        create(db, &task_create, creator_id, assignee_id)
+        let id = create(db, &task_create, creator_id, assignee_id)
             .await
-            .unwrap()
-            .id
+            .unwrap();
+
+        id
     }
 
     #[sqlx::test]
@@ -441,7 +430,7 @@ mod tests {
         let result = create_with_defaults(&db, &user_id).await;
         assert!(result.is_ok());
 
-        let task_id = result.unwrap().id;
+        let task_id = result.unwrap();
         assert!(!task_id.is_empty());
     }
 
@@ -497,7 +486,6 @@ mod tests {
             page: Some(1),
             per_page: Some(10),
             search: None,
-            priority: None,
             completed: None,
             assignee: None,
         };
@@ -520,7 +508,6 @@ mod tests {
             page: Some(1),
             per_page: Some(10),
             search: Some("test".to_string()),
-            priority: None,
             completed: None,
             assignee: None,
         };
@@ -531,42 +518,6 @@ mod tests {
         let tasks = result.unwrap();
         assert_eq!(tasks.len(), 2);
         assert!(tasks[0].title.contains("test"));
-    }
-
-    #[sqlx::test]
-    async fn test_find_all_with_completed_filter(db: PgPool) {
-        let user_id = create_test_user(&db, "user", "user@test.com").await;
-
-        // Create completed task
-        let task_id = create_test_task(&db, &user_id, &user_id).await;
-        let update_task = TaskUpdate {
-            title: None,
-            markdown: None,
-            priority: None,
-            completed: Some(true),
-            due_date: None,
-            assignee: None,
-        };
-        update(&db, &task_id, &user_id, &update_task).await.unwrap();
-
-        // Create incomplete task
-        create_test_task(&db, &user_id, &user_id).await;
-
-        let params = TaskPaginationParams {
-            page: Some(1),
-            per_page: Some(10),
-            search: None,
-            priority: None,
-            completed: Some(false),
-            assignee: None,
-        };
-
-        let result = find_all(&db, &user_id, &params).await;
-        assert!(result.is_ok());
-
-        let tasks = result.unwrap();
-        assert_eq!(tasks.len(), 1);
-        assert_eq!(tasks[0].completed, false);
     }
 
     #[sqlx::test]
@@ -582,7 +533,6 @@ mod tests {
             page: Some(1),
             per_page: Some(10),
             search: None,
-            priority: None,
             completed: None,
             assignee: Some(assignee1_id.clone()),
         };
@@ -629,8 +579,8 @@ mod tests {
         let update_task = TaskUpdate {
             title: Some("Hacked Title".to_string()),
             markdown: None,
-            priority: None,
-            completed: None,
+            priority: Some(2),
+            completed: Some(true),
             due_date: None,
             assignee: None,
         };

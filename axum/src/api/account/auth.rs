@@ -4,10 +4,10 @@ use crate::auth::Claims;
 use crate::auth::error::AuthError;
 use crate::auth::password::{hash_password, verify_password};
 use crate::auth::tokens::{self, decode_token, generate_token};
-use crate::db::crud::account::auth;
-use crate::models::users::{AuthPayload, BindPayload, SignUpPayload, TokenPair};
-use crate::models::{CreationId, InviteQuery, RefreshTokenPayload, RefreshTokenResponse};
+use crate::db::crud::core::account::auth;
 use crate::schema::AppState;
+use crate::types::users::{AuthPayload, BindPayload, SignUpPayload, TokenPair};
+use crate::types::{InviteQuery, RefreshTokenPayload, RefreshTokenResponse};
 use axum::extract::{Json, Query, State};
 use axum::http::StatusCode;
 use validator::Validate;
@@ -24,7 +24,7 @@ use validator::Validate;
 pub async fn signup(
     State(state): State<AppState>,
     Json(payload): Json<SignUpPayload>,
-) -> Result<Json<CreationId>, APIError> {
+) -> Result<Json<String>, APIError> {
     if payload.username.is_empty() || payload.pass.is_empty() {
         return Err(APIError::InvalidCredentials);
     }
@@ -114,8 +114,7 @@ pub async fn refresh(
         (status = 200, description = "Invite link generated", body = String),
         (status = 401, description = "Unauthorized"),
         (status = 400, description = "Invalid invite token")
-    ),
-    security(("api_key" = []))
+    )
 )]
 pub async fn generate_invite_link(
     claims: Claims,

@@ -11,14 +11,14 @@ use utoipa::OpenApi;
         account::generate_invite_link,
     ),
     components(schemas(
-        crate::models::SignUpPayload,
-        crate::models::AuthPayload,
-        crate::models::TokenPair,
-        crate::models::RefreshTokenPayload,
-        crate::models::RefreshTokenResponse,
-        crate::models::BindPayload,
-        crate::models::InviteQuery,
-        crate::models::InviterQuery,
+        crate::types::SignUpPayload,
+        crate::types::AuthPayload,
+        crate::types::TokenPair,
+        crate::types::RefreshTokenPayload,
+        crate::types::RefreshTokenResponse,
+        crate::types::BindPayload,
+        crate::types::InviteQuery,
+        crate::types::InviterQuery,
     ))
 )]
 pub struct AuthApi;

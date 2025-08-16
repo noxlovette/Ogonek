@@ -17,11 +17,9 @@
     StudentFilter,
   } from "$lib/components";
   import {
-    lessonStore,
     studentStore,
     setUser,
     setProfile,
-    setTeacherData,
     sidebar,
     mobileMenuOpen,
   } from "$lib/stores";
@@ -44,22 +42,16 @@
     elementsRight = [QuickAdd, StudentFilter];
   }
 
-  lessonStore.setLessons(data.lessons.data);
   studentStore.setStudents(data.students);
   setContext<Promise<Word>>("word", data.word);
+  setContext<string | null>("callURL", data.callURL);
   setContext<Student[]>("students", data.students);
-  setContext<number>("lessonCount", data.lessons.count);
-  setContext<number>("deckCount", data.decks.count);
-  setContext<number>("taskCount", data.tasks.count);
+  setContext<number>("lessonCount", data.badges.unseenLessons);
+  setContext<number>("deckCount", data.badges.unseenDecks);
+  setContext<number>("taskCount", data.badges.unseenTasks);
 
   setUser(data.user);
   setProfile(data.profile);
-  setTeacherData(
-    data.teacherData || {
-      teacherVideoCallUrl: "",
-      teacherTelegramId: "",
-    },
-  );
 </script>
 
 <div class="flex flex-row">

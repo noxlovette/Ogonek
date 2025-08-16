@@ -1,0 +1,75 @@
+name: ogonek-dev
+services:
+  svelte:
+    build:
+      context: ../svelte
+      dockerfile: Dockerfile.dev
+    container_name: svelte-ogonek-dev
+    ports:
+      - "5173:5173"
+    volumes:
+      - ../svelte/src:/app/src
+      - ../svelte/messages:/app/messages
+    env_file:
+      - ../svelte/.env
+    depends_on:
+      - axum
+  redis:
+    image: redis/redis-stack:latest
+    container_name: redis-ogonek-dev
+    ports:
+      - "6379:6379"
+      - "8003:8001"
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
+      interval: 1s
+      timeout: 3s
+      retries: 5
+      start_period: 30s
+  axum:
+    build:
+      context: ../axum
+      dockerfile: Dockerfile.dev
+    container_name: axum-ogonek-dev
+    ports:
+      - "3000:3000"
+    volumes:
+      - ../axum:/app
+      - cargo-cache:/usr/local/cargo/registry
+      - cargo-target:/app/target
+    env_file:
+      - ../axum/.env
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    depends_on:
+      postgres:
+        condition: service_healthy
+  postgres:
+    image: postgres
+    container_name: pg-ogonek-dev
+    restart: always
+    user: postgres
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    env_file:
+      - ../.env
+    ports:
+      - "5433:5432"
+    healthcheck:
+      test: ["CMD", "pg_isready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+volumes:
+  cargo-cache:
+    name: cargo-cache-ogonek-dev
+  cargo-target:
+    name: cargo-target-ogonek-dev
+  db-data:
+    name: db-ogonek-dev
+  uploads:
+    name: uploads-ogonek-dev

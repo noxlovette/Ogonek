@@ -1,5 +1,5 @@
 use crate::db::error::DbError;
-use crate::models::users::User;
+use crate::types::users::User;
 
 pub trait FromQuery: Sized {
     fn from_query_result(result: Vec<Self>) -> Result<Self, DbError> {

@@ -43,6 +43,9 @@ pub enum AppError {
 
     #[error("Bad Request: {0}")]
     BadRequest(String),
+
+    #[error("Notification failed: {0}")]
+    NotificationFailed(#[from] crate::notifications::error::NotificationError),
 }
 
 impl IntoResponse for AppError {
@@ -61,6 +64,25 @@ impl IntoResponse for AppError {
             // Validation errors -> 400
             Self::Validation(_) => (StatusCode::BAD_REQUEST, self.to_string()),
             Self::BadRequest(e) => (StatusCode::BAD_REQUEST, e.to_string()),
+
+            Self::NotificationFailed(notification_err) => {
+                let status_code = match notification_err.error_code() {
+                    4001..=4999 => StatusCode::BAD_REQUEST,
+                    5001..=5999 => StatusCode::INTERNAL_SERVER_ERROR,
+                    _ => StatusCode::INTERNAL_SERVER_ERROR,
+                };
+
+                let body = json!({
+                    "error": {
+                        "code": notification_err.error_code(),
+                        "type": "notification_error",
+                        "message": notification_err.to_string(),
+                        "details": notification_err
+                    }
+                });
+
+                return (status_code, Json(body)).into_response();
+            }
 
             // Password handling errors -> 500
             Self::PasswordHash => (
@@ -111,6 +133,12 @@ impl From<crate::auth::error::AuthError> for AppError {
             crate::auth::error::AuthError::AuthenticationFailed => Self::AuthenticationFailed,
             crate::auth::error::AuthError::Conflict(msg) => Self::AlreadyExists(msg),
         }
+    }
+}
+
+impl From<reqwest::Error> for AppError {
+    fn from(_err: reqwest::Error) -> Self {
+        Self::BadRequest("HTTP client error".into())
     }
 }
 

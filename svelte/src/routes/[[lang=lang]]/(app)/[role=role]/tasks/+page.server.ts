@@ -2,13 +2,8 @@ import logger from "$lib/logger";
 
 import { dev } from "$app/environment";
 import { routes } from "$lib/routes";
-import {
-  handleApiResponse,
-  isSuccessResponse,
-  messages,
-  notifyTelegram,
-} from "$lib/server";
-import type { NewResponse, PaginatedResponse, TaskSmall } from "$lib/types";
+import { handleApiResponse, isSuccessResponse } from "$lib/server";
+import type { PaginatedResponse, TaskSmall } from "$lib/types";
 import { delay } from "$lib/utils";
 import { fail, redirect, type Actions } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
@@ -36,33 +31,25 @@ export const actions: Actions = {
       method: "POST",
     });
 
-    const newResult = await handleApiResponse<NewResponse>(response);
+    const newResult = await handleApiResponse<string>(response);
 
     if (!isSuccessResponse(newResult)) {
       logger.info("Task creation failed axum-side");
       return fail(newResult.status, { message: newResult.message });
     }
 
-    const { id } = newResult.data;
+    const id = newResult.data;
 
     if (response.ok) {
       logger.info("Task creation completed");
       return redirect(301, `/t/tasks/${id}/edit`);
     }
   },
-  requestHW: async ({ request }) => {
-    const formData = await request.formData();
-    const username = formData.get("username") as string;
-    const teacherTelegramId = formData.get("teacherTelegramId") as string;
+  requestHW: async ({ fetch }) => {
+    const response = await fetch(routes.tasks.request(), { method: "POST" });
 
-    if (teacherTelegramId) {
-      const telegramResponse = await notifyTelegram(
-        messages.teacherNotify({ username }),
-        teacherTelegramId,
-      );
-      if (telegramResponse.status !== 200) {
-        return fail(400);
-      }
+    if (!response.ok) {
+      return fail(500);
     }
   },
 };

@@ -1,5 +1,5 @@
-use super::{ActionType, ModelType};
-use crate::db::{crud::tracking::ActivityLog, error::DbError};
+use crate::db::error::DbError;
+use crate::types::{ActionType, ActivityLog, ModelType};
 use sqlx::PgPool;
 
 /// Logs activity in the activity

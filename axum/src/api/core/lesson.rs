@@ -1,14 +1,16 @@
 use crate::api::LESSON_TAG;
 use crate::api::error::APIError;
 use crate::auth::Claims;
+use crate::db::crud::core::account::student;
 use crate::db::crud::core::lesson;
-use crate::db::crud::tracking::activity::log_activity;
-use crate::db::crud::tracking::{self, ActionType, ModelType};
-use crate::models::meta::{CreationId, PaginatedResponse};
-use crate::models::{
-    LessonFull, LessonPaginationParams, LessonSmall, LessonUpdate, PaginatedLessons,
-};
+use crate::db::crud::tracking::{self, activity::log_activity};
+use crate::notifications::dispatch_notification;
+use crate::notifications::messages::NotificationType;
 use crate::schema::AppState;
+use crate::types::{
+    ActionType, LessonFull, LessonSmall, LessonUpdate, ModelType, PaginatedLessons,
+    PaginatedResponse, PaginationParams,
+};
 use axum::extract::Path;
 use axum::extract::State;
 use axum::extract::{Json, Query};
@@ -36,8 +38,7 @@ pub fn router() -> OpenApiRouter<AppState> {
         (status = 200, description = "Lesson retrieved successfully", body = LessonFull),
         (status = 404, description = "Lesson not found"),
         (status = 401, description = "Unauthorized")
-    ),
-    security(("api_key" = []))
+    )
 )]
 pub async fn fetch_lesson(
     State(state): State<AppState>,
@@ -45,7 +46,7 @@ pub async fn fetch_lesson(
     claims: Claims,
 ) -> Result<Json<LessonFull>, APIError> {
     let lesson = lesson::find_by_id(&state.db, &id, &claims.sub).await?;
-    tracking::seen::mark_as_seen(&state.db, &claims.sub, &id, tracking::ModelType::Lesson).await?;
+    tracking::seen::mark_as_seen(&state.db, &claims.sub, &id, ModelType::Lesson).await?;
     Ok(Json(lesson))
 }
 /// Lessons belonging to a user
@@ -61,20 +62,17 @@ pub async fn fetch_lesson(
     tag = LESSON_TAG,responses(
         (status = 200, description = "Lessons retrieved successfully", body = PaginatedLessons),
         (status = 401, description = "Unauthorized")
-    ),
-    security(("api_key" = []))
+    )
 )]
 pub async fn list_lessons(
     State(state): State<AppState>,
-    Query(params): Query<LessonPaginationParams>,
+    Query(params): Query<PaginationParams>,
     claims: Claims,
 ) -> Result<Json<PaginatedResponse<LessonSmall>>, APIError> {
     let lessons = lesson::find_all(&state.db, &claims.sub, &params).await?;
-    let count = lesson::count(&state.db, &claims.sub).await?;
 
     Ok(Json(PaginatedResponse {
         data: lessons,
-        total: count,
         page: params.page(),
         per_page: params.limit(),
     }))
@@ -85,22 +83,21 @@ pub async fn list_lessons(
     post,
     path = "",
     tag = LESSON_TAG,responses(
-        (status = 201, description = "Lesson created successfully", body = CreationId),
+        (status = 201, description = "Lesson created successfully", body = String),
         (status = 400, description = "Bad request"),
         (status = 401, description = "Unauthorized")
-    ),
-    security(("api_key" = []))
+    )
 )]
 pub async fn create_lesson(
     State(state): State<AppState>,
     claims: Claims,
-) -> Result<Json<CreationId>, APIError> {
+) -> Result<Json<String>, APIError> {
     let id = lesson::create_with_defaults(&state.db, &claims.sub).await?;
 
     log_activity(
         &state.db,
         &claims.sub,
-        &id.id,
+        &id,
         ModelType::Lesson,
         ActionType::Create,
         None,
@@ -120,8 +117,7 @@ pub async fn create_lesson(
         (status = 204, description = "Lesson deleted successfully"),
         (status = 404, description = "Lesson not found"),
         (status = 401, description = "Unauthorized")
-    ),
-    security(("api_key" = []))
+    )
 )]
 pub async fn delete_lesson(
     State(state): State<AppState>,
@@ -162,8 +158,7 @@ pub async fn delete_lesson(
         (status = 204, description = "Lesson updated successfully"),
         (status = 404, description = "Lesson not found"),
         (status = 401, description = "Unauthorized")
-    ),
-    security(("api_key" = []))
+    )
 )]
 pub async fn update_lesson(
     State(state): State<AppState>,
@@ -198,13 +193,7 @@ pub async fn update_lesson(
 
         // insert unseen for new assignee
         if let Some(new_user) = new_assignee {
-            tracking::seen::insert_as_unseen(
-                &state.db,
-                &new_user,
-                &id,
-                tracking::ModelType::Lesson,
-            )
-            .await?;
+            tracking::seen::insert_as_unseen(&state.db, &new_user, &id, ModelType::Lesson).await?;
 
             // treat as creation
             log_activity(
@@ -216,6 +205,18 @@ pub async fn update_lesson(
                 Some(&new_user),
             )
             .await?;
+
+            let telegram_id = student::get_telegram_id(&state.db, &claims.sub, &new_user).await?;
+
+            if let Some(telegram_id) = telegram_id {
+                dispatch_notification(
+                    &state.bot_token,
+                    &state.http_client,
+                    &telegram_id,
+                    NotificationType::LessonCreated,
+                )
+                .await?;
+            }
         }
     } else if let Some(assignee) = current_assignee {
         // treat as update

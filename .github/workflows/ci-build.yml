@@ -1,16 +1,13 @@
 name: CI Build
-
 on:
   push:
     branches: [main]
   pull_request:
     branches: [main]
-
 jobs:
   rust-backend:
     name: Rust Backend Tests
     runs-on: ubuntu-latest
-
     services:
       postgres:
         image: postgres:alpine
@@ -25,7 +22,6 @@ jobs:
           --health-retries 5
         ports:
           - 5432:5432
-
       redis:
         image: redis:7-alpine
         options: >-
@@ -35,23 +31,19 @@ jobs:
           --health-retries 5
         ports:
           - 6379:6379
-
     env:
       DATABASE_URL: postgresql://testuser:testpass@localhost:5432/test_db
       REDIS_URL: redis://localhost:6379
       JWT_PRIVATE_KEY: ${{ secrets.JWT_PRIVATE_KEY }}
       JWT_PUBLIC_KEY: ${{ secrets.JWT_PUBLIC_KEY }}
       API_KEY: ${{ secrets.API_KEY }}
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Set up Rust
         uses: dtolnay/rust-toolchain@stable
         with:
           components: rustfmt, clippy
-
       - name: Cache Rust dependencies
         uses: actions/cache@v4
         with:
@@ -61,46 +53,37 @@ jobs:
             ~/.cargo/registry/cache/
             ~/.cargo/git/db/
             axum/target/
-          key: ${{ runner.os }}-cargo-${{ hashFiles('axum/**/Cargo.lock', 'axum/**/Cargo.toml') }}
+          key: ${{ runner.os }}-cargo-${{ hashFiles('axum//Cargo.lock', 'axum//Cargo.toml') }}
           restore-keys: |
             ${{ runner.os }}-cargo-
-
       - name: Install sqlx-cli
         run: cargo install sqlx-cli --version 0.8.6 --no-default-features --features native-tls,postgres --force
-
       - name: Run database migrations
         run: |
           cd axum
           sqlx migrate run
-
       - name: Rust Clippy
         run: |
           cd axum
           cargo clippy -- -D warnings
-
       - name: Rust Tests
         run: |
           cd axum
           cargo test
-
   svelte-frontend:
     name: Svelte Frontend Tests
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "24"
-
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
           package_json_file: svelte/package.json
-
       - name: Cache pnpm dependencies
         uses: actions/cache@v4
         with:
@@ -108,17 +91,14 @@ jobs:
           key: ${{ runner.os }}-pnpm-${{ hashFiles('svelte/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-pnpm-
-
       - name: Install Svelte dependencies
         run: |
           cd svelte
           pnpm install --frozen-lockfile
-
       - name: Svelte Format Check
         run: |
           cd svelte
           pnpm run format
-
       - name: Svelte Build
         run: |
           cd svelte

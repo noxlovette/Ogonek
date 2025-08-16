@@ -11,9 +11,9 @@ use utoipa::OpenApi;
         lesson::delete_lesson,
     ),
     components(schemas(
-        crate::models::LessonFull,
-        crate::models::LessonSmall,
-        crate::models::LessonUpdate,
+        crate::types::LessonFull,
+        crate::types::LessonSmall,
+        crate::types::LessonUpdate,
     ))
 )]
 pub struct LessonApi;

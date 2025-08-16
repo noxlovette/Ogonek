@@ -1,18 +1,21 @@
 use crate::api::TASK_TAG;
 use crate::api::error::APIError;
 use crate::auth::Claims;
-use crate::db::crud::core::task::create_with_defaults;
+use crate::db::crud::core::account::{profile, student};
+use crate::db::crud::core::task::{self, create_with_defaults};
 use crate::db::crud::{
-    core::task::{count, delete, find_all, find_assignee, find_by_id, toggle, update},
-    files::file::fetch_files_task,
-    tracking::{ActionType, ModelType, delete_seen, log_activity, seen},
+    core::files::file::fetch_files_task,
+    core::task::{delete, find_all, find_assignee, find_by_id, toggle, update},
+    tracking::{delete_seen, log_activity, seen},
 };
-use crate::models::{
-    CreationId, PaginatedResponse, PaginatedTasks, TaskPaginationParams, TaskSmall, TaskUpdate,
-    TaskWithFilesResponse,
-};
+use crate::notifications::dispatch_notification;
+use crate::notifications::messages::NotificationType;
 use crate::s3::post::delete_s3;
 use crate::schema::AppState;
+use crate::types::{
+    ActionType, ModelType, PaginatedResponse, PaginatedTasks, TaskPaginationParams, TaskSmall,
+    TaskUpdate, TaskWithFilesResponse,
+};
 use axum::extract::{Json, Path, Query, State};
 use axum::http::StatusCode;
 
@@ -27,8 +30,7 @@ use axum::http::StatusCode;
         (status = 200, description = "Task with files retrieved", body = TaskWithFilesResponse),
         (status = 404, description = "Task not found"),
         (status = 401, description = "Unauthorized")
-    ),
-    security(("api_key" = []))
+    )
 )]
 pub async fn fetch_task(
     State(state): State<AppState>,
@@ -45,7 +47,7 @@ pub async fn fetch_task(
 /// Tasks belonging to a user (through assignment or direct ownership)
 #[utoipa::path(
     get,
-    path = "", 
+    path = "",
     tag = TASK_TAG,
     params(
         ("page" = Option<u32>, Query, description = "Page number"),
@@ -58,8 +60,7 @@ pub async fn fetch_task(
     responses(
         (status = 200, description = "Tasks retrieved successfully", body = PaginatedTasks),
         (status = 401, description = "Unauthorized")
-    ),
-    security(("api_key" = []))
+    )
 )]
 pub async fn list_tasks(
     State(state): State<AppState>,
@@ -67,11 +68,9 @@ pub async fn list_tasks(
     Query(params): Query<TaskPaginationParams>,
 ) -> Result<Json<PaginatedResponse<TaskSmall>>, APIError> {
     let tasks = find_all(&state.db, &claims.sub, &params).await?;
-    let count = count(&state.db, &claims.sub).await?;
 
     Ok(Json(PaginatedResponse {
         data: tasks,
-        total: count,
         page: params.page(),
         per_page: params.limit(),
     }))
@@ -79,24 +78,23 @@ pub async fn list_tasks(
 /// Creates a new task
 #[utoipa::path(
     post,
-    path = "", 
+    path = "",
     tag = TASK_TAG,
     responses(
-        (status = 201, description = "Task created successfully", body = CreationId),
+        (status = 201, description = "Task created successfully", body = String),
         (status = 400, description = "Bad request"),
         (status = 401, description = "Unauthorized")
-    ),
-    security(("api_key" = []))
+    )
 )]
 pub async fn create_task(
     State(state): State<AppState>,
     claims: Claims,
-) -> Result<Json<CreationId>, APIError> {
+) -> Result<Json<String>, APIError> {
     let id = create_with_defaults(&state.db, &claims.sub).await?;
     log_activity(
         &state.db,
         &claims.sub,
-        &id.id,
+        &id,
         ModelType::Task,
         ActionType::Create,
         None,
@@ -118,8 +116,7 @@ pub async fn create_task(
         (status = 204, description = "Task deleted successfully"),
         (status = 404, description = "Task not found"),
         (status = 401, description = "Unauthorized")
-    ),
-    security(("api_key" = []))
+    )
 )]
 pub async fn delete_task(
     State(state): State<AppState>,
@@ -134,10 +131,10 @@ pub async fn delete_task(
     delete(&state.db, &id, &claims.sub, file_ids).await?;
 
     for file in files {
-        if let Some(s3_key) = file.s3_key {
-            if let Err(e) = delete_s3(&s3_key, &state).await {
-                tracing::error!("Failed to delete file from S3: {}, error: {:?}", s3_key, e);
-            }
+        if let Some(s3_key) = file.s3_key
+            && let Err(e) = delete_s3(&s3_key, &state).await
+        {
+            tracing::error!("Failed to delete file from S3: {}, error: {:?}", s3_key, e);
         }
     }
 
@@ -160,7 +157,7 @@ pub async fn delete_task(
 /// Toggles completed/not completed on a task
 #[utoipa::path(
     put,
-    path = "/{id}", 
+    path = "/{id}",
     tag = TASK_TAG,
     params(
         ("id" = String, Path, description = "Task ID")
@@ -169,8 +166,7 @@ pub async fn delete_task(
         (status = 200, description = "Task with files retrieved", body = TaskWithFilesResponse),
         (status = 404, description = "Task not found"),
         (status = 401, description = "Unauthorized")
-    ),
-    security(("api_key" = []))
+    )
 )]
 pub async fn toggle_task(
     State(state): State<AppState>,
@@ -178,17 +174,36 @@ pub async fn toggle_task(
     claims: Claims,
 ) -> Result<StatusCode, APIError> {
     let current_assignee = find_assignee(&state.db, &id, &claims.sub).await?;
-    toggle(&state.db, &id, &claims.sub).await?;
+    let should_notify = toggle(&state.db, &id, &claims.sub).await?;
 
-    log_activity(
-        &state.db,
-        &claims.sub,
-        &id,
-        ModelType::Task,
-        ActionType::Complete,
-        current_assignee.as_deref(),
-    )
-    .await?;
+    if should_notify {
+        log_activity(
+            &state.db,
+            &claims.sub,
+            &id,
+            ModelType::Task,
+            ActionType::Complete,
+            current_assignee.as_deref(),
+        )
+        .await?;
+
+        let telegram_id = profile::get_teacher_telegram_id(&state.db, &claims.sub).await?;
+        let task = task::find_by_id(&state.db, &id, &claims.sub).await?;
+        if let Some(telegram_id) = telegram_id {
+            dispatch_notification(
+                &state.bot_token,
+                &state.http_client,
+                &telegram_id,
+                NotificationType::Completed {
+                    task: task.title,
+                    username: task.assignee_name,
+                    id: task.id,
+                },
+            )
+            .await?;
+        }
+    }
+
     Ok(StatusCode::NO_CONTENT)
 }
 #[utoipa::path(
@@ -203,8 +218,7 @@ pub async fn toggle_task(
         (status = 204, description = "Task updated successfully"),
         (status = 404, description = "Task not found"),
         (status = 401, description = "Unauthorized")
-    ),
-    security(("api_key" = []))
+    )
 )]
 /// Updates the task
 pub async fn update_task(
@@ -252,6 +266,24 @@ pub async fn update_task(
                 None,
             )
             .await?;
+            let telegram_id = student::get_telegram_id(&state.db, &claims.sub, &new_user).await?;
+            let task = task::find_by_id(&state.db, &id, &claims.sub).await?;
+
+            if let Some(telegram_id) = telegram_id {
+                dispatch_notification(
+                    &state.bot_token,
+                    &state.http_client,
+                    &telegram_id,
+                    NotificationType::TaskCreated {
+                        title: task.title,
+                        id: task.id,
+                        date: task
+                            .due_date
+                            .map_or("no due date".to_string(), |dt| dt.to_string()),
+                    },
+                )
+                .await?;
+            }
         }
     } else if let Some(assignee) = current_assignee {
         // treat as update

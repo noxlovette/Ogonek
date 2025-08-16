@@ -3,7 +3,7 @@ use crate::error::AppError;
 use crate::s3::delete_s3;
 use crate::schema::AppState;
 
-use crate::db::crud::files::file::fetch_files_task;
+use crate::db::crud::core::files::file::fetch_files_task;
 pub async fn daily_cleanup(state: AppState) {
     loop {
         tracing::info!("Starting daily cleanup job...");
@@ -11,8 +11,8 @@ pub async fn daily_cleanup(state: AppState) {
         match fetch_old_tasks(&state.db).await {
             Ok(tasks) => {
                 for task in tasks {
-                    if let Err(e) = cleanup_task(&state, task.id.clone()).await {
-                        tracing::error!("Failed to clean up task {}: {:?}", task.id, e);
+                    if let Err(e) = cleanup_task(&state, task.clone()).await {
+                        tracing::error!("Failed to clean up task {}: {:?}", task, e);
                     }
                 }
             }
@@ -34,10 +34,10 @@ async fn cleanup_task(state: &AppState, id: String) -> Result<(), AppError> {
     delete_system(&state.db, &id, file_ids).await?;
 
     for file in files {
-        if let Some(s3_key) = file.s3_key {
-            if let Err(e) = delete_s3(&s3_key, state).await {
-                tracing::error!("Failed to delete file from S3: {}, error: {:?}", s3_key, e);
-            }
+        if let Some(s3_key) = file.s3_key
+            && let Err(e) = delete_s3(&s3_key, state).await
+        {
+            tracing::error!("Failed to delete file from S3: {}, error: {:?}", s3_key, e);
         }
     }
 

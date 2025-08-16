@@ -22,8 +22,7 @@ export const actions = {
     const markdown = formData.get("markdown");
     const title = formData.get("title");
     const topic = formData.get("topic");
-    const assigneeData = formData.get("student")?.toString() || "{}";
-    const { assignee = "" } = JSON.parse(assigneeData);
+    const assignee = formData.get("assignee") || "";
 
     const body = {
       id,

@@ -6,7 +6,6 @@ import {
   isSuccessResponse,
   turnstileVerify,
 } from "$lib/server";
-import type { SignupResponse } from "$lib/types";
 import {
   validateEmail,
   validatePassword,
@@ -70,14 +69,14 @@ export const actions: Actions = {
       body: JSON.stringify({ username, pass, email, role, name }),
     });
 
-    const result = await handleApiResponse<SignupResponse>(response);
+    const result = await handleApiResponse<string>(response);
 
     if (!isSuccessResponse(result)) {
       return fail(result.status, { message: result.message });
     }
 
     if (inviteToken) {
-      const studentId = result.data.id;
+      const studentId = result.data;
       logger.debug(studentId);
 
       const inviteResponse = await fetch("/axum/auth/bind", {

@@ -1,0 +1,16 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n            INSERT INTO teacher_student (teacher_id, student_id, status, markdown, student_telegram_id)\n            VALUES ($1, $2, 'active', $3, '900828558')\n            ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Varchar",
+        "Varchar",
+        "Text"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "a9b2e063ab6b7f6a8e8320f3328141eb0965eb17bca87a10de382d1e0aad84cb"
+}

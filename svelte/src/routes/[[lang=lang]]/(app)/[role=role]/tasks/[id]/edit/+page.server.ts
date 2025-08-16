@@ -1,9 +1,7 @@
 import logger from "$lib/logger";
 import { routes } from "$lib/routes";
-import { handleApiResponse, isSuccessResponse, messages } from "$lib/server";
-import { notifyTelegram } from "$lib/server/telegram";
+import { handleApiResponse, isSuccessResponse } from "$lib/server";
 import type { EmptyResponse } from "$lib/types";
-import { formatDate } from "@noxlovette/svarog";
 import type { Actions } from "@sveltejs/kit";
 import { error, fail, redirect } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
@@ -30,11 +28,7 @@ export const actions = {
     const completed = formData.has("completed");
     const priority = Number(formData.get("priority"));
     const filePath = formData.get("filePath")?.toString() || "";
-
-    const assigneeData = formData.get("student")?.toString() || "{}";
-    const { assignee = "", studentTelegramId = "" } = JSON.parse(assigneeData);
-    const initialAssignee = formData.get("initialAssignee")?.toString() || "";
-
+    const assignee = formData.get("assignee") || "";
     const dueDateWithTime =
       dueDate && dueDate !== ""
         ? new Date(`${dueDate}T23:59:59`).toISOString()
@@ -59,17 +53,6 @@ export const actions = {
       const errorData: App.Error = await response.json();
       logger.error({ errorData }, "Error updating task");
       return error(500);
-    }
-
-    if (studentTelegramId && initialAssignee !== assignee) {
-      const telegramResponse = await notifyTelegram(
-        messages.taskCreated({ title, id, date: formatDate(dueDate) }),
-        studentTelegramId,
-      );
-      if (telegramResponse.status !== 404 && telegramResponse.status !== 200) {
-        logger.error({ id }, "No notification sent for task");
-        return fail(400);
-      }
     }
 
     logger.info(

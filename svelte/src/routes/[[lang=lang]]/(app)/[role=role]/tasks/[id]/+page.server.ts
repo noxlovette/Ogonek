@@ -1,40 +1,17 @@
 import logger from "$lib/logger";
 import { routes } from "$lib/routes";
-import {
-  handleApiResponse,
-  isSuccessResponse,
-  messages,
-  notifyTelegram,
-} from "$lib/server";
+import { handleApiResponse, isSuccessResponse } from "$lib/server";
 import type { EmptyResponse, URLResponse } from "$lib/types";
 import type { Actions } from "@sveltejs/kit";
 import { fail } from "@sveltejs/kit";
 
 export const actions = {
-  complete: async ({ request, fetch, params }) => {
-    const formData = await request.formData();
+  complete: async ({ fetch, params }) => {
     const { id } = params;
-    const username = formData.get("username") as string;
-    const task = formData.get("task") as string;
-    const teacherTelegramId = formData.get("teacherTelegramId") as string;
+
     if (!id) {
-      logger.warn("Task completion attempted without ID");
-      return fail(400, { message: "Task ID is required" });
+      return fail(500);
     }
-
-    if (teacherTelegramId) {
-      const telegramResponse = await notifyTelegram(
-        messages.completed({ task, username, id }),
-        teacherTelegramId,
-      );
-      if (!telegramResponse.ok) {
-        logger.error(
-          { telegramResponse },
-          "Error in notifying teacher task completed",
-        );
-      }
-    }
-
     const response = await fetch(routes.tasks.single(id), {
       method: "PUT",
     });
@@ -42,8 +19,8 @@ export const actions = {
     const editResult = await handleApiResponse<EmptyResponse>(response);
 
     if (!isSuccessResponse(editResult)) {
-      logger.error({ id }, "completing task failed");
-      return fail(editResult.status, { message: editResult.message });
+      logger.error({ editResult, id }, "completing task failed");
+      return fail(500);
     }
 
     return { success: true };

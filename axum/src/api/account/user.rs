@@ -2,13 +2,13 @@ use crate::api::USER_TAG;
 use crate::api::error::APIError;
 use crate::auth::password::hash_password;
 use crate::auth::{Claims, tokens};
-use crate::db::crud::account::user;
-use crate::models::{InviterQuery, User};
+use crate::db::crud::core::account::user;
 use crate::schema::AppState;
+use crate::types::{InviterQuery, User};
 use axum::extract::{Json, Query, State};
 use axum::http::StatusCode;
 
-use crate::models::users::UserUpdate;
+use crate::types::users::UserUpdate;
 /// Gets the inviter's credentials
 #[utoipa::path(
     get,
@@ -21,8 +21,7 @@ use crate::models::users::UserUpdate;
         (status = 200, description = "Inviter details retrieved", body = User),
         (status = 401, description = "Unauthorized"),
         (status = 400, description = "Invalid invite token")
-    ),
-    security(("api_key" = []))
+    )
 )]
 
 pub async fn fetch_inviter(
@@ -43,8 +42,7 @@ pub async fn fetch_inviter(
     responses(
         (status = 200, description = "User details retrieved", body = User),
         (status = 401, description = "Unauthorized"),
-    ),
-    security(("api_key" = []))
+    )
 )]
 pub async fn fetch_me(
     State(state): State<AppState>,
@@ -63,8 +61,7 @@ pub async fn fetch_me(
     responses(
         (status = 204, description = "User deleted successfully"),
         (status = 401, description = "Unauthorized")
-    ),
-    security(("api_key" = []))
+    )
 )]
 pub async fn delete_user(
     State(state): State<AppState>,
@@ -84,8 +81,7 @@ pub async fn delete_user(
         (status = 204, description = "User updated successfully"),
         (status = 400, description = "Bad request"),
         (status = 401, description = "Unauthorized")
-    ),
-    security(("api_key" = []))
+    )
 )]
 pub async fn update_user(
     State(state): State<AppState>,

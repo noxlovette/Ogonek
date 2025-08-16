@@ -1,5 +1,6 @@
 node_modules
 .idea/
+.vscode
 
 # Build
 /dist
@@ -46,6 +47,7 @@ bun.lockb
 /build
 data
 tarpaulin-report.html
+openapi.*
 
 # OS
 .DS_Store

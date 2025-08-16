@@ -1,7 +1,7 @@
 use crate::api::TASK_TAG;
 use crate::error::AppError;
-use crate::models::{CompletedPart, MultipartInitResultS3, PartUploadUrl};
 use crate::schema::AppState;
+use crate::types::{CompletedPart, MultipartInitResultS3, PartUploadUrl};
 use aws_sdk_s3::presigning::PresigningConfig;
 use std::error::Error;
 /// Start multipart file upload
@@ -60,8 +60,7 @@ pub async fn init_multipart_s3(
    responses(
         (status = 200, description = "Upload part completed successfully"),
         (status = 401, description = "Unauthorized")
-    ),
-    security(("api_key" = []))
+    )
 )]
 pub async fn complete_multipart_s3(
     state: &AppState,
@@ -115,8 +114,7 @@ pub async fn complete_multipart_s3(
     responses(
         (status = 200, description = "Upload aborted"),
         (status = 401, description = "Unauthorized")
-    ),
-    security(("api_key" = []))
+    )
 )]
 pub async fn abort_multipart_s3(
     state: &AppState,

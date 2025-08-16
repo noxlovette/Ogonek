@@ -18,7 +18,7 @@
       ? `/t/flashcards/${deck.id}`
       : `/s/flashcards/${deck.id}`;
 
-  const title = deck.name;
+  const title = deck.title;
   const badgeText = deck.description ?? "Deck Description";
 </script>
 

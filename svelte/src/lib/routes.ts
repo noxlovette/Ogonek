@@ -17,9 +17,17 @@ export const routes = {
   },
 
   decks: {
-    all: (search?: string, assignee?: string) => {
+    all: (
+      search?: string,
+      assignee?: string,
+      page?: string,
+      per_page?: string,
+    ) => {
       const params = new URLSearchParams();
       if (search) params.append("search", search);
+      if (page) params.set("page", page);
+      if (per_page) params.set("per_page", per_page);
+
       if (assignee) params.append("assignee", assignee);
       const query = params.toString();
 
@@ -68,6 +76,7 @@ export const routes = {
     },
     single: (id: string) => `${API_BASE}/tasks/${id}`,
     new: () => `${API_BASE}/tasks`,
+    request: () => `${API_BASE}/notification/request`,
   },
   s3: {
     check: () => `${API_BASE}/s3`,
@@ -88,8 +97,12 @@ export const routes = {
   users: {
     self: () => `${API_BASE}/users`,
     profile: () => `${API_BASE}/users/profile`,
-    dashboard: () => `${API_BASE}/users/dashboard`,
   },
 
+  state: {
+    dashboard: () => `${API_BASE}/state/dashboard`,
+    badges: () => `${API_BASE}/state/badges`,
+    context: () => `${API_BASE}/state/context`,
+  },
   health: () => `${API_BASE}/health`,
 } as const;

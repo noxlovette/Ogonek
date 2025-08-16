@@ -1,5 +1,4 @@
 <script lang="ts">
-  import type { PageData } from "./$types";
   import {
     H1,
     DueTasksWidget,
@@ -20,7 +19,7 @@
     night: m["dashboard.nightGreeting"]({ name: $user.name! }),
   };
 
-  let { data }: { data: PageData } = $props();
+  let { data } = $props();
 </script>
 
 <HeaderEmbellish>
@@ -28,12 +27,12 @@
 </HeaderEmbellish>
 
 <div class="grid gap-8 lg:grid-cols-3">
-  <DueTasksWidget tasks={data.tasks.data} />
+  <DueTasksWidget tasks={data.tasks} />
 
   <LearnWidget
-    cardsCount={data.learn.dueCards}
-    streakDays={data.learn.stats.currentSterak}
-    todayStudied={data.learn.stats.cardsStudiedToday}
+    cardsCount={data.badges.dueCards}
+    streakDays={data.learn.currentStreak}
+    todayStudied={data.learn.cardsStudiedToday}
   />
   <ActivityFeedWidget activities={data.activity} />
 </div>
