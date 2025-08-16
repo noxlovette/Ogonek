@@ -26,7 +26,7 @@
   import TableSkeleton from "$lib/components/UI/interactive/TableSkeleton.svelte";
 
   let { data } = $props();
-  let { students } = $derived(data);
+  const { students } = data;
 
   const role = page.params.role;
 
@@ -42,7 +42,7 @@
 
   const deckConfig: TableConfig<DeckSmall> = {
     columns: [
-      { key: "name", label: m.title() },
+      { key: "title", label: m.title() },
       {
         key: "description",
         label: m.equal_key_gazelle_attend(),
@@ -127,9 +127,9 @@
   {/if}
 {:then decks}
   {#if role === "s"}
-    {#if decks.length}
+    {#if decks.data.length}
       <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {#each decks as deck (deck.id)}
+        {#each decks.data as deck (deck.id)}
           <DeckCard {deck} />
         {/each}
       </div>
@@ -143,8 +143,8 @@
       config={deckConfig}
       href="flashcards"
       {students}
-      items={decks}
-      total={decks.length}
+      items={decks.data}
+      total={decks.data.length}
     />
   {/if}
 {:catch error: App.Error}

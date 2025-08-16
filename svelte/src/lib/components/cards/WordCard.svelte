@@ -32,7 +32,7 @@
 >
   <!-- Card Front -->
   <div
-    class="ring-default absolute inset-0 flex h-full w-full items-center justify-center rounded-sm bg-white p-5 shadow-sm ring-1 transition-all duration-150 backface-hidden hover:shadow-sm dark:bg-stone-900 {flippedCards.has(
+    class="ring-default absolute inset-0 flex h-full w-full items-center justify-center rounded-sm bg-white p-5 shadow-sm transition-all duration-150 backface-hidden hover:shadow-sm dark:bg-stone-900 {flippedCards.has(
       card.id,
     )
       ? 'opacity-0'
