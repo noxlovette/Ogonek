@@ -3,7 +3,7 @@ services:
   svelte:
     build:
       context: ../svelte
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     container_name: svelte-ogonek-staging
     ports:
       - "3002:5173"
@@ -26,11 +26,12 @@ services:
   axum:
     build:
       context: ../axum
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     container_name: axum-ogonek-staging
     ports:
       - "3000:3000"
     volumes:
+      - ../axum:/app
       - cargo-cache:/usr/local/cargo/registry
       - cargo-target:/app/target
     env_file:
@@ -45,10 +46,11 @@ services:
       postgres:
         condition: service_healthy
   postgres:
-    image: postgres
+    image: postgres:alpine
     container_name: pg-ogonek-staging
     restart: always
-    user: postgres
+    ports: 
+      - "5433:5432"
     volumes:
       - db-data:/var/lib/postgresql/data
     env_file:
