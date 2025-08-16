@@ -27,14 +27,12 @@ impl ApnsProvider {
             Endpoint::Sandbox
         };
 
-        let key_path = std::env::var("APNS_KEY_PATH").unwrap_or_else(|_| "key.p8".to_string());
+        let key = std::env::var("APNS_KEY").context("NO APNS KEY")?;
 
-        let key = std::fs::read(key_path).context("Failed to load the p8 file")?;
+        let key_id = std::env::var("APNS_KEY_ID").context("APNS_KEY_ID needs to be set")?;
+        let team_id = std::env::var("APNS_TEAM_ID").context("APNS_TEAM_ID needs to be set")?;
 
-        let key_id = std::env::var("APNS_KEY_ID")?;
-        let team_id = std::env::var("APNS_TEAM_ID")?;
-
-        let topic = std::env::var("TOPIC")?;
+        let topic = std::env::var("APNS_TOPIC").context("APNS_TOPIC needs to be set")?;
 
         let client = Client::token(
             std::io::Cursor::new(key),
