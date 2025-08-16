@@ -110,7 +110,7 @@ pub async fn fetch_badges(
     tag = STATE_TAG,
     path = "/context",
     responses(
-        (status = 200, description = "Context data retrieved", body = NotificationBadges),
+        (status = 200, description = "Context data retrieved", body = AppContext),
         (status = 401, description = "Unauthorized")
     )
 )]

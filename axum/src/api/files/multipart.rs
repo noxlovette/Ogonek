@@ -24,9 +24,6 @@ use crate::api::TASK_TAG;
         (status = 200, description = "Multipart upload initialized", body = MultipartUploadInit),
         (status = 400, description = "Bad request"),
         (status = 404, description = "Parent folder not found")
-    ),
-    security(
-        ("api_key" = [])
     )
 )]
 pub async fn init_multipart_upload(
@@ -79,9 +76,6 @@ pub async fn init_multipart_upload(
         (status = 201, description = "Upload completed successfully"),
         (status = 400, description = "Bad request"),
         (status = 404, description = "File not found")
-    ),
-    security(
-        ("api_key" = [])
     )
 )]
 pub async fn complete_multipart_upload(
@@ -110,9 +104,6 @@ pub async fn complete_multipart_upload(
         (status = 200, description = "Upload aborted successfully"),
         (status = 400, description = "Bad request"),
         (status = 404, description = "File not found")
-    ),
-    security(
-        ("api_key" = [])
     )
 )]
 pub async fn abort_multipart_upload(

@@ -2,7 +2,6 @@ use crate::api::error::APIError;
 use crate::auth::Claims;
 use crate::db::crud::core::account::{profile, user};
 use crate::db::crud::notifications::device_tokens::*;
-use crate::notifications::dispatch_notification;
 use crate::notifications::messages::NotificationType;
 use crate::schema::AppState;
 use crate::types::DeviceTokenPayload;
@@ -43,15 +42,15 @@ pub async fn request_hw(
     let user = user::find_by_id(&state.db, &claims.sub).await?;
     let user_name = user.name;
     if let Some(telegram_id) = teacher_telegram_id {
-        dispatch_notification(
-            &state.bot_token,
-            &state.http_client,
-            &telegram_id,
-            NotificationType::TeacherNotify {
-                username: user_name,
-            },
-        )
-        .await?;
+        state
+            .notification_service
+            .dispatch_notification(
+                &telegram_id,
+                NotificationType::TeacherNotify {
+                    username: user_name,
+                },
+            )
+            .await?;
     }
     Ok(StatusCode::NO_CONTENT)
 }

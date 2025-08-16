@@ -1,5 +1,28 @@
 name: ogonek-staging
 services:
+  svelte:
+    build:
+      context: ../svelte
+      dockerfile: Dockerfile
+    container_name: svelte-ogonek-staging
+    ports:
+      - "3002:5173"
+    volumes:
+      - ../svelte/src:/app/src
+      - ../svelte/messages:/app/messages
+    env_file:
+      - ../svelte/.env
+    depends_on:
+      - axum
+  redis:
+    image: redis/redis-stack:latest
+    container_name: redis-ogonek-staging
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
+      interval: 1s
+      timeout: 3s
+      retries: 5
+      start_period: 30s
   axum:
     build:
       context: ../axum
@@ -11,7 +34,7 @@ services:
       - cargo-cache:/usr/local/cargo/registry
       - cargo-target:/app/target
     env_file:
-      - ./axum/.env
+      - ../axum/.env
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
       interval: 10s

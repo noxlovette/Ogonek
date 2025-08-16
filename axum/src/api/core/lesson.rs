@@ -4,7 +4,6 @@ use crate::auth::Claims;
 use crate::db::crud::core::account::student;
 use crate::db::crud::core::lesson;
 use crate::db::crud::tracking::{self, activity::log_activity};
-use crate::notifications::dispatch_notification;
 use crate::notifications::messages::NotificationType;
 use crate::schema::AppState;
 use crate::types::{
@@ -209,13 +208,10 @@ pub async fn update_lesson(
             let telegram_id = student::get_telegram_id(&state.db, &claims.sub, &new_user).await?;
 
             if let Some(telegram_id) = telegram_id {
-                dispatch_notification(
-                    &state.bot_token,
-                    &state.http_client,
-                    &telegram_id,
-                    NotificationType::LessonCreated,
-                )
-                .await?;
+                state
+                    .notification_service
+                    .dispatch_notification(&telegram_id, NotificationType::LessonCreated)
+                    .await?;
             }
         }
     } else if let Some(assignee) = current_assignee {

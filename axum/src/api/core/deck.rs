@@ -3,7 +3,6 @@ use crate::auth::Claims;
 use crate::db::crud::core::account::student;
 use crate::db::crud::core::flashcards::{self, deck};
 use crate::db::crud::tracking::{delete_seen, insert_as_unseen, log_activity, mark_as_seen};
-use crate::notifications::dispatch_notification;
 use crate::notifications::messages::NotificationType;
 use crate::schema::AppState;
 use crate::types::{
@@ -208,16 +207,16 @@ pub async fn update_deck(
             let deck = flashcards::deck::get_deck(&state.db, &id, &claims.sub).await?;
 
             if let Some(telegram_id) = telegram_id {
-                dispatch_notification(
-                    &state.bot_token,
-                    &state.http_client,
-                    &telegram_id,
-                    NotificationType::DeckCreated {
-                        title: deck.title,
-                        id: deck.id,
-                    },
-                )
-                .await?;
+                state
+                    .notification_service
+                    .dispatch_notification(
+                        &telegram_id,
+                        NotificationType::DeckCreated {
+                            title: deck.title,
+                            id: deck.id,
+                        },
+                    )
+                    .await?;
             }
         }
     } else if let Some(assignee) = current_assignee {

@@ -2,6 +2,7 @@ node_modules
 .idea/
 .vscode
 
+
 # Build
 /dist
 build/
@@ -18,6 +19,7 @@ test-results/
 *.crt
 *.csv
 *.key
+*.p8
 
 caddy-*
 

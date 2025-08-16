@@ -8,7 +8,6 @@ use crate::db::crud::{
     core::task::{delete, find_all, find_assignee, find_by_id, toggle, update},
     tracking::{delete_seen, log_activity, seen},
 };
-use crate::notifications::dispatch_notification;
 use crate::notifications::messages::NotificationType;
 use crate::s3::post::delete_s3;
 use crate::schema::AppState;
@@ -189,18 +188,19 @@ pub async fn toggle_task(
 
         let telegram_id = profile::get_teacher_telegram_id(&state.db, &claims.sub).await?;
         let task = task::find_by_id(&state.db, &id, &claims.sub).await?;
+
         if let Some(telegram_id) = telegram_id {
-            dispatch_notification(
-                &state.bot_token,
-                &state.http_client,
-                &telegram_id,
-                NotificationType::Completed {
-                    task: task.title,
-                    username: task.assignee_name,
-                    id: task.id,
-                },
-            )
-            .await?;
+            state
+                .notification_service
+                .dispatch_notification(
+                    &telegram_id,
+                    NotificationType::Completed {
+                        task: task.title,
+                        username: task.assignee_name,
+                        id: task.id,
+                    },
+                )
+                .await?;
         }
     }
 
@@ -268,21 +268,20 @@ pub async fn update_task(
             .await?;
             let telegram_id = student::get_telegram_id(&state.db, &claims.sub, &new_user).await?;
             let task = task::find_by_id(&state.db, &id, &claims.sub).await?;
-
             if let Some(telegram_id) = telegram_id {
-                dispatch_notification(
-                    &state.bot_token,
-                    &state.http_client,
-                    &telegram_id,
-                    NotificationType::TaskCreated {
-                        title: task.title,
-                        id: task.id,
-                        date: task
-                            .due_date
-                            .map_or("no due date".to_string(), |dt| dt.to_string()),
-                    },
-                )
-                .await?;
+                state
+                    .notification_service
+                    .dispatch_notification(
+                        &telegram_id,
+                        NotificationType::TaskCreated {
+                            title: task.title,
+                            id: task.id,
+                            date: task
+                                .due_date
+                                .map_or("no due date".to_string(), |dt| dt.to_string()),
+                        },
+                    )
+                    .await?;
             }
         }
     } else if let Some(assignee) = current_assignee {

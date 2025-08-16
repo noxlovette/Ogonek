@@ -1,15 +1,14 @@
-use crate::db::init::init_db;
-use crate::s3::init::init_s3;
+use crate::db::init_db;
+use crate::notifications::NotificationService;
+use crate::s3::init_s3;
 use aws_sdk_s3::Client as S3Client;
-use reqwest::Client;
 use sqlx::postgres::PgPool;
 #[derive(Clone, Debug)]
 pub struct AppState {
     pub db: PgPool,
     pub s3: S3Client,
-    pub http_client: Client,
-    pub bot_token: String,
     pub bucket_name: String,
+    pub notification_service: NotificationService,
 }
 
 impl AppState {
@@ -19,15 +18,13 @@ impl AppState {
         let db = init_db().await?;
         let s3 = init_s3().await?;
 
-        let http_client = Client::new();
-        let bot_token = std::env::var("TELEGRAM_KEY").expect("TELEGRAM_KEY needs to be set");
+        let notification_service = NotificationService::new()?;
 
         Ok(Self {
             db: db.clone(),
             s3,
             bucket_name,
-            http_client,
-            bot_token,
+            notification_service,
         })
     }
 }
