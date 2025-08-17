@@ -3,13 +3,10 @@ services:
   svelte:
     build:
       context: ../svelte
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile
     container_name: svelte-ogonek-staging
     ports:
-      - "3002:5173"
-    volumes:
-      - ../svelte/src:/app/src
-      - ../svelte/messages:/app/messages
+      - "3002:3000"
     env_file:
       - ../svelte/.env
     depends_on:
