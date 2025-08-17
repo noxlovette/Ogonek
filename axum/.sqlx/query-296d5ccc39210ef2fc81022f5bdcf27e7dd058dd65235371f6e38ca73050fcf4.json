@@ -1,0 +1,22 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        \n        SELECT token FROM device_tokens WHERE user_id = $1\n        \n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "token",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "296d5ccc39210ef2fc81022f5bdcf27e7dd058dd65235371f6e38ca73050fcf4"
+}

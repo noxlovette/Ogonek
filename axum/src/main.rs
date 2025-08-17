@@ -33,9 +33,9 @@ async fn run_server() -> anyhow::Result<()> {
         .nest("/lessons", lesson_routes())
         .nest("/tasks", task_routes())
         .nest("/decks", deck_routes())
-        .nest("/s3", s3_routes())
+        .nest("/files", file_routes())
         .nest("/learn", learn_routes())
-        .nest("/notification", notification_routes())
+        .nest("/notifications", notification_routes())
         .nest("/state", state_routes());
 
     // Public routes (no auth required)

@@ -2,8 +2,6 @@ use crate::api::TASK_TAG;
 use crate::api::error::APIError;
 use crate::auth::Claims;
 use crate::db::crud::core::files::file::{self, fetch_files_task};
-use crate::s3::get_presigned_url;
-use crate::s3::post::delete_s3;
 use crate::schema::AppState;
 use crate::types::files::{
     BatchPresignedUrlResponse, File, FileListParams, FileUpdate, PresignedFileUrl,
@@ -65,8 +63,7 @@ pub async fn fetch_presigned_url(
     tracing::debug!("File ID decyphered: {}", file_id);
 
     let file = file::find_by_id_no_owner(&state.db, file_id).await?;
-    let presigned_url =
-        get_presigned_url(&state.bucket_name, &state.s3, key_str, file.name).await?;
+    let presigned_url = state.s3.get_presigned_url(key_str, file.name).await?;
 
     // Return the structured response instead of raw JSON
     Ok((
@@ -102,13 +99,10 @@ pub async fn fetch_presigned_urls_batch(
         let file = file::find_by_id_no_owner(&state.db, &file_id).await?;
 
         // Generate presigned URL using the file's s3_key
-        let presigned_url = get_presigned_url(
-            &state.bucket_name,
-            &state.s3,
-            file.s3_key.clone(),
-            file.name.clone(),
-        )
-        .await?;
+        let presigned_url = state
+            .s3
+            .get_presigned_url(file.s3_key.clone(), file.name.clone())
+            .await?;
 
         presigned_urls.push(PresignedFileUrl {
             file_id: file_id.clone(),
@@ -165,7 +159,7 @@ pub async fn delete_file(
 ) -> Result<StatusCode, APIError> {
     let file = file::delete(&state.db, &file_id, &claims.sub).await?;
     if let Some(key) = &file.s3_key {
-        delete_s3(key, &state).await?;
+        state.s3.delete_s3(key).await?;
     } else {
         return Err(APIError::NotFound("S3 Object not Found".into()));
     }

@@ -25,3 +25,18 @@ pub async fn upsert(
 
     Ok(())
 }
+
+pub async fn get_device_tokens(db: &PgPool, user_id: &str) -> Result<Vec<String>, DbError> {
+    let token = sqlx::query_scalar!(
+        r#"
+        
+        SELECT token FROM device_tokens WHERE user_id = $1
+        
+        "#,
+        user_id,
+    )
+    .fetch_all(db)
+    .await?;
+
+    Ok(token)
+}

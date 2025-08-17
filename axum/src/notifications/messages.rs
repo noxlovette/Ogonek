@@ -1,4 +1,7 @@
+use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
+
+use crate::types::NotificationPayload;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum NotificationType {
@@ -18,7 +21,7 @@ pub enum NotificationType {
     TaskCreated {
         title: String,
         id: String,
-        date: String,
+        date: Option<DateTime<Utc>>,
     },
     #[serde(rename = "lessonCreated")]
     LessonCreated,
@@ -56,14 +59,94 @@ impl NotificationType {
                 )
             }
             Self::TaskCreated { title, id, date } => {
+                let formatted_date = date
+                    .map(|dt| dt.format("%B %d, %Y").to_string())
+                    .unwrap_or_else(|| "no due date".to_string());
+
                 format!(
                     "A new task has been added: \"{}\"\\. Due Date: {}\\. View it on [Ogonek](https://ogonek\\.app/s/tasks/{})",
                     escape_markdown_v2(title),
-                    escape_markdown_v2(date),
+                    escape_markdown_v2(&formatted_date),
                     id
                 )
             }
+
             Self::LessonCreated => "You have a new lesson".to_string(),
+        }
+    }
+
+    pub fn to_apns_payload(&self) -> NotificationPayload {
+        match self {
+            Self::TeacherNotify { username } => NotificationPayload {
+                title: "Homework Request".to_string(),
+                body: format!("{} needs homework assigned", username),
+                badge: Some(1),
+                sound: Some("default".to_string()),
+                data: Some(serde_json::json!({
+                    "type": "teacher_notify",
+                    "username": username
+                })),
+            },
+            Self::Completed { task, username, id } => NotificationPayload {
+                title: "Task Completed".to_string(),
+                body: format!("{} completed: {}", username, task),
+                badge: Some(1),
+                sound: Some("default".to_string()),
+                data: Some(serde_json::json!({
+                    "type": "task_completed",
+                    "task_id": id,
+                    "username": username
+                })),
+            },
+            Self::Reminder { task, due_date } => NotificationPayload {
+                title: "Task Reminder".to_string(),
+                body: format!("Don't forget: {} (due {})", task, due_date),
+                badge: Some(1),
+                sound: Some("default".to_string()),
+                data: Some(serde_json::json!({
+                    "type": "reminder",
+                    "task": task,
+                    "due_date": due_date
+                })),
+            },
+            Self::DeckCreated { title, id } => NotificationPayload {
+                title: "New Deck Available".to_string(),
+                body: format!("Check out the new deck: {}", title),
+                badge: Some(1),
+                sound: Some("default".to_string()),
+                data: Some(serde_json::json!({
+                    "type": "deck_created",
+                    "deck_id": id,
+                    "title": title
+                })),
+            },
+            Self::TaskCreated { title, id, date } => {
+                let formatted_date = date
+                    .map(|dt| dt.format("%B %d, %Y").to_string())
+                    .unwrap_or_else(|| "no due date".to_string());
+
+                NotificationPayload {
+                    title: "New Task Assigned".to_string(),
+                    body: format!("{} (due: {})", title, formatted_date),
+                    badge: Some(1),
+                    sound: Some("default".to_string()),
+                    data: Some(serde_json::json!({
+                        "type": "task_created",
+                        "task_id": id,
+                        "title": title,
+                        "due_date": date.map(|dt| dt.to_rfc3339()) // Keep ISO format for data
+                    })),
+                }
+            }
+            Self::LessonCreated => NotificationPayload {
+                title: "New Lesson".to_string(),
+                body: "You have a new lesson available".to_string(),
+                badge: Some(1),
+                sound: Some("default".to_string()),
+                data: Some(serde_json::json!({
+                    "type": "lesson_created"
+                })),
+            },
         }
     }
 }

@@ -1,6 +1,5 @@
 use crate::db::crud::core::task::{delete_system, fetch_old_tasks};
 use crate::error::AppError;
-use crate::s3::delete_s3;
 use crate::schema::AppState;
 
 use crate::db::crud::core::files::file::fetch_files_task;
@@ -35,7 +34,7 @@ async fn cleanup_task(state: &AppState, id: String) -> Result<(), AppError> {
 
     for file in files {
         if let Some(s3_key) = file.s3_key
-            && let Err(e) = delete_s3(&s3_key, state).await
+            && let Err(e) = state.s3.delete_s3(&s3_key).await
         {
             tracing::error!("Failed to delete file from S3: {}, error: {:?}", s3_key, e);
         }

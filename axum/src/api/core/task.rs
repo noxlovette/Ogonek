@@ -1,16 +1,13 @@
 use crate::api::TASK_TAG;
 use crate::api::error::APIError;
 use crate::auth::Claims;
-use crate::db::crud::core::account::{profile, student};
 use crate::db::crud::core::task::{self, create_with_defaults};
 use crate::db::crud::{
     core::files::file::fetch_files_task,
     core::task::{delete, find_all, find_assignee, find_by_id, toggle, update},
     tracking::{delete_seen, log_activity, seen},
 };
-use crate::notifications::dispatch_notification;
 use crate::notifications::messages::NotificationType;
-use crate::s3::post::delete_s3;
 use crate::schema::AppState;
 use crate::types::{
     ActionType, ModelType, PaginatedResponse, PaginatedTasks, TaskPaginationParams, TaskSmall,
@@ -132,7 +129,7 @@ pub async fn delete_task(
 
     for file in files {
         if let Some(s3_key) = file.s3_key
-            && let Err(e) = delete_s3(&s3_key, &state).await
+            && let Err(e) = state.s3.delete_s3(&s3_key).await
         {
             tracing::error!("Failed to delete file from S3: {}, error: {:?}", s3_key, e);
         }
@@ -187,13 +184,12 @@ pub async fn toggle_task(
         )
         .await?;
 
-        let telegram_id = profile::get_teacher_telegram_id(&state.db, &claims.sub).await?;
         let task = task::find_by_id(&state.db, &id, &claims.sub).await?;
-        if let Some(telegram_id) = telegram_id {
-            dispatch_notification(
-                &state.bot_token,
-                &state.http_client,
-                &telegram_id,
+
+        state
+            .notification_service
+            .notify_teacher(
+                &claims.sub,
                 NotificationType::Completed {
                     task: task.title,
                     username: task.assignee_name,
@@ -201,7 +197,6 @@ pub async fn toggle_task(
                 },
             )
             .await?;
-        }
     }
 
     Ok(StatusCode::NO_CONTENT)
@@ -266,24 +261,19 @@ pub async fn update_task(
                 None,
             )
             .await?;
-            let telegram_id = student::get_telegram_id(&state.db, &claims.sub, &new_user).await?;
             let task = task::find_by_id(&state.db, &id, &claims.sub).await?;
-
-            if let Some(telegram_id) = telegram_id {
-                dispatch_notification(
-                    &state.bot_token,
-                    &state.http_client,
-                    &telegram_id,
+            state
+                .notification_service
+                .notify_student(
+                    &claims.sub,
+                    &new_user,
                     NotificationType::TaskCreated {
                         title: task.title,
                         id: task.id,
-                        date: task
-                            .due_date
-                            .map_or("no due date".to_string(), |dt| dt.to_string()),
+                        date: task.due_date,
                     },
                 )
                 .await?;
-            }
         }
     } else if let Some(assignee) = current_assignee {
         // treat as update

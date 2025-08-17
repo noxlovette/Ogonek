@@ -1,9 +1,7 @@
 use crate::api::error::APIError;
 use crate::auth::Claims;
-use crate::db::crud::core::account::student;
 use crate::db::crud::core::flashcards::{self, deck};
 use crate::db::crud::tracking::{delete_seen, insert_as_unseen, log_activity, mark_as_seen};
-use crate::notifications::dispatch_notification;
 use crate::notifications::messages::NotificationType;
 use crate::schema::AppState;
 use crate::types::{
@@ -204,21 +202,19 @@ pub async fn update_deck(
             )
             .await?;
 
-            let telegram_id = student::get_telegram_id(&state.db, &claims.sub, &new_user).await?;
             let deck = flashcards::deck::get_deck(&state.db, &id, &claims.sub).await?;
 
-            if let Some(telegram_id) = telegram_id {
-                dispatch_notification(
-                    &state.bot_token,
-                    &state.http_client,
-                    &telegram_id,
+            state
+                .notification_service
+                .notify_student(
+                    &claims.sub,
+                    &new_user,
                     NotificationType::DeckCreated {
                         title: deck.title,
                         id: deck.id,
                     },
                 )
                 .await?;
-            }
         }
     } else if let Some(assignee) = current_assignee {
         // treat as update

@@ -10,4 +10,4 @@ use utoipa::OpenApi;
     fetch_presigned_urls_batch,
     delete_file,
 ))]
-pub struct S3Api;
+pub struct FilesApi;

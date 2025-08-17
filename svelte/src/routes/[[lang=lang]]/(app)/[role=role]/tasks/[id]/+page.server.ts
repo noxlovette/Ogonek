@@ -37,7 +37,7 @@ export const actions = {
 
     const encodedKey = btoa(key);
 
-    const response = await fetch(routes.s3.presign(encodedKey));
+    const response = await fetch(routes.files.presign(encodedKey));
 
     if (!response.ok) {
       return fail(response.status, {
@@ -57,7 +57,7 @@ export const actions = {
     }
     logger.info("Deleting file");
 
-    const response = await fetch(routes.s3.single(id), { method: "DELETE" });
+    const response = await fetch(routes.files.single(id), { method: "DELETE" });
     const deleteResult = await handleApiResponse<EmptyResponse>(response);
 
     if (!isSuccessResponse(deleteResult)) {
