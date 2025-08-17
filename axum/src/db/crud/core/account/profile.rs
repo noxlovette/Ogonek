@@ -79,8 +79,9 @@ pub async fn get_telegram_id(db: &PgPool, user_id: &str) -> Result<Option<String
         "#,
         user_id
     )
-    .fetch_one(db)
-    .await?;
+    .fetch_optional(db)
+    .await?
+    .flatten();
 
     Ok(telegram_id)
 }

@@ -270,9 +270,7 @@ pub async fn update_task(
                     NotificationType::TaskCreated {
                         title: task.title,
                         id: task.id,
-                        date: task
-                            .due_date
-                            .map_or("no due date".to_string(), |dt| dt.to_string()),
+                        date: task.due_date,
                     },
                 )
                 .await?;

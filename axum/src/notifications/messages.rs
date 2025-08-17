@@ -1,3 +1,4 @@
+use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 
 use crate::types::NotificationPayload;
@@ -20,7 +21,7 @@ pub enum NotificationType {
     TaskCreated {
         title: String,
         id: String,
-        date: String,
+        date: Option<DateTime<Utc>>,
     },
     #[serde(rename = "lessonCreated")]
     LessonCreated,
@@ -58,13 +59,18 @@ impl NotificationType {
                 )
             }
             Self::TaskCreated { title, id, date } => {
+                let formatted_date = date
+                    .map(|dt| dt.format("%B %d, %Y").to_string())
+                    .unwrap_or_else(|| "no due date".to_string());
+
                 format!(
                     "A new task has been added: \"{}\"\\. Due Date: {}\\. View it on [Ogonek](https://ogonek\\.app/s/tasks/{})",
                     escape_markdown_v2(title),
-                    escape_markdown_v2(date),
+                    escape_markdown_v2(&formatted_date),
                     id
                 )
             }
+
             Self::LessonCreated => "You have a new lesson".to_string(),
         }
     }
@@ -114,18 +120,24 @@ impl NotificationType {
                     "title": title
                 })),
             },
-            Self::TaskCreated { title, id, date } => NotificationPayload {
-                title: "New Task Assigned".to_string(),
-                body: format!("{} (due: {})", title, date),
-                badge: Some(1),
-                sound: Some("default".to_string()),
-                data: Some(serde_json::json!({
-                    "type": "task_created",
-                    "task_id": id,
-                    "title": title,
-                    "due_date": date
-                })),
-            },
+            Self::TaskCreated { title, id, date } => {
+                let formatted_date = date
+                    .map(|dt| dt.format("%B %d, %Y").to_string())
+                    .unwrap_or_else(|| "no due date".to_string());
+
+                NotificationPayload {
+                    title: "New Task Assigned".to_string(),
+                    body: format!("{} (due: {})", title, formatted_date),
+                    badge: Some(1),
+                    sound: Some("default".to_string()),
+                    data: Some(serde_json::json!({
+                        "type": "task_created",
+                        "task_id": id,
+                        "title": title,
+                        "due_date": date.map(|dt| dt.to_rfc3339()) // Keep ISO format for data
+                    })),
+                }
+            }
             Self::LessonCreated => NotificationPayload {
                 title: "New Lesson".to_string(),
                 body: "You have a new lesson available".to_string(),

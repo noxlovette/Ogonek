@@ -44,11 +44,11 @@ impl NotificationService {
             teacher_id, student_id, notification_type
         );
 
-        self.send_apns_notifications(&student_id, &notification_type)
+        self.send_apns_notifications(student_id, &notification_type)
             .await?;
 
         if let Ok(Some(telegram_id)) =
-            student::get_telegram_id(&self.db, teacher_id, &student_id).await
+            student::get_telegram_id(&self.db, teacher_id, student_id).await
         {
             self.telegram_provider
                 .send_notification(&telegram_id, &notification_type)

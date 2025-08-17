@@ -6,7 +6,10 @@ export default defineConfig({
   server: {
     host: true,
     port: 5173,
-    allowedHosts: ["next-precisely-piranha.ngrok-free.app", "staging.ogonek.app"],
+    allowedHosts: [
+      "next-precisely-piranha.ngrok-free.app",
+      "staging.ogonek.app",
+    ],
   },
   plugins: [
     sveltekit(),
