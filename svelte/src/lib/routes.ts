@@ -76,7 +76,7 @@ export const routes = {
     },
     single: (id: string) => `${API_BASE}/tasks/${id}`,
     new: () => `${API_BASE}/tasks`,
-    request: () => `${API_BASE}/notification/request`,
+    request: () => `${API_BASE}/notifications/request`,
   },
   s3: {
     check: () => `${API_BASE}/s3`,
