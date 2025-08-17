@@ -26,7 +26,7 @@ pub async fn upsert(
     Ok(())
 }
 
-pub async fn get_device_tokens(db: &PgPool, user_id: &str) -> Result<Option<String>, DbError> {
+pub async fn get_device_tokens(db: &PgPool, user_id: &str) -> Result<Vec<String>, DbError> {
     let token = sqlx::query_scalar!(
         r#"
         
@@ -35,7 +35,7 @@ pub async fn get_device_tokens(db: &PgPool, user_id: &str) -> Result<Option<Stri
         "#,
         user_id,
     )
-    .fetch_optional(db)
+    .fetch_all(db)
     .await?;
 
     Ok(token)

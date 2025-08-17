@@ -38,26 +38,6 @@ pub async fn get_call_url(
     Ok(td)
 }
 
-pub async fn get_teacher_telegram_id(
-    db: impl sqlx::Executor<'_, Database = sqlx::Postgres>,
-    user_id: &str,
-) -> Result<Option<String>, DbError> {
-    let td = sqlx::query_scalar!(
-        r#"
-        SELECT
-            p.telegram_id
-        FROM teacher_student ts
-        JOIN profile p ON ts.teacher_id = p.user_id
-        WHERE ts.student_id = $1
-        "#,
-        user_id,
-    )
-    .fetch_optional(db)
-    .await?
-    .flatten();
-
-    Ok(td)
-}
 pub async fn upsert(db: &PgPool, user_id: &str, update: &ProfileUpdate) -> Result<(), DbError> {
     sqlx::query_as!(
         Profile,
@@ -103,4 +83,41 @@ pub async fn get_telegram_id(db: &PgPool, user_id: &str) -> Result<Option<String
     .await?;
 
     Ok(telegram_id)
+}
+
+pub async fn get_teacher_telegram_id(
+    db: impl sqlx::Executor<'_, Database = sqlx::Postgres>,
+    user_id: &str,
+) -> Result<Option<String>, DbError> {
+    let td = sqlx::query_scalar!(
+        r#"
+        SELECT
+            p.telegram_id
+        FROM teacher_student ts
+        JOIN profile p ON ts.teacher_id = p.user_id
+        WHERE ts.student_id = $1
+        "#,
+        user_id,
+    )
+    .fetch_optional(db)
+    .await?
+    .flatten();
+
+    Ok(td)
+}
+
+pub async fn get_teacher_user_id(db: &PgPool, student_id: &str) -> Result<Option<String>, DbError> {
+    let id = sqlx::query_scalar!(
+        r#"
+        SELECT p.user_id
+        FROM teacher_student ts
+        JOIN profile p ON ts.teacher_id = p.user_id
+        WHERE ts.student_id = $1
+        "#,
+        student_id
+    )
+    .fetch_optional(db)
+    .await?;
+
+    Ok(id)
 }
