@@ -6,7 +6,7 @@ import type { RequestHandler } from "./$types";
 export const POST: RequestHandler = async ({ request, fetch }) => {
   const payload = await request.json();
 
-  const response = await fetch(routes.s3.multipart.init(), {
+  const response = await fetch(routes.files.multipart.init(), {
     method: "POST",
     body: JSON.stringify(payload),
   });

@@ -2,7 +2,6 @@ use crate::api::error::APIError;
 use crate::auth::Claims;
 use crate::db::crud::core::files::multipart::{FileCreateParams, FileLinkOptions};
 use crate::db::crud::core::files::{file, multipart};
-use crate::s3::{abort_multipart_s3, complete_multipart_s3, init_multipart_s3};
 use crate::schema::AppState;
 use crate::types::{
     AbortMultipartRequest, CompleteMultipartRequest, InitUploadRequest, MultipartInitResultS3,
@@ -56,8 +55,10 @@ pub async fn init_multipart_upload(
 
     multipart::create_multipart_file(&state.db, file_params, link_options).await?;
 
-    let MultipartInitResultS3 { upload_id, parts } =
-        init_multipart_s3(&state, &s3_key, &payload.content_type, payload.total_parts).await?;
+    let MultipartInitResultS3 { upload_id, parts } = state
+        .s3
+        .init_multipart_s3(&s3_key, &payload.content_type, payload.total_parts)
+        .await?;
 
     Ok(Json(MultipartUploadInit {
         upload_id,
@@ -87,7 +88,10 @@ pub async fn complete_multipart_upload(
     file::check_file_exists(&state.db, &payload.file_id, &claims.sub).await?;
 
     // Complete S3 upload
-    complete_multipart_s3(&state, &payload.s3_key, &payload.upload_id, payload.parts).await?;
+    state
+        .s3
+        .complete_multipart_s3(&payload.s3_key, &payload.upload_id, payload.parts)
+        .await?;
 
     // Mark as complete in DB
     multipart::mark_upload_complete(&state.db, &payload.file_id, &claims.sub).await?;
@@ -115,7 +119,11 @@ pub async fn abort_multipart_upload(
     file::check_file_exists(&state.db, &payload.file_id, &claims.sub).await?;
 
     // Abort S3 upload first (if this fails, we still want to clean up the DB record)
-    if let Err(e) = abort_multipart_s3(&state, &payload.s3_key, &payload.upload_id).await {
+    if let Err(e) = state
+        .s3
+        .abort_multipart_s3(&payload.s3_key, &payload.upload_id)
+        .await
+    {
         // Log the S3 error but continue with DB cleanup
         tracing::warn!("Failed to abort S3 multipart upload: {:?}", e);
     }

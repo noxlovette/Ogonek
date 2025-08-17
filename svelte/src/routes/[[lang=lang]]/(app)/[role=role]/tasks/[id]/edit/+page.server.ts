@@ -88,7 +88,7 @@ export const actions = {
     const formData = await request.formData();
     const id = formData.get("fileId") as string;
 
-    const response = await fetch(routes.s3.single(id), { method: "DELETE" });
+    const response = await fetch(routes.files.single(id), { method: "DELETE" });
 
     const deleteResult = await handleApiResponse<EmptyResponse>(response);
 

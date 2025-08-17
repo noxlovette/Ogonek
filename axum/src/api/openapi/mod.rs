@@ -2,10 +2,10 @@ use utoipa::OpenApi;
 
 pub mod auth;
 pub mod deck;
+pub mod files;
 pub mod learn;
 pub mod lesson;
 pub mod notifications;
-pub mod s3;
 pub mod state;
 pub mod task;
 pub mod user;
@@ -28,7 +28,7 @@ pub const LEARN_TAG: &str = "Learn";
         (path = "/api/v1/users", api = user::UserApi),
         (path = "/api/v1/auth", api = auth::AuthApi),
         (path = "/api/v1/learn", api = learn::LearnApi),
-        (path = "/api/v1/s3", api = s3::S3Api),
+        (path = "/api/v1/files", api = files::FilesApi),
         (path = "/api/v1/notifications", api = notifications::NotificationApi),
         (path = "/api/v1/state", api = state::StateApi),
     ),

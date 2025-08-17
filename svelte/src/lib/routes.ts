@@ -78,14 +78,15 @@ export const routes = {
     new: () => `${API_BASE}/tasks`,
     request: () => `${API_BASE}/notifications/request`,
   },
-  s3: {
-    check: () => `${API_BASE}/s3`,
-    presign: (encodedKey: string) => `${API_BASE}/s3/presigned/${encodedKey}`,
-    single: (id: string) => `${API_BASE}/s3/${id}`,
+  files: {
+    check: () => `${API_BASE}/files`,
+    presign: (encodedKey: string) =>
+      `${API_BASE}/files/presigned/${encodedKey}`,
+    single: (id: string) => `${API_BASE}/files/${id}`,
     multipart: {
-      init: () => `${API_BASE}/s3/init`,
-      complete: () => `${API_BASE}/s3/complete`,
-      abort: () => `${API_BASE}/s3/abort`,
+      init: () => `${API_BASE}/files/init`,
+      complete: () => `${API_BASE}/files/complete`,
+      abort: () => `${API_BASE}/files/abort`,
     },
   },
 

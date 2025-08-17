@@ -18,7 +18,7 @@ impl ApnsProvider {
     pub fn new() -> Result<Self> {
         let is_production = match std::env::var("APP_ENV") {
             Ok(env) => env == "production",
-            Err(_) => false, // default to dev mode
+            Err(_) => false,
         };
 
         let endpoint = if is_production {

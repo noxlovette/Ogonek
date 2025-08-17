@@ -6,7 +6,6 @@ pub struct DeviceTokenPayload {
     pub token: String,
     pub platform: String,
 }
-
 #[derive(Debug, Clone, Serialize)]
 pub struct NotificationPayload {
     pub title: String,
