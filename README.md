@@ -1,119 +1,93 @@
-# Ogonek 🔥
+# Ogonek
 
 [![CI](https://github.com/noxlovette/ogonek/actions/workflows/ci-build.yml/badge.svg)](https://github.com/noxlovette/ogonek/actions/workflows/ci-build.yml)
+[![Rust](https://img.shields.io/badge/rust-%23000000.svg?style=for-the-badge&logo=rust&logoColor=white)](https://www.rust-lang.org/)
+[![Svelte](https://img.shields.io/badge/svelte-%23f1413d.svg?style=for-the-badge&logo=svelte&logoColor=white)](https://svelte.dev/)
+[![PostgreSQL](https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+[![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
 
-A modern, full-stack web application designed to facilitate teaching and learning through flashcards, task management, and lesson planning. The platform connects teachers and students in a collaborative learning environment.
+A high-performance learning management platform designed for scalable educational workflows. Ogonek provides a comprehensive solution for course delivery, student assessment, and spaced repetition learning through a modern web architecture.
 
-## Overview
+## Architecture
 
-This application provides a comprehensive learning management system with the following core features:
+### System Overview
 
-- **Flashcard Learning System**: Create, share, and study decks of flashcards with spaced repetition algorithms (SM2)
-- **User Management**: Teacher and student roles with appropriate permissions and profiles
-- **Lesson Planning**: Create and assign lessons to students
-- **Task Management**: Assign and track tasks with priorities and due dates
-- **File Management**: Upload, organize, and share files with S3 storage integration (next release)
+Ogonek implements a service-oriented architecture with clear separation between presentation, business logic, and data layers. The monolithic database design ensures consistency while maintaining modular service boundaries.
 
-## Tech Stack
+```
+┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
+│   SvelteKit     │    │   Axum Server    │    │   PostgreSQL    │
+│   Frontend      │◄──►│   (Rust)         │◄──►│   Database      │
+│                 │    │                  │    │                 │
+└─────────────────┘    └──────────────────┘    └─────────────────┘
+                                │
+                                ▼
+                       ┌─────────────────┐
+                       │   Scaleway S3   │
+                       │   Object Store  │
+                       └─────────────────┘
+```
 
 ### Backend
 
-- **Rust** with **Axum** framework for a high-performance API
-- **SQLx** for type-safe database interactions with PostgreSQL
-- **JWT** authentication with role-based access control
-- **S3 Integration** for file storage (Scaleway)
+**Axum Web Framework**: Built on Tokio's async runtime, providing sub-millisecond response times with efficient resource utilisation.
+
+**Database Layer**: SQLx provides compile-time verified SQL queries with connection pooling and transaction management. Database interactions follow the repository pattern with dedicated CRUD modules.
+
+**File Storage**: Integrated S3-compatible object storage for multimedia content with presigned URL generation for secure, direct client downloads.
+
+**Error Handling**: Centralised error management with structured logging and Sentry integration for production monitoring.
 
 ### Frontend
 
-- **Svelte** with component-based architecture
-- **TailwindCSS** for styling
-- **TypeScript** for type safety
+**SvelteKit**: Server-side rendering with progressive enhancement and client-side hydration for optimal performance and SEO.
 
-### Infrastructure
+**Type Safety**: Full TypeScript integration.
 
-- **Docker Compose** for containerization and deployment
-- **PostgreSQL** for relational data storage
-- **Redis** for caching
+**State Management**: Svelte stores with reactive data flow patterns.
+
+**Internationalisation**: Paraglide-based translation system with compile-time optimisation.
 
 ## Core Features
 
-### Spaced Repetition Learning
+### Educational Content Management
 
-The application implements the SM2 algorithm for optimized flashcard learning, automatically scheduling reviews based on user performance.
+**Lesson Orchestration**: Hierarchical content organisation with multimedia support and progress tracking. Teachers can create structured learning paths with embedded assessments and resource attachments.
 
-### Teacher-Student Relationship
+**Task Assignment System**: Task distribution with deadline management and submission tracking. Supports file attachments up to 100MB with real-time upload progress.
 
-- Teachers can create content, assign tasks and lessons
-- Students can access assigned content, track their learning progress, study and create flashcards
-- Both roles have personalized dashboards
+**Spaced Repetition Engine**: Intelligent flashcard scheduling based on forgetting curve algorithms. Adaptive difficulty adjustment based on user performance metrics.
 
-### Content Management
+### Content Delivery
 
-- Create and organize flashcard decks
-- Author lesson content with markdown support
-- Assign and manage tasks with priority levels and due dates
+**Responsive Design**: Mobile-first interface with adaptive layouts for tablets and desktop environments.
 
-### File System (next release)
+**Updates**: Telegram and iOS notifications for assignment updates, new content, and system announcements.
 
-- Upload and organize files in folders
-- Attach files to tasks and lessons
-- Secure file storage using S3-compatible storage
+## Authentication & Authorisation
 
-## API Structure
+### Security Architecture
 
-The API is organized around these primary resources:
+**JWT-based Authentication**: Stateless token system with configurable expiration and refresh token rotation. Tokens include user roles and permissions for fine-grained access control.
 
-- `/auth` - Authentication endpoints
-- `/user` - User profile management
-- `/deck` - Flashcard deck management
-- `/learning` - Spaced repetition learning endpoints
-- `/lesson` - Lesson content management
-- `/task` - Task management
-- `/student` - Teacher-student relationship management
-- `/profile` - User profile customization
-- `/file` - File management system
+**Role-based Access Control (RBAC)**:
+- **Teachers**: Full access to course creation, student management, and analytics
+- **Students**: Access to assigned content, progress tracking, and submission capabilities
 
-## Getting Started
+### Security Features
 
-### Prerequisites
+**Password Security**: Argon2 hashing with configurable work factors and salt generation.
 
-- Docker and Docker Compose
-- Scaleway S3 compatible storage account (or alternative S3 provider)
-- sqlx and cargo installed
+**Session Management**: Token storage in cookies.
 
-### Environment Variables
+**API Security**: CORS configuration, request validation middleware.
 
-See the .env.example in the axum/ and svelte/ directories
+**Data Protection**: Environment-based secrets management.
 
-### Installation
+## Deployment
 
-1. Clone the repository
-2. Set up environment variables
-3. From the axum/ folder, run:
-   ```
-   sqlx database create && sqlx migrate run
-   ```
-4. Run with Docker Compose:
-   ```
-   docker compose -f compose.dev.yaml up -d
-   ```
+Containerised deployment using Docker Compose with multi-stage builds for production optimisation. Environment-based configuration with automated database migrations and integrated health monitoring.
 
-### Build
+---
 
-```
-SVELTE_IMAGE=ghcr.io/username/svelte-ogonek:tag AXUM_IMAGE=ghcr.io/username/axum-ogonek:tag docker buildx bake -f compose.buildx.yaml --push
-```
-
-## License
-
-This project is licensed under the GNU Affero General Public License v3.0 (AGPL-3.0).
-
-This means:
-
-- You can use, modify, and distribute this software
-- If you modify and distribute it, you must make your modifications available under the same license
-- If you run a modified version of the software on a server that users interact with (even over a network), you must make the source code available to those users
-
-This ensures that all improvements to the code remain open source, while allowing the original creator to maintain certain commercial advantages.
-
-For more information, see the [full license text](https://www.gnu.org/licenses/agpl-3.0.en.html).
+For technical support and deployment assistance: [danila.volkov@noxlovette.com](mailto:danila.volkov@noxlovette.com)
