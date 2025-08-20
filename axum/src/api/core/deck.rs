@@ -210,8 +210,8 @@ pub async fn update_deck(
                     &claims.sub,
                     &new_user,
                     NotificationType::DeckCreated {
-                        title: deck.title,
-                        id: deck.id,
+                        deck_title: deck.title,
+                        deck_id: deck.id,
                     },
                 )
                 .await?;
