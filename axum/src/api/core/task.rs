@@ -191,9 +191,9 @@ pub async fn toggle_task(
             .notify_teacher(
                 &claims.sub,
                 NotificationType::Completed {
-                    task: task.title,
+                    task_title: task.title,
                     username: task.assignee_name,
-                    id: task.id,
+                    task_id: task.id,
                 },
             )
             .await?;
@@ -268,9 +268,9 @@ pub async fn update_task(
                     &claims.sub,
                     &new_user,
                     NotificationType::TaskCreated {
-                        title: task.title,
-                        id: task.id,
-                        date: task.due_date,
+                        task_title: task.title,
+                        task_id: task.id,
+                        due_date: task.due_date,
                     },
                 )
                 .await?;

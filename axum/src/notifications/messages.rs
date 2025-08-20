@@ -9,22 +9,28 @@ pub enum NotificationType {
     TeacherNotify { username: String },
     #[serde(rename = "completed")]
     Completed {
-        task: String,
+        task_title: String,
         username: String,
-        id: String,
+        task_id: String,
     },
     #[serde(rename = "reminder")]
-    Reminder { task: String, due_date: String },
+    Reminder {
+        task_title: String,
+        due_date: String,
+    },
     #[serde(rename = "deckCreated")]
-    DeckCreated { title: String, id: String },
+    DeckCreated { deck_title: String, deck_id: String },
     #[serde(rename = "taskCreated")]
     TaskCreated {
-        title: String,
-        id: String,
-        date: Option<DateTime<Utc>>,
+        task_title: String,
+        task_id: String,
+        due_date: Option<DateTime<Utc>>,
     },
     #[serde(rename = "lessonCreated")]
-    LessonCreated,
+    LessonCreated {
+        lesson_title: String,
+        lesson_id: String,
+    },
 }
 
 impl NotificationType {
@@ -36,42 +42,63 @@ impl NotificationType {
                     escape_markdown_v2(username)
                 )
             }
-            Self::Completed { task, username, id } => {
+            Self::Completed {
+                task_title,
+                username,
+                task_id,
+            } => {
                 format!(
                     "{} for {} has been completed\\. View the result on [Ogonek](https://ogonek\\.app/t/tasks/{})",
-                    escape_markdown_v2(task),
+                    escape_markdown_v2(task_title),
                     escape_markdown_v2(username),
-                    id
+                    task_id
                 )
             }
-            Self::Reminder { task, due_date } => {
+            Self::Reminder {
+                task_title,
+                due_date,
+            } => {
                 format!(
                     "Don't forget to complete \"{}\" by {}",
-                    escape_markdown_v2(task),
+                    escape_markdown_v2(task_title),
                     escape_markdown_v2(due_date)
                 )
             }
-            Self::DeckCreated { title, id } => {
+            Self::DeckCreated {
+                deck_title,
+                deck_id,
+            } => {
                 format!(
                     "A new deck has been added: \"{}\"\\. View it on [Ogonek](https://ogonek\\.app/s/flashcards/{})",
-                    escape_markdown_v2(title),
-                    id
+                    escape_markdown_v2(deck_title),
+                    deck_id
                 )
             }
-            Self::TaskCreated { title, id, date } => {
-                let formatted_date = date
+            Self::TaskCreated {
+                task_title,
+                task_id,
+                due_date,
+            } => {
+                let formatted_date = due_date
                     .map(|dt| dt.format("%B %d, %Y").to_string())
                     .unwrap_or_else(|| "no due date".to_string());
 
                 format!(
                     "A new task has been added: \"{}\"\\. Due Date: {}\\. View it on [Ogonek](https://ogonek\\.app/s/tasks/{})",
-                    escape_markdown_v2(title),
+                    escape_markdown_v2(task_title),
                     escape_markdown_v2(&formatted_date),
-                    id
+                    task_id
                 )
             }
 
-            Self::LessonCreated => "You have a new lesson".to_string(),
+            Self::LessonCreated {
+                lesson_id,
+                lesson_title,
+            } => format!(
+                "A new lesson has been added: \"{}\"\\. View it on [Ogonek](https://ogonek\\.app/s/lessons/{})",
+                escape_markdown_v2(lesson_title),
+                lesson_id
+            ),
         }
     }
 
@@ -87,64 +114,82 @@ impl NotificationType {
                     "username": username
                 })),
             },
-            Self::Completed { task, username, id } => NotificationPayload {
+            Self::Completed {
+                task_title,
+                username,
+                task_id,
+            } => NotificationPayload {
                 title: "Task Completed".to_string(),
-                body: format!("{} completed: {}", username, task),
+                body: format!("{} completed: {}", username, task_title),
                 badge: Some(1),
                 sound: Some("default".to_string()),
                 data: Some(serde_json::json!({
                     "type": "task_completed",
-                    "task_id": id,
+                    "task_id": task_id,
                     "username": username
                 })),
             },
-            Self::Reminder { task, due_date } => NotificationPayload {
+            Self::Reminder {
+                task_title,
+                due_date,
+            } => NotificationPayload {
                 title: "Task Reminder".to_string(),
-                body: format!("Don't forget: {} (due {})", task, due_date),
+                body: format!("Don't forget: {} (due {})", task_title, due_date),
                 badge: Some(1),
                 sound: Some("default".to_string()),
                 data: Some(serde_json::json!({
                     "type": "reminder",
-                    "task": task,
+                    "task_title": task_title,
                     "due_date": due_date
                 })),
             },
-            Self::DeckCreated { title, id } => NotificationPayload {
+            Self::DeckCreated {
+                deck_title,
+                deck_id,
+            } => NotificationPayload {
                 title: "New Deck Available".to_string(),
-                body: format!("Check out the new deck: {}", title),
+                body: format!("Check out the new deck: {}", deck_title),
                 badge: Some(1),
                 sound: Some("default".to_string()),
                 data: Some(serde_json::json!({
                     "type": "deck_created",
-                    "deck_id": id,
-                    "title": title
+                    "deck_id": deck_id,
+                    "deck_title": deck_title
                 })),
             },
-            Self::TaskCreated { title, id, date } => {
-                let formatted_date = date
+            Self::TaskCreated {
+                task_title,
+                task_id,
+                due_date,
+            } => {
+                let formatted_date = due_date
                     .map(|dt| dt.format("%B %d, %Y").to_string())
                     .unwrap_or_else(|| "no due date".to_string());
 
                 NotificationPayload {
                     title: "New Task Assigned".to_string(),
-                    body: format!("{} (due: {})", title, formatted_date),
+                    body: format!("{} (due: {})", task_title, formatted_date),
                     badge: Some(1),
                     sound: Some("default".to_string()),
                     data: Some(serde_json::json!({
                         "type": "task_created",
-                        "task_id": id,
-                        "title": title,
-                        "due_date": date.map(|dt| dt.to_rfc3339()) // Keep ISO format for data
+                        "task_id": task_id,
+                        "title": task_title,
+                        "due_date": due_date.map(|dt| dt.to_rfc3339())
                     })),
                 }
             }
-            Self::LessonCreated => NotificationPayload {
+            Self::LessonCreated {
+                lesson_title,
+                lesson_id,
+            } => NotificationPayload {
                 title: "New Lesson".to_string(),
-                body: "You have a new lesson available".to_string(),
+                body: format!("New lesson: {}", lesson_title),
                 badge: Some(1),
                 sound: Some("default".to_string()),
                 data: Some(serde_json::json!({
-                    "type": "lesson_created"
+                    "type": "lesson_created",
+                    "lesson_id": lesson_id
                 })),
             },
         }
