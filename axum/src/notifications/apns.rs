@@ -58,7 +58,8 @@ impl ApnsProvider {
 
         let mut builder = DefaultNotificationBuilder::new()
             .set_title(&payload.title)
-            .set_body(&payload.body);
+            .set_body(&payload.body)
+            .set_content_available();
 
         if let Some(badge) = payload.badge {
             builder = builder.set_badge(badge);
@@ -73,7 +74,11 @@ impl ApnsProvider {
             ..Default::default()
         };
 
-        let notification = builder.build(device_token, options);
+        let mut notification = builder.build(device_token, options);
+
+        if let Some(data) = &payload.data {
+            notification.add_custom_data("data", data)?;
+        }
 
         match self.client.send(notification).await {
             Ok(response) => {

@@ -2554,7 +2554,7 @@ dependencies = [
 
 [[package]]
 name = "ogonek"
-version = "1.7.1"
+version = "1.7.4"
 dependencies = [
  "a2",
  "anyhow",
