@@ -46,3 +46,10 @@ serde_yaml = "0.9.34"
 reqwest = "0.12.23"
 tokio-util = "0.7.16"
 a2 = "0.10.0"
+
+[profile.release]
+strip = true
+opt-level = "z"
+lto = true
+codegen-units = 1
+panic = "abort"

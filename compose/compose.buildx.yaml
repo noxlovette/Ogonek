@@ -1,6 +1,7 @@
 name: ogonek-build
 services:
   svelte:
+    platform: linux/amd64
     build:
       context: ../svelte
       dockerfile: Dockerfile
@@ -8,6 +9,7 @@ services:
         - ${SVELTE_IMAGE}
     image: ${SVELTE_IMAGE}
   axum:
+    platform: linux/amd64
     build:
       context: ../axum
       dockerfile: Dockerfile
