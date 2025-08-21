@@ -1,6 +1,6 @@
 # Privacy Statement
 
-**Last Updated: February 25, 2025**
+**Last Updated: 21.08.2025**
 
 ## Introduction
 
@@ -12,13 +12,11 @@ Welcome to our service. We respect your privacy and are committed to protecting 
 
 - Account information (email address, username)
 - Content you create within the application (lessons, tasks, notes, decks, cards)
-- Profile information you choose to provide
+- Profile information you choose to provide (your video call URL, Telegram ID)
 
 ### Information Collected Automatically
 
-- **Usage Data**: How you interact with our service, including pages visited, features used, and time spent on the application.
-- **Device Information**: IP address, browser type, operating system, and device identifiers.
-- **Cookies and Similar Technologies**: We use cookies to maintain your session and remember your preferences.
+- **Cookies and Similar Technologies**: We use cookies to maintain your session.
 
 ## Third-Party Services
 
