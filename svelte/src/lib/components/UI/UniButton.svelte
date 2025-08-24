@@ -77,7 +77,7 @@
   transition-all duration-200 ease-out
   active:scale-[0.97] focus-visible:outline-none
   ring-offset-2
-  focus-visible:ring-2 focus-visible:ring-offset-3 focus-visible:ring-cacao-400
+  focus-visible:ring-2 focus-visible:ring-offset-3 focus-visible:ring-accent
   disabled:opacity-50 disabled:pointer-events-none
   backdrop-blur-sm
 `;
@@ -104,9 +104,9 @@
     dark:text-stone-400 dark:hover:bg-stone-800
   `,
     link: `
-    text-cacao-600 underline underline-offset-2 ring-0 p-0
-    hover:text-cacao-800
-    dark:text-cacao-300 dark:hover:text-cacao-100
+    text-accent underline underline-offset-2 ring-0 p-0
+    hover:text-accent
+    dark:text-accent dark:hover:text-accent
   `,
     outline: `
     bg-transparent text-stone-800 ring-1 ring-stone-300

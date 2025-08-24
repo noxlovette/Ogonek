@@ -70,7 +70,7 @@
         name={`cards[${index}][media_url]`}
         bind:value={card.mediaUrl}
         placeholder="https://example.com/image.jpg"
-        class="focus:ring-cacao-500 focus:ring-cacao-500 w-full rounded-md bg-transparent px-3 py-1.5 text-sm ring ring-stone-300 placeholder:text-stone-400 focus:ring-1 focus:outline-none dark:ring-stone-600 dark:placeholder:text-stone-500"
+        class="focus:ring-accent focus:ring-accent w-full rounded-md bg-transparent px-3 py-1.5 text-sm ring ring-stone-300 placeholder:text-stone-400 focus:ring-1 focus:outline-none dark:ring-stone-600 dark:placeholder:text-stone-500"
       />
     </div>
   {/if}

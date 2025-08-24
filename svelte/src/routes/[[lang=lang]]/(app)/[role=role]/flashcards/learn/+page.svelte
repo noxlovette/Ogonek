@@ -89,7 +89,7 @@
   <div class="p-8" in:fade={{ duration: 100 }}>
     <div class="flex flex-col items-center space-y-6 py-10 text-center">
       <div
-        class="bg-cacao-50 mx-auto flex h-16 w-16 items-center justify-center rounded-full dark:bg-stone-800"
+        class="bg-accent mx-auto flex h-16 w-16 items-center justify-center rounded-full dark:bg-stone-800"
       >
         <CheckCheck />
       </div>
@@ -107,7 +107,7 @@
       <span class="text-sm text-stone-600 dark:text-stone-400">
         {data.cards.indexOf(currentCard) + 1} / {data.cards.length}
       </span>
-      <span class="text-cacao-600 dark:text-cacao-400 text-sm font-medium">
+      <span class="text-accent dark:text-accent text-sm font-medium">
         {Math.round(
           ((data.cards.indexOf(currentCard) + 1) / data.cards.length) * 100,
         )}% {m.complete()}
@@ -117,7 +117,7 @@
       class="ring-defaultdark:bg-stone-700 h-2.5 w-full overflow-hidden rounded-full"
     >
       <div
-        class="bg-cacao-600 dark:bg-cacao-600 h-2.5 rounded-full transition-all duration-150"
+        class="bg-accent dark:bg-accent h-2.5 rounded-full transition-all duration-150"
         style="width: {((data.cards.indexOf(currentCard) + 1) /
           data.cards.length) *
           100}%"
@@ -141,7 +141,7 @@
               <input
                 bind:this={ref}
                 bind:value={userInput}
-                class="focus:border-cacao-200 focus:ring-cacao-500/70 w-full rounded-2xl border border-stone-100/60 bg-white px-4 py-2 text-base text-stone-900 placeholder-stone-400 shadow-sm transition-all focus:shadow-md focus:ring-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60 dark:border-stone-800/60 dark:bg-stone-950 dark:text-stone-100"
+                class="focus:border-accent focus:ring-accent w-full rounded-2xl border border-stone-100/60 bg-white px-4 py-2 text-base text-stone-900 placeholder-stone-400 shadow-sm transition-all focus:shadow-md focus:ring-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60 dark:border-stone-800/60 dark:bg-stone-950 dark:text-stone-100"
                 placeholder="Type in your answer..."
               />
             {:else}

@@ -40,7 +40,7 @@
   const iconClasses = $derived(() => {
     const base = "transition-all duration-300 flex-shrink-0";
     if ($sidebar) return `${base} size-6`;
-    return `${base} size-5 ${isActive ? "text-cacao-600 dark:text-cacao-400" : "text-stone-500 dark:text-stone-400"}`;
+    return `${base} size-5 ${isActive ? "text-accent dark:text-accent" : "text-stone-500 dark:text-stone-400"}`;
   });
 
   const badgeVisible = $derived(badge && badge != 0 ? true : false);
@@ -53,7 +53,7 @@
       {target}
       {rel}
       aria-label={name}
-      class={`${baseClasses} ${stateClasses} hover:border-cacao-300/50 dark:hover:border-cacao-600/50 min-h-[52px] min-w-[52px]
+      class={`${baseClasses} ${stateClasses} hover:border-accent dark:hover:border-accent min-h-[52px] min-w-[52px]
         justify-center
         rounded-xl border border-stone-200/30
         bg-white/90 shadow-md
@@ -61,7 +61,7 @@
         hover:shadow-xl hover:shadow-stone-900/15
         active:shadow-inner active:shadow-stone-900/20
         dark:border-stone-700/30 dark:bg-stone-800/90
-        ${isActive ? "border-cacao-400/60 dark:border-cacao-500/60 bg-cacao-50/95 dark:bg-cacao-900/80 shadow-cacao-500/20" : ""}
+        ${isActive ? "border-accent dark:border-accent bg-accent dark:bg-accent shadow-accent" : ""}
         transform hover:-translate-y-0.5
         hover:bg-white dark:hover:bg-stone-700/90
       `}
@@ -71,7 +71,7 @@
     >
       {#if isActive}
         <div
-          class="bg-cacao-500 dark:bg-cacao-400 shadow-cacao-500/40 absolute top-1/2 left-0 h-10
+          class="bg-accent dark:bg-accent shadow-accent absolute top-1/2 left-0 h-10
             w-1 -translate-y-1/2
             rounded-r-full shadow-lg
           "
@@ -128,7 +128,7 @@
     {rel}
     class={`${baseClasses} ${stateClasses} rounded-lg
       hover:bg-stone-50/80 dark:hover:bg-stone-800/60
-      ${isActive ? "bg-cacao-50/90 dark:bg-cacao-900/70 border-cacao-500 dark:border-cacao-400 border-l-2" : ""}
+      ${isActive ? "bg-accent dark:bg-accent border-accent dark:border-accent border-l-2" : ""}
       border
       border-transparent hover:translate-x-1 hover:border-stone-200/50 dark:hover:border-stone-700/50
     `}
@@ -138,7 +138,7 @@
   >
     {#if isActive}
       <div
-        class="bg-cacao-500 dark:bg-cacao-400 shadow-cacao-500/30 absolute top-1/2 left-0 h-8
+        class="bg-accent dark:bg-accent shadow-accent absolute top-1/2 left-0 h-8
           w-1 -translate-y-1/2
           rounded-r-full shadow-md
         "

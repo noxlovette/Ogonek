@@ -72,7 +72,7 @@
         class="mb-4 text-center"
         in:fly={{ y: 20, duration: 400, delay: 300 }}
       >
-        <h1 class="text-cacao-600 dark:text-cacao-400 text-2xl font-bold">
+        <h1 class="text-accent dark:text-accent text-2xl font-bold">
           {errorTitle}
         </h1>
         <p class="mt-2 text-stone-600 dark:text-stone-400">
@@ -88,7 +88,7 @@
         <p class="flex items-start">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="text-cacao-500 mr-2 h-5 w-5 flex-shrink-0"
+            class="text-accent mr-2 h-5 w-5 flex-shrink-0"
             viewBox="0 0 20 20"
             fill="currentColor"
           >

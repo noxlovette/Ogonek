@@ -152,7 +152,7 @@
               href="#{heading.id}"
               class="block px-2 py-1.5 text-sm text-stone-700 transition-colors hover:bg-stone-100 hover:text-stone-900 dark:text-stone-300 dark:hover:bg-stone-700 dark:hover:text-stone-100
                   {activeId === heading.id
-                ? 'border-cacao-500 bg-cacao-50 text-cacao-700 dark:border-cacao-400 dark:bg-cacao-900/20 dark:text-cacao-100 border-l-2 font-medium'
+                ? 'border-accent bg-accent text-accent dark:border-accent dark:bg-accent dark:text-accent border-l-2 font-medium'
                 : ''}"
               on:click={(e) => scrollToHeading(heading.id, e)}
             >

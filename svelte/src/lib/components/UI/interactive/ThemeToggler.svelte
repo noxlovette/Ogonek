@@ -47,7 +47,7 @@
   <button
     onclick={() => setTheme("light")}
     class="relative z-10 flex h-8 w-10 items-center justify-center rounded-md transition-colors duration-150"
-    class:text-cacao-500={theme === "light"}
+    class:text-accent={theme === "light"}
     class:text-stone-600={theme !== "light"}
     aria-label="Light theme"
   >
@@ -57,7 +57,7 @@
   <button
     onclick={() => setTheme("dark")}
     class="relative z-10 flex h-8 w-10 items-center justify-center rounded-md transition-colors duration-150"
-    class:text-cacao-500={theme === "dark"}
+    class:text-accent={theme === "dark"}
     class:text-stone-600={theme !== "dark"}
     aria-label="Dark theme"
   >
@@ -67,7 +67,7 @@
   <button
     onclick={() => setTheme("auto")}
     class="relative z-10 flex h-8 w-10 items-center justify-center rounded-md transition-colors duration-150"
-    class:text-cacao-500={theme === "auto"}
+    class:text-accent={theme === "auto"}
     class:text-stone-600={theme !== "auto"}
     aria-label="Auto theme"
   >

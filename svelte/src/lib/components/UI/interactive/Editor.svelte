@@ -230,12 +230,12 @@
     <h1 class="text-2xl font-bold">Markdown</h1>
     <button
       onclick={() => (preview = false)}
-      class="hover:bg-cacao-200 rounded-lg px-2 py-1 text-sm transition-colors"
+      class="hover:bg-accent rounded-lg px-2 py-1 text-sm transition-colors"
       class:chosen={!preview}>Editor</button
     >
     <button
       onclick={() => (preview = true)}
-      class="hover:bg-cacao-200 rounded-lg px-2 py-1 text-sm transition-colors"
+      class="hover:bg-accent rounded-lg px-2 py-1 text-sm transition-colors"
       class:chosen={preview}>Preview</button
     >
   </div>
@@ -350,7 +350,7 @@
           bind:value={markdownContent}
           onkeydown={handleKeyDown}
           class="
-          focus:border-cacao-500 focus:ring-cacao-500/20 ring-default min-h-[400px] w-full resize-none rounded-md bg-white px-4 py-2 font-mono text-base leading-relaxed text-stone-900 placeholder-stone-400 shadow-sm transition-all focus:shadow-md focus:ring-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60 dark:bg-stone-950 dark:text-stone-100
+          focus:border-accent focus:ring-accent ring-default min-h-[400px] w-full resize-none rounded-md bg-white px-4 py-2 font-mono text-base leading-relaxed text-stone-900 placeholder-stone-400 shadow-sm transition-all focus:shadow-md focus:ring-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60 dark:bg-stone-950 dark:text-stone-100
           "
           spellcheck="false"
           placeholder="Start typing your markdown here..."

@@ -67,7 +67,7 @@
 
   <!-- Card Back -->
   <div
-    class="bg-default ring-cacao-500 absolute inset-0 flex h-full w-full items-center justify-center rounded-sm p-5 shadow-sm ring-1 transition-all duration-150 backface-hidden hover:shadow-sm {flippedCards.has(
+    class="bg-default ring-accent absolute inset-0 flex h-full w-full items-center justify-center rounded-sm p-5 shadow-sm ring-1 transition-all duration-150 backface-hidden hover:shadow-sm {flippedCards.has(
       card.id,
     )
       ? 'opacity-100'
@@ -96,7 +96,7 @@
       class="absolute top-0 right-0 h-2 w-2 rounded-full transition-colors {flippedCards.has(
         card.id,
       )
-        ? 'bg-cacao-500 dark:bg-cacao-400'
+        ? 'bg-accent dark:bg-accent'
         : 'bg-stone-200 dark:bg-stone-700'}"
     ></div>
   </div>
