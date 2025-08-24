@@ -23,46 +23,17 @@
     @apply bg-stone-100/20 dark:bg-stone-900/30;
   }
 
-  .text-frosted {
-    position: relative;
-  }
-
-  .text-frosted::after {
-    content: attr(data-text);
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: inherit;
-    -webkit-mask-image: linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 0) 40%,
-      rgba(0, 0, 0, 1) 100%
-    );
-    mask-image: linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 0) 40%,
-      rgba(0, 0, 0, 1) 100%
-    );
-    filter: blur(2px); /* Apply slight blur to text edges */
-    z-index: -1; /* Place the blur effect behind the text */
+  .bg-clickable {
+    @apply bg-stone-100/20 active:bg-stone-100 dark:bg-stone-900/30 active:dark:bg-stone-900;
   }
 }
 
 @layer components {
-  .overdue {
-    @apply font-medium text-red-600;
-  }
-
   .chosen {
-    @apply bg-accent hover:bg-accent text-stone-50;
+    @apply bg-accent text-stone-50;
   }
 
   .backface-hidden {
     backface-visibility: hidden;
-  }
-  .rotate-y-180 {
-    transform: rotateY(180deg);
   }
 }

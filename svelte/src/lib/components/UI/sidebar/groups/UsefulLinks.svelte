@@ -4,7 +4,7 @@
     Forvo,
     Dictionary,
     Thesaurus,
-  } from "$lib/components/sidebar/elements";
+  } from "$lib/components/UI/sidebar/elements";
   import Group from "./Group.svelte";
   import { m } from "$lib/paraglide/messages";
 

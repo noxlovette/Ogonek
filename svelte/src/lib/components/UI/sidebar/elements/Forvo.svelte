@@ -5,7 +5,6 @@
 
 <SidebarItem
   external={true}
-  rightBar={true}
   href="https://forvo.com/"
   Icon={AudioLines}
   name="Pron"

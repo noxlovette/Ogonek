@@ -11,7 +11,6 @@
     WorkArea,
     UsefulLinks,
     WordOfTheDay,
-    Rightbar,
     QuickAdd,
     MobileMenu,
     StudentFilter,
@@ -55,7 +54,7 @@
 </script>
 
 <div class="flex flex-row">
-  <div class=" hidden flex-col md:block {$sidebar ? 'w-max' : 'w-1/6'}">
+  <div class=" hidden w-max flex-col md:block">
     <Sidebar elements={elementsLeft} />
   </div>
   <WorkArea>
@@ -66,7 +65,6 @@
       <Clock></Clock>
       <ThemeToggler />
     </div>
-    <Rightbar elements={elementsRight}></Rightbar>
   </div>
   <button
     aria-label={$mobileMenuOpen ? "Close menu" : "Open menu"}

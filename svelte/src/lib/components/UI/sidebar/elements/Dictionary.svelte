@@ -6,7 +6,6 @@
 
 <SidebarItem
   external={true}
-  rightBar={true}
   href="https://dictionary.cambridge.org/"
   Icon={Book}
   name={m.dictionary()}

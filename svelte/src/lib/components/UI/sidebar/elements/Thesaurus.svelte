@@ -5,7 +5,6 @@
 
 <SidebarItem
   external={true}
-  rightBar={true}
   href="https://www.thesaurus.com/"
   Icon={BookCopy}
   name="Thesaurus"
