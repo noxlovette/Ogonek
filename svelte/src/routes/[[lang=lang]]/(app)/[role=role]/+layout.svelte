@@ -65,9 +65,9 @@
       {#if role == "s"}
         <UsefulLinks />
       {:else}
+        <StudentFilter />
         <QuickAdd />
         <Divider></Divider>
-        <StudentFilter />
       {/if}
     </Sidebar>
   </div>

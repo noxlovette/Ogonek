@@ -113,13 +113,13 @@
       class={baseStyle}
     />
   {:else if type === "visibility"}
-    <select {name} {value} class={baseStyle}>
+    <select name="visibility" {value} class={baseStyle}>
       <option value="private">{m.private()}</option>
       <option value="public">{m.public()}</option>
       <option value="assigned">{m.assigned()}</option>
     </select>
   {:else if type === "assignee" && item}
-    <select id="assignee" {name} class={baseStyle}>
+    <select id="assignee" name="assignee" class={baseStyle}>
       <option {value}>Select an assignee</option>
       {#each $studentStore as student (student.id)}
         <option

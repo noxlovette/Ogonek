@@ -1,6 +1,6 @@
 @layer components {
   .markdown {
-    @apply mx-auto w-full rounded-xl;
+    @apply mx-auto w-full;
     > *:first-child {
       @apply mt-0;
     }
@@ -18,7 +18,7 @@
 
     h2 {
       @apply mt-6 mb-3 text-2xl font-medium text-stone-800 dark:text-stone-100;
-      @apply rounded-md bg-stone-100 px-3 py-1 dark:bg-stone-800;
+      @apply bg-stone-100 px-3 py-1 dark:bg-stone-800;
     }
 
     h3 {
@@ -49,7 +49,7 @@
 
     a {
       @apply text-stone-900 underline-offset-2 duration-200 hover:underline dark:text-stone-100;
-      @apply rounded px-1 py-0.5 hover:bg-stone-200 dark:hover:bg-stone-700;
+      @apply px-1 py-0.5 hover:bg-stone-200 dark:hover:bg-stone-700;
     }
 
     blockquote {
@@ -65,12 +65,12 @@
     }
 
     pre {
-      @apply my-6 overflow-x-auto rounded-xl bg-stone-900 p-4 text-sm text-stone-100 dark:bg-stone-950 dark:text-stone-50;
+      @apply my-6 overflow-x-auto bg-stone-900 p-4 text-sm text-stone-100 dark:bg-stone-950 dark:text-stone-50;
       @apply border-t-2 border-stone-700;
     }
 
     code {
-      @apply rounded px-1.5 py-0.5 font-mono text-sm;
+      @apply px-1.5 py-0.5 font-mono text-sm;
       @apply border border-stone-200 bg-stone-100 text-stone-800 dark:border-stone-700 dark:bg-stone-800 dark:text-stone-200;
     }
 
@@ -81,7 +81,7 @@
     }
 
     table {
-      @apply my-6 w-full border-collapse overflow-hidden rounded-md border border-stone-300 dark:border-stone-700;
+      @apply my-6 w-full border-collapse overflow-hidden border border-stone-300 dark:border-stone-700;
     }
 
     th {
@@ -103,12 +103,12 @@
     }
 
     img {
-      @apply my-6 h-auto max-w-full rounded-lg;
+      @apply my-6 h-auto max-w-full;
       @apply duration-200 hover:ring-2 hover:ring-stone-300 dark:hover:ring-stone-600;
     }
 
     input[type="checkbox"] {
-      @apply mr-2 h-4 w-4 rounded border border-stone-400 dark:border-stone-600;
+      @apply mr-2 h-4 w-4 border border-stone-400 dark:border-stone-600;
     }
 
     a:focus,
@@ -118,7 +118,7 @@
     }
 
     .info-callout {
-      @apply my-4 rounded-lg border px-4 py-3;
+      @apply my-4 border px-4 py-3;
       @apply border-stone-300 bg-stone-100 dark:border-stone-700 dark:bg-stone-800;
     }
 
@@ -128,7 +128,7 @@
     }
 
     .warning-callout {
-      @apply my-4 rounded-lg border px-4 py-3;
+      @apply my-4 border px-4 py-3;
       @apply border-amber-300 bg-amber-50 dark:border-amber-600 dark:bg-amber-900/30;
     }
 

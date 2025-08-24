@@ -62,36 +62,6 @@
 <svelte:head>
   <title>{`${m.edit()} ${deck.title} | Flashcards`}</title>
 </svelte:head>
-<Toolbar>
-  <LargeTitle>{deck.title}</LargeTitle>
-  <Divider />
-
-  <VStack>
-    <Merger>
-      <UniButton type="button" onclick={showImportModal} Icon={Import}
-        >Import</UniButton
-      >
-    </Merger>
-    <Merger>
-      <UniButton
-        variant="danger"
-        Icon={Trash2}
-        formaction="?/delete"
-        confirmText={deck.title}
-        confirmTitle="Delete Deck"
-      >
-        {m.delete()}</UniButton
-      >
-
-      <UniButton Icon={Ban} href=".">{m.cancel()}</UniButton>
-    </Merger>
-    <Merger>
-      <UniButton variant="prominent" type="submit" Icon={Check}
-        >{m.save()}</UniButton
-      >
-    </Merger>
-  </VStack>
-</Toolbar>
 <form
   method="POST"
   class="flex flex-col gap-4"
@@ -102,6 +72,47 @@
     },
   })}
 >
+  <Toolbar>
+    <LargeTitle>{deck.title}</LargeTitle>
+    <Divider />
+
+    <VStack>
+      <Merger>
+        <UniButton type="button" onclick={showImportModal} Icon={Import}
+          >Import</UniButton
+        >
+      </Merger>
+      <Merger>
+        <form
+          method="POST"
+          use:enhance={enhanceForm({
+            messages: {
+              redirect: m.tiny_happy_rat_bless(),
+            },
+          })}
+        >
+          <UniButton
+            variant="danger"
+            Icon={Trash2}
+            type="submit"
+            formaction="?/delete"
+            confirmText={deck.title}
+            confirmTitle="Delete Deck"
+          >
+            {m.delete()}</UniButton
+          >
+        </form>
+
+        <UniButton Icon={Ban} href=".">{m.cancel()}</UniButton>
+      </Merger>
+      <Merger>
+        <UniButton variant="prominent" type="submit" Icon={Check}
+          >{m.save()}</UniButton
+        >
+      </Merger>
+    </VStack>
+  </Toolbar>
+
   <VStack>
     <Input
       labelName="Deck Title"
@@ -117,8 +128,8 @@
     />
 
     {#if role === "t"}
-      <Input name="Visibility" type="visibility" />
-      <Input name="Assignee" item={deck} type="assignee" />
+      <Input name="visibility" value={deck.visibility} type="visibility" />
+      <Input name="assignee" item={deck} type="assignee" />
     {/if}
   </VStack>
 
@@ -129,22 +140,25 @@
       </Title1>
 
       <Merger>
-        <UniButton Icon={Plus}>
+        <UniButton Icon={Plus} onclick={addCard}>
           {m.new()}
         </UniButton>
       </Merger>
     </EmptySpace>
   {:else}
-    <HStack>
+    <div class="grid gap-4 md:grid-cols-2">
       {#each updatedCards as card, index (index)}
         <FlashCardEdit {card} {index} {removeCard} />
       {/each}
-    </HStack>
-    <UniButton onclick={addCard}>
-      {m.new()}
-    </UniButton>
+      <button
+        type="button"
+        class="group focus:ring-accent flex size-full items-center rounded-2xl shadow-sm transition focus:ring-2 focus:ring-offset-2 focus:outline-none"
+        onclick={addCard}
+      >
+        <Plus class="group-hover:text-accent" />
+      </button>
+    </div>
   {/if}
-  <div class="relative h-full lg:col-span-1"></div>
 </form>
 
 {#if page.state.showImportModal}

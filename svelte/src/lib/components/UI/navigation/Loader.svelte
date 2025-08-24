@@ -4,9 +4,7 @@
 </script>
 
 {#if $isLoading}
-  <div
-    class="absolute inset-0 z-50 flex items-center justify-center bg-white/60"
-  >
-    <Loader class="h-10 w-10 animate-spin text-stone-700" />
-  </div>
+  <Loader
+    class="absolute top-2 right-2 size-12 animate-spin text-stone-700 dark:text-stone-200"
+  />
 {/if}

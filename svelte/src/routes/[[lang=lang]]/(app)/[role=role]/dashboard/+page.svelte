@@ -10,7 +10,7 @@
     UniButton,
   } from "$lib/components";
   import { getGreeting } from "$lib/utils";
-  import { user } from "$lib/stores";
+  import { isLoading, user } from "$lib/stores";
   import { m } from "$lib/paraglide/messages";
   import { Settings } from "lucide-svelte";
 

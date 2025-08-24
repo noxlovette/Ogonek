@@ -14,7 +14,7 @@ export const load: PageServerLoad = async ({ fetch, url }) => {
   const assignee = url.searchParams.get("assignee") || "";
 
   return {
-    lessonsPaginated: (dev ? delay(2500) : Promise.resolve())
+    lessonsPaginated: (dev ? delay(100) : Promise.resolve())
       .then(() => fetch(routes.lessons.all(page, per_page, search, assignee)))
       .then((res) => res.json()) as Promise<PaginatedResponse<LessonSmall>>,
   };

@@ -101,5 +101,5 @@
 {/if}
 
 {#if showConfirmDialog}
-  <ConfirmDialogue bind:showConfirmDialog />
+  <ConfirmDialogue {formaction} bind:showConfirmDialog />
 {/if}

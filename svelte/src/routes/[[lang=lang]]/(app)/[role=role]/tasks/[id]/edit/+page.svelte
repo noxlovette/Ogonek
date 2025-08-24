@@ -71,7 +71,7 @@
 
   <div class="grid grid-cols-1 gap-5 md:grid-cols-4">
     <Input name="title" value={task.title} placeholder="Title"></Input>
-    <Input name="Assignee" type="assignee" item={task} />
+    <Input name="assignee" type="assignee" item={task} />
 
     <Input
       bind:value={dueDate}

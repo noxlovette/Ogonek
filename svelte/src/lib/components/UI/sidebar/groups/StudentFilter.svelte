@@ -5,6 +5,7 @@
   import { getContext } from "svelte";
   import Title2 from "$lib/components/typography/Title2.svelte";
   import { ChevronsUpDown } from "lucide-svelte";
+  import { Input } from "../../forms";
 
   const students: Student[] = getContext("students");
 </script>
@@ -13,7 +14,7 @@
   id="assignee"
   name="assignee"
   bind:value={$assigneeStore}
-  class="focus:border-accent focus:ring-accent d rounded-full px-4 py-2 placeholder-stone-400 shadow-md focus:ring-2 focus:outline-none"
+  class="ring-default focus:border-accent focus:ring-accent w-full rounded-2xl bg-white px-4 py-2 text-base text-stone-900 placeholder-stone-400 shadow-sm focus:shadow-md focus:ring-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60 dark:bg-stone-950 dark:text-stone-100"
 >
   <option value="">All Students</option>
   {#each students as student (student.id)}

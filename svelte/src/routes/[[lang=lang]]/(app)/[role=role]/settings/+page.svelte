@@ -15,7 +15,7 @@
   import { page } from "$app/state";
   import { enhanceForm } from "$lib/utils";
 
-  import { Check, LogOut, Key, Bell, Merge } from "lucide-svelte";
+  import { Check, LogOut, Key, Bell, Merge, Ban } from "lucide-svelte";
   import { m } from "$lib/paraglide/messages";
   import SettingsRow from "$lib/components/UI/SettingsRow.svelte";
   import {
@@ -97,6 +97,14 @@
           </UniButton>
         {:else}
           <UniButton
+            onclick={() => {
+              disabled = !disabled;
+            }}
+            Icon={Ban}
+          >
+            {m.cancel()}
+          </UniButton>
+          <UniButton
             Icon={Check}
             type="submit"
             variant="prominent"
@@ -115,14 +123,14 @@
         <Input
           bind:disabled
           placeholder="Name"
-          name="Name"
+          name="name"
           value={$user.name}
         />
         <Input
           bind:disabled
           type="email"
           placeholder="Email"
-          name="Email"
+          name="email"
           value={$user.email}
         />
       </HStack>
@@ -134,13 +142,13 @@
         <Input
           bind:disabled
           placeholder="Your Telegram ID"
-          name="Telegram"
+          name="telegramId"
           value={$profile.telegramId}
         />
         <Input
           bind:disabled
           placeholder="The link for your lessons"
-          name="Video Call URL"
+          name="videoCallUrl"
           value={$profile.videoCallUrl}
         />
       {/if}
