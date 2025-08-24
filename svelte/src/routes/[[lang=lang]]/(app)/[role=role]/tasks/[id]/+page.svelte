@@ -2,8 +2,6 @@
   import {
     EmptySpace,
     LargeTitle,
-    Title3,
-    Caption1,
     Toolbar,
     UniButton,
     FileTaskCard,
@@ -25,7 +23,6 @@
   import { enhanceForm } from "$lib/utils";
   import { formatDate } from "@noxlovette/svarog";
   import Multipart from "$lib/components/UI/interactive/Multipart.svelte";
-  import { user } from "$lib/stores/user";
   import Badge from "$lib/components/cards/Badge.svelte";
   import { getUrgency } from "$lib/utils";
   import Priority from "$lib/components/cards/Priority.svelte";
@@ -58,6 +55,8 @@
             >{m.edit()}</UniButton
           >
         {/if}
+      </Merger>
+      <Merger>
         <form
           class="flex"
           method="post"

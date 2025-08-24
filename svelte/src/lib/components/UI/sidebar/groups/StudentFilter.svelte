@@ -3,31 +3,23 @@
   import type { Student } from "$lib/types";
 
   import { getContext } from "svelte";
-  import Group from "./Group.svelte";
   import Title2 from "$lib/components/typography/Title2.svelte";
   import { ChevronsUpDown } from "lucide-svelte";
 
   const students: Student[] = getContext("students");
 </script>
 
-<Group>
-  <Title2>Filter</Title2>
-  <div class="relative mt-4 min-w-40">
-    <select
-      id="assignee"
-      name="assignee"
-      bind:value={$assigneeStore}
-      class="focus:border-accent focus:ring-accent h-full w-full rounded-2xl border border-stone-100/60 bg-white px-4 py-2 text-base text-stone-900 placeholder-stone-400 shadow-sm focus:shadow-md focus:ring-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60 dark:border-stone-800/60 dark:bg-stone-950 dark:text-stone-100"
-    >
-      <option value="">All Students</option>
-      {#each students as student (student.id)}
-        <option value={student.id}>{student.name}</option>
-      {/each}
-    </select>
-    <div
-      class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-stone-500"
-    >
-      <ChevronsUpDown class="size-4"></ChevronsUpDown>
-    </div>
-  </div>
-</Group>
+<select
+  id="assignee"
+  name="assignee"
+  bind:value={$assigneeStore}
+  class="focus:border-accent focus:ring-accent d rounded-full px-4 py-2 placeholder-stone-400 shadow-md focus:ring-2 focus:outline-none"
+>
+  <option value="">All Students</option>
+  {#each students as student (student.id)}
+    <option value={student.id}>{student.name}</option>
+  {/each}
+</select>
+<div
+  class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-stone-500"
+></div>

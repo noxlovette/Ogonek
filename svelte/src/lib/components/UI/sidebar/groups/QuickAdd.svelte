@@ -1,41 +1,27 @@
 <script lang="ts">
-  import { Title3 } from "$lib/components/typography";
-  import Group from "./Group.svelte";
   import UniButton from "$lib/components/UI/UniButton.svelte";
   import { BookOpenCheck, ListTodo, WholeWord } from "lucide-svelte";
   import { enhance } from "$app/forms";
+  import { HStack } from "../../toolbar";
 </script>
 
-<Group>
-  <Title3>Quick Add</Title3>
-
-  <div class="mt-4 grid w-full grid-cols-1 gap-4">
-    <form action="/t/tasks?/new" method="POST" class="" use:enhance>
-      <UniButton
-        size="sm"
-        Icon={ListTodo}
-        fullWidth={true}
-        type="submit"
-        variant="primary">Add Task</UniButton
-      >
-    </form>
-    <form action="/t/lessons?/new" method="POST" class="" use:enhance>
-      <UniButton
-        size="sm"
-        Icon={BookOpenCheck}
-        fullWidth={true}
-        type="submit"
-        variant="primary">Add Lesson</UniButton
-      >
-    </form>
-    <form action="/t/flashcards?/new" method="POST" class="" use:enhance>
-      <UniButton
-        size="sm"
-        Icon={WholeWord}
-        fullWidth={true}
-        type="submit"
-        variant="primary">Add Deck</UniButton
-      >
-    </form>
-  </div>
-</Group>
+<HStack styling="gap-2">
+  <form action="/t/tasks?/new" method="POST" class="" use:enhance>
+    <UniButton Icon={ListTodo} type="submit" variant="primary" iconOnly={false}
+      >Add Task</UniButton
+    >
+  </form>
+  <form action="/t/lessons?/new" method="POST" class="" use:enhance>
+    <UniButton
+      Icon={BookOpenCheck}
+      type="submit"
+      variant="primary"
+      iconOnly={false}>Add Lesson</UniButton
+    >
+  </form>
+  <form action="/t/flashcards?/new" method="POST" class="" use:enhance>
+    <UniButton Icon={WholeWord} type="submit" variant="primary" iconOnly={false}
+      >Add Deck</UniButton
+    >
+  </form>
+</HStack>

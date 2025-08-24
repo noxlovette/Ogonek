@@ -28,7 +28,7 @@
   );
 
   const baseClasses =
-    "group relative p-1 px-2 flex items-center gap-2 font-medium rounded-lg";
+    "group relative p-1 px-2 flex items-center gap-2 font-medium rounded-2xl";
 
   const iconClasses = $derived(() => {
     return `size-5 ${isActive ? "text-accent" : "text-stone-500 dark:text-stone-400"}`;

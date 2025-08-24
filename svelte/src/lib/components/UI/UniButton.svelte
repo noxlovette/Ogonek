@@ -3,6 +3,7 @@
   import type { ComponentType, Snippet } from "svelte";
   import type { MouseEventHandler } from "svelte/elements";
   import ConfirmDialogue from "./ConfirmDialogue.svelte";
+  import { Headline } from "../typography";
 
   type ButtonVariant = "primary" | "danger" | "prominent";
 
@@ -73,7 +74,9 @@
       <Icon class="size-5" />
     {/if}
     {#if !iconOnly}
-      {@render children?.()}
+      <Headline>
+        {@render children?.()}
+      </Headline>
     {/if}
   </a>
 {:else}
@@ -89,7 +92,9 @@
     {/if}
 
     {#if !iconOnly}
-      {@render children?.()}
+      <Headline>
+        {@render children?.()}
+      </Headline>
     {/if}
   </button>
 {/if}

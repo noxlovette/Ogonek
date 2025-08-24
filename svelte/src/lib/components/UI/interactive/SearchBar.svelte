@@ -14,7 +14,7 @@
         type="text"
         bind:value={$searchTerm}
         placeholder="Search..."
-        class="focus:border-accent focus:ring-accent dark:focus:border-accent dark:focus:ring-accent w-full rounded-full py-2.5 pr-10 pl-10 shadow-md placeholder:text-stone-400 focus:ring-2 focus:outline-none"
+        class="focus:border-accent focus:ring-accent dark:focus:border-accent dark:focus:ring-accent w-full rounded-full py-2.5 pr-10 pl-10 placeholder-stone-400 shadow-md focus:ring-2 focus:outline-none"
       />
       {#if $searchTerm}
         <button

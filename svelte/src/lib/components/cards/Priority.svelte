@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { Caption1 } from "../typography";
+
   const { priority = 3 } = $props();
 
   const getPriorityLabel = (priority: number): string => {
@@ -46,7 +48,7 @@
 <!-- dot + label -->
 <div class="flex items-center gap-1">
   <span class={`h-2.5 w-2.5 rounded-full ${priorityConfig.color}`}></span>
-  <span class={`font-medium ${priorityConfig.textColor}`}>
+  <Caption1 styling={priorityConfig.textColor}>
     {priorityLabel}
-  </span>
+  </Caption1>
 </div>

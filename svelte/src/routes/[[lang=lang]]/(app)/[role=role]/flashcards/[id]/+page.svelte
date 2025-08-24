@@ -1,14 +1,12 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
   import {
-    Caption1,
     WordCard,
     LargeTitle,
     UniButton,
     GreySpan,
     Toolbar,
     EmptySpace,
-    Title3,
     VStack,
     Merger,
     Caption1,
@@ -18,14 +16,7 @@
   import { invalidate } from "$app/navigation";
 
   import { user } from "$lib/stores";
-  import {
-    Check,
-    Circle,
-    Copy,
-    Pencil,
-    UserRoundMinus,
-    UserRoundPlus,
-  } from "lucide-svelte";
+  import { Check, Circle, Copy, Pencil } from "lucide-svelte";
   import { enhanceForm } from "$lib/utils";
   import Badge from "$lib/components/cards/Badge.svelte";
   import { page } from "$app/state";

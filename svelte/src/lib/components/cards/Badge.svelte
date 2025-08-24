@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { Caption1 } from "../typography";
+
   const { urgency = "normal", badgeText = "badge", styling = "" } = $props();
 
   function getBadgeConfig(urgency: string) {
@@ -34,11 +36,13 @@
 <div class="top-3 right-3 z-10 flex">
   <span
     class={`
-      inline-flex items-center rounded-full px-2.5 py-0.5 font-medium
+      inline-flex items-center rounded-full px-2.5 py-0.5
       ring-1 backdrop-blur-sm ring-inset
       ${badgeConfig.color} ${styling}
     `}
   >
-    {badgeConfig.text}
+    <Caption1>
+      {badgeConfig.text}
+    </Caption1>
   </span>
 </div>

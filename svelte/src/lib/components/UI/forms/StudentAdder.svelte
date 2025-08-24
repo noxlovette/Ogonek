@@ -30,7 +30,7 @@
   }
 </script>
 
-<div class="relative inline-block">
+<div class="relative flex size-full">
   <UniButton
     type="button"
     onclick={() => (showPopover = !showPopover)}

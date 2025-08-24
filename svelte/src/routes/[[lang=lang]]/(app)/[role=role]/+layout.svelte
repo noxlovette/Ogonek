@@ -10,7 +10,6 @@
     Sidebar,
     WorkArea,
     UsefulLinks,
-    WordOfTheDay,
     QuickAdd,
     MobileMenu,
     StudentFilter,
@@ -19,28 +18,25 @@
     studentStore,
     setUser,
     setProfile,
-    sidebar,
     mobileMenuOpen,
   } from "$lib/stores";
 
   import { page } from "$app/state";
   import { setContext } from "svelte";
-  import type { Word, Student } from "$lib/types";
+  import type { Student } from "$lib/types";
   import { Menu } from "lucide-svelte";
+  import Divider from "$lib/components/UI/toolbar/Divider.svelte";
 
   let { data, children } = $props();
   const role = page.params.role;
 
   let elementsLeft = $state([Dashboard, Todo, Lessons, Words, Zoom, Settings]);
-  let elementsRight = $state([UsefulLinks, WordOfTheDay]);
 
   if (role === "t") {
     elementsLeft = [Dashboard, Todo, Lessons, Students, Words, Settings];
-    elementsRight = [QuickAdd, StudentFilter];
   }
 
   studentStore.setStudents(data.students);
-  setContext<Promise<Word>>("word", data.word);
   setContext<string | null>("callURL", data.callURL);
   setContext<Student[]>("students", data.students);
   setContext<number>("lessonCount", data.badges.unseenLessons);
@@ -53,7 +49,26 @@
 
 <div class="flex flex-row gap-8 p-6">
   <div class="hidden w-max flex-col md:block">
-    <Sidebar elements={elementsLeft} />
+    <Sidebar
+      ><Dashboard />
+      <Todo />
+      <Lessons />
+      <Words />
+      {#if role == "s"}
+        <Students />
+      {:else}
+        <Zoom />
+      {/if}
+
+      <Divider />
+      {#if role == "s"}
+        <UsefulLinks />
+      {:else}
+        <QuickAdd />
+        <Divider></Divider>
+        <StudentFilter />
+      {/if}
+    </Sidebar>
   </div>
   <WorkArea>
     {@render children?.()}
