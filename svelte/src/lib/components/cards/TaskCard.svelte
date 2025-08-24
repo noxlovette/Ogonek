@@ -8,6 +8,8 @@
   import Priority from "./Priority.svelte";
   import SeenBadge from "./SeenBadge.svelte";
   import { m } from "$lib/paraglide/messages";
+  import { HStack, VStack } from "../UI";
+  import Divider from "../UI/toolbar/Divider.svelte";
 
   let { task } = $props();
   const formattedDate: string = formatDate(task.dueDate);
@@ -18,12 +20,13 @@
 </script>
 
 <CardClickable {href}>
-  <div class="flex items-start justify-between gap-3">
-    <Headline>
-      {task.title}
-    </Headline>
+  <Headline>
+    {task.title}
+  </Headline>
+  <VStack>
+    <Badge {badgeText} {urgency} />
+    <Divider />
     <Priority priority={task.priority} />
-  </div>
-  <Badge {badgeText} {urgency} />
+  </VStack>
   <SeenBadge seen={task.seen} />
 </CardClickable>

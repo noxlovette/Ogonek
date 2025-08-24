@@ -32,9 +32,7 @@
 </script>
 
 <div class="w-full space-y-4">
-  <div
-    class="ring-default overflow-hidden rounded-lg bg-white shadow-sm ring-1 ring-stone-200 dark:border-stone-600/30 dark:bg-stone-950 dark:ring-stone-800"
-  >
+  <div class="ring-default overflow-hidden rounded-lg shadow-md">
     <div class="overflow-x-auto">
       <table class="w-full table-auto" aria-label="Data table">
         <thead>
@@ -58,7 +56,7 @@
         <tbody class="divide-y divide-stone-200 dark:divide-stone-800">
           {#each items as item, rowIndex (item.id)}
             <tr
-              class="group cursor-pointer duration-150 ease-in-out hover:bg-amber-50/50 dark:hover:bg-amber-900/10"
+              class="group cursor-pointer duration-150 ease-in-out hover:bg-stone-50/80 dark:hover:bg-stone-900/80"
               onclick={(e) => handleRowClick(item, e)}
               onkeydown={(e) => handleRowClick(item, e)}
               tabindex="0"

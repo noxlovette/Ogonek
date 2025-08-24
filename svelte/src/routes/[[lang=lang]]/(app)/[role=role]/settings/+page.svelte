@@ -1,32 +1,36 @@
 <script lang="ts">
   import {
     LargeTitle,
-    Title2,
     Input,
     Panel,
     UniButton,
     Toolbar,
-    Caption1,
     Divider,
     Merger,
+    HStack,
+    Title3,
+    Caption1,
   } from "$lib/components";
   import { enhance } from "$app/forms";
-  import { goto } from "$app/navigation";
   import { page } from "$app/state";
   import { enhanceForm } from "$lib/utils";
-  import {
-    user,
-    profile,
-    notification,
-    clearUser,
-    assigneeStore,
-    pageSize,
-    searchTerm,
-    currentPage,
-  } from "$lib/stores";
 
   import { Check, LogOut, Key, Bell, Merge } from "lucide-svelte";
   import { m } from "$lib/paraglide/messages";
+  import SettingsRow from "$lib/components/UI/SettingsRow.svelte";
+  import {
+    user,
+    assigneeStore,
+    notification,
+    searchTerm,
+    pageSize,
+    currentPage,
+    clearUser,
+    profile,
+  } from "$lib/stores";
+  import { goto } from "$app/navigation";
+  import Title1 from "$lib/components/typography/Title1.svelte";
+  import Headline from "$lib/components/typography/Headline.svelte";
 
   let disabled = $state(true);
 
@@ -58,7 +62,6 @@
 
 <form
   method="POST"
-  class="flex flex-col gap-3"
   use:enhance={enhanceForm({
     messages: {
       success: m.changesSaved(),
@@ -69,6 +72,7 @@
       },
     },
   })}
+  class="flex flex-col gap-4"
   action="?/update"
 >
   <Toolbar>
@@ -95,101 +99,97 @@
       >
     </Merger>
   </Toolbar>
+  <div class="grid grid-cols-2 gap-4">
+    <HStack>
+      <Title3>Profile Settings</Title3>
 
-  <div class="grid gap-3 md:grid-cols-2">
-    <Panel>
-      <div>
-        <Title2>{m.mellow_mild_pig_boil()}</Title2>
-      </div>
+      <HStack>
+        <Input
+          bind:disabled
+          placeholder="Name"
+          name="Name"
+          value={$user.name}
+        />
+        <Input
+          bind:disabled
+          type="email"
+          placeholder="Email"
+          name="Email"
+          value={$user.name}
+        />
+      </HStack>
 
-      <div class="grid gap-3">
-        {#each defaultFields as field, index (index)}
-          <div>
-            <Input
-              type={field.type}
-              placeholder={field.label}
-              labelName={field.label}
-              name={field.id}
-              bind:disabled
-              value={field.storeKey
-                ? $profile[field.storeKey]
-                : $user[field.id]}
-            />
-          </div>
-        {/each}
-      </div></Panel
-    >
-    {#if page.params.role === "t"}
-      <Panel>
-        <Title2>{m.real_best_gibbon_dazzle()}</Title2>
-        <div class="grid gap-3">
-          {#each teacherFields as field, index (index)}
-            <div>
-              <Input
-                type={field.type}
-                placeholder={field.label}
-                labelName={field.label}
-                name={field.id}
-                bind:disabled
-                value={field.storeKey
-                  ? $profile[field.storeKey]
-                  : $user[field.id]}
-              />
-            </div>
-          {/each}
-          {#if $profile.zoomUrl === null}
-            <Caption1>Please define your Zoom URL</Caption1>
-          {/if}
-        </div>
-      </Panel>
-    {/if}
+      <!-- Teacher Settings -->
+      {#if page.params.role === "t"}
+        <Divider />
+        <Title3>Teacher Settings</Title3>
+        <Input
+          bind:disabled
+          placeholder="Your Telegram ID"
+          name="Telegram"
+          value={$profile.telegramId}
+        />
+        <Input
+          bind:disabled
+          placeholder="The link for your lessons"
+          name="Video Call URL"
+          value={$profile.videoCallUrl}
+        />
+      {/if}
+    </HStack>
+
+    <HStack>
+      <HStack>
+        <Title3>Notifications</Title3>
+        <Headline>
+          {m.stale_quick_mantis_stab()}
+        </Headline>
+        <Caption1>
+          {m.broad_clear_snake_peel()}
+        </Caption1>
+        <UniButton
+          variant="primary"
+          href="https://t.me/fz_notif_bot"
+          Icon={Bell}
+          iconOnly={false}
+        >
+          {m.suave_teary_emu_expand()}
+        </UniButton>
+      </HStack>
+      <!-- Logout Section -->
+      <HStack>
+        <Headline>Log Out</Headline>
+        <Caption1>
+          {m.odd_tough_shell_dust()}
+        </Caption1>
+        <form
+          action="?/logout"
+          method="POST"
+          class="flex flex-col"
+          use:enhance={enhanceForm({
+            handlers: {
+              redirect: async (result) => {
+                clearUser();
+                assigneeStore.reset();
+                pageSize.reset();
+                currentPage.reset();
+                searchTerm.reset();
+                notification.set({ message: "Bye!", type: "success" });
+                goto(result.location);
+              },
+            },
+          })}
+        >
+          <UniButton
+            variant="danger"
+            type="submit"
+            Icon={LogOut}
+            iconOnly={false}
+          >
+            {m.seemly_any_ostrich_believe()}
+          </UniButton>
+        </form>
+      </HStack>
+    </HStack>
   </div>
-
-  <Panel>
-    <div class="flex items-center gap-3">
-      <Title2>{m.stale_quick_mantis_stab()}</Title2>
-    </div>
-
-    <p class="text-sm text-stone-700 dark:text-stone-300">
-      {m.broad_clear_snake_peel()}
-    </p>
-
-    <div class="flex">
-      <UniButton variant="primary" Icon={Bell} href="https://t.me/fz_notif_bot">
-        {m.suave_teary_emu_expand()}
-      </UniButton>
-    </div>
-  </Panel>
-</form>
-<form
-  action="?/logout"
-  method="POST"
-  class="flex flex-col"
-  use:enhance={enhanceForm({
-    handlers: {
-      redirect: async (result) => {
-        clearUser();
-        assigneeStore.reset();
-        pageSize.reset();
-        currentPage.reset();
-        searchTerm.reset();
-        notification.set({ message: "Bye!", type: "success" });
-        goto(result.location);
-      },
-    },
-  })}
->
-  <Panel>
-    <p class="text-sm text-stone-700 dark:text-stone-300">
-      {m.odd_tough_shell_dust()}
-    </p>
-    <div>
-      <UniButton
-        variant="danger"
-        type="submit"
-        Icon={LogOut}
-        formaction="?/logout">{m.seemly_any_ostrich_believe()}</UniButton
-      >
-    </div>
-  </Panel>
 </form>

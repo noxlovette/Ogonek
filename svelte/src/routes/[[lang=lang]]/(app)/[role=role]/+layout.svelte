@@ -26,6 +26,7 @@
   import type { Student } from "$lib/types";
   import { Menu } from "lucide-svelte";
   import Divider from "$lib/components/UI/toolbar/Divider.svelte";
+  import Loader from "$lib/components/UI/navigation/Loader.svelte";
 
   let { data, children } = $props();
   const role = page.params.role;
@@ -55,9 +56,9 @@
       <Lessons />
       <Words />
       {#if role == "s"}
-        <Students />
-      {:else}
         <Zoom />
+      {:else}
+        <Students />
       {/if}
 
       <Divider />
@@ -81,6 +82,7 @@
     <Menu />
   </button>
   <MobileMenu elements={elementsLeft} />
+  <Loader />
 </div>
 
 <svelte:head>

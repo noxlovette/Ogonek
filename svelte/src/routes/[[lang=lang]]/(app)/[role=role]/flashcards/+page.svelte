@@ -100,7 +100,6 @@
         >
       {/if}
     </Merger>
-    <Divider />
     <SearchBar />
   </VStack>
 </Toolbar>

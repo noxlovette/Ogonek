@@ -1,9 +1,14 @@
+<!-- Updated Panel.svelte -->
 <script lang="ts">
-  let { children } = $props();
+  let { children, variant = "default" } = $props();
 </script>
 
 <section
-  class="ring-default flex flex-col gap-3 rounded-lg bg-inherit px-5 py-4 shadow-sm dark:bg-stone-950"
+  class="overflow-hidden rounded-xl border border-stone-200 bg-white shadow-sm dark:border-stone-800 dark:bg-stone-900"
+  class:bg-stone-50={variant === "inset"}
+  class:dark:bg-stone-950={variant === "inset"}
 >
-  {@render children?.()}
+  <div class="p-6">
+    {@render children?.()}
+  </div>
 </section>

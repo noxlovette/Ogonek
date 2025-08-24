@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Caption1 from "$lib/components/typography/Caption1.svelte";
+  import Label from "$lib/components/typography/Label.svelte";
   import { Eye, EyeClosed } from "lucide-svelte";
 
   let {
@@ -9,14 +9,16 @@
     value = $bindable(),
     disabled = $bindable(),
     ref,
+    showLabel = true,
     type = "text",
   }: {
     placeholder: string;
     name: string;
-    value: string | number | boolean | undefined | null;
+    value?: string | number | boolean | null;
     labelName?: string;
     ref?: HTMLInputElement;
     disabled?: boolean;
+    showLabel?: boolean;
     type?:
       | "text"
       | "number"
@@ -35,8 +37,9 @@
 </script>
 
 <div class="relative space-y-1">
-  <Caption1>{labelName}</Caption1>
-
+  {#if showLabel}
+    <Label>{labelName}</Label>
+  {/if}
   {#if type === "text"}
     <input
       {name}
