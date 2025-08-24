@@ -101,59 +101,40 @@
         </Merger>
       </VStack>
     </VStack>
-    {#if page.params.role == "t"}
-      <Caption1>
-        {assigneeName}
-      </Caption1>
-    {/if}
+    <VStack>
+      {#if deck.description}
+        <div class="flex flex-wrap gap-x-1 gap-y-2">
+          {#each deck.description.split(";") as deckTag, index (index)}
+            <Badge>{deckTag}</Badge>
+          {/each}
+        </div>
+      {/if}
+      <Badge>
+        {cards.length}
+        {m.some_happy_cat({ count: cards.length })}
+      </Badge>
+      {#if page.params.role == "t"}
+        <Caption1>
+          {assigneeName}
+        </Caption1>
+      {/if}
+    </VStack>
   </HStack>
 </Toolbar>
 
-<div class="grid gap-8 lg:grid-cols-3">
-  <div class="lg:col-span-2">
-    <div class="grid gap-4 sm:grid-cols-1 md:grid-cols-2">
-      {#each cards as card (card.id)}
-        <WordCard bind:flippedCards {card} {toggleCard} />
-      {/each}
-    </div>
-
-    {#if cards.length === 0}
-      <EmptySpace>
-        <p class="text-lg text-stone-500 dark:text-stone-400">
-          {m.noFlashcards()}
-        </p>
-        <p class="mt-2 text-sm text-stone-400 dark:text-stone-500">
-          {m.deft_fuzzy_stingray_push()}
-        </p>
-      </EmptySpace>
-    {/if}
-  </div>
-
-  <div class="h-full">
-    <div class="sticky top-6">
-      <div
-        class="bg-default ring-default flex flex-col space-y-3 rounded-lg p-3 shadow-sm"
-      >
-        <Caption1>{m.equal_key_gazelle_attend()}</Caption1>
-        {#if deck.description}
-          <div class="flex flex-wrap gap-x-1 gap-y-2">
-            {#each deck.description.split(";") as deckTag, index (index)}
-              <Badge badgeText={deckTag}></Badge>
-            {/each}
-          </div>
-        {:else}
-          <p class="text-stone-500 italic dark:text-stone-400">
-            {m.simple_east_crocodile_spark()}
-          </p>
-        {/if}
-
-        <div class="border-t border-stone-100 pt-4 dark:border-stone-700">
-          <GreySpan>
-            {cards.length}
-            {m.some_happy_cat({ count: cards.length })}
-          </GreySpan>
-        </div>
-      </div>
-    </div>
-  </div>
+<div class="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+  {#each cards as card (card.id)}
+    <WordCard bind:flippedCards {card} {toggleCard} />
+  {/each}
 </div>
+
+{#if cards.length === 0}
+  <EmptySpace>
+    <p class="text-lg text-stone-500 dark:text-stone-400">
+      {m.noFlashcards()}
+    </p>
+    <p class="mt-2 text-sm text-stone-400 dark:text-stone-500">
+      {m.deft_fuzzy_stingray_push()}
+    </p>
+  </EmptySpace>
+{/if}

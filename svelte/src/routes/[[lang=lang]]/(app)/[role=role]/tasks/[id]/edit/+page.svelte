@@ -7,9 +7,7 @@
     Editor,
     LargeTitle,
     UniButton,
-    AssigneeSelector,
     Toolbar,
-    GreySpan,
     Multipart,
     Input,
     Merger,
@@ -73,7 +71,7 @@
 
   <div class="grid grid-cols-1 gap-5 md:grid-cols-4">
     <Input name="title" value={task.title} placeholder="Title"></Input>
-    <AssigneeSelector item={task} />
+    <Input name="Assignee" type="assignee" item={task} />
 
     <Input
       bind:value={dueDate}

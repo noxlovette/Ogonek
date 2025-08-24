@@ -31,6 +31,7 @@
   import { goto } from "$app/navigation";
   import Title1 from "$lib/components/typography/Title1.svelte";
   import Headline from "$lib/components/typography/Headline.svelte";
+  import VStack from "$lib/components/UI/toolbar/VStack.svelte";
 
   let disabled = $state(true);
 
@@ -79,24 +80,28 @@
     <LargeTitle>{m.settings()}</LargeTitle>
 
     <Divider />
+
     <Merger>
-      <UniButton
-        Icon={Key}
-        variant="primary"
-        onclick={() => {
-          disabled = !disabled;
-        }}
-        type="button"
-      >
-        {disabled ? m.edit() : m.editing()}
-      </UniButton>
-      <UniButton
-        Icon={Check}
-        type="submit"
-        variant="primary"
-        disable={disabled}
-        formaction="?/update">{m.save()}</UniButton
-      >
+      {#if disabled}
+        <UniButton
+          Icon={Key}
+          variant="prominent"
+          onclick={() => {
+            disabled = !disabled;
+          }}
+          type="button"
+        >
+          {disabled ? m.edit() : m.editing()}
+        </UniButton>
+      {:else}
+        <UniButton
+          Icon={Check}
+          type="submit"
+          variant="prominent"
+          disable={disabled}
+          formaction="?/update">{m.save()}</UniButton
+        >
+      {/if}
     </Merger>
   </Toolbar>
   <div class="grid grid-cols-2 gap-4">
@@ -115,7 +120,7 @@
           type="email"
           placeholder="Email"
           name="Email"
-          value={$user.name}
+          value={$user.email}
         />
       </HStack>
 
@@ -141,54 +146,60 @@
     <HStack>
       <HStack>
         <Title3>Notifications</Title3>
-        <Headline>
-          {m.stale_quick_mantis_stab()}
-        </Headline>
+        <VStack>
+          <Headline>
+            {m.stale_quick_mantis_stab()}
+          </Headline>
+          <Divider></Divider>
+          <UniButton
+            variant="primary"
+            href="https://t.me/fz_notif_bot"
+            Icon={Bell}
+            iconOnly={false}
+          >
+            {m.suave_teary_emu_expand()}
+          </UniButton>
+        </VStack>
         <Caption1>
           {m.broad_clear_snake_peel()}
         </Caption1>
-        <UniButton
-          variant="primary"
-          href="https://t.me/fz_notif_bot"
-          Icon={Bell}
-          iconOnly={false}
-        >
-          {m.suave_teary_emu_expand()}
-        </UniButton>
       </HStack>
       <!-- Logout Section -->
       <HStack>
-        <Headline>Log Out</Headline>
+        <VStack>
+          <Headline>Log Out</Headline>
+          <Divider></Divider>
+          <form
+            action="?/logout"
+            method="POST"
+            class="flex flex-col"
+            use:enhance={enhanceForm({
+              handlers: {
+                redirect: async (result) => {
+                  clearUser();
+                  assigneeStore.reset();
+                  pageSize.reset();
+                  currentPage.reset();
+                  searchTerm.reset();
+                  notification.set({ message: "Bye!", type: "success" });
+                  goto(result.location);
+                },
+              },
+            })}
+          >
+            <UniButton
+              variant="danger"
+              type="submit"
+              Icon={LogOut}
+              iconOnly={false}
+            >
+              {m.seemly_any_ostrich_believe()}
+            </UniButton>
+          </form>
+        </VStack>
         <Caption1>
           {m.odd_tough_shell_dust()}
         </Caption1>
-        <form
-          action="?/logout"
-          method="POST"
-          class="flex flex-col"
-          use:enhance={enhanceForm({
-            handlers: {
-              redirect: async (result) => {
-                clearUser();
-                assigneeStore.reset();
-                pageSize.reset();
-                currentPage.reset();
-                searchTerm.reset();
-                notification.set({ message: "Bye!", type: "success" });
-                goto(result.location);
-              },
-            },
-          })}
-        >
-          <UniButton
-            variant="danger"
-            type="submit"
-            Icon={LogOut}
-            iconOnly={false}
-          >
-            {m.seemly_any_ostrich_believe()}
-          </UniButton>
-        </form>
       </HStack>
     </HStack>
   </div>

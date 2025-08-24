@@ -24,7 +24,7 @@
     {task.title}
   </Headline>
   <VStack>
-    <Badge {badgeText} {urgency} />
+    <Badge {urgency}>{badgeText}</Badge>
     <Divider />
     <Priority priority={task.priority} />
   </VStack>

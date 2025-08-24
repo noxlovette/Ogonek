@@ -1,7 +1,6 @@
 <script lang="ts">
   import {
     LargeTitle,
-    Title3,
     DeckCard,
     Table,
     UniButton,
@@ -27,6 +26,7 @@
   import { goto } from "$app/navigation";
   import EmptySpace from "$lib/components/typography/EmptySpace.svelte";
   import TableSkeleton from "$lib/components/UI/interactive/TableSkeleton.svelte";
+  import Title1 from "$lib/components/typography/Title1.svelte";
 
   let { data } = $props();
   const { students } = data;
@@ -124,7 +124,7 @@
       </div>
     {:else}
       <EmptySpace>
-        <Title3>{m.noDecks()}</Title3>
+        <Title1>{m.noDecks()}</Title1>
       </EmptySpace>
     {/if}
   {:else}

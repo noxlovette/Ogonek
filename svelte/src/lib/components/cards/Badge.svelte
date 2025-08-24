@@ -1,7 +1,7 @@
 <script lang="ts">
   import { Caption1 } from "../typography";
 
-  const { urgency = "normal", badgeText = "badge", styling = "" } = $props();
+  const { urgency = "normal", styling = "", children } = $props();
 
   function getBadgeConfig(urgency: string) {
     switch (urgency) {
@@ -23,7 +23,6 @@
       case "normal":
       default:
         return {
-          text: badgeText,
           color:
             "bg-secondary/10 text-secondary-foreground/80 ring-secondary/30",
         };
@@ -42,7 +41,11 @@
     `}
   >
     <Caption1>
-      {badgeConfig.text}
+      {#if badgeConfig.text}
+        {badgeConfig.text}
+      {:else}
+        {@render children()}
+      {/if}
     </Caption1>
   </span>
 </div>
