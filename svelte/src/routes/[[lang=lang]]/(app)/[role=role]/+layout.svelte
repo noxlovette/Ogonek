@@ -26,9 +26,8 @@
   import { page } from "$app/state";
   import { setContext } from "svelte";
   import type { Word, Student } from "$lib/types";
-  import ThemeToggler from "$lib/components/UI/interactive/ThemeToggler.svelte";
-  import Clock from "$lib/components/UI/Clock.svelte";
   import { Menu } from "lucide-svelte";
+  import LoadingOverlay from "$lib/components/UI/LoadingOverlay.svelte";
 
   let { data, children } = $props();
   const role = page.params.role;
@@ -54,18 +53,12 @@
 </script>
 
 <div class="flex flex-row">
-  <div class=" hidden w-max flex-col md:block">
+  <div class="hidden w-max flex-col md:block">
     <Sidebar elements={elementsLeft} />
   </div>
   <WorkArea>
     {@render children?.()}
   </WorkArea>
-  <div class="hidden w-1/6 pl-4 md:block">
-    <div class="flex items-baseline justify-between pb-5">
-      <Clock></Clock>
-      <ThemeToggler />
-    </div>
-  </div>
   <button
     aria-label={$mobileMenuOpen ? "Close menu" : "Open menu"}
     class="absolute right-0 z-50 flex flex-col items-center justify-center rounded-md p-2 hover:bg-stone-200 md:hidden dark:hover:bg-stone-700"
@@ -74,7 +67,9 @@
     <Menu />
   </button>
   <MobileMenu elements={elementsLeft} />
+  <LoadingOverlay />
 </div>
+
 <svelte:head>
   <title>Ogonek | Main</title>
 </svelte:head>

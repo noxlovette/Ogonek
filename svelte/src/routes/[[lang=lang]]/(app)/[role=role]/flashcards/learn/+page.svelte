@@ -5,7 +5,7 @@
   import { invalidate } from "$app/navigation";
   import { enhanceForm, qualityButtons } from "$lib/utils";
   import { CheckCheck, Home } from "lucide-svelte";
-  import { HeaderEmbellish, UniButton, Label, KBD } from "$lib/components";
+  import { Toolbar, UniButton, Label, KBD } from "$lib/components";
   import { m } from "$lib/paraglide/messages";
 
   let { data } = $props();
@@ -103,7 +103,7 @@
   </div>
 {:else if currentCard}
   <div class="space-y-6" in:fade={{ duration: 100 }}>
-    <HeaderEmbellish>
+    <Toolbar>
       <span class="text-sm text-stone-600 dark:text-stone-400">
         {data.cards.indexOf(currentCard) + 1} / {data.cards.length}
       </span>
@@ -112,7 +112,7 @@
           ((data.cards.indexOf(currentCard) + 1) / data.cards.length) * 100,
         )}% {m.complete()}
       </span>
-    </HeaderEmbellish>
+    </Toolbar>
     <div
       class="ring-defaultdark:bg-stone-700 h-2.5 w-full overflow-hidden rounded-full"
     >

@@ -1,13 +1,13 @@
 <script lang="ts">
-  import { DeckCard, EmptySpace, H1, HeaderEmbellish } from "$lib/components";
+  import { DeckCard, EmptySpace, H1, Toolbar } from "$lib/components";
   import { m } from "$lib/paraglide/messages";
 
   let { data } = $props();
 </script>
 
-<HeaderEmbellish>
+<Toolbar>
   <H1>Public Decks</H1>
-</HeaderEmbellish>
+</Toolbar>
 {#if data.decks.length > 0}
   <grid class="grid gap-4 md:grid-cols-3">
     {#each data.decks as deck (deck.id)}

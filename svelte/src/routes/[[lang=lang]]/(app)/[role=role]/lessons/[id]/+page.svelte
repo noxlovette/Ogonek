@@ -4,7 +4,7 @@
     H1,
     H2,
     H3,
-    HeaderEmbellish,
+    Toolbar,
     TableOfContents,
   } from "$lib/components";
 
@@ -21,7 +21,7 @@
   let formattedDate = formatDate(data.lesson.createdAt);
 </script>
 
-<HeaderEmbellish>
+<Toolbar>
   <div class="flex items-baseline gap-3 md:gap-4">
     <H1>
       {#if role === "t"}
@@ -50,7 +50,7 @@
       >
     </div>
   {/if}
-</HeaderEmbellish>
+</Toolbar>
 <div class="gap-4 md:grid md:grid-cols-4">
   <TableOfContents />
   <div class="markdown md:col-span-3">

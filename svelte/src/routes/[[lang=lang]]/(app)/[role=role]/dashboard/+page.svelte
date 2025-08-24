@@ -4,7 +4,7 @@
     DueTasksWidget,
     ActivityFeedWidget,
     LearnWidget,
-    HeaderEmbellish,
+    Toolbar,
   } from "$lib/components";
   import { getGreeting } from "$lib/utils";
   import { user } from "$lib/stores";
@@ -22,9 +22,9 @@
   let { data } = $props();
 </script>
 
-<HeaderEmbellish>
+<Toolbar>
   <H1>{greetings[greetingType]}</H1>
-</HeaderEmbellish>
+</Toolbar>
 
 <div class="grid gap-8 lg:grid-cols-3">
   <DueTasksWidget tasks={data.tasks} />

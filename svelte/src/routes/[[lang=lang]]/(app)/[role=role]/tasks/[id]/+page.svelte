@@ -4,7 +4,7 @@
     H1,
     H3,
     Label,
-    HeaderEmbellish,
+    Toolbar,
     UniButton,
     FileTaskCard,
   } from "$lib/components";
@@ -35,7 +35,7 @@
   <title>Task From {formattedDate}</title>
 </svelte:head>
 
-<HeaderEmbellish>
+<Toolbar>
   <div class="flex flex-col gap-3 md:flex-row md:items-baseline md:gap-4">
     <H1>{data.task.title}</H1>
     {#if role === "t"}
@@ -90,7 +90,7 @@
       >
     {/if}
   </div>
-</HeaderEmbellish>
+</Toolbar>
 
 <grid class="grid gap-4 md:grid-cols-4">
   <div class="flex gap-4 md:flex-col">

@@ -2,9 +2,11 @@
   import type { Task, TableConfig } from "$lib/types/index.js";
   import {
     H1,
+    Divider,
+    Merger,
     Table,
     UniButton,
-    HeaderEmbellish,
+    Toolbar,
     SearchBar,
     TableSkeleton,
     LoadingCard,
@@ -73,11 +75,10 @@
   }
 </script>
 
-<HeaderEmbellish>
-  <div
-    class="flex flex-col items-center gap-3 md:flex-row md:items-center md:gap-4"
-  >
-    <H1>{m.tasks()}</H1>
+<Toolbar>
+  <H1>{m.tasks()}</H1>
+  <Divider />
+  <Merger>
     {#if role == "t"}
       <form
         action="?/new"
@@ -119,8 +120,8 @@
         ? m.steep_zany_tern_zip()
         : m.direct_slow_bobcat_shine()}
     </UniButton>
-  </div>
-</HeaderEmbellish>
+  </Merger>
+</Toolbar>
 
 <SearchBar />
 {#await data.tasksPaginated}

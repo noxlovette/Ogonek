@@ -5,7 +5,7 @@
     H1,
     AssigneeSelector,
     UniButton,
-    HeaderEmbellish,
+    Toolbar,
   } from "$lib/components";
   import type { PageData } from "./$types";
   import { enhanceForm } from "$lib/utils";
@@ -29,7 +29,7 @@
     },
   })}
 >
-  <HeaderEmbellish>
+  <Toolbar>
     <H1>{m.editing()}</H1>
     <div class="flex items-center space-x-3">
       <UniButton variant="secondary" Icon={Ban} href=".">{m.cancel()}</UniButton
@@ -45,7 +45,7 @@
         confirmTitle="Delete Lesson">{m.delete()}</UniButton
       >
     </div>
-  </HeaderEmbellish>
+  </Toolbar>
 
   <input type="hidden" name="id" value={lesson.id} />
   <input type="hidden" name="markdown" value={markdown} />

@@ -8,7 +8,7 @@
     H1,
     UniButton,
     AssigneeSelector,
-    HeaderEmbellish,
+    Toolbar,
     GreySpan,
     Multipart,
     Input,
@@ -44,7 +44,7 @@
     },
   })}
 >
-  <HeaderEmbellish>
+  <Toolbar>
     <div class="flex items-end space-x-4">
       <H1>{m.editing()}</H1>
       <GreySpan>
@@ -66,7 +66,7 @@
         confirmTitle="Delete Task">{m.delete()}</UniButton
       >
     </div>
-  </HeaderEmbellish>
+  </Toolbar>
 
   <input type="hidden" name="markdown" value={markdown} />
 

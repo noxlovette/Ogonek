@@ -5,7 +5,7 @@
     DeckCard,
     Table,
     UniButton,
-    HeaderEmbellish,
+    Toolbar,
     LoadingCard,
     SearchBar,
   } from "$lib/components";
@@ -70,7 +70,7 @@
   <title>Flashcards | Review</title>
 </svelte:head>
 
-<HeaderEmbellish>
+<Toolbar>
   <div class="flex flex-col gap-3 md:flex-row md:items-baseline md:gap-4">
     <H1>{m.flashcards()}</H1>
     <H3>
@@ -112,7 +112,7 @@
       >
     {/if}
   </div>
-</HeaderEmbellish>
+</Toolbar>
 
 <SearchBar />
 {#await data.decksResponse}

@@ -10,7 +10,7 @@
     FileAudio,
     FileVideo,
     File,
-    Loader2,
+    Loader,
     X,
   } from "lucide-svelte";
   import Label from "../typography/Label.svelte";
@@ -106,7 +106,7 @@
         <div
           class="absolute inset-0 flex items-center justify-center bg-white/80 dark:bg-stone-900/80"
         >
-          <Loader2 class="size-16 animate-spin" />
+          <Loader class="size-16 animate-spin" />
         </div>
       {/if}
     </button>

@@ -6,7 +6,7 @@
     H1,
     UniButton,
     GreySpan,
-    HeaderEmbellish,
+    Toolbar,
     EmptySpace,
     H3,
   } from "$lib/components";
@@ -43,7 +43,7 @@
 <svelte:head>
   <title>{deck.title} | Flashcards</title>
 </svelte:head>
-<HeaderEmbellish>
+<Toolbar>
   <div class="flex items-baseline gap-3 md:gap-4">
     <H1>{deck.title}</H1>
     {#if page.params.role == "t"}
@@ -102,7 +102,7 @@
       </UniButton>
     </form>
   </div>
-</HeaderEmbellish>
+</Toolbar>
 
 <div class="grid gap-8 lg:grid-cols-3">
   <div class="lg:col-span-2">

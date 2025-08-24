@@ -5,7 +5,7 @@
     Input,
     Panel,
     UniButton,
-    HeaderEmbellish,
+    Toolbar,
     Caption,
   } from "$lib/components";
   import { enhance } from "$app/forms";
@@ -69,7 +69,7 @@
   })}
   action="?/update"
 >
-  <HeaderEmbellish>
+  <Toolbar>
     <div class="flex flex-col gap-3 md:flex-row md:gap-4">
       <H1>{m.settings()}</H1>
       <div class="flex gap-3 md:gap-4">
@@ -92,7 +92,7 @@
         >
       </div>
     </div>
-  </HeaderEmbellish>
+  </Toolbar>
 
   <div class="grid gap-3 md:grid-cols-2">
     <Panel>

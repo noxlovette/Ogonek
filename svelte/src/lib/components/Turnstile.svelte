@@ -2,7 +2,7 @@
 <script lang="ts">
   import { onMount, onDestroy, tick } from "svelte";
   import { page } from "$app/state";
-  import { Loader2 } from "lucide-svelte";
+  import { Loader } from "lucide-svelte";
   import logger from "$lib/logger";
 
   let turnstileElement: HTMLDivElement;
@@ -87,7 +87,7 @@
 <div class="relative">
   {#if isLoading}
     <div class="absolute inset-0 flex items-center justify-center">
-      <Loader2 class="font-stone-200 animate-spin"></Loader2>
+      <Loader class="font-stone-200 animate-spin"></Loader>
     </div>
   {/if}
 

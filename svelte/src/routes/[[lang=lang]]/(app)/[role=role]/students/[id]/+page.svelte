@@ -5,7 +5,7 @@
     GridCell,
     H1,
     H3,
-    HeaderEmbellish,
+    Toolbar,
     LessonCard,
     TaskCard,
     UniButton,
@@ -22,7 +22,7 @@
 <svelte:head>
   <title>{student.name}</title>
 </svelte:head>
-<HeaderEmbellish>
+<Toolbar>
   <div>
     <H1>{student.name}</H1>
     <H3>
@@ -35,7 +35,7 @@
     href="/t/students/{student.id}/edit"
     variant="secondary">Edit</UniButton
   >
-</HeaderEmbellish>
+</Toolbar>
 <grid class="grid gap-4 md:grid-cols-2">
   <GridCell>
     <H2>Decks</H2>

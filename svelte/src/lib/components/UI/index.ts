@@ -4,5 +4,6 @@ export * from "./navigation/index";
 export { default as Panel } from "./Panel.svelte";
 export * from "./sidebar";
 export { default as TableOfContents } from "./TableOfContents.svelte";
+export * from "./toolbar";
 export { default as UniButton } from "./UniButton.svelte";
 export { default as WorkArea } from "./WorkArea.svelte";
