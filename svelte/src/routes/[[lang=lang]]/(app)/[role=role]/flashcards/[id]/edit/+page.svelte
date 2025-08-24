@@ -110,7 +110,7 @@
             </p>
             <button
               type="button"
-              class="bg-accent hover:bg-accent focus:ring-accent dark:bg-accent dark:hover:bg-accent mt-6 inline-flex items-center rounded-lg px-4 py-2 text-sm font-medium text-stone-50 shadow-sm transition focus:ring-2 focus:ring-offset-2 focus:outline-none dark:focus:ring-offset-stone-900"
+              class="bg-cacao-500 hover:bg-cacao-600 focus:ring-cacao-500 dark:bg-cacao-600 dark:hover:bg-cacao-700 mt-6 inline-flex items-center rounded-lg px-4 py-2 text-sm font-medium text-stone-50 shadow-sm transition focus:ring-2 focus:ring-offset-2 focus:outline-none dark:focus:ring-offset-stone-900"
               onclick={addCard}
             >
               <Plus class="mr-2 h-4 w-4" />
@@ -127,7 +127,7 @@
           <button
             type="button"
             onclick={addCard}
-            class="group hover:border-accent hover:text-accent dark:hover:border-accent dark:hover:text-accent bg-default mt-4 flex w-full items-center justify-center rounded-lg border-2 border-dashed border-stone-300/30 py-4 text-stone-500 transition dark:border-stone-600/30 dark:bg-stone-900/50 dark:text-stone-400"
+            class="group hover:border-cacao-300 hover:text-cacao-500 dark:hover:border-cacao-700 dark:hover:text-cacao-400 bg-default mt-4 flex w-full items-center justify-center rounded-lg border-2 border-dashed border-stone-300/30 py-4 text-stone-500 transition dark:border-stone-600/30 dark:bg-stone-900/50 dark:text-stone-400"
           >
             <Plus class="mr-2 h-5 w-5 transition group-hover:scale-110" />
             <span>{m.new()}</span>
@@ -165,7 +165,7 @@
             <select
               name="visibility"
               value={deck.visibility}
-              class="focus:border-accent focus:ring-accent/20 h-full w-full rounded-2xl border border-stone-300 bg-white px-4 py-2 text-base text-stone-900 placeholder-stone-400 shadow-sm focus:shadow-md focus:ring-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60 dark:border-stone-700 dark:bg-stone-950 dark:text-stone-100"
+              class="focus:border-cacao-500 focus:ring-cacao-500/20 h-full w-full rounded-2xl border border-stone-300 bg-white px-4 py-2 text-base text-stone-900 placeholder-stone-400 shadow-sm transition-all focus:shadow-md focus:ring-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60 dark:border-stone-700 dark:bg-stone-950 dark:text-stone-100"
             >
               <option value="private">{m.private()}</option>
               <option value="public">{m.public()}</option>

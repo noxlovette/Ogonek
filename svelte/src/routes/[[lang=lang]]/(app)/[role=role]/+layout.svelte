@@ -70,7 +70,7 @@
   </div>
   <button
     aria-label={$mobileMenuOpen ? "Close menu" : "Open menu"}
-    class="absolute right-0 z-50 flex flex-col items-center justify-center rounded-md p-2 hover:bg-stone-200 md:hidden dark:hover:bg-stone-700"
+    class="absolute right-0 z-50 flex flex-col items-center justify-center rounded-md p-2 transition-colors hover:bg-stone-200 md:hidden dark:hover:bg-stone-700"
     onclick={() => mobileMenuOpen.toggle()}
   >
     <Menu />

@@ -95,7 +95,7 @@
             <button
               type="button"
               onclick={copyLink}
-              class="rounded p-2 text-stone-500 hover:bg-stone-100 hover:text-stone-700 dark:hover:bg-stone-700 dark:hover:text-stone-300"
+              class="rounded p-2 text-stone-500 transition-colors hover:bg-stone-100 hover:text-stone-700 dark:hover:bg-stone-700 dark:hover:text-stone-300"
               title="Copy link"
             >
               <Copy size={14} />

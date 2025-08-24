@@ -30,7 +30,7 @@
   );
 
   const baseClasses =
-    "group relative flex items-center gap-3 active:scale-[0.95] hover:scale-[1.02] px-3 py-3 text-sm font-medium    select-none";
+    "group relative flex items-center gap-3 active:scale-[0.95] hover:scale-[1.02] px-3 py-3 text-sm font-medium transition-all duration-300 ease-out select-none";
 
   const stateClasses = $derived(() => {
     if (disabled) return "opacity-40 cursor-not-allowed";
@@ -38,9 +38,9 @@
   });
 
   const iconClasses = $derived(() => {
-    const base = "  flex-shrink-0";
+    const base = "transition-all duration-300 flex-shrink-0";
     if ($sidebar) return `${base} size-6`;
-    return `${base} size-5 ${isActive ? "text-accent dark:text-accent" : "text-stone-500 dark:text-stone-400"}`;
+    return `${base} size-5 ${isActive ? "text-cacao-600 dark:text-cacao-400" : "text-stone-500 dark:text-stone-400"}`;
   });
 
   const badgeVisible = $derived(badge && badge != 0 ? true : false);
@@ -53,7 +53,7 @@
       {target}
       {rel}
       aria-label={name}
-      class={`${baseClasses} ${stateClasses} hover:border-accent/50 dark:hover:border-accent/50 min-h-[52px] min-w-[52px]
+      class={`${baseClasses} ${stateClasses} hover:border-cacao-300/50 dark:hover:border-cacao-600/50 min-h-[52px] min-w-[52px]
         justify-center
         rounded-xl border border-stone-200/30
         bg-white/90 shadow-md
@@ -61,7 +61,7 @@
         hover:shadow-xl hover:shadow-stone-900/15
         active:shadow-inner active:shadow-stone-900/20
         dark:border-stone-700/30 dark:bg-stone-800/90
-        ${isActive ? "border-accent/60 dark:border-accent/60 bg-accent-/95 dark:bg-accent/80 shadow-accent/20" : ""}
+        ${isActive ? "border-cacao-400/60 dark:border-cacao-500/60 bg-cacao-50/95 dark:bg-cacao-900/80 shadow-cacao-500/20" : ""}
         transform hover:-translate-y-0.5
         hover:bg-white dark:hover:bg-stone-700/90
       `}
@@ -71,7 +71,7 @@
     >
       {#if isActive}
         <div
-          class="bg-accent dark:bg-accent shadow-accent/40 absolute top-1/2 left-0 h-10
+          class="bg-cacao-500 dark:bg-cacao-400 shadow-cacao-500/40 absolute top-1/2 left-0 h-10
             w-1 -translate-y-1/2
             rounded-r-full shadow-lg
           "
@@ -101,7 +101,7 @@
     <!-- Clean tooltip -->
     <div
       class="pointer-events-none absolute top-1/2 left-16 z-50
-        -translate-y-1/2 opacity-0
+        -translate-y-1/2 opacity-0 transition-all duration-300
         group-hover/tooltip:pointer-events-auto group-hover/tooltip:translate-x-2
         group-hover/tooltip:opacity-100
       "
@@ -128,7 +128,7 @@
     {rel}
     class={`${baseClasses} ${stateClasses} rounded-lg
       hover:bg-stone-50/80 dark:hover:bg-stone-800/60
-      ${isActive ? "bg-accent-/90 dark:bg-accent/70 border-accent dark:border-accent border-l-2" : ""}
+      ${isActive ? "bg-cacao-50/90 dark:bg-cacao-900/70 border-cacao-500 dark:border-cacao-400 border-l-2" : ""}
       border
       border-transparent hover:translate-x-1 hover:border-stone-200/50 dark:hover:border-stone-700/50
     `}
@@ -138,7 +138,7 @@
   >
     {#if isActive}
       <div
-        class="bg-accent dark:bg-accent shadow-accent/30 absolute top-1/2 left-0 h-8
+        class="bg-cacao-500 dark:bg-cacao-400 shadow-cacao-500/30 absolute top-1/2 left-0 h-8
           w-1 -translate-y-1/2
           rounded-r-full shadow-md
         "
@@ -170,7 +170,7 @@
 
       {#if external}
         <div
-          class="ml-2 flex h-4 w-4 items-center justify-center opacity-60 hover:opacity-100"
+          class="ml-2 flex h-4 w-4 items-center justify-center opacity-60 transition-opacity hover:opacity-100"
         >
           <SquareArrowUpRight />
         </div>

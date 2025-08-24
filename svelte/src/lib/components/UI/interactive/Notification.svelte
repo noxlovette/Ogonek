@@ -44,7 +44,7 @@
 
     <button
       onclick={handleDismiss}
-      class="rounded-full p-1 hover:bg-stone-200/40 dark:hover:bg-stone-800/40"
+      class="rounded-full p-1 transition-colors hover:bg-stone-200/40 dark:hover:bg-stone-800/40"
       aria-label="Dismiss notification"
     >
       <X class="size-4 text-stone-600 dark:text-stone-300" />

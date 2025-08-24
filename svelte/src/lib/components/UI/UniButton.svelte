@@ -74,10 +74,10 @@
   flex items-center justify-center
   hover:scale-[1.02]
   rounded-full font-medium select-none
-    
+  transition-all duration-200 ease-out
   active:scale-[0.97] focus-visible:outline-none
   ring-offset-2
-  focus-visible:ring-2 focus-visible:ring-offset-3 focus-visible:ring-accent
+  focus-visible:ring-2 focus-visible:ring-offset-3 focus-visible:ring-cacao-400
   disabled:opacity-50 disabled:pointer-events-none
   backdrop-blur-sm
 `;
@@ -104,9 +104,9 @@
     dark:text-stone-400 dark:hover:bg-stone-800
   `,
     link: `
-    text-accent underline underline-offset-2 ring-0 p-0
-    hover:text-accent
-    dark:text-accent dark:hover:text-accent
+    text-cacao-600 underline underline-offset-2 ring-0 p-0
+    hover:text-cacao-800
+    dark:text-cacao-300 dark:hover:text-cacao-100
   `,
     outline: `
     bg-transparent text-stone-800 ring-1 ring-stone-300
@@ -181,14 +181,14 @@
     <div class="mt-5 flex justify-end gap-2">
       <button
         type="button"
-        class="rounded-lg bg-white px-4 py-2 text-stone-700/30 ring-1 ring-stone-300 hover:bg-stone-50 dark:bg-stone-800/30 dark:text-stone-200 dark:hover:bg-stone-700"
+        class="rounded-lg bg-white px-4 py-2 text-stone-700/30 ring-1 ring-stone-300 transition-all hover:bg-stone-50 dark:bg-stone-800/30 dark:text-stone-200 dark:hover:bg-stone-700"
         onclick={() => (showConfirmDialog = false)}
       >
         Cancel
       </button>
       <button
         type="submit"
-        class="rounded-lg bg-gradient-to-br from-red-500 to-red-600 px-4 py-2 text-stone-50 ring-1 ring-red-300 hover:from-red-500 hover:to-red-700 focus:ring focus:ring-red-400 focus:ring-offset-2"
+        class="rounded-lg bg-gradient-to-br from-red-500 to-red-600 px-4 py-2 text-stone-50 ring-1 ring-red-300 transition-all hover:from-red-500 hover:to-red-700 focus:ring focus:ring-red-400 focus:ring-offset-2"
         {formaction}
       >
         Confirm

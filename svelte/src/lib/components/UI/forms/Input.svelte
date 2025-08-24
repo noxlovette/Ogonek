@@ -31,7 +31,7 @@
   let showPassword = $state(false);
 
   const baseStyle =
-    "w-full rounded-2xl bg-white dark:bg-stone-950 border border-stone-100/60 dark:border-stone-800/60 px-4 py-2 text-base text-stone-900 dark:text-stone-100 placeholder-stone-400  shadow-sm focus:shadow-md focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent/70 disabled:opacity-60 disabled:cursor-not-allowed";
+    "w-full rounded-2xl bg-white dark:bg-stone-950 border border-stone-100/60 dark:border-stone-800/60 px-4 py-2 text-base text-stone-900 dark:text-stone-100 placeholder-stone-400 transition-all shadow-sm focus:shadow-md focus:outline-none focus:border-cacao-200 focus:ring-2 focus:ring-cacao-500/70 disabled:opacity-60 disabled:cursor-not-allowed";
 </script>
 
 <div class="relative space-y-1">

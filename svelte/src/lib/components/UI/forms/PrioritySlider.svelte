@@ -65,8 +65,8 @@
         onclick={() => setPriority(level)}
         {disabled}
         class={`
-            focus:ring-accent h-4 w-4 rounded-full border-2  
-             hover:scale-110 focus:ring-2 focus:ring-offset-2 focus:outline-none active:scale-95
+            focus:ring-cacao-500 h-4 w-4 rounded-full border-2 transition-all 
+            duration-200 hover:scale-110 focus:ring-2 focus:ring-offset-2 focus:outline-none active:scale-95
             disabled:cursor-not-allowed disabled:hover:scale-100
             ${
               priority === level

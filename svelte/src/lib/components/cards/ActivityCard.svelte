@@ -83,7 +83,7 @@
   {/if}
 {/snippet}
 <a
-  class="bg-default flex items-center justify-between gap-3 rounded-xl border border-stone-200 p-2 shadow-sm hover:shadow-md dark:border-stone-800"
+  class="bg-default flex items-center justify-between gap-3 rounded-xl border border-stone-200 p-2 shadow-sm transition-shadow hover:shadow-md dark:border-stone-800"
   {href}
 >
   <!-- Icon -->

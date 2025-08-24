@@ -332,7 +332,7 @@
           </button>
 
           <button
-            class="bg-accent hover:bg-accent rounded-lg px-4 py-2 font-medium text-stone-50 disabled:cursor-not-allowed disabled:bg-stone-400"
+            class="bg-cacao-500 hover:bg-cacao-600 rounded-lg px-4 py-2 font-medium text-stone-50 disabled:cursor-not-allowed disabled:bg-stone-400"
             disabled={!importFrontColumn || !importBackColumn}
             onclick={importCards}
           >
