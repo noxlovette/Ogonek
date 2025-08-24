@@ -33,7 +33,7 @@
   </div>
   <div class="flex flex-wrap gap-0.5">
     {#each badgeText.split(";") as badgeCnunk, index (index)}
-      <Badge>badgeCnunk</Badge>
+      <Badge>{badgeCnunk}</Badge>
     {/each}
   </div>
 

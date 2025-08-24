@@ -47,7 +47,6 @@
       {/if}
     </VStack>
     <VStack>
-      <Badge>{formattedDate}</Badge>
       {#if role === "t"}
         <Title3>
           {data.lesson.topic}
@@ -57,6 +56,7 @@
           {data.lesson.assigneeName}
         </Caption1>
       {/if}
+      <Badge>{formattedDate}</Badge>
     </VStack>
   </HStack>
 </Toolbar>

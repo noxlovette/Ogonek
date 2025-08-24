@@ -8,23 +8,22 @@
       case "overdue":
         return {
           text: "Overdue",
-          color: "bg-secondary/20 text-secondary-foreground ring-secondary/40",
+          color: "bg-red-600 ring-red-700/40  ",
         };
       case "urgent":
         return {
           text: "Due Today",
-          color: "bg-secondary/20 text-secondary-foreground ring-secondary/40",
+          color: "bg-orange-600  ring-orange-700/40",
         };
       case "soon":
         return {
           text: "Due Soon",
-          color: "bg-secondary/20 text-secondary-foreground ring-secondary/40",
+          color: "bg-yellow-600   ring-yellow-600/40",
         };
       case "normal":
       default:
         return {
-          color:
-            "bg-secondary/10 text-secondary-foreground/80 ring-secondary/30",
+          color: "bg-secondary-dark ring-secondary/30 dark:bg-secondary",
         };
     }
   }
@@ -40,7 +39,7 @@
       ${badgeConfig.color} ${styling}
     `}
   >
-    <Caption1>
+    <Caption1 styling="text-white">
       {#if badgeConfig.text}
         {badgeConfig.text}
       {:else}

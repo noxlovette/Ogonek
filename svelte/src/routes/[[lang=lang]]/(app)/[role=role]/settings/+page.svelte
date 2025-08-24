@@ -32,6 +32,7 @@
   import Title1 from "$lib/components/typography/Title1.svelte";
   import Headline from "$lib/components/typography/Headline.svelte";
   import VStack from "$lib/components/UI/toolbar/VStack.svelte";
+  import ThemeToggler from "$lib/components/UI/interactive/ThemeToggler.svelte";
 
   let disabled = $state(true);
 
@@ -80,29 +81,31 @@
     <LargeTitle>{m.settings()}</LargeTitle>
 
     <Divider />
-
-    <Merger>
-      {#if disabled}
-        <UniButton
-          Icon={Key}
-          variant="prominent"
-          onclick={() => {
-            disabled = !disabled;
-          }}
-          type="button"
-        >
-          {disabled ? m.edit() : m.editing()}
-        </UniButton>
-      {:else}
-        <UniButton
-          Icon={Check}
-          type="submit"
-          variant="prominent"
-          disable={disabled}
-          formaction="?/update">{m.save()}</UniButton
-        >
-      {/if}
-    </Merger>
+    <VStack>
+      <ThemeToggler />
+      <Merger>
+        {#if disabled}
+          <UniButton
+            Icon={Key}
+            variant="prominent"
+            onclick={() => {
+              disabled = !disabled;
+            }}
+            type="button"
+          >
+            {disabled ? m.edit() : m.editing()}
+          </UniButton>
+        {:else}
+          <UniButton
+            Icon={Check}
+            type="submit"
+            variant="prominent"
+            disable={disabled}
+            formaction="?/update">{m.save()}</UniButton
+          >
+        {/if}
+      </Merger>
+    </VStack>
   </Toolbar>
   <div class="grid grid-cols-2 gap-4">
     <HStack>

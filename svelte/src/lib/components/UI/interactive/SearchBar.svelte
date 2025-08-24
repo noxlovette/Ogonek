@@ -1,6 +1,7 @@
 <script lang="ts">
   import { X, Search } from "lucide-svelte";
   import { searchTerm } from "$lib/stores";
+  import UniButton from "../UniButton.svelte";
 </script>
 
 <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
@@ -14,7 +15,7 @@
         type="text"
         bind:value={$searchTerm}
         placeholder="Search..."
-        class="focus:border-accent focus:ring-accent dark:focus:border-accent dark:focus:ring-accent w-full rounded-full py-2.5 pr-10 pl-10 placeholder-stone-400 shadow-md focus:ring-2 focus:outline-none"
+        class="focus:border-accent focus:ring-accent ring-default dark:focus:border-accent dark:focus:ring-accent w-full rounded-full py-2.5 pr-10 pl-10 placeholder-stone-400 shadow-md focus:ring-2 focus:outline-none dark:bg-stone-900"
       />
       {#if $searchTerm}
         <button

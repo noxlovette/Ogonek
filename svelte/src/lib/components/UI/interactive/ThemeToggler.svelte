@@ -31,9 +31,8 @@
 </script>
 
 <div
-  class="relative inline-flex w-max rounded-full bg-stone-200/60 p-1 dark:bg-stone-800/60"
+  class="relative inline-flex w-max rounded-full bg-stone-200/60 p-1 dark:bg-stone-800"
 >
-  <!-- Sliding background indicator -->
   <div
     class="absolute top-1 h-8 w-10 rounded-full bg-white shadow-sm duration-200 ease-out dark:bg-stone-600"
     style="transform: translateX({theme === 'light'
@@ -43,9 +42,9 @@
         : '80px'})"
   ></div>
 
-  <!-- Theme buttons -->
   <button
     onclick={() => setTheme("light")}
+    type="button"
     class="relative z-10 flex h-8 w-10 items-center justify-center rounded-md duration-150"
     class:text-accent={theme === "light"}
     class:text-stone-600={theme !== "light"}
@@ -56,6 +55,7 @@
 
   <button
     onclick={() => setTheme("dark")}
+    type="button"
     class="relative z-10 flex h-8 w-10 items-center justify-center rounded-md duration-150"
     class:text-accent={theme === "dark"}
     class:text-stone-600={theme !== "dark"}
@@ -66,6 +66,7 @@
 
   <button
     onclick={() => setTheme("auto")}
+    type="button"
     class="relative z-10 flex h-8 w-10 items-center justify-center rounded-md duration-150"
     class:text-accent={theme === "auto"}
     class:text-stone-600={theme !== "auto"}

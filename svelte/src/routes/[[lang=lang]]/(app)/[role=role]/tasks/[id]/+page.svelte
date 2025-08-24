@@ -89,7 +89,7 @@
     </VStack>
     <VStack>
       <VStack>
-        <Badge {urgency}>formattedDate</Badge>
+        <Badge {urgency}>{formattedDate}</Badge>
         <Priority priority={data.task.priority}></Priority>
       </VStack>
       {#if role === "t"}
