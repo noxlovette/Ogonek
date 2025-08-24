@@ -70,7 +70,7 @@
         <!-- Progress bar -->
         <div class="h-2 w-full rounded-full bg-stone-200 dark:bg-stone-800">
           <div
-            class="h-2 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 transition-all duration-300"
+            class="h-2 rounded-full bg-gradient-to-r from-amber-500 to-amber-600"
             style="width: {progressPercentage}%"
           ></div>
         </div>

@@ -93,6 +93,7 @@ export const routes = {
   students: {
     all: () => `${API_BASE}/users/student`,
     single: (id: string) => `${API_BASE}/users/student/${id}`,
+    bind: (id: string) => `${API_BASE}/users/${id}`,
   },
 
   users: {

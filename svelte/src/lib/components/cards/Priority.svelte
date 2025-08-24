@@ -48,7 +48,7 @@
   <div class="flex gap-0.5">
     {#each segments as segment, index (index)}
       <div
-        class={`h-4 w-1 rounded-sm transition-colors duration-200 ${
+        class={`h-4 w-1 rounded-sm   ${
           segment.active ? priorityConfig.color : priorityConfig.bgColor
         }`}
       ></div>

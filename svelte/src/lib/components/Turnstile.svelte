@@ -93,7 +93,7 @@
 
   <div
     bind:this={turnstileElement}
-    class="cf-turnstile my-4 transition-opacity duration-200"
+    class="cf-turnstile my-4"
     class:opacity-0={isLoading}
   ></div>
 

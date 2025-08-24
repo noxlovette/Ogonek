@@ -32,7 +32,7 @@ export const qualityButtons = [
   {
     quality: 5,
     label: "Easy",
-    color: "ring-cacao-500 hover:bg-cacao-600/10 ring",
+    color: "ring-accent hover:bg-accent/10 ring",
     key: 6,
   },
 ];

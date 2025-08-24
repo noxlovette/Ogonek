@@ -59,7 +59,7 @@
         <tbody class="divide-y divide-stone-200 dark:divide-stone-800">
           {#each items as item, rowIndex (item.id)}
             <tr
-              class="group cursor-pointer transition-all duration-150 ease-in-out hover:bg-amber-50/50 dark:hover:bg-amber-900/10"
+              class="group cursor-pointer hover:bg-amber-50/50 dark:hover:bg-amber-900/10"
               onclick={(e) => handleRowClick(item, e)}
               onkeydown={(e) => handleRowClick(item, e)}
               tabindex="0"
@@ -69,7 +69,7 @@
             >
               {#each config.columns as column, index (index)}
                 <td
-                  class="px-4 py-3 text-sm text-stone-600 transition-all duration-200 ease-in-out group-hover:text-stone-900 dark:text-stone-400 dark:group-hover:text-stone-200"
+                  class=" px-4 py-3 text-sm text-stone-600 group-hover:text-stone-900 dark:text-stone-400 dark:group-hover:text-stone-200"
                 >
                   <div class="max-h-20 overflow-hidden text-ellipsis">
                     {#if column.formatter}

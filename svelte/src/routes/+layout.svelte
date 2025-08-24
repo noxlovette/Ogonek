@@ -24,7 +24,7 @@
   use:keyEscape={goBack}
 >
   <div
-    class="selection:bg-cacao-500/20 caret-cacao-800 relative flex h-full min-h-[100dvh] w-full flex-col items-center font-medium dark:caret-stone-200"
+    class="selection:bg-accent/20 caret-accent relative flex h-full min-h-[100dvh] w-full flex-col items-center font-medium dark:caret-stone-200"
   >
     <div id="main" class="flex w-full flex-1 flex-col p-3 py-4">
       {@render children?.()}

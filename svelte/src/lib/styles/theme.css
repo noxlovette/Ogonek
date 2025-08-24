@@ -56,7 +56,7 @@
   }
 
   .chosen {
-    @apply bg-cacao-600 hover:bg-cacao-600 text-stone-50;
+    @apply bg-accent hover:bg-accent text-stone-50;
   }
 
   .backface-hidden {

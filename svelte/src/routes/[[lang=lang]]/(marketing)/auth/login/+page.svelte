@@ -15,7 +15,7 @@
       {m.petty_neat_emu_endure()}
       <a
         href="/auth/signup"
-        class="text-cacao-500 hover:text-cacao-400 font-medium dark:text-stone-50 dark:hover:text-stone-200"
+        class="text-accent hover:text-accent font-medium dark:text-stone-50 dark:hover:text-stone-200"
         >{m.signUp()}</a
       >
     </p>

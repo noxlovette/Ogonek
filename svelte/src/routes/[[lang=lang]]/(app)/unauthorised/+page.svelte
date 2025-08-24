@@ -23,12 +23,10 @@
     </div>
 
     <button
-      class="group inline-flex items-center gap-2 rounded-lg bg-red-600 px-6 py-3 text-stone-50 transition-colors duration-200 hover:bg-red-700"
+      class="group inline-flex items-center gap-2 rounded-lg bg-red-600 px-6 py-3 text-stone-50 hover:bg-red-700"
       onclick={() => window.history.back()}
     >
-      <ArrowLeft
-        class="group-hover:-transtone-x-1 transition-transform duration-200"
-      />
+      <ArrowLeft class="group-hover:-transtone-x-1  " />
       {m.level_low_angelfish_peel()}
     </button>
   </div>

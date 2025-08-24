@@ -10,7 +10,7 @@
   <select
     id="assignee"
     name="assignee"
-    class="focus:border-cacao-200 focus:ring-cacao-500/70 h-full w-full rounded-2xl border border-stone-100/60 bg-white px-4 py-2 text-base text-stone-900 placeholder-stone-400 shadow-sm transition-all focus:shadow-md focus:ring-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60 dark:border-stone-800/60 dark:bg-stone-950 dark:text-stone-100"
+    class="focus:border-accent focus:ring-accent/70 h-full w-full rounded-2xl border border-stone-100/60 bg-white px-4 py-2 text-base text-stone-900 placeholder-stone-400 shadow-sm focus:shadow-md focus:ring-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60 dark:border-stone-800/60 dark:bg-stone-950 dark:text-stone-100"
   >
     <option value="">Select an assignee</option>
     {#each $studentStore as student (student.id)}
