@@ -4,18 +4,18 @@
   import type { MouseEventHandler } from "svelte/elements";
   import ConfirmDialogue from "./ConfirmDialogue.svelte";
 
-  type ButtonVariant = "primary" | "danger";
+  type ButtonVariant = "primary" | "danger" | "prominent";
 
   type ButtonType = "button" | "submit" | "reset" | undefined;
 
   interface Props {
-    variant: ButtonVariant;
+    variant?: ButtonVariant;
     type?: ButtonType;
     href?: string | undefined;
     formaction?: string | undefined;
     styling?: string;
     disable?: boolean;
-    Icon: ComponentType | undefined;
+    Icon?: ComponentType | undefined;
     confirmText?: string | undefined;
     confirmTitle?: string | undefined;
     onclick?: MouseEventHandler<HTMLButtonElement> | undefined;
@@ -53,12 +53,13 @@
   flex items-center justify-center flex-1 p-2
   rounded-full font-medium focus-visible:outline-none
   disabled:opacity-50 disabled:pointer-events-none
-  backdrop-blur-sm  gap-2
+  backdrop-blur-sm gap-2
 `;
 
   const variantClasses = {
     primary: "hover:bg-stone-100",
     danger: "text-red-600 dark:text-red-50 hover:bg-red-100",
+    prominent: "hover:bg-accent/80 bg-accent text-white",
   };
 
   const allClasses = $derived(

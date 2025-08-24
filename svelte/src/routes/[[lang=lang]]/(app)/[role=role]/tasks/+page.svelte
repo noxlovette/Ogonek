@@ -13,6 +13,7 @@
     TaskCard,
     EmptySpace,
     H3,
+    VStack,
   } from "$lib/components";
 
   import { enhance } from "$app/forms";
@@ -78,52 +79,56 @@
 <Toolbar>
   <H1>{m.tasks()}</H1>
   <Divider />
-  <Merger>
-    {#if role == "t"}
-      <form
-        action="?/new"
-        method="post"
-        use:enhance={enhanceForm({
-          messages: {
-            redirect: m.few_big_dachshund_scoop(),
-          },
-          navigate: true,
-        })}
-      >
-        <UniButton Icon={PlusCircle} type="submit" variant="primary"
-          >{m.new()}</UniButton
+  <VStack>
+    <Merger>
+      {#if role == "t"}
+        <form
+          action="?/new"
+          method="post"
+          use:enhance={enhanceForm({
+            messages: {
+              redirect: m.few_big_dachshund_scoop(),
+            },
+            navigate: true,
+          })}
         >
-      </form>
-    {:else if role == "s"}
-      <form
-        action="?/requestHW"
-        method="post"
-        use:enhance={enhanceForm({
-          messages: {
-            success: m.minor_mad_hare_buzz(),
-          },
-        })}
-      >
-        <UniButton Icon={Bell} type="submit" variant="primary"
-          >{m.tense_mealy_kitten_aid()}</UniButton
+          <UniButton Icon={PlusCircle} type="submit" variant="primary"
+            >{m.new()}</UniButton
+          >
+        </form>
+      {:else if role == "s"}
+        <form
+          action="?/requestHW"
+          method="post"
+          use:enhance={enhanceForm({
+            messages: {
+              success: m.minor_mad_hare_buzz(),
+            },
+          })}
         >
-      </form>
-    {/if}
+          <UniButton Icon={Bell} type="submit" variant="primary"
+            >{m.tense_mealy_kitten_aid()}</UniButton
+          >
+        </form>
+      {/if}
+    </Merger>
 
-    <UniButton
-      type="button"
-      onclick={toggleCompletedTasks}
-      variant="primary"
-      Icon={$completedStore === true ? EyeClosed : Eye}
-    >
-      {$completedStore === true
-        ? m.steep_zany_tern_zip()
-        : m.direct_slow_bobcat_shine()}
-    </UniButton>
-  </Merger>
+    <Merger>
+      <UniButton
+        type="button"
+        onclick={toggleCompletedTasks}
+        variant="primary"
+        Icon={$completedStore === true ? EyeClosed : Eye}
+      >
+        {$completedStore === true
+          ? m.steep_zany_tern_zip()
+          : m.direct_slow_bobcat_shine()}
+      </UniButton>
+    </Merger>
+    <SearchBar />
+  </VStack>
 </Toolbar>
 
-<SearchBar />
 {#await data.tasksPaginated}
   {#if role === "s"}
     <div class="grid grid-cols-1 gap-4 md:grid-cols-3">

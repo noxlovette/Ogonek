@@ -3,13 +3,11 @@
   import { onMount, onDestroy } from "svelte";
   import { H2 } from "../typography";
 
-  // Props with proper TypeScript types
   export let targetSelector: string = ".markdown";
   export let minLevel: number = 1;
   export let maxLevel: number = 6;
   export let title: string = "Contents";
 
-  // Interfaces for better type safety
   interface Heading {
     id: string;
     text: string;
@@ -17,12 +15,10 @@
     element: HTMLElement;
   }
 
-  // State with proper typing
   let headings: Heading[] = [];
   let activeId: string = "";
   let observer: IntersectionObserver | null = null;
 
-  // Generate URL-friendly ID from text
   function generateId(text: string | null): string {
     if (!text) return "";
     return text
@@ -31,7 +27,6 @@
       .replace(/^-+|-+$/g, "");
   }
 
-  // Scan for headings and build TOC structure
   function buildTOC(): void {
     const container = document.querySelector(targetSelector) as HTMLElement;
     if (!container) {
@@ -51,7 +46,6 @@
     headings = Array.from(headingElements).map((heading) => {
       const htmlElement = heading as HTMLElement;
 
-      // Generate ID if it doesn't exist
       if (!htmlElement.id) {
         htmlElement.id = generateId(htmlElement.textContent);
       }
@@ -65,13 +59,11 @@
     });
   }
 
-  // Setup intersection observer for scroll spy
   function setupScrollSpy(): void {
     if (!window.IntersectionObserver || headings.length === 0) return;
 
     observer = new IntersectionObserver(
       (entries: IntersectionObserverEntry[]) => {
-        // Find the first visible heading
         const visibleHeading = entries.find((entry) => entry.isIntersecting);
         if (visibleHeading) {
           activeId = (visibleHeading.target as HTMLElement).id;
@@ -83,13 +75,11 @@
       },
     );
 
-    // Observe all headings
     headings.forEach((heading) => {
       observer?.observe(heading.element);
     });
   }
 
-  // Smooth scroll to heading
   function scrollToHeading(id: string, event: Event): void {
     event.preventDefault();
     const element = document.getElementById(id);
@@ -102,7 +92,6 @@
     }
   }
 
-  // Get Tailwind padding class based on heading level
   function getPaddingClass(level: number): string {
     const minLevelInTOC = Math.min(...headings.map((h) => h.level));
     const relativeLevel = level - minLevelInTOC;
@@ -137,9 +126,7 @@
 >
   {#if title}
     <div class="mb-3">
-      <H2>
-        {title}
-      </H2>
+      <H2>{title}</H2>
     </div>
   {/if}
 
@@ -150,9 +137,12 @@
           <li class={getPaddingClass(heading.level)}>
             <a
               href="#{heading.id}"
-              class="block px-2 py-1.5 text-sm text-stone-700 hover:bg-stone-100 hover:text-stone-900 dark:text-stone-300 dark:hover:bg-stone-700 dark:hover:text-stone-100
-                  {activeId === heading.id
-                ? 'border-accent bg-accent text-accent dark:border-accent dark:bg-accent dark:text-accent border-l-2 font-medium'
+              class="block rounded-md px-2 py-1.5 text-sm text-stone-700
+                     transition-colors hover:bg-stone-100
+                     hover:text-stone-900 dark:text-stone-300
+                     dark:hover:bg-stone-700 dark:hover:text-stone-100
+                     {activeId === heading.id
+                ? 'border-l-2 border-stone-400 bg-stone-50 font-medium dark:bg-stone-800'
                 : ''}"
               on:click={(e) => scrollToHeading(heading.id, e)}
             >

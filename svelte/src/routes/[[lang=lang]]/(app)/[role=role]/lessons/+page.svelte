@@ -9,6 +9,8 @@
     H3,
     SearchBar,
     TableSkeleton,
+    Divider,
+    Merger,
   } from "$lib/components";
   import { enhance } from "$app/forms";
   import { enhanceForm } from "$lib/utils";
@@ -24,9 +26,10 @@
     assigneeStore,
   } from "$lib/stores";
   import { goto } from "$app/navigation";
-  import { PlusCircle } from "lucide-svelte";
+  import { Plus } from "lucide-svelte";
   import { m } from "$lib/paraglide/messages.js";
   import LoadingCard from "$lib/components/cards/LoadingCard.svelte";
+  import VStack from "$lib/components/UI/toolbar/VStack.svelte";
 
   let { data } = $props();
 
@@ -55,10 +58,9 @@
   $effect(() => {
     const params = new URLSearchParams();
 
-    // Only add params if they have actual values
     if ($searchTerm?.trim()) params.set("search", $searchTerm);
     if ($pageSize > 0) params.set("page_size", $pageSize.toString());
-    if ($currentPage > 1) params.set("page", $currentPage.toString()); // Skip page=1 since it's default
+    if ($currentPage > 1) params.set("page", $currentPage.toString());
     if ($assigneeStore?.trim()) params.set("assignee", $assigneeStore);
 
     const queryString = params.toString();
@@ -72,28 +74,29 @@
 </script>
 
 <Toolbar>
-  <div class="flex flex-col gap-3 md:flex-row md:gap-4">
-    <H1>{m.lessons()}</H1>
-    {#if role === "t"}
-      <form
-        action="?/new"
-        method="post"
-        use:enhance={enhanceForm({
-          messages: {
-            redirect: m.newLessonCreated(),
-          },
-          navigate: true,
-        })}
-      >
-        <UniButton Icon={PlusCircle} type="submit" variant="primary"
-          >{m.new()}</UniButton
-        >
-      </form>
-    {/if}
-  </div>
-</Toolbar>
+  <H1>{m.lessons()}</H1>
+  <Divider />
 
-<SearchBar />
+  <VStack>
+    {#if role === "t"}
+      <Merger>
+        <form
+          action="?/new"
+          method="post"
+          use:enhance={enhanceForm({
+            messages: {
+              redirect: m.newLessonCreated(),
+            },
+            navigate: true,
+          })}
+        >
+          <UniButton Icon={Plus} type="submit">{m.new()}</UniButton>
+        </form>
+      </Merger>
+    {/if}
+    <SearchBar />
+  </VStack>
+</Toolbar>
 
 {#await data.lessonsPaginated}
   {#if role === "s"}

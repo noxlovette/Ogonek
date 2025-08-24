@@ -34,7 +34,6 @@
 <div class="w-full space-y-4">
   <div
     class="ring-default overflow-hidden rounded-lg bg-white shadow-sm ring-1 ring-stone-200 dark:border-stone-600/30 dark:bg-stone-950 dark:ring-stone-800"
-    in:fly={{ y: 10, duration: 300 }}
   >
     <div class="overflow-x-auto">
       <table class="w-full table-auto" aria-label="Data table">
@@ -65,7 +64,6 @@
               tabindex="0"
               role="button"
               aria-label="View details for {item.name || item.title || 'item'}"
-              in:fade|global={{ duration: 150, delay: rowIndex * 10 }}
             >
               {#each config.columns as column, index (index)}
                 <td

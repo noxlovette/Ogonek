@@ -3,7 +3,7 @@
   import { enhance } from "$app/forms";
   import { clickOutside } from "$lib/actions";
   import { notification } from "$lib/stores";
-  import { PersonStanding, X, Copy } from "lucide-svelte";
+  import { X, Copy, Plus } from "lucide-svelte";
   import UniButton from "../UniButton.svelte";
   import { Caption } from "$lib/components/typography";
   import H4 from "$lib/components/typography/H4.svelte";
@@ -35,7 +35,7 @@
     type="button"
     onclick={() => (showPopover = !showPopover)}
     variant="primary"
-    Icon={PersonStanding}
+    Icon={Plus}
   >
     Invite Students
   </UniButton>
@@ -72,12 +72,7 @@
       >
         <Caption>Do they have an account?</Caption>
         <Toggler name="isRegistered" title="Yes"></Toggler>
-        <UniButton
-          type="submit"
-          size="sm"
-          variant="primary"
-          Icon={PersonStanding}
-        >
+        <UniButton type="submit" variant="primary" Icon={Plus}>
           Generate Link
         </UniButton>
       </form>

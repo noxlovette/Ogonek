@@ -8,12 +8,15 @@
     Toolbar,
     LoadingCard,
     SearchBar,
+    Divider,
+    Merger,
+    VStack,
   } from "$lib/components";
   import { enhance } from "$app/forms";
   import { enhanceForm } from "$lib/utils";
   import { page } from "$app/state";
   import type { TableConfig, DeckSmall } from "$lib/types";
-  import { ArrowBigRight, PlusCircle, ShoppingBag } from "lucide-svelte";
+  import { ArrowBigRight, Plus, PlusCircle, ShoppingBag } from "lucide-svelte";
   import { m } from "$lib/paraglide/messages";
   import {
     searchTerm,
@@ -71,50 +74,37 @@
 </svelte:head>
 
 <Toolbar>
-  <div class="flex flex-col gap-3 md:flex-row md:items-baseline md:gap-4">
-    <H1>{m.flashcards()}</H1>
-    <H3>
+  <H1>{m.flashcards()}</H1>
+  <Divider />
+  <VStack>
+    <Merger>
+      <form
+        action="?/new"
+        method="post"
+        use:enhance={enhanceForm({
+          messages: {
+            redirect: m.newDeckCreated(),
+          },
+          navigate: true,
+        })}
+      >
+        <UniButton Icon={Plus} type="submit" variant="primary"
+          >{m.new()}</UniButton
+        >
+      </form>
       {#if data.cards?.length}
-        {data.cards.length} {m.blue_solid_wren_feel()}
-      {:else}
-        {m.livid_trite_squirrel_cuddle()}
+        <UniButton
+          variant="primary"
+          Icon={ArrowBigRight}
+          href="flashcards/learn">{m.helpful_slow_flea_catch()}</UniButton
+        >
       {/if}
-    </H3>
-  </div>
-
-  <div class="flex flex-col gap-3 md:flex-row md:gap-4">
-    <form
-      action="?/new"
-      method="post"
-      use:enhance={enhanceForm({
-        messages: {
-          redirect: m.newDeckCreated(),
-        },
-        navigate: true,
-      })}
-    >
-      <UniButton
-        fullWidth={true}
-        Icon={PlusCircle}
-        type="submit"
-        variant="primary">{m.new()}</UniButton
-      >
-    </form>
-    <UniButton
-      Icon={ShoppingBag}
-      variant="primary"
-      href="flashcards/marketplace"
-      styling="hidden md:flex">{m.marketplace()}</UniButton
-    >
-    {#if data.cards?.length}
-      <UniButton variant="primary" Icon={ArrowBigRight} href="flashcards/learn"
-        >{m.helpful_slow_flea_catch()}</UniButton
-      >
-    {/if}
-  </div>
+    </Merger>
+    <Divider />
+    <SearchBar />
+  </VStack>
 </Toolbar>
 
-<SearchBar />
 {#await data.decksResponse}
   {#if role === "s"}
     <div class="grid grid-cols-1 gap-4 md:grid-cols-3">

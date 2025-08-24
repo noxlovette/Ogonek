@@ -3,7 +3,6 @@
   import { searchTerm } from "$lib/stores";
 </script>
 
-<!-- Search & Filter Bar -->
 <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
   <div class="flex flex-grow items-center gap-3">
     <div class="relative flex-1">
@@ -15,7 +14,7 @@
         type="text"
         bind:value={$searchTerm}
         placeholder="Search..."
-        class="focus:border-accent focus:ring-accent dark:focus:border-accent dark:focus:ring-accent ring-default w-full rounded-2xl bg-white py-2.5 pr-10 pl-10 shadow-sm placeholder:text-stone-400 focus:ring-2 focus:outline-none dark:border-stone-600/30 dark:bg-stone-950 dark:placeholder:text-stone-600"
+        class="focus:border-accent focus:ring-accent dark:focus:border-accent dark:focus:ring-accent w-full rounded-full py-2.5 pr-10 pl-10 shadow-md placeholder:text-stone-400 focus:ring-2 focus:outline-none"
       />
       {#if $searchTerm}
         <button

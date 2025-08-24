@@ -2,6 +2,6 @@
   let { children } = $props();
 </script>
 
-<div class="relative mb-4 flex">
+<div class="relative flex w-full justify-between">
   {@render children?.()}
 </div>

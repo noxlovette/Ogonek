@@ -27,7 +27,6 @@
   import { setContext } from "svelte";
   import type { Word, Student } from "$lib/types";
   import { Menu } from "lucide-svelte";
-  import LoadingOverlay from "$lib/components/UI/LoadingOverlay.svelte";
 
   let { data, children } = $props();
   const role = page.params.role;
@@ -52,7 +51,7 @@
   setProfile(data.profile);
 </script>
 
-<div class="flex flex-row">
+<div class="flex flex-row gap-8 p-6">
   <div class="hidden w-max flex-col md:block">
     <Sidebar elements={elementsLeft} />
   </div>
@@ -67,7 +66,6 @@
     <Menu />
   </button>
   <MobileMenu elements={elementsLeft} />
-  <LoadingOverlay />
 </div>
 
 <svelte:head>

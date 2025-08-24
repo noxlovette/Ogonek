@@ -12,10 +12,13 @@
     GreySpan,
     Multipart,
     Input,
+    Merger,
+    Divider,
   } from "$lib/components";
   import type { PageData } from "./$types";
   import PrioritySlider from "$lib/components/UI/forms/PrioritySlider.svelte";
   import { m } from "$lib/paraglide/messages";
+  import VStack from "$lib/components/UI/toolbar/VStack.svelte";
 
   let { data }: { data: PageData } = $props();
   let { task, files } = data;
@@ -45,27 +48,25 @@
   })}
 >
   <Toolbar>
-    <div class="flex items-end space-x-4">
-      <H1>{m.editing()}</H1>
-      <GreySpan>
-        {files.length}
-        {files.length === 1 ? "file" : "files"}
-      </GreySpan>
-    </div>
-    <div class="flex items-center space-x-3">
-      <UniButton variant="secondary" Icon={Ban} href=".">{m.cancel()}</UniButton
-      >
-      <UniButton variant="primary" type="submit" Icon={Check}
-        >{m.save()}</UniButton
-      >
-      <UniButton
-        variant="danger"
-        Icon={Trash2}
-        formaction="?/delete"
-        confirmText={task.title}
-        confirmTitle="Delete Task">{m.delete()}</UniButton
-      >
-    </div>
+    <H1>{m.editing()}</H1>
+    <Divider />
+    <VStack>
+      <Merger>
+        <UniButton Icon={Ban} href=".">{m.cancel()}</UniButton>
+        <UniButton
+          variant="danger"
+          Icon={Trash2}
+          formaction="?/delete"
+          confirmText={task.title}
+          confirmTitle="Delete Task">{m.delete()}</UniButton
+        >
+      </Merger>
+      <Merger>
+        <UniButton variant="prominent" type="submit" Icon={Check}
+          >{m.save()}</UniButton
+        >
+      </Merger>
+    </VStack>
   </Toolbar>
 
   <input type="hidden" name="markdown" value={markdown} />

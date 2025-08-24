@@ -4,202 +4,139 @@
     > *:first-child {
       @apply mt-0;
     }
+
     h1,
     h2,
     h3 {
       @apply font-semibold tracking-tight;
     }
+
     h1 {
       @apply mt-8 mb-4 text-4xl font-semibold text-stone-900 dark:text-stone-50;
-      /* Add sky accent border */
-      @apply border-accent dark:border-accent border-l-4 pl-4;
+      @apply border-l-4 border-stone-300 pl-4 dark:border-stone-600;
     }
+
     h2 {
       @apply mt-6 mb-3 text-2xl font-medium text-stone-800 dark:text-stone-100;
-      /* Subtle sky background highlight */
-      @apply bg-accent dark:bg-accent rounded-md px-3 py-1;
+      @apply rounded-md bg-stone-100 px-3 py-1 dark:bg-stone-800;
     }
+
     h3 {
       @apply mt-4 mb-2 text-lg font-medium text-stone-700 dark:text-stone-200;
-      /* Sky text color for emphasis */
-      @apply text-accent dark:text-accent;
+      @apply text-stone-600 dark:text-stone-300;
     }
+
     p {
       @apply mb-4 text-[17px] leading-relaxed text-stone-800 dark:text-stone-300;
     }
+
     ul,
     ol {
       @apply my-2 ml-5 list-disc space-y-1.5;
     }
+
     li {
       @apply text-stone-700 dark:text-stone-300;
-      /* Sky bullet points */
       list-style-type: none;
       position: relative;
       padding-left: 1.5rem;
     }
+
     li::before {
       content: "•";
-      @apply text-accent dark:text-accent absolute left-0 font-bold;
+      @apply absolute left-0 font-bold text-stone-400 dark:text-stone-500;
     }
+
     a {
-      @apply text-accent dark:text-accent underline-offset-2 duration-200 hover:underline;
-      /* Enhanced hover with sky background */
-      @apply hover:bg-accent hover:text-accent dark:hover:bg-accent dark:hover:text-accent rounded px-1 py-0.5;
+      @apply text-stone-900 underline-offset-2 duration-200 hover:underline dark:text-stone-100;
+      @apply rounded px-1 py-0.5 hover:bg-stone-200 dark:hover:bg-stone-700;
     }
+
     blockquote {
-      @apply border-accent bg-accent dark:border-accent dark:bg-accent my-4 border-l-4 px-4 py-2 text-stone-700 italic dark:text-stone-300;
-      /* Sky quote icon */
+      @apply my-4 border-l-4 px-4 py-2 text-stone-700 italic dark:text-stone-300;
+      @apply border-stone-300 bg-stone-50 dark:border-stone-700 dark:bg-stone-800;
       position: relative;
       padding-left: 3rem;
     }
+
     blockquote::before {
       content: "";
-      @apply text-accent dark:text-accent absolute top-2 left-4 font-serif text-3xl;
+      @apply absolute top-2 left-4 font-serif text-3xl text-stone-400 dark:text-stone-500;
     }
+
     pre {
       @apply my-6 overflow-x-auto rounded-xl bg-stone-900 p-4 text-sm text-stone-100 dark:bg-stone-950 dark:text-stone-50;
-      /* Sky accent border for code blocks */
-      @apply border-accent dark:border-accent border-t-2;
+      @apply border-t-2 border-stone-700;
     }
+
     code {
-      @apply bg-accent text-accent dark:bg-accent dark:text-accent rounded px-1.5 py-0.5 font-mono text-sm;
-      /* Sky border for inline code */
-      @apply border-accent dark:border-accent border;
+      @apply rounded px-1.5 py-0.5 font-mono text-sm;
+      @apply border border-stone-200 bg-stone-100 text-stone-800 dark:border-stone-700 dark:bg-stone-800 dark:text-stone-200;
     }
+
     hr {
-      @apply border-accent dark:border-accent my-8 border-t-2;
-      /* Sky gradient divider */
-      background: linear-gradient(
-        to right,
-        transparent,
-        rgb(14 165 233 / 0.5),
-        transparent
-      );
-      height: 2px;
-      border: none;
+      @apply my-8 border-t-2 border-stone-300 dark:border-stone-700;
+      background: none;
+      height: 0;
     }
+
     table {
-      @apply my-6 w-full border-collapse overflow-hidden rounded-md;
-      /* Sky table border */
-      @apply border-accent dark:border-accent border;
+      @apply my-6 w-full border-collapse overflow-hidden rounded-md border border-stone-300 dark:border-stone-700;
     }
+
     th {
-      @apply border-accent bg-accent text-accent dark:border-accent dark:bg-accent dark:text-accent border-b px-3 py-2 text-left text-sm font-medium;
+      @apply border-b px-3 py-2 text-left text-sm font-medium;
+      @apply border-stone-300 bg-stone-100 text-stone-700 dark:border-stone-700 dark:bg-stone-800 dark:text-stone-200;
     }
+
     td {
-      @apply border-accent dark:border-accent border-b px-3 py-2 text-sm text-stone-700 dark:text-stone-300;
-      /* Alternating sky row backgrounds */
+      @apply border-b px-3 py-2 text-sm text-stone-700 dark:text-stone-300;
+      @apply border-stone-200 dark:border-stone-700;
     }
+
     tr:nth-child(even) td {
-      @apply bg-accent dark:bg-accent;
+      @apply bg-stone-50 dark:bg-stone-900;
     }
+
     tr:hover td {
-      @apply bg-accent dark:bg-accent duration-200;
+      @apply bg-stone-100 duration-200 dark:bg-stone-800;
     }
+
     img {
       @apply my-6 h-auto max-w-full rounded-lg;
-      /* Sky image border on hover */
-      @apply hover:ring-accent dark:hover:ring-accent duration-200 hover:ring-2;
+      @apply duration-200 hover:ring-2 hover:ring-stone-300 dark:hover:ring-stone-600;
     }
+
     input[type="checkbox"] {
-      @apply accent-accent dark:accent-accent mr-2;
-      /* Enhanced checkbox styling */
-      @apply border-accent dark:border-accent h-4 w-4 rounded;
+      @apply mr-2 h-4 w-4 rounded border border-stone-400 dark:border-stone-600;
     }
-    /* Focus states with sky colors */
+
     a:focus,
     input:focus,
     button:focus {
-      @apply ring-accent dark:ring-accent ring-2 ring-offset-2 outline-none dark:ring-offset-stone-800;
+      @apply ring-2 ring-stone-400 ring-offset-2 outline-none dark:ring-stone-500 dark:ring-offset-stone-800;
     }
-    /* Info callouts with sky styling */
+
     .info-callout {
-      @apply border-accent bg-accent dark:border-accent dark:bg-accent my-4 rounded-lg border px-4 py-3;
+      @apply my-4 rounded-lg border px-4 py-3;
+      @apply border-stone-300 bg-stone-100 dark:border-stone-700 dark:bg-stone-800;
     }
+
     .info-callout::before {
       content: "ℹ️";
-      @apply text-accent dark:text-accent mr-2;
+      @apply mr-2 text-stone-500 dark:text-stone-400;
     }
-    /* Warning callouts */
+
     .warning-callout {
-      @apply my-4 rounded-lg border border-amber-200 bg-amber-50/70 px-4 py-3 dark:border-amber-700 dark:bg-amber-900/30;
+      @apply my-4 rounded-lg border px-4 py-3;
+      @apply border-amber-300 bg-amber-50 dark:border-amber-600 dark:bg-amber-900/30;
     }
+
     .warning-callout::before {
       content: "⚠️";
       @apply mr-2 text-amber-600 dark:text-amber-400;
     }
-    * {
-      @apply duration-200;
-    }
-  }
 
-  .markdown-mini {
-    @apply max-w-[60ch] px-1 text-[12px] leading-snug;
-    h1 {
-      @apply mt-2 mb-1 text-lg font-semibold text-stone-900 dark:text-stone-50;
-      /* Mini sky accent */
-      @apply border-accent dark:border-accent border-l-2 pl-2;
-    }
-    h2 {
-      @apply text-accent dark:text-accent mt-2 mb-1 text-base font-medium;
-    }
-    h3 {
-      @apply text-accent dark:text-accent mt-1 mb-0.5 text-sm font-medium;
-    }
-    p {
-      @apply mb-2 text-[12px] leading-snug text-stone-700 dark:text-stone-300;
-    }
-    ul,
-    ol {
-      @apply my-1 ml-2 list-disc space-y-1;
-    }
-    li {
-      @apply text-[12px] text-stone-700 dark:text-stone-300;
-      /* Mini sky bullets */
-      list-style-type: none;
-      position: relative;
-      padding-left: 1rem;
-    }
-    li::before {
-      content: "•";
-      @apply text-accent dark:text-accent absolute left-0 text-[10px];
-    }
-    a {
-      @apply text-accent dark:text-accent text-[12px] underline underline-offset-2;
-      @apply hover:bg-accent dark:hover:bg-accent rounded px-0.5;
-    }
-    blockquote {
-      @apply border-accent bg-accent dark:border-accent dark:bg-accent my-2 rounded border-l-2 px-2 py-1 text-[12px] text-stone-700 italic dark:text-stone-300;
-    }
-    pre {
-      @apply my-2 overflow-x-auto rounded-md bg-stone-900 p-2 text-[11px] text-stone-100 dark:bg-stone-950 dark:text-stone-50;
-      @apply border-accent dark:border-accent border-t;
-    }
-    code {
-      @apply bg-accent text-accent dark:bg-accent dark:text-accent rounded px-1 py-0.5 font-mono text-[11px];
-    }
-    hr {
-      @apply border-accent dark:border-accent my-1 border-t;
-    }
-    table {
-      @apply border-accent dark:border-accent my-2 w-full border-collapse rounded border text-[11px];
-    }
-    th {
-      @apply border-accent bg-accent text-accent dark:border-accent dark:bg-accent dark:text-accent border-b px-2 py-1 text-left font-medium;
-    }
-    td {
-      @apply border-accent dark:border-accent border-b px-2 py-1 text-stone-700 dark:text-stone-300;
-    }
-    tr:nth-child(even) td {
-      @apply bg-accent dark:bg-accent;
-    }
-    img {
-      @apply my-2 h-auto max-w-full rounded;
-    }
-    input[type="checkbox"] {
-      @apply accent-accent dark:accent-accent mr-1;
-    }
     * {
       @apply duration-200;
     }

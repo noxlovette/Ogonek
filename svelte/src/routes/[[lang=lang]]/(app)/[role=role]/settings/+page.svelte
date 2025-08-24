@@ -7,6 +7,8 @@
     UniButton,
     Toolbar,
     Caption,
+    Divider,
+    Merger,
   } from "$lib/components";
   import { enhance } from "$app/forms";
   import { goto } from "$app/navigation";
@@ -23,7 +25,7 @@
     currentPage,
   } from "$lib/stores";
 
-  import { Check, LogOut, Key, Bell } from "lucide-svelte";
+  import { Check, LogOut, Key, Bell, Merge } from "lucide-svelte";
   import { m } from "$lib/paraglide/messages";
 
   let disabled = $state(true);
@@ -70,28 +72,28 @@
   action="?/update"
 >
   <Toolbar>
-    <div class="flex flex-col gap-3 md:flex-row md:gap-4">
-      <H1>{m.settings()}</H1>
-      <div class="flex gap-3 md:gap-4">
-        <UniButton
-          Icon={Key}
-          variant="primary"
-          onclick={() => {
-            disabled = !disabled;
-          }}
-          type="button"
-        >
-          {disabled ? m.edit() : m.editing()}
-        </UniButton>
-        <UniButton
-          Icon={Check}
-          type="submit"
-          variant="primary"
-          disable={disabled}
-          formaction="?/update">{m.save()}</UniButton
-        >
-      </div>
-    </div>
+    <H1>{m.settings()}</H1>
+
+    <Divider />
+    <Merger>
+      <UniButton
+        Icon={Key}
+        variant="primary"
+        onclick={() => {
+          disabled = !disabled;
+        }}
+        type="button"
+      >
+        {disabled ? m.edit() : m.editing()}
+      </UniButton>
+      <UniButton
+        Icon={Check}
+        type="submit"
+        variant="primary"
+        disable={disabled}
+        formaction="?/update">{m.save()}</UniButton
+      >
+    </Merger>
   </Toolbar>
 
   <div class="grid gap-3 md:grid-cols-2">
