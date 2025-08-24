@@ -1,12 +1,12 @@
 <script lang="ts">
   import {
-    H1,
-    H2,
+    LargeTitle,
+    Title2,
     Input,
     Panel,
     UniButton,
     Toolbar,
-    Caption,
+    Caption1,
     Divider,
     Merger,
   } from "$lib/components";
@@ -72,7 +72,7 @@
   action="?/update"
 >
   <Toolbar>
-    <H1>{m.settings()}</H1>
+    <LargeTitle>{m.settings()}</LargeTitle>
 
     <Divider />
     <Merger>
@@ -99,7 +99,7 @@
   <div class="grid gap-3 md:grid-cols-2">
     <Panel>
       <div>
-        <H2>{m.mellow_mild_pig_boil()}</H2>
+        <Title2>{m.mellow_mild_pig_boil()}</Title2>
       </div>
 
       <div class="grid gap-3">
@@ -121,7 +121,7 @@
     >
     {#if page.params.role === "t"}
       <Panel>
-        <H2>{m.real_best_gibbon_dazzle()}</H2>
+        <Title2>{m.real_best_gibbon_dazzle()}</Title2>
         <div class="grid gap-3">
           {#each teacherFields as field, index (index)}
             <div>
@@ -138,7 +138,7 @@
             </div>
           {/each}
           {#if $profile.zoomUrl === null}
-            <Caption>Please define your Zoom URL</Caption>
+            <Caption1>Please define your Zoom URL</Caption1>
           {/if}
         </div>
       </Panel>
@@ -147,7 +147,7 @@
 
   <Panel>
     <div class="flex items-center gap-3">
-      <H2>{m.stale_quick_mantis_stab()}</H2>
+      <Title2>{m.stale_quick_mantis_stab()}</Title2>
     </div>
 
     <p class="text-sm text-stone-700 dark:text-stone-300">

@@ -272,27 +272,27 @@
       <div class="w-px bg-stone-300 dark:bg-stone-600"></div>
 
       <button
-        onclick={() => insertMarkdown("# ", "", "Heading")}
+        onclick={() => insertMarkdown("# ", "", "Headline")}
         class="rounded px-3 py-1 text-sm font-bold hover:bg-stone-200 dark:hover:bg-stone-700"
-        title="Heading 1"
+        title="Headline 1"
       >
-        H1
+        LargeTitle
       </button>
 
       <button
-        onclick={() => insertMarkdown("## ", "", "Heading")}
+        onclick={() => insertMarkdown("## ", "", "Headline")}
         class="rounded px-3 py-1 text-sm font-bold hover:bg-stone-200 dark:hover:bg-stone-700"
-        title="Heading 2"
+        title="Headline 2"
       >
-        H2
+        Title2
       </button>
 
       <button
-        onclick={() => insertMarkdown("### ", "", "Heading")}
+        onclick={() => insertMarkdown("### ", "", "Headline")}
         class="rounded px-3 py-1 text-sm font-bold hover:bg-stone-200 dark:hover:bg-stone-700"
-        title="Heading 3"
+        title="Headline 3"
       >
-        H3
+        Title3
       </button>
 
       <div class="w-px bg-stone-300 dark:bg-stone-600"></div>

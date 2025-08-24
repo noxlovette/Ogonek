@@ -1,12 +1,12 @@
 <script lang="ts">
   import { studentStore, assigneeStore, user } from "$lib/stores";
-  import { Label } from "$lib/components/typography";
+  import { Caption1 } from "$lib/components/typography";
   type Assignable = { assignee?: string };
   let { item }: { item: Assignable } = $props();
 </script>
 
 <div class="relative flex flex-col space-y-1">
-  <Label>Assignee</Label>
+  <Caption1>Assignee</Caption1>
   <select
     id="assignee"
     name="assignee"

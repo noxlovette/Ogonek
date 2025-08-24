@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Label from "$lib/components/typography/Label.svelte";
+  import Caption1 from "$lib/components/typography/Caption1.svelte";
   import { Eye, EyeClosed } from "lucide-svelte";
 
   let {
@@ -35,7 +35,7 @@
 </script>
 
 <div class="relative space-y-1">
-  <Label>{labelName}</Label>
+  <Caption1>{labelName}</Caption1>
 
   {#if type === "text"}
     <input

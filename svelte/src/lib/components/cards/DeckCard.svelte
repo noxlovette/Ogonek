@@ -4,7 +4,7 @@
   import { user } from "$lib/stores";
   import CardClickable from "./CardClickable.svelte";
   import Badge from "./Badge.svelte";
-  import { H3 } from "../typography";
+  import { Title3 } from "../typography";
   import { Circle, CircleCheckBig } from "lucide-svelte";
   import SeenBadge from "./SeenBadge.svelte";
 
@@ -24,7 +24,7 @@
 
 <CardClickable {href}>
   <div class="inline-flex justify-between">
-    <H3>{title}</H3>
+    <Title3>{title}</Title3>
     {#if deck.isSubscribed}
       <CircleCheckBig />
     {:else}

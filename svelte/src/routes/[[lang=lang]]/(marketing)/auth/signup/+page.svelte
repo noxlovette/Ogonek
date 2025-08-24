@@ -1,6 +1,12 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
-  import { Turnstile, UniButton, Input, Label, H1 } from "$lib/components";
+  import {
+    Turnstile,
+    UniButton,
+    Input,
+    Caption1,
+    LargeTitle,
+  } from "$lib/components";
   import { DoorOpen } from "lucide-svelte";
   import { enhanceForm } from "$lib/utils";
   import { m } from "$lib/paraglide/messages";
@@ -12,9 +18,9 @@
 
 <div class="flex max-w-md flex-col gap-4">
   <div class="flex flex-col items-center text-center">
-    <H1>
+    <LargeTitle>
       {m.bad_even_seahorse_rise()}
-    </H1>
+    </LargeTitle>
     <p class="mt-2 text-sm text-stone-600">
       {m.dark_candid_octopus_compose()}
       <a
@@ -41,7 +47,7 @@
       <Input name="username" placeholder="Username" value=""></Input>
 
       <div class="flex flex-col space-y-1">
-        <Label>Role</Label>
+        <Caption1>Role</Caption1>
         <select
           name="role"
           required

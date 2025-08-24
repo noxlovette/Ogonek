@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { H1, UniButton } from "$lib/components";
+  import { LargeTitle, UniButton } from "$lib/components";
   import { m } from "$lib/paraglide/messages";
   import { Mail, Send } from "lucide-svelte";
 
@@ -10,9 +10,9 @@
 </script>
 
 <div class="mx-auto flex max-w-md flex-col items-center justify-center gap-4">
-  <H1>
+  <LargeTitle>
     {m.mean_stock_dove_beam()}
-  </H1>
+  </LargeTitle>
 
   <div class="grid gap-4 md:grid-cols-2">
     <UniButton

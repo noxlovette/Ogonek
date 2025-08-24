@@ -1,7 +1,7 @@
 <!-- TableOfContents.svelte -->
 <script lang="ts">
   import { onMount, onDestroy } from "svelte";
-  import { H2 } from "../typography";
+  import { Title2 } from "../typography";
 
   export let targetSelector: string = ".markdown";
   export let minLevel: number = 1;
@@ -126,7 +126,7 @@
 >
   {#if title}
     <div class="mb-3">
-      <H2>{title}</H2>
+      <Title2>{title}</Title2>
     </div>
   {/if}
 

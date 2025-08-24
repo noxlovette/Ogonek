@@ -1,19 +1,31 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
   import {
-    Label,
+    Caption1,
     WordCard,
-    H1,
+    LargeTitle,
     UniButton,
     GreySpan,
     Toolbar,
     EmptySpace,
-    H3,
+    Title3,
+    VStack,
+    Merger,
+    Caption1,
+    HStack,
+    Divider,
   } from "$lib/components";
   import { invalidate } from "$app/navigation";
 
   import { user } from "$lib/stores";
-  import { Copy, Pencil, UserRoundMinus, UserRoundPlus } from "lucide-svelte";
+  import {
+    Check,
+    Circle,
+    Copy,
+    Pencil,
+    UserRoundMinus,
+    UserRoundPlus,
+  } from "lucide-svelte";
   import { enhanceForm } from "$lib/utils";
   import Badge from "$lib/components/cards/Badge.svelte";
   import { page } from "$app/state";
@@ -44,64 +56,66 @@
   <title>{deck.title} | Flashcards</title>
 </svelte:head>
 <Toolbar>
-  <div class="flex items-baseline gap-3 md:gap-4">
-    <H1>{deck.title}</H1>
+  <HStack>
+    <VStack>
+      <LargeTitle>{deck.title}</LargeTitle>
+      <Divider></Divider>
+      <VStack>
+        <Merger>
+          <form
+            method="POST"
+            action="?/duplicate"
+            use:enhance={enhanceForm({
+              messages: {
+                success: "Deck Duplicated",
+              },
+            })}
+          >
+            <UniButton Icon={Copy} type="submit">Duplicate</UniButton>
+          </form>
+          {#if $user.id === deck.createdBy}
+            <UniButton href="{deck.id}/edit" Icon={Pencil}>{m.edit()}</UniButton
+            >
+          {/if}
+        </Merger>
+        <Merger>
+          <form
+            method="POST"
+            action="?/subscribe"
+            use:enhance={enhanceForm({
+              messages: {
+                success: isSubscribed
+                  ? m.elegant_small_gadfly_quell()
+                  : m.stout_royal_macaw_fear(),
+              },
+              handlers: {
+                success: async () => {
+                  isSubscribed = !isSubscribed;
+                  invalidate("learn:subscribe");
+                },
+              },
+            })}
+          >
+            <input type="hidden" name="isSubscribed" value={isSubscribed} />
+            <UniButton
+              Icon={isSubscribed === true ? Check : Circle}
+              type="submit"
+              variant="prominent"
+            >
+              {isSubscribed
+                ? m.fluffy_elegant_coyote_assure()
+                : m.fit_least_baboon_imagine()}
+            </UniButton>
+          </form>
+        </Merger>
+      </VStack>
+    </VStack>
     {#if page.params.role == "t"}
-      <H3>
+      <Caption1>
         {assigneeName}
-      </H3>
+      </Caption1>
     {/if}
-  </div>
-  <div class="flex flex-col gap-3 md:flex-row md:gap-4">
-    {#if $user.id === deck.createdBy}
-      <UniButton variant="secondary" href="{deck.id}/edit" Icon={Pencil}
-        >{m.edit()}</UniButton
-      >
-    {/if}
-    <form
-      method="POST"
-      action="?/subscribe"
-      use:enhance={enhanceForm({
-        messages: {
-          success: isSubscribed
-            ? m.elegant_small_gadfly_quell()
-            : m.stout_royal_macaw_fear(),
-        },
-        handlers: {
-          success: async () => {
-            isSubscribed = !isSubscribed;
-            invalidate("learn:subscribe");
-          },
-        },
-      })}
-    >
-      <input type="hidden" name="isSubscribed" value={isSubscribed} />
-      <UniButton
-        Icon={isSubscribed === true ? UserRoundMinus : UserRoundPlus}
-        type="submit"
-        fullWidth={true}
-        variant="primary"
-      >
-        {isSubscribed
-          ? m.fluffy_elegant_coyote_assure()
-          : m.fit_least_baboon_imagine()}
-      </UniButton>
-    </form>
-
-    <form
-      method="POST"
-      action="?/duplicate"
-      use:enhance={enhanceForm({
-        messages: {
-          success: "Deck Duplicated",
-        },
-      })}
-    >
-      <UniButton Icon={Copy} type="submit" variant="secondary">
-        Duplicate
-      </UniButton>
-    </form>
-  </div>
+  </HStack>
 </Toolbar>
 
 <div class="grid gap-8 lg:grid-cols-3">
@@ -129,7 +143,7 @@
       <div
         class="bg-default ring-default flex flex-col space-y-3 rounded-lg p-3 shadow-sm"
       >
-        <Label>{m.equal_key_gazelle_attend()}</Label>
+        <Caption1>{m.equal_key_gazelle_attend()}</Caption1>
         {#if deck.description}
           <div class="flex flex-wrap gap-x-1 gap-y-2">
             {#each deck.description.split(";") as deckTag, index (index)}

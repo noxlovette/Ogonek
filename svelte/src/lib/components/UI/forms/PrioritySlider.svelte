@@ -46,7 +46,7 @@
 </script>
 
 <div class="flex flex-col gap-3">
-  <!-- Priority Label -->
+  <!-- Priority Caption1 -->
   <div class="flex items-center justify-between">
     <p class={`text-sm font-medium ${config.color}`}>
       {config.label}

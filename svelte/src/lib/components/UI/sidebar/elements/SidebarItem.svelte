@@ -2,7 +2,7 @@
   import { sidebar } from "$lib/stores/sidebar";
   import { page } from "$app/state";
   import { SquareArrowUpRight } from "lucide-svelte";
-  import { H4 } from "$lib/components/typography";
+  import { Headline } from "$lib/components/typography";
 
   let {
     Icon,
@@ -53,9 +53,9 @@
   </div>
 
   <div class="flex min-w-0 flex-1 items-center justify-between">
-    <H4>
+    <Headline>
       {name}
-    </H4>
+    </Headline>
 
     {#if badgeVisible}
       <div

@@ -1,16 +1,16 @@
 <script lang="ts">
   import {
     UniButton,
-    H1,
-    H2,
-    H3,
+    LargeTitle,
+    Title2,
+    Title3,
     Toolbar,
     TableOfContents,
     HStack,
     VStack,
     Divider,
     Merger,
-    Caption,
+    Caption1,
   } from "$lib/components";
 
   import { formatDate } from "@noxlovette/svarog";
@@ -30,13 +30,13 @@
 <Toolbar>
   <HStack>
     <VStack>
-      <H1>
+      <LargeTitle>
         {#if role === "t"}
           {data.lesson.title}
         {:else}
           {data.lesson.topic}
         {/if}
-      </H1>
+      </LargeTitle>
       <Divider />
       {#if role === "t"}
         <Merger>
@@ -49,13 +49,13 @@
     <VStack>
       <Badge badgeText={formattedDate} />
       {#if role === "t"}
-        <H3>
+        <Title3>
           {data.lesson.topic}
-        </H3>
+        </Title3>
 
-        <Caption>
+        <Caption1>
           {data.lesson.assigneeName}
-        </Caption>
+        </Caption1>
       {/if}
     </VStack>
   </HStack>

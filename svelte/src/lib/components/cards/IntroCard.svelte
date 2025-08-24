@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { H1 } from "../typography";
+  import { LargeTitle } from "../typography";
 
   let { children, title = "Title" } = $props();
 </script>
@@ -7,9 +7,9 @@
 <section
   class="ring-default max-w-xs space-y-2 rounded-md bg-white p-5 pb-12 shadow-sm dark:bg-stone-950"
 >
-  <H1>
+  <LargeTitle>
     {title}
-  </H1>
+  </LargeTitle>
   <p class="text-balance">
     {@render children?.()}
   </p>

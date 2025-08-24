@@ -5,7 +5,7 @@
   import { invalidate } from "$app/navigation";
   import { enhanceForm, qualityButtons } from "$lib/utils";
   import { CheckCheck, Home } from "lucide-svelte";
-  import { Toolbar, UniButton, Label, KBD } from "$lib/components";
+  import { Toolbar, UniButton, Caption1, KBD } from "$lib/components";
   import { m } from "$lib/paraglide/messages";
 
   let { data } = $props();
@@ -134,7 +134,7 @@
       >
         <!-- Front side -->
         <div class="flex-grow">
-          <Label>{showCloze ? "" : m.cardFront()}</Label>
+          <Caption1>{showCloze ? "" : m.cardFront()}</Caption1>
 
           {#if showCloze}
             {#if !showAnswer}
@@ -146,12 +146,12 @@
               />
             {:else}
               <div class="space-y-2">
-                <Label>{m.cardFrontClozeUserInput()}</Label>
+                <Caption1>{m.cardFrontClozeUserInput()}</Caption1>
                 <div class="rounded-lg bg-stone-100 p-3 dark:bg-stone-800">
                   <span class="">{userInput}</span>
                 </div>
 
-                <Label>{m.cardFrontClozeCorrect()}</Label>
+                <Caption1>{m.cardFrontClozeCorrect()}</Caption1>
                 <div class="rounded-lg bg-green-100 p-3 dark:bg-green-900">
                   <span class="">{currentCard.front}</span>
                 </div>
@@ -164,7 +164,7 @@
         <!-- Back side -->
         {#if showCloze}
           <div class="flex-grow">
-            <Label>Question</Label>
+            <Caption1>Question</Caption1>
             <p>
               {currentCard.back}
             </p>
@@ -180,7 +180,7 @@
           </div>
         {:else if showAnswer}
           <div class="flex-grow">
-            <Label>{m.cardBack()}</Label>
+            <Caption1>{m.cardBack()}</Caption1>
             <p>
               {currentCard.back}
             </p>

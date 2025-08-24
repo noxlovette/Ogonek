@@ -3,14 +3,14 @@
     DeckCard,
     EmptySpace,
     GridCell,
-    H1,
-    H3,
+    LargeTitle,
+    Title3,
     Toolbar,
     LessonCard,
     TaskCard,
     UniButton,
   } from "$lib/components";
-  import H2 from "$lib/components/typography/H2.svelte";
+  import Title2 from "$lib/components/typography/Title2.svelte";
   import type { PageData } from "./$types";
   import { Pencil } from "lucide-svelte";
   let { data }: { data: PageData } = $props();
@@ -24,10 +24,10 @@
 </svelte:head>
 <Toolbar>
   <div>
-    <H1>{student.name}</H1>
-    <H3>
+    <LargeTitle>{student.name}</LargeTitle>
+    <Title3>
       {student.email}
-    </H3>
+    </Title3>
   </div>
 
   <UniButton
@@ -38,50 +38,50 @@
 </Toolbar>
 <grid class="grid gap-4 md:grid-cols-2">
   <GridCell>
-    <H2>Decks</H2>
+    <Title2>Decks</Title2>
     {#each studentDecks as deck (deck.id)}
       <DeckCard {deck}></DeckCard>
     {/each}
     {#if studentDecks.length < 1}
       <EmptySpace>
-        <H3>No Decks</H3>
+        <Title3>No Decks</Title3>
       </EmptySpace>
     {/if}
   </GridCell>
 
   <GridCell>
-    <H2>Lessons</H2>
+    <Title2>Lessons</Title2>
     {#each studentLessons as lesson (lesson.id)}
       <LessonCard {lesson}></LessonCard>
     {/each}
     {#if studentLessons.length < 1}
       <EmptySpace>
-        <H3>No Lessons</H3>
+        <Title3>No Lessons</Title3>
       </EmptySpace>
     {/if}
   </GridCell>
 
   <GridCell>
-    <H2>Tasks</H2>
+    <Title2>Tasks</Title2>
     {#each studentTasks as task (task.id)}
       <TaskCard {task}></TaskCard>
     {/each}
     {#if studentTasks.length < 1}
       <EmptySpace>
-        <H3>No Tasks</H3>
+        <Title3>No Tasks</Title3>
       </EmptySpace>
     {/if}
   </GridCell>
 
   <GridCell>
-    <H2>Notes</H2>
+    <Title2>Notes</Title2>
     {#if student.markdown}
       <div class="">
         {@html rendered}
       </div>
     {:else}
       <EmptySpace>
-        <H3>No Notes</H3>
+        <Title3>No Notes</Title3>
       </EmptySpace>
     {/if}
   </GridCell>

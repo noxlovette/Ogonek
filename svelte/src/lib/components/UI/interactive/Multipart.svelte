@@ -2,7 +2,7 @@
   import { onDestroy } from "svelte";
   import UniButton from "../UniButton.svelte";
   import { Ban, Check, Upload, X } from "lucide-svelte";
-  import { Label } from "$lib/components/typography";
+  import { Caption1 } from "$lib/components/typography";
   import logger from "$lib/logger";
 
   type UploadStatus = "waiting" | "uploading" | "complete" | "error";
@@ -372,7 +372,7 @@
       class="flex flex-col items-center justify-center space-y-2 text-center"
     >
       <Upload />
-      <Label>Select files for upload</Label>
+      <Caption1>Select files for upload</Caption1>
     </span>
   </label>
 

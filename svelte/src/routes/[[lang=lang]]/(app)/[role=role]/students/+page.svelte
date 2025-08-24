@@ -2,7 +2,7 @@
   import type { PageData } from "./$types";
   import {
     Table,
-    H1,
+    LargeTitle,
     Toolbar,
     StudentAdder,
     Divider,
@@ -27,7 +27,7 @@
 </script>
 
 <Toolbar>
-  <H1>Students</H1>
+  <LargeTitle>Students</LargeTitle>
   <Divider />
   <Merger>
     <StudentAdder />

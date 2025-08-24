@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { H3 } from "$lib/components/typography";
+  import { Title3 } from "$lib/components/typography";
   import {
     Forvo,
     Dictionary,
@@ -12,7 +12,7 @@
 </script>
 
 <Group>
-  <H3>{m.usefulLinks()}</H3>
+  <Title3>{m.usefulLinks()}</Title3>
   {#each elements as Element, index (index)}
     <Element />
   {/each}

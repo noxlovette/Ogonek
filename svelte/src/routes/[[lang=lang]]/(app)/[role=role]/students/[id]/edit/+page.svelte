@@ -1,6 +1,12 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
-  import { Editor, H1, Toolbar, UniButton, Input } from "$lib/components";
+  import {
+    Editor,
+    LargeTitle,
+    Toolbar,
+    UniButton,
+    Input,
+  } from "$lib/components";
   import type { Student } from "$lib/types";
   import { Ban, Check, Trash2 } from "lucide-svelte";
   import type { PageData } from "./$types";
@@ -24,7 +30,7 @@
   })}
 >
   <Toolbar>
-    <H1>{student.name}</H1>
+    <LargeTitle>{student.name}</LargeTitle>
     <div class="flex items-center space-x-3">
       <UniButton variant="secondary" href="." Icon={Ban}>Cancel</UniButton>
       <UniButton variant="primary" type="submit" Icon={Check}>Save</UniButton>

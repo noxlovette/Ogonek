@@ -5,8 +5,8 @@
   import { notification } from "$lib/stores";
   import { X, Copy, Plus } from "lucide-svelte";
   import UniButton from "../UniButton.svelte";
-  import { Caption } from "$lib/components/typography";
-  import H4 from "$lib/components/typography/H4.svelte";
+  import { Caption1 } from "$lib/components/typography";
+  import Headline from "$lib/components/typography/Headline.svelte";
   import Toggler from "../interactive/Toggler.svelte";
 
   let showPopover = false;
@@ -45,7 +45,7 @@
       use:clickOutside={() => (showPopover = false)}
     >
       <div class="flex items-center justify-between">
-        <H4>Invite Students</H4>
+        <Headline>Invite Students</Headline>
         <button
           class="text-stone-400 hover:text-stone-700"
           type="button"
@@ -70,7 +70,7 @@
           },
         })}
       >
-        <Caption>Do they have an account?</Caption>
+        <Caption1>Do they have an account?</Caption1>
         <Toggler name="isRegistered" title="Yes"></Toggler>
         <UniButton type="submit" variant="primary" Icon={Plus}>
           Generate Link
@@ -79,7 +79,7 @@
 
       {#if generatedLink}
         <div class="mt-3 space-y-1">
-          <Caption>Invite Link:</Caption>
+          <Caption1>Invite Link:</Caption1>
           <div class="flex items-center gap-1">
             <input
               bind:this={linkInput}

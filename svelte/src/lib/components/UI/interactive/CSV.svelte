@@ -1,12 +1,12 @@
 <script lang="ts">
-  import { Label } from "$lib/components/typography";
+  import { Caption1 } from "$lib/components/typography";
   import { notification } from "$lib/stores";
   import type { Card, Deck } from "$lib/types";
   import { UploadCloud, X } from "lucide-svelte";
   import ModalBackGround from "../forms/ModalBackGround.svelte";
   import { extractWordsFromRewordFile } from "$lib/utils";
   import Papa from "papaparse";
-  import H2 from "$lib/components/typography/H2.svelte";
+  import Title2 from "$lib/components/typography/Title2.svelte";
   import logger from "$lib/logger";
   interface CSVRow {
     [key: string]: string;
@@ -227,7 +227,7 @@
 
 <ModalBackGround>
   <div class="mb-4 flex min-w-1/2 items-center justify-between">
-    <H2>Import Cards</H2>
+    <Title2>Import Cards</Title2>
 
     <button
       class="text-stone-500 hover:text-stone-700"
@@ -264,7 +264,7 @@
       <div class="space-y-4">
         <div class="grid grid-cols-2 gap-4">
           <div>
-            <Label>Front</Label>
+            <Caption1>Front</Caption1>
             <select
               bind:value={importFrontColumn}
               class="w-full rounded-lg border border-stone-300 bg-white p-2 dark:border-stone-700 dark:bg-stone-950"
@@ -277,7 +277,7 @@
           </div>
 
           <div>
-            <Label>Back</Label>
+            <Caption1>Back</Caption1>
             <select
               bind:value={importBackColumn}
               class="w-full rounded-lg border border-stone-300 bg-white p-2 dark:border-stone-700 dark:bg-stone-950"

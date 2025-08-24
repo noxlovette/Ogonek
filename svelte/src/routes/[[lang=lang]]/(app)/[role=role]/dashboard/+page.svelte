@@ -1,6 +1,6 @@
 <script lang="ts">
   import {
-    H1,
+    LargeTitle,
     DueTasksWidget,
     ActivityFeedWidget,
     LearnWidget,
@@ -23,7 +23,7 @@
 </script>
 
 <Toolbar>
-  <H1>{greetings[greetingType]}</H1>
+  <LargeTitle>{greetings[greetingType]}</LargeTitle>
 </Toolbar>
 
 <div class="grid gap-8 lg:grid-cols-3">

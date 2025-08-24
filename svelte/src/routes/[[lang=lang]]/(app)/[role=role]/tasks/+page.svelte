@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { Task, TableConfig } from "$lib/types/index.js";
   import {
-    H1,
+    LargeTitle,
     Divider,
     Merger,
     Table,
@@ -12,7 +12,7 @@
     LoadingCard,
     TaskCard,
     EmptySpace,
-    H3,
+    Title3,
     VStack,
   } from "$lib/components";
 
@@ -77,7 +77,7 @@
 </script>
 
 <Toolbar>
-  <H1>{m.tasks()}</H1>
+  <LargeTitle>{m.tasks()}</LargeTitle>
   <Divider />
   <VStack>
     <Merger>
@@ -142,7 +142,7 @@
 {:then tasks}
   {#if tasks.data.length < 1}
     <EmptySpace>
-      <H3>{m.noTasks()}</H3>
+      <Title3>{m.noTasks()}</Title3>
     </EmptySpace>
   {/if}
   {#if role === "s"}

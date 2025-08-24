@@ -1,7 +1,7 @@
 <script lang="ts">
   import {
-    H1,
-    H3,
+    LargeTitle,
+    Title3,
     DeckCard,
     Table,
     UniButton,
@@ -74,7 +74,7 @@
 </svelte:head>
 
 <Toolbar>
-  <H1>{m.flashcards()}</H1>
+  <LargeTitle>{m.flashcards()}</LargeTitle>
   <Divider />
   <VStack>
     <Merger>
@@ -125,7 +125,7 @@
       </div>
     {:else}
       <EmptySpace>
-        <H3>{m.noDecks()}</H3>
+        <Title3>{m.noDecks()}</Title3>
       </EmptySpace>
     {/if}
   {:else}

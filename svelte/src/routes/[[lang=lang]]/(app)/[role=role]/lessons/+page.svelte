@@ -1,12 +1,12 @@
 <script lang="ts">
   import {
-    H1,
+    LargeTitle,
     Table,
     LessonCard,
     UniButton,
     Toolbar,
     EmptySpace,
-    H3,
+    Title3,
     SearchBar,
     TableSkeleton,
     Divider,
@@ -74,7 +74,7 @@
 </script>
 
 <Toolbar>
-  <H1>{m.lessons()}</H1>
+  <LargeTitle>{m.lessons()}</LargeTitle>
   <Divider />
 
   <VStack>
@@ -111,7 +111,7 @@
 {:then lessons}
   {#if lessons.data.length < 1}
     <EmptySpace>
-      <H3>{m.noLessons()}</H3>
+      <Title3>{m.noLessons()}</Title3>
     </EmptySpace>
   {/if}
   {#if role === "s"}

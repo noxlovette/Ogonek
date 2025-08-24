@@ -2,8 +2,8 @@
   let { children, styling = "" } = $props();
 </script>
 
-<h1
-  class=" text-center text-2xl font-bold tracking-tight md:text-left md:text-4xl {styling}"
+<h3
+  class="text-xl font-medium tracking-normal text-balance md:text-2xl {styling}"
 >
   {@render children?.()}
-</h1>
+</h3>

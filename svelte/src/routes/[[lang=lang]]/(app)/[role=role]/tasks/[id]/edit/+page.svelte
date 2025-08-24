@@ -5,7 +5,7 @@
   import { enhanceForm } from "$lib/utils";
   import {
     Editor,
-    H1,
+    LargeTitle,
     UniButton,
     AssigneeSelector,
     Toolbar,
@@ -48,7 +48,7 @@
   })}
 >
   <Toolbar>
-    <H1>{m.editing()}</H1>
+    <LargeTitle>{m.editing()}</LargeTitle>
     <Divider />
     <VStack>
       <Merger>

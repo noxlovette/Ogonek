@@ -4,7 +4,7 @@
   import CardClickable from "./CardClickable.svelte";
   import { page } from "$app/state";
   import Badge from "./Badge.svelte";
-  import { H3 } from "../typography";
+  import { Title3 } from "../typography";
   import SeenBadge from "./SeenBadge.svelte";
   interface Props {
     lesson: LessonSmall;
@@ -22,9 +22,9 @@
 </script>
 
 <CardClickable {href}>
-  <H3>
+  <Title3>
     {title}
-  </H3>
+  </Title3>
   <Badge {badgeText} />
   <SeenBadge seen={lesson.seen} />
 </CardClickable>

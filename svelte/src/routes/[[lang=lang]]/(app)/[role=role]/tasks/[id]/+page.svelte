@@ -1,14 +1,14 @@
 <script lang="ts">
   import {
     EmptySpace,
-    H1,
-    H3,
-    Label,
+    LargeTitle,
+    Title3,
+    Caption1,
     Toolbar,
     UniButton,
     FileTaskCard,
     HStack,
-    Caption,
+    Caption1,
     Merger,
     Divider,
   } from "$lib/components";
@@ -50,9 +50,14 @@
 <Toolbar>
   <HStack>
     <VStack>
-      <H1>{data.task.title}</H1>
+      <LargeTitle>{data.task.title}</LargeTitle>
       <Divider />
       <Merger>
+        {#if role === "t"}
+          <UniButton Icon={Pencil} href="/t/tasks/{data.task.id}/edit"
+            >{m.edit()}</UniButton
+          >
+        {/if}
         <form
           class="flex"
           method="post"
@@ -70,7 +75,7 @@
           })}
         >
           <UniButton
-            variant="primary"
+            variant="prominent"
             type="submit"
             Icon={completed ? Check : Circle}
           >
@@ -81,11 +86,6 @@
             {/if}
           </UniButton>
         </form>
-        {#if role === "t"}
-          <UniButton Icon={Pencil} href="/t/tasks/{data.task.id}/edit"
-            >{m.edit()}</UniButton
-          >
-        {/if}
       </Merger>
     </VStack>
     <VStack>
@@ -94,9 +94,9 @@
         <Priority priority={data.task.priority}></Priority>
       </VStack>
       {#if role === "t"}
-        <Caption>
+        <Caption1>
           {data.task.assigneeName}
-        </Caption>
+        </Caption1>
       {/if}
     </VStack>
   </HStack>
@@ -109,7 +109,7 @@
   <div class="flex gap-4 md:flex-col">
     {#if files.length > 0}
       <div class="flex w-full flex-col gap-4">
-        <Label>{m.stock_wise_cowfish_roam()}</Label>
+        <Caption1>{m.stock_wise_cowfish_roam()}</Caption1>
         {#each files as file (file.id)}
           <FileTaskCard {file} />
         {/each}
@@ -119,7 +119,7 @@
     {/if}
     {#if page.params.role === "s"}
       <div class="flex w-full flex-col space-y-2">
-        <Label>{m.bright_helpful_firefox_stir()}</Label>
+        <Caption1>{m.bright_helpful_firefox_stir()}</Caption1>
         <Multipart taskId={data.task.id} />
       </div>
     {/if}

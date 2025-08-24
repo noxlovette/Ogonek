@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { EmptySpace, H2 } from "$lib/components/typography";
+  import { EmptySpace, Title2 } from "$lib/components/typography";
   import { enhanceForm } from "$lib/utils";
   import { enhance } from "$app/forms";
   import { m } from "$lib/paraglide/messages";
@@ -13,7 +13,7 @@
 </script>
 
 <div class="flex flex-col gap-4">
-  <H2>{m.any_lime_lemur_propel()}</H2>
+  <Title2>{m.any_lime_lemur_propel()}</Title2>
   {#if tasks.length > 0}
     <div class="grid grid-cols-1 gap-4">
       {#each tasks as task (task.id)}

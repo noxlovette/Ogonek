@@ -1,8 +1,8 @@
 <script lang="ts">
   import {
-    Label,
+    Caption1,
     Input,
-    H1,
+    LargeTitle,
     FlashCardEdit,
     AssigneeSelector,
     CSV,
@@ -59,7 +59,7 @@
   <title>{`${m.edit()} ${deck.title} | Flashcards`}</title>
 </svelte:head>
 <Toolbar>
-  <H1>{deck.title}</H1>
+  <LargeTitle>{deck.title}</LargeTitle>
   <div class="hidden md:block">
     <div class="flex items-center gap-3">
       <span class="text-sm text-stone-500 dark:text-stone-400">
@@ -161,7 +161,7 @@
           <AssigneeSelector item={deck} />
 
           <div>
-            <Label>{m.visibility()}</Label>
+            <Caption1>{m.visibility()}</Caption1>
             <select
               name="visibility"
               value={deck.visibility}

@@ -24,9 +24,9 @@
   data-sveltekit-prefetch={prefetch ? "" : null}
   class={[
     styling,
-    `group ring-default bg-clickable relative flex
+    `group bg-clickable relative flex
      flex-col justify-between 
-     rounded-xl px-4 py-5 shadow-sm backdrop-blur-md active:bg-stone-100
+     rounded-xl px-4 py-5 shadow-md backdrop-blur-md active:bg-stone-100
     `,
   ].join(" ")}
   style={`height: ${height};`}

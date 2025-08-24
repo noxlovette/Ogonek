@@ -3,7 +3,7 @@
   import CardClickable from "./CardClickable.svelte";
   import { user } from "$lib/stores";
   import Badge from "./Badge.svelte";
-  import { H3 } from "../typography";
+  import { Headline } from "../typography";
   import { getUrgency } from "$lib/utils";
   import Priority from "./Priority.svelte";
   import SeenBadge from "./SeenBadge.svelte";
@@ -19,9 +19,9 @@
 
 <CardClickable {href}>
   <div class="flex items-start justify-between gap-3">
-    <H3>
+    <Headline>
       {task.title}
-    </H3>
+    </Headline>
     <Priority priority={task.priority} />
   </div>
   <Badge {badgeText} {urgency} />

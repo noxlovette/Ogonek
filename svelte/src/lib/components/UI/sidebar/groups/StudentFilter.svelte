@@ -4,14 +4,14 @@
 
   import { getContext } from "svelte";
   import Group from "./Group.svelte";
-  import H2 from "$lib/components/typography/H2.svelte";
+  import Title2 from "$lib/components/typography/Title2.svelte";
   import { ChevronsUpDown } from "lucide-svelte";
 
   const students: Student[] = getContext("students");
 </script>
 
 <Group>
-  <H2>Filter</H2>
+  <Title2>Filter</Title2>
   <div class="relative mt-4 min-w-40">
     <select
       id="assignee"

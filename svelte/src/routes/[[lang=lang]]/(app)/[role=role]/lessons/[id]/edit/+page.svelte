@@ -2,7 +2,7 @@
   import { enhance } from "$app/forms";
   import {
     Editor,
-    H1,
+    LargeTitle,
     AssigneeSelector,
     UniButton,
     Toolbar,
@@ -33,7 +33,7 @@
   })}
 >
   <Toolbar>
-    <H1>{m.editing()}</H1>
+    <LargeTitle>{m.editing()}</LargeTitle>
     <Divider />
     <VStack>
       <Merger>

@@ -2,7 +2,7 @@
   import { m } from "$lib/paraglide/messages";
   import { ArrowBigRight, Clock, Target, Zap, Calendar } from "lucide-svelte";
   import UniButton from "../UI/UniButton.svelte";
-  import { H2 } from "$lib/components/typography";
+  import { Title2 } from "$lib/components/typography";
 
   const {
     cardsCount = 0,
@@ -17,7 +17,7 @@
 </script>
 
 <div class="flex flex-col gap-4">
-  <H2>{m.flashcards()}</H2>
+  <Title2>{m.flashcards()}</Title2>
 
   <!-- Main Review Card -->
   <div
