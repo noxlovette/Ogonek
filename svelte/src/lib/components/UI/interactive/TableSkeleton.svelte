@@ -15,7 +15,7 @@
   </div>
   <div class="divide-y divide-stone-100 dark:divide-stone-700">
     {#each Array(rows)}
-      <div class="px-6 py-4 transition-colors">
+      <div class="px-6 py-4">
         <div
           class="grid grid-cols-5
             items-center gap-4"

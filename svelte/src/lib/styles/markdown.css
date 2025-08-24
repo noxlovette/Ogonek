@@ -43,7 +43,7 @@
       @apply text-accent dark:text-accent absolute left-0 font-bold;
     }
     a {
-      @apply text-accent dark:text-accent underline-offset-2 transition-all duration-200 hover:underline;
+      @apply text-accent dark:text-accent underline-offset-2 duration-200 hover:underline;
       /* Enhanced hover with sky background */
       @apply hover:bg-accent hover:text-accent dark:hover:bg-accent dark:hover:text-accent rounded px-1 py-0.5;
     }
@@ -95,12 +95,12 @@
       @apply bg-accent dark:bg-accent;
     }
     tr:hover td {
-      @apply bg-accent dark:bg-accent transition-colors duration-200;
+      @apply bg-accent dark:bg-accent duration-200;
     }
     img {
       @apply my-6 h-auto max-w-full rounded-lg;
       /* Sky image border on hover */
-      @apply hover:ring-accent dark:hover:ring-accent transition-all duration-200 hover:ring-2;
+      @apply hover:ring-accent dark:hover:ring-accent duration-200 hover:ring-2;
     }
     input[type="checkbox"] {
       @apply accent-accent dark:accent-accent mr-2;
@@ -130,7 +130,7 @@
       @apply mr-2 text-amber-600 dark:text-amber-400;
     }
     * {
-      @apply transition-colors duration-200;
+      @apply duration-200;
     }
   }
 
@@ -201,7 +201,7 @@
       @apply accent-accent dark:accent-accent mr-1;
     }
     * {
-      @apply transition-colors duration-200;
+      @apply duration-200;
     }
   }
 }

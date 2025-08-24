@@ -30,7 +30,7 @@
   );
 
   const baseClasses =
-    "group relative flex items-center gap-3 active:scale-[0.95] hover:scale-[1.02] px-3 py-3 text-sm font-medium transition-all duration-300 ease-out select-none";
+    "group relative flex items-center gap-3 active:scale-[0.95] hover:scale-[1.02] px-3 py-3 text-sm font-medium  duration-300 ease-out select-none";
 
   const stateClasses = $derived(() => {
     if (disabled) return "opacity-40 cursor-not-allowed";
@@ -38,7 +38,7 @@
   });
 
   const iconClasses = $derived(() => {
-    const base = "transition-all duration-300 flex-shrink-0";
+    const base = " duration-300 flex-shrink-0";
     if ($sidebar) return `${base} size-6`;
     return `${base} size-5 ${isActive ? "text-accent dark:text-accent" : "text-stone-500 dark:text-stone-400"}`;
   });
@@ -101,7 +101,7 @@
     <!-- Clean tooltip -->
     <div
       class="pointer-events-none absolute top-1/2 left-16 z-50
-        -translate-y-1/2 opacity-0 transition-all duration-300
+        -translate-y-1/2 opacity-0 duration-300
         group-hover/tooltip:pointer-events-auto group-hover/tooltip:translate-x-2
         group-hover/tooltip:opacity-100
       "
@@ -170,7 +170,7 @@
 
       {#if external}
         <div
-          class="ml-2 flex h-4 w-4 items-center justify-center opacity-60 transition-opacity hover:opacity-100"
+          class="ml-2 flex h-4 w-4 items-center justify-center opacity-60 hover:opacity-100"
         >
           <SquareArrowUpRight />
         </div>

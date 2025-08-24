@@ -20,7 +20,7 @@
       {#if $searchTerm}
         <button
           onclick={() => searchTerm.reset()}
-          class="absolute top-1/2 right-3 -translate-y-1/2 rounded-full p-1 text-stone-400 transition-colors duration-200 hover:bg-stone-100 hover:text-stone-700 dark:hover:bg-stone-800 dark:hover:text-stone-300"
+          class="absolute top-1/2 right-3 -translate-y-1/2 rounded-full p-1 text-stone-400 duration-200 hover:bg-stone-100 hover:text-stone-700 dark:hover:bg-stone-800 dark:hover:text-stone-300"
           aria-label="Clear search"
         >
           <X size={16} />

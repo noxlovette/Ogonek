@@ -15,13 +15,13 @@
 </script>
 
 <div
-  class="group ring-default relative rounded-lg bg-white p-3 shadow-sm transition-all hover:ring-stone-300 dark:bg-stone-900 dark:hover:ring-stone-600"
+  class="group ring-default relative rounded-lg bg-white p-3 shadow-sm hover:ring-stone-300 dark:bg-stone-900 dark:hover:ring-stone-600"
   transition:fade
 >
   <button
     type="button"
     onclick={() => removeCard(index)}
-    class="absolute -top-2 -right-2 hidden rounded-full bg-red-500/90 p-1.5 text-stone-50 opacity-0 transition-all group-hover:opacity-100 hover:bg-red-600 focus:ring focus:ring-red-400 md:block"
+    class="absolute -top-2 -right-2 hidden rounded-full bg-red-500/90 p-1.5 text-stone-50 opacity-0 group-hover:opacity-100 hover:bg-red-600 focus:ring focus:ring-red-400 md:block"
     title="Remove card"
   >
     <Trash2 class="size-4" />

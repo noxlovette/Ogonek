@@ -230,12 +230,12 @@
     <h1 class="text-2xl font-bold">Markdown</h1>
     <button
       onclick={() => (preview = false)}
-      class="hover:bg-accent rounded-lg px-2 py-1 text-sm transition-colors"
+      class="hover:bg-accent rounded-lg px-2 py-1 text-sm"
       class:chosen={!preview}>Editor</button
     >
     <button
       onclick={() => (preview = true)}
-      class="hover:bg-accent rounded-lg px-2 py-1 text-sm transition-colors"
+      class="hover:bg-accent rounded-lg px-2 py-1 text-sm"
       class:chosen={preview}>Preview</button
     >
   </div>
@@ -247,7 +247,7 @@
     >
       <button
         onclick={() => insertMarkdown("**", "**", "bold text")}
-        class="rounded px-3 py-1 text-sm font-bold transition-colors hover:bg-stone-200 dark:hover:bg-stone-700"
+        class="rounded px-3 py-1 text-sm font-bold hover:bg-stone-200 dark:hover:bg-stone-700"
         title="Bold (Ctrl+B)"
       >
         B
@@ -255,7 +255,7 @@
 
       <button
         onclick={() => insertMarkdown("*", "*", "italic text")}
-        class="rounded px-3 py-1 text-sm italic transition-colors hover:bg-stone-200 dark:hover:bg-stone-700"
+        class="rounded px-3 py-1 text-sm italic hover:bg-stone-200 dark:hover:bg-stone-700"
         title="Italic (Ctrl+I)"
       >
         I
@@ -263,7 +263,7 @@
 
       <button
         onclick={() => insertMarkdown("`", "`", "code")}
-        class="rounded px-3 py-1 font-mono text-sm transition-colors hover:bg-stone-200 dark:hover:bg-stone-700"
+        class="rounded px-3 py-1 font-mono text-sm hover:bg-stone-200 dark:hover:bg-stone-700"
         title="Inline Code"
       >
         &lt;/&gt;
@@ -273,7 +273,7 @@
 
       <button
         onclick={() => insertMarkdown("# ", "", "Heading")}
-        class="rounded px-3 py-1 text-sm font-bold transition-colors hover:bg-stone-200 dark:hover:bg-stone-700"
+        class="rounded px-3 py-1 text-sm font-bold hover:bg-stone-200 dark:hover:bg-stone-700"
         title="Heading 1"
       >
         H1
@@ -281,7 +281,7 @@
 
       <button
         onclick={() => insertMarkdown("## ", "", "Heading")}
-        class="rounded px-3 py-1 text-sm font-bold transition-colors hover:bg-stone-200 dark:hover:bg-stone-700"
+        class="rounded px-3 py-1 text-sm font-bold hover:bg-stone-200 dark:hover:bg-stone-700"
         title="Heading 2"
       >
         H2
@@ -289,7 +289,7 @@
 
       <button
         onclick={() => insertMarkdown("### ", "", "Heading")}
-        class="rounded px-3 py-1 text-sm font-bold transition-colors hover:bg-stone-200 dark:hover:bg-stone-700"
+        class="rounded px-3 py-1 text-sm font-bold hover:bg-stone-200 dark:hover:bg-stone-700"
         title="Heading 3"
       >
         H3
@@ -299,7 +299,7 @@
 
       <button
         onclick={() => insertMarkdown("- ", "", "List item")}
-        class="rounded px-3 py-1 text-sm transition-colors hover:bg-stone-200 dark:hover:bg-stone-700"
+        class="rounded px-3 py-1 text-sm hover:bg-stone-200 dark:hover:bg-stone-700"
         title="Bullet List"
       >
         • List
@@ -307,7 +307,7 @@
 
       <button
         onclick={() => insertMarkdown("1. ", "", "List item")}
-        class="rounded px-3 py-1 text-sm transition-colors hover:bg-stone-200 dark:hover:bg-stone-700"
+        class="rounded px-3 py-1 text-sm hover:bg-stone-200 dark:hover:bg-stone-700"
         title="Numbered List"
       >
         1. List
@@ -315,7 +315,7 @@
 
       <button
         onclick={() => insertMarkdown("> ", "", "Quote")}
-        class="rounded px-3 py-1 text-sm transition-colors hover:bg-stone-200 dark:hover:bg-stone-700"
+        class="rounded px-3 py-1 text-sm hover:bg-stone-200 dark:hover:bg-stone-700"
         title="Quote"
       >
         Quote
@@ -325,7 +325,7 @@
 
       <button
         onclick={insertLink}
-        class="rounded px-3 py-1 text-sm transition-colors hover:bg-stone-200 dark:hover:bg-stone-700"
+        class="rounded px-3 py-1 text-sm hover:bg-stone-200 dark:hover:bg-stone-700"
         title="Link (Ctrl+K)"
       >
         🔗 Link
@@ -333,7 +333,7 @@
 
       <button
         onclick={() => insertMarkdown("```\n", "\n```", "code block")}
-        class="rounded px-3 py-1 font-mono text-sm transition-colors hover:bg-stone-200 dark:hover:bg-stone-700"
+        class="rounded px-3 py-1 font-mono text-sm hover:bg-stone-200 dark:hover:bg-stone-700"
         title="Code Block"
       >
         Code
@@ -350,7 +350,7 @@
           bind:value={markdownContent}
           onkeydown={handleKeyDown}
           class="
-          focus:border-accent focus:ring-accent ring-default min-h-[400px] w-full resize-none rounded-md bg-white px-4 py-2 font-mono text-base leading-relaxed text-stone-900 placeholder-stone-400 shadow-sm transition-all focus:shadow-md focus:ring-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60 dark:bg-stone-950 dark:text-stone-100
+          focus:border-accent focus:ring-accent ring-default min-h-[400px] w-full resize-none rounded-md bg-white px-4 py-2 font-mono text-base leading-relaxed text-stone-900 placeholder-stone-400 shadow-sm focus:shadow-md focus:ring-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60 dark:bg-stone-950 dark:text-stone-100
           "
           spellcheck="false"
           placeholder="Start typing your markdown here..."

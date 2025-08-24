@@ -354,7 +354,7 @@
     aria-label="File upload area"
     class="relative flex flex-1 cursor-pointer
 			 flex-col items-center justify-center rounded-lg border-2
-			 border-dashed p-12 transition-colors duration-200
+			 border-dashed p-12 duration-200
 			 {isDragging
       ? 'border-accent bg-accent'
       : 'border-stone-300/30 hover:border-stone-400 dark:border-stone-600/30 dark:bg-stone-950 dark:hover:border-stone-700'}"
@@ -412,7 +412,7 @@
               class="mb-1 h-1.5 w-full rounded-full bg-stone-200 dark:bg-stone-600"
             >
               <div
-                class="bg-accent h-1.5 rounded-full transition-all duration-150 dark:bg-stone-100"
+                class="bg-accent h-1.5 rounded-full duration-150 dark:bg-stone-100"
                 style="width: {formatPercentage(
                   fileState.progress.percentComplete,
                 )}"
