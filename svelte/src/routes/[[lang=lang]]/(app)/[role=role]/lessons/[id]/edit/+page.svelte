@@ -6,6 +6,9 @@
     AssigneeSelector,
     UniButton,
     Toolbar,
+    Divider,
+    Merger,
+    VStack,
   } from "$lib/components";
   import type { PageData } from "./$types";
   import { enhanceForm } from "$lib/utils";
@@ -31,20 +34,25 @@
 >
   <Toolbar>
     <H1>{m.editing()}</H1>
-    <div class="flex items-center space-x-3">
-      <UniButton variant="secondary" Icon={Ban} href=".">{m.cancel()}</UniButton
+    <Divider />
+    <VStack>
+      <Merger>
+        <UniButton Icon={Ban} href=".">{m.cancel()}</UniButton>
+
+        <UniButton
+          variant="danger"
+          formaction="?/delete"
+          Icon={Trash2}
+          confirmText={lesson.title}
+          confirmTitle="Delete Lesson">{m.delete()}</UniButton
+        >
+      </Merger>
+      <Merger>
+        <UniButton variant="prominent" type="submit" Icon={Check}
+          >{m.save()}</UniButton
+        ></Merger
       >
-      <UniButton variant="primary" type="submit" Icon={Check}
-        >{m.save()}</UniButton
-      >
-      <UniButton
-        variant="danger"
-        formaction="?/delete"
-        Icon={Trash2}
-        confirmText={lesson.title}
-        confirmTitle="Delete Lesson">{m.delete()}</UniButton
-      >
-    </div>
+    </VStack>
   </Toolbar>
 
   <input type="hidden" name="id" value={lesson.id} />

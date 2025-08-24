@@ -6,6 +6,11 @@
     H3,
     Toolbar,
     TableOfContents,
+    HStack,
+    VStack,
+    Divider,
+    Merger,
+    Caption,
   } from "$lib/components";
 
   import { formatDate } from "@noxlovette/svarog";
@@ -13,6 +18,7 @@
   import { Pencil } from "lucide-svelte";
   import { page } from "$app/state";
   import { m } from "$lib/paraglide/messages";
+  import Badge from "$lib/components/cards/Badge.svelte";
 
   let role = $derived(page.params.role);
 
@@ -22,41 +28,44 @@
 </script>
 
 <Toolbar>
-  <div class="flex items-baseline gap-3 md:gap-4">
-    <H1>
+  <HStack>
+    <VStack>
+      <H1>
+        {#if role === "t"}
+          {data.lesson.title}
+        {:else}
+          {data.lesson.topic}
+        {/if}
+      </H1>
+      <Divider />
       {#if role === "t"}
-        {data.lesson.title}
-      {:else}
-        {data.lesson.topic}
+        <Merger>
+          <UniButton Icon={Pencil} href="/t/lessons/{data.lesson.id}/edit"
+            >{m.edit()}</UniButton
+          >
+        </Merger>
       {/if}
-    </H1>
-    {#if role === "t"}
-      <H3>
-        {data.lesson.assigneeName}
-      </H3>
-    {:else}
-      {formattedDate}
-    {/if}
-  </div>
-  {#if role === "t"}
-    <div class="flex items-center gap-3 md:gap-4">
-      <H2>
-        {data.lesson.topic}
-      </H2>
-      <UniButton
-        Icon={Pencil}
-        href="/t/lessons/{data.lesson.id}/edit"
-        variant="secondary">{m.edit()}</UniButton
-      >
-    </div>
-  {/if}
+    </VStack>
+    <VStack>
+      <Badge badgeText={formattedDate} />
+      {#if role === "t"}
+        <H3>
+          {data.lesson.topic}
+        </H3>
+
+        <Caption>
+          {data.lesson.assigneeName}
+        </Caption>
+      {/if}
+    </VStack>
+  </HStack>
 </Toolbar>
 <div class="gap-4 md:grid md:grid-cols-4">
-  <TableOfContents />
   <div class="markdown md:col-span-3">
     <!-- Input is sanitized with rehype -->
     {@html data.rendered}
   </div>
+  <TableOfContents />
 </div>
 <svelte:head>
   <title>Lesson From {formattedDate}</title>
