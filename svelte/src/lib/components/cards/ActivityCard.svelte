@@ -13,6 +13,7 @@
     Trash2,
     WholeWord,
   } from "lucide-svelte";
+  import Merger from "../UI/toolbar/Merger.svelte";
 
   let { activity }: { activity: ActivityLog } = $props();
 
@@ -83,15 +84,14 @@
   {/if}
 {/snippet}
 <a
-  class="bg-default flex items-center justify-between gap-3 rounded-xl border border-stone-200 p-2 shadow-sm hover:shadow-md dark:border-stone-800"
+  class="bg-default ring-default flex items-center justify-between gap-3 rounded-2xl p-2 shadow-md"
   {href}
 >
   <!-- Icon -->
-  <div
-    class="flex-shrink-0 rounded-full bg-stone-100 p-2 dark:bg-stone-950 dark:ring-stone-700"
-  >
+
+  <Merger>
     {@render icon(activity)}
-  </div>
+  </Merger>
 
   <!-- Content -->
   <div class="flex flex-1 flex-col overflow-hidden">

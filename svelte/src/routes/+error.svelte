@@ -107,14 +107,16 @@
         <UniButton
           type="button"
           variant="primary"
+          iconOnly={false}
           Icon={House}
-          href="/{page.params.role}/dashboard">Back to Safety</UniButton
+          href={`/${page.params.role || "s"}/dashboard`}
+          >Back to Safety</UniButton
         >
         <UniButton
           type="button"
-          variant="ghost"
           Icon={Send}
-          href="https://t.me/noxlovette">Contact Support</UniButton
+          href="https://t.me/noxlovette"
+          iconOnly={false}>Contact Support</UniButton
         >
       </div>
     </div>

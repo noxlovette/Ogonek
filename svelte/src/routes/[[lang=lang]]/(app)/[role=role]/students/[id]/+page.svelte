@@ -30,11 +30,7 @@
     </Title3>
   </div>
 
-  <UniButton
-    Icon={Pencil}
-    href="/t/students/{student.id}/edit"
-    variant="secondary">Edit</UniButton
-  >
+  <UniButton Icon={Pencil} href="/t/students/{student.id}/edit">Edit</UniButton>
 </Toolbar>
 <grid class="grid gap-4 md:grid-cols-2">
   <GridCell>

@@ -77,7 +77,7 @@
       {/if}
     </div>
     <Turnstile />
-    <UniButton Icon={DoorOpen} type="submit" variant="primary" fullWidth={true}
+    <UniButton Icon={DoorOpen} type="submit" variant="primary"
       >Create Account</UniButton
     >
   </form>

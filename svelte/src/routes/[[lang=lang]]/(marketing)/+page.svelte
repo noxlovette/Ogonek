@@ -16,10 +16,15 @@
     <IntroCard title={m.flashcards()}>{m.calm_blue_warbler_zoom()}</IntroCard>
   </grid>
   <div class="grid grid-cols-2 gap-3">
-    <UniButton Icon={Flame} href="/auth/login" variant="secondary"
+    <UniButton iconOnly={false} Icon={Flame} href="/auth/login"
       >{m.logIn()}</UniButton
     >
-    <UniButton Icon={FlameKindling} href="/auth/signup" variant="primary">
+    <UniButton
+      iconOnly={false}
+      Icon={FlameKindling}
+      href="/auth/signup"
+      variant="primary"
+    >
       {m.signUp()}</UniButton
     >
   </div>

@@ -32,7 +32,7 @@
   <Toolbar>
     <LargeTitle>{student.name}</LargeTitle>
     <div class="flex items-center space-x-3">
-      <UniButton variant="secondary" href="." Icon={Ban}>Cancel</UniButton>
+      <UniButton href="." Icon={Ban}>Cancel</UniButton>
       <UniButton variant="primary" type="submit" Icon={Check}>Save</UniButton>
       <UniButton
         variant="danger"
