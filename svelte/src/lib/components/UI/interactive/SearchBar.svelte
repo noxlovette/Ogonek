@@ -1,7 +1,7 @@
 <script lang="ts">
   import { X, Search } from "lucide-svelte";
   import { searchTerm } from "$lib/stores";
-  import UniButton from "../UniButton.svelte";
+  import UniButton from "../forms/UniButton.svelte";
 </script>
 
 <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">

@@ -12,7 +12,7 @@ export const POST: RequestHandler = async ({ request, fetch }) => {
   });
 
   if (!response.ok) {
-    const error = await response.text();
+    const error = (await response.text()) as any;
     logger.error("Error initializing multipart upload:", error);
     return new Response(error, { status: response.status });
   }

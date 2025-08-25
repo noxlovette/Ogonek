@@ -16,7 +16,7 @@
   import type { PageData } from "./$types";
   import PrioritySlider from "$lib/components/UI/forms/PrioritySlider.svelte";
   import { m } from "$lib/paraglide/messages";
-  import VStack from "$lib/components/UI/toolbar/VStack.svelte";
+  import VStack from "$lib/components/UI/VStack.svelte";
 
   let { data }: { data: PageData } = $props();
   let { task, files } = data;

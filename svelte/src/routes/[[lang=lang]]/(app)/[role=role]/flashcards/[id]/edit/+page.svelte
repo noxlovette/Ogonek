@@ -16,7 +16,7 @@
   import { enhance } from "$app/forms";
   import { page } from "$app/state";
   import { Plus, Ban, Check, Trash2, Import } from "lucide-svelte";
-  import UniButton from "$lib/components/UI/UniButton.svelte";
+  import UniButton from "$lib/components/UI/forms/UniButton.svelte";
   import { pushState } from "$app/navigation";
   import { onMount } from "svelte";
   import { m } from "$lib/paraglide/messages.js";

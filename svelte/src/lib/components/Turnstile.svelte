@@ -48,7 +48,6 @@
           sitekey: "0x4AAAAAAA6Es9VtsFFGCAbw",
           theme: "auto",
           callback: (token: string) => {
-            // Update reactive state instead of DOM manipulation
             turnstileToken = token;
           },
           "error-callback": () => {
@@ -57,7 +56,7 @@
           },
         });
       }
-    } catch (error) {
+    } catch (error: any) {
       logger.error("Turnstile initialization failed:", error);
       hasError = true;
     } finally {

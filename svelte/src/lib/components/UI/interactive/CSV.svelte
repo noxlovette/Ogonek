@@ -70,7 +70,6 @@
       header: true,
       delimiter: ";",
       complete: (results) => {
-        logger.info("parsing complete", results);
         if (results.data && results.data.length) {
           const csvData = results.data as CSVRow[];
 
@@ -194,7 +193,7 @@
           frontKeys.find((key) => csvHeaders.includes(key)) || "wrd";
         importBackColumn =
           backKeys.find((key) => csvHeaders.includes(key)) || "";
-      } catch (err) {
+      } catch (err: any) {
         logger.error("Failed to parse .reword file:", err);
       }
     }

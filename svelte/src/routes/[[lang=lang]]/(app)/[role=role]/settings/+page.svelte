@@ -2,7 +2,6 @@
   import {
     LargeTitle,
     Input,
-    Panel,
     UniButton,
     Toolbar,
     Divider,
@@ -17,7 +16,6 @@
 
   import { Check, LogOut, Key, Bell, Merge, Ban } from "lucide-svelte";
   import { m } from "$lib/paraglide/messages";
-  import SettingsRow from "$lib/components/UI/SettingsRow.svelte";
   import {
     user,
     assigneeStore,
@@ -29,9 +27,8 @@
     profile,
   } from "$lib/stores";
   import { goto } from "$app/navigation";
-  import Title1 from "$lib/components/typography/Title1.svelte";
   import Headline from "$lib/components/typography/Headline.svelte";
-  import VStack from "$lib/components/UI/toolbar/VStack.svelte";
+  import VStack from "$lib/components/UI/VStack.svelte";
   import ThemeToggler from "$lib/components/UI/interactive/ThemeToggler.svelte";
 
   let disabled = $state(true);

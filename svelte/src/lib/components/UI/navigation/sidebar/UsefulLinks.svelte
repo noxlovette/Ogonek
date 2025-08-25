@@ -1,9 +1,5 @@
 <script lang="ts">
-  import {
-    Forvo,
-    Dictionary,
-    Thesaurus,
-  } from "$lib/components/UI/sidebar/elements";
+  import { Forvo, Dictionary, Thesaurus } from "$lib/components/UI";
 
   let elements = [Forvo, Dictionary, Thesaurus];
 </script>

@@ -3,7 +3,7 @@
   import type { ComponentType, Snippet } from "svelte";
   import type { MouseEventHandler } from "svelte/elements";
   import ConfirmDialogue from "./ConfirmDialogue.svelte";
-  import { Headline } from "../typography";
+  import { Headline } from "../../typography";
 
   type ButtonVariant = "primary" | "danger" | "prominent";
 

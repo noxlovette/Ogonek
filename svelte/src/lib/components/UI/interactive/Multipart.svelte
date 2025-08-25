@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onDestroy } from "svelte";
-  import UniButton from "../UniButton.svelte";
+  import UniButton from "../forms/UniButton.svelte";
   import { Ban, Check, Upload, X } from "lucide-svelte";
   import { Caption1 } from "$lib/components/typography";
   import logger from "$lib/logger";
@@ -192,7 +192,7 @@
 
       fileState.status = "complete";
       onComplete(fileIdLocal);
-    } catch (error) {
+    } catch (error: any) {
       logger.error(`Upload failed for ${file.name}:`, error);
       fileState.status = "error";
       fileState.errorMessage = "Upload failed";
@@ -209,7 +209,7 @@
               s3Key,
             }),
           });
-        } catch (abortError) {
+        } catch (abortError: any) {
           logger.error("Failed to abort upload:", abortError);
         }
       }

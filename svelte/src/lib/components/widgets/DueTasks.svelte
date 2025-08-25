@@ -4,7 +4,7 @@
   import { enhance } from "$app/forms";
   import { m } from "$lib/paraglide/messages";
   import { Lightbulb } from "lucide-svelte";
-  import UniButton from "../UI/UniButton.svelte";
+  import UniButton from "../UI/forms/UniButton.svelte";
   import { page } from "$app/state";
   import type { TaskSmall } from "$lib/types";
   import { TaskCard } from "$lib/components/cards";

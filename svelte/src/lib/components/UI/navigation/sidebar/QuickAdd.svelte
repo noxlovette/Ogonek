@@ -1,8 +1,8 @@
 <script lang="ts">
-  import UniButton from "$lib/components/UI/UniButton.svelte";
+  import UniButton from "$lib/components/UI/forms/UniButton.svelte";
   import { BookOpenCheck, ListTodo, WholeWord } from "lucide-svelte";
   import { enhance } from "$app/forms";
-  import { HStack } from "../../toolbar";
+  import HStack from "../../HStack.svelte";
 </script>
 
 <HStack styling="gap-2">

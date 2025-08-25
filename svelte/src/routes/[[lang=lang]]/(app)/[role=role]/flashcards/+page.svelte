@@ -15,7 +15,7 @@
   import { enhanceForm } from "$lib/utils";
   import { page } from "$app/state";
   import type { TableConfig, DeckSmall } from "$lib/types";
-  import { ArrowBigRight, Plus, PlusCircle, ShoppingBag } from "lucide-svelte";
+  import { GraduationCap, Plus } from "lucide-svelte";
   import { m } from "$lib/paraglide/messages";
   import {
     searchTerm,
@@ -95,7 +95,7 @@
       {#if data.cards?.length}
         <UniButton
           variant="primary"
-          Icon={ArrowBigRight}
+          Icon={GraduationCap}
           href="flashcards/learn">{m.helpful_slow_flea_catch()}</UniButton
         >
       {/if}

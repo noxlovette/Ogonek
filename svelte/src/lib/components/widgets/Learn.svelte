@@ -1,7 +1,7 @@
 <script lang="ts">
   import { m } from "$lib/paraglide/messages";
   import { ArrowBigRight, Clock, Target, Zap, Calendar } from "lucide-svelte";
-  import UniButton from "../UI/UniButton.svelte";
+  import UniButton from "../UI/forms/UniButton.svelte";
   import {
     Body,
     Headline,

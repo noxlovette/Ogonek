@@ -29,7 +29,7 @@
   import { Plus } from "lucide-svelte";
   import { m } from "$lib/paraglide/messages.js";
   import LoadingCard from "$lib/components/cards/LoadingCard.svelte";
-  import VStack from "$lib/components/UI/toolbar/VStack.svelte";
+  import VStack from "$lib/components/UI/VStack.svelte";
 
   let { data } = $props();
 

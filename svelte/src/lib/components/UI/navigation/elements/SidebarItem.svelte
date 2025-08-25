@@ -1,22 +1,22 @@
 <script lang="ts">
-  import { sidebar } from "$lib/stores/sidebar";
   import { page } from "$app/state";
   import { SquareArrowUpRight } from "lucide-svelte";
   import { Headline } from "$lib/components/typography";
+  import NotificationBadge from "../../NotificationBadge.svelte";
 
   let {
     Icon,
     href = "/",
     name,
     external = false,
-    badge = undefined,
+    badge = 0,
     disabled = false,
   }: {
     Icon?: any;
     href: string;
     name: string;
     external?: boolean;
-    badge?: string | number;
+    badge?: number;
     disabled?: boolean;
   } = $props();
 
@@ -28,13 +28,11 @@
   );
 
   const baseClasses =
-    "group relative p-1 px-2 flex items-center gap-2 font-medium rounded-2xl";
+    "group relative p-1 px-2 hidden md:flex items-center gap-2 font-medium rounded-2xl";
 
   const iconClasses = $derived(() => {
     return `size-5 ${isActive ? "text-accent" : "text-stone-500 dark:text-stone-400"}`;
   });
-
-  const badgeVisible = $derived(badge && badge != 0 ? true : false);
 </script>
 
 <a
@@ -57,18 +55,7 @@
       {name}
     </Headline>
 
-    {#if badgeVisible}
-      <div
-        class="ml-2 flex h-6 min-w-[24px] animate-pulse items-center justify-center
-            rounded-full border
-            border-red-400/20 bg-red-500 px-2 text-xs
-            font-bold text-white
-            hover:animate-none dark:bg-red-600
-          "
-      >
-        {typeof badge === "number" && badge > 10 ? "10+" : badge}
-      </div>
-    {/if}
+    <NotificationBadge {badge} />
 
     {#if external}
       <div

@@ -140,7 +140,7 @@ async function handleTokenRefresh(event: RequestEvent) {
     await redis.set(`${refreshCacheKey}:result`, JSON.stringify(user), "EX", 3);
 
     return user;
-  } catch (error) {
+  } catch (error: any) {
     logger.error("Token refresh failed:", error);
     throw redirect(302, "/auth/login");
   } finally {
