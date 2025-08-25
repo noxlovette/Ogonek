@@ -89,9 +89,7 @@
 >
   <!-- Icon -->
 
-  <Merger>
-    {@render icon(activity)}
-  </Merger>
+  {@render icon(activity)}
 
   <!-- Content -->
   <div class="flex flex-1 flex-col overflow-hidden">

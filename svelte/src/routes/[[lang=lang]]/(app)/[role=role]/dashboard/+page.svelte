@@ -27,7 +27,12 @@
 </script>
 
 <Toolbar>
-  <LargeTitle>{greetings[greetingType]}</LargeTitle>
+  <div class="md:hidden">
+    <LargeTitle>Dashboard</LargeTitle>
+  </div>
+  <div class="hidden md:block">
+    <LargeTitle>{greetings[greetingType]}</LargeTitle>
+  </div>
   <Divider />
   <Merger>
     <UniButton href="settings" Icon={Settings}>
@@ -36,7 +41,7 @@
   </Merger>
 </Toolbar>
 
-<div class="grid gap-8 lg:grid-cols-3">
+<div class="grid items-stretch gap-8 lg:grid-cols-3">
   <DueTasksWidget tasks={data.tasks} />
   <LearnWidget cardsCount={data.badges.dueCards} />
   <ActivityFeedWidget activities={data.activity} />

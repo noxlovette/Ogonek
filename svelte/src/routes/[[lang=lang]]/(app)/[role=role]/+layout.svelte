@@ -37,7 +37,7 @@
   setProfile(data.profile);
 </script>
 
-<div class="flex flex-row gap-8 p-6">
+<div class="flex flex-row gap-4 p-2 md:gap-6 md:p-5 lg:gap-8 lg:p-6">
   <div class="hidden w-max flex-col md:block">
     <Sidebar
       ><Dashboard />

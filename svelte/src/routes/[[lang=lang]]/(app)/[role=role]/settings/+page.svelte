@@ -9,6 +9,8 @@
     HStack,
     Title3,
     Caption1,
+    Title1,
+    Title2,
   } from "$lib/components";
   import { enhance } from "$app/forms";
   import { page } from "$app/state";
@@ -112,9 +114,9 @@
       </Merger>
     </VStack>
   </Toolbar>
-  <div class="grid grid-cols-2 gap-4">
+  <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
     <HStack>
-      <Title3>Profile Settings</Title3>
+      <Title1>Profile Settings</Title1>
 
       <HStack>
         <Input
@@ -135,7 +137,7 @@
       <!-- Teacher Settings -->
       {#if page.params.role === "t"}
         <Divider />
-        <Title3>Teacher Settings</Title3>
+        <Title2>Teacher Settings</Title2>
         <Input
           bind:disabled
           placeholder="Your Telegram ID"
@@ -153,7 +155,7 @@
 
     <HStack>
       <HStack>
-        <Title3>Notifications</Title3>
+        <Title1>Notifications</Title1>
         <VStack>
           <Headline>
             {m.stale_quick_mantis_stab()}

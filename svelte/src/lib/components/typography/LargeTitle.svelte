@@ -3,7 +3,7 @@
 </script>
 
 <h1
-  class="text-center text-4xl font-bold tracking-tight md:text-left md:text-5xl {styling}"
+  class=" truncate text-center text-3xl font-bold tracking-tight md:text-left md:text-5xl {styling}"
 >
   {@render children?.()}
 </h1>

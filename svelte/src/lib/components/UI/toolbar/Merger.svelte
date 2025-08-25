@@ -3,7 +3,7 @@
 </script>
 
 <div
-  class="ring-default flex gap-3 rounded-full p-1 shadow-md dark:bg-stone-900"
+  class="ring-default flex gap-1 rounded-full shadow-md md:gap-2 lg:gap-3 dark:bg-stone-900"
 >
   {@render children()}
 </div>

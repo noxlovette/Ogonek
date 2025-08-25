@@ -22,8 +22,8 @@
   );
 </script>
 
-<a {href} class="relative flex items-center p-2">
-  <HStack>
+<a {href} class="relative flex items-center p-2 md:hidden">
+  <HStack styling="items-center">
     <div class="relative">
       <Icon
         class={isActive ? "text-accent" : "text-stone-500 dark:text-stone-400"}

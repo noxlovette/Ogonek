@@ -51,7 +51,7 @@
   }
 
   const baseClasses = `
-  flex items-center justify-center flex-1 p-2
+  flex items-center justify-center flex-1 p-2 md:p-3
   rounded-full font-medium focus-visible:outline-none
   disabled:opacity-50 disabled:pointer-events-none
   backdrop-blur-sm gap-2
