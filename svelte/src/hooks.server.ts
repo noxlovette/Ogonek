@@ -227,7 +227,7 @@ export const handleError: HandleServerError = async ({
 
   logger.error({
     errorID,
-    message: error.message ?? message as,
+    message: error.message ?? message,
     status,
     request: requestContext,
   });
