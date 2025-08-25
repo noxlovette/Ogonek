@@ -1,30 +1,37 @@
 <script lang="ts">
   import {
-    H1,
-    H2,
+    LargeTitle,
     Input,
-    Panel,
     UniButton,
-    HeaderEmbellish,
-    Caption,
+    Toolbar,
+    Divider,
+    Merger,
+    HStack,
+    Title3,
+    Caption1,
+    Title1,
+    Title2,
   } from "$lib/components";
   import { enhance } from "$app/forms";
-  import { goto } from "$app/navigation";
   import { page } from "$app/state";
   import { enhanceForm } from "$lib/utils";
+
+  import { Check, LogOut, Key, Bell, Merge, Ban } from "lucide-svelte";
+  import { m } from "$lib/paraglide/messages";
   import {
     user,
-    profile,
-    notification,
-    clearUser,
     assigneeStore,
-    pageSize,
+    notification,
     searchTerm,
+    pageSize,
     currentPage,
+    clearUser,
+    profile,
   } from "$lib/stores";
-
-  import { Check, LogOut, Key, Bell } from "lucide-svelte";
-  import { m } from "$lib/paraglide/messages";
+  import { goto } from "$app/navigation";
+  import Headline from "$lib/components/typography/Headline.svelte";
+  import VStack from "$lib/components/UI/VStack.svelte";
+  import ThemeToggler from "$lib/components/UI/interactive/ThemeToggler.svelte";
 
   let disabled = $state(true);
 
@@ -56,7 +63,6 @@
 
 <form
   method="POST"
-  class="flex flex-col gap-3"
   use:enhance={enhanceForm({
     messages: {
       success: m.changesSaved(),
@@ -67,127 +73,144 @@
       },
     },
   })}
+  class="flex flex-col gap-4"
   action="?/update"
 >
-  <HeaderEmbellish>
-    <div class="flex flex-col gap-3 md:flex-row md:gap-4">
-      <H1>{m.settings()}</H1>
-      <div class="flex gap-3 md:gap-4">
-        <UniButton
-          Icon={Key}
-          variant="primary"
-          onclick={() => {
-            disabled = !disabled;
-          }}
-          type="button"
-        >
-          {disabled ? m.edit() : m.editing()}
-        </UniButton>
-        <UniButton
-          Icon={Check}
-          type="submit"
-          variant="primary"
-          disable={disabled}
-          formaction="?/update">{m.save()}</UniButton
-        >
-      </div>
-    </div>
-  </HeaderEmbellish>
+  <Toolbar>
+    <LargeTitle>{m.settings()}</LargeTitle>
 
-  <div class="grid gap-3 md:grid-cols-2">
-    <Panel>
-      <div>
-        <H2>{m.mellow_mild_pig_boil()}</H2>
-      </div>
+    <Divider />
+    <VStack>
+      <ThemeToggler />
+      <Merger>
+        {#if disabled}
+          <UniButton
+            Icon={Key}
+            variant="prominent"
+            onclick={() => {
+              disabled = !disabled;
+            }}
+            type="button"
+          >
+            {disabled ? m.edit() : m.editing()}
+          </UniButton>
+        {:else}
+          <UniButton
+            onclick={() => {
+              disabled = !disabled;
+            }}
+            Icon={Ban}
+          >
+            {m.cancel()}
+          </UniButton>
+          <UniButton
+            Icon={Check}
+            type="submit"
+            variant="prominent"
+            disable={disabled}
+            formaction="?/update">{m.save()}</UniButton
+          >
+        {/if}
+      </Merger>
+    </VStack>
+  </Toolbar>
+  <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+    <HStack>
+      <Title1>Profile Settings</Title1>
 
-      <div class="grid gap-3">
-        {#each defaultFields as field, index (index)}
-          <div>
-            <Input
-              type={field.type}
-              placeholder={field.label}
-              labelName={field.label}
-              name={field.id}
-              bind:disabled
-              value={field.storeKey
-                ? $profile[field.storeKey]
-                : $user[field.id]}
-            />
-          </div>
-        {/each}
-      </div></Panel
-    >
-    {#if page.params.role === "t"}
-      <Panel>
-        <H2>{m.real_best_gibbon_dazzle()}</H2>
-        <div class="grid gap-3">
-          {#each teacherFields as field, index (index)}
-            <div>
-              <Input
-                type={field.type}
-                placeholder={field.label}
-                labelName={field.label}
-                name={field.id}
-                bind:disabled
-                value={field.storeKey
-                  ? $profile[field.storeKey]
-                  : $user[field.id]}
-              />
-            </div>
-          {/each}
-          {#if $profile.zoomUrl === null}
-            <Caption>Please define your Zoom URL</Caption>
-          {/if}
-        </div>
-      </Panel>
-    {/if}
+      <HStack>
+        <Input
+          bind:disabled
+          placeholder="Name"
+          name="name"
+          value={$user.name}
+        />
+        <Input
+          bind:disabled
+          type="email"
+          placeholder="Email"
+          name="email"
+          value={$user.email}
+        />
+      </HStack>
+
+      <!-- Teacher Settings -->
+      {#if page.params.role === "t"}
+        <Divider />
+        <Title2>Teacher Settings</Title2>
+        <Input
+          bind:disabled
+          placeholder="Your Telegram ID"
+          name="telegramId"
+          value={$profile.telegramId}
+        />
+        <Input
+          bind:disabled
+          placeholder="The link for your lessons"
+          name="videoCallUrl"
+          value={$profile.videoCallUrl}
+        />
+      {/if}
+    </HStack>
+
+    <HStack>
+      <HStack>
+        <Title1>Notifications</Title1>
+        <VStack>
+          <Headline>
+            {m.stale_quick_mantis_stab()}
+          </Headline>
+          <Divider></Divider>
+          <UniButton
+            variant="primary"
+            href="https://t.me/fz_notif_bot"
+            Icon={Bell}
+            iconOnly={false}
+          >
+            {m.suave_teary_emu_expand()}
+          </UniButton>
+        </VStack>
+        <Caption1>
+          {m.broad_clear_snake_peel()}
+        </Caption1>
+      </HStack>
+      <!-- Logout Section -->
+      <HStack>
+        <VStack>
+          <Headline>Log Out</Headline>
+          <Divider></Divider>
+          <form
+            action="?/logout"
+            method="POST"
+            class="flex flex-col"
+            use:enhance={enhanceForm({
+              handlers: {
+                redirect: async (result) => {
+                  clearUser();
+                  assigneeStore.reset();
+                  pageSize.reset();
+                  currentPage.reset();
+                  searchTerm.reset();
+                  notification.set({ message: "Bye!", type: "success" });
+                  goto(result.location);
+                },
+              },
+            })}
+          >
+            <UniButton
+              variant="danger"
+              type="submit"
+              Icon={LogOut}
+              iconOnly={false}
+            >
+              {m.seemly_any_ostrich_believe()}
+            </UniButton>
+          </form>
+        </VStack>
+        <Caption1>
+          {m.odd_tough_shell_dust()}
+        </Caption1>
+      </HStack>
+    </HStack>
   </div>
-
-  <Panel>
-    <div class="flex items-center gap-3">
-      <H2>{m.stale_quick_mantis_stab()}</H2>
-    </div>
-
-    <p class="text-sm text-stone-700 dark:text-stone-300">
-      {m.broad_clear_snake_peel()}
-    </p>
-
-    <div class="flex">
-      <UniButton variant="primary" Icon={Bell} href="https://t.me/fz_notif_bot">
-        {m.suave_teary_emu_expand()}
-      </UniButton>
-    </div>
-  </Panel>
-</form>
-<form
-  action="?/logout"
-  method="POST"
-  class="flex flex-col"
-  use:enhance={enhanceForm({
-    handlers: {
-      redirect: async (result) => {
-        clearUser();
-        assigneeStore.reset();
-        pageSize.reset();
-        currentPage.reset();
-        searchTerm.reset();
-        notification.set({ message: "Bye!", type: "success" });
-        goto(result.location);
-      },
-    },
-  })}
->
-  <Panel>
-    <p class="text-sm text-stone-700 dark:text-stone-300">
-      {m.odd_tough_shell_dust()}
-    </p>
-    <div>
-      <UniButton
-        variant="danger"
-        type="submit"
-        Icon={LogOut}
-        formaction="?/logout">{m.seemly_any_ostrich_believe()}</UniButton
-      >
-    </div>
-  </Panel>
 </form>

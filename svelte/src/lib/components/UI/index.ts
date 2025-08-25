@@ -1,7 +1,9 @@
-export * from "./forms/index";
-export * from "./interactive/index";
-export * from "./navigation/index";
-export { default as Panel } from "./Panel.svelte";
+export * from "./forms";
+export * from "./interactive";
+export * from "./navigation";
 export { default as TableOfContents } from "./TableOfContents.svelte";
-export { default as UniButton } from "./UniButton.svelte";
+export * from "./toolbar";
 export { default as WorkArea } from "./WorkArea.svelte";
+
+export { default as HStack } from "./HStack.svelte";
+export { default as VStack } from "./VStack.svelte";

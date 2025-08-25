@@ -1,0 +1,100 @@
+services:
+  svelte:
+    image: ghcr.io/noxlovette/svelte-ogonek:1.7.3
+    container_name: svelte-fl-prod
+    env_file:
+      - ./.env.svelte
+    ports:
+      - "3333:3000"
+    networks:
+      - web
+      - internal
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  redis:
+    image: redis/redis-stack-server:latest
+    container_name: redis-fl-prod
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - web
+      - internal
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+  axum:
+    image: ghcr.io/noxlovette/axum-ogonek:1.7.4
+    container_name: axum-fl-prod
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    env_file:
+      - ./.env.axum
+    ports:
+      - "3001:3000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - internal
+      - web 
+    dns:  
+      - 8.8.8.8
+      - 1.1.1.1
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+
+  postgres:
+    image: postgres:17-alpine
+    container_name: pg-fl-prod
+    restart: unless-stopped
+    env_file: ./.env.postgres
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - internal
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-U", "postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+
+volumes:
+  db-data:
+    name: db-fl-prod
+
+networks:
+  web:
+    name: web-fl
+  internal:
+    name: internal-fl
+    internal: true
+

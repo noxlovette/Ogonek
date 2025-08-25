@@ -1,9 +1,7 @@
 name: ogonek-staging
 services:
   svelte:
-    build:
-      context: ../svelte
-      dockerfile: Dockerfile
+    image: ghcr.io/noxlovette/svelte-ogonek:1.7.3
     container_name: svelte-ogonek-staging
     ports:
       - "3002:3000"
@@ -12,7 +10,7 @@ services:
     depends_on:
       - axum
   redis:
-    image: redis/redis-stack:latest
+    image: redis/redis-stack-server:latest
     container_name: redis-ogonek-staging
     healthcheck:
       test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
@@ -43,10 +41,10 @@ services:
       postgres:
         condition: service_healthy
   postgres:
-    image: postgres:alpine
+    image: postgres:17-alpine
     container_name: pg-ogonek-staging
     restart: always
-    ports: 
+    ports:
       - "5433:5432"
     volumes:
       - db-data:/var/lib/postgresql/data

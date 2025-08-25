@@ -46,7 +46,7 @@
 </script>
 
 <div class="flex flex-col gap-3">
-  <!-- Priority Label -->
+  <!-- Priority Caption1 -->
   <div class="flex items-center justify-between">
     <p class={`text-sm font-medium ${config.color}`}>
       {config.label}
@@ -65,7 +65,7 @@
         onclick={() => setPriority(level)}
         {disabled}
         class={`
-            focus:ring-cacao-500 h-4 w-4 rounded-full border-2 transition-all 
+            focus:ring-accent h-4 w-4 rounded-full border-2  
             duration-200 hover:scale-110 focus:ring-2 focus:ring-offset-2 focus:outline-none active:scale-95
             disabled:cursor-not-allowed disabled:hover:scale-100
             ${

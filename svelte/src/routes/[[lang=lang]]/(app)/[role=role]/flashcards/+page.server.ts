@@ -15,7 +15,7 @@ export const load: PageServerLoad = async ({ fetch, url }) => {
   const per_page = url.searchParams.get("per_page") || "50";
 
   return {
-    decksResponse: (dev ? delay(2500) : Promise.resolve())
+    decksResponse: (dev ? delay(100) : Promise.resolve())
       .then(() => fetch(routes.decks.all(search, assignee, page, per_page)))
       .then((res) => res.json()) as Promise<PaginatedResponse<DeckSmall>>,
   };

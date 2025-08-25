@@ -1,19 +1,11 @@
 @theme {
   --font-sans:
-    ui-sans-serif, -apple-system, system-ui, "Helvetica Neue", Helvetica,
+    -apple-system, BlinkMacSystemFont, "Inter", "Helvetica Neue", Helvetica,
     "Segoe UI", Roboto, Arial, "Noto Sans", sans-serif;
 
   --font-serif: "Lora", system-ui, -apple-system;
 
-  --color-cacao-50: oklch(0.98 0.008 35);
-  --color-cacao-100: oklch(0.94 0.025 35);
-  --color-cacao-200: oklch(0.89 0.055 35);
-  --color-cacao-300: oklch(0.82 0.095 35);
-  --color-cacao-400: oklch(0.75 0.125 35);
-  --color-cacao-500: oklch(0.67 0.145 35);
-  --color-cacao-600: oklch(0.58 0.155 35);
-  --color-cacao-700: oklch(0.48 0.135 35);
-  --color-cacao-800: oklch(0.36 0.115 35);
-  --color-cacao-900: oklch(0.25 0.095 35);
-  --color-cacao-950: oklch(0.18 0.075 35);
+  --color-accent: #df7055;
+  --color-secondary: #2a324b;
+  --color-secondary-dark: #767b91;
 }

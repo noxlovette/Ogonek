@@ -3,10 +3,10 @@
   import { enhance } from "$app/forms";
   import { clickOutside } from "$lib/actions";
   import { notification } from "$lib/stores";
-  import { PersonStanding, X, Copy } from "lucide-svelte";
-  import UniButton from "../UniButton.svelte";
-  import { Caption } from "$lib/components/typography";
-  import H4 from "$lib/components/typography/H4.svelte";
+  import { X, Copy, Plus } from "lucide-svelte";
+  import UniButton from "./UniButton.svelte";
+  import { Caption1 } from "$lib/components/typography";
+  import Headline from "$lib/components/typography/Headline.svelte";
   import Toggler from "../interactive/Toggler.svelte";
 
   let showPopover = false;
@@ -30,12 +30,12 @@
   }
 </script>
 
-<div class="relative inline-block">
+<div class="relative flex size-full">
   <UniButton
     type="button"
     onclick={() => (showPopover = !showPopover)}
     variant="primary"
-    Icon={PersonStanding}
+    Icon={Plus}
   >
     Invite Students
   </UniButton>
@@ -45,7 +45,7 @@
       use:clickOutside={() => (showPopover = false)}
     >
       <div class="flex items-center justify-between">
-        <H4>Invite Students</H4>
+        <Headline>Invite Students</Headline>
         <button
           class="text-stone-400 hover:text-stone-700"
           type="button"
@@ -70,21 +70,16 @@
           },
         })}
       >
-        <Caption>Do they have an account?</Caption>
+        <Caption1>Do they have an account?</Caption1>
         <Toggler name="isRegistered" title="Yes"></Toggler>
-        <UniButton
-          type="submit"
-          size="sm"
-          variant="primary"
-          Icon={PersonStanding}
-        >
+        <UniButton type="submit" variant="primary" Icon={Plus}>
           Generate Link
         </UniButton>
       </form>
 
       {#if generatedLink}
         <div class="mt-3 space-y-1">
-          <Caption>Invite Link:</Caption>
+          <Caption1>Invite Link:</Caption1>
           <div class="flex items-center gap-1">
             <input
               bind:this={linkInput}
@@ -95,7 +90,7 @@
             <button
               type="button"
               onclick={copyLink}
-              class="rounded p-2 text-stone-500 transition-colors hover:bg-stone-100 hover:text-stone-700 dark:hover:bg-stone-700 dark:hover:text-stone-300"
+              class="rounded p-2 text-stone-500 hover:bg-stone-100 hover:text-stone-700 dark:hover:bg-stone-700 dark:hover:text-stone-300"
               title="Copy link"
             >
               <Copy size={14} />

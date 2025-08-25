@@ -31,11 +31,10 @@
 </script>
 
 <div
-  class="relative inline-flex w-max rounded-full bg-stone-200/60 p-1 dark:bg-stone-800/60"
+  class="relative inline-flex w-max rounded-full bg-stone-200/60 p-1 dark:bg-stone-800"
 >
-  <!-- Sliding background indicator -->
   <div
-    class="absolute top-1 h-8 w-10 rounded-full bg-white shadow-sm transition-transform duration-200 ease-out dark:bg-stone-600"
+    class="absolute top-1 h-8 w-10 rounded-full bg-white shadow-sm duration-200 ease-out dark:bg-stone-600"
     style="transform: translateX({theme === 'light'
       ? '0px'
       : theme === 'dark'
@@ -43,11 +42,11 @@
         : '80px'})"
   ></div>
 
-  <!-- Theme buttons -->
   <button
     onclick={() => setTheme("light")}
-    class="relative z-10 flex h-8 w-10 items-center justify-center rounded-md transition-colors duration-150"
-    class:text-cacao-500={theme === "light"}
+    type="button"
+    class="relative z-10 flex h-8 w-10 items-center justify-center rounded-md duration-150"
+    class:text-accent={theme === "light"}
     class:text-stone-600={theme !== "light"}
     aria-label="Light theme"
   >
@@ -56,8 +55,9 @@
 
   <button
     onclick={() => setTheme("dark")}
-    class="relative z-10 flex h-8 w-10 items-center justify-center rounded-md transition-colors duration-150"
-    class:text-cacao-500={theme === "dark"}
+    type="button"
+    class="relative z-10 flex h-8 w-10 items-center justify-center rounded-md duration-150"
+    class:text-accent={theme === "dark"}
     class:text-stone-600={theme !== "dark"}
     aria-label="Dark theme"
   >
@@ -66,8 +66,9 @@
 
   <button
     onclick={() => setTheme("auto")}
-    class="relative z-10 flex h-8 w-10 items-center justify-center rounded-md transition-colors duration-150"
-    class:text-cacao-500={theme === "auto"}
+    type="button"
+    class="relative z-10 flex h-8 w-10 items-center justify-center rounded-md duration-150"
+    class:text-accent={theme === "auto"}
     class:text-stone-600={theme !== "auto"}
     aria-label="Auto theme"
   >

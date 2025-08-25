@@ -14,7 +14,7 @@ export const POST: RequestHandler = async ({ request, fetch, url }) => {
   });
 
   if (!response.ok) {
-    const error = await response.text();
+    const error = (await response.text()) as any;
     logger.error("Error completing multipart upload:", error);
     return new Response(error, { status: response.status });
   }

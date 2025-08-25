@@ -2,10 +2,12 @@
   import { enhance } from "$app/forms";
   import {
     Editor,
-    H1,
-    AssigneeSelector,
+    LargeTitle,
     UniButton,
-    HeaderEmbellish,
+    Toolbar,
+    Divider,
+    Merger,
+    VStack,
   } from "$lib/components";
   import type { PageData } from "./$types";
   import { enhanceForm } from "$lib/utils";
@@ -21,7 +23,7 @@
 <form
   method="POST"
   action="?/update"
-  class="mb-4 space-y-4"
+  class="gap-4"
   use:enhance={enhanceForm({
     messages: {
       redirect: m.changesSaved(),
@@ -29,30 +31,35 @@
     },
   })}
 >
-  <HeaderEmbellish>
-    <H1>{m.editing()}</H1>
-    <div class="flex items-center space-x-3">
-      <UniButton variant="secondary" Icon={Ban} href=".">{m.cancel()}</UniButton
+  <Toolbar>
+    <LargeTitle>{m.editing()}</LargeTitle>
+    <Divider />
+    <VStack>
+      <Merger>
+        <UniButton Icon={Ban} href=".">{m.cancel()}</UniButton>
+
+        <UniButton
+          variant="danger"
+          formaction="?/delete"
+          Icon={Trash2}
+          confirmText={lesson.title}
+          confirmTitle="Delete Lesson">{m.delete()}</UniButton
+        >
+      </Merger>
+      <Merger>
+        <UniButton variant="prominent" type="submit" Icon={Check}
+          >{m.save()}</UniButton
+        ></Merger
       >
-      <UniButton variant="primary" type="submit" Icon={Check}
-        >{m.save()}</UniButton
-      >
-      <UniButton
-        variant="danger"
-        formaction="?/delete"
-        Icon={Trash2}
-        confirmText={lesson.title}
-        confirmTitle="Delete Lesson">{m.delete()}</UniButton
-      >
-    </div>
-  </HeaderEmbellish>
+    </VStack>
+  </Toolbar>
 
   <input type="hidden" name="id" value={lesson.id} />
   <input type="hidden" name="markdown" value={markdown} />
   <div class="grid grid-cols-1 gap-5 md:grid-cols-3">
     <Input name="title" value={lesson.title} placeholder="Title"></Input>
     <Input name="topic" value={lesson.topic} placeholder="Topic"></Input>
-    <AssigneeSelector item={lesson} />
+    <Input name="assignee" item={lesson} type="assignee" />
   </div>
 </form>
 <Editor bind:markdownContent={markdown} />

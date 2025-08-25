@@ -10,10 +10,10 @@
     FileAudio,
     FileVideo,
     File,
-    Loader2,
+    Loader,
     X,
   } from "lucide-svelte";
-  import Label from "../typography/Label.svelte";
+  import Caption1 from "../typography/Caption1.svelte";
 
   let { file }: { file: FileSmall } = $props();
   let downloading = $state(false);
@@ -82,11 +82,11 @@
     <button
       type="submit"
       disabled={downloading}
-      class="group ring-default relative flex w-full flex-col items-center justify-between gap-4 overflow-clip rounded-md p-2 transition-colors hover:bg-stone-100 dark:hover:bg-stone-800"
+      class="group ring-default relative flex w-full flex-col items-center justify-between gap-4 overflow-clip rounded-md p-2 hover:bg-stone-100 dark:hover:bg-stone-800"
     >
-      <Label>
+      <Caption1>
         {file.name.split(".").shift()?.slice(0, 15)}
-      </Label>
+      </Caption1>
 
       <div class="">
         {@render icon(file.mimeType || "")}
@@ -106,7 +106,7 @@
         <div
           class="absolute inset-0 flex items-center justify-center bg-white/80 dark:bg-stone-900/80"
         >
-          <Loader2 class="size-16 animate-spin" />
+          <Loader class="size-16 animate-spin" />
         </div>
       {/if}
     </button>

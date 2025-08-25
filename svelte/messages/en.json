@@ -88,7 +88,7 @@
   "real_best_gibbon_dazzle": "Teacher Settings",
   "stale_quick_mantis_stab": "Telegram Notifications",
   "broad_clear_snake_peel": "Connect with our Telegram bot to receive instant notifications for new tasks, due dates, and other important updates",
-  "suave_teary_emu_expand": "Enable Notifications",
+  "suave_teary_emu_expand": "Activate",
   "odd_tough_shell_dust": "\"I didn't say it was gonna be easy, Neo. I just said it would be the truth.\"",
   "seemly_any_ostrich_believe": "Log Out",
   "mellow_ok_blackbird_peek": "Enjoy the freedom of markdown to keep track of each lesson you have, get control of your money and time investment.",
@@ -136,5 +136,6 @@
       }
     }
   ],
-  "any_lime_lemur_propel": "Due Tasks"
+  "any_lime_lemur_propel": "Due Tasks",
+  "tiny_happy_rat_bless": "Deleted Successfully"
 }

@@ -1,19 +1,21 @@
 <script lang="ts">
   import {
-    H1,
-    H3,
+    LargeTitle,
     DeckCard,
     Table,
     UniButton,
-    HeaderEmbellish,
+    Toolbar,
     LoadingCard,
     SearchBar,
+    Divider,
+    Merger,
+    VStack,
   } from "$lib/components";
   import { enhance } from "$app/forms";
   import { enhanceForm } from "$lib/utils";
   import { page } from "$app/state";
   import type { TableConfig, DeckSmall } from "$lib/types";
-  import { ArrowBigRight, PlusCircle, ShoppingBag } from "lucide-svelte";
+  import { GraduationCap, Plus } from "lucide-svelte";
   import { m } from "$lib/paraglide/messages";
   import {
     searchTerm,
@@ -24,6 +26,7 @@
   import { goto } from "$app/navigation";
   import EmptySpace from "$lib/components/typography/EmptySpace.svelte";
   import TableSkeleton from "$lib/components/UI/interactive/TableSkeleton.svelte";
+  import Title1 from "$lib/components/typography/Title1.svelte";
 
   let { data } = $props();
   const { students } = data;
@@ -70,51 +73,37 @@
   <title>Flashcards | Review</title>
 </svelte:head>
 
-<HeaderEmbellish>
-  <div class="flex flex-col gap-3 md:flex-row md:items-baseline md:gap-4">
-    <H1>{m.flashcards()}</H1>
-    <H3>
+<Toolbar>
+  <LargeTitle>{m.flashcards()}</LargeTitle>
+  <Divider />
+  <VStack>
+    <Merger>
+      <form
+        action="?/new"
+        method="post"
+        use:enhance={enhanceForm({
+          messages: {
+            redirect: m.newDeckCreated(),
+          },
+          navigate: true,
+        })}
+      >
+        <UniButton Icon={Plus} type="submit" variant="primary"
+          >{m.new()}</UniButton
+        >
+      </form>
       {#if data.cards?.length}
-        {data.cards.length} {m.blue_solid_wren_feel()}
-      {:else}
-        {m.livid_trite_squirrel_cuddle()}
+        <UniButton
+          variant="primary"
+          Icon={GraduationCap}
+          href="flashcards/learn">{m.helpful_slow_flea_catch()}</UniButton
+        >
       {/if}
-    </H3>
-  </div>
+    </Merger>
+    <SearchBar />
+  </VStack>
+</Toolbar>
 
-  <div class="flex flex-col gap-3 md:flex-row md:gap-4">
-    <form
-      action="?/new"
-      method="post"
-      use:enhance={enhanceForm({
-        messages: {
-          redirect: m.newDeckCreated(),
-        },
-        navigate: true,
-      })}
-    >
-      <UniButton
-        fullWidth={true}
-        Icon={PlusCircle}
-        type="submit"
-        variant="primary">{m.new()}</UniButton
-      >
-    </form>
-    <UniButton
-      Icon={ShoppingBag}
-      variant="primary"
-      href="flashcards/marketplace"
-      styling="hidden md:flex">{m.marketplace()}</UniButton
-    >
-    {#if data.cards?.length}
-      <UniButton variant="primary" Icon={ArrowBigRight} href="flashcards/learn"
-        >{m.helpful_slow_flea_catch()}</UniButton
-      >
-    {/if}
-  </div>
-</HeaderEmbellish>
-
-<SearchBar />
 {#await data.decksResponse}
   {#if role === "s"}
     <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
@@ -135,7 +124,7 @@
       </div>
     {:else}
       <EmptySpace>
-        <H3>{m.noDecks()}</H3>
+        <Title1>{m.noDecks()}</Title1>
       </EmptySpace>
     {/if}
   {:else}

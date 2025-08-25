@@ -1,14 +1,18 @@
 <script lang="ts">
   import {
-    H1,
+    LargeTitle,
     DueTasksWidget,
     ActivityFeedWidget,
     LearnWidget,
-    HeaderEmbellish,
+    Toolbar,
+    Divider,
+    Merger,
+    UniButton,
   } from "$lib/components";
   import { getGreeting } from "$lib/utils";
-  import { user } from "$lib/stores";
+  import { isLoading, user } from "$lib/stores";
   import { m } from "$lib/paraglide/messages";
+  import { Settings } from "lucide-svelte";
 
   const greetingType = getGreeting();
 
@@ -22,18 +26,24 @@
   let { data } = $props();
 </script>
 
-<HeaderEmbellish>
-  <H1>{greetings[greetingType]}</H1>
-</HeaderEmbellish>
+<Toolbar>
+  <div class="md:hidden">
+    <LargeTitle>Dashboard</LargeTitle>
+  </div>
+  <div class="hidden md:block">
+    <LargeTitle>{greetings[greetingType]}</LargeTitle>
+  </div>
+  <Divider />
+  <Merger>
+    <UniButton href="settings" Icon={Settings}>
+      {m.settings()}
+    </UniButton>
+  </Merger>
+</Toolbar>
 
-<div class="grid gap-8 lg:grid-cols-3">
+<div class="grid items-stretch gap-8 lg:grid-cols-3">
   <DueTasksWidget tasks={data.tasks} />
-
-  <LearnWidget
-    cardsCount={data.badges.dueCards}
-    streakDays={data.learn.currentStreak}
-    todayStudied={data.learn.cardsStudiedToday}
-  />
+  <LearnWidget cardsCount={data.badges.dueCards} />
   <ActivityFeedWidget activities={data.activity} />
 </div>
 <svelte:head>

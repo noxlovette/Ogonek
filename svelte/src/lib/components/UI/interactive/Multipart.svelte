@@ -1,8 +1,8 @@
 <script lang="ts">
   import { onDestroy } from "svelte";
-  import UniButton from "../UniButton.svelte";
+  import UniButton from "../forms/UniButton.svelte";
   import { Ban, Check, Upload, X } from "lucide-svelte";
-  import { Label } from "$lib/components/typography";
+  import { Caption1 } from "$lib/components/typography";
   import logger from "$lib/logger";
 
   type UploadStatus = "waiting" | "uploading" | "complete" | "error";
@@ -192,7 +192,7 @@
 
       fileState.status = "complete";
       onComplete(fileIdLocal);
-    } catch (error) {
+    } catch (error: any) {
       logger.error(`Upload failed for ${file.name}:`, error);
       fileState.status = "error";
       fileState.errorMessage = "Upload failed";
@@ -209,7 +209,7 @@
               s3Key,
             }),
           });
-        } catch (abortError) {
+        } catch (abortError: any) {
           logger.error("Failed to abort upload:", abortError);
         }
       }
@@ -354,9 +354,9 @@
     aria-label="File upload area"
     class="relative flex flex-1 cursor-pointer
 			 flex-col items-center justify-center rounded-lg border-2
-			 border-dashed p-12 transition-colors duration-200
+			 border-dashed p-12 duration-200
 			 {isDragging
-      ? 'border-cacao-700 bg-cacao-100'
+      ? 'border-accent bg-accent'
       : 'border-stone-300/30 hover:border-stone-400 dark:border-stone-600/30 dark:bg-stone-950 dark:hover:border-stone-700'}"
   >
     <input
@@ -372,7 +372,6 @@
       class="flex flex-col items-center justify-center space-y-2 text-center"
     >
       <Upload />
-      <Label>Select files for upload</Label>
     </span>
   </label>
 
@@ -412,7 +411,7 @@
               class="mb-1 h-1.5 w-full rounded-full bg-stone-200 dark:bg-stone-600"
             >
               <div
-                class="bg-cacao-600 h-1.5 rounded-full transition-all duration-150 dark:bg-stone-100"
+                class="bg-accent h-1.5 rounded-full duration-150 dark:bg-stone-100"
                 style="width: {formatPercentage(
                   fileState.progress.percentComplete,
                 )}"

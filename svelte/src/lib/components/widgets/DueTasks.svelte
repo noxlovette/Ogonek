@@ -1,21 +1,22 @@
 <script lang="ts">
-  import { EmptySpace, H2 } from "$lib/components/typography";
+  import { EmptySpace, Title2 } from "$lib/components/typography";
   import { enhanceForm } from "$lib/utils";
   import { enhance } from "$app/forms";
   import { m } from "$lib/paraglide/messages";
   import { Lightbulb } from "lucide-svelte";
-  import UniButton from "../UI/UniButton.svelte";
+  import UniButton from "../UI/forms/UniButton.svelte";
   import { page } from "$app/state";
   import type { TaskSmall } from "$lib/types";
   import { TaskCard } from "$lib/components/cards";
+  import { HStack } from "../UI";
 
   const { tasks }: { tasks: TaskSmall[] } = $props();
 </script>
 
-<div class="flex flex-col gap-4">
-  <H2>{m.any_lime_lemur_propel()}</H2>
+<HStack>
+  <Title2>{m.any_lime_lemur_propel()}</Title2>
   {#if tasks.length > 0}
-    <div class="grid grid-cols-1 gap-4">
+    <div class="grid w-full grid-cols-1 items-stretch gap-4">
       {#each tasks as task (task.id)}
         <TaskCard {task} />
       {/each}
@@ -38,4 +39,4 @@
       </form>
     </EmptySpace>
   {/if}
-</div>
+</HStack>

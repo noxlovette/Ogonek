@@ -1,16 +1,19 @@
 <script lang="ts">
   import type { Task, TableConfig } from "$lib/types/index.js";
   import {
-    H1,
+    LargeTitle,
+    Divider,
+    Merger,
     Table,
     UniButton,
-    HeaderEmbellish,
+    Toolbar,
     SearchBar,
     TableSkeleton,
     LoadingCard,
     TaskCard,
     EmptySpace,
-    H3,
+    Title3,
+    VStack,
   } from "$lib/components";
 
   import { enhance } from "$app/forms";
@@ -73,56 +76,59 @@
   }
 </script>
 
-<HeaderEmbellish>
-  <div
-    class="flex flex-col items-center gap-3 md:flex-row md:items-center md:gap-4"
-  >
-    <H1>{m.tasks()}</H1>
-    {#if role == "t"}
-      <form
-        action="?/new"
-        method="post"
-        use:enhance={enhanceForm({
-          messages: {
-            redirect: m.few_big_dachshund_scoop(),
-          },
-          navigate: true,
-        })}
-      >
-        <UniButton Icon={PlusCircle} type="submit" variant="primary"
-          >{m.new()}</UniButton
+<Toolbar>
+  <LargeTitle>{m.tasks()}</LargeTitle>
+  <Divider />
+  <VStack>
+    <Merger>
+      {#if role == "t"}
+        <form
+          action="?/new"
+          method="post"
+          use:enhance={enhanceForm({
+            messages: {
+              redirect: m.few_big_dachshund_scoop(),
+            },
+            navigate: true,
+          })}
         >
-      </form>
-    {:else if role == "s"}
-      <form
-        action="?/requestHW"
-        method="post"
-        use:enhance={enhanceForm({
-          messages: {
-            success: m.minor_mad_hare_buzz(),
-          },
-        })}
-      >
-        <UniButton Icon={Bell} type="submit" variant="primary"
-          >{m.tense_mealy_kitten_aid()}</UniButton
+          <UniButton Icon={PlusCircle} type="submit" variant="primary"
+            >{m.new()}</UniButton
+          >
+        </form>
+      {:else if role == "s"}
+        <form
+          action="?/requestHW"
+          method="post"
+          use:enhance={enhanceForm({
+            messages: {
+              success: m.minor_mad_hare_buzz(),
+            },
+          })}
         >
-      </form>
-    {/if}
+          <UniButton Icon={Bell} type="submit" variant="primary"
+            >{m.tense_mealy_kitten_aid()}</UniButton
+          >
+        </form>
+      {/if}
+    </Merger>
 
-    <UniButton
-      type="button"
-      onclick={toggleCompletedTasks}
-      variant="primary"
-      Icon={$completedStore === true ? EyeClosed : Eye}
-    >
-      {$completedStore === true
-        ? m.steep_zany_tern_zip()
-        : m.direct_slow_bobcat_shine()}
-    </UniButton>
-  </div>
-</HeaderEmbellish>
+    <Merger>
+      <UniButton
+        type="button"
+        onclick={toggleCompletedTasks}
+        variant="primary"
+        Icon={$completedStore === true ? EyeClosed : Eye}
+      >
+        {$completedStore === true
+          ? m.steep_zany_tern_zip()
+          : m.direct_slow_bobcat_shine()}
+      </UniButton>
+    </Merger>
+    <SearchBar />
+  </VStack>
+</Toolbar>
 
-<SearchBar />
 {#await data.tasksPaginated}
   {#if role === "s"}
     <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
@@ -136,7 +142,7 @@
 {:then tasks}
   {#if tasks.data.length < 1}
     <EmptySpace>
-      <H3>{m.noTasks()}</H3>
+      <Title3>{m.noTasks()}</Title3>
     </EmptySpace>
   {/if}
   {#if role === "s"}

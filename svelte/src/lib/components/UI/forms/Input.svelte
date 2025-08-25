@@ -1,22 +1,28 @@
 <script lang="ts">
   import Label from "$lib/components/typography/Label.svelte";
+  import { m } from "$lib/paraglide/messages";
+  import { assigneeStore, studentStore, user } from "$lib/stores";
   import { Eye, EyeClosed } from "lucide-svelte";
 
   let {
     placeholder = "Edit here",
-    name = "name",
+    name,
     labelName = name,
     value = $bindable(),
     disabled = $bindable(),
     ref,
+    showLabel = true,
+    item,
     type = "text",
   }: {
-    placeholder: string;
+    placeholder?: string;
     name: string;
-    value: string | number | boolean | undefined | null;
+    value?: string | number | boolean | null;
     labelName?: string;
     ref?: HTMLInputElement;
     disabled?: boolean;
+    showLabel?: boolean;
+    item?: Assignable;
     type?:
       | "text"
       | "number"
@@ -25,18 +31,20 @@
       | "email"
       | "checkbox"
       | "date"
-      | string;
+      | "assignee"
+      | "visibility";
   } = $props();
 
   let showPassword = $state(false);
-
+  type Assignable = { assignee?: string };
   const baseStyle =
-    "w-full rounded-2xl bg-white dark:bg-stone-950 border border-stone-100/60 dark:border-stone-800/60 px-4 py-2 text-base text-stone-900 dark:text-stone-100 placeholder-stone-400 transition-all shadow-sm focus:shadow-md focus:outline-none focus:border-cacao-200 focus:ring-2 focus:ring-cacao-500/70 disabled:opacity-60 disabled:cursor-not-allowed";
+    "w-full rounded-2xl bg-white dark:bg-stone-950 ring-default px-4 py-2 text-base text-stone-900 dark:text-stone-100 placeholder-stone-400 shadow-sm focus:shadow-md focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent disabled:opacity-60 disabled:cursor-not-allowed";
 </script>
 
 <div class="relative space-y-1">
-  <Label>{labelName}</Label>
-
+  {#if showLabel}
+    <Label>{labelName}</Label>
+  {/if}
   {#if type === "text"}
     <input
       {name}
@@ -104,5 +112,25 @@
       {disabled}
       class={baseStyle}
     />
+  {:else if type === "visibility"}
+    <select name="visibility" {value} class={baseStyle}>
+      <option value="private">{m.private()}</option>
+      <option value="public">{m.public()}</option>
+      <option value="assigned">{m.assigned()}</option>
+    </select>
+  {:else if type === "assignee" && item}
+    <select id="assignee" name="assignee" class={baseStyle}>
+      <option {value}>Select an assignee</option>
+      {#each $studentStore as student (student.id)}
+        <option
+          value={student.id}
+          selected={item.assignee === $user.id
+            ? student.id === $assigneeStore
+            : student.id === item.assignee}
+        >
+          {student.name}
+        </option>
+      {/each}
+    </select>
   {/if}
 </div>

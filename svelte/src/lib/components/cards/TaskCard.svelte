@@ -3,11 +3,13 @@
   import CardClickable from "./CardClickable.svelte";
   import { user } from "$lib/stores";
   import Badge from "./Badge.svelte";
-  import { H3 } from "../typography";
+  import { Headline } from "../typography";
   import { getUrgency } from "$lib/utils";
   import Priority from "./Priority.svelte";
   import SeenBadge from "./SeenBadge.svelte";
   import { m } from "$lib/paraglide/messages";
+  import { HStack, VStack } from "../UI";
+  import Divider from "../UI/toolbar/Divider.svelte";
 
   let { task } = $props();
   const formattedDate: string = formatDate(task.dueDate);
@@ -18,12 +20,13 @@
 </script>
 
 <CardClickable {href}>
-  <div class="flex items-start justify-between gap-3">
-    <H3>
-      {task.title}
-    </H3>
+  <Headline>
+    {task.title}
+  </Headline>
+  <VStack>
+    <Badge {urgency}>{badgeText}</Badge>
+    <Divider />
     <Priority priority={task.priority} />
-  </div>
-  <Badge {badgeText} {urgency} />
+  </VStack>
   <SeenBadge seen={task.seen} />
 </CardClickable>

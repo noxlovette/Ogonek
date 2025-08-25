@@ -1,7 +1,13 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
   import { user } from "$lib/stores";
-  import { Caption, H1, H3, HeaderEmbellish, UniButton } from "$lib/components";
+  import {
+    Caption1,
+    LargeTitle,
+    Title3,
+    Toolbar,
+    UniButton,
+  } from "$lib/components";
   import { enhanceForm } from "$lib/utils";
   import { Cable } from "lucide-svelte";
 
@@ -24,13 +30,13 @@
     <div
       class="flex max-w-md flex-col items-center justify-center space-y-3 rounded-sm px-6 py-4 text-center shadow-sm"
     >
-      <HeaderEmbellish>
-        <H1 styling="text-center">{inviter.name}</H1>
-      </HeaderEmbellish>
+      <Toolbar>
+        <LargeTitle styling="text-center">{inviter.name}</LargeTitle>
+      </Toolbar>
 
-      <H3>wants to add you to their students</H3>
+      <Title3>wants to add you to their students</Title3>
 
-      <Caption>If you don't know them do not connect</Caption>
+      <Caption1>If you don't know them do not connect</Caption1>
       <UniButton styling="mt-4" variant="primary" type="submit" Icon={Cable}
         >Start Work</UniButton
       >

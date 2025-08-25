@@ -2,7 +2,7 @@
 <script lang="ts">
   import { onMount, onDestroy, tick } from "svelte";
   import { page } from "$app/state";
-  import { Loader2 } from "lucide-svelte";
+  import { Loader } from "lucide-svelte";
   import logger from "$lib/logger";
 
   let turnstileElement: HTMLDivElement;
@@ -48,7 +48,6 @@
           sitekey: "0x4AAAAAAA6Es9VtsFFGCAbw",
           theme: "auto",
           callback: (token: string) => {
-            // Update reactive state instead of DOM manipulation
             turnstileToken = token;
           },
           "error-callback": () => {
@@ -57,7 +56,7 @@
           },
         });
       }
-    } catch (error) {
+    } catch (error: any) {
       logger.error("Turnstile initialization failed:", error);
       hasError = true;
     } finally {
@@ -87,13 +86,13 @@
 <div class="relative">
   {#if isLoading}
     <div class="absolute inset-0 flex items-center justify-center">
-      <Loader2 class="font-stone-200 animate-spin"></Loader2>
+      <Loader class="font-stone-200 animate-spin"></Loader>
     </div>
   {/if}
 
   <div
     bind:this={turnstileElement}
-    class="cf-turnstile my-4 transition-opacity duration-200"
+    class="cf-turnstile my-4 duration-200"
     class:opacity-0={isLoading}
   ></div>
 

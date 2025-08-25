@@ -2,8 +2,8 @@
   import { enhance } from "$app/forms";
   import {
     Editor,
-    H1,
-    HeaderEmbellish,
+    LargeTitle,
+    Toolbar,
     UniButton,
     Input,
   } from "$lib/components";
@@ -29,10 +29,10 @@
     },
   })}
 >
-  <HeaderEmbellish>
-    <H1>{student.name}</H1>
+  <Toolbar>
+    <LargeTitle>{student.name}</LargeTitle>
     <div class="flex items-center space-x-3">
-      <UniButton variant="secondary" href="." Icon={Ban}>Cancel</UniButton>
+      <UniButton href="." Icon={Ban}>Cancel</UniButton>
       <UniButton variant="primary" type="submit" Icon={Check}>Save</UniButton>
       <UniButton
         variant="danger"
@@ -42,7 +42,7 @@
         Icon={Trash2}>Delete</UniButton
       >
     </div>
-  </HeaderEmbellish>
+  </Toolbar>
   <div class="grid grid-cols-1 gap-5 md:grid-cols-4">
     <Input
       value={student.studentTelegramId}

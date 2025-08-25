@@ -17,7 +17,7 @@ export const load: PageServerLoad = async ({ fetch, url, depends }) => {
   const completed = url.searchParams.get("completed") || "false";
 
   return {
-    tasksPaginated: (dev ? delay(2000) : Promise.resolve())
+    tasksPaginated: (dev ? delay(100) : Promise.resolve())
       .then(() =>
         fetch(routes.tasks.all(page, per_page, search, assignee, completed)),
       )
