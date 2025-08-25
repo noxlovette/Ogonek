@@ -41,7 +41,7 @@
     <Input name="username" placeholder="Username" value="" />
     <Input name="password" placeholder="Password" value="" type="password" />
     <Turnstile />
-    <UniButton Icon={DoorOpen} type="submit" variant="primary"
+    <UniButton Icon={DoorOpen} type="submit" variant="primary" iconOnly={false}
       >{m.logIn()}</UniButton
     >
   </form>

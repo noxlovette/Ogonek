@@ -204,7 +204,7 @@ pub async fn update_deck(
 
             let deck = flashcards::deck::get_deck(&state.db, &id, &claims.sub).await?;
 
-            state
+            let _ = state
                 .notification_service
                 .notify_student(
                     &claims.sub,
@@ -214,7 +214,7 @@ pub async fn update_deck(
                         deck_id: deck.id,
                     },
                 )
-                .await?;
+                .await;
         }
     } else if let Some(assignee) = current_assignee {
         // treat as update

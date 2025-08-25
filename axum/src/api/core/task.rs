@@ -262,7 +262,7 @@ pub async fn update_task(
             )
             .await?;
             let task = task::find_by_id(&state.db, &id, &claims.sub).await?;
-            state
+            let _ = state
                 .notification_service
                 .notify_student(
                     &claims.sub,
@@ -273,7 +273,7 @@ pub async fn update_task(
                         due_date: task.due_date,
                     },
                 )
-                .await?;
+                .await;
         }
     } else if let Some(assignee) = current_assignee {
         // treat as update

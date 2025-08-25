@@ -205,7 +205,7 @@ pub async fn update_lesson(
             .await?;
 
             let lesson = lesson::find_by_id(&state.db, &id, &claims.sub).await?;
-            state
+            let _ = state
                 .notification_service
                 .notify_student(
                     &claims.sub,
@@ -215,7 +215,7 @@ pub async fn update_lesson(
                         lesson_title: lesson.title,
                     },
                 )
-                .await?;
+                .await;
         }
     } else if let Some(assignee) = current_assignee {
         // treat as update
