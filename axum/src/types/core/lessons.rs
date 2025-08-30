@@ -34,6 +34,8 @@ pub struct LessonFull {
     #[serde(with = "datetime_serialization")]
     pub updated_at: DateTime<Utc>,
     pub assignee_name: String,
+
+    pub media_url: Option<String>,
 }
 
 #[derive(Deserialize, Debug, ToSchema)]
@@ -54,6 +56,7 @@ pub struct LessonUpdate {
     pub markdown: Option<String>,
     pub assignee: Option<String>,
     pub created_by: Option<String>,
+    pub media_url: Option<String>,
 }
 
 // NOT IMPLEMENTED

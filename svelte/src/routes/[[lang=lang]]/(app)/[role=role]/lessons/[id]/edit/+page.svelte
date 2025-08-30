@@ -9,12 +9,11 @@
     Merger,
     VStack,
   } from "$lib/components";
-  import type { PageData } from "./$types";
   import { enhanceForm } from "$lib/utils";
   import { Ban, Check, Trash2 } from "lucide-svelte";
   import Input from "$lib/components/UI/forms/Input.svelte";
   import { m } from "$lib/paraglide/messages";
-  let { data }: { data: PageData } = $props();
+  let { data, form } = $props();
   let { lesson } = data;
 
   let markdown = $state(lesson.markdown);
@@ -61,5 +60,6 @@
     <Input name="topic" value={lesson.topic} placeholder="Topic"></Input>
     <Input name="assignee" item={lesson} type="assignee" />
   </div>
+  <PhotoPicker />
 </form>
 <Editor bind:markdownContent={markdown} />

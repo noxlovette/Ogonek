@@ -100,6 +100,7 @@ pub async fn find_by_id(
             l.created_by,
             l.created_at,
             l.updated_at,
+            l.media_url,
             u.name as assignee_name
         FROM lessons l
         LEFT JOIN "user" u ON l.assignee = u.id
@@ -498,6 +499,7 @@ mod tests {
             topic: Some("Updated Topic".to_string()),
             markdown: None,
             assignee: None,
+            media_url: None,
             id: None,
             created_by: None,
         };
@@ -531,6 +533,7 @@ mod tests {
             topic: None,
             markdown: None,
             assignee: None,
+            media_url: None,
             id: None,
             created_by: None,
         };
