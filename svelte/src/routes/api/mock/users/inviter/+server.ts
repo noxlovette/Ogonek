@@ -1,31 +1,10 @@
-import { json, type RequestEvent } from '@sveltejs/kit';
 
-// Generated mock for GET /api/v1/users/inviter
-// Operation: Gets the inviter's credentials
-
-
-
-
-export async function GET({ request, params, url }: RequestEvent) {
-  // Mock response selector - customize this logic
-  const mockResponse = url.searchParams.get('mock_status') || '200';
-  
-  
-  
+import { json } from "@sveltejs/kit";
+import type { RequestHandler } from "./$types";
+export const GET: RequestHandler = async ({ request, params, url }) => {
   // Query params: invite
-
+  // Gets the inviter's credentials
   
-  // Return mock based on requested status
-  switch (parseInt(mockResponse)) {
-    case 200:
-      return json(null, { status: 200 });
-
-    case 400:
-      return json(null, { status: 400 });
-
-    case 401:
-      return json(null, { status: 401 });
-    default:
-      return json({ error: "Not implemented" }, { status: 501 });
-  }
-}
+  
+  return json(null);
+};

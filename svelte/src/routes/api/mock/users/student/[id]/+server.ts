@@ -1,31 +1,38 @@
-import { json, type RequestEvent } from '@sveltejs/kit';
+import logger from "$lib/logger";
+import { json } from "@sveltejs/kit";
+import type { RequestHandler } from "./$types";
+type PATCHRequestBody = any;
 
-// Generated mock for GET /api/v1/users/student/{id}
-// Operation: fetch_student
-
-
-
-
-export async function GET({ request, params, url }: RequestEvent) {
-  // Mock response selector - customize this logic
-  const mockResponse = url.searchParams.get('mock_status') || '200';
-  
-  
+export const GET: RequestHandler = async ({ request, params, url }) => {
   // Path params: id
-
+  // fetch_student
   
   
-  // Return mock based on requested status
-  switch (parseInt(mockResponse)) {
-    case 200:
-      return json(null, { status: 200 });
+  return json(null);
+};
 
-    case 401:
-      return json(null, { status: 401 });
+export const POST: RequestHandler = async ({ request, params, url }) => {
+  // Path params: id
+  // upsert_student
+  
+  
+  return json(null);
+};
 
-    case 404:
-      return json(null, { status: 404 });
-    default:
-      return json({ error: "Not implemented" }, { status: 501 });
-  }
-}
+export const DELETE: RequestHandler = async ({ request, params, url }) => {
+  // Path params: id
+  // remove_student
+  
+  
+  return json(null);
+};
+
+export const PATCH: RequestHandler = async ({ request, params, url }) => {
+  const body = await request.json();
+  logger.info("PATCH /api/v1/users/student/{id} with body:", body);
+  // Path params: id
+  // update_student
+  
+  
+  return json(null);
+};

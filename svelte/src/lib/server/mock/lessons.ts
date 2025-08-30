@@ -2,7 +2,7 @@ import type { LessonFull, LessonSmall } from "$lib/types";
 import { daysAgo, yesterday } from "$lib/utils";
 import { nanoid } from "nanoid";
 
-export function createMockLessonSmall(
+export function createLessonSmall(
   overrides: Partial<LessonSmall> = {},
 ): LessonSmall {
   return {
@@ -16,10 +16,10 @@ export function createMockLessonSmall(
   };
 }
 
-export function createMockLessonFull(
+export function createLessonFull(
   overrides: Partial<LessonFull> = {},
 ): LessonFull {
-  const base = createMockLessonSmall(overrides);
+  const base = createLessonSmall(overrides);
 
   return {
     ...base,
@@ -32,12 +32,12 @@ export function createMockLessonFull(
   };
 }
 
-export function generateMockLessonsSmall(
-  count: number,
+export function createLessonsSmall(
+  count: number = 4,
   overrides: Partial<LessonSmall> = {},
 ): LessonSmall[] {
   return Array.from({ length: count }, (_, i) =>
-    createMockLessonSmall({
+    createLessonSmall({
       title: `Lesson ${i + 1}`,
       ...overrides,
     }),

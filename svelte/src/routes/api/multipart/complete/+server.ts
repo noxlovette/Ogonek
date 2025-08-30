@@ -8,7 +8,7 @@ export const POST: RequestHandler = async ({ request, fetch, url }) => {
 
   logger.debug(`Processing multipart completion with taskId: ${taskId}`);
 
-  const response = await fetch(routes.files.multipart.complete(), {
+  const response = await fetch(routes.files.complete_multipart_upload(), {
     method: "POST",
     body: JSON.stringify(payload),
   });

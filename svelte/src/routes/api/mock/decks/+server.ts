@@ -1,32 +1,17 @@
-import type { DeckSmall } from "$lib/types";
+import logger from "$lib/logger";
 import { json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
-
-export const GET: RequestHandler = async () => {
-  const decks: DeckSmall[] = [
-    {
-      id: "deck1",
-      title: "Hello there",
-      description: "Murrrrrr",
-      assigneeName: "Kotya",
-      visibility: "assigned",
-      isSubscribed: true,
-      seen: true,
-    },
-    {
-      id: "deck2",
-      title: "Hello there",
-      description: "Kotya Assigned",
-      assigneeName: "Kotya",
-      visibility: "private",
-      isSubscribed: false,
-      seen: true,
-    },
-  ];
-  return json(decks);
+export const GET: RequestHandler = async ({ request, params, url }) => {
+  // Query params: page, per_page, search, assignee
+  // Decks the user has access to
+  
+  
+  return json(null);
 };
-export const POST: RequestHandler = async () => {
-  const id = "deck1";
 
-  return json(id);
+export const POST: RequestHandler = async ({}) => {
+  // Creates a new Deck using user defaults
+  
+  
+  return json(null);
 };

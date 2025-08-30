@@ -1,50 +1,16 @@
-import type { AppContext, Profile, Student, User } from "$lib/types";
+import type {
+  ActivityLog,
+  AppContext,
+  DashboardData,
+  NotificationBadges,
+} from "$lib/types";
+import { nanoid } from "nanoid";
+import { createDecksSmall } from "./decks";
+import { createLessonsSmall } from "./lessons";
+import { createTasksSmall } from "./tasks";
+import { createMockProfile, createMockTeacher, createStudents } from "./user";
 
-export function createMockTeacher(overrides: Partial<User> = {}): User {
-  return {
-    id: "teacher1",
-    name: "Teacher One",
-    username: "teacher1",
-    role: "teacher",
-    email: null,
-    ...overrides,
-  };
-}
-export function createMockStudent(overrides: Partial<Student> = {}): Student {
-  return {
-    id: "student1",
-    name: "Student One",
-    username: "student1",
-    email: "",
-    markdown: null,
-    studentTelegramId: null,
-    ...overrides,
-  };
-}
-export function createMockProfile(overrides: Partial<Profile> = {}): Profile {
-  return {
-    userId: "teacher1",
-    videoCallUrl: "https://zoom.us/j/pwd?=teacher1",
-    avatarUrl: null,
-    telegramId: null,
-    ...overrides,
-  };
-}
-
-export function createStudents(
-  overrides: Partial<Student> = {},
-  count: number = 4,
-): Student[] {
-  return Array.from({ length: count }, (_, i) =>
-    createMockStudent({
-      name: `Student ${i + 1}`,
-      username: `student${i + 1}`,
-      ...overrides,
-    }),
-  );
-}
-
-export function generateAppContext(
+export function createAppContext(
   overrides: Partial<AppContext> = {},
 ): AppContext {
   return {
@@ -53,12 +19,49 @@ export function generateAppContext(
     callUrl: null,
     students: createStudents(),
     preferences: {
-      auto_subscribe: false,
-      email_notifications: false,
-      push_notifications: false,
+      autoSubscribe: false,
+      emailNotifications: false,
+      pushNotifications: false,
       theme: "light",
       language: "ru",
       ...overrides,
     },
+  };
+}
+
+export function createDashboardData(
+  overrides: Partial<DashboardData> = {},
+): DashboardData {
+  return {
+    tasks: createTasksSmall(),
+    lessons: createLessonsSmall(),
+    decks: createDecksSmall(),
+    activity: createActivities(),
+    learnData: {
+      cardsStudiedToday: 5,
+      currentStreak: 2,
+    },
+  };
+}
+
+function createActivity(overrides: Partial<ActivityLog> = {}): ActivityLog {
+  return {
+    action: "created",
+    createdAt: null,
+    modelId: nanoid(),
+    modelType: "lesson",
+    ...overrides,
+  };
+}
+
+function createActivities(count = 4): ActivityLog[] {
+  return Array.from({ length: count }, (_, i) => createActivity());
+}
+
+export function createBadges(): NotificationBadges {
+  return {
+    unseenDecks: 2,
+    unseenLessons: 4,
+    unseenTasks: 4,
   };
 }

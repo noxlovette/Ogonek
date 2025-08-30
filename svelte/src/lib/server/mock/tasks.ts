@@ -2,9 +2,7 @@ import type { FileSmall, TaskFull, TaskSmall, TaskWithFiles } from "$lib/types";
 import { daysAgo, defaultTaskDueDate, tomorrow, yesterday } from "$lib/utils";
 import { nanoid } from "nanoid";
 
-export function createMockTaskSmall(
-  overrides: Partial<TaskSmall> = {},
-): TaskSmall {
+export function createTaskSmall(overrides: Partial<TaskSmall> = {}): TaskSmall {
   const dueDate = defaultTaskDueDate();
 
   return {
@@ -19,10 +17,8 @@ export function createMockTaskSmall(
   };
 }
 
-export function createMockTaskFull(
-  overrides: Partial<TaskFull> = {},
-): TaskFull {
-  const base = createMockTaskSmall(overrides);
+export function createTaskFull(overrides: Partial<TaskFull> = {}): TaskFull {
+  const base = createTaskSmall(overrides);
 
   return {
     ...base,
@@ -36,9 +32,7 @@ export function createMockTaskFull(
   };
 }
 
-export function createMockFileSmall(
-  overrides: Partial<FileSmall> = {},
-): FileSmall {
+export function createFileSmall(overrides: Partial<FileSmall> = {}): FileSmall {
   let id = nanoid();
 
   return {
@@ -52,13 +46,13 @@ export function createMockFileSmall(
   };
 }
 
-export function createMockTaskWithFiles(
+export function createTaskWithFiles(
   taskOverrides: Partial<TaskFull> = {},
   filesCount: number = 2,
 ): TaskWithFiles {
-  const task = createMockTaskFull(taskOverrides);
+  const task = createTaskFull(taskOverrides);
   const files = Array.from({ length: filesCount }, (_, i) =>
-    createMockFileSmall({
+    createFileSmall({
       name: `attachment_${i + 1}.pdf`,
       size: Math.floor(Math.random() * 1024 * 100) + 1024, // 1KB to 100KB
     }),
@@ -68,12 +62,12 @@ export function createMockTaskWithFiles(
 }
 
 // Batch generators for when you need arrays
-export function generateMockTasks(
+export function createTasks(
   count: number,
   overrides: Partial<TaskFull> = {},
 ): TaskFull[] {
   return Array.from({ length: count }, (_, i) =>
-    createMockTaskFull({
+    createTaskFull({
       title: `Task ${i + 1}`,
       priority: Math.floor(Math.random() * 3) + 1,
       completed: Math.random() > 0.7,
@@ -82,12 +76,12 @@ export function generateMockTasks(
   );
 }
 
-export function generateMockTasksSmall(
-  count: number,
+export function createTasksSmall(
+  count: number = 4,
   overrides: Partial<TaskSmall> = {},
 ): TaskSmall[] {
   return Array.from({ length: count }, (_, i) =>
-    createMockTaskSmall({
+    createTaskSmall({
       title: `Task ${i + 1}`,
       priority: Math.floor(Math.random() * 3) + 1,
       completed: Math.random() > 0.7,
@@ -97,10 +91,10 @@ export function generateMockTasksSmall(
 }
 
 // Realistic scenario builders
-export const MockScenarios = {
+export const Scenarios = {
   // High priority overdue tasks
   urgentTasks: (count: number = 3) =>
-    generateMockTasks(count, {
+    createTasks(count, {
       priority: 1,
       completed: false,
       dueDate: daysAgo(2),
@@ -108,28 +102,28 @@ export const MockScenarios = {
 
   // Completed recent tasks
   recentCompletions: (count: number = 5) =>
-    generateMockTasks(count, {
+    createTasks(count, {
       completed: true,
       updatedAt: yesterday(),
     }),
 
   // Mixed priority upcoming tasks
   upcomingTasks: (count: number = 10) =>
-    generateMockTasks(count, {
+    createTasks(count, {
       completed: false,
       dueDate: tomorrow(),
     }),
 
   // Student specific tasks
   studentTasks: (studentId: string, count: number = 5) =>
-    generateMockTasks(count, {
+    createTasks(count, {
       assignee: studentId,
       assigneeName: `Student ${studentId.slice(-4)}`,
     }),
 };
 
 // Usage examples:
-// const singleTask = createMockTaskFull({ title: "Custom Task", priority: 1 });
-// const taskList = generateMockTasks(10);
-// const urgentStuff = MockScenarios.urgentTasks(3);
-// const taskWithAttachments = createMockTaskWithFiles({ title: "Assignment" }, 3);
+// const singleTask = createTaskFull({ title: "Custom Task", priority: 1 });
+// const taskList = createTasks(10);
+// const urgentStuff = Scenarios.urgentTasks(3);
+// const taskWithAttachments = createTaskWithFiles({ title: "Assignment" }, 3);

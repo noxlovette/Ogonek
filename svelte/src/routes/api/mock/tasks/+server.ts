@@ -7,7 +7,6 @@ export const GET: RequestHandler = async () => {
   const paginatedResponse: PaginatedResponse<TaskSmall> = {
     data: generateMockTasksSmall(5),
     perPage: 3,
-    total: 10,
     page: 1,
   };
 

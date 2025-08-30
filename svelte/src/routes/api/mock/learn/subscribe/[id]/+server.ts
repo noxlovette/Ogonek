@@ -1,31 +1,18 @@
-import { json, type RequestEvent } from '@sveltejs/kit';
-
-// Generated mock for POST /api/v1/learn/subscribe/{id}
-// Operation: Subscribes the user to the deck
-
-
-
-
-export async function POST({ request, params, url }: RequestEvent) {
-  // Mock response selector - customize this logic
-  const mockResponse = url.searchParams.get('mock_status') || '204';
-  
-  
+import logger from "$lib/logger";
+import { json } from "@sveltejs/kit";
+import type { RequestHandler } from "./$types";
+export const POST: RequestHandler = async ({ request, params, url }) => {
   // Path params: id
-
+  // Subscribes the user to the deck
   
   
-  // Return mock based on requested status
-  switch (parseInt(mockResponse)) {
-    case 204:
-      return new Response(null, { status: 204 });
+  return json(null);
+};
 
-    case 401:
-      return json(null, { status: 401 });
-
-    case 404:
-      return json(null, { status: 404 });
-    default:
-      return json({ error: "Not implemented" }, { status: 501 });
-  }
-}
+export const DELETE: RequestHandler = async ({ request, params, url }) => {
+  // Path params: id
+  // Unsubscribes the user from the deck
+  
+  
+  return json(null);
+};

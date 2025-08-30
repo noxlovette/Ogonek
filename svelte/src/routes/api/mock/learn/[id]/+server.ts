@@ -1,31 +1,25 @@
-import { json, type RequestEvent } from '@sveltejs/kit';
+import logger from "$lib/logger";
+import { json } from "@sveltejs/kit";
+import type { RequestHandler } from "./$types";
+type PUTRequestBody = any;
 
-// Generated mock for PUT /api/v1/learn/{id}
-// Operation: Updates the learn progress on a card
-
-
-type RequestBody = any;
-
-
-export async function PUT({ request, params, url }: RequestEvent) {
-  // Mock response selector - customize this logic
-  const mockResponse = url.searchParams.get('mock_status') || '204';
-  
-  // Parse request body
-  // const body: RequestBody = await request.json();
-
+export const PUT: RequestHandler = async ({ request, params, url }) => {
+  const body = await request.json();
+  logger.info("PUT /api/v1/learn/{id} with body:", body);
   // Path params: id
-
+  // Updates the learn progress on a card
   
   
-  // Return mock based on requested status
-  switch (parseInt(mockResponse)) {
-    case 204:
-      return new Response(null, { status: 204 });
+  return json(null);
+};
 
-    case 401:
-      return json(null, { status: 401 });
-    default:
-      return json({ error: "Not implemented" }, { status: 501 });
-  }
-}
+export const DELETE: RequestHandler = async ({ request, params, url }) => {
+  // Path params: id
+  // Resets the progress for a particular deck
+  
+  
+  return json([
+  null,
+  null
+]);
+};
