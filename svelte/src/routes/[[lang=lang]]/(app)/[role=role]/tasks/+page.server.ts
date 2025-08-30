@@ -46,7 +46,9 @@ export const actions: Actions = {
     }
   },
   requestHW: async ({ fetch }) => {
-    const response = await fetch(routes.tasks.request(), { method: "POST" });
+    const response = await fetch(routes.notifications.request_hw(), {
+      method: "POST",
+    });
 
     if (!response.ok) {
       return fail(500);

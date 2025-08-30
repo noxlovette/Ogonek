@@ -44,7 +44,7 @@ export const actions = {
       completed,
       filePath,
     };
-    const response = await fetch(routes.tasks.single(id), {
+    const response = await fetch(routes.tasks.task(id), {
       method: "PATCH",
       body: JSON.stringify(body),
     });
@@ -67,7 +67,7 @@ export const actions = {
     if (!id) {
       return fail(400);
     }
-    const response = await fetch(routes.tasks.single(id), {
+    const response = await fetch(routes.tasks.task(id), {
       method: "DELETE",
     });
 
@@ -88,7 +88,9 @@ export const actions = {
     const formData = await request.formData();
     const id = formData.get("fileId") as string;
 
-    const response = await fetch(routes.files.single(id), { method: "DELETE" });
+    const response = await fetch(routes.files.delete_file(id), {
+      method: "DELETE",
+    });
 
     const deleteResult = await handleApiResponse<EmptyResponse>(response);
 

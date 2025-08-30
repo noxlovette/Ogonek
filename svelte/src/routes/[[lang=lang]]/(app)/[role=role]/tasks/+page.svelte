@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Task, TableConfig } from "$lib/types/index.js";
+  import type { TaskFull, TableConfig } from "$lib/types/index.js";
   import {
     LargeTitle,
     Divider,
@@ -34,7 +34,7 @@
   const { data } = $props();
   const role = page.params.role;
 
-  const taskConfig: TableConfig<Task> = {
+  const taskConfig: TableConfig<TaskFull> = {
     columns: [
       { key: "title", label: m.title() },
       {
@@ -152,7 +152,7 @@
       {/each}
     </div>
   {:else}
-    <Table items={tasks.data} total={tasks.total} {href} config={taskConfig} />
+    <Table items={tasks.data} {href} config={taskConfig} />
   {/if}
 {:catch error: App.Error}
   <p>Error loading lessons: {error.errorID}</p>

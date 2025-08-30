@@ -1,11 +1,11 @@
 import logger from "$lib/logger";
-import { generateMockTasksSmall } from "$lib/server/mock/tasks";
+import { createTasksSmall } from "$lib/server/mock/tasks";
 import type { PaginatedResponse, TaskSmall } from "$lib/types";
 import type { RequestHandler } from "@sveltejs/kit";
 
 export const GET: RequestHandler = async () => {
   const paginatedResponse: PaginatedResponse<TaskSmall> = {
-    data: generateMockTasksSmall(5),
+    data: createTasksSmall(5),
     perPage: 3,
     page: 1,
   };

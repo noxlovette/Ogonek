@@ -1,4 +1,5 @@
 import type { Profile, Student, User } from "$lib/types";
+import { nanoid } from "nanoid";
 
 export function createMockTeacher(overrides: Partial<User> = {}): User {
   return {
@@ -12,7 +13,7 @@ export function createMockTeacher(overrides: Partial<User> = {}): User {
 }
 export function createMockStudent(overrides: Partial<Student> = {}): Student {
   return {
-    id: "student1",
+    id: nanoid(),
     name: "Student One",
     username: "student1",
     email: "",

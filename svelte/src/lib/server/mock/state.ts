@@ -63,5 +63,6 @@ export function createBadges(): NotificationBadges {
     unseenDecks: 2,
     unseenLessons: 4,
     unseenTasks: 4,
+    dueCards: 4,
   };
 }
