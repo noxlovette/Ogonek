@@ -91,7 +91,7 @@ function generateMockValue(schema) {
 /**
  * Generates HTTP status response template
  */
-function generateStatusResponse(status, responseSchema) {
+function generateStatusResponse(status, responseSchema, useJson = true) {
   const statusMessages = {
     200: "OK",
     201: "Created",
@@ -113,14 +113,21 @@ function generateStatusResponse(status, responseSchema) {
 
   const mockData = responseSchema ? generateMockData(responseSchema) : "null";
 
-  return `    case ${status}:
-      return json(${mockData}, { status: ${status} });`;
+  if (useJson) {
+    return `    case ${status}:
+      return json(${mockData});`;
+  } else {
+    return `    case ${status}:
+      return new Response(JSON.stringify(${mockData}), {
+        headers: { "Content-Type": "application/json" },
+      });`;
+  }
 }
 
 /**
- * Generates the Svelte API route file content
+ * Generates the modern Svelte API route file content
  */
-function generateRouteFile(method, path, operation) {
+function generateRouteFile(method, path, operation, allMethods) {
   const methodUpper = method.toUpperCase();
   const operationId =
     operation.operationId || `${method}${path.replace(/[^a-zA-Z0-9]/g, "")}`;
@@ -131,12 +138,15 @@ function generateRouteFile(method, path, operation) {
   );
   const defaultResponse = operation.responses?.default;
 
+  // Decide whether to use json() or new Response() based on complexity
+  const useJson = responses.length <= 2 && !operation.requestBody;
+
   // Generate response cases
   const responseCases = responses
     .map((status) => {
       const responseSchema =
         operation.responses[status]?.content?.["application/json"]?.schema;
-      return generateStatusResponse(parseInt(status), responseSchema);
+      return generateStatusResponse(parseInt(status), responseSchema, useJson);
     })
     .join("\n\n");
 
@@ -156,32 +166,176 @@ function generateRouteFile(method, path, operation) {
   const queryParams =
     operation.parameters?.filter((p) => p.in === "query") || [];
 
+  // Build imports
   const imports = ["json"];
-  if (requestBodyType || pathParams.length || queryParams.length) {
-    imports.push("type RequestEvent");
-  }
+  const typeImports = ["RequestHandler"];
 
-  return `import { ${imports.join(", ")} } from '@sveltejs/kit';
+  // Add logger import if POST/PUT/PATCH
+  const needsLogger = ["post", "put", "patch"].includes(method);
+  const loggerImport = needsLogger ? 'import logger from "$lib/logger";' : "";
+
+  // Generate type definitions
+  const typeDefinitions = requestBodyType
+    ? `type RequestBody = ${requestBodyType};\n`
+    : "";
+
+  // Generate handler function
+  const handlerParams =
+    requestBodyType || pathParams.length || queryParams.length
+      ? "{ request, params, url }"
+      : "{}";
+
+  // Generate body parsing
+  const bodyParsing = requestBodyType
+    ? `  const body = await request.json();\n  logger.info("${methodUpper} ${path} with body:", body);\n`
+    : "";
+
+  // Generate parameter comments
+  const paramComments = [
+    pathParams.length
+      ? `  // Path params: ${pathParams.map((p) => p.name).join(", ")}`
+      : "",
+    queryParams.length
+      ? `  // Query params: ${queryParams.map((p) => p.name).join(", ")}`
+      : "",
+  ]
+    .filter(Boolean)
+    .join("\n");
+
+  const paramsSection = paramComments ? `${paramComments}\n` : "";
+
+  return `${loggerImport}
+import { ${imports.join(", ")} } from "@sveltejs/kit";
+import type { ${typeImports.join(", ")} } from "./$types";
 
 // Generated mock for ${methodUpper} ${path}
 // Operation: ${operation.summary || operationId}
 ${operation.description ? `// ${operation.description}` : ""}
 
-${requestBodyType ? `type RequestBody = ${requestBodyType};\n` : ""}
-
-export async function ${methodUpper}({ request, params, url }: RequestEvent) {
-  // Mock response selector - customize this logic
-  const mockResponse = url.searchParams.get('mock_status') || '${responses[0] || "200"}';
-  
-  ${requestBodyType ? `// Parse request body\n  // const body: RequestBody = await request.json();\n` : ""}
-  ${pathParams.length ? `// Path params: ${pathParams.map((p) => p.name).join(", ")}\n` : ""}
-  ${queryParams.length ? `// Query params: ${queryParams.map((p) => p.name).join(", ")}\n` : ""}
+${typeDefinitions}export const ${methodUpper}: RequestHandler = async (${handlerParams}) => {
+${bodyParsing}${paramsSection}  // Mock response selector - customize this logic
+  const mockResponse = url?.searchParams.get('mock_status') || '${responses[0] || "200"}';
   
   // Return mock based on requested status
   switch (parseInt(mockResponse)) {
 ${responseCases}${defaultCase}
   }
-}`;
+};`;
+}
+
+/**
+ * Generates a consolidated route file with all methods
+ */
+function generateConsolidatedRouteFile(apiPath, pathItem) {
+  const methods = Object.keys(pathItem).filter((method) =>
+    ["get", "post", "put", "patch", "delete"].includes(method),
+  );
+
+  if (methods.length === 0) return null;
+
+  const allHandlers = methods.map((method) =>
+    generateRouteFile(method, apiPath, pathItem[method], methods),
+  );
+
+  // Extract common imports and combine
+  const hasLogger = methods.some((method) =>
+    ["post", "put", "patch"].includes(method),
+  );
+  const loggerImport = hasLogger ? 'import logger from "$lib/logger";' : "";
+
+  // Get all unique type definitions
+  const allTypeDefinitions = new Set();
+  methods.forEach((method) => {
+    const operation = pathItem[method];
+    const requestBodySchema =
+      operation.requestBody?.content?.["application/json"]?.schema;
+    if (requestBodySchema) {
+      const typeDef = generateTypeFromSchema(
+        requestBodySchema,
+        `${method.toUpperCase()}RequestBody`,
+      );
+      allTypeDefinitions.add(
+        `type ${method.toUpperCase()}RequestBody = ${typeDef};`,
+      );
+    }
+  });
+
+  const typeDefinitionsSection =
+    allTypeDefinitions.size > 0
+      ? `\n${Array.from(allTypeDefinitions).join("\n")}\n`
+      : "";
+
+  // Generate individual handlers
+  const handlers = methods
+    .map((method) => {
+      const operation = pathItem[method];
+      const methodUpper = method.toUpperCase();
+      const operationId =
+        operation.operationId ||
+        `${method}${apiPath.replace(/[^a-zA-Z0-9]/g, "")}`;
+
+      // Extract response info
+      const responses = Object.keys(operation.responses || {}).filter(
+        (code) => code !== "default",
+      );
+      const requestBodySchema =
+        operation.requestBody?.content?.["application/json"]?.schema;
+      const hasBody =
+        requestBodySchema && ["post", "put", "patch"].includes(method);
+      const pathParams =
+        operation.parameters?.filter((p) => p.in === "path") || [];
+      const queryParams =
+        operation.parameters?.filter((p) => p.in === "query") || [];
+
+      // Handler parameters
+      const handlerParams =
+        hasBody || pathParams.length || queryParams.length
+          ? "{ request, params, url }"
+          : "{}";
+
+      // Body parsing
+      const bodyParsing = hasBody
+        ? `  const body = await request.json();\n  logger.info("${methodUpper} ${apiPath} with body:", body);\n`
+        : "";
+
+      // Parameter comments
+      const paramComments = [
+        pathParams.length
+          ? `  // Path params: ${pathParams.map((p) => p.name).join(", ")}`
+          : "",
+        queryParams.length
+          ? `  // Query params: ${queryParams.map((p) => p.name).join(", ")}`
+          : "",
+      ]
+        .filter(Boolean)
+        .join("\n");
+
+      const paramsSection = paramComments ? `${paramComments}\n` : "";
+
+      // Generate mock response
+      const mockData = responses[0]
+        ? operation.responses[responses[0]]?.content?.["application/json"]
+            ?.schema
+          ? generateMockData(
+              operation.responses[responses[0]].content["application/json"]
+                .schema,
+            )
+          : "null"
+        : '{ message: "Success" }';
+
+      return `export const ${methodUpper}: RequestHandler = async (${handlerParams}) => {
+${bodyParsing}${paramsSection}  // ${operation.summary || operationId}
+  ${operation.description ? `// ${operation.description}` : ""}
+  
+  return json(${mockData});
+};`;
+    })
+    .join("\n\n");
+
+  return `${loggerImport}
+import { json } from "@sveltejs/kit";
+import type { RequestHandler } from "./$types";${typeDefinitionsSection}
+${handlers}`;
 }
 
 /**
@@ -219,12 +373,6 @@ async function findExistingRoutes(dir, baseDir = dir) {
   return routes;
 }
 
-/**
- * Converts SvelteKit route back to OpenAPI path for comparison
- */
-function convertToApiPath(svelteRoute) {
-  return svelteRoute.replace(/\[([^\]]+)\]/g, "{$1}");
-}
 async function generateMocks() {
   try {
     console.log("🔍 Reading OpenAPI spec...");
@@ -289,29 +437,23 @@ async function generateMocks() {
       // Create directory structure
       await fs.mkdir(routeDir, { recursive: true });
 
-      // Process each HTTP method
-      for (const [method, operation] of Object.entries(pathItem)) {
-        if (!["get", "post", "put", "patch", "delete"].includes(method))
-          continue;
+      const filename = "+server.ts";
+      const filepath = path.join(routeDir, filename);
 
-        const filename = "+server.ts";
-        const filepath = path.join(routeDir, filename);
+      // Skip if file exists
+      try {
+        await fs.access(filepath);
+        console.log(`⏭️  Skipping existing: ${apiPath}`);
+        skipped++;
+        continue;
+      } catch {
+        // File doesn't exist, proceed
+      }
 
-        // Skip if file exists
-        try {
-          await fs.access(filepath);
-          console.log(
-            `⏭️  Skipping existing: ${apiPath} [${method.toUpperCase()}]`,
-          );
-          skipped++;
-          continue;
-        } catch {
-          // File doesn't exist, proceed
-        }
+      console.log(`✨ Generating: ${apiPath}`);
 
-        console.log(`✨ Generating: ${apiPath} [${method.toUpperCase()}]`);
-
-        const content = generateRouteFile(method, apiPath, operation);
+      const content = generateConsolidatedRouteFile(apiPath, pathItem);
+      if (content) {
         await fs.writeFile(filepath, content);
         generated++;
       }

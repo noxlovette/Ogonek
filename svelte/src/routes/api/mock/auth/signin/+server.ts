@@ -1,22 +1,17 @@
-import { json, type RequestEvent } from '@sveltejs/kit';
+import { json, type RequestEvent } from "@sveltejs/kit";
 
 // Generated mock for POST /api/v1/auth/signin
 // Operation: signin
 
-
 type RequestBody = any;
-
 
 export async function POST({ request, params, url }: RequestEvent) {
   // Mock response selector - customize this logic
-  const mockResponse = url.searchParams.get('mock_status') || '200';
-  
+  const mockResponse = url.searchParams.get("mock_status") || "200";
+
   // Parse request body
   // const body: RequestBody = await request.json();
 
-  
-  
-  
   // Return mock based on requested status
   switch (parseInt(mockResponse)) {
     case 200:

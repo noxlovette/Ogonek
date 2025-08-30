@@ -1,27 +1,8 @@
-import { json } from '@sveltejs/kit';
+import { generateAppContext } from "$lib/server/mock/state";
+import { json } from "@sveltejs/kit";
+import type { RequestHandler } from "./$types";
+export const GET: RequestHandler = async ({}) => {
+  // fetch_context
 
-// Generated mock for GET /api/v1/state/context
-// Operation: fetch_context
-
-
-
-
-export async function GET({ request, params, url }: RequestEvent) {
-  // Mock response selector - customize this logic
-  const mockResponse = url.searchParams.get('mock_status') || '200';
-  
-  
-  
-  
-  
-  // Return mock based on requested status
-  switch (parseInt(mockResponse)) {
-    case 200:
-      return json(null, { status: 200 });
-
-    case 401:
-      return json(null, { status: 401 });
-    default:
-      return json({ error: "Not implemented" }, { status: 501 });
-  }
-}
+  return json(generateAppContext());
+};

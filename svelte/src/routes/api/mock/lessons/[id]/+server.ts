@@ -1,20 +1,14 @@
-import { json, type RequestEvent } from '@sveltejs/kit';
+import { json, type RequestEvent } from "@sveltejs/kit";
 
 // Generated mock for GET /api/v1/lessons/{id}
 // Operation: Fetches lesson by id
 
-
-
-
 export async function GET({ request, params, url }: RequestEvent) {
   // Mock response selector - customize this logic
-  const mockResponse = url.searchParams.get('mock_status') || '200';
-  
-  
+  const mockResponse = url.searchParams.get("mock_status") || "200";
+
   // Path params: id
 
-  
-  
   // Return mock based on requested status
   switch (parseInt(mockResponse)) {
     case 200:
