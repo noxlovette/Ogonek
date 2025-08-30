@@ -7,3 +7,5 @@ export { default as WorkArea } from "./WorkArea.svelte";
 
 export { default as HStack } from "./HStack.svelte";
 export { default as VStack } from "./VStack.svelte";
+
+export { default as PhotoPicker } from "./PhotoPicker.svelte";
