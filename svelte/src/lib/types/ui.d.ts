@@ -4,13 +4,6 @@ export interface Toast {
   message: string | null;
   type: "success" | "error" | "info" | null;
 }
-export interface Profile {
-  userId: string;
-  videoCallUrl: string | null;
-  avatarUrl: string | null;
-  telegramId: string | null;
-  [key: string]: string | undefined | null;
-}
 
 export interface BaseTableItem {
   id: string;

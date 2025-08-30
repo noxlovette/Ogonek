@@ -178,15 +178,15 @@ export const handleFetch: HandleFetch = async ({ event, request, fetch }) => {
   const url = new URL(request.url);
 
   if (url.pathname.startsWith("/axum/")) {
-    const cleanPath = url.pathname.replace("/axum/", "/api/v1/");
+    const cleanPath = url.pathname.replace("/axum/", "");
 
     if (envPublic.PUBLIC_MOCK_MODE) {
-      const mockURL = `${env.ORIGIN}/api/mock${cleanPath}`;
+      const mockURL = `${env.ORIGIN}/api/mock/${cleanPath}`;
       request = new Request(mockURL, request);
 
       return fetch(request);
     } else {
-      const newUrl = new URL(cleanPath, env.BACKEND_URL);
+      const newUrl = new URL(`/api/v1/${cleanPath}`, env.BACKEND_URL);
 
       url.searchParams.forEach((value, key) => {
         newUrl.searchParams.set(key, value);
@@ -227,7 +227,7 @@ export const handleError: HandleServerError = async ({
 
   logger.error({
     errorID,
-    message: error.message ?? message,
+    message: message,
     status,
     request: requestContext,
   });

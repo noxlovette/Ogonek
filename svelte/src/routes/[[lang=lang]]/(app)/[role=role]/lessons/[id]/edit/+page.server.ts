@@ -32,7 +32,7 @@ export const actions = {
       assignee,
     };
 
-    const response = await fetch(routes.lessons.single(id), {
+    const response = await fetch(routes.lessons.lesson(id), {
       method: "PATCH",
       body: JSON.stringify(body),
     });
@@ -53,7 +53,7 @@ export const actions = {
     if (!id) {
       return fail(500);
     }
-    const response = await fetch(routes.lessons.single(id), {
+    const response = await fetch(routes.lessons.lesson(id), {
       method: "DELETE",
     });
 

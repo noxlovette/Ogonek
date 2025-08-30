@@ -49,7 +49,8 @@ bun.lockb
 /build
 data
 tarpaulin-report.html
-openapi.*
+openapi.json
+openapi.yaml
 
 # OS
 .DS_Store

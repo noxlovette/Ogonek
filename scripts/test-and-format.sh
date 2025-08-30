@@ -1,10 +1,8 @@
-#!/bin/bash
-# Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
-NC='\033[0m' # No Color
+NC='\033[0m' 
 
 # Configuration
 DB_URL="postgres://postgres:H8QheSCRFCKejvDsbu@localhost:5433/pg-ogonek-dev"
@@ -47,27 +45,19 @@ run_cmd cargo clippy -- -D warnings
 echo -e "${YELLOW}🧪 Running cargo tests...${NC}"
 run_cmd cargo test
 
-echo -e "${YELLOW}📋 Generating OpenAPI spec...${NC}"
-run_cmd cargo run --bin generate_types
-
-# Copy OpenAPI spec to Swift project
-if [ -f openapi.yaml ]; then
-    cp openapi.yaml ~/Development/ogonek-swift/ || echo -e "${YELLOW}⚠️  Could not copy OpenAPI spec to Swift project${NC}"
-fi
-
 echo -e "${YELLOW}🗄️  Preparing sqlx queries...${NC}"
 run_cmd cargo sqlx prepare
 
 echo -e "${GREEN}✅ Rust checks completed successfully${NC}"
 
-# Navigate back to root and then to svelte folder
 cd ..
+
+run_cmd ./scripts/generate-types.sh
 
 echo -e "${YELLOW}⚡ Running Svelte checks in svelte folder...${NC}"
 cd svelte || handle_error "svelte folder not found"
 
 echo -e "${YELLOW}📦 Installing/updating pnpm dependencies...${NC}"
-# Use install --frozen-lockfile for consistency with CI
 run_cmd pnpm install --frozen-lockfile
 
 echo -e "${YELLOW}🎨 Formatting Svelte code...${NC}"

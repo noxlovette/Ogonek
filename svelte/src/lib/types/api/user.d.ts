@@ -1,25 +1,5 @@
-export interface Profile {
-  userId: string;
-  videoCallUrl: string | null;
-  avatarUrl: string | null;
-  telegramId: string | null;
-  [key: string]: string | undefined | null;
-}
+import type { components } from "./openapi";
 
-export interface User {
-  name: string | null;
-  username: string | null;
-  role: string | null;
-  email: string | null;
-  id: string | null;
-  [key: string]: string | undefined | null;
-}
-
-export interface Student {
-  id: string;
-  name: string;
-  username: string;
-  email: string;
-  markdown: string | null;
-  studentTelegramId: string | null;
-}
+export type User = components["schemas"]["User"];
+export type Profile = components["schemas"]["Profile"];
+export type Student = components["schemas"]["Student"];

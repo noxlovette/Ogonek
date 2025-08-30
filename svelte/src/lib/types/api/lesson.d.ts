@@ -1,19 +1,4 @@
-export interface Lesson {
-  id: string;
-  createdAt: string;
-  updatedAt: string;
-  assignee: string;
-  topic: string;
-  title: string;
-  assigneeName: string;
-  markdown: string;
-}
+import type { components } from "./openapi";
 
-export interface LessonSmall {
-  id: string;
-  createdAt: string;
-  title: string;
-  topic: string;
-  assigneeName: string;
-  seen: boolean;
-}
+export type LessonSmall = components["schemas"]["LessonSmall"];
+export type LessonFull = components["schemas"]["LessonFull"];

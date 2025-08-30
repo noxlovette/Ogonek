@@ -1,31 +1,7 @@
-export interface DeckSmall {
-  id: string;
-  isSubscribed?: boolean;
-  title: string;
-  description: string;
-  visibility: "private" | "assigned" | "public";
-  seen: boolean;
-  assigneeName: string;
-}
-export interface Card {
-  id: string;
-  front: string;
-  back: string;
-  mediaUrl?: string | null;
-  deckId: string;
-  createdAt?: string;
-}
+import type { components } from "./openapi";
 
-export interface CardProgress {
-  id: string;
-  cardId: string;
-  userId: string;
-  reviewCount: number;
-  lastReviewed: string | null;
-  dueDate: string;
-  easeFactor: number;
-  interval: number;
-  front: string;
-  back: string;
-  mediaUrl: string | null;
-}
+export type DeckFull = components["schemas"]["DeckFull"];
+export type DeckSmall = components["schemas"]["DeckSmall"];
+export type DeckWithCards = components["schemas"]["DeckWithCards"];
+export type CardProgress = components["schemas"]["CardProgressWithFields"];
+export type Card = components["schemas"]["Card"];

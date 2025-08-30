@@ -60,6 +60,5 @@
     <Input name="topic" value={lesson.topic} placeholder="Topic"></Input>
     <Input name="assignee" item={lesson} type="assignee" />
   </div>
-  <PhotoPicker />
 </form>
 <Editor bind:markdownContent={markdown} />

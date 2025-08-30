@@ -13,7 +13,7 @@ export const actions = {
     const formData = await request.formData();
 
     const isSubscribed = formData.get("isSubscribed") === "true";
-    const response = await fetch(routes.learn.subscribe(id), {
+    const response = await fetch(routes.learn.update(id), {
       method: isSubscribed ? "DELETE" : "POST",
     });
 

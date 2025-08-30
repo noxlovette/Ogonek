@@ -4,7 +4,6 @@ import { fail } from "@sveltejs/kit";
 import type { Actions } from "./$types";
 
 export const actions: Actions = {
-  // Update the progress of the card
   default: async ({ fetch, request }) => {
     const formData = await request.formData();
     const cardId = formData.get("cardId") as string;
@@ -13,7 +12,7 @@ export const actions: Actions = {
       return fail(422, { message: "No Id Provided" });
     }
 
-    const response = await fetch(routes.learn.update(cardId), {
+    const response = await fetch(routes.learn.update_card_progress(cardId), {
       method: "PUT",
       body: JSON.stringify({
         quality: Number(formData.get("quality")),
