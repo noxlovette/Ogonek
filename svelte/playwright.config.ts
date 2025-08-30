@@ -6,11 +6,13 @@ const config: PlaywrightTestConfig = {
     port: 4173,
     env: {
       NODE_ENV: "test",
-      REDIS_DISABLED: "true",
+      PUBLIC_MOCK_MODE: "true",
     },
   },
   testDir: "tests",
   testMatch: /(.+\.)?(test|spec)\.[jt]s/,
+  use: {
+    baseURL: "http://localhost:4173",
+  },
 };
-
 export default config;

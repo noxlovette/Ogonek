@@ -1,8 +1,20 @@
-export interface TaskWithFiles {
-  task: Task;
-  files: FileSmall[];
+export interface ActivityLog {
+  modelType: string;
+  modelId: string;
+  action: string;
+  createdAt: string;
 }
 
+export interface Deck {
+  id: string;
+  title: string;
+  description?: string;
+  assignee: string;
+  isSubscribed: boolean;
+  visibility: "public" | "private" | "assigned";
+  createdBy: string;
+  createdAt: string;
+}
 export interface UserPreferences {
   auto_subscribe: boolean;
   email_notifications: boolean;
@@ -64,7 +76,7 @@ export interface LearnDataDashboard {
   stats: SimpleStats;
 }
 
-interface SimpleStats {
+export interface SimpleStats {
   cardsStudiedToday: number;
   currentStreak: number;
 }
