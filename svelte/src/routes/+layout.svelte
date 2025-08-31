@@ -36,7 +36,7 @@
     <MockController></MockController>
   {/if}
   <h1
-    class="w-full cursor-default bg-stone-100 text-center font-serif text-7xl text-stone-200 xl:text-[20rem] dark:bg-stone-900 dark:text-stone-800"
+    class="w-full cursor-default text-center font-serif text-7xl text-stone-200 xl:text-[20rem] dark:text-stone-800"
   >
     Ogonek
   </h1>

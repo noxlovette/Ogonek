@@ -85,6 +85,7 @@
     {type}
     {formaction}
     {disabled}
+    id="btn"
     class={allClasses}
     onclick={variant === "danger" ? handleClick : onclick}
   >

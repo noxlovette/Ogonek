@@ -1,4 +1,4 @@
-import { version } from "$app/environment";
+import { dev, version } from "$app/environment";
 import { env } from "$env/dynamic/private";
 import { env as envPublic } from "$env/dynamic/public";
 import logger from "$lib/logger";
@@ -20,7 +20,7 @@ import { sequence } from "@sveltejs/kit/hooks";
 Sentry.init({
   dsn: envPublic.PUBLIC_SENTRY_DSN,
   release: version,
-  environment: envPublic.PUBLIC_APP_ENV || "development",
+  environment: dev ? "development" : "production",
   tracesSampleRate: envPublic.PUBLIC_SENTRY_TRACING_RATE
     ? Number(envPublic.PUBLIC_SENTRY_TRACING_RATE)
     : 1.0,

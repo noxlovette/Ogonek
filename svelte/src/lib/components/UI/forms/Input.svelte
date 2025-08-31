@@ -11,6 +11,7 @@
     value = $bindable(),
     disabled = $bindable(),
     ref,
+    required = false,
     showLabel = true,
     item,
     type = "text",
@@ -22,6 +23,7 @@
     ref?: HTMLInputElement;
     disabled?: boolean;
     showLabel?: boolean;
+    required?: boolean;
     item?: Assignable;
     type?:
       | "text"
@@ -32,7 +34,8 @@
       | "checkbox"
       | "date"
       | "assignee"
-      | "visibility";
+      | "visibility"
+      | "role";
   } = $props();
 
   let showPassword = $state(false);
@@ -131,6 +134,12 @@
           {student.name}
         </option>
       {/each}
+    </select>
+  {:else if type === "role"}
+    <select {name} {required} class={baseStyle}>
+      <option value="">Select a role</option>
+      <option value="teacher">Teacher</option>
+      <option value="student">Student</option>
     </select>
   {/if}
 </div>

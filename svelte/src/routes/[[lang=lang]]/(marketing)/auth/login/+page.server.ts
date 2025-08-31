@@ -1,11 +1,10 @@
-import { env } from "$env/dynamic/public";
 import logger from "$lib/logger";
 import { routes } from "$lib/routes";
 import {
+  captchaVerify,
   handleApiResponse,
   isSuccessResponse,
   setTokenCookie,
-  turnstileVerify,
   ValidateAccess,
 } from "$lib/server";
 import type { AuthResponse } from "$lib/types";
@@ -35,22 +34,20 @@ export const actions: Actions = {
       });
     }
 
-    if (env.PUBLIC_APP_ENV !== "development") {
-      const turnstileToken = data.get("cf-turnstile-response") as string;
-      if (!turnstileToken) {
-        return fail(400, {
-          message: "Please complete the CAPTCHA verification",
-        });
-      }
-      const turnstileResponse = await turnstileVerify(turnstileToken);
-      if (!turnstileResponse.ok) {
-        return fail(400, {
-          message: "Turnstile verification failed",
-        });
-      }
+    const captchaToken = data.get("smart-token") as string;
+    if (!captchaToken) {
+      return fail(400, {
+        message: "Please complete the CAPTCHA verification",
+      });
+    }
+    const captchaResponse = await captchaVerify(captchaToken);
+    if (!captchaResponse.ok) {
+      return fail(400, {
+        message: "Captcha verification failed",
+      });
     }
 
-    const response = await fetch(routes.auth.login(), {
+    const response = await fetch(routes.auth.signin(), {
       method: "POST",
       body: JSON.stringify({ username, pass }),
     });
