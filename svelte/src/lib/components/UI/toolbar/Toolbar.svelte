@@ -1,18 +1,25 @@
 <script lang="ts">
   import { page } from "$app/state";
   import { ChevronLeft } from "lucide-svelte";
-  import { derived } from "svelte/store";
   import UniButton from "../forms/UniButton.svelte";
   import Merger from "./Merger.svelte";
   import Divider from "./Divider.svelte";
   import { VStack } from "..";
+  import type { Role } from "$lib/types";
 
   let { children } = $props();
+  function isRole(segment: string): segment is Role {
+    return segment === "t" || segment === "s";
+  }
 
-  // Determine if we’re in a "subsection"
-  // Example: hide on `/role/dashboard`, show on `/role/lessons/:id`
   const showBack = $derived.by(() => {
     const segments = page.url.pathname.split("/").filter(Boolean);
+
+    const [firstSegment] = segments;
+
+    if (!isRole(firstSegment)) {
+      return segments.length > 1;
+    }
 
     if (segments.length < 2) return false;
 

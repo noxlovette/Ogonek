@@ -27,7 +27,7 @@
   let elementsMobile = [Dashboard, Todo, Lessons, Words];
 
   studentStore.setStudents(data.students);
-  setContext<string | null>("callURL", data.callURL);
+  setContext<string | null>("callURL", data.callURL ?? "https://zoom.us");
   setContext<Student[]>("students", data.students);
   setContext<number>("lessonCount", data.badges.unseenLessons);
   setContext<number>("deckCount", data.badges.unseenDecks);

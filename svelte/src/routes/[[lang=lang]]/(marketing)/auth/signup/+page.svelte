@@ -1,6 +1,6 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
-  import { Captcha, UniButton, Input, Grid } from "$lib/components";
+  import { Captcha, UniButton, Input, Grid, Merger } from "$lib/components";
   import { DoorOpen } from "lucide-svelte";
   import { enhanceForm } from "$lib/utils";
   import { m } from "$lib/paraglide/messages";
@@ -12,7 +12,7 @@
 
 <form
   method="post"
-  class="flex flex-col gap-4"
+  class="flex max-w-md flex-col gap-2 md:gap-3 lg:gap-4"
   use:enhance={enhanceForm({
     messages: {
       redirect: "Welcome on board",
@@ -22,20 +22,29 @@
   })}
 >
   <Grid>
-    <Input name="name" placeholder="Name" value=""></Input>
-    <Input name="username" placeholder="Username" value=""></Input>
+    <Input name="name" showLabel={false} placeholder="Name" value=""></Input>
+    <Input name="username" showLabel={false} placeholder="Username" value=""
+    ></Input>
 
-    <Input name="role" type="role" />
-    <Input name="email" placeholder="Email" type="email" value=""></Input>
+    <Input name="role" showLabel={false} type="role" />
+    <Input
+      name="email"
+      showLabel={false}
+      placeholder="Email"
+      type="email"
+      value=""
+    ></Input>
     <Input
       name="password"
       placeholder="Password"
+      showLabel={false}
       type="password"
       bind:value={password}
     ></Input>
     <Input
       name="confirmPassword"
       placeholder="Again"
+      showLabel={false}
       type="password"
       bind:value={confirmPassword}
     ></Input>
@@ -45,11 +54,12 @@
     {/if}
   </Grid>
   <Captcha />
-  <UniButton Icon={DoorOpen} type="submit" variant="primary" iconOnly={false}
-    >Create Account</UniButton
-  >
+  <Merger>
+    <UniButton Icon={DoorOpen} type="submit" variant="primary" iconOnly={false}
+      >Create Account</UniButton
+    >
+  </Merger>
 </form>
-
 <svelte:head>
   <title>{m.signUp()}</title>
 </svelte:head>

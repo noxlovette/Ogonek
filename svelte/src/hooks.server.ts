@@ -38,15 +38,18 @@ export const init: ServerInit = async () => {
   logger.info("App Booted");
 };
 
-export const paraglideHandle: Handle = ({ event, resolve }) =>
-  paraglideMiddleware(event.request, ({ request, locale }) => {
-    event.request = request;
-
-    return resolve(event, {
-      transformPageChunk: ({ html }) =>
-        html.replace("%paraglide.lang%", locale),
-    });
-  });
+const paraglideHandle: Handle = ({ event, resolve }) =>
+  paraglideMiddleware(
+    event.request,
+    ({ request: localizedRequest, locale }) => {
+      event.request = localizedRequest;
+      return resolve(event, {
+        transformPageChunk: ({ html }) => {
+          return html.replace("%lang%", locale);
+        },
+      });
+    },
+  );
 
 export const authenticationHandle: Handle = async ({ event, resolve }) => {
   // skip authentication if in dev mode
@@ -255,6 +258,7 @@ export const handleError: HandleServerError = async ({
 };
 
 export const handle: Handle = sequence(
-  Sentry.sentryHandle(),
+  paraglideHandle,
   authenticationHandle,
+  Sentry.sentryHandle(),
 );

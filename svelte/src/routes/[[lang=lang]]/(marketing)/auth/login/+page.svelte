@@ -1,7 +1,7 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
   import { goto } from "$app/navigation";
-  import { Input, Captcha, UniButton, Grid } from "$lib/components";
+  import { Input, Captcha, UniButton, Grid, Merger } from "$lib/components";
   import { m } from "$lib/paraglide/messages";
   import { initialUser, notification } from "$lib/stores";
   import { enhanceForm } from "$lib/utils";
@@ -10,7 +10,7 @@
 
 <form
   method="POST"
-  class="flex flex-col gap-4"
+  class="flex max-w-md flex-col gap-2 md:gap-3 lg:gap-4"
   use:enhance={enhanceForm({
     handlers: {
       success: async (result) => {
@@ -25,19 +25,28 @@
   })}
 >
   <Grid>
-    <Input required={true} name="username" placeholder="Username" value="" />
+    <Input
+      required={true}
+      showLabel={false}
+      name="username"
+      placeholder="Username"
+      value=""
+    />
     <Input
       required={true}
       name="password"
+      showLabel={false}
       placeholder="Password"
       value=""
       type="password"
     />
   </Grid>
   <Captcha />
-  <UniButton Icon={DoorOpen} type="submit" variant="primary" iconOnly={false}
-    >{m.logIn()}</UniButton
-  >
+  <Merger>
+    <UniButton Icon={DoorOpen} type="submit" variant="primary" iconOnly={false}
+      >{m.logIn()}</UniButton
+    >
+  </Merger>
 </form>
 
 <svelte:head>

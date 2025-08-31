@@ -87,7 +87,9 @@
     />
     <button
       type="button"
-      class="absolute top-[2.65rem] right-3 -translate-y-1/2 transform text-stone-500 dark:text-stone-300"
+      class="absolute {showLabel
+        ? 'top-[2.65rem]'
+        : 'top-[1.3rem]'} right-3 -translate-y-1/2 transform text-stone-500 dark:text-stone-300"
       onclick={() => (showPassword = !showPassword)}
       tabindex="-1"
     >

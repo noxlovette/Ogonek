@@ -1,5 +1,7 @@
 export type UrgencyLevel = "overdue" | "urgent" | "soon" | "normal";
 
+export type Role = "t" | "s";
+
 export interface Toast {
   message: string | null;
   type: "success" | "error" | "info" | null;
