@@ -12,7 +12,7 @@ export async function GET({ url }: RequestEvent) {
   });
 }
 
-export async function PATCH({ request, params, url }: RequestEvent) {
+export async function PATCH({ request, url }: RequestEvent) {
   const body: LessonUpdateBody = await request.json();
 
   logger.debug(body);

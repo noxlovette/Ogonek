@@ -8,13 +8,13 @@ import { nanoid } from "nanoid";
 import { createDecksSmall } from "./decks";
 import { createLessonsSmall } from "./lessons";
 import { createTasksSmall } from "./tasks";
-import { createProfile, createStudents, createUserTeacher } from "./user";
+import { createProfile, createStudents, createUser } from "./user";
 
 export function createAppContext(
   overrides: Partial<AppContext> = {},
 ): AppContext {
   return {
-    user: createUserTeacher(),
+    user: createUser(),
     profile: createProfile(),
     callUrl: null,
     students: createStudents(),
@@ -41,6 +41,7 @@ export function createDashboardData(
       cardsStudiedToday: 5,
       currentStreak: 2,
     },
+    ...overrides,
   };
 }
 

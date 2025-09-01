@@ -13,7 +13,7 @@ export const actions = {
     const formData = await request.formData();
 
     const isSubscribed = formData.get("isSubscribed") === "true";
-    const response = await fetch(routes.learn.update(id), {
+    const response = await fetch(routes.learn.update_card_progress(id), {
       method: isSubscribed ? "DELETE" : "POST",
     });
 

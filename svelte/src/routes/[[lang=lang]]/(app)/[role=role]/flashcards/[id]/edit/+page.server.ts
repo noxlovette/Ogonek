@@ -52,7 +52,7 @@ export const actions = {
       cards,
     };
 
-    const response = await fetch(routes.decks.single(id), {
+    const response = await fetch(routes.decks.deck(id), {
       method: "PATCH",
       body: JSON.stringify(body),
     });
@@ -70,7 +70,7 @@ export const actions = {
   delete: async ({ params, fetch }) => {
     const { id } = params;
 
-    const response = await fetch(routes.decks.single(id), {
+    const response = await fetch(routes.decks.deck(id), {
       method: "DELETE",
     });
 

@@ -13,7 +13,7 @@ export const GET: RequestHandler = async () => {
   return json(paginatedResponse);
 };
 
-export const POST: RequestHandler = async ({ request }) => {
+export const POST: RequestHandler = async () => {
   const id = nanoid();
 
   return json(id);

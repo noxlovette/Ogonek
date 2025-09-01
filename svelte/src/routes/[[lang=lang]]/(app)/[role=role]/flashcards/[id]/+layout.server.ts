@@ -1,3 +1,4 @@
+import logger from "$lib/logger";
 import { routes } from "$lib/routes";
 import type { DeckWithCards } from "$lib/types";
 import { error } from "@sveltejs/kit";
@@ -12,7 +13,10 @@ export const load: LayoutServerLoad = async ({ fetch, params }) => {
     return error(response.status);
   }
 
+  logger.debug(response);
   const deckComposite: DeckWithCards = await response.json();
+  logger.debug(deckComposite);
   const { deck, cards } = deckComposite;
+  logger.debug(deck);
   return { deck, cards };
 };

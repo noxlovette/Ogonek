@@ -1,6 +1,7 @@
-import type { DeckFull, DeckSmall } from "$lib/types";
+import type { DeckFull, DeckSmall, DeckWithCards } from "$lib/types";
 import { daysAgo } from "$lib/utils";
 import { nanoid } from "nanoid";
+import { createCards } from "./cards";
 
 export function createDeckSmall(overrides: Partial<DeckSmall> = {}): DeckSmall {
   return {
@@ -38,4 +39,14 @@ export function createDecksSmall(
       ...overrides,
     }),
   );
+}
+
+export function createDeckWithCards(
+  overrides: Partial<DeckWithCards> = {},
+): DeckWithCards {
+  return {
+    deck: createDeckFull(),
+    cards: createCards(),
+    ...overrides,
+  };
 }
