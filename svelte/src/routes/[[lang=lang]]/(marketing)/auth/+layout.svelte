@@ -28,7 +28,7 @@
       <Caption1>
         {isLogin ? m.petty_neat_emu_endure() : m.dark_candid_octopus_compose()}
         <a href={isLogin ? "/auth/signup" : "/auth/login"} class="text-accent"
-          >{isLogin ? m.signUp() : m.logIn()}</a
+          >{isLogin ? m.nimble_north_worm_drop() : m.logIn()}</a
         >
       </Caption1>
     </HStack>

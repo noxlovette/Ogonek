@@ -1,16 +1,15 @@
 <script lang="ts">
-  import { LargeTitle } from "../typography";
+  import { Callout, LargeTitle, Title1 } from "../typography";
 
   let { children, title = "Title" } = $props();
 </script>
 
-<section
-  class="ring-default max-w-xs space-y-2 rounded-md bg-white p-5 pb-12 shadow-sm dark:bg-stone-950"
->
-  <LargeTitle>
+<section class="max-w-md gap-2 md:gap-3 lg:gap-4">
+  <Title1>
     {title}
-  </LargeTitle>
-  <p class="text-balance">
+  </Title1>
+
+  <Callout>
     {@render children?.()}
-  </p>
+  </Callout>
 </section>
