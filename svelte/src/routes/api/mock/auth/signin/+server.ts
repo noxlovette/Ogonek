@@ -7,7 +7,15 @@ export const POST: RequestHandler = async ({ request, params, url }) => {
   const body = await request.json();
   logger.info("POST /api/v1/auth/signin with body:", body);
   // signin
-  
-  
-  return json(null);
+
+  return json({
+    accessToken: {
+      token: "access token",
+      expiresAt: 1756710415,
+    },
+    refreshToken: {
+      token: "refresh token",
+      expiresAt: 1759301515,
+    },
+  });
 };

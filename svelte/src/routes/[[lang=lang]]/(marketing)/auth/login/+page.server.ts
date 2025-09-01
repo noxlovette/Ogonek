@@ -1,3 +1,4 @@
+import { env } from "$env/dynamic/public";
 import logger from "$lib/logger";
 import { routes } from "$lib/routes";
 import {
@@ -7,6 +8,7 @@ import {
   setTokenCookie,
   ValidateAccess,
 } from "$lib/server";
+import { createMockTeacher } from "$lib/server/mock/user";
 import type { AuthResponse } from "$lib/types";
 import { validateRequired } from "@noxlovette/svarog";
 import { fail, type Actions } from "@sveltejs/kit";
@@ -57,13 +59,17 @@ export const actions: Actions = {
       return fail(authResult.status);
     }
 
-    const { accessToken, refreshToken } = authResult.data;
-    setTokenCookie(cookies, "accessToken", accessToken);
-    setTokenCookie(cookies, "refreshToken", refreshToken);
+    if (!env.PUBLIC_MOCK_MODE) {
+      const { accessToken, refreshToken } = authResult.data;
+      setTokenCookie(cookies, "accessToken", accessToken);
+      setTokenCookie(cookies, "refreshToken", refreshToken);
 
-    const user = await ValidateAccess(accessToken.token);
+      const user = await ValidateAccess(accessToken.token);
 
-    logger.debug({ user }, "user from the login");
+      logger.debug({ user }, "user from the login");
+    }
+
+    const user = createMockTeacher();
 
     return {
       user,

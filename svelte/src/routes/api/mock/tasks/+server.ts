@@ -1,7 +1,7 @@
-import logger from "$lib/logger";
 import { createTasksSmall } from "$lib/server/mock/tasks";
 import type { PaginatedResponse, TaskSmall } from "$lib/types";
-import type { RequestHandler } from "@sveltejs/kit";
+import { json, type RequestHandler } from "@sveltejs/kit";
+import { nanoid } from "nanoid";
 
 export const GET: RequestHandler = async () => {
   const paginatedResponse: PaginatedResponse<TaskSmall> = {
@@ -10,19 +10,13 @@ export const GET: RequestHandler = async () => {
     page: 1,
   };
 
-  return new Response(JSON.stringify(paginatedResponse), {
-    headers: { "Content-Type": "application/json" },
-  });
+  return json(paginatedResponse);
 };
 
 export const POST: RequestHandler = async ({ request }) => {
   const body = await request.json();
 
-  logger.warn("HIT POST TASK with body:", body);
+  const id = nanoid();
 
-  const id = "task1";
-
-  return new Response(JSON.stringify(id), {
-    headers: { "Content-Type": "application/json" },
-  });
+  return json(id);
 };

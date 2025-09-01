@@ -1,6 +1,7 @@
 import { createLessonsSmall } from "$lib/server/mock/lessons";
 import type { LessonSmall, PaginatedResponse } from "$lib/types";
 import { json } from "@sveltejs/kit";
+import { nanoid } from "nanoid";
 import type { RequestHandler } from "./$types";
 export const GET: RequestHandler = async () => {
   const paginatedResponse: PaginatedResponse<LessonSmall> = {
@@ -12,5 +13,6 @@ export const GET: RequestHandler = async () => {
   return json(paginatedResponse);
 };
 export const POST: RequestHandler = async () => {
-  return json({ id: "lesson1" });
+  const id = nanoid();
+  return json(id);
 };
