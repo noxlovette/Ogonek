@@ -14,8 +14,6 @@ export const GET: RequestHandler = async () => {
 };
 
 export const POST: RequestHandler = async ({ request }) => {
-  const body = await request.json();
-
   const id = nanoid();
 
   return json(id);

@@ -1,26 +1,33 @@
+import logger from "$lib/logger";
 import { createTaskWithFiles } from "$lib/server/mock";
+import { mockResponder } from "$lib/server/mock/helpers";
+import type { TaskUpdateBody } from "$lib/types";
 import { json, type RequestEvent } from "@sveltejs/kit";
 
-// Generated mock for GET /api/v1/tasks/{id}
-// Operation: One Task
+export async function GET({ url }: RequestEvent) {
+  return mockResponder(url, {
+    200: () => createTaskWithFiles(),
+    401: () => null,
+    404: () => null,
+  });
+}
 
-export async function GET({ request, params, url }: RequestEvent) {
-  // Mock response selector - customize this logic
-  const mockResponse = url.searchParams.get("mock_status") || "200";
+export async function PATCH({ request, url }: RequestEvent) {
+  const body: TaskUpdateBody = await request.json();
 
-  // Path params: id
+  logger.debug(body);
 
-  // Return mock based on requested status
-  switch (parseInt(mockResponse)) {
-    case 200:
-      return json(createTaskWithFiles({ id: params.id }), { status: 200 });
+  return mockResponder(url, {
+    200: () => json(null, { status: 200 }),
+    401: () => null,
+    404: () => null,
+  });
+}
 
-    case 401:
-      return json(null, { status: 401 });
-
-    case 404:
-      return json(null, { status: 404 });
-    default:
-      return json({ error: "Not implemented" }, { status: 501 });
-  }
+export async function DELETE({ url }: RequestEvent) {
+  return mockResponder(url, {
+    204: () => null,
+    401: () => null,
+    404: () => null,
+  });
 }
