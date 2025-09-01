@@ -8,14 +8,14 @@ import { nanoid } from "nanoid";
 import { createDecksSmall } from "./decks";
 import { createLessonsSmall } from "./lessons";
 import { createTasksSmall } from "./tasks";
-import { createMockProfile, createMockTeacher, createStudents } from "./user";
+import { createProfile, createStudents, createUserTeacher } from "./user";
 
 export function createAppContext(
   overrides: Partial<AppContext> = {},
 ): AppContext {
   return {
-    user: createMockTeacher(),
-    profile: createMockProfile(),
+    user: createUserTeacher(),
+    profile: createProfile(),
     callUrl: null,
     students: createStudents(),
     preferences: {

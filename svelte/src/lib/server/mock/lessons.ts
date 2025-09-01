@@ -16,6 +16,17 @@ export function createLessonSmall(
   };
 }
 
+export function createLessonsSmall(
+  count: number = 4,
+  overrides: Partial<LessonSmall> = {},
+): LessonSmall[] {
+  return Array.from({ length: count }, (_, i) =>
+    createLessonSmall({
+      title: `Lesson ${i + 1}`,
+      ...overrides,
+    }),
+  );
+}
 export function createLessonFull(
   overrides: Partial<LessonFull> = {},
 ): LessonFull {
@@ -30,16 +41,4 @@ export function createLessonFull(
     assignee: "student_" + nanoid(8),
     ...overrides,
   };
-}
-
-export function createLessonsSmall(
-  count: number = 4,
-  overrides: Partial<LessonSmall> = {},
-): LessonSmall[] {
-  return Array.from({ length: count }, (_, i) =>
-    createLessonSmall({
-      title: `Lesson ${i + 1}`,
-      ...overrides,
-    }),
-  );
 }

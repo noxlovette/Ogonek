@@ -1,17 +1,32 @@
-import type { Profile, Student, User } from "$lib/types";
+import type { Profile, Role, Student, User } from "$lib/types";
 import { nanoid } from "nanoid";
-
-export function createMockTeacher(overrides: Partial<User> = {}): User {
+/**
+ * Creates a user instance for mock endpoints
+ * @param overrides redefine the user you want to create
+ * @param role t or s, creates either teacher or student. Defaults to teacher
+ * @returns a user instance
+ */
+export function createUser(
+  overrides: Partial<User> = {},
+  role: Role = "t",
+): User {
+  const isTeacher = role === "t";
   return {
-    id: "teacher1",
-    name: "Teacher One",
-    username: "teacher1",
-    role: "teacher",
+    id: isTeacher ? "teacher1" : "student",
+    name: isTeacher ? "Teacher One" : "Student One",
+    username: isTeacher ? "teacher1" : "student1",
+    role: isTeacher ? "teacher" : "student",
     email: "",
     ...overrides,
   };
 }
-export function createMockStudent(overrides: Partial<Student> = {}): Student {
+
+/**
+ * Creates a Student instance (NOT A STUDENT USER)
+ * @param overrides student fields
+ * @returns a student instance
+ */
+export function createStudent(overrides: Partial<Student> = {}): Student {
   return {
     id: nanoid(),
     name: "Student One",
@@ -22,7 +37,13 @@ export function createMockStudent(overrides: Partial<Student> = {}): Student {
     ...overrides,
   };
 }
-export function createMockProfile(overrides: Partial<Profile> = {}): Profile {
+
+/**
+ * Creates a mock profile
+ * @param overrides profile override
+ * @returns a profile
+ */
+export function createProfile(overrides: Partial<Profile> = {}): Profile {
   return {
     userId: "teacher1",
     videoCallUrl: "https://zoom.us/j/pwd?=teacher1",
@@ -32,15 +53,26 @@ export function createMockProfile(overrides: Partial<Profile> = {}): Profile {
   };
 }
 
+/**
+ * Creates a mock student array
+ * @param overrides give all of the generated students a specific property
+ * @param count how many to create
+ * @returns an array of students
+ */
 export function createStudents(
   overrides: Partial<Student> = {},
   count: number = 4,
 ): Student[] {
   return Array.from({ length: count }, (_, i) =>
-    createMockStudent({
+    createStudent({
       name: `Student ${i + 1}`,
       username: `student${i + 1}`,
       ...overrides,
     }),
   );
 }
+
+/**
+ * In-memory user store for persistence inside a session
+ */
+export const mockTeacher: User = createUser();

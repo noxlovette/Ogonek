@@ -1,25 +1,33 @@
+import logger from "$lib/logger";
+import { createLessonFull } from "$lib/server/mock";
+import { mockResponder } from "$lib/server/mock/helpers";
+import type { LessonUpdateBody } from "$lib/types";
 import { json, type RequestEvent } from "@sveltejs/kit";
 
-// Generated mock for GET /api/v1/lessons/{id}
-// Operation: Fetches lesson by id
+export async function GET({ url }: RequestEvent) {
+  return mockResponder(url, {
+    200: () => createLessonFull(),
+    401: () => null,
+    404: () => null,
+  });
+}
 
-export async function GET({ request, params, url }: RequestEvent) {
-  // Mock response selector - customize this logic
-  const mockResponse = url.searchParams.get("mock_status") || "200";
+export async function PATCH({ request, params, url }: RequestEvent) {
+  const body: LessonUpdateBody = await request.json();
 
-  // Path params: id
+  logger.debug(body);
 
-  // Return mock based on requested status
-  switch (parseInt(mockResponse)) {
-    case 200:
-      return json(null, { status: 200 });
+  return mockResponder(url, {
+    200: () => json(null, { status: 200 }),
+    401: () => null,
+    404: () => null,
+  });
+}
 
-    case 401:
-      return json(null, { status: 401 });
-
-    case 404:
-      return json(null, { status: 404 });
-    default:
-      return json({ error: "Not implemented" }, { status: 501 });
-  }
+export async function DELETE({ url }: RequestEvent) {
+  return mockResponder(url, {
+    204: () => null,
+    401: () => null,
+    404: () => null,
+  });
 }
