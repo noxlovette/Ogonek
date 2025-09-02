@@ -1,52 +1,38 @@
 import type { DeckFull, DeckSmall, DeckWithCards } from "$lib/types";
-import { daysAgo } from "$lib/utils";
+import { faker } from "@faker-js/faker";
 import { nanoid } from "nanoid";
 import { createCards } from "./cards";
 
-export function createDeckSmall(overrides: Partial<DeckSmall> = {}): DeckSmall {
+export function createDeckSmall(): DeckSmall {
   return {
     id: nanoid(),
-    title: "Sample Lesson",
-    assigneeName: "John Doe",
-    cardCount: 10,
-    description: "test;miracle",
-    isSubscribed: true,
-    visibility: "assigned",
-    seen: false,
-    ...overrides,
+    title: faker.book.title(),
+    assigneeName: faker.person.fullName(),
+    cardCount: faker.number.int(),
+    description: Array.from(
+      { length: faker.number.int({ min: 1, max: 4 }) },
+      () => faker.word.adjective(),
+    ).join(";"),
+    isSubscribed: faker.datatype.boolean(),
+    visibility: faker.helpers.arrayElement(["assigned", "private", "public"]),
+    seen: faker.datatype.boolean(),
   };
 }
 
-export function createDeckFull(overrides: Partial<DeckFull> = {}): DeckFull {
-  const base = createDeckSmall(overrides);
+export function createDeckFull(): DeckFull {
+  const base = createDeckSmall();
 
   return {
     ...base,
-    createdBy: "teacher1",
-    createdAt: daysAgo(30),
-    assignee: "student_" + nanoid(8),
-    ...overrides,
+    createdBy: nanoid(),
+    createdAt: faker.date.past().toISOString(),
+    assignee: nanoid(),
   };
 }
 
-export function createDecksSmall(
-  count: number = 4,
-  overrides: Partial<DeckSmall> = {},
-): DeckSmall[] {
-  return Array.from({ length: count }, (_, i) =>
-    createDeckSmall({
-      title: `Deck ${i + 1}`,
-      ...overrides,
-    }),
-  );
-}
-
-export function createDeckWithCards(
-  overrides: Partial<DeckWithCards> = {},
-): DeckWithCards {
+export function createDeckWithCards(): DeckWithCards {
   return {
     deck: createDeckFull(),
     cards: createCards(),
-    ...overrides,
   };
 }

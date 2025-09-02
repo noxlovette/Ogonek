@@ -1,11 +1,12 @@
-import { createTasksSmall } from "$lib/server/mock/tasks";
+import { createTaskSmall } from "$lib/server/mock";
 import type { PaginatedResponse, TaskSmall } from "$lib/types";
+import { faker } from "@faker-js/faker";
 import { json, type RequestHandler } from "@sveltejs/kit";
 import { nanoid } from "nanoid";
 
 export const GET: RequestHandler = async () => {
   const paginatedResponse: PaginatedResponse<TaskSmall> = {
-    data: createTasksSmall(5),
+    data: faker.helpers.multiple(createTaskSmall),
     perPage: 3,
     page: 1,
   };

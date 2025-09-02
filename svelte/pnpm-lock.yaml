@@ -42,6 +42,9 @@ importers:
       '@eslint/js':
         specifier: ^9.18.0
         version: 9.33.0
+      '@faker-js/faker':
+        specifier: ^10.0.0
+        version: 10.0.0
       '@inlang/paraglide-js':
         specifier: ^2.2.0
         version: 2.2.0
@@ -452,6 +455,10 @@ packages:
 
   '@exodus/schemasafe@1.3.0':
     resolution: {integrity: sha512-5Aap/GaRupgNx/feGBwLLTVv8OQFfv3pq2lPRzPg9R+IOBnDgghTGW7l7EuVXOvg5cc/xSAlRW8rBrjIC3Nvqw==}
+
+  '@faker-js/faker@10.0.0':
+    resolution: {integrity: sha512-UollFEUkVXutsaP+Vndjxar40Gs5JL2HeLcl8xO1QAjJgOdhc3OmBFWyEylS+RddWaaBiAzH+5/17PLQJwDiLw==}
+    engines: {node: ^20.19.0 || ^22.13.0 || ^23.5.0 || >=24.0.0, npm: '>=10'}
 
   '@gcornut/valibot-json-schema@0.42.0':
     resolution: {integrity: sha512-4Et4AN6wmqeA0PfU5Clkv/IS27wiefsWf6TemAZrb75uzkClYEFavim7SboeKwbll9Nbsn2Iv0LT/HS5H7orZg==}
@@ -4709,6 +4716,8 @@ snapshots:
       levn: 0.4.1
 
   '@exodus/schemasafe@1.3.0': {}
+
+  '@faker-js/faker@10.0.0': {}
 
   '@gcornut/valibot-json-schema@0.42.0(esbuild@0.25.9)(typescript@5.8.3)':
     dependencies:

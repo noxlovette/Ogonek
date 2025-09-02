@@ -47,5 +47,5 @@
   <ActivityFeedWidget activities={data.activity} />
 </div>
 <svelte:head>
-  <title>Dashboard | Ogonek</title>
+  <title>{m.dashboardName()}</title>
 </svelte:head>

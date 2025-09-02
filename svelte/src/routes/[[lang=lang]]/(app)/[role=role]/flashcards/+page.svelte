@@ -70,7 +70,7 @@
 </script>
 
 <svelte:head>
-  <title>Flashcards | Review</title>
+  <title>{m.flashcards()}</title>
 </svelte:head>
 
 <Toolbar>

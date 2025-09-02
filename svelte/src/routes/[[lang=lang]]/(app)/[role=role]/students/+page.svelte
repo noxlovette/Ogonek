@@ -9,6 +9,7 @@
     Merger,
   } from "$lib/components";
   import type { Student, TableConfig } from "$lib/types";
+  import { m } from "$lib/paraglide/messages";
 
   let { data }: { data: PageData } = $props();
 
@@ -27,7 +28,7 @@
 </script>
 
 <Toolbar>
-  <LargeTitle>Students</LargeTitle>
+  <LargeTitle>{m.mellow_stout_fireant_assure()}</LargeTitle>
   <Divider />
   <Merger>
     <StudentAdder />
@@ -36,5 +37,5 @@
 <Table config={studentConfig} {href} items={students} {students} />
 
 <svelte:head>
-  <title>Students</title>
+  <title>{m.mellow_stout_fireant_assure()}</title>
 </svelte:head>

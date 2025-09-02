@@ -1,3 +1,4 @@
+import { dev } from "$app/environment";
 import { env } from "$env/dynamic/public";
 import { z } from "$lib";
 import logger from "$lib/logger";
@@ -23,21 +24,23 @@ export const actions: Actions = {
         message: "Validation failed",
       });
     }
-    const captchaToken = formData.get("smart-token") as string;
 
-    if (!captchaToken) {
-      return fail(400, {
-        message: "Please complete the CAPTCHA verification",
-      });
+    if (!dev) {
+      const captchaToken = formData.get("smart-token") as string;
+
+      if (!captchaToken) {
+        return fail(400, {
+          message: "Please complete the CAPTCHA verification",
+        });
+      }
+
+      const captchaResponse = await captchaVerify(captchaToken);
+      if (!captchaResponse.ok) {
+        return fail(400, {
+          message: "Captcha verification failed",
+        });
+      }
     }
-
-    const captchaResponse = await captchaVerify(captchaToken);
-    if (!captchaResponse.ok) {
-      return fail(400, {
-        message: "Captcha verification failed",
-      });
-    }
-
     const { username, pass } = validation.data;
     const response = await fetch(routes.auth.signin(), {
       method: "POST",
