@@ -1,3 +1,4 @@
+import { z } from "$lib";
 import logger from "$lib/logger";
 import { routes } from "$lib/routes";
 import type { Actions } from "@sveltejs/kit";
@@ -18,20 +19,10 @@ export const actions = {
       return fail(500);
     }
     const formData = await request.formData();
+    const data = Object.fromEntries(formData);
+    const body = z.updateLessonBody.safeParse(data).data;
 
-    const markdown = formData.get("markdown");
-    const title = formData.get("title");
-    const topic = formData.get("topic");
-    const assignee = formData.get("assignee") || "";
-
-    const body = {
-      id,
-      title,
-      markdown,
-      topic,
-      assignee,
-    };
-
+    console.log(body);
     const response = await fetch(routes.lessons.lesson(id), {
       method: "PATCH",
       body: JSON.stringify(body),

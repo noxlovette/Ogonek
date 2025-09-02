@@ -41,7 +41,6 @@
   use:enhance={enhanceForm({
     messages: {
       redirect: m.changesSaved(),
-      defaultError: m.failedToSaveChanges(),
     },
   })}
 >

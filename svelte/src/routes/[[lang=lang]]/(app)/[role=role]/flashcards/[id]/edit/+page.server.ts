@@ -1,3 +1,4 @@
+import { z } from "$lib";
 import logger from "$lib/logger";
 import { routes } from "$lib/routes";
 import { handleApiResponse, isSuccessResponse } from "$lib/server";
@@ -11,11 +12,8 @@ export const actions = {
 
     const { id } = params;
 
-    const title = formData.get("title");
-    const description = formData.get("description");
-    const visibility = formData.get("visibility");
-    const assignee = formData.get("assignee") || "";
-
+    const data = Object.fromEntries(formData);
+    const deck = z.updateDeckBody.safeParse(data).data?.deck;
     const cards = [];
     let index = 0;
     while (formData.has(`cards[${index}][front]`)) {
@@ -27,13 +25,6 @@ export const actions = {
       });
       index++;
     }
-
-    if (!title || typeof title !== "string") {
-      return fail(400, {
-        message: "Deck title is required",
-      });
-    }
-
     for (const card of cards) {
       if (!card.front || !card.back) {
         return fail(400, {
@@ -43,12 +34,7 @@ export const actions = {
     }
 
     const body = {
-      deck: {
-        title,
-        description,
-        visibility,
-        assignee,
-      },
+      deck,
       cards,
     };
 

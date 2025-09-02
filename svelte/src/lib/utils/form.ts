@@ -1,4 +1,5 @@
 import { goto } from "$app/navigation";
+import { m } from "$lib/paraglide/messages";
 import { isLoading } from "$lib/stores";
 import { notification } from "$lib/stores/notification";
 import type { SubmitFunction } from "@sveltejs/kit";
@@ -109,7 +110,7 @@ export function enhanceForm(config: EnhanceConfig = {}): SubmitFunction {
         } else if (result.type === "error" && result.error?.message) {
           return String(result.error.message);
         }
-        return messages.defaultError || "Something went wrong";
+        return messages.defaultError || m.loved_loose_flea_grin();
       };
 
       // Handle the result
