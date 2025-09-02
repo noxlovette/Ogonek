@@ -20,7 +20,7 @@
           const { user = initialUser } = result.data;
 
           notification.set({ message: "Welcome home", type: "success" });
-          // await goto(user.role === "teacher" ? "/t/dashboard" : "/s/dashboard");
+          await goto(user.role === "teacher" ? "/t/dashboard" : "/s/dashboard");
         }
       },
     },
@@ -31,7 +31,9 @@
       required={true}
       showLabel={false}
       name="username"
+      invalid={form?.username}
       placeholder="Username"
+      invalidDescription="2+ characters"
       value=""
     />
 
@@ -39,17 +41,14 @@
       required={true}
       name="pass"
       showLabel={false}
+      invalid={form?.pass}
       placeholder="Password"
+      invalidDescription="3+ characters"
       value=""
       type="password"
     />
   </Grid>
   <Captcha />
-  {#if form?.success}
-    <!-- this message is ephemeral; it exists because the page was rendered in
-	       response to a form submission. it will vanish if the user reloads -->
-    <p>Successfully logged in! Welcome back</p>
-  {/if}
   <Merger>
     <UniButton Icon={DoorOpen} type="submit" variant="primary" iconOnly={false}
       >{m.logIn()}</UniButton

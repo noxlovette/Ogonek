@@ -8,6 +8,8 @@
   let password = $state("");
   let confirmPassword = $state("");
   let passwordMatch = $state(true);
+
+  let { form } = $props();
 </script>
 
 <form
@@ -19,17 +21,33 @@
       defaultError: "Signup Failed",
     },
     navigate: true,
+    shouldUpdate: true,
   })}
 >
   <Grid>
-    <Input name="name" showLabel={false} placeholder="Name" value=""></Input>
-    <Input name="username" showLabel={false} placeholder="Username" value=""
+    <Input
+      name="name"
+      showLabel={false}
+      placeholder="Name"
+      value=""
+      invalid={form?.name}
+      invalidDescription="3+ characters"
+    ></Input>
+    <Input
+      name="username"
+      showLabel={false}
+      placeholder="Username"
+      value=""
+      invalid={form?.username}
+      invalidDescription="2+ characters"
     ></Input>
 
     <Input name="role" showLabel={false} type="role" />
 
     <Input
       name="email"
+      invalid={form?.email}
+      invalidDescription="Invalid email"
       showLabel={false}
       placeholder="Email"
       type="email"
@@ -38,6 +56,8 @@
 
     <Input
       name="password"
+      invalid={form?.pass}
+      invalidDescription="3+ characters"
       placeholder="Password"
       showLabel={false}
       type="password"

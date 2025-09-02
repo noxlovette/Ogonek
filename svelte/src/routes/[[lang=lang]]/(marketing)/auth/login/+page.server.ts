@@ -10,9 +10,19 @@ import { fail, type Actions } from "@sveltejs/kit";
 export const actions: Actions = {
   default: async ({ request, fetch, cookies }) => {
     const formData = await request.formData();
-    const validation = validateForm(formData, z.signupBody);
-    if (!validation.success) return validation.failure;
-    const { pass, username } = validation.data;
+    const validation = validateForm(formData, z.signinBody);
+    if (!validation.success) {
+      const fieldErrors: Record<string, boolean> = {};
+      validation.errors.issues.forEach((issue) => {
+        const fieldPath = issue.path[0] as string;
+        fieldErrors[fieldPath] = true;
+      });
+
+      return fail(400, {
+        ...fieldErrors,
+        message: "Validation failed",
+      });
+    }
     const captchaToken = formData.get("smart-token") as string;
 
     if (!captchaToken) {
@@ -27,6 +37,8 @@ export const actions: Actions = {
         message: "Captcha verification failed",
       });
     }
+
+    const { username, pass } = validation.data;
     const response = await fetch(routes.auth.signin(), {
       method: "POST",
       headers: { "Content-Type": "application/json" },

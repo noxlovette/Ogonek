@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Caption1 from "$lib/components/typography/Caption1.svelte";
   import Label from "$lib/components/typography/Label.svelte";
   import { m } from "$lib/paraglide/messages";
   import { assigneeStore, studentStore, user } from "$lib/stores";
@@ -11,6 +12,8 @@
     value = $bindable(),
     disabled = $bindable(),
     ref,
+    invalid = false,
+    invalidDescription,
     required = false,
     showLabel = true,
     item,
@@ -21,6 +24,8 @@
     value?: string | number | boolean | null;
     labelName?: string;
     ref?: HTMLInputElement;
+    invalid?: boolean;
+    invalidDescription?: string;
     disabled?: boolean;
     showLabel?: boolean;
     required?: boolean;
@@ -40,14 +45,14 @@
 
   let showPassword = $state(false);
   type Assignable = { assignee?: string | null };
-  const baseStyle =
-    "w-full rounded-2xl bg-white dark:bg-stone-950 ring-default px-4 py-2 text-base text-stone-900 dark:text-stone-100 placeholder-stone-400 shadow-sm focus:shadow-md focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent disabled:opacity-60 disabled:cursor-not-allowed";
+  const baseStyle = `w-full rounded-2xl bg-white dark:bg-stone-950  px-4 py-2 text-base placeholder-stone-400 shadow-sm focus:shadow-md focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent disabled:opacity-60 disabled:cursor-not-allowed ${invalid ? "ring-error text-red-500" : "ring-default"}`;
 </script>
 
 <div class="relative space-y-1">
   {#if showLabel}
     <Label>{labelName}</Label>
   {/if}
+
   {#if type === "text"}
     <input
       {name}
@@ -143,5 +148,8 @@
       <option value="teacher">Teacher</option>
       <option value="student">Student</option>
     </select>
+  {/if}
+  {#if invalid && invalidDescription}
+    <Caption1 styling="text-red-500">{invalidDescription}</Caption1>
   {/if}
 </div>

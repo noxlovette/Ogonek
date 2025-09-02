@@ -1,5 +1,4 @@
 import { z } from "$lib";
-import logger from "$lib/logger";
 import { routes } from "$lib/routes";
 import {
   captchaVerify,
@@ -15,14 +14,25 @@ export const actions: Actions = {
     const formData = await request.formData();
 
     const validation = validateForm(formData, z.signupBody);
-    if (!validation.success) return validation.failure;
+    if (!validation.success) {
+      const fieldErrors: Record<string, boolean> = {};
+      validation.errors.issues.forEach((issue) => {
+        const fieldPath = issue.path[0] as string;
+        fieldErrors[fieldPath] = true;
+      });
 
+      return fail(400, {
+        ...fieldErrors,
+        message: "Validation failed",
+      });
+    }
     const { username, pass, email, role, name } = validation.data;
     const inviteToken = url.searchParams.get("invite");
 
     const captchaToken = formData.get("smart-token") as string;
     if (!captchaToken) {
       return fail(400, {
+        captcha: true,
         message: "Please complete the CAPTCHA verification",
       });
     }
@@ -46,7 +56,6 @@ export const actions: Actions = {
 
     if (inviteToken) {
       const studentId = result.data;
-      logger.debug(studentId);
 
       const inviteResponse = await fetch("/axum/auth/bind", {
         method: "POST",

@@ -1,33 +1,23 @@
 import { goto } from "$app/navigation";
-import logger from "$lib/logger";
 import { isLoading } from "$lib/stores";
 import { notification } from "$lib/stores/notification";
 import type { SubmitFunction } from "@sveltejs/kit";
-import { fail, type ActionFailure } from "@sveltejs/kit";
-import type { infer as ZodInfer, ZodObject, ZodRawShape } from "zod";
-type ValidationResult<T> =
-  | { success: true; data: T }
-  | { success: false; failure: ActionFailure<{ message: string }> };
-
+import type { ZodError, infer as ZodInfer, ZodObject, ZodRawShape } from "zod";
 export function validateForm<T extends ZodRawShape>(
   formData: FormData,
   zodObject: ZodObject<T>,
-): ValidationResult<ZodInfer<ZodObject<T>>> {
+):
+  | { success: true; data: ZodInfer<ZodObject<T>> }
+  | { success: false; errors: ZodError } {
   const rawData = Object.fromEntries(formData);
   const validationResult = zodObject.safeParse(rawData);
 
-  logger.debug(validationResult);
-
   if (!validationResult.success) {
-    return {
-      success: false,
-      failure: fail(400, { message: validationResult.error.message }),
-    };
+    return { success: false, errors: validationResult.error };
   }
 
   return { success: true, data: validationResult.data };
 }
-
 /*
 const validation = validateForm(formData, loginSchema);
 
@@ -172,6 +162,11 @@ export function enhanceForm(config: EnhanceConfig = {}): SubmitFunction {
           if (handlers.failure) {
             await handlers.failure(result);
           }
+
+          if (shouldUpdate) {
+            update();
+          }
+
           break;
 
         case "error":
