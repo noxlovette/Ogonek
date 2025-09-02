@@ -6,6 +6,8 @@
   import { initialUser, notification } from "$lib/stores";
   import { enhanceForm } from "$lib/utils";
   import { DoorOpen } from "lucide-svelte";
+
+  let { form } = $props();
 </script>
 
 <form
@@ -18,7 +20,7 @@
           const { user = initialUser } = result.data;
 
           notification.set({ message: "Welcome home", type: "success" });
-          await goto(user.role === "teacher" ? "/t/dashboard" : "/s/dashboard");
+          // await goto(user.role === "teacher" ? "/t/dashboard" : "/s/dashboard");
         }
       },
     },
@@ -32,9 +34,10 @@
       placeholder="Username"
       value=""
     />
+
     <Input
       required={true}
-      name="password"
+      name="pass"
       showLabel={false}
       placeholder="Password"
       value=""
@@ -42,6 +45,11 @@
     />
   </Grid>
   <Captcha />
+  {#if form?.success}
+    <!-- this message is ephemeral; it exists because the page was rendered in
+	       response to a form submission. it will vanish if the user reloads -->
+    <p>Successfully logged in! Welcome back</p>
+  {/if}
   <Merger>
     <UniButton Icon={DoorOpen} type="submit" variant="primary" iconOnly={false}
       >{m.logIn()}</UniButton

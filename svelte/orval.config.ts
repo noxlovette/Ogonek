@@ -5,7 +5,7 @@ export default defineConfig({
     output: {
       client: "zod",
       mode: "split",
-      target: "./src/lib/types/api/gen/zod",
+      target: "./src/lib/zod",
     },
     input: {
       target: "./openapi.json",

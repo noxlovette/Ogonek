@@ -17,7 +17,7 @@
 
   import { page } from "$app/state";
   import { setContext } from "svelte";
-  import type { Student } from "$lib/types";
+  import type { Student } from "$lib/types/index.js";
   import Divider from "$lib/components/UI/toolbar/Divider.svelte";
   import Loader from "$lib/components/UI/navigation/Loader.svelte";
 

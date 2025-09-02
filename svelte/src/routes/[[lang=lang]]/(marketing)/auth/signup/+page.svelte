@@ -27,6 +27,7 @@
     ></Input>
 
     <Input name="role" showLabel={false} type="role" />
+
     <Input
       name="email"
       showLabel={false}
@@ -34,6 +35,7 @@
       type="email"
       value=""
     ></Input>
+
     <Input
       name="password"
       placeholder="Password"

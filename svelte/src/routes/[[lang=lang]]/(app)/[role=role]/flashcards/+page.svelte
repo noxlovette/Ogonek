@@ -14,7 +14,7 @@
   import { enhance } from "$app/forms";
   import { enhanceForm } from "$lib/utils";
   import { page } from "$app/state";
-  import type { TableConfig, DeckSmall } from "$lib/types";
+  import type { TableConfig, DeckSmall } from "$lib/types/index.js";
   import { GraduationCap, Plus } from "lucide-svelte";
   import { m } from "$lib/paraglide/messages";
   import {
