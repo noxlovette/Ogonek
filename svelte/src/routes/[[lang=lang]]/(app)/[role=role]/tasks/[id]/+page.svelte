@@ -35,7 +35,7 @@
   let role = $derived(page.params.role);
   let completed = $state(data.task.completed);
 
-  let formattedDate = formatDate(data.task.createdAt);
+  let formattedDate = formatDate(data.task.dueDate || "");
 
   const urgency = getUrgency(data.task);
 </script>

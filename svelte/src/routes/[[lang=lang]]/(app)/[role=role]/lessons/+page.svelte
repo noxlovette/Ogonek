@@ -121,12 +121,7 @@
       {/each}
     </div>
   {:else}
-    <Table
-      items={lessons.data}
-      total={lessons.total}
-      {href}
-      config={lessonConfig}
-    />
+    <Table items={lessons.data} {href} config={lessonConfig} />
   {/if}
 {:catch error: App.Error}
   <p>Error loading lessons: {error.errorID}</p>
