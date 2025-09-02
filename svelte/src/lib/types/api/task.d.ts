@@ -1,4 +1,4 @@
-import type { components } from "./openapi";
+import type { components } from "./gen/openapi";
 
 export type TaskFull = components["schemas"]["TaskFull"];
 export type TaskSmall = components["schemas"]["TaskSmall"];

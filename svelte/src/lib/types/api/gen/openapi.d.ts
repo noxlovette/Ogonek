@@ -579,7 +579,9 @@ export interface components {
             user: components["schemas"]["User"];
         };
         AuthPayload: {
+            /** @example MyPassword123 */
             pass: string;
+            /** @example john_doe */
             username: string;
         };
         BatchPresignedUrlResponse: {
@@ -836,10 +838,18 @@ export interface components {
             quality: number;
         };
         SignUpPayload: {
+            /**
+             * Format: email
+             * @example john@example.com
+             */
             email: string;
+            /** @example John Doe */
             name: string;
+            /** @example MyPassword123 */
             pass: string;
+            /** @example student */
             role: string;
+            /** @example johndoe */
             username: string;
         };
         SimpleStats: {

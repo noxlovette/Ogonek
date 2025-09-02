@@ -9,9 +9,17 @@ import {
   ValidateAccess,
 } from "$lib/server";
 import { createUser } from "$lib/server/mock/user";
-import type { AuthResponse } from "$lib/types";
+import { z, type AuthResponse } from "$lib/types";
 import { validateRequired } from "@noxlovette/svarog";
 import { fail, type Actions } from "@sveltejs/kit";
+import { superValidate } from "sveltekit-superforms";
+import { zod4 } from "sveltekit-superforms/adapters";
+
+export const load = async () => {
+  const form = await superValidate(zod4(z.signinBody));
+
+  return { form };
+};
 
 export const actions: Actions = {
   default: async ({ request, fetch, cookies }) => {

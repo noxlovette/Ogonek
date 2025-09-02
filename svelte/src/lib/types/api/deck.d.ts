@@ -1,4 +1,4 @@
-import type { components } from "./openapi";
+import type { components } from "./gen/openapi";
 
 export type DeckFull = components["schemas"]["DeckFull"];
 export type DeckSmall = components["schemas"]["DeckSmall"];

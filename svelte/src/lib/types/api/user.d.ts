@@ -1,4 +1,4 @@
-import type { components } from "./openapi";
+import type { components } from "./gen/openapi";
 
 export type User = components["schemas"]["User"];
 export type Profile = components["schemas"]["Profile"];

@@ -1,4 +1,4 @@
-import type { components } from "./openapi";
+import type { components } from "./gen/openapi";
 
 export type ActivityLog = components["schemas"]["ActivityLog"];
 export type UserPreferences = components["schemas"]["UserPreferences"];

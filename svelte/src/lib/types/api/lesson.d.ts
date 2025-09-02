@@ -1,4 +1,4 @@
-import type { components } from "./openapi";
+import type { components } from "./gen/openapi";
 /**
  * The lesson type used in lists and cards
  */
