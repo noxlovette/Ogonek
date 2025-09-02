@@ -9,7 +9,7 @@ pub async fn find_all(
     let cards = sqlx::query_as!(
         Card,
         r#"
-        SELECT * FROM cards
+        SELECT id, front, back, media_url FROM cards
         WHERE deck_id = $1
         ORDER BY created_at DESC
         "#,
@@ -37,7 +37,7 @@ pub async fn batch_upsert(
     let mut media_urls = Vec::with_capacity(cards.len());
 
     for card in cards {
-        card_ids.push(card.id.clone().unwrap_or_else(|| nanoid::nanoid!()));
+        card_ids.push(nanoid::nanoid!());
         fronts.push(card.front);
         backs.push(card.back);
         media_urls.push(card.media_url);

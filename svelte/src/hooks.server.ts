@@ -227,9 +227,9 @@ export const handleError: HandleServerError = async ({
     timestamp: new Date().toISOString(),
     userId: event.locals.user?.id || "anonymous",
   };
-
   logger.error({
     errorID,
+    //@ts-expect-error: it works
     message: error.message ?? message,
     status,
     request: requestContext,

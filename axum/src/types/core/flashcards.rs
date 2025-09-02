@@ -18,9 +18,6 @@ pub struct Card {
     pub front: String,
     pub back: String,
     pub media_url: Option<String>,
-    pub deck_id: String,
-    #[serde(with = "datetime_serialization")]
-    pub created_at: DateTime<Utc>,
 }
 #[derive(Deserialize, ToSchema)]
 #[serde(rename_all = "camelCase")]

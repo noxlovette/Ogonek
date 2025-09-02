@@ -26,5 +26,5 @@
     {title}
   </Title3>
   <Badge>{badgeText}</Badge>
-  <SeenBadge seen={lesson.seen} />
+  <SeenBadge seen={lesson.seen || true} />
 </CardClickable>

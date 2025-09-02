@@ -1,5 +1,4 @@
 import type { Card } from "$lib/types";
-import { daysAgo } from "$lib/utils";
 import { nanoid } from "nanoid";
 
 /**
@@ -10,8 +9,6 @@ export function createCard(overrides: Partial<Card> = {}): Card {
     id: nanoid(),
     front: "What is the capital of France?",
     back: "Paris",
-    deckId: "", // Should be set when adding to a deck
-    createdAt: new Date().toISOString(),
     mediaUrl: null,
     ...overrides,
   };
@@ -38,8 +35,6 @@ export function createCards(
     return createCard({
       front: `${sample.front}`,
       back: `${sample.back}`,
-      deckId: deckId || "",
-      createdAt: daysAgo(Math.floor(Math.random() * 30)),
       ...overrides,
     });
   });
@@ -61,9 +56,8 @@ export function createCardsWithMedia(
  * Creates cards for a specific deck with varied creation dates
  */
 export function createCardsForDeck(deckId: string, count: number = 10): Card[] {
-  return createCards(count, deckId).map((card, i) => ({
+  return createCards(count, deckId).map((card) => ({
     ...card,
-    createdAt: daysAgo(Math.floor(Math.random() * 14)), // Last 2 weeks
   }));
 }
 
@@ -73,13 +67,11 @@ export function createCardsForDeck(deckId: string, count: number = 10): Card[] {
 export function createFlashcard(
   front: string,
   back: string,
-  deckId?: string,
   overrides: Partial<Card> = {},
 ): Card {
   return createCard({
     front,
     back,
-    deckId: deckId || "",
     ...overrides,
   });
 }
@@ -93,6 +85,6 @@ export function createCardsFromPairs(
   overrides: Partial<Card> = {},
 ): Card[] {
   return pairs.map(({ front, back }) =>
-    createFlashcard(front, back, deckId, overrides),
+    createFlashcard(front, back, overrides),
   );
 }

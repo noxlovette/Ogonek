@@ -12,12 +12,15 @@ export const load: PageServerLoad = async ({ params }) => {
 export const actions: Actions = {
   default: async ({ fetch, request }) => {
     const formData = await request.formData();
-    const isRegistered = formData.has("isRegistered") || false;
+    const invite = formData.has("isRegistered") || false;
 
     logger.info({ formData });
-    const response = await fetch(routes.auth.invite(isRegistered), {
-      method: "POST",
-    });
+    const response = await fetch(
+      routes.auth.generate_invite_link(invite.toString()),
+      {
+        method: "POST",
+      },
+    );
 
     if (!response.ok) {
       logger.error({ response }, "Failed to generate invite link");

@@ -49,7 +49,7 @@
       {
         key: "description",
         label: m.equal_key_gazelle_attend(),
-        formatter: (value: string | boolean | undefined) =>
+        formatter: (value: string | boolean | undefined | null | number) =>
           value
             ? String(value).substring(0, 50) +
               (String(value).length > 50 ? "..." : "")
@@ -62,7 +62,7 @@
       {
         key: "isSubscribed",
         label: m.stout_royal_macaw_fear(),
-        formatter: (value: string | boolean | undefined) =>
+        formatter: (value: string | boolean | undefined | null | number) =>
           value === true ? "◉" : "○",
       },
     ],

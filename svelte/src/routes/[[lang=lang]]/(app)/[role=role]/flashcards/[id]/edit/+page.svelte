@@ -46,7 +46,6 @@
       ...updatedCards,
       {
         id: "",
-        deckId: deck.id,
         front: "",
         back: "",
         mediaUrl: undefined,

@@ -1,10 +1,9 @@
-import { dev } from "$app/environment";
 import logger from "$lib/logger";
 import { routes } from "$lib/routes";
 import {
+  captchaVerify,
   handleApiResponse,
   isSuccessResponse,
-  turnstileVerify,
 } from "$lib/server";
 import {
   validateEmail,
@@ -49,20 +48,19 @@ export const actions: Actions = {
       return fail(400, { message: passMatchValidation });
     }
 
-    if (!dev) {
-      const turnstileToken = data.get("cf-turnstile-response") as string;
-      if (!turnstileToken) {
-        return fail(400, {
-          message: "Please complete the CAPTCHA verification",
-        });
-      }
-      const turnstileResponse = await turnstileVerify(turnstileToken);
-      if (!turnstileResponse.ok) {
-        return fail(400, {
-          message: "Turnstile verification failed",
-        });
-      }
+    const captchaToken = data.get("smart-token") as string;
+    if (!captchaToken) {
+      return fail(400, {
+        message: "Please complete the CAPTCHA verification",
+      });
     }
+    const captchaResponse = await captchaVerify(captchaToken);
+    if (!captchaResponse.ok) {
+      return fail(400, {
+        message: "Captcha verification failed",
+      });
+    }
+
     // Signup API call
     const response = await fetch(routes.auth.signup(), {
       method: "POST",

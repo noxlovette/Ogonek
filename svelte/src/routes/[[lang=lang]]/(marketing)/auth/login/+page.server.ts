@@ -8,7 +8,7 @@ import {
   setTokenCookie,
   ValidateAccess,
 } from "$lib/server";
-import { createUserTeacher } from "$lib/server/mock/user";
+import { createUser } from "$lib/server/mock/user";
 import type { AuthResponse } from "$lib/types";
 import { validateRequired } from "@noxlovette/svarog";
 import { fail, type Actions } from "@sveltejs/kit";
@@ -69,7 +69,7 @@ export const actions: Actions = {
       logger.debug({ user }, "user from the login");
     }
 
-    const user = createUserTeacher();
+    const user = createUser();
 
     return {
       user,

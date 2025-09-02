@@ -8,5 +8,5 @@ yarn.lock
 node_modules
 
 # artefacts
-build/
-messages/
+build
+messages

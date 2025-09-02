@@ -43,13 +43,13 @@
       {
         key: "assigneeName",
         label: m.assignee(),
-        formatter: (value: string | boolean | undefined) =>
+        formatter: (value: string | boolean | undefined | null) =>
           value === $user.name ? m.notAssigned() : String(value),
       },
       {
         key: "createdAt",
         label: m.created(),
-        formatter: (value: string | boolean | undefined) =>
+        formatter: (value: string | boolean | undefined | null) =>
           formatDate(String(value)),
       },
     ],

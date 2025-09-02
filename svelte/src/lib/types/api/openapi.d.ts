@@ -591,9 +591,6 @@ export interface components {
         };
         Card: {
             back: string;
-            /** Format: date-time */
-            createdAt: string;
-            deckId: string;
             front: string;
             id: string;
             mediaUrl?: string | null;
@@ -1338,7 +1335,10 @@ export interface operations {
         parameters: {
             query?: never;
             header?: never;
-            path?: never;
+            path: {
+                /** @description Deck ID */
+                id: string;
+            };
             cookie?: never;
         };
         requestBody?: never;

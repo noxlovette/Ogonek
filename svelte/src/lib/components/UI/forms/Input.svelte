@@ -24,7 +24,7 @@
     disabled?: boolean;
     showLabel?: boolean;
     required?: boolean;
-    item?: Assignable;
+    item?: Assignable | null;
     type?:
       | "text"
       | "number"
@@ -39,7 +39,7 @@
   } = $props();
 
   let showPassword = $state(false);
-  type Assignable = { assignee?: string };
+  type Assignable = { assignee?: string | null };
   const baseStyle =
     "w-full rounded-2xl bg-white dark:bg-stone-950 ring-default px-4 py-2 text-base text-stone-900 dark:text-stone-100 placeholder-stone-400 shadow-sm focus:shadow-md focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent disabled:opacity-60 disabled:cursor-not-allowed";
 </script>

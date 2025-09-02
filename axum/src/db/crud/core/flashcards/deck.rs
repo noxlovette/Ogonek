@@ -581,8 +581,6 @@ mod tests {
             assert_eq!(orig.front, new.front);
             assert_eq!(orig.back, new.back);
             assert_eq!(orig.media_url, new.media_url);
-            // Cards should belong to different decks
-            assert_ne!(orig.deck_id, new.deck_id);
         }
     }
 

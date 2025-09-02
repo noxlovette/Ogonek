@@ -8,23 +8,17 @@ export default [
   js.configs.recommended,
   ...ts.configs.recommended,
   ...svelte.configs["flat/recommended"],
+  ...svelte.configs.prettier,
   prettier,
   ...svelte.configs["flat/prettier"],
   {
     languageOptions: {
-      globals: {
-        ...globals.browser,
-        ...globals.node,
-      },
+      globals: { ...globals.browser, ...globals.node },
     },
   },
   {
     files: ["**/*.svelte", "**/*.ts"],
-    languageOptions: {
-      parserOptions: {
-        parser: ts.parser,
-      },
-    },
+    languageOptions: { parserOptions: { parser: ts.parser } },
     rules: {
       "svelte/no-at-html-tags": "off",
       "@typescript-eslint/no-explicit-any": "off",

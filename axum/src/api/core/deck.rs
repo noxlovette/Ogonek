@@ -47,6 +47,9 @@ pub async fn create_deck(
     post,
     tag = DECK_TAG,
     path = "{id}/duplicate",
+    params(
+        ("id" = String, Path, description = "Deck ID")
+    ),
     responses(
         (status = 200, description = "Deck duplicated successfully", body = String),
         (status = 400, description = "Bad request"),
