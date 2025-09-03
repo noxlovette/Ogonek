@@ -12,6 +12,7 @@
     Caption1,
     HStack,
     Divider,
+    EditButton,
   } from "$lib/components";
   import { invalidate } from "$app/navigation";
 
@@ -65,8 +66,7 @@
             <UniButton Icon={Copy} type="submit">Duplicate</UniButton>
           </form>
           {#if $user.id === deck.createdBy}
-            <UniButton href="{deck.id}/edit" Icon={Pencil}>{m.edit()}</UniButton
-            >
+            <EditButton href="{deck.id}/edit" />
           {/if}
         </Merger>
         <Merger>

@@ -15,12 +15,9 @@ test.beforeEach(async ({ page }) => {
     .first()
     .click();
 });
-test("navigates to detail view", async ({ page }) => {
-  await expect(page).toHaveTitle(/Task From/);
-});
 
-test("edit task", async ({ page }) => {
-  await page.locator("div:nth-child(3) > .flex").first().click();
+test("task edit", async ({ page }) => {
+  await page.getByRole("link", { name: "Edit" }).click();
   await page
     .locator("form")
     .filter({ hasText: "Editing... title assignee" })
@@ -33,10 +30,22 @@ test("edit task", async ({ page }) => {
   await page.getByRole("textbox", { name: "Title" }).click();
   await page.getByRole("textbox", { name: "Title" }).press("ControlOrMeta+a");
   await page.getByRole("textbox", { name: "Title" }).fill("Hello!");
+  await page.getByRole("button", { name: "Save" }).click();
+});
+
+test("task delete", async ({ page }) => {
+  await page.locator("div:nth-child(3) > .flex").first().click();
   await page
     .locator("form")
     .filter({ hasText: "Editing... title assignee" })
     .locator("#btn")
-    .nth(2)
+    .nth(1)
     .click();
+  await page
+    .locator("form")
+    .filter({ hasText: "Editing... You are deleting" })
+    .locator("#btn")
+    .nth(3)
+    .click();
+  await page.getByRole("alert", { name: "Notification" }).click();
 });

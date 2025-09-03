@@ -1,8 +1,6 @@
 <script lang="ts">
   import {
-    UniButton,
     LargeTitle,
-    Title2,
     Title3,
     Toolbar,
     TableOfContents,
@@ -11,13 +9,12 @@
     Divider,
     Merger,
     Caption1,
+    EditButton,
   } from "$lib/components";
 
   import { formatDate } from "@noxlovette/svarog";
   import type { PageData } from "./$types";
-  import { Pencil } from "lucide-svelte";
   import { page } from "$app/state";
-  import { m } from "$lib/paraglide/messages";
   import Badge from "$lib/components/cards/Badge.svelte";
 
   let role = $derived(page.params.role);
@@ -40,9 +37,7 @@
       <Divider />
       {#if role === "t"}
         <Merger>
-          <UniButton Icon={Pencil} href="/t/lessons/{data.lesson.id}/edit"
-            >{m.edit()}</UniButton
-          >
+          <EditButton href="/t/lessons/{data.lesson.id}/edit" />
         </Merger>
       {/if}
     </VStack>
@@ -62,7 +57,6 @@
 </Toolbar>
 <div class="gap-4 md:grid md:grid-cols-4">
   <div class="markdown md:col-span-3">
-    <!-- Input is sanitized with rehype -->
     {@html data.rendered}
   </div>
   <TableOfContents />

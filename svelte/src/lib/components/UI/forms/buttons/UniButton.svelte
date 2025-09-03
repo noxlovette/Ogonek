@@ -2,8 +2,8 @@
   import { isLoading } from "$lib/stores";
   import type { ComponentType, Snippet } from "svelte";
   import type { MouseEventHandler } from "svelte/elements";
-  import ConfirmDialogue from "./ConfirmDialogue.svelte";
-  import { Headline } from "../../typography";
+  import ConfirmDialogue from "../ConfirmDialogue.svelte";
+  import { Headline } from "../../../typography";
 
   type ButtonVariant = "primary" | "danger" | "prominent";
 
@@ -21,6 +21,7 @@
     confirmTitle?: string | undefined;
     onclick?: MouseEventHandler<HTMLButtonElement> | undefined;
     children?: Snippet;
+    ariaLabel?: string;
     iconOnly?: boolean;
   }
 
@@ -36,6 +37,7 @@
     confirmTitle = undefined,
     onclick = undefined,
     children,
+    ariaLabel = undefined,
     iconOnly = true,
   }: Props = $props();
 
@@ -70,7 +72,7 @@
 </script>
 
 {#if isLink}
-  <a {href} class={allClasses} aria-disabled={disabled}>
+  <a {href} class={allClasses} aria-disabled={disabled} aria-label={ariaLabel}>
     {#if Icon}
       <Icon class="size-5" />
     {/if}
@@ -86,6 +88,7 @@
     {formaction}
     {disabled}
     id="btn"
+    aria-label={ariaLabel}
     class={allClasses}
     onclick={variant === "danger" ? handleClick : onclick}
   >

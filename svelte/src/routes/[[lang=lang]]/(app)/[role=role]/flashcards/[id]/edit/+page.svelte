@@ -8,15 +8,17 @@
     Divider,
     VStack,
     Merger,
-    HStack,
     EmptySpace,
+    DeleteButton,
+    CancelButton,
+    SaveButton,
   } from "$lib/components";
 
   import { enhanceForm } from "$lib/utils";
   import { enhance } from "$app/forms";
   import { page } from "$app/state";
-  import { Plus, Ban, Check, Trash2, Import } from "lucide-svelte";
-  import UniButton from "$lib/components/UI/forms/UniButton.svelte";
+  import { Plus, Import } from "lucide-svelte";
+  import UniButton from "$lib/components/UI/forms/buttons/UniButton.svelte";
   import { pushState } from "$app/navigation";
   import { onMount } from "svelte";
   import { m } from "$lib/paraglide/messages.js";
@@ -90,24 +92,13 @@
             },
           })}
         >
-          <UniButton
-            variant="danger"
-            Icon={Trash2}
-            type="submit"
-            formaction="?/delete"
-            confirmText={deck.title}
-            confirmTitle="Delete Deck"
-          >
-            {m.delete()}</UniButton
-          >
+          <DeleteButton confirmText={deck.title} confirmTitle="Delete Deck" />
         </form>
 
-        <UniButton Icon={Ban} href=".">{m.cancel()}</UniButton>
+        <CancelButton />
       </Merger>
       <Merger>
-        <UniButton variant="prominent" type="submit" Icon={Check}
-          >{m.save()}</UniButton
-        >
+        <SaveButton />
       </Merger>
     </VStack>
   </Toolbar>

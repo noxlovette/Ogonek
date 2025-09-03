@@ -8,9 +8,11 @@
     Divider,
     Merger,
     VStack,
+    CancelButton,
+    DeleteButton,
+    SaveButton,
   } from "$lib/components";
   import { enhanceForm } from "$lib/utils";
-  import { Ban, Check, Trash2 } from "lucide-svelte";
   import Input from "$lib/components/UI/forms/Input.svelte";
   import { m } from "$lib/paraglide/messages";
   let { data, form } = $props();
@@ -35,21 +37,12 @@
     <Divider />
     <VStack>
       <Merger>
-        <UniButton Icon={Ban} href=".">{m.cancel()}</UniButton>
-
-        <UniButton
-          variant="danger"
-          formaction="?/delete"
-          Icon={Trash2}
-          confirmText={lesson.title}
-          confirmTitle="Delete Lesson">{m.delete()}</UniButton
-        >
+        <CancelButton />
+        <DeleteButton confirmText={lesson.title} confirmTitle="Delete Lesson" />
       </Merger>
       <Merger>
-        <UniButton variant="prominent" type="submit" Icon={Check}
-          >{m.save()}</UniButton
-        ></Merger
-      >
+        <SaveButton />
+      </Merger>
     </VStack>
   </Toolbar>
 

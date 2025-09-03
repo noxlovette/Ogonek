@@ -1,7 +1,7 @@
 <script lang="ts">
   import { page } from "$app/state";
   import { ChevronLeft } from "lucide-svelte";
-  import UniButton from "../forms/UniButton.svelte";
+  import UniButton from "../forms/buttons/UniButton.svelte";
   import Merger from "./Merger.svelte";
   import Divider from "./Divider.svelte";
   import { VStack } from "..";

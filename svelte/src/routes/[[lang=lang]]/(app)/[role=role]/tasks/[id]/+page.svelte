@@ -9,6 +9,7 @@
     Caption1,
     Merger,
     Divider,
+    EditButton,
   } from "$lib/components";
   import { page } from "$app/state";
   import { enhance } from "$app/forms";
@@ -51,9 +52,7 @@
       <Divider />
       <Merger>
         {#if role === "t"}
-          <UniButton Icon={Pencil} href="/t/tasks/{data.task.id}/edit"
-            >{m.edit()}</UniButton
-          >
+          <EditButton href="/t/tasks/{data.task.id}/edit" />
         {/if}
       </Merger>
       <Merger>
