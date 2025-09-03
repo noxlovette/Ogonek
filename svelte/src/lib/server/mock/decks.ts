@@ -1,7 +1,7 @@
 import type { DeckFull, DeckSmall, DeckWithCards } from "$lib/types";
 import { faker } from "@faker-js/faker";
 import { nanoid } from "nanoid";
-import { createCards } from "./cards";
+import { createCard } from "./cards";
 
 export function createDeckSmall(): DeckSmall {
   return {
@@ -24,7 +24,7 @@ export function createDeckFull(): DeckFull {
 
   return {
     ...base,
-    createdBy: nanoid(),
+    createdBy: "mockUser",
     createdAt: faker.date.past().toISOString(),
     assignee: nanoid(),
   };
@@ -33,6 +33,8 @@ export function createDeckFull(): DeckFull {
 export function createDeckWithCards(): DeckWithCards {
   return {
     deck: createDeckFull(),
-    cards: createCards(),
+    cards: faker.helpers.multiple(createCard, {
+      count: faker.number.int({ min: 7, max: 80 }),
+    }),
   };
 }

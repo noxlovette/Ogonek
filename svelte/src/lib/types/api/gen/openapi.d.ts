@@ -599,21 +599,9 @@ export interface components {
         };
         CardProgressWithFields: {
             back: string;
-            cardId: string;
-            /** Format: date-time */
-            dueDate?: string | null;
-            /** Format: double */
-            easeFactor: number;
             front: string;
             id: string;
-            /** Format: int32 */
-            interval: number;
-            /** Format: date-time */
-            lastReviewed?: string | null;
             mediaUrl?: string | null;
-            /** Format: int32 */
-            reviewCount: number;
-            userId: string;
         };
         CardUpsert: {
             back: string;

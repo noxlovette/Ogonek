@@ -36,7 +36,11 @@
       <AlertCircle class="size-5 text-yellow-500" />
     {/if}
 
-    <p class="flex-1 text-sm font-medium text-stone-800 dark:text-stone-100">
+    <p
+      role="alert"
+      aria-label="Notification"
+      class="flex-1 text-sm font-medium text-stone-800 dark:text-stone-100"
+    >
       {$notification.message}
     </p>
 

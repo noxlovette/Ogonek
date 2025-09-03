@@ -3,14 +3,13 @@ import { faker } from "@faker-js/faker";
 import { nanoid } from "nanoid";
 /**
  * Creates a user instance for mock endpoints
- * @param overrides redefine the user you want to create
  * @param role t or s, creates either teacher or student. Defaults to teacher
  * @returns a user instance
  */
 export function createUser(role: Role = "t"): User {
   const isTeacher = role === "t";
   return {
-    id: nanoid(),
+    id: "mockUser",
     name: faker.person.fullName(),
     username: faker.internet.username(),
     role: isTeacher ? "teacher" : "student",
@@ -29,7 +28,7 @@ export function createStudent(): Student {
     name: faker.person.firstName(),
     username: faker.internet.username(),
     email: faker.internet.email(),
-    markdown: null,
+    markdown: faker.lorem.text(),
     studentTelegramId: null,
   };
 }

@@ -4,13 +4,12 @@
   import { enhance } from "$app/forms";
   import { invalidate } from "$app/navigation";
   import { enhanceForm, qualityButtons } from "$lib/utils";
-  import { CheckCheck, GraduationCap, Home, House } from "lucide-svelte";
+  import { CheckCheck, GraduationCap } from "lucide-svelte";
   import {
     Toolbar,
     UniButton,
     Caption1,
     KBD,
-    Body,
     Callout,
     Divider,
   } from "$lib/components";
