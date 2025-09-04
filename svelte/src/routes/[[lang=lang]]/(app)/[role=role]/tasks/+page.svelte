@@ -14,6 +14,7 @@
     EmptySpace,
     Title3,
     VStack,
+    Title1,
   } from "$lib/components";
 
   import { enhance } from "$app/forms";
@@ -142,7 +143,7 @@
 {:then tasks}
   {#if tasks.data.length < 1}
     <EmptySpace>
-      <Title3>{m.noTasks()}</Title3>
+      <Title1>{m.noTasks()}</Title1>
     </EmptySpace>
   {/if}
   {#if role === "s"}

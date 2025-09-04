@@ -16,6 +16,7 @@
   import type { PageData } from "./$types";
   import { page } from "$app/state";
   import Badge from "$lib/components/cards/Badge.svelte";
+  import type { PhotoURLs } from "$lib/types";
 
   let role = $derived(page.params.role);
 
@@ -57,27 +58,28 @@
 </Toolbar>
 <div class="md:grid md:grid-cols-4">
   <article class="markdown md:col-span-3">
-    <div class="relative h-30 w-full overflow-hidden rounded-t-xl">
-      <!-- Small placeholder -->
-      <div
-        class="absolute inset-0 z-10 bg-cover bg-center"
-        style="background-image: url('{data.lesson.photo?.urls.small}')"
-      ></div>
+    {#if data.lesson.photo}
+      <div class="relative h-30 w-full overflow-hidden rounded-t-xl">
+        <div
+          class="absolute inset-0 z-10 bg-cover bg-center"
+          style="background-image: url('{(data.lesson.photo?.urls as PhotoURLs)
+            .small}')"
+        ></div>
 
-      <!-- Full image on top -->
-      <div
-        class="absolute inset-0 z-20 bg-cover bg-center"
-        style="background-image: url('{data.lesson.photo?.urls.full}')"
-      ></div>
+        <div
+          class="absolute inset-0 z-20 bg-cover bg-center"
+          style="background-image: url('{(data.lesson.photo?.urls as PhotoURLs)
+            .full}')"
+        ></div>
 
-      <!-- Hidden lazy img trigger -->
-      <img
-        src={data.lesson.photo?.urls.full}
-        alt={data.lesson.photo?.altDescription}
-        loading="lazy"
-        class="absolute inset-0 -z-10 h-0 w-0 opacity-0"
-      />
-    </div>
+        <img
+          src={(data.lesson.photo?.urls as PhotoURLs).full}
+          alt={data.lesson.photo?.altDescription}
+          loading="lazy"
+          class="absolute inset-0 -z-10 h-0 w-0 opacity-0"
+        />
+      </div>
+    {/if}
 
     {@html data.rendered}
   </article>

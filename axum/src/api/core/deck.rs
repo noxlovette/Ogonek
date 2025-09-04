@@ -124,7 +124,24 @@ pub async fn list_decks(
     Query(params): Query<PaginationParams>,
     claims: Claims,
 ) -> Result<Json<PaginatedResponse<DeckSmall>>, APIError> {
+    // DEBUG THE SHIT OUT OF THIS! 🔍
+    tracing::info!("🔥 DECK LIST PARAMS: {:?}", params);
+    tracing::info!(
+        "📊 PAGINATION DEBUG: page={:?}, per_page={:?}, limit={}, offset={}",
+        params.page,
+        params.per_page,
+        params.limit(),
+        params.offset()
+    );
+    tracing::info!(
+        "🔍 SEARCH: {:?}, ASSIGNEE: {:?}",
+        params.search,
+        params.assignee
+    );
+
     let decks = flashcards::deck::find_all(&state.db, &claims.sub, &params).await?;
+
+    tracing::info!("✅ FOUND {} DECKS", decks.len());
 
     Ok(Json(PaginatedResponse {
         data: decks,

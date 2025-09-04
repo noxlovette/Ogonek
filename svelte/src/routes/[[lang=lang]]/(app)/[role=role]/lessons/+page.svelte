@@ -11,6 +11,7 @@
     TableSkeleton,
     Divider,
     Merger,
+    Title1,
   } from "$lib/components";
   import { enhance } from "$app/forms";
   import { enhanceForm } from "$lib/utils";
@@ -59,7 +60,7 @@
     const params = new URLSearchParams();
 
     if ($searchTerm?.trim()) params.set("search", $searchTerm);
-    if ($pageSize > 0) params.set("page_size", $pageSize.toString());
+    if ($pageSize > 0) params.set("per_page", $pageSize.toString());
     if ($currentPage > 1) params.set("page", $currentPage.toString());
     if ($assigneeStore?.trim()) params.set("assignee", $assigneeStore);
 
@@ -111,7 +112,7 @@
 {:then lessons}
   {#if lessons.data.length < 1}
     <EmptySpace>
-      <Title3>{m.noLessons()}</Title3>
+      <Title1>{m.noLessons()}</Title1>
     </EmptySpace>
   {/if}
   {#if role === "s"}

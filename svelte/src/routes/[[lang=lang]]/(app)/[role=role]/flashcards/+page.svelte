@@ -36,9 +36,9 @@
   $effect(() => {
     const params = new URLSearchParams();
 
-    if ($searchTerm?.trim()) params.set("search", $searchTerm);
-    if ($pageSize > 0) params.set("page_size", $pageSize.toString());
     if ($currentPage > 1) params.set("page", $currentPage.toString());
+    if ($pageSize > 0) params.set("per_page", $pageSize.toString());
+    if ($searchTerm?.trim()) params.set("search", $searchTerm);
     if ($assigneeStore?.trim()) params.set("assignee", $assigneeStore);
 
     const queryString = params.toString();
@@ -111,7 +111,7 @@
   </VStack>
 </Toolbar>
 
-{#await data.decksResponse}
+{#await data.decksPaginated}
   {#if role === "s"}
     <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
       <LoadingCard />
@@ -122,27 +122,26 @@
     <TableSkeleton />
   {/if}
 {:then decks}
-  {#if role === "s"}
-    {#if decks.data.length}
+  {#if decks.data.length}
+    {#if role === "s"}
       <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {#each decks.data as deck (deck.id)}
           <DeckCard {deck} />
         {/each}
       </div>
     {:else}
-      <EmptySpace>
-        <Title1>{m.noDecks()}</Title1>
-      </EmptySpace>
+      <Table
+        config={deckConfig}
+        href="flashcards"
+        {students}
+        items={decks.data}
+      />
     {/if}
   {:else}
-    <Table
-      config={deckConfig}
-      href="flashcards"
-      {students}
-      items={decks.data}
-      total={decks.data.length}
-    />
+    <EmptySpace>
+      <Title1>{m.noDecks()}</Title1>
+    </EmptySpace>
   {/if}
 {:catch error: App.Error}
-  <p>Error loading decks: {error.errorID}</p>
+  <p>Error loading decks: {error.errorID} {error.message}</p>
 {/await}
