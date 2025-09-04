@@ -287,16 +287,9 @@ export const deleteFileParams = zod.object({
  */
 export const fetchDueCardsResponseItem = zod.object({
   "back": zod.string(),
-  "cardId": zod.string(),
-  "dueDate": zod.iso.datetime({}).nullish(),
-  "easeFactor": zod.number(),
   "front": zod.string(),
   "id": zod.string(),
-  "interval": zod.number(),
-  "lastReviewed": zod.iso.datetime({}).nullish(),
-  "mediaUrl": zod.string().nullish(),
-  "reviewCount": zod.number(),
-  "userId": zod.string()
+  "mediaUrl": zod.string().nullish()
 })
 export const fetchDueCardsResponse = zod.array(fetchDueCardsResponseItem)
 
@@ -376,14 +369,21 @@ export const fetchLessonResponse = zod.object({
   "assignee": zod.string(),
   "assigneeName": zod.string(),
   "createdAt": zod.iso.datetime({}),
-  "createdBy": zod.string(),
   "id": zod.string(),
   "markdown": zod.string(),
-  "mediaUrl": zod.string().nullish(),
   "title": zod.string(),
   "topic": zod.string(),
   "updatedAt": zod.iso.datetime({})
-}).describe('Grown-up lesson')
+}).describe('Grown-up lesson').and(zod.object({
+  "photo": zod.union([zod.null(),zod.object({
+  "altDescription": zod.string().nullish(),
+  "id": zod.string(),
+  "photographerName": zod.string(),
+  "photographerUsername": zod.string(),
+  "unsplashId": zod.string(),
+  "urls": zod.any()
+})]).optional()
+}))
 
 
 /**
@@ -409,6 +409,30 @@ export const updateLessonBody = zod.object({
   "mediaUrl": zod.string().nullish(),
   "title": zod.string().nullish(),
   "topic": zod.string().nullish()
+})
+
+
+/**
+ * @summary Adds a photo to the lesson
+ */
+export const upsertPhotoParams = zod.object({
+  "id": zod.string().describe('Lesson ID')
+})
+
+export const upsertPhotoBody = zod.object({
+  "altDescription": zod.string().nullish(),
+  "unsplashId": zod.string(),
+  "urls": zod.object({
+  "full": zod.string(),
+  "raw": zod.string(),
+  "regular": zod.string(),
+  "small": zod.string(),
+  "thumb": zod.string()
+}),
+  "user": zod.object({
+  "name": zod.string(),
+  "username": zod.string()
+})
 })
 
 

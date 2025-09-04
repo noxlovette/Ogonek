@@ -125,7 +125,7 @@
           : m.direct_slow_bobcat_shine()}
       </UniButton>
     </Merger>
-    <SearchBar />
+    <SearchBar bind:q={$searchTerm} />
   </VStack>
 </Toolbar>
 

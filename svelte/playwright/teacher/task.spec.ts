@@ -34,18 +34,8 @@ test("task edit", async ({ page }) => {
 });
 
 test("task delete", async ({ page }) => {
-  await page.locator("div:nth-child(3) > .flex").first().click();
-  await page
-    .locator("form")
-    .filter({ hasText: "Editing... title assignee" })
-    .locator("#btn")
-    .nth(1)
-    .click();
-  await page
-    .locator("form")
-    .filter({ hasText: "Editing... You are deleting" })
-    .locator("#btn")
-    .nth(3)
-    .click();
+  await page.getByRole("link", { name: "Edit" }).click();
+  await page.getByRole("button", { name: "Delete" }).click();
+  await page.getByRole("button", { name: "Confirm" }).click();
   await page.getByRole("alert", { name: "Notification" }).click();
 });

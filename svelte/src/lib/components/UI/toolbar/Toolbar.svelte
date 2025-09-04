@@ -7,7 +7,7 @@
   import { VStack } from "..";
   import type { Role } from "$lib/types";
 
-  let { children } = $props();
+  let { children, src = "", alt = "" } = $props();
   function isRole(segment: string): segment is Role {
     return segment === "t" || segment === "s";
   }
@@ -35,7 +35,14 @@
   }
 </script>
 
-<div class="flex w-full flex-col justify-between gap-4">
+<div
+  class="relative flex w-full flex-col justify-between gap-4 overflow-hidden py-2 md:py-3 lg:py-4"
+>
+  {#if src}
+    <div class="absolute inset-0 opacity-50">
+      <img class="size-full rounded-xl object-cover" {src} {alt} />
+    </div>
+  {/if}
   {#if showBack}
     <VStack>
       <Merger>
@@ -44,7 +51,8 @@
       <Divider></Divider>
     </VStack>
   {/if}
-  <div class="flex">
+
+  <div class="relative z-10 flex">
     {@render children?.()}
   </div>
 </div>

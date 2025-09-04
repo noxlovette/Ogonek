@@ -30,12 +30,14 @@
         Icon={Ban}
         iconOnly={false}
         onclick={() => (showConfirmDialog = false)}
+        ariaLabel="Cancel Deletion"
       >
         Cancel
       </UniButton>
       <UniButton
         {formaction}
         Icon={Trash2}
+        ariaLabel="Confirm"
         type="submit"
         iconOnly={false}
         variant="danger">Confirm</UniButton

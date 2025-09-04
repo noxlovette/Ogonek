@@ -34,13 +34,20 @@
   const role = page.params.role;
 
   $effect(() => {
-    goto(
-      `?search=${$searchTerm}&page_size=${$pageSize}&page=${$currentPage}&assignee=${$assigneeStore}`,
-      {
-        noScroll: true,
-        keepFocus: true,
-      },
-    );
+    const params = new URLSearchParams();
+
+    if ($searchTerm?.trim()) params.set("search", $searchTerm);
+    if ($pageSize > 0) params.set("page_size", $pageSize.toString());
+    if ($currentPage > 1) params.set("page", $currentPage.toString());
+    if ($assigneeStore?.trim()) params.set("assignee", $assigneeStore);
+
+    const queryString = params.toString();
+    const newUrl = queryString ? `?${queryString}` : window.location.pathname;
+
+    goto(newUrl, {
+      noScroll: true,
+      keepFocus: true,
+    });
   });
 
   const deckConfig: TableConfig<DeckSmall> = {
@@ -100,7 +107,7 @@
         >
       {/if}
     </Merger>
-    <SearchBar />
+    <SearchBar bind:q={$searchTerm} />
   </VStack>
 </Toolbar>
 

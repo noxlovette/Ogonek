@@ -76,6 +76,7 @@ export const routes = {
     lesson: (id: string) => `${API_BASE}/lessons/${id}`,
     delete: (id: string) => `${API_BASE}/lessons/${id}`,
     update: (id: string) => `${API_BASE}/lessons/${id}`,
+    upsert_photo: (id: string) => `${API_BASE}/lessons/${id}/photo`,
   },
   notifications: {
     register_device_token: () => `${API_BASE}/notifications/register`,

@@ -25,7 +25,8 @@
     "jose": "^6.0.12",
     "lucide-svelte": "^0.536.0",
     "papaparse": "^5.5.3",
-    "pino": "^9.9.0"
+    "pino": "^9.9.0",
+    "unsplash-js": "^7.0.19"
   },
   "devDependencies": {
     "@eslint/compat": "^1.2.5",

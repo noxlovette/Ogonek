@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "\n        SELECT * FROM cards\n        WHERE deck_id = $1\n        ORDER BY created_at DESC\n        ",
+  "query": "\n        SELECT\n            cp.id,\n            c.front,\n            c.back,\n            c.media_url\n        FROM card_progress cp\n        JOIN cards c ON c.id = cp.card_id\n        WHERE cp.user_id = $1\n            AND (cp.due_date <= CURRENT_TIMESTAMP OR cp.review_count = 0)\n        ORDER BY cp.due_date ASC\n        ",
   "describe": {
     "columns": [
       {
@@ -22,16 +22,6 @@
         "ordinal": 3,
         "name": "media_url",
         "type_info": "Text"
-      },
-      {
-        "ordinal": 4,
-        "name": "deck_id",
-        "type_info": "Varchar"
-      },
-      {
-        "ordinal": 5,
-        "name": "created_at",
-        "type_info": "Timestamptz"
       }
     ],
     "parameters": {
@@ -43,10 +33,8 @@
       false,
       false,
       false,
-      true,
-      false,
-      false
+      true
     ]
   },
-  "hash": "8b61b90bc47bee08d662a0039eabdb4905a4b424ea8a97922d37bd1a64576a22"
+  "hash": "bdb392b00082068316440034da1a76f9b8d4302399d79c8f2fc23278160beca4"
 }

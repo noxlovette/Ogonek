@@ -94,7 +94,7 @@
         </form>
       </Merger>
     {/if}
-    <SearchBar />
+    <SearchBar bind:q={$searchTerm} />
   </VStack>
 </Toolbar>
 

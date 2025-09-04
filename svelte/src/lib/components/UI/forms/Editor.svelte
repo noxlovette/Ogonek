@@ -1,5 +1,9 @@
 <script lang="ts">
+  import Title2 from "$lib/components/typography/Title2.svelte";
   import { parseMarkdown } from "@noxlovette/svarog";
+  import { UniButton } from "./buttons";
+  import { ChartNoAxesGantt, Eye } from "lucide-svelte";
+  import { Merger } from "../toolbar";
 
   let {
     markdownContent = $bindable(
@@ -9,7 +13,7 @@
 
   let htmlContent = $state("");
   let preview = $state(false);
-  let textareaRef = $state(HTMLTextAreaElement.prototype);
+  let textareaRef = $state();
 
   // Undo/Redo functionality
   let history: string[] = $state([markdownContent]);
@@ -227,17 +231,21 @@
 
 <div class="col-span-2 flex size-full flex-col gap-4">
   <div id="header" class="flex items-center space-x-4">
-    <h1 class="text-2xl font-bold">Markdown</h1>
-    <button
-      onclick={() => (preview = false)}
-      class="hover:bg-accent rounded-lg px-2 py-1 text-sm"
-      class:chosen={!preview}>Editor</button
-    >
-    <button
-      onclick={() => (preview = true)}
-      class="hover:bg-accent rounded-lg px-2 py-1 text-sm"
-      class:chosen={preview}>Preview</button
-    >
+    <Title2>Markdown</Title2>
+    <Merger>
+      <UniButton
+        variant={preview ? "primary" : "prominent"}
+        Icon={ChartNoAxesGantt}
+        iconOnly={false}
+        onclick={() => (preview = false)}>Edit</UniButton
+      >
+      <UniButton
+        variant={preview ? "prominent" : "primary"}
+        Icon={Eye}
+        iconOnly={false}
+        onclick={() => (preview = true)}>Preview</UniButton
+      >
+    </Merger>
   </div>
 
   {#if !preview}

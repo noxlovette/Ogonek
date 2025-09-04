@@ -3,7 +3,6 @@
   import {
     Editor,
     LargeTitle,
-    UniButton,
     Toolbar,
     Divider,
     Merger,
@@ -11,14 +10,21 @@
     CancelButton,
     DeleteButton,
     SaveButton,
+    PhotoPicker,
+    SearchBar,
+    Grid,
+    Callout,
   } from "$lib/components";
   import { enhanceForm } from "$lib/utils";
   import Input from "$lib/components/UI/forms/Input.svelte";
   import { m } from "$lib/paraglide/messages";
+  import Title2 from "$lib/components/typography/Title2.svelte";
   let { data, form } = $props();
   let { lesson } = data;
 
   let markdown = $state(lesson.markdown);
+
+  let q = "";
 </script>
 
 <form
@@ -55,3 +61,25 @@
   </div>
 </form>
 <Editor bind:markdownContent={markdown} />
+
+<VStack>
+  <Title2>Unsplash Photos</Title2>
+  <Divider></Divider>
+
+  {#if q}
+    <Callout>
+      Showing results for {q}
+    </Callout>
+  {/if}
+</VStack>
+<Grid>
+  <form class="" action="?/unsplash" method="POST" use:enhance>
+    <SearchBar {q} />
+  </form>
+
+  {#if form?.photo}
+    Failed to save photo
+  {/if}
+
+  <PhotoPicker photos={form?.photos} chosen={lesson.photo?.unsplashId} />
+</Grid>

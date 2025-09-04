@@ -97,13 +97,13 @@ pub async fn find_by_id(
             l.topic,
             l.markdown,
             l.assignee,
-            l.created_by,
             l.created_at,
+            l.photo_id,
             l.updated_at,
-            l.media_url,
             u.name as assignee_name
         FROM lessons l
         LEFT JOIN "user" u ON l.assignee = u.id
+        LEFT JOIN photos p on l.photo_id = p.id
         WHERE l.id = $1
         AND (l.assignee = $2 OR l.created_by = $2)
         "#,
@@ -312,7 +312,6 @@ mod tests {
         let lesson = result.unwrap();
         assert_eq!(lesson.title, "Find Test");
         assert_eq!(lesson.topic, "Testing");
-        assert_eq!(lesson.created_by, user);
     }
 
     #[sqlx::test]

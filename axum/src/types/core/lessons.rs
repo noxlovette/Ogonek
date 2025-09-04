@@ -1,4 +1,4 @@
-use crate::types::datetime_serialization;
+use crate::types::{datetime_serialization, photos::Photo};
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use sqlx::prelude::FromRow;
@@ -26,16 +26,22 @@ pub struct LessonFull {
     pub topic: String,
     pub markdown: String,
     pub assignee: String,
-    pub created_by: String,
-
+    #[serde(skip_serializing)]
+    pub photo_id: Option<String>,
     #[serde(with = "datetime_serialization")]
     pub created_at: DateTime<Utc>,
 
     #[serde(with = "datetime_serialization")]
     pub updated_at: DateTime<Utc>,
     pub assignee_name: String,
+}
 
-    pub media_url: Option<String>,
+#[derive(Serialize, Debug, ToSchema)]
+pub struct LessonWithPhoto {
+    #[serde(flatten)]
+    pub lesson: LessonFull,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub photo: Option<Photo>,
 }
 
 #[derive(Deserialize, Debug, ToSchema)]

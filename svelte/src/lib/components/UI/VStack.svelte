@@ -1,7 +1,7 @@
 <script lang="ts">
-  let { children } = $props();
+  let { children, styling = "" } = $props();
 </script>
 
-<div class="flex h-full items-end gap-4">
+<div class="flex h-full items-end gap-4 {styling}">
   {@render children()}
 </div>

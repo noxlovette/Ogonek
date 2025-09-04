@@ -349,6 +349,23 @@ export interface paths {
         patch: operations["update_lesson"];
         trace?: never;
     };
+    "/api/v1/lessons/{id}/photo": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Adds a photo to the lesson */
+        patch: operations["upsert_photo"];
+        trace?: never;
+    };
     "/api/v1/notifications/register": {
         parameters: {
             query?: never;
@@ -716,10 +733,8 @@ export interface components {
             assigneeName: string;
             /** Format: date-time */
             createdAt: string;
-            createdBy: string;
             id: string;
             markdown: string;
-            mediaUrl?: string | null;
             title: string;
             topic: string;
             /** Format: date-time */
@@ -743,6 +758,9 @@ export interface components {
             mediaUrl?: string | null;
             title?: string | null;
             topic?: string | null;
+        };
+        LessonWithPhoto: components["schemas"]["LessonFull"] & {
+            photo?: null | components["schemas"]["Photo"];
         };
         MultipartUploadInit: {
             fileId: string;
@@ -794,6 +812,14 @@ export interface components {
             /** Format: int32 */
             partNumber: number;
             url: string;
+        };
+        Photo: {
+            altDescription?: string | null;
+            id: string;
+            photographerName: string;
+            photographerUsername: string;
+            unsplashId: string;
+            urls: unknown;
         };
         PresignedFileUrl: {
             fileId: string;
@@ -905,6 +931,17 @@ export interface components {
             expiresAt: number;
             token: string;
         };
+        URLs: {
+            full: string;
+            raw: string;
+            regular: string;
+            small: string;
+            thumb: string;
+        };
+        UnsplashUser: {
+            name: string;
+            username: string;
+        };
         UpdateCardProgress: {
             /** Format: date-time */
             due_date: string;
@@ -920,6 +957,12 @@ export interface components {
         UpdateStudentRequest: {
             markdown?: string | null;
             studentTelegramId?: string | null;
+        };
+        UpsertPhoto: {
+            altDescription?: string | null;
+            unsplashId: string;
+            urls: components["schemas"]["URLs"];
+            user: components["schemas"]["UnsplashUser"];
         };
         User: {
             email: string;
@@ -1839,7 +1882,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["LessonFull"];
+                    "application/json": components["schemas"]["LessonWithPhoto"];
                 };
             };
             /** @description Unauthorized */
@@ -1906,6 +1949,45 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["LessonUpdate"];
+            };
+        };
+        responses: {
+            /** @description Lesson updated successfully */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Lesson not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    upsert_photo: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Lesson ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpsertPhoto"];
             };
         };
         responses: {

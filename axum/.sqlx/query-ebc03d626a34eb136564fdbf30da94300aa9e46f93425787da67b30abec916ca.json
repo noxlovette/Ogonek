@@ -1,0 +1,16 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        UPDATE lessons\n        SET photo_id = COALESCE($2, photo_id)\n        WHERE id = $1 AND created_by = $3\n        ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Varchar",
+        "Text"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "ebc03d626a34eb136564fdbf30da94300aa9e46f93425787da67b30abec916ca"
+}
