@@ -13,13 +13,19 @@
     PhotoPicker,
     SearchBar,
     UniButton,
+    Photo,
   } from "$lib/components";
   import { enhanceForm } from "$lib/utils";
   import Input from "$lib/components/UI/forms/Input.svelte";
   import { m } from "$lib/paraglide/messages";
   import Title2 from "$lib/components/typography/Title2.svelte";
-  import { ChartNoAxesGantt, Eye, ImageOff } from "lucide-svelte";
-  import type { PhotoURLs } from "$lib/types";
+  import {
+    Ban,
+    ChartNoAxesGantt,
+    Eye,
+    EyeClosed,
+    ImageOff,
+  } from "lucide-svelte";
   import { invalidate } from "$app/navigation";
   let { data, form } = $props();
   let { lesson } = data;
@@ -28,6 +34,7 @@
 
   let q = "";
   let preview = $state(false);
+  let showPicker = $state(true);
 </script>
 
 <form
@@ -78,53 +85,31 @@
   })}
 >
   <VStack>
-    <Title2>Photo</Title2>
+    <Title2>Photo (Unsplash)</Title2>
     <Divider></Divider>
-    {#if data.lesson.photo}
-      <Merger>
-        <UniButton type="submit" Icon={ImageOff} formaction="?/removePhoto"
+    <Merger>
+      {#if data.lesson.photo}
+        <UniButton
+          type="submit"
+          variant="danger"
+          Icon={ImageOff}
+          formaction="?/removePhoto"
         ></UniButton>
-      </Merger>
-    {/if}
+      {/if}
+      {#if form?.photos}
+        <UniButton
+          Icon={showPicker ? Eye : EyeClosed}
+          onclick={() => (showPicker = !showPicker)}
+        />
+      {/if}
+    </Merger>
+
     <SearchBar bind:q placeholder="Search photos..." />
   </VStack>
-  <PhotoPicker photos={form?.photos} chosen={lesson.photo?.id} />
-  {#if data.lesson.photo}
-    <div class="relative h-30 w-full overflow-hidden rounded-t-xl">
-      <div
-        class="absolute inset-0 z-10 bg-cover bg-center"
-        style="background-image: url('{(data.lesson.photo?.urls as PhotoURLs)
-          .small}')"
-      ></div>
-
-      <div
-        class="absolute inset-0 z-20 bg-cover bg-center"
-        style="background-image: url('{(data.lesson.photo?.urls as PhotoURLs)
-          .full}')"
-      ></div>
-
-      <img
-        src={(data.lesson.photo?.urls as PhotoURLs).full}
-        alt={data.lesson.photo?.altDescription}
-        loading="lazy"
-        class="absolute inset-0 -z-10 h-0 w-0 opacity-0"
-      />
-
-      {#if data.lesson.photo?.photographerName}
-        <div
-          class="absolute right-0 bottom-0 z-30 m-2 rounded-full bg-stone-100 px-2 py-1 text-xs dark:bg-stone-800"
-        >
-          Photo by <a
-            href={`https://unsplash.com/@${data.lesson.photo.photographerUsername}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Visit photographer's Unsplash profile (opens in new tab)"
-            >{data.lesson.photo.photographerName}</a
-          >
-        </div>
-      {/if}
-    </div>
+  {#if showPicker}
+    <PhotoPicker photos={form?.photos} chosen={lesson.photo?.id} />
   {/if}
+  <Photo photo={data.lesson.photo} />
 </form>
 
 <VStack>

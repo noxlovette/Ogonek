@@ -1,9 +1,4 @@
-export interface UnsplashPhoto {
-  id: string;
-  urls: PhotoURLs;
-  alt_description?: string;
-  user: UnsplashUser;
-}
+import type { components } from "./api/gen/openapi";
 
 export interface PhotoURLs {
   raw: string;
@@ -13,13 +8,4 @@ export interface PhotoURLs {
   thumb: string;
 }
 
-export interface UnsplashUser {
-  name: string;
-  username: string;
-}
-
-export interface UnsplashResponse {
-  results: UnsplashPhoto[];
-  total: number;
-  total_pages: number;
-}
+export type Photo = components["schemas"]["Photo"];

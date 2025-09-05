@@ -118,6 +118,14 @@ export const actions = {
       if (!axumResponse.ok) {
         return fail(500, { photo: true });
       }
+
+      /**
+       * Track the download as per Unsplash's guidelines:
+       * https://help.unsplash.com/en/articles/2511258-guideline-triggering-a-download
+       **/
+      unsplash.photos.trackDownload({
+        downloadLocation: response.links.download_location,
+      });
     }
   },
   removePhoto: async ({ fetch, params }) => {

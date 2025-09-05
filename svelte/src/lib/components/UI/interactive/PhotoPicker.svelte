@@ -1,12 +1,13 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
-  import { Check, ExternalLink, X } from "lucide-svelte";
+  import { Ban, Check, ExternalLink, X } from "lucide-svelte";
   import type { Basic as Photo } from "unsplash-js/dist/methods/photos/types";
   import { UniButton } from "../forms";
   import { enhanceForm } from "$lib/utils";
-  import { HStack } from "..";
+  import { HStack, Merger, VStack } from "..";
   import { fade } from "svelte/transition";
-  import { Caption1 } from "$lib/components/typography";
+  import { Caption1, Title3 } from "$lib/components/typography";
+  import Divider from "../toolbar/Divider.svelte";
 
   let {
     photos,
@@ -38,7 +39,11 @@
 </script>
 
 {#if photos}
-  <div class="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6" aria-label="Photo selection grid" in:fade>
+  <div
+    class="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6"
+    aria-label="Photo selection grid"
+    in:fade
+  >
     {#each photos as photo, index (photo.id)}
       <button
         type="button"
@@ -83,76 +88,46 @@
 
   <!-- Selected Photo Actions -->
   {#if selectedPhoto}
-    <div
-      class="rounded-xl border border-stone-200 bg-stone-50 p-4 dark:border-stone-700 dark:bg-stone-800/50"
-    >
-      <div class="flex items-start gap-4">
-        <!-- Thumbnail -->
-        <div class="flex-shrink-0">
-          <img
-            src={selectedPhoto.urls.thumb}
-            alt="Selected photo"
-            class="h-16 w-16 rounded-lg object-cover ring-1 ring-stone-200 dark:ring-stone-700"
-          />
-        </div>
-
-        <!-- Info & Actions -->
-        <div class="min-w-0 flex-1">
-          <div class="mb-3">
-            <h3 class="font-medium text-stone-900 dark:text-stone-100">
-              {selectedPhoto.alt_description || "Untitled Photo"}
-            </h3>
-            <p class="text-sm text-stone-600 dark:text-stone-400">
-              Photo by
-              <span class="font-medium">{selectedPhoto.user.name}</span>
-            </p>
-          </div>
-
-          <!-- Action buttons -->
-          <div class="flex items-center gap-2">
-            <button
-              type="button"
-              onclick={clearSelection}
-              class="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm
-                       text-stone-600 transition-colors hover:bg-stone-100 hover:text-stone-800
-                       dark:text-stone-400 dark:hover:bg-stone-700 dark:hover:text-stone-200"
-              aria-label="Clear selection"
-            >
-              <X size={14} />
-              Clear
-            </button>
-
-            <a
-              href={selectedPhoto.links.html}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm
-                       text-stone-600 transition-colors hover:bg-stone-100 hover:text-stone-800
-                       dark:text-stone-400 dark:hover:bg-stone-700 dark:hover:text-stone-200"
-              aria-label="View on Unsplash (opens in new tab)"
-            >
-              <ExternalLink size={14} />
-              Unsplash
-            </a>
-
-            <form
-              use:enhance={enhanceForm({
-                messages: {
-                  success: "Photo selected successfully",
-                },
-              })}
-              action="?/addPhoto"
-              method="POST"
-              class="ml-auto"
-            >
-              <input type="hidden" name="photoId" value={selectedPhoto.id} />
-              <UniButton variant="prominent" type="submit" Icon={Check}>
-                Confirm Selection
-              </UniButton>
-            </form>
-          </div>
-        </div>
+    <div class="ring-default bg-default flex w-full gap-4 rounded-2xl p-4">
+      <!-- Thumbnail -->
+      <div class="flex-shrink-0">
+        <img
+          src={selectedPhoto.urls.thumb}
+          alt="Selected photo"
+          class="h-16 w-16 rounded-lg object-cover ring-1 ring-stone-200 dark:ring-stone-700"
+        />
       </div>
+
+      <HStack>
+        <Title3 styling="capitalize text-clip">
+          {selectedPhoto.alt_description || "Untitled Photo"}
+        </Title3>
+        <Caption1>
+          Photo by
+          <span class="font-medium">{selectedPhoto.user.name}</span>
+        </Caption1>
+      </HStack>
+      <Divider></Divider>
+      <VStack>
+        <Merger>
+          <UniButton Icon={Ban} onclick={clearSelection}></UniButton>
+          <form
+            use:enhance={enhanceForm({
+              messages: {
+                success: "Photo selected successfully",
+              },
+            })}
+            action="?/addPhoto"
+            method="POST"
+            class="ml-auto"
+          >
+            <input type="hidden" name="photoId" value={selectedPhoto.id} />
+            <UniButton variant="prominent" type="submit" Icon={Check}>
+              Confirm Selection
+            </UniButton>
+          </form>
+        </Merger>
+      </VStack>
     </div>
   {/if}
 {/if}
