@@ -4,7 +4,8 @@ import { parseMarkdown } from "@noxlovette/svarog";
 import { redirect } from "@sveltejs/kit";
 import type { LayoutServerLoad } from "./$types";
 
-export const load: LayoutServerLoad = async ({ params, fetch }) => {
+export const load: LayoutServerLoad = async ({ params, fetch, depends }) => {
+  depends("edit:photo");
   const response = await fetch(routes.lessons.lesson(params.id));
   if (!response.ok) {
     throw redirect(303, `/${params.role}/lessons/`);

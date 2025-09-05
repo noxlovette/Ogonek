@@ -82,6 +82,8 @@ export const actions = {
         });
     }
 
+    console.log(photos);
+
     return { photos };
   },
   addPhoto: async ({ request, fetch, params }) => {
@@ -117,5 +119,20 @@ export const actions = {
         return fail(500, { photo: true });
       }
     }
+  },
+  removePhoto: async ({ fetch, params }) => {
+    const { id } = params;
+    if (!id) {
+      return fail(500);
+    }
+    const response = await fetch(routes.lessons.upsert_photo(id), {
+      method: "DELETE",
+    });
+
+    if (!response.ok) {
+      return fail(500);
+    }
+
+    return { success: true };
   },
 } satisfies Actions;

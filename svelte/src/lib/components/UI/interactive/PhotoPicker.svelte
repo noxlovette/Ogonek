@@ -1,229 +1,158 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
-  import { EmptySpace } from "$lib/components/typography";
   import { Check, ExternalLink, X } from "lucide-svelte";
   import type { Basic as Photo } from "unsplash-js/dist/methods/photos/types";
-  import { onMount } from "svelte";
+  import { UniButton } from "../forms";
+  import { enhanceForm } from "$lib/utils";
+  import { HStack } from "..";
+  import { fade } from "svelte/transition";
+  import { Caption1 } from "$lib/components/typography";
 
-  let { photos, chosen }: { photos?: Photo[]; chosen?: string } = $props();
+  let {
+    photos,
+    chosen = $bindable(),
+  }: {
+    photos?: Photo[];
+    chosen?: string;
+  } = $props();
 
-  let selectedPhoto: Photo | null = $state(null);
-  let gridElement: HTMLDivElement;
-  let focusedIndex = $state(-1);
-  let showActions = $state(false);
-  let actionPanelElement: HTMLDivElement;
+  let selectedPhoto = $derived(
+    chosen && photos ? photos.find((p) => p.id === chosen) : null,
+  );
 
-  $effect(() => {
-    if (chosen && photos) {
-      selectedPhoto = photos.find((p) => p.id === chosen) || null;
-      showActions = !!selectedPhoto;
-    } else {
-      selectedPhoto = null;
-      showActions = false;
-    }
-  });
-
-  function selectPhoto(photo: Photo, index: number) {
+  function selectPhoto(photo: Photo) {
     chosen = photo.id;
-    selectedPhoto = photo;
-    focusedIndex = index;
-    showActions = true;
   }
 
-  function deselectPhoto() {
+  function clearSelection() {
     chosen = undefined;
-    selectedPhoto = null;
-    showActions = false;
-    focusedIndex = -1;
   }
 
-  function handleKeydown(event: KeyboardEvent, photo: Photo, index: number) {
-    switch (event.key) {
-      case "Enter":
-      case " ":
-        event.preventDefault();
-        selectPhoto(photo, index);
-        break;
-      case "ArrowRight":
-        event.preventDefault();
-        if (photos && index < photos.length - 1) {
-          const nextButton = gridElement.children[
-            index + 1
-          ] as HTMLButtonElement;
-          nextButton?.focus();
-          focusedIndex = index + 1;
-        }
-        break;
-      case "ArrowLeft":
-        event.preventDefault();
-        if (index > 0) {
-          const prevButton = gridElement.children[
-            index - 1
-          ] as HTMLButtonElement;
-          prevButton?.focus();
-          focusedIndex = index - 1;
-        }
-        break;
-      case "ArrowDown":
-        event.preventDefault();
-        // Calculate next row (assuming 4 columns on lg screens)
-        const cols =
-          window.innerWidth >= 1024 ? 4 : window.innerWidth >= 768 ? 3 : 2;
-        const nextRowIndex = index + cols;
-        if (photos && nextRowIndex < photos.length) {
-          const nextRowButton = gridElement.children[
-            nextRowIndex
-          ] as HTMLButtonElement;
-          nextRowButton?.focus();
-          focusedIndex = nextRowIndex;
-        }
-        break;
-      case "ArrowUp":
-        event.preventDefault();
-        const prevCols =
-          window.innerWidth >= 1024 ? 4 : window.innerWidth >= 768 ? 3 : 2;
-        const prevRowIndex = index - prevCols;
-        if (prevRowIndex >= 0) {
-          const prevRowButton = gridElement.children[
-            prevRowIndex
-          ] as HTMLButtonElement;
-          prevRowButton?.focus();
-          focusedIndex = prevRowIndex;
-        }
-        break;
+  // Better keyboard navigation
+  function handleKeydown(event: KeyboardEvent, photo: Photo) {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      selectPhoto(photo);
     }
   }
-
-  function handleActionKeydown(event: KeyboardEvent) {
-    if (event.key === "Escape") {
-      showActions = false;
-      // Return focus to selected photo
-      if (focusedIndex >= 0) {
-        const button = gridElement.children[focusedIndex] as HTMLButtonElement;
-        button?.focus();
-      }
-    }
-  }
-
-  onMount(() => {
-    if (actionPanelElement) {
-      actionPanelElement.addEventListener("keydown", handleActionKeydown);
-    }
-  });
 </script>
 
-<div class="relative">
-  {#if photos}
-    <div
-      bind:this={gridElement}
-      class="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4"
-      role="grid"
-      aria-label="Photo selection grid"
-    >
-      {#each photos as photo, index}
-        <button
-          type="button"
-          onclick={() => selectPhoto(photo, index)}
-          onkeydown={(e) => handleKeydown(e, photo, index)}
-          class="group bg-default relative aspect-square cursor-pointer overflow-hidden
-           rounded-2xl transition-all duration-200 focus:ring-2 focus:ring-blue-500 focus:outline-none
-           {chosen === photo.id
-            ? 'ring-3 ring-green-500'
-            : 'hover:ring-accent hover:ring-3'}"
-          role="gridcell"
-          tabindex="0"
-          aria-selected={chosen === photo.id}
-          aria-label="{photo.alt_description || `Photo ${index + 1}`} by {photo
-            .user.name}. {chosen === photo.id ? 'Selected' : 'Not selected'}"
-        >
+{#if photos}
+  <div class="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6" aria-label="Photo selection grid" in:fade>
+    {#each photos as photo, index (photo.id)}
+      <button
+        type="button"
+        onclick={() => selectPhoto(photo)}
+        onkeydown={(e) => handleKeydown(e, photo)}
+        class="group relative aspect-square w-full overflow-hidden rounded-2xl transition-all duration-200
+               {chosen === photo.id
+          ? 'ring-2 ring-amber-500/30 ring-offset-2 ring-offset-stone-50'
+          : 'hover:ring-2 hover:ring-stone-300/50'}"
+        role="gridcell"
+        tabindex="0"
+        aria-selected={chosen === photo.id}
+        aria-label="{photo.alt_description || `Photo ${index + 1}`} by {photo
+          .user.name}. {chosen === photo.id ? 'Selected' : 'Not selected'}"
+      >
+        <img
+          src={photo.urls.small}
+          alt="{photo.alt_description || `Photo ${index + 1}`} by {photo.user
+            .name}"
+          class="h-full w-full object-cover transition-transform duration-300
+                 {chosen === photo.id ? 'scale-105' : 'group-hover:scale-105'}"
+          loading="lazy"
+        />
+        {#if chosen === photo.id}
           <div
-            class="absolute inset-0 animate-pulse bg-gray-200"
+            class="absolute inset-0 bg-amber-500/20 backdrop-blur-[1px]"
             aria-hidden="true"
-          ></div>
-
-          <img
-            src={photo.urls.small}
-            alt="{photo.alt_description || `Photo ${index + 1}`} by {photo.user
-              .name}"
-            class="h-full w-full object-cover transition-opacity duration-300"
-            loading="lazy"
-          />
-
-          {#if chosen === photo.id}
+          >
             <div
-              class="absolute inset-0 flex items-center justify-center bg-green-500/30"
-              aria-hidden="true"
+              class="absolute top-2 right-2 rounded-full bg-amber-600 p-1.5 shadow-lg"
             >
-              <Check class="text-green-500" size={32} />
-            </div>
-          {/if}
-        </button>
-      {/each}
-    </div>
-
-    <!-- Slide-out action panel -->
-    <div
-      bind:this={actionPanelElement}
-      class="overflow-hidden transition-all duration-300 ease-in-out {showActions
-        ? 'max-h-20'
-        : 'max-h-0'}"
-      aria-hidden={!showActions}
-    >
-      {#if selectedPhoto}
-        <div class="mt-4 rounded-xl border border-gray-200 bg-gray-50 p-4">
-          <div class="flex items-center justify-between gap-4">
-            <div class="min-w-0 flex-1">
-              <p class="truncate text-sm text-gray-600">
-                Photo by <span class="font-medium"
-                  >{selectedPhoto.user.name}</span
-                >
-              </p>
-            </div>
-
-            <div class="flex items-center gap-2">
-              <button
-                type="button"
-                onclick={deselectPhoto}
-                class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-red-600 transition-colors hover:bg-red-50"
-                aria-label="Deselect photo"
-              >
-                <X size={16} />
-                Deselect
-              </button>
-
-              <a
-                href={selectedPhoto.links.html}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-blue-600 transition-colors hover:bg-blue-50"
-                aria-label="Visit photo on Unsplash (opens in new tab)"
-              >
-                <ExternalLink size={16} />
-                Visit Unsplash
-              </a>
-
-              <form
-                use:enhance
-                action="?/addPhoto"
-                method="POST"
-                class="inline"
-              >
-                <input type="hidden" name="photoId" value={selectedPhoto.id} />
-                <button
-                  type="submit"
-                  class="flex items-center gap-2 rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-green-700"
-                  aria-label="Confirm photo selection"
-                >
-                  <Check size={16} />
-                  Confirm
-                </button>
-              </form>
+              <Check class="text-white" size={16} />
             </div>
           </div>
+        {/if}
+        <div
+          class="absolute right-0 bottom-0 left-0 bg-gradient-to-t from-stone-900/60 to-transparent p-3"
+        ></div>
+      </button>
+    {/each}
+  </div>
+
+  <!-- Selected Photo Actions -->
+  {#if selectedPhoto}
+    <div
+      class="rounded-xl border border-stone-200 bg-stone-50 p-4 dark:border-stone-700 dark:bg-stone-800/50"
+    >
+      <div class="flex items-start gap-4">
+        <!-- Thumbnail -->
+        <div class="flex-shrink-0">
+          <img
+            src={selectedPhoto.urls.thumb}
+            alt="Selected photo"
+            class="h-16 w-16 rounded-lg object-cover ring-1 ring-stone-200 dark:ring-stone-700"
+          />
         </div>
-      {/if}
+
+        <!-- Info & Actions -->
+        <div class="min-w-0 flex-1">
+          <div class="mb-3">
+            <h3 class="font-medium text-stone-900 dark:text-stone-100">
+              {selectedPhoto.alt_description || "Untitled Photo"}
+            </h3>
+            <p class="text-sm text-stone-600 dark:text-stone-400">
+              Photo by
+              <span class="font-medium">{selectedPhoto.user.name}</span>
+            </p>
+          </div>
+
+          <!-- Action buttons -->
+          <div class="flex items-center gap-2">
+            <button
+              type="button"
+              onclick={clearSelection}
+              class="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm
+                       text-stone-600 transition-colors hover:bg-stone-100 hover:text-stone-800
+                       dark:text-stone-400 dark:hover:bg-stone-700 dark:hover:text-stone-200"
+              aria-label="Clear selection"
+            >
+              <X size={14} />
+              Clear
+            </button>
+
+            <a
+              href={selectedPhoto.links.html}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm
+                       text-stone-600 transition-colors hover:bg-stone-100 hover:text-stone-800
+                       dark:text-stone-400 dark:hover:bg-stone-700 dark:hover:text-stone-200"
+              aria-label="View on Unsplash (opens in new tab)"
+            >
+              <ExternalLink size={14} />
+              Unsplash
+            </a>
+
+            <form
+              use:enhance={enhanceForm({
+                messages: {
+                  success: "Photo selected successfully",
+                },
+              })}
+              action="?/addPhoto"
+              method="POST"
+              class="ml-auto"
+            >
+              <input type="hidden" name="photoId" value={selectedPhoto.id} />
+              <UniButton variant="prominent" type="submit" Icon={Check}>
+                Confirm Selection
+              </UniButton>
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
-  {:else}
-    <EmptySpace>Photos will show up here</EmptySpace>
   {/if}
-</div>
+{/if}

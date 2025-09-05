@@ -12,19 +12,22 @@
     SaveButton,
     PhotoPicker,
     SearchBar,
-    Grid,
-    Callout,
+    UniButton,
   } from "$lib/components";
   import { enhanceForm } from "$lib/utils";
   import Input from "$lib/components/UI/forms/Input.svelte";
   import { m } from "$lib/paraglide/messages";
   import Title2 from "$lib/components/typography/Title2.svelte";
+  import { ChartNoAxesGantt, Eye, ImageOff } from "lucide-svelte";
+  import type { PhotoURLs } from "$lib/types";
+  import { invalidate } from "$app/navigation";
   let { data, form } = $props();
   let { lesson } = data;
 
   let markdown = $state(lesson.markdown);
 
   let q = "";
+  let preview = $state(false);
 </script>
 
 <form
@@ -61,61 +64,83 @@
   </div>
 </form>
 
-{#if lesson.photo}
-  <div class="mb-6 rounded-xl border border-gray-200 bg-gray-50 p-4">
-    <div class="flex items-start gap-4">
-      <img
-        src={lesson.photo.urls?.small || lesson.photo.urls}
-        alt={lesson.photo.altDescription || "Lesson photo"}
-        class="h-24 w-24 flex-shrink-0 rounded-lg object-cover"
-      />
-      <div class="min-w-0 flex-1">
-        <p class="mb-1 text-sm font-medium text-gray-900">
-          Current lesson photo
-        </p>
-        <p class="truncate text-xs text-gray-500">
-          {lesson.photo.altDescription || "No description available"}
-        </p>
-        {#if lesson.photo.photographerName}
-          <p class="mt-1 text-xs text-gray-500">
-            Photo by {lesson.photo.photographerName}
-          </p>
-        {/if}
-      </div>
-    </div>
-  </div>
-{/if}
+<form
+  class="flex flex-col gap-4"
+  action="?/unsplash"
+  method="POST"
+  use:enhance={enhanceForm({
+    handlers: {
+      success: () => {
+        invalidate("edit:photo");
+      },
+    },
+    shouldUpdate: true,
+  })}
+>
+  <VStack>
+    <Title2>Photo</Title2>
+    <Divider></Divider>
+    {#if data.lesson.photo}
+      <Merger>
+        <UniButton type="submit" Icon={ImageOff} formaction="?/removePhoto"
+        ></UniButton>
+      </Merger>
+    {/if}
+    <SearchBar bind:q placeholder="Search photos..." />
+  </VStack>
+  <PhotoPicker photos={form?.photos} chosen={lesson.photo?.id} />
+  {#if data.lesson.photo}
+    <div class="relative h-30 w-full overflow-hidden rounded-t-xl">
+      <div
+        class="absolute inset-0 z-10 bg-cover bg-center"
+        style="background-image: url('{(data.lesson.photo?.urls as PhotoURLs)
+          .small}')"
+      ></div>
 
-<Editor bind:markdownContent={markdown} />
+      <div
+        class="absolute inset-0 z-20 bg-cover bg-center"
+        style="background-image: url('{(data.lesson.photo?.urls as PhotoURLs)
+          .full}')"
+      ></div>
+
+      <img
+        src={(data.lesson.photo?.urls as PhotoURLs).full}
+        alt={data.lesson.photo?.altDescription}
+        loading="lazy"
+        class="absolute inset-0 -z-10 h-0 w-0 opacity-0"
+      />
+
+      {#if data.lesson.photo?.photographerName}
+        <div
+          class="absolute right-0 bottom-0 z-30 m-2 rounded-full bg-stone-100 px-2 py-1 text-xs dark:bg-stone-800"
+        >
+          Photo by <a
+            href={`https://unsplash.com/@${data.lesson.photo.photographerUsername}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Visit photographer's Unsplash profile (opens in new tab)"
+            >{data.lesson.photo.photographerName}</a
+          >
+        </div>
+      {/if}
+    </div>
+  {/if}
+</form>
 
 <VStack>
-  <Title2>Unsplash Photos</Title2>
+  <Title2>Markdown</Title2>
   <Divider></Divider>
-
-  {#if q}
-    <Callout>
-      Showing results for {q}
-    </Callout>
-  {/if}
+  <Merger>
+    <UniButton
+      variant={preview ? "primary" : "prominent"}
+      Icon={ChartNoAxesGantt}
+      onclick={() => (preview = false)}>Edit</UniButton
+    >
+    <UniButton
+      variant={preview ? "prominent" : "primary"}
+      Icon={Eye}
+      onclick={() => (preview = true)}>Preview</UniButton
+    >
+  </Merger>
 </VStack>
-<Grid>
-  <form
-    class=""
-    action="?/unsplash"
-    method="POST"
-    use:enhance={enhanceForm({
-      messages: {
-        failure: "Failed to add photo",
-        success: "Photo updated",
-      },
-    })}
-  >
-    <SearchBar bind:q />
-  </form>
-
-  {#if form?.photo}
-    Failed to save photo
-  {/if}
-
-  <PhotoPicker photos={form?.photos} chosen={lesson.photo?.unsplashId} />
-</Grid>
+<Editor bind:markdownContent={markdown} {preview} />

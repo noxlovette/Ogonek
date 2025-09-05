@@ -127,6 +127,10 @@ export function enhanceForm(config: EnhanceConfig = {}): SubmitFunction {
           if (handlers.success) {
             await handlers.success(result);
           }
+
+          if (shouldUpdate) {
+            update();
+          }
           break;
 
         case "redirect":

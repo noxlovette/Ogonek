@@ -4,16 +4,20 @@
   import { UniButton } from "./buttons";
   import { ChartNoAxesGantt, Eye } from "lucide-svelte";
   import { Merger } from "../toolbar";
+  import { SearchBar, VStack } from "..";
+  import Divider from "../toolbar/Divider.svelte";
+  import { enhance } from "$app/forms";
+  import { enhanceForm } from "$lib/utils";
 
   let {
     markdownContent = $bindable(
       "# Start writing\n\nYour **markdown** goes here...",
     ),
+    preview = false,
   } = $props();
 
   let htmlContent = $state("");
-  let preview = $state(false);
-  let textareaRef = $state();
+  let textareaRef: HTMLTextAreaElement | null = $state(null);
 
   // Undo/Redo functionality
   let history: string[] = $state([markdownContent]);
@@ -227,149 +231,101 @@
       }
     }
   }
+
+  let q = $state("");
 </script>
 
-<div class="col-span-2 flex size-full flex-col gap-4">
-  <div id="header" class="flex items-center space-x-4">
-    <Title2>Markdown</Title2>
-    <Merger>
-      <UniButton
-        variant={preview ? "primary" : "prominent"}
-        Icon={ChartNoAxesGantt}
-        iconOnly={false}
-        onclick={() => (preview = false)}>Edit</UniButton
-      >
-      <UniButton
-        variant={preview ? "prominent" : "primary"}
-        Icon={Eye}
-        iconOnly={false}
-        onclick={() => (preview = true)}>Preview</UniButton
-      >
-    </Merger>
-  </div>
-
-  {#if !preview}
-    <!-- Toolbar -->
-    <div
-      class="bg-default bg-default ring-default flex flex-wrap gap-2 rounded-lg p-2"
+{#if !preview}
+  <div
+    class="bg-default bg-default ring-default flex flex-wrap gap-2 rounded-lg p-2"
+  >
+    <button
+      onclick={() => insertMarkdown("**", "**", "bold text")}
+      class="rounded px-3 py-1 text-sm font-bold hover:bg-stone-200 dark:hover:bg-stone-700"
+      title="Bold (Ctrl+B)"
     >
-      <button
-        onclick={() => insertMarkdown("**", "**", "bold text")}
-        class="rounded px-3 py-1 text-sm font-bold hover:bg-stone-200 dark:hover:bg-stone-700"
-        title="Bold (Ctrl+B)"
-      >
-        B
-      </button>
+      B
+    </button>
 
-      <button
-        onclick={() => insertMarkdown("*", "*", "italic text")}
-        class="rounded px-3 py-1 text-sm italic hover:bg-stone-200 dark:hover:bg-stone-700"
-        title="Italic (Ctrl+I)"
-      >
-        I
-      </button>
+    <button
+      onclick={() => insertMarkdown("*", "*", "italic text")}
+      class="rounded px-3 py-1 text-sm italic hover:bg-stone-200 dark:hover:bg-stone-700"
+      title="Italic (Ctrl+I)"
+    >
+      I
+    </button>
+    <div class="w-px bg-stone-300 dark:bg-stone-600"></div>
 
-      <button
-        onclick={() => insertMarkdown("`", "`", "code")}
-        class="rounded px-3 py-1 font-mono text-sm hover:bg-stone-200 dark:hover:bg-stone-700"
-        title="Inline Code"
-      >
-        &lt;/&gt;
-      </button>
+    <button
+      onclick={() => insertMarkdown("# ", "", "Headline")}
+      class="rounded px-3 py-1 text-sm font-bold hover:bg-stone-200 dark:hover:bg-stone-700"
+      title="Headline 1"
+    >
+      LargeTitle
+    </button>
 
-      <div class="w-px bg-stone-300 dark:bg-stone-600"></div>
+    <button
+      onclick={() => insertMarkdown("## ", "", "Headline")}
+      class="rounded px-3 py-1 text-sm font-bold hover:bg-stone-200 dark:hover:bg-stone-700"
+      title="Headline 2"
+    >
+      Title2
+    </button>
 
-      <button
-        onclick={() => insertMarkdown("# ", "", "Headline")}
-        class="rounded px-3 py-1 text-sm font-bold hover:bg-stone-200 dark:hover:bg-stone-700"
-        title="Headline 1"
-      >
-        LargeTitle
-      </button>
+    <button
+      onclick={() => insertMarkdown("### ", "", "Headline")}
+      class="rounded px-3 py-1 text-sm font-bold hover:bg-stone-200 dark:hover:bg-stone-700"
+      title="Headline 3"
+    >
+      Title3
+    </button>
 
-      <button
-        onclick={() => insertMarkdown("## ", "", "Headline")}
-        class="rounded px-3 py-1 text-sm font-bold hover:bg-stone-200 dark:hover:bg-stone-700"
-        title="Headline 2"
-      >
-        Title2
-      </button>
+    <div class="w-px bg-stone-300 dark:bg-stone-600"></div>
 
-      <button
-        onclick={() => insertMarkdown("### ", "", "Headline")}
-        class="rounded px-3 py-1 text-sm font-bold hover:bg-stone-200 dark:hover:bg-stone-700"
-        title="Headline 3"
-      >
-        Title3
-      </button>
+    <button
+      onclick={() => insertMarkdown("- ", "", "List item")}
+      class="rounded px-3 py-1 text-sm hover:bg-stone-200 dark:hover:bg-stone-700"
+      title="Bullet List"
+    >
+      • List
+    </button>
 
-      <div class="w-px bg-stone-300 dark:bg-stone-600"></div>
+    <button
+      onclick={() => insertMarkdown("> ", "", "Quote")}
+      class="rounded px-3 py-1 text-sm hover:bg-stone-200 dark:hover:bg-stone-700"
+      title="Quote"
+    >
+      Quote
+    </button>
 
-      <button
-        onclick={() => insertMarkdown("- ", "", "List item")}
-        class="rounded px-3 py-1 text-sm hover:bg-stone-200 dark:hover:bg-stone-700"
-        title="Bullet List"
-      >
-        • List
-      </button>
+    <div class="w-px bg-stone-300 dark:bg-stone-600"></div>
 
-      <button
-        onclick={() => insertMarkdown("1. ", "", "List item")}
-        class="rounded px-3 py-1 text-sm hover:bg-stone-200 dark:hover:bg-stone-700"
-        title="Numbered List"
-      >
-        1. List
-      </button>
-
-      <button
-        onclick={() => insertMarkdown("> ", "", "Quote")}
-        class="rounded px-3 py-1 text-sm hover:bg-stone-200 dark:hover:bg-stone-700"
-        title="Quote"
-      >
-        Quote
-      </button>
-
-      <div class="w-px bg-stone-300 dark:bg-stone-600"></div>
-
-      <button
-        onclick={insertLink}
-        class="rounded px-3 py-1 text-sm hover:bg-stone-200 dark:hover:bg-stone-700"
-        title="Link (Ctrl+K)"
-      >
-        🔗 Link
-      </button>
-
-      <button
-        onclick={() => insertMarkdown("```\n", "\n```", "code block")}
-        class="rounded px-3 py-1 font-mono text-sm hover:bg-stone-200 dark:hover:bg-stone-700"
-        title="Code Block"
-      >
-        Code
-      </button>
-    </div>
-  {/if}
-
-  <div class="flex flex-1">
-    {#if !preview}
-      <!-- Editor -->
-      <div class="flex w-full flex-col">
-        <textarea
-          bind:this={textareaRef}
-          bind:value={markdownContent}
-          onkeydown={handleKeyDown}
-          class="
-          focus:border-accent focus:ring-accent ring-default min-h-[400px] w-full resize-none rounded-md bg-white px-4 py-2 font-mono text-base leading-relaxed text-stone-900 placeholder-stone-400 shadow-sm focus:shadow-md focus:ring-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60 dark:bg-stone-950 dark:text-stone-100
-          "
-          spellcheck="false"
-          placeholder="Start typing your markdown here..."
-        ></textarea>
-      </div>
-    {:else}
-      <div
-        class="markdown prose prose-stone dark:prose-invert w-full max-w-none rounded-lg p-4 shadow-sm dark:border-stone-900"
-      >
-        {@html htmlContent}
-      </div>
-    {/if}
+    <button
+      onclick={insertLink}
+      class="rounded px-3 py-1 text-sm hover:bg-stone-200 dark:hover:bg-stone-700"
+      title="Link (Ctrl+K)"
+    >
+      🔗 Link
+    </button>
   </div>
-</div>
+{/if}
+
+{#if !preview}
+  <!-- Editor -->
+  <div class="flex w-full flex-col">
+    <textarea
+      bind:this={textareaRef}
+      bind:value={markdownContent}
+      onkeydown={handleKeyDown}
+      class="
+          focus:border-accent focus:ring-accent ring-default bg-default min-h-[400px] w-full resize-none rounded-2xl bg-white px-4 py-2 font-mono text-base leading-relaxed text-stone-900 placeholder-stone-400 shadow-sm focus:shadow-md focus:ring-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60
+          "
+      spellcheck="false"
+      placeholder="Start typing your markdown here..."
+    ></textarea>
+  </div>
+{:else}
+  <div class="markdown ring-default bg-default rounded-2xl p-4">
+    {@html htmlContent}
+  </div>
+{/if}

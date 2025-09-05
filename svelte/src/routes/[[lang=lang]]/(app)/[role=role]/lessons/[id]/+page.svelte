@@ -78,16 +78,18 @@
           loading="lazy"
           class="absolute inset-0 -z-10 h-0 w-0 opacity-0"
         />
-        
-        {#if data.lesson.photo?.user}
-          <div class="absolute bottom-0 right-0 z-30 m-2 px-2 py-1 bg-black/50 text-white text-xs rounded backdrop-blur">
-            Photo by <a 
-              href={data.lesson.photo.links?.html || `https://unsplash.com/@${data.lesson.photo.user.username}`}
+
+        {#if data.lesson.photo?.photographerName}
+          <div
+            class="absolute right-0 bottom-0 z-30 m-2 rounded-full bg-stone-100 px-2 py-1 text-xs dark:bg-stone-800"
+          >
+            Photo by <a
+              href={`https://unsplash.com/@${data.lesson.photo.photographerUsername}`}
               target="_blank"
               rel="noopener noreferrer"
-              class="underline hover:no-underline"
               aria-label="Visit photographer's Unsplash profile (opens in new tab)"
-            >{data.lesson.photo.user.name}</a>
+              >{data.lesson.photo.photographerName}</a
+            >
           </div>
         {/if}
       </div>
