@@ -60,6 +60,32 @@
     <Input name="assignee" item={lesson} type="assignee" />
   </div>
 </form>
+
+{#if lesson.photo}
+  <div class="mb-6 rounded-xl border border-gray-200 bg-gray-50 p-4">
+    <div class="flex items-start gap-4">
+      <img
+        src={lesson.photo.urls?.small || lesson.photo.urls}
+        alt={lesson.photo.altDescription || "Lesson photo"}
+        class="h-24 w-24 flex-shrink-0 rounded-lg object-cover"
+      />
+      <div class="min-w-0 flex-1">
+        <p class="mb-1 text-sm font-medium text-gray-900">
+          Current lesson photo
+        </p>
+        <p class="truncate text-xs text-gray-500">
+          {lesson.photo.altDescription || "No description available"}
+        </p>
+        {#if lesson.photo.photographerName}
+          <p class="mt-1 text-xs text-gray-500">
+            Photo by {lesson.photo.photographerName}
+          </p>
+        {/if}
+      </div>
+    </div>
+  </div>
+{/if}
+
 <Editor bind:markdownContent={markdown} />
 
 <VStack>
@@ -73,8 +99,18 @@
   {/if}
 </VStack>
 <Grid>
-  <form class="" action="?/unsplash" method="POST" use:enhance>
-    <SearchBar {q} />
+  <form
+    class=""
+    action="?/unsplash"
+    method="POST"
+    use:enhance={enhanceForm({
+      messages: {
+        failure: "Failed to add photo",
+        success: "Photo updated",
+      },
+    })}
+  >
+    <SearchBar bind:q />
   </form>
 
   {#if form?.photo}

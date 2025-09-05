@@ -221,7 +221,7 @@ pub async fn update_lesson(
                     &new_user,
                     NotificationType::LessonCreated {
                         lesson_id: lesson.id,
-                        lesson_title: lesson.title,
+                        lesson_topic: lesson.topic,
                     },
                 )
                 .await;
