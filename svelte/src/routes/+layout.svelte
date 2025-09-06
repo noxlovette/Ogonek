@@ -20,7 +20,7 @@
 <MetaData />
 
 <main
-  class="flex min-h-[100dvh] w-full flex-col justify-center overflow-x-clip overflow-y-auto bg-white text-stone-800 antialiased select-none dark:bg-stone-950 dark:text-stone-100"
+  class="flex min-h-[100dvh] w-full flex-col justify-center overflow-clip bg-white text-stone-800 antialiased select-none dark:bg-stone-950 dark:text-stone-100"
   use:keyEscape={goBack}
 >
   <div
