@@ -1,8 +1,6 @@
 <script lang="ts">
   import {
-    UniButton,
     LargeTitle,
-    Title2,
     Title3,
     Toolbar,
     TableOfContents,
@@ -11,13 +9,13 @@
     Divider,
     Merger,
     Caption1,
+    EditButton,
+    Photo,
   } from "$lib/components";
 
-  import { formatDate } from "@noxlovette/svarog";
+  import { formatDate } from "$lib/utils";
   import type { PageData } from "./$types";
-  import { Pencil } from "lucide-svelte";
   import { page } from "$app/state";
-  import { m } from "$lib/paraglide/messages";
   import Badge from "$lib/components/cards/Badge.svelte";
 
   let role = $derived(page.params.role);
@@ -40,13 +38,11 @@
       <Divider />
       {#if role === "t"}
         <Merger>
-          <UniButton Icon={Pencil} href="/t/lessons/{data.lesson.id}/edit"
-            >{m.edit()}</UniButton
-          >
+          <EditButton href="/t/lessons/{data.lesson.id}/edit" />
         </Merger>
       {/if}
     </VStack>
-    <VStack>
+    <VStack styling="">
       {#if role === "t"}
         <Title3>
           {data.lesson.topic}
@@ -60,11 +56,12 @@
     </VStack>
   </HStack>
 </Toolbar>
-<div class="gap-4 md:grid md:grid-cols-4">
-  <div class="markdown md:col-span-3">
-    <!-- Input is sanitized with rehype -->
+<div class="md:grid md:grid-cols-4">
+  <article class="markdown md:col-span-3">
+    <Photo photo={data.lesson.photo} />
+
     {@html data.rendered}
-  </div>
+  </article>
   <TableOfContents />
 </div>
 <svelte:head>

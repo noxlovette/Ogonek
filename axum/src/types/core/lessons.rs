@@ -1,4 +1,4 @@
-use crate::types::datetime_serialization;
+use crate::types::{datetime_serialization, photos::Photo};
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use sqlx::prelude::FromRow;
@@ -26,14 +26,45 @@ pub struct LessonFull {
     pub topic: String,
     pub markdown: String,
     pub assignee: String,
-    pub created_by: String,
-
+    #[serde(skip_serializing)]
+    pub photo_id: Option<String>,
     #[serde(with = "datetime_serialization")]
     pub created_at: DateTime<Utc>,
 
     #[serde(with = "datetime_serialization")]
     pub updated_at: DateTime<Utc>,
     pub assignee_name: String,
+}
+/// FUCK SWIFT OPEN API!
+#[derive(Serialize, Debug, ToSchema)]
+pub struct LessonWithPhoto {
+    pub assignee: String,
+    pub assignee_name: String,
+    pub created_at: DateTime<Utc>,
+    pub id: String,
+    pub markdown: String,
+    pub title: String,
+    pub topic: String,
+    pub updated_at: DateTime<Utc>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub photo: Option<Photo>,
+}
+
+impl From<(LessonFull, Option<Photo>)> for LessonWithPhoto {
+    fn from((lesson, photo): (LessonFull, Option<Photo>)) -> Self {
+        Self {
+            assignee: lesson.assignee,
+            assignee_name: lesson.assignee_name,
+            created_at: lesson.created_at,
+            id: lesson.id,
+            markdown: lesson.markdown,
+            title: lesson.title,
+            topic: lesson.topic,
+            updated_at: lesson.updated_at,
+            photo,
+        }
+    }
 }
 
 #[derive(Deserialize, Debug, ToSchema)]
@@ -54,6 +85,7 @@ pub struct LessonUpdate {
     pub markdown: Option<String>,
     pub assignee: Option<String>,
     pub created_by: Option<String>,
+    pub media_url: Option<String>,
 }
 
 // NOT IMPLEMENTED

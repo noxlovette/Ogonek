@@ -1,72 +1,73 @@
+import { dev } from "$app/environment";
 import { env } from "$env/dynamic/public";
+import { z } from "$lib";
 import logger from "$lib/logger";
 import { routes } from "$lib/routes";
-import {
-  handleApiResponse,
-  isSuccessResponse,
-  setTokenCookie,
-  turnstileVerify,
-  ValidateAccess,
-} from "$lib/server";
-import type { AuthResponse } from "$lib/types";
-import { validateRequired } from "@noxlovette/svarog";
-import { fail, type Actions } from "@sveltejs/kit";
+import { captchaVerify, setTokenCookie, ValidateAccess } from "$lib/server";
+import { createUser } from "$lib/server/mock/user";
+import type { User } from "$lib/types";
+import { validateForm } from "$lib/utils";
+import { fail } from "@sveltejs/kit";
+import type { JWTPayload } from "jose";
+import type { Actions } from "./$types";
 
 export const actions: Actions = {
   default: async ({ request, fetch, cookies }) => {
-    const data = await request.formData();
-    const username = data.get("username") as string;
-    const pass = data.get("password") as string;
-    const validateUsername = validateRequired("username");
-    const validatePass = validateRequired("password");
+    const formData = await request.formData();
+    const validation = validateForm(formData, z.signinBody);
+    if (!validation.success) {
+      const fieldErrors: Record<string, boolean> = {};
+      validation.errors.issues.forEach((issue) => {
+        const fieldPath = issue.path[0] as string;
+        fieldErrors[fieldPath] = true;
+      });
 
-    const usernameError = validateUsername(username);
-    const passError = validatePass(pass);
-
-    if (usernameError) {
       return fail(400, {
-        message: usernameError,
+        ...fieldErrors,
+        message: "Validation failed",
       });
     }
 
-    if (passError) {
-      return fail(400, {
-        message: passError,
-      });
-    }
+    if (!dev) {
+      const captchaToken = formData.get("smart-token") as string;
 
-    if (env.PUBLIC_APP_ENV !== "development") {
-      const turnstileToken = data.get("cf-turnstile-response") as string;
-      if (!turnstileToken) {
+      if (!captchaToken) {
         return fail(400, {
           message: "Please complete the CAPTCHA verification",
         });
       }
-      const turnstileResponse = await turnstileVerify(turnstileToken);
-      if (!turnstileResponse.ok) {
+
+      const captchaResponse = await captchaVerify(captchaToken);
+      if (!captchaResponse.ok) {
         return fail(400, {
-          message: "Turnstile verification failed",
+          message: "Captcha verification failed",
         });
       }
     }
-
-    const response = await fetch(routes.auth.login(), {
+    const { username, pass } = validation.data;
+    const response = await fetch(routes.auth.signin(), {
       method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, pass }),
     });
 
-    const authResult = await handleApiResponse<AuthResponse>(response);
-    if (!isSuccessResponse(authResult)) {
-      return fail(authResult.status);
+    const data = await response.json();
+    const parsed = z.signinResponse.safeParse(data);
+
+    if (!parsed.success) {
+      return fail(400);
     }
 
-    const { accessToken, refreshToken } = authResult.data;
-    setTokenCookie(cookies, "accessToken", accessToken);
-    setTokenCookie(cookies, "refreshToken", refreshToken);
-
-    const user = await ValidateAccess(accessToken.token);
-
-    logger.debug({ user }, "user from the login");
+    let user: JWTPayload | User;
+    if (!env.PUBLIC_MOCK_MODE) {
+      const { accessToken, refreshToken } = parsed.data;
+      setTokenCookie(cookies, "accessToken", accessToken);
+      setTokenCookie(cookies, "refreshToken", refreshToken);
+      user = await ValidateAccess(accessToken.token);
+      logger.debug({ user }, "user from the login");
+    } else {
+      user = createUser();
+    }
 
     return {
       user,

@@ -12,6 +12,7 @@
     Caption1,
     HStack,
     Divider,
+    EditButton,
   } from "$lib/components";
   import { invalidate } from "$app/navigation";
 
@@ -65,8 +66,7 @@
             <UniButton Icon={Copy} type="submit">Duplicate</UniButton>
           </form>
           {#if $user.id === deck.createdBy}
-            <UniButton href="{deck.id}/edit" Icon={Pencil}>{m.edit()}</UniButton
-            >
+            <EditButton href="{deck.id}/edit" />
           {/if}
         </Merger>
         <Merger>
@@ -123,7 +123,7 @@
 </Toolbar>
 
 <div class="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-  {#each cards as card (card.id)}
+  {#each cards as card, _}
     <WordCard bind:flippedCards {card} {toggleCard} />
   {/each}
 </div>

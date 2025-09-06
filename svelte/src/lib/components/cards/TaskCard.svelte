@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { formatDate } from "@noxlovette/svarog";
+  import { formatDate } from "$lib/utils";
   import CardClickable from "./CardClickable.svelte";
   import { user } from "$lib/stores";
   import Badge from "./Badge.svelte";

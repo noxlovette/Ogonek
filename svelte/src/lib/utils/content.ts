@@ -19,10 +19,10 @@ export function shuffleArray<T>(array: T[]): T[] {
   return newArray;
 }
 
-import type { Task, UrgencyLevel } from "$lib/types";
-export function getUrgency(task: Task): UrgencyLevel {
+import type { TaskFull, UrgencyLevel } from "$lib/types";
+export function getUrgency(task: TaskFull): UrgencyLevel {
   const now = new Date();
-  const due = new Date(task.dueDate);
+  const due = new Date(task.dueDate || "");
   const diffDays = Math.ceil(
     (due.getTime() - now.getTime()) / (1000 * 60 * 60 * 24),
   );

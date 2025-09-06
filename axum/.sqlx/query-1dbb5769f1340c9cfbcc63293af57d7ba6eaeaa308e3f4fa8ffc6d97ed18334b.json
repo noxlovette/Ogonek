@@ -1,0 +1,71 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        SELECT\n            l.id,\n            l.title,\n            l.topic,\n            l.markdown,\n            l.assignee,\n            l.created_at,\n            l.photo_id,\n            l.updated_at,\n            u.name as assignee_name\n        FROM lessons l\n        LEFT JOIN \"user\" u ON l.assignee = u.id\n        LEFT JOIN photos p on l.photo_id = p.id\n        WHERE l.id = $1\n        AND (l.assignee = $2 OR l.created_by = $2)\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 1,
+        "name": "title",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 2,
+        "name": "topic",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 3,
+        "name": "markdown",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 4,
+        "name": "assignee",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 5,
+        "name": "created_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 6,
+        "name": "photo_id",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 7,
+        "name": "updated_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 8,
+        "name": "assignee_name",
+        "type_info": "Varchar"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Text"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false
+    ]
+  },
+  "hash": "1dbb5769f1340c9cfbcc63293af57d7ba6eaeaa308e3f4fa8ffc6d97ed18334b"
+}

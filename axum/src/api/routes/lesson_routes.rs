@@ -1,7 +1,7 @@
 use crate::api::core;
 use crate::schema::AppState;
 use axum::Router;
-use axum::routing::get;
+use axum::routing::{get, post};
 
 pub fn lesson_routes() -> Router<AppState> {
     Router::new()
@@ -11,5 +11,9 @@ pub fn lesson_routes() -> Router<AppState> {
             get(core::fetch_lesson)
                 .patch(core::update_lesson)
                 .delete(core::delete_lesson),
+        )
+        .route(
+            "/{id}/photo",
+            post(core::upsert_photo).delete(core::delete_photo),
         )
 }

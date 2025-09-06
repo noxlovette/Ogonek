@@ -7,7 +7,7 @@ import type { LayoutServerLoad } from "./$types";
 
 export const load: LayoutServerLoad = async ({ params, fetch }) => {
   const { id, role } = params;
-  const response = await fetch(routes.tasks.single(id));
+  const response = await fetch(routes.tasks.task(id));
   if (!response.ok) {
     logger.error({ id }, "Task load failed");
 

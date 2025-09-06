@@ -1,69 +1,48 @@
-import { dev } from "$app/environment";
-import logger from "$lib/logger";
+import { z } from "$lib";
 import { routes } from "$lib/routes";
 import {
+  captchaVerify,
   handleApiResponse,
   isSuccessResponse,
-  turnstileVerify,
 } from "$lib/server";
-import {
-  validateEmail,
-  validatePassword,
-  validatePasswordMatch,
-  validateUsername,
-} from "@noxlovette/svarog";
+import { validateForm } from "$lib/utils";
 import { fail, redirect } from "@sveltejs/kit";
 import type { Actions } from "./$types";
-export const actions: Actions = {
+
+export const actions = {
   default: async ({ request, url, fetch }) => {
-    const data = await request.formData();
-    const username = data.get("username") as string;
-    const pass = data.get("password") as string;
-    const confirmPassword = data.get("confirmPassword") as string;
-    const email = data.get("email") as string;
-    const role = data.get("role") as string;
-    const name = data.get("name") as string;
+    const formData = await request.formData();
+
+    const validation = validateForm(formData, z.signupBody);
+    if (!validation.success) {
+      const fieldErrors: Record<string, boolean> = {};
+      validation.errors.issues.forEach((issue) => {
+        const fieldPath = issue.path[0] as string;
+        fieldErrors[fieldPath] = true;
+      });
+
+      return fail(400, {
+        ...fieldErrors,
+        message: "Validation failed",
+      });
+    }
+    const { username, pass, email, role, name } = validation.data;
     const inviteToken = url.searchParams.get("invite");
 
-    if (validateEmail(email)) {
-      return fail(400, { message: "Invalid Email" });
+    const captchaToken = formData.get("smart-token") as string;
+    if (!captchaToken) {
+      return fail(400, {
+        captcha: true,
+        message: "Please complete the CAPTCHA verification",
+      });
+    }
+    const captchaResponse = await captchaVerify(captchaToken);
+    if (!captchaResponse.ok) {
+      return fail(400, {
+        message: "Captcha verification failed",
+      });
     }
 
-    const usernameValidation = validateUsername(username);
-    const passValidation = validatePassword(pass);
-    const passMatchValidation = validatePasswordMatch(pass, confirmPassword);
-
-    if (usernameValidation) {
-      return fail(400, { message: usernameValidation });
-    }
-
-    if (pass !== confirmPassword) {
-      return fail(400, { message: "Passwords do not match" });
-    }
-
-    if (passValidation) {
-      return fail(400, { message: passValidation });
-    }
-
-    if (passMatchValidation) {
-      return fail(400, { message: passMatchValidation });
-    }
-
-    if (!dev) {
-      const turnstileToken = data.get("cf-turnstile-response") as string;
-      if (!turnstileToken) {
-        return fail(400, {
-          message: "Please complete the CAPTCHA verification",
-        });
-      }
-      const turnstileResponse = await turnstileVerify(turnstileToken);
-      if (!turnstileResponse.ok) {
-        return fail(400, {
-          message: "Turnstile verification failed",
-        });
-      }
-    }
-    // Signup API call
     const response = await fetch(routes.auth.signup(), {
       method: "POST",
       body: JSON.stringify({ username, pass, email, role, name }),
@@ -77,7 +56,6 @@ export const actions: Actions = {
 
     if (inviteToken) {
       const studentId = result.data;
-      logger.debug(studentId);
 
       const inviteResponse = await fetch("/axum/auth/bind", {
         method: "POST",

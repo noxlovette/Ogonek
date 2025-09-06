@@ -3,7 +3,7 @@
 </script>
 
 <footer
-  class="mt-12 flex w-full flex-col items-center justify-center bg-stone-100 select-none dark:bg-stone-900"
+  class="mt-12 flex w-full flex-col items-center justify-center px-1 md:px-6 lg:px-12"
 >
   <div class="mx-auto flex w-full items-center justify-between px-3 py-2">
     <div class="flex flex-col gap-1 text-sm">

@@ -10,6 +10,7 @@ use utoipa::OpenApi;
         deck::create_deck,
         deck::update_deck,
         deck::delete_deck,
+        deck::duplicate_deck,
     ),
     components(schemas(
         crate::types::DeckSmall,

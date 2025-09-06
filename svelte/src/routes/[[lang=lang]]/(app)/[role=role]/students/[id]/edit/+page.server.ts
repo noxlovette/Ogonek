@@ -17,7 +17,7 @@ export const actions = {
       studentTelegramId,
     };
 
-    const response = await fetch(routes.students.single(id), {
+    const response = await fetch(routes.users.student(id), {
       method: "PATCH",
       body: JSON.stringify(body),
     });
@@ -38,7 +38,7 @@ export const actions = {
     if (!id) {
       return fail(400);
     }
-    const response = await fetch(routes.students.single(id), {
+    const response = await fetch(routes.users.student(id), {
       method: "DELETE",
     });
 

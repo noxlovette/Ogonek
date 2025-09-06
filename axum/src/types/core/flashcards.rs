@@ -18,9 +18,6 @@ pub struct Card {
     pub front: String,
     pub back: String,
     pub media_url: Option<String>,
-    pub deck_id: String,
-    #[serde(with = "datetime_serialization")]
-    pub created_at: DateTime<Utc>,
 }
 #[derive(Deserialize, ToSchema)]
 #[serde(rename_all = "camelCase")]
@@ -101,25 +98,12 @@ pub struct DeckUpdate {
 }
 
 use utoipa::ToSchema;
-// LEARNING HERE
 use validator::Validate;
 
 #[derive(Serialize, Clone, Validate, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct CardProgressWithFields {
     pub id: String,
-    pub user_id: String,
-    pub card_id: String,
-    #[validate(range(min = 0))]
-    pub review_count: i32,
-    #[serde(with = "datetime_serialization::option")]
-    pub last_reviewed: Option<DateTime<Utc>>,
-    #[serde(with = "datetime_serialization::option")]
-    pub due_date: Option<DateTime<Utc>>,
-    #[validate(range(min = 1.3, max = 5.0))]
-    pub ease_factor: f64,
-    #[validate(range(min = 1))]
-    pub interval: i32,
     pub front: String,
     pub back: String,
     pub media_url: Option<String>,

@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        DELETE FROM photos\n        WHERE id = (\n        SELECT photo_id\n        FROM lessons\n        WHERE id = $1 AND created_by = $2\n    )\n        ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Text"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "214640c1acf50228f0d46f331752897b6e97a08f44683b083a6c284294ea764d"
+}

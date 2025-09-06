@@ -28,7 +28,7 @@ pub enum NotificationType {
     },
     #[serde(rename = "lessonCreated")]
     LessonCreated {
-        lesson_title: String,
+        lesson_topic: String,
         lesson_id: String,
     },
 }
@@ -93,10 +93,10 @@ impl NotificationType {
 
             Self::LessonCreated {
                 lesson_id,
-                lesson_title,
+                lesson_topic,
             } => format!(
                 "A new lesson has been added: \"{}\"\\. View it on [Ogonek](https://ogonek\\.app/s/lessons/{})",
-                escape_markdown_v2(lesson_title),
+                escape_markdown_v2(lesson_topic),
                 lesson_id
             ),
         }
@@ -180,11 +180,11 @@ impl NotificationType {
                 }
             }
             Self::LessonCreated {
-                lesson_title,
+                lesson_topic,
                 lesson_id,
             } => NotificationPayload {
                 title: "New Lesson".to_string(),
-                body: format!("New lesson: {}", lesson_title),
+                body: format!("New lesson: {}", lesson_topic),
                 badge: Some(1),
                 sound: Some("default".to_string()),
                 data: Some(serde_json::json!({

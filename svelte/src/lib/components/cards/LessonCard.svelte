@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { LessonSmall } from "$lib/types";
-  import { formatDate } from "@noxlovette/svarog";
+  import { formatDate } from "$lib/utils";
   import CardClickable from "./CardClickable.svelte";
   import { page } from "$app/state";
   import Badge from "./Badge.svelte";
@@ -26,5 +26,5 @@
     {title}
   </Title3>
   <Badge>{badgeText}</Badge>
-  <SeenBadge seen={lesson.seen} />
+  <SeenBadge seen={lesson.seen || true} />
 </CardClickable>

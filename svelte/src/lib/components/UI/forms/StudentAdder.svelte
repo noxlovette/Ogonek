@@ -4,7 +4,7 @@
   import { clickOutside } from "$lib/actions";
   import { notification } from "$lib/stores";
   import { X, Copy, Plus } from "lucide-svelte";
-  import UniButton from "./UniButton.svelte";
+  import UniButton from "./buttons/UniButton.svelte";
   import { Caption1 } from "$lib/components/typography";
   import Headline from "$lib/components/typography/Headline.svelte";
   import Toggler from "../interactive/Toggler.svelte";

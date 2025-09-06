@@ -40,7 +40,7 @@ export const actions = {
         method: "PATCH",
         body: JSON.stringify(profileBody),
       }),
-      fetch(routes.users.self(), {
+      fetch(routes.users.me(), {
         method: "PATCH",
         body: JSON.stringify(userBody),
       }),

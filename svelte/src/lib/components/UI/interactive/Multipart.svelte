@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onDestroy } from "svelte";
-  import UniButton from "../forms/UniButton.svelte";
+  import UniButton from "../forms/buttons/UniButton.svelte";
   import { Ban, Check, Upload, X } from "lucide-svelte";
   import { Caption1 } from "$lib/components/typography";
   import logger from "$lib/logger";

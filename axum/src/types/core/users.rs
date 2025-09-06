@@ -5,18 +5,36 @@ use validator::Validate;
 
 #[derive(Deserialize, Validate, ToSchema)]
 #[serde(rename_all = "camelCase")]
+pub struct AuthPayload {
+    #[validate(length(min = 3, max = 16))]
+    #[schema(min_length = 3, max_length = 16, example = "john_doe")]
+    pub username: String,
+
+    #[validate(length(min = 8, max = 32))]
+    #[schema(min_length = 8, max_length = 32, example = "MyPassword123")]
+    pub pass: String,
+}
+
+#[derive(Deserialize, Validate, ToSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct SignUpPayload {
     #[validate(length(min = 3))]
+    #[schema(min_length = 3, max_length = 100, example = "John Doe")]
     pub name: String,
 
     #[validate(email)]
+    #[schema(format = "email", example = "john@example.com")]
     pub email: String,
 
     #[validate(length(min = 8))]
+    #[schema(min_length = 8, max_length = 128, example = "MyPassword123")]
     pub pass: String,
 
     #[validate(length(min = 2))]
+    #[schema(min_length = 2, max_length = 50, example = "johndoe")]
     pub username: String,
+
+    #[schema(example = "student")]
     pub role: String,
 }
 
@@ -39,15 +57,6 @@ pub struct User {
     #[serde(skip_serializing)]
     pub pass: String,
     pub role: String,
-}
-
-#[derive(Deserialize, Validate, ToSchema)]
-#[serde(rename_all = "camelCase")]
-pub struct AuthPayload {
-    #[validate(length(min = 3, max = 16))]
-    pub username: String,
-    #[validate(length(min = 8, max = 32))]
-    pub pass: String,
 }
 
 #[derive(Serialize, ToSchema)]

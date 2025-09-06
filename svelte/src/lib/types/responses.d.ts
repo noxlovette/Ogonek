@@ -23,7 +23,7 @@ export interface AuthResponse {
 export interface RefreshResponse {
   accessToken: {
     token: string;
-    expiresAt: string;
+    expiresAt: number;
   };
 }
 

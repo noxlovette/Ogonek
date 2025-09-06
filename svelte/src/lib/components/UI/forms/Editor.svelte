@@ -1,5 +1,12 @@
 <script lang="ts">
+  import Title2 from "$lib/components/typography/Title2.svelte";
   import { parseMarkdown } from "@noxlovette/svarog";
+  import { UniButton } from "./buttons";
+  import { ChartNoAxesGantt, Eye } from "lucide-svelte";
+  import { Merger } from "../toolbar";
+  import { VStack } from "..";
+  import Divider from "../toolbar/Divider.svelte";
+  import HStack from "../HStack.svelte";
 
   let {
     markdownContent = $bindable(
@@ -8,8 +15,9 @@
   } = $props();
 
   let htmlContent = $state("");
+  let textareaRef: HTMLTextAreaElement | null = $state(null);
+
   let preview = $state(false);
-  let textareaRef = $state(HTMLTextAreaElement.prototype);
 
   // Undo/Redo functionality
   let history: string[] = $state([markdownContent]);
@@ -88,6 +96,9 @@
 
     // Set cursor position
     setTimeout(() => {
+      if (!textareaRef) {
+        return;
+      }
       const newStart = start + before.length;
       const newEnd = newStart + replacement.length;
       textareaRef.setSelectionRange(newStart, newEnd);
@@ -114,6 +125,9 @@
 
     // Select the URL part
     setTimeout(() => {
+      if (!textareaRef) {
+        return;
+      }
       const urlStart = start + linkText.length + 3; // After "[linkText]("
       const urlEnd = urlStart + 3; // "url"
       textareaRef.setSelectionRange(urlStart, urlEnd);
@@ -122,6 +136,10 @@
   }
 
   function handleKeyDown(event: KeyboardEvent) {
+    if (!textareaRef) {
+      return;
+    }
+
     if (event.ctrlKey || event.metaKey) {
       switch (event.key) {
         case "b":
@@ -170,6 +188,9 @@
             markdownContent.substring(0, lineStart) +
             markdownContent.substring(start);
           setTimeout(() => {
+            if (!textareaRef) {
+              return;
+            }
             textareaRef.setSelectionRange(lineStart, lineStart);
           }, 0);
           return;
@@ -192,6 +213,9 @@
         markdownContent = newText;
 
         setTimeout(() => {
+          if (!textareaRef) {
+            return;
+          }
           const newPos = start + newListItem.length;
           textareaRef.setSelectionRange(newPos, newPos);
         }, 0);
@@ -217,6 +241,9 @@
           markdownContent.substring(start);
 
         setTimeout(() => {
+          if (!textareaRef) {
+            return;
+          }
           const offset = event.shiftKey ? -2 : 2;
           textareaRef.setSelectionRange(start + offset, start + offset);
         }, 0);
@@ -225,23 +252,24 @@
   }
 </script>
 
-<div class="col-span-2 flex size-full flex-col gap-4">
-  <div id="header" class="flex items-center space-x-4">
-    <h1 class="text-2xl font-bold">Markdown</h1>
-    <button
-      onclick={() => (preview = false)}
-      class="hover:bg-accent rounded-lg px-2 py-1 text-sm"
-      class:chosen={!preview}>Editor</button
-    >
-    <button
-      onclick={() => (preview = true)}
-      class="hover:bg-accent rounded-lg px-2 py-1 text-sm"
-      class:chosen={preview}>Preview</button
-    >
-  </div>
-
+<HStack styling="col-span-2 gap-2 md:gap-3 lg:gap-4">
+  <VStack>
+    <Title2>Markdown</Title2>
+    <Divider></Divider>
+    <Merger>
+      <UniButton
+        variant={preview ? "primary" : "prominent"}
+        Icon={ChartNoAxesGantt}
+        onclick={() => (preview = false)}>Edit</UniButton
+      >
+      <UniButton
+        variant={preview ? "prominent" : "primary"}
+        Icon={Eye}
+        onclick={() => (preview = true)}>Preview</UniButton
+      >
+    </Merger>
+  </VStack>
   {#if !preview}
-    <!-- Toolbar -->
     <div
       class="bg-default bg-default ring-default flex flex-wrap gap-2 rounded-lg p-2"
     >
@@ -260,15 +288,6 @@
       >
         I
       </button>
-
-      <button
-        onclick={() => insertMarkdown("`", "`", "code")}
-        class="rounded px-3 py-1 font-mono text-sm hover:bg-stone-200 dark:hover:bg-stone-700"
-        title="Inline Code"
-      >
-        &lt;/&gt;
-      </button>
-
       <div class="w-px bg-stone-300 dark:bg-stone-600"></div>
 
       <button
@@ -306,14 +325,6 @@
       </button>
 
       <button
-        onclick={() => insertMarkdown("1. ", "", "List item")}
-        class="rounded px-3 py-1 text-sm hover:bg-stone-200 dark:hover:bg-stone-700"
-        title="Numbered List"
-      >
-        1. List
-      </button>
-
-      <button
         onclick={() => insertMarkdown("> ", "", "Quote")}
         class="rounded px-3 py-1 text-sm hover:bg-stone-200 dark:hover:bg-stone-700"
         title="Quote"
@@ -330,38 +341,26 @@
       >
         🔗 Link
       </button>
-
-      <button
-        onclick={() => insertMarkdown("```\n", "\n```", "code block")}
-        class="rounded px-3 py-1 font-mono text-sm hover:bg-stone-200 dark:hover:bg-stone-700"
-        title="Code Block"
-      >
-        Code
-      </button>
     </div>
   {/if}
 
-  <div class="flex flex-1">
-    {#if !preview}
-      <!-- Editor -->
-      <div class="flex w-full flex-col">
-        <textarea
-          bind:this={textareaRef}
-          bind:value={markdownContent}
-          onkeydown={handleKeyDown}
-          class="
-          focus:border-accent focus:ring-accent ring-default min-h-[400px] w-full resize-none rounded-md bg-white px-4 py-2 font-mono text-base leading-relaxed text-stone-900 placeholder-stone-400 shadow-sm focus:shadow-md focus:ring-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60 dark:bg-stone-950 dark:text-stone-100
+  {#if !preview}
+    <!-- Editor -->
+    <div class="flex w-full flex-col">
+      <textarea
+        bind:this={textareaRef}
+        bind:value={markdownContent}
+        onkeydown={handleKeyDown}
+        class="
+          focus:border-accent focus:ring-accent ring-default bg-default min-h-[400px] w-full resize-none rounded-2xl bg-white px-4 py-2 font-mono text-base leading-relaxed text-stone-900 placeholder-stone-400 shadow-sm focus:shadow-md focus:ring-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60
           "
-          spellcheck="false"
-          placeholder="Start typing your markdown here..."
-        ></textarea>
-      </div>
-    {:else}
-      <div
-        class="markdown prose prose-stone dark:prose-invert w-full max-w-none rounded-lg p-4 shadow-sm dark:border-stone-900"
-      >
-        {@html htmlContent}
-      </div>
-    {/if}
-  </div>
-</div>
+        spellcheck="false"
+        placeholder="Start typing your markdown here..."
+      ></textarea>
+    </div>
+  {:else}
+    <div class="markdown ring-default bg-default rounded-2xl p-4">
+      {@html htmlContent}
+    </div>
+  {/if}
+</HStack>

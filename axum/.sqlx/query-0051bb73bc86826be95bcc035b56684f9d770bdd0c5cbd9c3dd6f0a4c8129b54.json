@@ -1,0 +1,27 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        INSERT INTO photos (id, unsplash_id, urls, alt_description, photographer_name, photographer_username)\n        VALUES ($1, $2, $3, $4, $5, $6)\n        ON CONFLICT (unsplash_id) \n        DO UPDATE SET\n            urls = EXCLUDED.urls,\n            alt_description = EXCLUDED.alt_description,\n            photographer_name = EXCLUDED.photographer_name,\n            photographer_username = EXCLUDED.photographer_username\n        RETURNING id\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Varchar"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Varchar",
+        "Varchar",
+        "Jsonb",
+        "Text",
+        "Varchar",
+        "Varchar"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "0051bb73bc86826be95bcc035b56684f9d770bdd0c5cbd9c3dd6f0a4c8129b54"
+}

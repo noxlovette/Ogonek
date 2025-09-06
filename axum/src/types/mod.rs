@@ -1,17 +1,17 @@
 pub mod core;
 pub mod notifications;
+pub mod photos;
 pub mod preferences;
 pub mod responses;
 pub mod s3;
 pub mod tracking;
-
 pub use core::*;
 pub use notifications::*;
+pub use photos::*;
 pub use preferences::*;
 pub use responses::*;
 pub use s3::*;
 pub use tracking::*;
-
 pub mod datetime_serialization {
     use chrono::{DateTime, Utc};
     use serde::{Deserialize, Deserializer, Serializer};

@@ -8,10 +8,7 @@ NC='\033[0m' # No Color
 
 echo -e "${BLUE}🚀 Starting Ogonek development environment...${NC}"
 
-echo -e "${YELLOW}📋 Generating OpenAPI spec...${NC}"
-cd axum
-cargo run --bin generate_types
-cp -p openapi.yaml ~/Development/ogonek-swift/
+./scripts/generate-types.sh
 
 echo -e "${YELLOW}💾 Setting up environment...${NC}"
 export DATABASE_URL="
@@ -27,7 +24,6 @@ echo -e "${YELLOW}Creating sqlx queries...${NC}"
 export DATABASE_URL="
 postgres://postgres:H8QheSCRFCKejvDsbu@localhost:5433/pg-ogonek-dev"
 cargo sqlx prepare
-
 
 
 echo -e "${GREEN}✅ Development environment started!${NC}"

@@ -1,8 +1,10 @@
 use crate::db::error::DbError;
 use crate::types::{Profile, ProfileUpdate};
-use sqlx::PgPool;
 
-pub async fn find_by_id(db: &PgPool, user_id: &str) -> Result<Profile, DbError> {
+pub async fn find_by_id(
+    db: impl sqlx::Executor<'_, Database = sqlx::Postgres>,
+    user_id: &str,
+) -> Result<Profile, DbError> {
     let profile = sqlx::query_as!(
         Profile,
         r#"
@@ -38,7 +40,11 @@ pub async fn get_call_url(
     Ok(td)
 }
 
-pub async fn upsert(db: &PgPool, user_id: &str, update: &ProfileUpdate) -> Result<(), DbError> {
+pub async fn upsert(
+    db: impl sqlx::Executor<'_, Database = sqlx::Postgres>,
+    user_id: &str,
+    update: &ProfileUpdate,
+) -> Result<(), DbError> {
     sqlx::query_as!(
         Profile,
         r#"
@@ -71,7 +77,10 @@ pub async fn upsert(db: &PgPool, user_id: &str, update: &ProfileUpdate) -> Resul
     Ok(())
 }
 
-pub async fn get_telegram_id(db: &PgPool, user_id: &str) -> Result<Option<String>, DbError> {
+pub async fn get_telegram_id(
+    db: impl sqlx::Executor<'_, Database = sqlx::Postgres>,
+    user_id: &str,
+) -> Result<Option<String>, DbError> {
     let telegram_id = sqlx::query_scalar!(
         r#"
         SELECT telegram_id FROM profile
@@ -107,7 +116,10 @@ pub async fn get_teacher_telegram_id(
     Ok(td)
 }
 
-pub async fn get_teacher_user_id(db: &PgPool, student_id: &str) -> Result<Option<String>, DbError> {
+pub async fn get_teacher_user_id(
+    db: impl sqlx::Executor<'_, Database = sqlx::Postgres>,
+    student_id: &str,
+) -> Result<Option<String>, DbError> {
     let id = sqlx::query_scalar!(
         r#"
         SELECT p.user_id
