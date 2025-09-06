@@ -337,7 +337,7 @@ pub async fn update(
             .collect::<Vec<String>>(),
     )
     .await?;
-    batch_upsert(db, deck_id, update.cards).await?;
+    batch_upsert(&mut *tx, deck_id, update.cards).await?;
 
     tx.commit().await?;
 

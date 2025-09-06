@@ -9,7 +9,7 @@ import { validateForm } from "$lib/utils";
 import { fail, redirect } from "@sveltejs/kit";
 import type { Actions } from "./$types";
 
-export const actions: Actions = {
+export const actions = {
   default: async ({ request, url, fetch }) => {
     const formData = await request.formData();
 

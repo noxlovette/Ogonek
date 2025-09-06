@@ -6,24 +6,21 @@ type PATCHRequestBody = any;
 export const GET: RequestHandler = async ({ request, params, url }) => {
   // Path params: id
   // fetch_student
-  
-  
+
   return json(null);
 };
 
 export const POST: RequestHandler = async ({ request, params, url }) => {
   // Path params: id
   // upsert_student
-  
-  
+
   return json(null);
 };
 
 export const DELETE: RequestHandler = async ({ request, params, url }) => {
   // Path params: id
   // remove_student
-  
-  
+
   return json(null);
 };
 
@@ -32,7 +29,6 @@ export const PATCH: RequestHandler = async ({ request, params, url }) => {
   logger.info("PATCH /api/v1/users/student/{id} with body:", body);
   // Path params: id
   // update_student
-  
-  
+
   return json(null);
 };

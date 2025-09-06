@@ -19,7 +19,7 @@
   import Input from "$lib/components/UI/forms/Input.svelte";
   import { m } from "$lib/paraglide/messages";
   import Title2 from "$lib/components/typography/Title2.svelte";
-  import { , Eye, EyeClosed, ImageOff } from "lucide-svelte";
+  import { Eye, EyeClosed, ImageOff } from "lucide-svelte";
   import { invalidate } from "$app/navigation";
   let { data, form } = $props();
   let { lesson } = data;

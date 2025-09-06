@@ -8,7 +8,6 @@ export const PATCH: RequestHandler = async ({ request, params, url }) => {
   logger.info("PATCH /api/v1/lessons/{id}/photo with body:", body);
   // Path params: id
   // Adds a photo to the lesson
-  
-  
+
   return json(null);
 };

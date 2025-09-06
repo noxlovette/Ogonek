@@ -4,12 +4,13 @@
   import { DoorOpen } from "lucide-svelte";
   import { enhanceForm } from "$lib/utils";
   import { m } from "$lib/paraglide/messages";
+  import type { PageProps } from "./$types";
 
   let password = $state("");
   let confirmPassword = $state("");
   let passwordMatch = $state(true);
 
-  let { form } = $props();
+  let { form }: PageProps = $props();
 </script>
 
 <form

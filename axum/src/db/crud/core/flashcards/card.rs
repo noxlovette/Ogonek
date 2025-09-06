@@ -37,7 +37,7 @@ pub async fn batch_upsert(
     let mut media_urls = Vec::with_capacity(cards.len());
 
     for card in cards {
-        card_ids.push(nanoid::nanoid!());
+        card_ids.push(card.id.unwrap_or_else(|| nanoid::nanoid!()));
         fronts.push(card.front);
         backs.push(card.back);
         media_urls.push(card.media_url);

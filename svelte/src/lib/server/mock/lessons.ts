@@ -19,7 +19,6 @@ export function createLessonFull(): LessonFull {
   return {
     ...base,
     markdown: faker.lorem.text(),
-    createdBy: nanoid(),
     updatedAt: faker.date.recent().toISOString(),
     assignee: nanoid(),
   };

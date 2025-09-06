@@ -7,8 +7,9 @@ import { captchaVerify, setTokenCookie, ValidateAccess } from "$lib/server";
 import { createUser } from "$lib/server/mock/user";
 import type { User } from "$lib/types";
 import { validateForm } from "$lib/utils";
-import { fail, type Actions } from "@sveltejs/kit";
+import { fail } from "@sveltejs/kit";
 import type { JWTPayload } from "jose";
+import type { Actions } from "./$types";
 
 export const actions: Actions = {
   default: async ({ request, fetch, cookies }) => {

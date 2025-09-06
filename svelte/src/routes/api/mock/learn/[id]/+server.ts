@@ -8,18 +8,13 @@ export const PUT: RequestHandler = async ({ request, params, url }) => {
   logger.info("PUT /api/v1/learn/{id} with body:", body);
   // Path params: id
   // Updates the learn progress on a card
-  
-  
+
   return json(null);
 };
 
 export const DELETE: RequestHandler = async ({ request, params, url }) => {
   // Path params: id
   // Resets the progress for a particular deck
-  
-  
-  return json([
-  null,
-  null
-]);
+
+  return json([null, null]);
 };

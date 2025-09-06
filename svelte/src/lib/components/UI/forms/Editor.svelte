@@ -4,7 +4,7 @@
   import { UniButton } from "./buttons";
   import { ChartNoAxesGantt, Eye } from "lucide-svelte";
   import { Merger } from "../toolbar";
-  import { SearchBar, VStack } from "..";
+  import { VStack } from "..";
   import Divider from "../toolbar/Divider.svelte";
   import HStack from "../HStack.svelte";
 
@@ -96,6 +96,9 @@
 
     // Set cursor position
     setTimeout(() => {
+      if (!textareaRef) {
+        return;
+      }
       const newStart = start + before.length;
       const newEnd = newStart + replacement.length;
       textareaRef.setSelectionRange(newStart, newEnd);
@@ -122,6 +125,9 @@
 
     // Select the URL part
     setTimeout(() => {
+      if (!textareaRef) {
+        return;
+      }
       const urlStart = start + linkText.length + 3; // After "[linkText]("
       const urlEnd = urlStart + 3; // "url"
       textareaRef.setSelectionRange(urlStart, urlEnd);
@@ -130,6 +136,10 @@
   }
 
   function handleKeyDown(event: KeyboardEvent) {
+    if (!textareaRef) {
+      return;
+    }
+
     if (event.ctrlKey || event.metaKey) {
       switch (event.key) {
         case "b":
@@ -178,6 +188,9 @@
             markdownContent.substring(0, lineStart) +
             markdownContent.substring(start);
           setTimeout(() => {
+            if (!textareaRef) {
+              return;
+            }
             textareaRef.setSelectionRange(lineStart, lineStart);
           }, 0);
           return;
@@ -200,6 +213,9 @@
         markdownContent = newText;
 
         setTimeout(() => {
+          if (!textareaRef) {
+            return;
+          }
           const newPos = start + newListItem.length;
           textareaRef.setSelectionRange(newPos, newPos);
         }, 0);
@@ -225,14 +241,15 @@
           markdownContent.substring(start);
 
         setTimeout(() => {
+          if (!textareaRef) {
+            return;
+          }
           const offset = event.shiftKey ? -2 : 2;
           textareaRef.setSelectionRange(start + offset, start + offset);
         }, 0);
       }
     }
   }
-
-  let q = $state("");
 </script>
 
 <HStack styling="col-span-2 gap-2 md:gap-3 lg:gap-4">

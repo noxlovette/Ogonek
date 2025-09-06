@@ -45,7 +45,7 @@
 
   let showPassword = $state(false);
   type Assignable = { assignee?: string | null };
-  const baseStyle = `w-full rounded-full bg-white dark:bg-stone-950  px-4 py-2 text-base placeholder-stone-400 shadow-sm focus:shadow-md focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent disabled:opacity-60 disabled:cursor-not-allowed ${invalid ? "ring-error text-red-500" : "ring-default"}`;
+  const baseStyle = `w-full rounded-2xl bg-white dark:bg-stone-950  px-4 py-2 text-base placeholder-stone-400 shadow-sm focus:shadow-md focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent disabled:opacity-60 disabled:cursor-not-allowed ${invalid ? "ring-error text-red-500" : "ring-default"}`;
 </script>
 
 <div class="relative space-y-1">

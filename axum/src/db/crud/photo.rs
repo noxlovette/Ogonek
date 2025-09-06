@@ -3,7 +3,6 @@ use crate::{
     types::{Photo, UpsertPhoto},
 };
 use serde_json::json;
-
 /// Returns the lesson's photo
 pub async fn find_by_id(
     db: impl sqlx::Executor<'_, Database = sqlx::Postgres>,
@@ -30,7 +29,7 @@ pub async fn upsert(
     db: &PgPool,
     lesson_id: &str,
     user_id: &str,
-    update: &UpsertPhoto
+    update: &UpsertPhoto,
 ) -> Result<(), DbError> {
     let photo_id = nanoid::nanoid!();
 
@@ -49,7 +48,7 @@ pub async fn upsert(
         "#,
         photo_id,
         update.unsplash_id,
-        json!(update.urls), 
+        json!(update.urls),
         update.alt_description,
         update.user.name,
         update.user.username
@@ -66,7 +65,6 @@ pub async fn upsert(
         lesson_id,
         photo_id,
         user_id
-
     )
     .execute(&mut *tx)
     .await?;
@@ -77,11 +75,7 @@ pub async fn upsert(
 }
 
 /// Deletes photo by lesson id
-pub async fn delete(
-    db: &PgPool,
-    lesson_id: &str,
-    user_id: &str,
-) -> Result<(), DbError> {
+pub async fn delete(db: &PgPool, lesson_id: &str, user_id: &str) -> Result<(), DbError> {
     sqlx::query!(
         r#"
         DELETE FROM photos
@@ -93,7 +87,6 @@ pub async fn delete(
         "#,
         lesson_id,
         user_id
-
     )
     .execute(db)
     .await?;

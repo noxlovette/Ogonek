@@ -52,7 +52,7 @@ echo -e "${GREEN}✅ Rust checks completed successfully${NC}"
 
 cd ..
 
-run_cmd ./scripts/generate-types.sh
+run_cmd ./scripts/backend/generate-types.sh
 
 echo -e "${YELLOW}⚡ Running Svelte checks in svelte folder...${NC}"
 cd svelte || handle_error "svelte folder not found"

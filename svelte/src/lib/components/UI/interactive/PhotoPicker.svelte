@@ -93,7 +93,7 @@
       <div class="flex-shrink-0">
         <img
           src={selectedPhoto.urls.thumb}
-          alt="Selected photo"
+          alt={selectedPhoto.alt_description}
           class="h-16 w-16 rounded-lg object-cover ring-1 ring-stone-200 dark:ring-stone-700"
         />
       </div>
