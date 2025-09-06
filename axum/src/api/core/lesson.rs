@@ -54,7 +54,17 @@ pub async fn fetch_lesson(
         photo = photo::find_by_id(&state.db, photo_id).await?;
     }
 
-    Ok(Json(LessonWithPhoto { lesson, photo }))
+    Ok(Json(LessonWithPhoto {
+        assignee: lesson.assignee,
+        assignee_name: lesson.assignee_name,
+        created_at: lesson.created_at,
+        id: lesson.id,
+        markdown: lesson.markdown,
+        title: lesson.title,
+        topic: lesson.topic,
+        updated_at: lesson.updated_at,
+        photo,
+    }))
 }
 /// Lessons belonging to a user
 #[utoipa::path(

@@ -35,13 +35,36 @@ pub struct LessonFull {
     pub updated_at: DateTime<Utc>,
     pub assignee_name: String,
 }
-
+/// FUCK SWIFT OPEN API!
 #[derive(Serialize, Debug, ToSchema)]
 pub struct LessonWithPhoto {
-    #[serde(flatten)]
-    pub lesson: LessonFull,
+    pub assignee: String,
+    pub assignee_name: String,
+    pub created_at: DateTime<Utc>,
+    pub id: String,
+    pub markdown: String,
+    pub title: String,
+    pub topic: String,
+    pub updated_at: DateTime<Utc>,
+
     #[serde(skip_serializing_if = "Option::is_none")]
     pub photo: Option<Photo>,
+}
+
+impl From<(LessonFull, Option<Photo>)> for LessonWithPhoto {
+    fn from((lesson, photo): (LessonFull, Option<Photo>)) -> Self {
+        Self {
+            assignee: lesson.assignee,
+            assignee_name: lesson.assignee_name,
+            created_at: lesson.created_at,
+            id: lesson.id,
+            markdown: lesson.markdown,
+            title: lesson.title,
+            topic: lesson.topic,
+            updated_at: lesson.updated_at,
+            photo,
+        }
+    }
 }
 
 #[derive(Deserialize, Debug, ToSchema)]
