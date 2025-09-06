@@ -5,8 +5,10 @@ import logger from "$lib/logger";
 import { routes } from "$lib/routes";
 import { captchaVerify, setTokenCookie, ValidateAccess } from "$lib/server";
 import { createUser } from "$lib/server/mock/user";
+import type { User } from "$lib/types";
 import { validateForm } from "$lib/utils";
 import { fail, type Actions } from "@sveltejs/kit";
+import type { JWTPayload } from "jose";
 
 export const actions: Actions = {
   default: async ({ request, fetch, cookies }) => {
@@ -55,15 +57,17 @@ export const actions: Actions = {
       return fail(400);
     }
 
+    let user: JWTPayload | User;
     if (!env.PUBLIC_MOCK_MODE) {
       const { accessToken, refreshToken } = parsed.data;
       setTokenCookie(cookies, "accessToken", accessToken);
       setTokenCookie(cookies, "refreshToken", refreshToken);
-      const user = await ValidateAccess(accessToken.token);
+      user = await ValidateAccess(accessToken.token);
       logger.debug({ user }, "user from the login");
+    } else {
+      user = createUser();
     }
 
-    const user = createUser();
     return {
       user,
       success: true,

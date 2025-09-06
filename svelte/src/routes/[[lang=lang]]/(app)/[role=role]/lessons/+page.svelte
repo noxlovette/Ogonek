@@ -17,7 +17,7 @@
   import { enhanceForm } from "$lib/utils";
   import { page } from "$app/state";
   import type { TableConfig, LessonSmall } from "$lib/types/index.js";
-  import { formatDate } from "@noxlovette/svarog";
+  import { formatDate } from "$lib/utils";
 
   import {
     user,

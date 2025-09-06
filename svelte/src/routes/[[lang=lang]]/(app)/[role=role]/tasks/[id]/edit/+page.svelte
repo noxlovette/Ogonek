@@ -78,7 +78,7 @@
   </div>
 </form>
 
-<div class="grid grid-cols-3 gap-4 space-x-4">
+<div class="grid gap-4 md:grid-cols-3">
   <Editor bind:markdownContent={markdown} />
   <Multipart taskId={task.id} />
 </div>

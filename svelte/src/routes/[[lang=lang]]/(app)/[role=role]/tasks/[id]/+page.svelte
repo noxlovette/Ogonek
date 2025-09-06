@@ -13,16 +13,8 @@
   } from "$lib/components";
   import { page } from "$app/state";
   import { enhance } from "$app/forms";
-  import {
-    CheckSquare,
-    Square,
-    Pencil,
-    Check,
-    Circle,
-    Divide,
-  } from "lucide-svelte";
-  import { enhanceForm } from "$lib/utils";
-  import { formatDate } from "@noxlovette/svarog";
+  import { Check, Circle } from "lucide-svelte";
+  import { enhanceForm, formatDate } from "$lib/utils";
   import Multipart from "$lib/components/UI/interactive/Multipart.svelte";
   import Badge from "$lib/components/cards/Badge.svelte";
   import { getUrgency } from "$lib/utils";
@@ -36,7 +28,11 @@
   let role = $derived(page.params.role);
   let completed = $state(data.task.completed);
 
-  let formattedDate = formatDate(data.task.dueDate || "");
+  let formattedDate = $state(m.arable_flat_emu_strive());
+
+  if (data.task.dueDate) {
+    formattedDate = formatDate(data.task.dueDate);
+  }
 
   const urgency = getUrgency(data.task);
 </script>

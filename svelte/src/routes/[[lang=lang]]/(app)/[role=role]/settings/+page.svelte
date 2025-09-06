@@ -32,6 +32,7 @@
   import Headline from "$lib/components/typography/Headline.svelte";
   import VStack from "$lib/components/UI/VStack.svelte";
   import ThemeToggler from "$lib/components/UI/interactive/ThemeToggler.svelte";
+  import Title3 from "$lib/components/typography/Title3.svelte";
 
   let disabled = $state(true);
 
@@ -116,7 +117,7 @@
   </Toolbar>
   <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
     <HStack>
-      <Title1>Profile Settings</Title1>
+      <Title1>{m.noble_formal_zebra_sprout()}</Title1>
 
       <HStack>
         <Input
@@ -137,7 +138,7 @@
       <!-- Teacher Settings -->
       {#if page.params.role === "t"}
         <Divider />
-        <Title2>Teacher Settings</Title2>
+        <Title2>{m.bad_fluffy_lionfish_expand()}</Title2>
         <Input
           bind:disabled
           placeholder="Your Telegram ID"
@@ -155,7 +156,7 @@
 
     <HStack>
       <HStack>
-        <Title1>Notifications</Title1>
+        <Title1>{m.settings()}</Title1>
         <VStack>
           <Headline>
             {m.stale_quick_mantis_stab()}
@@ -215,7 +216,7 @@
 
     <HStack>
       <VStack>
-        <Headline>Language (this browser)</Headline>
+        <Title3>{m.safe_lazy_cheetah_dial()}</Title3>
       </VStack>
       <LanguageSelector />
     </HStack>

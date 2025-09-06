@@ -29,7 +29,7 @@
     assigneeStore,
   } from "$lib/stores";
   import { Bell, Eye, EyeClosed, PlusCircle } from "lucide-svelte";
-  import { formatDate } from "@noxlovette/svarog";
+  import { formatDate } from "$lib/utils";
   import { m } from "$lib/paraglide/messages";
 
   const { data } = $props();

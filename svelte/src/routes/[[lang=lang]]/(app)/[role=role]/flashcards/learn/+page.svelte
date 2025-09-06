@@ -104,8 +104,11 @@
         {m.quiet_lost_whale_exhale()}
       </p>
 
-      <UniButton href="." Icon={GraduationCap} variant="primary"
-        >{m.decks()}</UniButton
+      <UniButton
+        href="."
+        Icon={GraduationCap}
+        variant="primary"
+        iconOnly={false}>{m.decks()}</UniButton
       >
     </div>
   </div>

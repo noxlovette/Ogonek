@@ -19,13 +19,7 @@
   import Input from "$lib/components/UI/forms/Input.svelte";
   import { m } from "$lib/paraglide/messages";
   import Title2 from "$lib/components/typography/Title2.svelte";
-  import {
-    Ban,
-    ChartNoAxesGantt,
-    Eye,
-    EyeClosed,
-    ImageOff,
-  } from "lucide-svelte";
+  import { , Eye, EyeClosed, ImageOff } from "lucide-svelte";
   import { invalidate } from "$app/navigation";
   let { data, form } = $props();
   let { lesson } = data;
@@ -112,20 +106,4 @@
   <Photo photo={data.lesson.photo} />
 </form>
 
-<VStack>
-  <Title2>Markdown</Title2>
-  <Divider></Divider>
-  <Merger>
-    <UniButton
-      variant={preview ? "primary" : "prominent"}
-      Icon={ChartNoAxesGantt}
-      onclick={() => (preview = false)}>Edit</UniButton
-    >
-    <UniButton
-      variant={preview ? "prominent" : "primary"}
-      Icon={Eye}
-      onclick={() => (preview = true)}>Preview</UniButton
-    >
-  </Merger>
-</VStack>
-<Editor bind:markdownContent={markdown} {preview} />
+<Editor bind:markdownContent={markdown} />

@@ -22,7 +22,7 @@ test-results/
 *.p8
 
 caddy-*
-
+.claude/
 svelte/static/uploads/
 
 students_data/

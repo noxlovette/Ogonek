@@ -6,18 +6,18 @@
   import { Merger } from "../toolbar";
   import { SearchBar, VStack } from "..";
   import Divider from "../toolbar/Divider.svelte";
-  import { enhance } from "$app/forms";
-  import { enhanceForm } from "$lib/utils";
+  import HStack from "../HStack.svelte";
 
   let {
     markdownContent = $bindable(
       "# Start writing\n\nYour **markdown** goes here...",
     ),
-    preview = false,
   } = $props();
 
   let htmlContent = $state("");
   let textareaRef: HTMLTextAreaElement | null = $state(null);
+
+  let preview = $state(false);
 
   // Undo/Redo functionality
   let history: string[] = $state([markdownContent]);
@@ -235,97 +235,115 @@
   let q = $state("");
 </script>
 
-{#if !preview}
-  <div
-    class="bg-default bg-default ring-default flex flex-wrap gap-2 rounded-lg p-2"
-  >
-    <button
-      onclick={() => insertMarkdown("**", "**", "bold text")}
-      class="rounded px-3 py-1 text-sm font-bold hover:bg-stone-200 dark:hover:bg-stone-700"
-      title="Bold (Ctrl+B)"
+<HStack styling="col-span-2 gap-2 md:gap-3 lg:gap-4">
+  <VStack>
+    <Title2>Markdown</Title2>
+    <Divider></Divider>
+    <Merger>
+      <UniButton
+        variant={preview ? "primary" : "prominent"}
+        Icon={ChartNoAxesGantt}
+        onclick={() => (preview = false)}>Edit</UniButton
+      >
+      <UniButton
+        variant={preview ? "prominent" : "primary"}
+        Icon={Eye}
+        onclick={() => (preview = true)}>Preview</UniButton
+      >
+    </Merger>
+  </VStack>
+  {#if !preview}
+    <div
+      class="bg-default bg-default ring-default flex flex-wrap gap-2 rounded-lg p-2"
     >
-      B
-    </button>
+      <button
+        onclick={() => insertMarkdown("**", "**", "bold text")}
+        class="rounded px-3 py-1 text-sm font-bold hover:bg-stone-200 dark:hover:bg-stone-700"
+        title="Bold (Ctrl+B)"
+      >
+        B
+      </button>
 
-    <button
-      onclick={() => insertMarkdown("*", "*", "italic text")}
-      class="rounded px-3 py-1 text-sm italic hover:bg-stone-200 dark:hover:bg-stone-700"
-      title="Italic (Ctrl+I)"
-    >
-      I
-    </button>
-    <div class="w-px bg-stone-300 dark:bg-stone-600"></div>
+      <button
+        onclick={() => insertMarkdown("*", "*", "italic text")}
+        class="rounded px-3 py-1 text-sm italic hover:bg-stone-200 dark:hover:bg-stone-700"
+        title="Italic (Ctrl+I)"
+      >
+        I
+      </button>
+      <div class="w-px bg-stone-300 dark:bg-stone-600"></div>
 
-    <button
-      onclick={() => insertMarkdown("# ", "", "Headline")}
-      class="rounded px-3 py-1 text-sm font-bold hover:bg-stone-200 dark:hover:bg-stone-700"
-      title="Headline 1"
-    >
-      LargeTitle
-    </button>
+      <button
+        onclick={() => insertMarkdown("# ", "", "Headline")}
+        class="rounded px-3 py-1 text-sm font-bold hover:bg-stone-200 dark:hover:bg-stone-700"
+        title="Headline 1"
+      >
+        LargeTitle
+      </button>
 
-    <button
-      onclick={() => insertMarkdown("## ", "", "Headline")}
-      class="rounded px-3 py-1 text-sm font-bold hover:bg-stone-200 dark:hover:bg-stone-700"
-      title="Headline 2"
-    >
-      Title2
-    </button>
+      <button
+        onclick={() => insertMarkdown("## ", "", "Headline")}
+        class="rounded px-3 py-1 text-sm font-bold hover:bg-stone-200 dark:hover:bg-stone-700"
+        title="Headline 2"
+      >
+        Title2
+      </button>
 
-    <button
-      onclick={() => insertMarkdown("### ", "", "Headline")}
-      class="rounded px-3 py-1 text-sm font-bold hover:bg-stone-200 dark:hover:bg-stone-700"
-      title="Headline 3"
-    >
-      Title3
-    </button>
+      <button
+        onclick={() => insertMarkdown("### ", "", "Headline")}
+        class="rounded px-3 py-1 text-sm font-bold hover:bg-stone-200 dark:hover:bg-stone-700"
+        title="Headline 3"
+      >
+        Title3
+      </button>
 
-    <div class="w-px bg-stone-300 dark:bg-stone-600"></div>
+      <div class="w-px bg-stone-300 dark:bg-stone-600"></div>
 
-    <button
-      onclick={() => insertMarkdown("- ", "", "List item")}
-      class="rounded px-3 py-1 text-sm hover:bg-stone-200 dark:hover:bg-stone-700"
-      title="Bullet List"
-    >
-      • List
-    </button>
+      <button
+        onclick={() => insertMarkdown("- ", "", "List item")}
+        class="rounded px-3 py-1 text-sm hover:bg-stone-200 dark:hover:bg-stone-700"
+        title="Bullet List"
+      >
+        • List
+      </button>
 
-    <button
-      onclick={() => insertMarkdown("> ", "", "Quote")}
-      class="rounded px-3 py-1 text-sm hover:bg-stone-200 dark:hover:bg-stone-700"
-      title="Quote"
-    >
-      Quote
-    </button>
+      <button
+        onclick={() => insertMarkdown("> ", "", "Quote")}
+        class="rounded px-3 py-1 text-sm hover:bg-stone-200 dark:hover:bg-stone-700"
+        title="Quote"
+      >
+        Quote
+      </button>
 
-    <div class="w-px bg-stone-300 dark:bg-stone-600"></div>
+      <div class="w-px bg-stone-300 dark:bg-stone-600"></div>
 
-    <button
-      onclick={insertLink}
-      class="rounded px-3 py-1 text-sm hover:bg-stone-200 dark:hover:bg-stone-700"
-      title="Link (Ctrl+K)"
-    >
-      🔗 Link
-    </button>
-  </div>
-{/if}
+      <button
+        onclick={insertLink}
+        class="rounded px-3 py-1 text-sm hover:bg-stone-200 dark:hover:bg-stone-700"
+        title="Link (Ctrl+K)"
+      >
+        🔗 Link
+      </button>
+    </div>
+  {/if}
 
-{#if !preview}
-  <!-- Editor -->
-  <div class="flex w-full flex-col">
-    <textarea
-      bind:this={textareaRef}
-      bind:value={markdownContent}
-      onkeydown={handleKeyDown}
-      class="
+  {#if !preview}
+    <!-- Editor -->
+    <div class="flex w-full flex-col">
+      <textarea
+        bind:this={textareaRef}
+        bind:value={markdownContent}
+        onkeydown={handleKeyDown}
+        class="
           focus:border-accent focus:ring-accent ring-default bg-default min-h-[400px] w-full resize-none rounded-2xl bg-white px-4 py-2 font-mono text-base leading-relaxed text-stone-900 placeholder-stone-400 shadow-sm focus:shadow-md focus:ring-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60
           "
-      spellcheck="false"
-      placeholder="Start typing your markdown here..."
-    ></textarea>
-  </div>
-{:else}
-  <div class="markdown ring-default bg-default rounded-2xl p-4">
-    {@html htmlContent}
-  </div>
-{/if}
+        spellcheck="false"
+        placeholder="Start typing your markdown here..."
+      ></textarea>
+    </div>
+  {:else}
+    <div class="markdown ring-default bg-default rounded-2xl p-4">
+      {@html htmlContent}
+    </div>
+  {/if}
+</HStack>
