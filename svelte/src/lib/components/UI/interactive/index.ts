@@ -1,6 +1,7 @@
 export { default as Editor } from "../forms/Editor.svelte";
 export { default as Notification } from "../Notification.svelte";
 export { default as CSV } from "./CSV.svelte";
+export { default as LanguageSelector } from "./LanguageSelector.svelte";
 export { default as Multipart } from "./Multipart.svelte";
 export { default as PhotoPicker } from "./PhotoPicker.svelte";
 export { default as SearchBar } from "./SearchBar.svelte";

@@ -7,10 +7,10 @@
     Divider,
     Merger,
     HStack,
-    Title3,
     Caption1,
     Title1,
     Title2,
+    LanguageSelector,
   } from "$lib/components";
   import { enhance } from "$app/forms";
   import { page } from "$app/state";
@@ -211,6 +211,13 @@
           {m.odd_tough_shell_dust()}
         </Caption1>
       </HStack>
+    </HStack>
+
+    <HStack>
+      <VStack>
+        <Headline>Language (this browser)</Headline>
+      </VStack>
+      <LanguageSelector />
     </HStack>
   </div>
 </form>
