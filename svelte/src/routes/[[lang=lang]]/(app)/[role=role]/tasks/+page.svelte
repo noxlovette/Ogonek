@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Task, TableConfig } from "$lib/types/index.js";
+  import type { TaskFull, TableConfig } from "$lib/types/index.js";
   import {
     LargeTitle,
     Divider,
@@ -14,6 +14,7 @@
     EmptySpace,
     Title3,
     VStack,
+    Title1,
   } from "$lib/components";
 
   import { enhance } from "$app/forms";
@@ -28,13 +29,13 @@
     assigneeStore,
   } from "$lib/stores";
   import { Bell, Eye, EyeClosed, PlusCircle } from "lucide-svelte";
-  import { formatDate } from "@noxlovette/svarog";
+  import { formatDate } from "$lib/utils";
   import { m } from "$lib/paraglide/messages";
 
   const { data } = $props();
   const role = page.params.role;
 
-  const taskConfig: TableConfig<Task> = {
+  const taskConfig: TableConfig<TaskFull> = {
     columns: [
       { key: "title", label: m.title() },
       {
@@ -125,7 +126,7 @@
           : m.direct_slow_bobcat_shine()}
       </UniButton>
     </Merger>
-    <SearchBar />
+    <SearchBar bind:q={$searchTerm} />
   </VStack>
 </Toolbar>
 
@@ -142,7 +143,7 @@
 {:then tasks}
   {#if tasks.data.length < 1}
     <EmptySpace>
-      <Title3>{m.noTasks()}</Title3>
+      <Title1>{m.noTasks()}</Title1>
     </EmptySpace>
   {/if}
   {#if role === "s"}
@@ -152,7 +153,7 @@
       {/each}
     </div>
   {:else}
-    <Table items={tasks.data} total={tasks.total} {href} config={taskConfig} />
+    <Table items={tasks.data} {href} config={taskConfig} />
   {/if}
 {:catch error: App.Error}
   <p>Error loading lessons: {error.errorID}</p>

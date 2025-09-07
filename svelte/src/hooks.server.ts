@@ -1,4 +1,4 @@
-import { version } from "$app/environment";
+import { dev, version } from "$app/environment";
 import { env } from "$env/dynamic/private";
 import { env as envPublic } from "$env/dynamic/public";
 import logger from "$lib/logger";
@@ -20,7 +20,7 @@ import { sequence } from "@sveltejs/kit/hooks";
 Sentry.init({
   dsn: envPublic.PUBLIC_SENTRY_DSN,
   release: version,
-  environment: envPublic.PUBLIC_APP_ENV || "development",
+  environment: dev ? "development" : "production",
   tracesSampleRate: envPublic.PUBLIC_SENTRY_TRACING_RATE
     ? Number(envPublic.PUBLIC_SENTRY_TRACING_RATE)
     : 1.0,
@@ -38,15 +38,18 @@ export const init: ServerInit = async () => {
   logger.info("App Booted");
 };
 
-export const paraglideHandle: Handle = ({ event, resolve }) =>
-  paraglideMiddleware(event.request, ({ request, locale }) => {
-    event.request = request;
-
-    return resolve(event, {
-      transformPageChunk: ({ html }) =>
-        html.replace("%paraglide.lang%", locale),
-    });
-  });
+const paraglideHandle: Handle = ({ event, resolve }) =>
+  paraglideMiddleware(
+    event.request,
+    ({ request: localizedRequest, locale }) => {
+      event.request = localizedRequest;
+      return resolve(event, {
+        transformPageChunk: ({ html }) => {
+          return html.replace("%lang%", locale);
+        },
+      });
+    },
+  );
 
 export const authenticationHandle: Handle = async ({ event, resolve }) => {
   // skip authentication if in dev mode
@@ -178,15 +181,15 @@ export const handleFetch: HandleFetch = async ({ event, request, fetch }) => {
   const url = new URL(request.url);
 
   if (url.pathname.startsWith("/axum/")) {
-    const cleanPath = url.pathname.replace("/axum/", "/api/v1/");
+    const cleanPath = url.pathname.replace("/axum/", "");
 
     if (envPublic.PUBLIC_MOCK_MODE) {
-      const mockURL = `${env.ORIGIN}/api/mock${cleanPath}`;
+      const mockURL = `${env.ORIGIN}/api/mock/${cleanPath}`;
       request = new Request(mockURL, request);
 
       return fetch(request);
     } else {
-      const newUrl = new URL(cleanPath, env.BACKEND_URL);
+      const newUrl = new URL(`/api/v1/${cleanPath}`, env.BACKEND_URL);
 
       url.searchParams.forEach((value, key) => {
         newUrl.searchParams.set(key, value);
@@ -224,9 +227,9 @@ export const handleError: HandleServerError = async ({
     timestamp: new Date().toISOString(),
     userId: event.locals.user?.id || "anonymous",
   };
-
   logger.error({
     errorID,
+    //@ts-expect-error: it works
     message: error.message ?? message,
     status,
     request: requestContext,
@@ -255,6 +258,7 @@ export const handleError: HandleServerError = async ({
 };
 
 export const handle: Handle = sequence(
-  Sentry.sentryHandle(),
+  paraglideHandle,
   authenticationHandle,
+  Sentry.sentryHandle(),
 );

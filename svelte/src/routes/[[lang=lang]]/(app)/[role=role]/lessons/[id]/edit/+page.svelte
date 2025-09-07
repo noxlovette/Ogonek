@@ -3,21 +3,34 @@
   import {
     Editor,
     LargeTitle,
-    UniButton,
     Toolbar,
     Divider,
     Merger,
     VStack,
+    CancelButton,
+    DeleteButton,
+    SaveButton,
+    PhotoPicker,
+    SearchBar,
+    UniButton,
+    Photo,
   } from "$lib/components";
-  import type { PageData } from "./$types";
   import { enhanceForm } from "$lib/utils";
-  import { Ban, Check, Trash2 } from "lucide-svelte";
   import Input from "$lib/components/UI/forms/Input.svelte";
   import { m } from "$lib/paraglide/messages";
-  let { data }: { data: PageData } = $props();
+  import Title2 from "$lib/components/typography/Title2.svelte";
+  import { Eye, EyeClosed, ImageOff } from "lucide-svelte";
+  import { invalidate } from "$app/navigation";
+  let { data, form } = $props();
   let { lesson } = data;
 
   let markdown = $state(lesson.markdown);
+
+  let q = "";
+
+  let showPicker = $state(true);
+
+  $inspect(form);
 </script>
 
 <form
@@ -36,21 +49,12 @@
     <Divider />
     <VStack>
       <Merger>
-        <UniButton Icon={Ban} href=".">{m.cancel()}</UniButton>
-
-        <UniButton
-          variant="danger"
-          formaction="?/delete"
-          Icon={Trash2}
-          confirmText={lesson.title}
-          confirmTitle="Delete Lesson">{m.delete()}</UniButton
-        >
+        <CancelButton />
+        <DeleteButton confirmText={lesson.title} confirmTitle="Delete Lesson" />
       </Merger>
       <Merger>
-        <UniButton variant="prominent" type="submit" Icon={Check}
-          >{m.save()}</UniButton
-        ></Merger
-      >
+        <SaveButton />
+      </Merger>
     </VStack>
   </Toolbar>
 
@@ -62,4 +66,50 @@
     <Input name="assignee" item={lesson} type="assignee" />
   </div>
 </form>
+
+<form
+  class="flex flex-col gap-4"
+  action="?/unsplash"
+  method="POST"
+  use:enhance={enhanceForm({
+    handlers: {
+      success: () => {
+        invalidate("edit:photo");
+      },
+    },
+    shouldUpdate: true,
+  })}
+>
+  <VStack>
+    <Title2>Photo (Unsplash)</Title2>
+    <Divider></Divider>
+    <Merger>
+      {#if data.lesson.photo}
+        <UniButton
+          type="submit"
+          variant="danger"
+          Icon={ImageOff}
+          formaction="?/removePhoto"
+        ></UniButton>
+      {/if}
+      {#if form?.photos}
+        <UniButton
+          Icon={showPicker ? Eye : EyeClosed}
+          onclick={() => (showPicker = !showPicker)}
+        />
+      {/if}
+    </Merger>
+
+    <SearchBar bind:q placeholder="Search photos..." />
+  </VStack>
+  {#if showPicker}
+    <PhotoPicker
+      photos={form?.photos}
+      error={form?.unsplashError}
+      chosen={lesson.photo?.id}
+    />
+  {/if}
+  <Photo photo={data.lesson.photo} />
+</form>
+
 <Editor bind:markdownContent={markdown} />

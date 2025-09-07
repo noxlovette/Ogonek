@@ -4,19 +4,22 @@ import {
   ValidateAccess,
 } from "$lib/server";
 
+import { routes } from "$lib/routes";
 import type { User } from "$lib/types";
 import { fail, redirect } from "@sveltejs/kit";
 import type { Actions, PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async ({ fetch, url }) => {
   const invite = url.searchParams.get("invite");
-  const inviter = await fetch(`/axum/user/inviter?invite=${invite}`).then(
-    (res) => res.json() as Promise<User>,
-  );
+  if (invite) {
+    const inviter = await fetch(routes.users.inviter(invite)).then(
+      (res) => res.json() as Promise<User>,
+    );
 
-  return {
-    inviter,
-  };
+    return {
+      inviter,
+    };
+  }
 };
 
 export const actions: Actions = {

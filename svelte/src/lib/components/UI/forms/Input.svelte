@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Caption1 from "$lib/components/typography/Caption1.svelte";
   import Label from "$lib/components/typography/Label.svelte";
   import { m } from "$lib/paraglide/messages";
   import { assigneeStore, studentStore, user } from "$lib/stores";
@@ -11,6 +12,9 @@
     value = $bindable(),
     disabled = $bindable(),
     ref,
+    invalid = false,
+    invalidDescription,
+    required = false,
     showLabel = true,
     item,
     type = "text",
@@ -20,9 +24,12 @@
     value?: string | number | boolean | null;
     labelName?: string;
     ref?: HTMLInputElement;
+    invalid?: boolean;
+    invalidDescription?: string;
     disabled?: boolean;
     showLabel?: boolean;
-    item?: Assignable;
+    required?: boolean;
+    item?: Assignable | null;
     type?:
       | "text"
       | "number"
@@ -32,19 +39,20 @@
       | "checkbox"
       | "date"
       | "assignee"
-      | "visibility";
+      | "visibility"
+      | "role";
   } = $props();
 
   let showPassword = $state(false);
-  type Assignable = { assignee?: string };
-  const baseStyle =
-    "w-full rounded-2xl bg-white dark:bg-stone-950 ring-default px-4 py-2 text-base text-stone-900 dark:text-stone-100 placeholder-stone-400 shadow-sm focus:shadow-md focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent disabled:opacity-60 disabled:cursor-not-allowed";
+  type Assignable = { assignee?: string | null };
+  const baseStyle = `w-full rounded-2xl bg-white dark:bg-stone-950  px-4 py-2 text-base placeholder-stone-400 shadow-sm focus:shadow-md focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent disabled:opacity-60 disabled:cursor-not-allowed ${invalid ? "ring-error text-red-500" : "ring-default"}`;
 </script>
 
 <div class="relative space-y-1">
   {#if showLabel}
     <Label>{labelName}</Label>
   {/if}
+
   {#if type === "text"}
     <input
       {name}
@@ -84,7 +92,9 @@
     />
     <button
       type="button"
-      class="absolute top-[2.65rem] right-3 -translate-y-1/2 transform text-stone-500 dark:text-stone-300"
+      class="absolute {showLabel
+        ? 'top-[2.65rem]'
+        : 'top-[1.3rem]'} right-3 -translate-y-1/2 transform text-stone-500 dark:text-stone-300"
       onclick={() => (showPassword = !showPassword)}
       tabindex="-1"
     >
@@ -132,5 +142,14 @@
         </option>
       {/each}
     </select>
+  {:else if type === "role"}
+    <select {name} {required} class={baseStyle}>
+      <option value="">Select a role</option>
+      <option value="teacher">Teacher</option>
+      <option value="student">Student</option>
+    </select>
+  {/if}
+  {#if invalid && invalidDescription}
+    <Caption1 styling="text-red-500">{invalidDescription}</Caption1>
   {/if}
 </div>

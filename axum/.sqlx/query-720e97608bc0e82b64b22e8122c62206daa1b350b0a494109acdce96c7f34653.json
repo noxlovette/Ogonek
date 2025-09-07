@@ -1,0 +1,52 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n\n        SELECT * FROM photos WHERE id = $1\n        \n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 1,
+        "name": "unsplash_id",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 2,
+        "name": "urls",
+        "type_info": "Jsonb"
+      },
+      {
+        "ordinal": 3,
+        "name": "alt_description",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 4,
+        "name": "photographer_name",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 5,
+        "name": "photographer_username",
+        "type_info": "Varchar"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      true,
+      false,
+      false
+    ]
+  },
+  "hash": "720e97608bc0e82b64b22e8122c62206daa1b350b0a494109acdce96c7f34653"
+}

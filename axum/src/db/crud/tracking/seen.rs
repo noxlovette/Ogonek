@@ -4,7 +4,7 @@ use sqlx::PgPool;
 
 /// Lets mark an object as seen
 pub async fn mark_as_seen(
-    db: &PgPool,
+    db: impl sqlx::Executor<'_, Database = sqlx::Postgres>,
     user_id: &str,
     model_id: &str,
     model_type: ModelType,

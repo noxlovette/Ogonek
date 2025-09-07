@@ -10,7 +10,7 @@
     UniButton,
   } from "$lib/components";
   import { getGreeting } from "$lib/utils";
-  import { isLoading, user } from "$lib/stores";
+  import { user } from "$lib/stores";
   import { m } from "$lib/paraglide/messages";
   import { Settings } from "lucide-svelte";
 
@@ -43,9 +43,9 @@
 
 <div class="grid items-stretch gap-8 lg:grid-cols-3">
   <DueTasksWidget tasks={data.tasks} />
-  <LearnWidget cardsCount={data.badges.dueCards} />
+  <LearnWidget cardsCount={data.badges.dueCards || 0} />
   <ActivityFeedWidget activities={data.activity} />
 </div>
 <svelte:head>
-  <title>Dashboard | Ogonek</title>
+  <title>{m.dashboardName()}</title>
 </svelte:head>

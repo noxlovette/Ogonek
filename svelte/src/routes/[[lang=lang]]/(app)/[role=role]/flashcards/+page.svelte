@@ -14,7 +14,7 @@
   import { enhance } from "$app/forms";
   import { enhanceForm } from "$lib/utils";
   import { page } from "$app/state";
-  import type { TableConfig, DeckSmall } from "$lib/types";
+  import type { TableConfig, DeckSmall } from "$lib/types/index.js";
   import { GraduationCap, Plus } from "lucide-svelte";
   import { m } from "$lib/paraglide/messages";
   import {
@@ -34,13 +34,20 @@
   const role = page.params.role;
 
   $effect(() => {
-    goto(
-      `?search=${$searchTerm}&page_size=${$pageSize}&page=${$currentPage}&assignee=${$assigneeStore}`,
-      {
-        noScroll: true,
-        keepFocus: true,
-      },
-    );
+    const params = new URLSearchParams();
+
+    if ($currentPage > 1) params.set("page", $currentPage.toString());
+    if ($pageSize > 0) params.set("per_page", $pageSize.toString());
+    if ($searchTerm?.trim()) params.set("search", $searchTerm);
+    if ($assigneeStore?.trim()) params.set("assignee", $assigneeStore);
+
+    const queryString = params.toString();
+    const newUrl = queryString ? `?${queryString}` : window.location.pathname;
+
+    goto(newUrl, {
+      noScroll: true,
+      keepFocus: true,
+    });
   });
 
   const deckConfig: TableConfig<DeckSmall> = {
@@ -49,7 +56,7 @@
       {
         key: "description",
         label: m.equal_key_gazelle_attend(),
-        formatter: (value: string | boolean | undefined) =>
+        formatter: (value: string | boolean | undefined | null | number) =>
           value
             ? String(value).substring(0, 50) +
               (String(value).length > 50 ? "..." : "")
@@ -62,7 +69,7 @@
       {
         key: "isSubscribed",
         label: m.stout_royal_macaw_fear(),
-        formatter: (value: string | boolean | undefined) =>
+        formatter: (value: string | boolean | undefined | null | number) =>
           value === true ? "◉" : "○",
       },
     ],
@@ -70,7 +77,7 @@
 </script>
 
 <svelte:head>
-  <title>Flashcards | Review</title>
+  <title>{m.flashcards()}</title>
 </svelte:head>
 
 <Toolbar>
@@ -100,11 +107,11 @@
         >
       {/if}
     </Merger>
-    <SearchBar />
+    <SearchBar bind:q={$searchTerm} />
   </VStack>
 </Toolbar>
 
-{#await data.decksResponse}
+{#await data.decksPaginated}
   {#if role === "s"}
     <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
       <LoadingCard />
@@ -115,27 +122,26 @@
     <TableSkeleton />
   {/if}
 {:then decks}
-  {#if role === "s"}
-    {#if decks.data.length}
+  {#if decks.data.length}
+    {#if role === "s"}
       <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {#each decks.data as deck (deck.id)}
           <DeckCard {deck} />
         {/each}
       </div>
     {:else}
-      <EmptySpace>
-        <Title1>{m.noDecks()}</Title1>
-      </EmptySpace>
+      <Table
+        config={deckConfig}
+        href="flashcards"
+        {students}
+        items={decks.data}
+      />
     {/if}
   {:else}
-    <Table
-      config={deckConfig}
-      href="flashcards"
-      {students}
-      items={decks.data}
-      total={decks.data.length}
-    />
+    <EmptySpace>
+      <Title1>{m.noDecks()}</Title1>
+    </EmptySpace>
   {/if}
 {:catch error: App.Error}
-  <p>Error loading decks: {error.errorID}</p>
+  <p>Error loading decks: {error.errorID} {error.message}</p>
 {/await}

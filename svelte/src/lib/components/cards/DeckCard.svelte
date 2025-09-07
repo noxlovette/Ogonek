@@ -37,5 +37,5 @@
     {/each}
   </div>
 
-  <SeenBadge seen={deck.seen} />
+  <SeenBadge seen={deck.seen || true} />
 </CardClickable>

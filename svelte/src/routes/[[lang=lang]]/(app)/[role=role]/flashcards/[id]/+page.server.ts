@@ -2,7 +2,6 @@ import { env } from "$env/dynamic/private";
 import logger from "$lib/logger";
 import { routes } from "$lib/routes";
 import { handleApiResponse, isSuccessResponse } from "$lib/server";
-import type { EmptyResponse } from "$lib/types";
 import { fail, redirect } from "@sveltejs/kit";
 import type { Actions } from "./$types";
 
@@ -13,14 +12,14 @@ export const actions = {
     const formData = await request.formData();
 
     const isSubscribed = formData.get("isSubscribed") === "true";
-    const response = await fetch(routes.learn.subscribe(id), {
+    const response = await fetch(routes.learn.update_card_progress(id), {
       method: isSubscribed ? "DELETE" : "POST",
     });
 
-    const editResult = await handleApiResponse<EmptyResponse>(response);
-
-    if (!isSuccessResponse(editResult)) {
-      return fail(editResult.status, { message: editResult.message });
+    if (!response.ok) {
+      const errorData = await response.text();
+      logger.error(errorData);
+      return fail(400);
     }
 
     return { success: true };

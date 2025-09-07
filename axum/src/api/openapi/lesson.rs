@@ -9,6 +9,8 @@ use utoipa::OpenApi;
         lesson::create_lesson,
         lesson::update_lesson,
         lesson::delete_lesson,
+        lesson::upsert_photo,
+        lesson::delete_photo
     ),
     components(schemas(
         crate::types::LessonFull,

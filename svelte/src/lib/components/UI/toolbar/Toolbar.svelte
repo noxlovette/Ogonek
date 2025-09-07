@@ -1,18 +1,25 @@
 <script lang="ts">
   import { page } from "$app/state";
   import { ChevronLeft } from "lucide-svelte";
-  import { derived } from "svelte/store";
-  import UniButton from "../forms/UniButton.svelte";
+  import UniButton from "../forms/buttons/UniButton.svelte";
   import Merger from "./Merger.svelte";
   import Divider from "./Divider.svelte";
   import { VStack } from "..";
+  import type { Role } from "$lib/types";
 
-  let { children } = $props();
+  let { children, src = "", alt = "" } = $props();
+  function isRole(segment: string): segment is Role {
+    return segment === "t" || segment === "s";
+  }
 
-  // Determine if we’re in a "subsection"
-  // Example: hide on `/role/dashboard`, show on `/role/lessons/:id`
   const showBack = $derived.by(() => {
     const segments = page.url.pathname.split("/").filter(Boolean);
+
+    const [firstSegment] = segments;
+
+    if (!isRole(firstSegment)) {
+      return segments.length > 1;
+    }
 
     if (segments.length < 2) return false;
 
@@ -28,7 +35,14 @@
   }
 </script>
 
-<div class="flex w-full flex-col justify-between gap-4">
+<div
+  class="relative flex w-full flex-col justify-between gap-4 py-2 md:py-3 lg:py-4"
+>
+  {#if src}
+    <div class="absolute inset-0 opacity-50">
+      <img class="size-full rounded-xl object-cover" {src} {alt} />
+    </div>
+  {/if}
   {#if showBack}
     <VStack>
       <Merger>
@@ -37,7 +51,8 @@
       <Divider></Divider>
     </VStack>
   {/if}
-  <div class="flex">
+
+  <div class="relative z-10 flex">
     {@render children?.()}
   </div>
 </div>

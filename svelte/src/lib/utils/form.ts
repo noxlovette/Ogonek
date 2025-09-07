@@ -1,8 +1,32 @@
 import { goto } from "$app/navigation";
+import { m } from "$lib/paraglide/messages";
 import { isLoading } from "$lib/stores";
 import { notification } from "$lib/stores/notification";
 import type { SubmitFunction } from "@sveltejs/kit";
+import type { ZodError, infer as ZodInfer, ZodObject, ZodRawShape } from "zod";
+export function validateForm<T extends ZodRawShape>(
+  formData: FormData,
+  zodObject: ZodObject<T>,
+):
+  | { success: true; data: ZodInfer<ZodObject<T>> }
+  | { success: false; errors: ZodError } {
+  const rawData = Object.fromEntries(formData);
+  const validationResult = zodObject.safeParse(rawData);
 
+  if (!validationResult.success) {
+    return { success: false, errors: validationResult.error };
+  }
+
+  return { success: true, data: validationResult.data };
+}
+/*
+const validation = validateForm(formData, loginSchema);
+
+if (!validation.success) return validation.failure;
+
+const { email, password } = validation.data;
+
+*/
 // Define custom action result types that extend SvelteKit's built-in types
 type ActionResultSuccess = {
   type: "success";
@@ -86,7 +110,7 @@ export function enhanceForm(config: EnhanceConfig = {}): SubmitFunction {
         } else if (result.type === "error" && result.error?.message) {
           return String(result.error.message);
         }
-        return messages.defaultError || "Something went wrong";
+        return messages.defaultError || m.loved_loose_flea_grin();
       };
 
       // Handle the result
@@ -102,6 +126,10 @@ export function enhanceForm(config: EnhanceConfig = {}): SubmitFunction {
           // Call success handler if provided
           if (handlers.success) {
             await handlers.success(result);
+          }
+
+          if (shouldUpdate) {
+            update();
           }
           break;
 
@@ -139,6 +167,11 @@ export function enhanceForm(config: EnhanceConfig = {}): SubmitFunction {
           if (handlers.failure) {
             await handlers.failure(result);
           }
+
+          if (shouldUpdate) {
+            update();
+          }
+
           break;
 
         case "error":
@@ -150,6 +183,10 @@ export function enhanceForm(config: EnhanceConfig = {}): SubmitFunction {
           // Call error handler if provided
           if (handlers.error) {
             await handlers.error(result);
+          }
+
+          if (shouldUpdate) {
+            update();
           }
           break;
       }

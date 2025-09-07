@@ -25,7 +25,7 @@
 {#if $notification.message}
   <div
     transition:fade={{ duration: 250 }}
-    class="bg-default ring-default fixed top-5 left-1/2 z-50 flex max-w-sm -translate-x-1/2 items-center gap-4 rounded-full px-5 py-3 capitalize shadow-xl backdrop-blur-md
+    class="bg-default ring-default fixed top-5 left-1/2 z-50 flex max-w-sm -translate-x-1/2 items-center gap-4 rounded-full px-5 py-3 shadow-xl backdrop-blur-md
 "
   >
     {#if $notification.type === "success"}
@@ -36,7 +36,11 @@
       <AlertCircle class="size-5 text-yellow-500" />
     {/if}
 
-    <p class="flex-1 text-sm font-medium text-stone-800 dark:text-stone-100">
+    <p
+      role="alert"
+      aria-label="Notification"
+      class="flex-1 text-sm font-medium text-stone-800 dark:text-stone-100"
+    >
       {$notification.message}
     </p>
 

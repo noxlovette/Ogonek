@@ -107,7 +107,7 @@ pub async fn refresh(
     get,
     path = "/invite",
     params(
-        ("invite" = InviteQuery, Query, description = "Invite token")
+        ("isRegistered" = InviteQuery, Query, description = "Invite token")
     ),
     tag = AUTH_TAG,
     responses(

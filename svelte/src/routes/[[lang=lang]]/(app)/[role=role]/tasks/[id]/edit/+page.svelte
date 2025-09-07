@@ -1,17 +1,18 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
 
-  import { Ban, Trash2, Check } from "lucide-svelte";
   import { enhanceForm } from "$lib/utils";
   import {
     Editor,
     LargeTitle,
-    UniButton,
     Toolbar,
     Multipart,
     Input,
     Merger,
     Divider,
+    CancelButton,
+    DeleteButton,
+    SaveButton,
   } from "$lib/components";
   import type { PageData } from "./$types";
   import PrioritySlider from "$lib/components/UI/forms/PrioritySlider.svelte";
@@ -19,7 +20,7 @@
   import VStack from "$lib/components/UI/VStack.svelte";
 
   let { data }: { data: PageData } = $props();
-  let { task, files } = data;
+  let { task } = data;
 
   let markdown = $state(task.markdown);
 
@@ -41,7 +42,6 @@
   use:enhance={enhanceForm({
     messages: {
       redirect: m.changesSaved(),
-      defaultError: m.failedToSaveChanges(),
     },
   })}
 >
@@ -50,19 +50,11 @@
     <Divider />
     <VStack>
       <Merger>
-        <UniButton Icon={Ban} href=".">{m.cancel()}</UniButton>
-        <UniButton
-          variant="danger"
-          Icon={Trash2}
-          formaction="?/delete"
-          confirmText={task.title}
-          confirmTitle="Delete Task">{m.delete()}</UniButton
-        >
+        <CancelButton />
+        <DeleteButton confirmText={task.title} confirmTitle="Delete Task" />
       </Merger>
       <Merger>
-        <UniButton variant="prominent" type="submit" Icon={Check}
-          >{m.save()}</UniButton
-        >
+        <SaveButton />
       </Merger>
     </VStack>
   </Toolbar>
@@ -86,7 +78,7 @@
   </div>
 </form>
 
-<div class="grid grid-cols-3 gap-4 space-x-4">
+<div class="grid gap-4 md:grid-cols-3">
   <Editor bind:markdownContent={markdown} />
   <Multipart taskId={task.id} />
 </div>

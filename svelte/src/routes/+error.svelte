@@ -2,7 +2,7 @@
   import { page } from "$app/state";
   import { fade, fly } from "svelte/transition";
   import { backOut } from "svelte/easing";
-  import UniButton from "$lib/components/UI/forms/UniButton.svelte";
+  import UniButton from "$lib/components/UI/forms/buttons/UniButton.svelte";
   import { House, Send } from "lucide-svelte";
 
   // Determine error category for custom messaging

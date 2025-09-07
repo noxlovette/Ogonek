@@ -3,7 +3,7 @@
   import { Body } from "../../typography";
   import Title1 from "../../typography/Title1.svelte";
   import ModalBackGround from "./ModalBackGround.svelte";
-  import UniButton from "./UniButton.svelte";
+  import UniButton from "./buttons/UniButton.svelte";
   import VStack from "../VStack.svelte";
   import HStack from "../HStack.svelte";
 
@@ -16,7 +16,7 @@
 </script>
 
 <ModalBackGround>
-  <HStack>
+  <div role="dialog" aria-label="Confirmation Dialogue" class="gap-2">
     <Title1>
       {confirmTitle}
     </Title1>
@@ -26,12 +26,22 @@
     </Body>
 
     <VStack>
-      <UniButton Icon={Ban} onclick={() => (showConfirmDialog = false)}>
+      <UniButton
+        Icon={Ban}
+        iconOnly={false}
+        onclick={() => (showConfirmDialog = false)}
+        ariaLabel="Cancel Deletion"
+      >
         Cancel
       </UniButton>
-      <UniButton {formaction} Icon={Trash2} type="submit" variant="danger"
-        >Confirm</UniButton
+      <UniButton
+        {formaction}
+        Icon={Trash2}
+        ariaLabel="Confirm"
+        type="submit"
+        iconOnly={false}
+        variant="danger">Confirm</UniButton
       >
     </VStack>
-  </HStack>
+  </div>
 </ModalBackGround>

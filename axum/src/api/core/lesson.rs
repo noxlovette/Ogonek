@@ -2,12 +2,13 @@ use crate::api::LESSON_TAG;
 use crate::api::error::APIError;
 use crate::auth::Claims;
 use crate::db::crud::core::lesson;
+use crate::db::crud::photo;
 use crate::db::crud::tracking::{self, activity::log_activity};
 use crate::notifications::messages::NotificationType;
 use crate::schema::AppState;
 use crate::types::{
-    ActionType, LessonFull, LessonSmall, LessonUpdate, ModelType, PaginatedLessons,
-    PaginatedResponse, PaginationParams,
+    ActionType, LessonSmall, LessonUpdate, LessonWithPhoto, ModelType, PaginatedLessons,
+    PaginatedResponse, PaginationParams, Photo, UpsertPhoto,
 };
 use axum::extract::Path;
 use axum::extract::State;
@@ -21,7 +22,8 @@ pub fn router() -> OpenApiRouter<AppState> {
         list_lessons,
         create_lesson,
         delete_lesson,
-        update_lesson
+        update_lesson,
+        upsert_photo,
     ))
 }
 
@@ -33,7 +35,7 @@ pub fn router() -> OpenApiRouter<AppState> {
         ("id" = String, Path, description = "Lesson ID")
     ),
     tag = LESSON_TAG,responses(
-        (status = 200, description = "Lesson retrieved successfully", body = LessonFull),
+        (status = 200, description = "Lesson retrieved successfully", body = LessonWithPhoto),
         (status = 404, description = "Lesson not found"),
         (status = 401, description = "Unauthorized")
     )
@@ -42,10 +44,27 @@ pub async fn fetch_lesson(
     State(state): State<AppState>,
     Path(id): Path<String>,
     claims: Claims,
-) -> Result<Json<LessonFull>, APIError> {
+) -> Result<Json<LessonWithPhoto>, APIError> {
     let lesson = lesson::find_by_id(&state.db, &id, &claims.sub).await?;
     tracking::seen::mark_as_seen(&state.db, &claims.sub, &id, ModelType::Lesson).await?;
-    Ok(Json(lesson))
+
+    let mut photo: Option<Photo> = None;
+
+    if let Some(photo_id) = &lesson.photo_id {
+        photo = photo::find_by_id(&state.db, photo_id).await?;
+    }
+
+    Ok(Json(LessonWithPhoto {
+        assignee: lesson.assignee,
+        assignee_name: lesson.assignee_name,
+        created_at: lesson.created_at,
+        id: lesson.id,
+        markdown: lesson.markdown,
+        title: lesson.title,
+        topic: lesson.topic,
+        updated_at: lesson.updated_at,
+        photo,
+    }))
 }
 /// Lessons belonging to a user
 #[utoipa::path(
@@ -212,7 +231,7 @@ pub async fn update_lesson(
                     &new_user,
                     NotificationType::LessonCreated {
                         lesson_id: lesson.id,
-                        lesson_title: lesson.title,
+                        lesson_topic: lesson.topic,
                     },
                 )
                 .await;
@@ -229,6 +248,54 @@ pub async fn update_lesson(
         )
         .await?;
     }
+
+    Ok(StatusCode::NO_CONTENT)
+}
+
+/// Adds a photo to the lesson
+#[utoipa::path(
+    patch,
+    path = "/{id}/photo",
+    params(
+        ("id" = String, Path, description = "Lesson ID")
+    ),
+    request_body = UpsertPhoto,
+    tag = LESSON_TAG,responses(
+        (status = 204, description = "Lesson updated successfully"),
+        (status = 404, description = "Lesson not found"),
+        (status = 401, description = "Unauthorized")
+    )
+)]
+pub async fn upsert_photo(
+    State(state): State<AppState>,
+    Path(lesson_id): Path<String>,
+    claims: Claims,
+    Json(payload): Json<UpsertPhoto>,
+) -> Result<StatusCode, APIError> {
+    photo::upsert(&state.db, &lesson_id, &claims.sub, &payload).await?;
+
+    Ok(StatusCode::NO_CONTENT)
+}
+
+/// Deletes a photo from the lesson
+#[utoipa::path(
+    patch,
+    path = "/{id}/photo",
+    params(
+    ("id" = String, Path, description = "Lesson ID")
+    ),
+    tag = LESSON_TAG,responses(
+        (status = 204, description = "Photo deleted successfully"),
+        (status = 404, description = "Lesson not found"),
+        (status = 401, description = "Unauthorized")
+    )
+)]
+pub async fn delete_photo(
+    State(state): State<AppState>,
+    Path(lesson_id): Path<String>,
+    claims: Claims,
+) -> Result<StatusCode, APIError> {
+    photo::delete(&state.db, &lesson_id, &claims.sub).await?;
 
     Ok(StatusCode::NO_CONTENT)
 }

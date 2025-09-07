@@ -1,9 +1,10 @@
+import { z } from "$lib";
 import logger from "$lib/logger";
 import { routes } from "$lib/routes";
 import { handleApiResponse, isSuccessResponse } from "$lib/server";
 import type { EmptyResponse } from "$lib/types";
 import type { Actions } from "@sveltejs/kit";
-import { error, fail, redirect } from "@sveltejs/kit";
+import { fail, redirect } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async ({ params }) => {
@@ -14,52 +15,36 @@ export const load: PageServerLoad = async ({ params }) => {
 
 export const actions = {
   update: async ({ request, fetch, params }) => {
-    const id = params.id || "";
-    const startTime = performance.now();
-
+    const { id } = params;
     const formData = await request.formData();
-    const markdown = formData.get("markdown")?.toString() || "";
-    const title = formData.get("title")?.toString() || "";
-    const dueDate = formData.get("dueDate")?.toString();
-    if (!dueDate) {
-      logger.error({ dueDate }, "No due date. bailing out");
-      return fail(400, { message: "Add due date" });
-    }
-    const completed = formData.has("completed");
-    const priority = Number(formData.get("priority"));
-    const filePath = formData.get("filePath")?.toString() || "";
-    const assignee = formData.get("assignee") || "";
-    const dueDateWithTime =
-      dueDate && dueDate !== ""
-        ? new Date(`${dueDate}T23:59:59`).toISOString()
-        : null;
-
-    const body = {
-      id,
-      title,
-      markdown,
-      priority,
-      assignee,
-      dueDate: dueDateWithTime,
-      completed,
-      filePath,
+    const data = {
+      title: formData.get("title")?.toString(),
+      dueDate: new Date(formData.get("dueDate") + "T23:59:59").toISOString(),
+      priority: Number(formData.get("priority")),
+      completed: formData.has("completed"),
+      assignee: formData.get("assignee")?.toString(),
+      markdown: formData.get("markdown")?.toString(),
     };
-    const response = await fetch(routes.tasks.single(id), {
-      method: "PATCH",
-      body: JSON.stringify(body),
-    });
 
+    const validation = z.updateTaskBody.safeParse(data);
+    console.log(validation);
+    if (!validation.success) {
+      return fail(400, {
+        message: "Validation failed",
+      });
+    }
+    const response = await fetch(routes.tasks.task(id || ""), {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(validation.data),
+    });
     if (!response.ok) {
       const errorData: App.Error = await response.json();
-      logger.error({ errorData }, "Error updating task");
-      return error(500);
+      logger.error({ errorData, id }, "Error updating task");
+      return fail(response.status, {
+        message: errorData.message || "Update failed",
+      });
     }
-
-    logger.info(
-      { task_id: id, duration: performance.now() - startTime },
-      "Successful task update",
-    );
-
     return redirect(303, `/t/tasks/${id}`);
   },
   delete: async ({ fetch, params }) => {
@@ -67,7 +52,7 @@ export const actions = {
     if (!id) {
       return fail(400);
     }
-    const response = await fetch(routes.tasks.single(id), {
+    const response = await fetch(routes.tasks.task(id), {
       method: "DELETE",
     });
 
@@ -88,7 +73,9 @@ export const actions = {
     const formData = await request.formData();
     const id = formData.get("fileId") as string;
 
-    const response = await fetch(routes.files.single(id), { method: "DELETE" });
+    const response = await fetch(routes.files.delete_file(id), {
+      method: "DELETE",
+    });
 
     const deleteResult = await handleApiResponse<EmptyResponse>(response);
 

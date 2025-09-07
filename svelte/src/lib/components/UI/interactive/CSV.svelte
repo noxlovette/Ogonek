@@ -1,8 +1,8 @@
 <script lang="ts">
   import { Caption1 } from "$lib/components/typography";
   import { notification } from "$lib/stores";
-  import type { Card, Deck } from "$lib/types";
-  import { UploadCloud, X } from "lucide-svelte";
+  import type { Card, DeckFull } from "$lib/types";
+  import { Upload, X } from "lucide-svelte";
   import ModalBackGround from "../forms/ModalBackGround.svelte";
   import { extractWordsFromRewordFile } from "$lib/utils";
   import Papa from "papaparse";
@@ -15,7 +15,7 @@
   let {
     deck,
     updatedCards = $bindable([]),
-  }: { deck: Deck; updatedCards: Card[] } = $props();
+  }: { deck: DeckFull; updatedCards: Card[] } = $props();
   type importOptions = "csv" | "reword";
 
   let fileInput: HTMLInputElement | null = $state(null);
@@ -247,7 +247,7 @@
       <div
         class="bg-default relative flex h-40 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-stone-300 px-4 py-6 dark:border-stone-700"
       >
-        <UploadCloud class="size-12 opacity-80" />
+        <Upload class="size-12 opacity-80" />
         <p class="text-stone-600 dark:text-stone-400">
           Drag and drop or click to select
         </p>

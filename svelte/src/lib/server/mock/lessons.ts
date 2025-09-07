@@ -1,20 +1,25 @@
-import type { LessonSmall } from "$lib/types";
+import type { LessonFull, LessonSmall } from "$lib/types";
+import { faker } from "@faker-js/faker";
+import { nanoid } from "nanoid";
 
-export const lessons: LessonSmall[] = [
-  {
-    id: "lesson1",
-    title: "Seryoga 1",
-    topic: "Freedom",
-    assigneeName: "Seryoga",
-    createdAt: "2025-07-03T10:40:10.957506Z",
-    seen: true,
-  },
-  {
-    id: "lesson2",
-    title: "Sasha 1",
-    topic: "Love",
-    assigneeName: "Sasha",
-    createdAt: "2025-06-16T10:40:10.957506Z",
-    seen: false,
-  },
-];
+export function createLessonSmall(): LessonSmall {
+  return {
+    id: nanoid(),
+    title: faker.book.title(),
+    topic: faker.book.genre(),
+    createdAt: faker.date.recent().toISOString(),
+    assigneeName: faker.person.fullName(),
+    seen: faker.datatype.boolean(),
+  };
+}
+
+export function createLessonFull(): LessonFull {
+  const base = createLessonSmall();
+
+  return {
+    ...base,
+    markdown: faker.lorem.text(),
+    updatedAt: faker.date.recent().toISOString(),
+    assignee: nanoid(),
+  };
+}

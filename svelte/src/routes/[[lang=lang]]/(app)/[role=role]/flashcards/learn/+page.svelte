@@ -4,13 +4,12 @@
   import { enhance } from "$app/forms";
   import { invalidate } from "$app/navigation";
   import { enhanceForm, qualityButtons } from "$lib/utils";
-  import { CheckCheck, GraduationCap, Home, House } from "lucide-svelte";
+  import { CheckCheck, GraduationCap } from "lucide-svelte";
   import {
     Toolbar,
     UniButton,
     Caption1,
     KBD,
-    Body,
     Callout,
     Divider,
   } from "$lib/components";
@@ -105,8 +104,11 @@
         {m.quiet_lost_whale_exhale()}
       </p>
 
-      <UniButton href="." Icon={GraduationCap} variant="primary"
-        >{m.decks()}</UniButton
+      <UniButton
+        href="."
+        Icon={GraduationCap}
+        variant="primary"
+        iconOnly={false}>{m.decks()}</UniButton
       >
     </div>
   </div>

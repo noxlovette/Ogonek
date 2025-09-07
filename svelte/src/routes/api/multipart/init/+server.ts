@@ -6,7 +6,7 @@ import type { RequestHandler } from "./$types";
 export const POST: RequestHandler = async ({ request, fetch }) => {
   const payload = await request.json();
 
-  const response = await fetch(routes.files.multipart.init(), {
+  const response = await fetch(routes.files.init_multipart_upload(), {
     method: "POST",
     body: JSON.stringify(payload),
   });

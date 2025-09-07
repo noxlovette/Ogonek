@@ -11,12 +11,13 @@
     TableSkeleton,
     Divider,
     Merger,
+    Title1,
   } from "$lib/components";
   import { enhance } from "$app/forms";
   import { enhanceForm } from "$lib/utils";
   import { page } from "$app/state";
   import type { TableConfig, LessonSmall } from "$lib/types/index.js";
-  import { formatDate } from "@noxlovette/svarog";
+  import { formatDate } from "$lib/utils";
 
   import {
     user,
@@ -43,13 +44,13 @@
       {
         key: "assigneeName",
         label: m.assignee(),
-        formatter: (value: string | boolean | undefined) =>
+        formatter: (value: string | boolean | undefined | null) =>
           value === $user.name ? m.notAssigned() : String(value),
       },
       {
         key: "createdAt",
         label: m.created(),
-        formatter: (value: string | boolean | undefined) =>
+        formatter: (value: string | boolean | undefined | null) =>
           formatDate(String(value)),
       },
     ],
@@ -59,7 +60,7 @@
     const params = new URLSearchParams();
 
     if ($searchTerm?.trim()) params.set("search", $searchTerm);
-    if ($pageSize > 0) params.set("page_size", $pageSize.toString());
+    if ($pageSize > 0) params.set("per_page", $pageSize.toString());
     if ($currentPage > 1) params.set("page", $currentPage.toString());
     if ($assigneeStore?.trim()) params.set("assignee", $assigneeStore);
 
@@ -94,7 +95,7 @@
         </form>
       </Merger>
     {/if}
-    <SearchBar />
+    <SearchBar bind:q={$searchTerm} />
   </VStack>
 </Toolbar>
 
@@ -111,7 +112,7 @@
 {:then lessons}
   {#if lessons.data.length < 1}
     <EmptySpace>
-      <Title3>{m.noLessons()}</Title3>
+      <Title1>{m.noLessons()}</Title1>
     </EmptySpace>
   {/if}
   {#if role === "s"}
@@ -121,12 +122,7 @@
       {/each}
     </div>
   {:else}
-    <Table
-      items={lessons.data}
-      total={lessons.total}
-      {href}
-      config={lessonConfig}
-    />
+    <Table items={lessons.data} {href} config={lessonConfig} />
   {/if}
 {:catch error: App.Error}
   <p>Error loading lessons: {error.errorID}</p>

@@ -1,52 +1,69 @@
+/**
+ * This file was auto-generated from OpenAPI spec.
+ * Do not make direct changes to the file.
+ */
+
 const API_BASE = "/axum";
 
 export const routes = {
   auth: {
-    signup: () => `${API_BASE}/auth/signup`,
-    login: () => `${API_BASE}/auth/signin`,
+    bind_student_to_teacher: () => `${API_BASE}/auth/bind`,
+    generate_invite_link: (
+    isRegistered: string
+  ) => {
+      const params = new URLSearchParams();
+      if (isRegistered) params.set("isRegistered", isRegistered);
+      const query = params.toString();
+      return `${API_BASE}/auth/invite${query ? `?${query}` : ""}`;
+    },
     refresh: () => `${API_BASE}/auth/refresh`,
-    invite: (isRegistered: boolean = false) =>
-      `${API_BASE}/auth/invite?isRegistered=${isRegistered}`,
-    bind: () => `${API_BASE}/auth/bind`,
+    signin: () => `${API_BASE}/auth/signin`,
+    signup: () => `${API_BASE}/auth/signup`,
   },
-
-  learn: {
-    due: () => `${API_BASE}/learn`,
-    update: (id: string) => `${API_BASE}/learn/${id}`,
-    subscribe: (id: string) => `${API_BASE}/learn/subscribe/${id}`,
-  },
-
   decks: {
     all: (
-      search?: string,
-      assignee?: string,
-      page?: string,
-      per_page?: string,
-    ) => {
+    page?: string,
+    per_page?: string,
+    search?: string,
+    assignee?: string
+  ) => {
       const params = new URLSearchParams();
-      if (search) params.append("search", search);
       if (page) params.set("page", page);
       if (per_page) params.set("per_page", per_page);
-
-      if (assignee) params.append("assignee", assignee);
+      if (search) params.set("search", search);
+      if (assignee) params.set("assignee", assignee);
       const query = params.toString();
-
       return `${API_BASE}/decks${query ? `?${query}` : ""}`;
     },
-    single: (id: string) => `${API_BASE}/decks/${id}`,
-    duplicate: (id: string) => `${API_BASE}/decks/${id}/duplicate`,
     new: () => `${API_BASE}/decks`,
+    decks_public: () => `${API_BASE}/decks/public`,
+    deck: (id: string) => `${API_BASE}/decks/${id}`,
+    delete: (id: string) => `${API_BASE}/decks/${id}`,
+    update: (id: string) => `${API_BASE}/decks/${id}`,
+    duplicate: (id: string) => `${API_BASE}/decks${id}/duplicate`,
   },
-
+  files: {
+    abort_multipart_upload: () => `${API_BASE}/files/abort`,
+    complete_multipart_upload: () => `${API_BASE}/files/complete`,
+    init_multipart_upload: () => `${API_BASE}/files/init`,
+    presigned_urls_batch: (file_id: string) => `${API_BASE}/files/presigned/batch/${file_id}`,
+    presigned_url: (encoded_key: string) => `${API_BASE}/files/presigned/${encoded_key}`,
+    delete_file: (id: string) => `${API_BASE}/files/${id}`,
+  },
+  learn: {
+    due_cards: () => `${API_BASE}/learn`,
+    subscribe_to: (id: string) => `${API_BASE}/learn/subscribe/${id}`,
+    unsubscribe_from: (id: string) => `${API_BASE}/learn/subscribe/${id}`,
+    update_card_progress: (id: string) => `${API_BASE}/learn/${id}`,
+    reset_deck_progress: (id: string) => `${API_BASE}/learn/${id}`,
+  },
   lessons: {
-    single: (id: string) => `${API_BASE}/lessons/${id}`,
-    new: () => `${API_BASE}/lessons`,
     all: (
-      page?: string,
-      per_page?: string,
-      search?: string,
-      assignee?: string,
-    ) => {
+    page?: string,
+    per_page?: string,
+    search?: string,
+    assignee?: string
+  ) => {
       const params = new URLSearchParams();
       if (page) params.set("page", page);
       if (per_page) params.set("per_page", per_page);
@@ -55,55 +72,71 @@ export const routes = {
       const query = params.toString();
       return `${API_BASE}/lessons${query ? `?${query}` : ""}`;
     },
+    new: () => `${API_BASE}/lessons`,
+    lesson: (id: string) => `${API_BASE}/lessons/${id}`,
+    delete: (id: string) => `${API_BASE}/lessons/${id}`,
+    update: (id: string) => `${API_BASE}/lessons/${id}`,
+    upsert_photo: (id: string) => `${API_BASE}/lessons/${id}/photo`,
   },
-
+  notifications: {
+    register_device_token: () => `${API_BASE}/notifications/register`,
+    request_hw: () => `${API_BASE}/notifications/request`,
+  },
+  state: {
+    badges: () => `${API_BASE}/state/badges`,
+    context: () => `${API_BASE}/state/context`,
+    dashboard: () => `${API_BASE}/state/dashboard`,
+  },
   tasks: {
     all: (
-      page?: string,
-      per_page?: string,
-      search?: string,
-      assignee?: string,
-      completed?: string,
-    ) => {
+    page?: string,
+    per_page?: string,
+    search?: string,
+    assignee?: string,
+    completed?: string,
+    priority?: string
+  ) => {
       const params = new URLSearchParams();
       if (page) params.set("page", page);
       if (per_page) params.set("per_page", per_page);
       if (search) params.set("search", search);
       if (assignee) params.set("assignee", assignee);
       if (completed) params.set("completed", completed);
+      if (priority) params.set("priority", priority);
       const query = params.toString();
       return `${API_BASE}/tasks${query ? `?${query}` : ""}`;
     },
-    single: (id: string) => `${API_BASE}/tasks/${id}`,
     new: () => `${API_BASE}/tasks`,
-    request: () => `${API_BASE}/notifications/request`,
+    task: (id: string) => `${API_BASE}/tasks/${id}`,
+    toggle: (id: string) => `${API_BASE}/tasks/${id}`,
+    delete: (id: string) => `${API_BASE}/tasks/${id}`,
+    update: (id: string) => `${API_BASE}/tasks/${id}`,
   },
-  files: {
-    check: () => `${API_BASE}/files`,
-    presign: (encodedKey: string) =>
-      `${API_BASE}/files/presigned/${encodedKey}`,
-    single: (id: string) => `${API_BASE}/files/${id}`,
-    multipart: {
-      init: () => `${API_BASE}/files/init`,
-      complete: () => `${API_BASE}/files/complete`,
-      abort: () => `${API_BASE}/files/abort`,
-    },
-  },
-
-  students: {
-    all: () => `${API_BASE}/users/student`,
-    single: (id: string) => `${API_BASE}/users/student/${id}`,
-  },
-
   users: {
-    self: () => `${API_BASE}/users`,
+    me: () => `${API_BASE}/users`,
+    delete_user: () => `${API_BASE}/users`,
+    update_user: () => `${API_BASE}/users`,
+    inviter: (
+    invite?: string
+  ) => {
+      const params = new URLSearchParams();
+      if (invite) params.set("invite", invite);
+      const query = params.toString();
+      return `${API_BASE}/users/inviter${query ? `?${query}` : ""}`;
+    },
     profile: () => `${API_BASE}/users/profile`,
-  },
-
-  state: {
-    dashboard: () => `${API_BASE}/state/dashboard`,
-    badges: () => `${API_BASE}/state/badges`,
-    context: () => `${API_BASE}/state/context`,
-  },
-  health: () => `${API_BASE}/health`,
+    upsert_profile: () => `${API_BASE}/users/profile`,
+    students: () => `${API_BASE}/users/student`,
+    student: (id: string) => `${API_BASE}/users/student/${id}`,
+    upsert_student: (id: string) => `${API_BASE}/users/student/${id}`,
+    remove_student: (id: string) => `${API_BASE}/users/student/${id}`,
+    update_student: (id: string) => `${API_BASE}/users/student/${id}`,
+  }
 } as const;
+
+// Type helpers
+export type Routes = typeof routes;
+export type RouteGroup = keyof Routes;
+
+// Helper to get all route functions from a group
+export type RouteFunctions<T extends RouteGroup> = Routes[T];

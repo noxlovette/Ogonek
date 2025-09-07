@@ -1,20 +1,26 @@
+import { z } from "$lib";
 import logger from "$lib/logger";
 import { routes } from "$lib/routes";
-import { handleApiResponse, isSuccessResponse } from "$lib/server";
-import type { EmptyResponse } from "$lib/types";
+import type { DeckUpdate } from "$lib/types";
 import { fail, redirect } from "@sveltejs/kit";
 import type { Actions } from "./$types";
 
 export const actions = {
   update: async ({ request, fetch, params }) => {
     const formData = await request.formData();
-
     const { id } = params;
 
-    const title = formData.get("title");
+    const title = formData.get("title") as string;
     const description = formData.get("description");
     const visibility = formData.get("visibility");
     const assignee = formData.get("assignee") || "";
+
+    const deck: DeckUpdate = {
+      title: title ?? null,
+      description: description?.toString() || null,
+      visibility: visibility?.toString() || null,
+      assignee: assignee.toString() || null,
+    };
 
     const cards = [];
     let index = 0;
@@ -27,41 +33,27 @@ export const actions = {
       });
       index++;
     }
+    const body = { deck, cards };
 
-    if (!title || typeof title !== "string") {
-      return fail(400, {
-        message: "Deck title is required",
-      });
+    const validatedBody = z.updateDeckBody.safeParse(body);
+
+    if (validatedBody.error) {
+      const error = validatedBody.error.message;
+      logger.error({ error }, "error validating deck");
+      return fail(400);
     }
 
-    for (const card of cards) {
-      if (!card.front || !card.back) {
-        return fail(400, {
-          message: "All cards must have both front and back content",
-        });
-      }
-    }
-
-    const body = {
-      deck: {
-        title,
-        description,
-        visibility,
-        assignee,
-      },
-      cards,
-    };
-
-    const response = await fetch(routes.decks.single(id), {
+    const response = await fetch(routes.decks.deck(id), {
       method: "PATCH",
-      body: JSON.stringify(body),
+      body: JSON.stringify(validatedBody.data),
     });
 
-    const editResult = await handleApiResponse<EmptyResponse>(response);
-
-    if (!isSuccessResponse(editResult)) {
-      logger.error({ editResult }, "Axum-side error updating task");
-      return fail(editResult.status, { message: editResult.message });
+    if (!response.ok) {
+      const errorData = await response.text();
+      console.error("Update failed:", errorData);
+      return fail(response.status, {
+        message: "Failed to update deck",
+      });
     }
 
     return redirect(301, ".");
@@ -70,14 +62,12 @@ export const actions = {
   delete: async ({ params, fetch }) => {
     const { id } = params;
 
-    const response = await fetch(routes.decks.single(id), {
+    const response = await fetch(routes.decks.deck(id), {
       method: "DELETE",
     });
 
-    const deleteResult = await handleApiResponse<EmptyResponse>(response);
-
-    if (!isSuccessResponse(deleteResult)) {
-      return fail(deleteResult.status, { message: deleteResult.message });
+    if (!response.ok) {
+      return fail(500);
     }
 
     return redirect(301, "../");

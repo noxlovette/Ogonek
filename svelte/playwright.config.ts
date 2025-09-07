@@ -2,15 +2,17 @@ import type { PlaywrightTestConfig } from "@playwright/test";
 
 const config: PlaywrightTestConfig = {
   webServer: {
-    command: "npm run build && npm run preview",
-    port: 4173,
+    command: "pnpm run build && pnpm run dev",
+    port: 5173,
     env: {
-      NODE_ENV: "test",
-      REDIS_DISABLED: "true",
+      PUBLIC_MOCK_MODE: "true",
     },
+    reuseExistingServer: true,
   },
-  testDir: "tests",
+  testDir: "playwright",
   testMatch: /(.+\.)?(test|spec)\.[jt]s/,
+  use: {
+    baseURL: "http://localhost:5173",
+  },
 };
-
 export default config;
