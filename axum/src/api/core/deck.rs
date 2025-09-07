@@ -46,7 +46,7 @@ pub async fn create_deck(
 #[utoipa::path(
     post,
     tag = DECK_TAG,
-    path = "{id}/duplicate",
+    path = "/{id}/duplicate",
     params(
         ("id" = String, Path, description = "Deck ID")
     ),

@@ -141,7 +141,7 @@ export interface paths {
         patch: operations["update_deck"];
         trace?: never;
     };
-    "/api/v1/decks{id}/duplicate": {
+    "/api/v1/decks/{id}/duplicate": {
         parameters: {
             query?: never;
             header?: never;

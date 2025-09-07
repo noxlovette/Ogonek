@@ -40,7 +40,7 @@ export const routes = {
     deck: (id: string) => `${API_BASE}/decks/${id}`,
     delete: (id: string) => `${API_BASE}/decks/${id}`,
     update: (id: string) => `${API_BASE}/decks/${id}`,
-    duplicate: (id: string) => `${API_BASE}/decks${id}/duplicate`,
+    duplicate: (id: string) => `${API_BASE}/decks/${id}/duplicate`,
   },
   files: {
     abort_multipart_upload: () => `${API_BASE}/files/abort`,

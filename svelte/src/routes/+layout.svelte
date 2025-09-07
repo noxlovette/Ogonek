@@ -1,6 +1,7 @@
 <script lang="ts">
   import "../app.css";
   import { env } from "$env/dynamic/public";
+
   import {
     Footer,
     Notification,
@@ -47,4 +48,14 @@
 
 <svelte:head>
   <title>Ogonek</title>
+
+  {#if env.PUBLIC_GOOGLE_SITE_VERIFICATION}
+    <meta
+      name="google-site-verification"
+      content={env.PUBLIC_GOOGLE_SITE_VERIFICATION}
+    />
+  {/if}
+  {#if env.PUBLIC_YANDEX_VERIFICATION}
+    <meta name="yandex-verification" content={env.PUBLIC_YANDEX_VERIFICATION} />
+  {/if}
 </svelte:head>
