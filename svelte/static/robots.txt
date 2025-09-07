@@ -1,2 +1,20 @@
 User-agent: *
-Disallow: /
+Allow: /
+
+# Block private/sensitive areas
+Disallow: /*/dashboard/
+Disallow: /*/students/
+Disallow: /*/lessons/
+Disallow: /*/flashcards/
+Disallow: /*/tasks/
+Disallow: /*/settings/
+Disallow: /*/unauthorised/
+Disallow: /sentry-example-page/
+
+# Allow public pages
+Allow: /
+Allow: /*/auth/
+Allow: /*/contact/
+Allow: /*/paperwork/
+
+Sitemap: https://ogonek.app/sitemap.xml

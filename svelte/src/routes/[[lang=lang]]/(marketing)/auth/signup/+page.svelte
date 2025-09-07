@@ -1,6 +1,6 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
-  import { Captcha, UniButton, Input, Grid, Merger } from "$lib/components";
+  import { Captcha, UniButton, Input, Grid, Merger, MetaData } from "$lib/components";
   import { DoorOpen } from "lucide-svelte";
   import { enhanceForm } from "$lib/utils";
   import { m } from "$lib/paraglide/messages";
@@ -11,6 +11,32 @@
   let passwordMatch = $state(true);
 
   let { form }: PageProps = $props();
+
+  // SEO data specific to signup page
+  const seoData = {
+    title: "Sign Up for Ogonek - Create Your Teaching Account",
+    description: "Join thousands of teachers using Ogonek's digital classroom. Create flashcards, manage lessons, track student progress. Free account for private tutors and teachers.",
+    keywords: "sign up, create account, teacher registration, join ogonek, digital classroom registration, teaching platform signup",
+    ogTitle: "Sign Up for Ogonek - Digital Teaching Platform",
+    ogType: "website" as const,
+    jsonLd: {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "Sign Up for Ogonek",
+      "description": "Join thousands of teachers using Ogonek's digital classroom. Create your free teaching account today.",
+      "url": "https://ogonek.app/auth/signup",
+      "isPartOf": {
+        "@type": "WebSite",
+        "name": "Ogonek",
+        "url": "https://ogonek.app"
+      },
+      "potentialAction": {
+        "@type": "RegisterAction",
+        "target": "https://ogonek.app/auth/signup",
+        "name": "Create Ogonek Account"
+      }
+    }
+  };
 </script>
 
 <form
@@ -83,6 +109,4 @@
     >
   </Merger>
 </form>
-<svelte:head>
-  <title>{m.signUp()}</title>
-</svelte:head>
+<MetaData {...seoData} />

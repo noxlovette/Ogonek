@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { page } from "$app/state";
+
   interface Props {
     description?: string;
     title?: string;
@@ -7,18 +9,67 @@
     ogTitle?: string;
     ogUrl?: string;
     ogImage?: string;
+    ogType?: string;
+    twitterCard?: string;
+    twitterSite?: string;
+    canonicalUrl?: string;
+    jsonLd?: object;
   }
 
   let {
     description = "Ogonek. The digital classroom for private teachers.",
     title = "Ogonek",
-    keywords = "education, teach, English, classroom management, teaching, learning",
+    keywords = "education, teach, English, classroom management, teaching, learning, private tutoring, flashcards, lesson planning",
     robots = "index, follow",
     ogTitle = "Ogonek",
     ogUrl = "https://ogonek.app",
     ogImage = "https://ogonek.app/images/og.png",
+    ogType = "website",
+    twitterCard = "summary_large_image",
+    twitterSite = "@ogonek_app",
+    canonicalUrl,
+    jsonLd,
   }: Props = $props();
-  let ogType = "website";
+
+  // Generate canonical URL from current page if not provided
+  const currentCanonical = $derived(
+    canonicalUrl || `https://ogonek.app${page.url.pathname}`,
+  );
+
+  // Default JSON-LD structured data
+  const defaultJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    name: "Ogonek",
+    url: "https://ogonek.app",
+    description: description,
+    applicationCategory: "EducationalApplication",
+    operatingSystem: "All",
+    featureList: [
+      "Interactive Flashcards",
+      "Lesson Scheduling",
+      "Student Progress Tracking",
+      "Lesson Notes",
+      "Task Management",
+    ],
+    softwareVersion: "1.9.0",
+    author: {
+      "@type": "Organization",
+      name: "noxlovette",
+      url: "https://noxlovette.com",
+    },
+    datePublished: "2024-12-17",
+    inLanguage: "en-GB",
+    screenshot: "https://ogonek.app/images/og.png",
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "USD",
+      category: "Free",
+    },
+  };
+
+  const finalJsonLd = $derived(jsonLd || defaultJsonLd);
 </script>
 
 <svelte:head>
@@ -47,30 +98,37 @@
   <meta name="robots" content={robots} />
   <meta property="og:locale" content="en_GB" />
 
+  <!-- Canonical URL -->
+  <link rel="canonical" href={currentCanonical} />
+
+  <!-- Open Graph -->
   <meta property="og:title" content={ogTitle} />
   <meta property="og:description" content={description} />
-  <meta property="og:url" content={ogUrl} />
+  <meta property="og:url" content={currentCanonical} />
   <meta property="og:image" content={ogImage} />
+  <meta property="og:image:alt" content={`${ogTitle} - ${description}`} />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
   <meta property="og:type" content={ogType} />
+  <meta property="og:site_name" content="Ogonek" />
 
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content={twitterCard} />
+  <meta name="twitter:site" content={twitterSite} />
+  <meta name="twitter:creator" content="@noxlovette" />
+  <meta name="twitter:title" content={ogTitle} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={ogImage} />
+  <meta name="twitter:image:alt" content={`${ogTitle} - ${description}`} />
+
+  <!-- Additional Meta Tags -->
+  <meta name="author" content="noxlovette" />
+  <meta name="language" content="en-GB" />
+  <meta name="rating" content="general" />
+  <meta name="revisit-after" content="7 days" />
+
+  <!-- JSON-LD Structured Data -->
   <script type="application/ld+json">
-    {
-      "@context": "http://schema.org",
-      "@type": "WebApplication",
-      "name": "Ogonek",
-      "url": "https://ogonek.app",
-      "description": "Ogonek. The digital classroom for private teachers.",
-      "applicationCategory": "EducationalApplication",
-      "operatingSystem": "All",
-      // "screenshot": "https://Ogonek.noxlovette.com/static/images/screenshot.jpg",
-      "featureList": "Flashcards, Scheduling, Lesson Notes, Student Progress Tracking",
-      "softwareVersion": "1.2.11",
-      "author": {
-        "@type": "Organization",
-        "name": "noxlovette",
-        "url": "https://noxlovette.com"
-      },
-      "datePublished": "2024-12-17"
-    }
+    {JSON.stringify(finalJsonLd)}
   </script>
 </svelte:head>
