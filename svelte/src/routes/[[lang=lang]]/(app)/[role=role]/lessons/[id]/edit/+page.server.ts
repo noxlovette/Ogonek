@@ -5,7 +5,6 @@ import { unsplash } from "$lib/server";
 import type { UpsertPhoto } from "$lib/types";
 import type { Actions } from "@sveltejs/kit";
 import { fail, redirect } from "@sveltejs/kit";
-import type { Basic as Photo } from "unsplash-js/dist/methods/photos/types";
 import type { PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async ({ params }) => {
@@ -34,10 +33,7 @@ export const actions = {
     if (!response.ok) {
       const errorData = await response.json();
       logger.error({ errorData, id }, "Error updating lesson axum-side");
-      return {
-        success: false,
-        error: errorData,
-      };
+      return fail(500);
     }
 
     throw redirect(303, `/t/lessons/${id}`);
@@ -53,38 +49,36 @@ export const actions = {
 
     if (!response.ok) {
       const errorData = await response.json();
-      logger.error("Error deleting lesson axum-side", errorData);
-      return {
-        success: false,
-        error: errorData,
-      };
+      logger.error({ errorData }, "Error deleting lesson axum-side");
+      return fail(500);
     }
 
     return redirect(303, "/t/lessons");
   },
   unsplash: async ({ request }) => {
-    const formData = request.formData();
-    const q = (await formData).get("q") as string | null;
+    const formData = await request.formData();
+    const q = formData.get("q") as string | null;
 
-    console.log(q);
-    let photos: Photo[] = [];
-    if (q) {
-      await unsplash.search
-        .getPhotos({
-          query: q,
-        })
-        .then((result) => {
-          if (result.type === "success") {
-            photos = result.response.results;
-          } else {
-            console.log(result);
-          }
-        });
+    if (!q) {
+      return { photos: [], unsplashError: false };
     }
 
-    console.log(photos);
+    try {
+      const result = await unsplash.search.getPhotos({ query: q });
 
-    return { photos };
+      if (result.type === "success") {
+        return {
+          photos: result.response.results,
+          unsplashError: false,
+        };
+      } else {
+        console.log(result);
+        return fail(403, { unsplashError: true });
+      }
+    } catch (error) {
+      console.error("Unsplash API error:", error);
+      return fail(500, { unsplashError: true });
+    }
   },
   addPhoto: async ({ request, fetch, params }) => {
     const { id } = params;

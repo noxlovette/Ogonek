@@ -6,15 +6,17 @@
   import { enhanceForm } from "$lib/utils";
   import { HStack, Merger, VStack } from "..";
   import { fade } from "svelte/transition";
-  import { Caption1, Title3 } from "$lib/components/typography";
+  import { Callout, Caption1, Title3 } from "$lib/components/typography";
   import Divider from "../toolbar/Divider.svelte";
 
   let {
     photos,
     chosen = $bindable(),
+    error = undefined,
   }: {
     photos?: Photo[];
     chosen?: string;
+    error?: boolean;
   } = $props();
 
   let selectedPhoto = $derived(
@@ -38,6 +40,9 @@
   }
 </script>
 
+{#if error}
+  <Callout>Unsplash error. Check back in later</Callout>
+{/if}
 {#if photos}
   <div
     class="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6"

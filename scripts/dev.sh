@@ -8,14 +8,13 @@ NC='\033[0m' # No Color
 
 echo -e "${BLUE}🚀 Starting Ogonek development environment...${NC}"
 
-./scripts/generate-types.sh
+./scripts/backend/generate-types.sh
 
 echo -e "${YELLOW}💾 Setting up environment...${NC}"
 export DATABASE_URL="
 postgres://postgres:H8QheSCRFCKejvDsbu@postgres:5432/pg-ogonek-dev"
 
 echo -e "${GREEN}🐳 Starting Docker Compose...${NC}"
-cd ..
 
 docker compose -f ./compose/compose.dev.yaml up -d
 

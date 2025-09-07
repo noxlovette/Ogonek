@@ -22,7 +22,7 @@ export const bindStudentToTeacherBody = zod.object({
  * @summary Generates the invite link for the teacher
  */
 export const generateInviteLinkQueryParams = zod.object({
-  "invite": zod.object({
+  "isRegistered": zod.object({
   "isRegistered": zod.string()
 }).describe('Invite token')
 })

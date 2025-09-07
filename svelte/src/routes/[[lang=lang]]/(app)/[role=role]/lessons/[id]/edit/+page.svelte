@@ -27,8 +27,10 @@
   let markdown = $state(lesson.markdown);
 
   let q = "";
-  let preview = $state(false);
+
   let showPicker = $state(true);
+
+  $inspect(form);
 </script>
 
 <form
@@ -101,7 +103,11 @@
     <SearchBar bind:q placeholder="Search photos..." />
   </VStack>
   {#if showPicker}
-    <PhotoPicker photos={form?.photos} chosen={lesson.photo?.id} />
+    <PhotoPicker
+      photos={form?.photos}
+      error={form?.unsplashError}
+      chosen={lesson.photo?.id}
+    />
   {/if}
   <Photo photo={data.lesson.photo} />
 </form>

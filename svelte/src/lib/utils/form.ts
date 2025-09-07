@@ -184,6 +184,10 @@ export function enhanceForm(config: EnhanceConfig = {}): SubmitFunction {
           if (handlers.error) {
             await handlers.error(result);
           }
+
+          if (shouldUpdate) {
+            update();
+          }
           break;
       }
     };

@@ -36,7 +36,7 @@
 </script>
 
 <div
-  class="relative flex w-full flex-col justify-between gap-4 overflow-hidden py-2 md:py-3 lg:py-4"
+  class="relative flex w-full flex-col justify-between gap-4 py-2 md:py-3 lg:py-4"
 >
   {#if src}
     <div class="absolute inset-0 opacity-50">

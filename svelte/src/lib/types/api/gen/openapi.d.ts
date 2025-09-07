@@ -1044,7 +1044,7 @@ export interface operations {
         parameters: {
             query: {
                 /** @description Invite token */
-                invite: components["schemas"]["InviteQuery"];
+                isRegistered: components["schemas"]["InviteQuery"];
             };
             header?: never;
             path?: never;

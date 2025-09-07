@@ -9,10 +9,10 @@ export const routes = {
   auth: {
     bind_student_to_teacher: () => `${API_BASE}/auth/bind`,
     generate_invite_link: (
-    invite: string
+    isRegistered: string
   ) => {
       const params = new URLSearchParams();
-      if (invite) params.set("invite", invite);
+      if (isRegistered) params.set("isRegistered", isRegistered);
       const query = params.toString();
       return `${API_BASE}/auth/invite${query ? `?${query}` : ""}`;
     },
