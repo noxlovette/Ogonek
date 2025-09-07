@@ -14,14 +14,16 @@ import type { Actions } from "./$types";
 export const actions: Actions = {
   default: async ({ request, fetch, cookies }) => {
     const formData = await request.formData();
+
     const validation = validateForm(formData, z.signinBody);
     if (!validation.success) {
       const fieldErrors: Record<string, boolean> = {};
       validation.errors.issues.forEach((issue) => {
-        const fieldPath = issue.path[0] as string;
-        fieldErrors[fieldPath] = true;
+        const fieldPath = issue.path[0];
+        if (typeof fieldPath === "string") {
+          fieldErrors[fieldPath] = true;
+        }
       });
-
       return fail(400, {
         ...fieldErrors,
         message: "Validation failed",
@@ -29,48 +31,98 @@ export const actions: Actions = {
     }
 
     if (!dev) {
-      const captchaToken = formData.get("smart-token") as string;
-
-      if (!captchaToken) {
+      const captchaToken = formData.get("smart-token");
+      if (!captchaToken || typeof captchaToken !== "string") {
         return fail(400, {
           message: "Please complete the CAPTCHA verification",
         });
       }
 
-      const captchaResponse = await captchaVerify(captchaToken);
-      if (!captchaResponse.ok) {
-        return fail(400, {
-          message: "Captcha verification failed",
+      try {
+        const captchaResponse: Response = await captchaVerify(captchaToken);
+        if (!captchaResponse.ok) {
+          return fail(400, {
+            message: "Captcha verification failed",
+          });
+        }
+      } catch (error) {
+        logger.error({ error }, "CAPTCHA verification error");
+        return fail(500, {
+          message: "Verification service unavailable",
         });
       }
     }
+
     const { username, pass } = validation.data;
+
     const response = await fetch(routes.auth.signin(), {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, pass }),
     });
 
-    const data = await response.json();
-    const parsed = z.signinResponse.safeParse(data);
+    if (!response.ok) {
+      if (response.status === 401) {
+        return fail(401, {
+          message: "Invalid credentials",
+        });
+      }
+      if (response.status === 429) {
+        return fail(429, {
+          message: "Too many login attempts. Please try again later.",
+        });
+      }
+      return fail(response.status, {
+        message: "Authentication service error",
+      });
+    }
 
+    let data: unknown;
+    try {
+      data = await response.json();
+    } catch (error) {
+      logger.error({ error }, "Failed to parse auth response JSON");
+      return fail(500, {
+        message: "Invalid server response",
+      });
+    }
+
+    const parsed = z.signinResponse.safeParse(data);
     if (!parsed.success) {
-      return fail(400);
+      logger.error(
+        {
+          parseErrors: parsed.error,
+          responseData: data,
+        },
+        "Auth response validation failed",
+      );
+      return fail(500, {
+        message: "Invalid authentication response",
+      });
     }
 
     let user: JWTPayload | User;
     if (!env.PUBLIC_MOCK_MODE) {
       const { accessToken, refreshToken } = parsed.data;
-      setTokenCookie(cookies, "accessToken", accessToken);
-      setTokenCookie(cookies, "refreshToken", refreshToken);
-      user = await ValidateAccess(accessToken.token);
-      logger.debug({ user }, "user from the login");
+
+      try {
+        setTokenCookie(cookies, "accessToken", accessToken);
+        setTokenCookie(cookies, "refreshToken", refreshToken);
+        user = await ValidateAccess(accessToken.token);
+        logger.debug({ userId: user?.id }, "Successful login");
+      } catch (error) {
+        logger.error({ error }, "Token validation failed");
+        return fail(500, {
+          message: "Authentication processing error",
+        });
+      }
     } else {
       user = createUser();
     }
 
     return {
       user,
+      username: false,
+      pass: false,
       success: true,
     };
   },
