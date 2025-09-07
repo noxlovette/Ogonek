@@ -5,6 +5,7 @@
   import { enhanceForm } from "$lib/utils";
   import { m } from "$lib/paraglide/messages";
   import type { PageProps } from "./$types";
+  import message from "$lib/messages";
 
   let password = $state("");
   let confirmPassword = $state("");
@@ -44,8 +45,8 @@
   class="flex max-w-md flex-col gap-2 md:gap-3 lg:gap-4"
   use:enhance={enhanceForm({
     messages: {
-      redirect: "Welcome on board",
-      defaultError: "Signup Failed",
+      redirect: message.auth.signupSuccess,
+      defaultError: message.auth.signupFailure,
     },
     navigate: true,
     shouldUpdate: true,
@@ -105,7 +106,7 @@
   <Captcha />
   <Merger>
     <UniButton Icon={DoorOpen} type="submit" variant="primary" iconOnly={false}
-      >Create Account</UniButton
+      >{m.signUp()}</UniButton
     >
   </Merger>
 </form>

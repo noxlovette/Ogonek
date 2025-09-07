@@ -1,7 +1,12 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
   import { goto } from "$app/navigation";
+<<<<<<< HEAD
   import { Input, Captcha, UniButton, Grid, Merger, MetaData } from "$lib/components";
+=======
+  import { Input, Captcha, UniButton, Grid, Merger } from "$lib/components";
+  import message from "$lib/messages.js";
+>>>>>>> ab33d07 (init messages.ts)
   import { m } from "$lib/paraglide/messages";
   import { initialUser, notification } from "$lib/stores";
   import { enhanceForm } from "$lib/utils";
@@ -45,7 +50,10 @@
         if (result.data) {
           const { user = initialUser } = result.data;
 
-          notification.set({ message: "Welcome home", type: "success" });
+          notification.set({
+            message: message.auth.loginSuccess,
+            type: "success",
+          });
           await goto(user.role === "teacher" ? "/t/dashboard" : "/s/dashboard");
         }
       },

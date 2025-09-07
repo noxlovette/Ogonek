@@ -12,7 +12,6 @@
     LoadingCard,
     TaskCard,
     EmptySpace,
-    Title3,
     VStack,
     Title1,
   } from "$lib/components";
@@ -28,9 +27,10 @@
     currentPage,
     assigneeStore,
   } from "$lib/stores";
-  import { Bell, Eye, EyeClosed, PlusCircle } from "lucide-svelte";
+  import { Bell, Eye, EyeClosed, Plus, PlusCircle } from "lucide-svelte";
   import { formatDate } from "$lib/utils";
   import { m } from "$lib/paraglide/messages";
+  import message from "$lib/messages.js";
 
   const { data } = $props();
   const role = page.params.role;
@@ -88,12 +88,12 @@
           method="post"
           use:enhance={enhanceForm({
             messages: {
-              redirect: m.few_big_dachshund_scoop(),
+              redirect: message.crud.created,
             },
             navigate: true,
           })}
         >
-          <UniButton Icon={PlusCircle} type="submit" variant="primary"
+          <UniButton Icon={Plus} type="submit" variant="primary"
             >{m.new()}</UniButton
           >
         </form>
@@ -103,7 +103,7 @@
           method="post"
           use:enhance={enhanceForm({
             messages: {
-              success: m.minor_mad_hare_buzz(),
+              success: message.tasks.teacherNotified,
             },
           })}
         >

@@ -27,6 +27,7 @@
   import EmptySpace from "$lib/components/typography/EmptySpace.svelte";
   import TableSkeleton from "$lib/components/UI/interactive/TableSkeleton.svelte";
   import Title1 from "$lib/components/typography/Title1.svelte";
+  import message from "$lib/messages.js";
 
   let { data } = $props();
   const { students } = data;
@@ -90,7 +91,7 @@
         method="post"
         use:enhance={enhanceForm({
           messages: {
-            redirect: m.newDeckCreated(),
+            redirect: message.crud.created,
           },
           navigate: true,
         })}
