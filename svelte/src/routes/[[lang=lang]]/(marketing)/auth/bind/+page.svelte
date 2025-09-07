@@ -2,8 +2,12 @@
   import { enhance } from "$app/forms";
   import { user } from "$lib/stores";
   import {
+    Body,
     Caption1,
+    HStack,
     LargeTitle,
+    Merger,
+    Title1,
     Title3,
     Toolbar,
     UniButton,
@@ -16,33 +20,28 @@
   const { inviter } = data;
 </script>
 
-<div class="">
-  <form
-    method="POST"
-    use:enhance={enhanceForm({
-      messages: {
-        redirect: "Bound to teacher",
-      },
-      navigate: true,
-    })}
-  >
-    <input type="hidden" name="userId" value={$user.id} />
-    <div
-      class="flex max-w-md flex-col items-center justify-center space-y-3 rounded-sm px-6 py-4 text-center shadow-sm"
+<form
+  method="POST"
+  class="flex flex-col gap-2 md:gap-3 lg:gap-4"
+  use:enhance={enhanceForm({
+    messages: {
+      redirect: "Bound to teacher",
+    },
+    navigate: true,
+  })}
+>
+  <input type="hidden" name="userId" value={$user.id} />
+
+  <Title1>{inviter.name}</Title1>
+  <Body>wants to add you to their students</Body>
+
+  <Merger>
+    <UniButton iconOnly={false} variant="primary" type="submit" Icon={Cable}
+      >Connect</UniButton
     >
-      <Toolbar>
-        <LargeTitle styling="text-center">{inviter.name}</LargeTitle>
-      </Toolbar>
+  </Merger>
+</form>
 
-      <Title3>wants to add you to their students</Title3>
-
-      <Caption1>If you don't know them do not connect</Caption1>
-      <UniButton styling="mt-4" variant="primary" type="submit" Icon={Cable}
-        >Start Work</UniButton
-      >
-    </div>
-  </form>
-</div>
 <svelte:head>
   <title>Connect to Teacher</title>
 </svelte:head>

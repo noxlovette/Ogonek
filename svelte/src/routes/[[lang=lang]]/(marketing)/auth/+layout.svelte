@@ -12,7 +12,9 @@
   import { page } from "$app/state";
   import WorkArea from "$lib/components/UI/WorkArea.svelte";
 
-  const isLogin = $derived(page.url.href.includes("login"));
+  const isLogin = $derived(
+    page.url.href.includes("login") || page.url.href.includes("bind"),
+  );
 
   let { children } = $props();
 </script>
