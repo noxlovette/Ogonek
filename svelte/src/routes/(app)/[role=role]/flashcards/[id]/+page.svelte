@@ -4,7 +4,6 @@
     WordCard,
     LargeTitle,
     UniButton,
-    GreySpan,
     Toolbar,
     EmptySpace,
     VStack,
@@ -17,7 +16,7 @@
   import { invalidate } from "$app/navigation";
 
   import { user } from "$lib/stores";
-  import { Check, Circle, Copy, Pencil } from "lucide-svelte";
+  import { BookOpenCheck, Check, Circle, Copy } from "lucide-svelte";
   import { enhanceForm } from "$lib/utils";
   import Badge from "$lib/components/cards/Badge.svelte";
   import { page } from "$app/state";
@@ -53,6 +52,11 @@
       <LargeTitle>{deck.title}</LargeTitle>
       <Divider></Divider>
       <VStack>
+        <Merger>
+          <UniButton href="{deck.id}/test" Icon={BookOpenCheck}
+            >Test Mode</UniButton
+          >
+        </Merger>
         <Merger>
           <form
             method="POST"

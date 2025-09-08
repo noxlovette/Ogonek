@@ -12,6 +12,7 @@
     KBD,
     Callout,
     Divider,
+    ProgressBar,
   } from "$lib/components";
   import { m } from "$lib/paraglide/messages";
 
@@ -67,6 +68,10 @@
       ref.focus();
     }
   });
+
+  const progress = $derived(
+    ((data.cards.indexOf(currentCard) + 1) / data.cards.length) * 100,
+  );
 </script>
 
 {#snippet qualityButton(quality: {
@@ -119,20 +124,13 @@
     </span>
     <Divider />
     <span class="text-accent dark:text-accent text-sm font-medium">
-      {Math.round(
-        ((data.cards.indexOf(currentCard) + 1) / data.cards.length) * 100,
-      )}% {m.complete()}
+      {progress}% {m.complete()}
     </span>
   </Toolbar>
   <div
-    class="ring-defaultdark:bg-stone-700 h-2.5 w-full overflow-hidden rounded-full"
+    class="ring-default h-2.5 w-full overflow-hidden rounded-full dark:bg-stone-700"
   >
-    <div
-      class="bg-accent dark:bg-accent h-2.5 rounded-full duration-150"
-      style="width: {((data.cards.indexOf(currentCard) + 1) /
-        data.cards.length) *
-        100}%"
-    ></div>
+    <ProgressBar {progress} />
   </div>
 
   <!-- Card container -->
