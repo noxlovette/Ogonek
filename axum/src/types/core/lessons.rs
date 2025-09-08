@@ -40,11 +40,13 @@ pub struct LessonFull {
 pub struct LessonWithPhoto {
     pub assignee: String,
     pub assignee_name: String,
+    #[serde(with = "datetime_serialization")]
     pub created_at: DateTime<Utc>,
     pub id: String,
     pub markdown: String,
     pub title: String,
     pub topic: String,
+    #[serde(with = "datetime_serialization")]
     pub updated_at: DateTime<Utc>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
