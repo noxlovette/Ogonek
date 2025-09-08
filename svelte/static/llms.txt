@@ -15,6 +15,6 @@ Disallow: /*/admin/
 
 Contact: danila.volkov@noxlovette.com
 
-Policy: https://ogonek.app/paperwork/terms
+Policy: https://ogonek.app/terms
 
 Sitemap: https://ogonek.app/sitemap.xml
