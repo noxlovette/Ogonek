@@ -1,12 +1,15 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
   import { goto } from "$app/navigation";
-<<<<<<< HEAD
-  import { Input, Captcha, UniButton, Grid, Merger, MetaData } from "$lib/components";
-=======
-  import { Input, Captcha, UniButton, Grid, Merger } from "$lib/components";
+  import {
+    Input,
+    Captcha,
+    UniButton,
+    Grid,
+    Merger,
+    MetaData,
+  } from "$lib/components";
   import message from "$lib/messages.js";
->>>>>>> ab33d07 (init messages.ts)
   import { m } from "$lib/paraglide/messages";
   import { initialUser, notification } from "$lib/stores";
   import { enhanceForm } from "$lib/utils";
@@ -14,30 +17,32 @@
 
   let { form } = $props();
 
-  // SEO data specific to login page
   const seoData = {
     title: "Login to Ogonek - Digital Classroom for Teachers",
-    description: "Sign in to your Ogonek account and access your digital teaching tools. Manage lessons, track student progress, and organize your private tutoring business.",
-    keywords: "login, sign in, teacher login, digital classroom, education platform, teaching tools, tutor login",
+    description:
+      "Sign in to your Ogonek account and access your digital teaching tools. Manage lessons, track student progress, and organize your private tutoring business.",
+    keywords:
+      "login, sign in, teacher login, digital classroom, education platform, teaching tools, tutor login",
     ogTitle: "Login to Ogonek",
     ogType: "website" as const,
     jsonLd: {
       "@context": "https://schema.org",
       "@type": "WebPage",
-      "name": "Login to Ogonek",
-      "description": "Sign in to your Ogonek account and access your digital teaching tools.",
-      "url": "https://ogonek.app/auth/login",
-      "isPartOf": {
+      name: "Login to Ogonek",
+      description:
+        "Sign in to your Ogonek account and access your digital teaching tools.",
+      url: "https://ogonek.app/auth/login",
+      isPartOf: {
         "@type": "WebSite",
-        "name": "Ogonek",
-        "url": "https://ogonek.app"
+        name: "Ogonek",
+        url: "https://ogonek.app",
       },
-      "potentialAction": {
+      potentialAction: {
         "@type": "LoginAction",
-        "target": "https://ogonek.app/auth/login",
-        "name": "Login to Ogonek"
-      }
-    }
+        target: "https://ogonek.app/auth/login",
+        name: "Login to Ogonek",
+      },
+    },
   };
 </script>
 
