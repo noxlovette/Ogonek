@@ -28,7 +28,7 @@
 
 <Toolbar>
   <div class="md:hidden">
-    <LargeTitle>Dashboard</LargeTitle>
+    <LargeTitle>{m.dashboardName()}</LargeTitle>
   </div>
   <div class="hidden md:block">
     <LargeTitle>{greetings[greetingType]}</LargeTitle>
