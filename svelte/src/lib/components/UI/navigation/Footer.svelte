@@ -9,8 +9,8 @@
     <div class="flex flex-col gap-1 text-sm">
       <p class="flex items-center">© 2024-2025 {m.danilaVolkov()}</p>
       <div class="hidden gap-3 text-stone-500 md:flex">
-        <a href="/paperwork/privacy" class="hover:text-accent">{m.privacy()}</a>
-        <a href="/paperwork/terms" class="hover:text-accent">{m.terms()}</a>
+        <a href="/privacy-policy" class="hover:text-accent">{m.privacy()}</a>
+        <a href="/terms" class="hover:text-accent">{m.terms()}</a>
         <a href="/contact" class="hover:text-accent">{m.contact()}</a>
       </div>
     </div>
