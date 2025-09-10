@@ -1,5 +1,5 @@
 use crate::{
-    api::{account::user, admin, middleware::require_elevated_role},
+    api::{admin, middleware::require_elevated_role},
     schema::AppState,
 };
 use axum::{Router, middleware::from_fn, routing::post};
@@ -11,10 +11,5 @@ pub fn admin_routes() -> Router<AppState> {
 }
 
 fn user_routes() -> Router<AppState> {
-    Router::new().route(
-        "/",
-        post(admin::user::create_user)
-            .get(user::fetch_me)
-            .patch(user::update_user),
-    )
+    Router::new().route("/", post(admin::user::create_user))
 }

@@ -1,10 +1,8 @@
 pub mod api;
-pub mod auth;
 pub mod db;
-pub mod error;
-pub mod notifications;
-pub mod s3;
-pub mod schema;
+pub mod openapi;
+pub mod services;
 pub mod tests;
-pub mod tools;
-pub mod types;
+
+// Re-export commonly used modules from services for backward compatibility
+pub use services::{auth, error, notifications, s3, schema, tools, types};

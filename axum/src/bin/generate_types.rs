@@ -1,4 +1,4 @@
-use ogonek::api::openapi::*;
+use ogonek::openapi::*;
 use std::fs;
 use utoipa::OpenApi;
 

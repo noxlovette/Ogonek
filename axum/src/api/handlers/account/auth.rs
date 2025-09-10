@@ -1,11 +1,11 @@
 use crate::api::AUTH_TAG;
 use crate::api::error::APIError;
-use crate::auth::Claims;
-use crate::auth::error::AuthError;
 use crate::auth::password::{hash_password, verify_password};
 use crate::auth::tokens::{self, decode_token, generate_token};
 use crate::db::crud::core::account::auth;
 use crate::schema::AppState;
+use crate::services::Claims;
+use crate::services::AuthError;
 use crate::types::{AuthPayload, BindPayload, SignUpPayload, TokenPair, UserRole};
 use crate::types::{InviteQuery, RefreshTokenPayload, RefreshTokenResponse};
 use axum::extract::{Json, Query, State};
