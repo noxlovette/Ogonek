@@ -1,4 +1,4 @@
-use crate::auth::error::AuthError;
+use crate::{auth::error::AuthError, types::UserRole};
 use axum::{RequestPartsExt, extract::FromRequestParts, http::request::Parts};
 use axum_extra::{
     TypedHeader,
@@ -58,7 +58,7 @@ impl Keys {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Claims {
     pub sub: String,
-    pub role: String,
+    pub role: UserRole,
     pub exp: usize,
     pub iat: usize,
 }

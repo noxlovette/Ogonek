@@ -1,8 +1,8 @@
 use crate::auth::claims::{Claims, KEYS};
 
 use crate::auth::error::AuthError;
-use crate::types::InviteToken;
 use crate::types::TokenWithExpiry;
+use crate::types::{InviteToken, UserRole};
 use base64::{Engine as _, engine::general_purpose::URL_SAFE};
 
 use jsonwebtoken::{Algorithm, Header, Validation, decode, encode};
@@ -10,7 +10,7 @@ use std::time::{SystemTime, UNIX_EPOCH};
 
 pub fn generate_token(
     user_id: &str,
-    user_role: &str,
+    user_role: &UserRole,
     secs: u64,
 ) -> Result<TokenWithExpiry, AuthError> {
     let now = SystemTime::now()
@@ -22,7 +22,7 @@ pub fn generate_token(
 
     let claims = Claims {
         sub: user_id.to_string(),
-        role: user_role.to_string(),
+        role: user_role.clone(),
         exp: exp as usize,
         iat: now as usize,
     };
@@ -76,7 +76,7 @@ mod tests {
     #[test]
     fn test_generate_token_success() {
         let user_id = "test_user";
-        let user_role = "admin";
+        let user_role = &UserRole::Admin;
         let duration = 3600;
 
         let result = generate_token(user_id, user_role, duration);
@@ -98,13 +98,13 @@ mod tests {
     #[test]
     fn test_generate_token_different_roles() {
         let test_cases = vec![
-            ("user123", "admin", 3600),
-            ("user456", "teacher", 1800),
-            ("user789", "student", 900),
+            ("user123", UserRole::Admin, 3600),
+            ("user456", UserRole::Teacher, 1800),
+            ("user789", UserRole::Student, 900),
         ];
 
         for (user_id, role, duration) in test_cases {
-            let result = generate_token(user_id, role, duration);
+            let result = generate_token(user_id, &role, duration);
             assert!(result.is_ok(), "Failed for role: {}", role);
 
             let token = result.unwrap();
@@ -116,11 +116,11 @@ mod tests {
     #[test]
     fn test_decode_token_success() {
         let user_id = "test_user";
-        let user_role = "admin";
+        let user_role = UserRole::Admin;
         let duration = 3600;
 
         // Generate a token first
-        let token_result = generate_token(user_id, user_role, duration);
+        let token_result = generate_token(user_id, &user_role, duration);
         assert!(token_result.is_ok());
         let token = token_result.unwrap();
 
@@ -165,15 +165,15 @@ mod tests {
     #[test]
     fn test_generate_decode_roundtrip() {
         let test_cases = vec![
-            ("user1", "admin", 3600),
-            ("user_with_underscores", "teacher", 1800),
-            ("123456", "student", 900),
-            ("special@user.com", "moderator", 7200),
+            ("user1", UserRole::Admin, 3600),
+            ("user_with_underscores", UserRole::Admin, 1800),
+            ("123456", UserRole::Student, 900),
+            ("special@user.com", UserRole::Moderator, 7200),
         ];
 
         for (user_id, role, duration) in test_cases {
             // Generate token
-            let token_result = generate_token(user_id, role, duration);
+            let token_result = generate_token(user_id, &role, duration);
             assert!(
                 token_result.is_ok(),
                 "Generation failed for user: {}",
@@ -208,7 +208,7 @@ mod tests {
     #[test]
     fn test_token_expiry_calculation() {
         let user_id = "test_user";
-        let user_role = "admin";
+        let user_role = UserRole::Admin;
         let duration = 1800; // 30 minutes
 
         let before_generation = SystemTime::now()
@@ -216,7 +216,7 @@ mod tests {
             .unwrap()
             .as_secs();
 
-        let result = generate_token(user_id, user_role, duration);
+        let result = generate_token(user_id, &user_role, duration);
         assert!(result.is_ok());
 
         let after_generation = SystemTime::now()
@@ -313,14 +313,14 @@ mod tests {
     #[test]
     fn test_token_uniqueness() {
         let user_id = "test_user";
-        let user_role = "admin";
+        let user_role = UserRole::Admin;
         let duration = 3600;
 
         // Generate multiple tokens and verify they're unique
         let mut tokens = std::collections::HashSet::new();
 
         for _ in 0..5 {
-            let result = generate_token(user_id, user_role, duration);
+            let result = generate_token(user_id, &user_role, duration);
             assert!(result.is_ok());
             let token = result.unwrap();
 

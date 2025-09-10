@@ -1,12 +1,12 @@
 use crate::db::error::DbError;
-use crate::types::{User, UserUpdate};
+use crate::types::{User, UserRole, UserUpdate};
 use sqlx::PgPool;
 
 pub async fn find_by_id(db: &PgPool, user_id: &str) -> Result<User, DbError> {
     let user = sqlx::query_as!(
         User,
         r#"
-        SELECT username, email, role, id, name, pass
+        SELECT username, email, role as "role!: UserRole", id, name, pass
         FROM "user"
         WHERE id = $1
         "#,
