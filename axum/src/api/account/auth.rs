@@ -1,5 +1,3 @@
-use std::str::FromStr;
-
 use crate::api::AUTH_TAG;
 use crate::api::error::APIError;
 use crate::auth::Claims;
@@ -32,7 +30,7 @@ pub async fn signup(
         return Err(APIError::InvalidCredentials);
     }
     let role = UserRole::from(payload.role.clone());
-    if !role.can_sign_up() {
+    if !role.can_self_assign() {
         return Err(APIError::AccessDenied);
     }
 

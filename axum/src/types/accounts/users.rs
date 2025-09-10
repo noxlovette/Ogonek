@@ -24,6 +24,7 @@ pub struct User {
 }
 #[derive(sqlx::Type, Clone, Debug, PartialEq, Serialize, Deserialize, ToSchema)]
 #[sqlx(rename_all = "snake_case")]
+#[serde(rename_all = "lowercase")]
 pub enum UserRole {
     Student,
     Teacher,
@@ -33,8 +34,34 @@ pub enum UserRole {
 }
 
 impl UserRole {
-    pub fn can_sign_up(&self) -> bool {
+    /// Roles that can be self-assigned during signup
+    pub fn can_self_assign(&self) -> bool {
         matches!(self, Self::Student | Self::Teacher)
+    }
+
+    /// Roles that require admin privileges to assign
+    pub fn requires_admin_to_assign(&self) -> bool {
+        matches!(self, Self::Moderator | Self::Admin | Self::God)
+    }
+
+    /// Who can assign this role to others
+    pub fn can_be_assigned_by(&self, assigner_role: &UserRole) -> bool {
+        match self {
+            Self::Student | Self::Teacher => true, // Anyone can assign basic roles
+            Self::Moderator => matches!(assigner_role, Self::Admin | Self::God),
+            Self::Admin => matches!(assigner_role, Self::God),
+            Self::God => false, // God role can't be assigned, only exists in DB
+        }
+    }
+
+    pub fn hierarchy_level(&self) -> u8 {
+        match self {
+            Self::Student => 0,
+            Self::Teacher => 1,
+            Self::Moderator => 2,
+            Self::Admin => 3,
+            Self::God => 4,
+        }
     }
 }
 

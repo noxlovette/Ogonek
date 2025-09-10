@@ -18,6 +18,8 @@ pub const STATE_TAG: &str = "State"; // preferences, badges, dashboard
 pub const AUTH_TAG: &str = "Auth";
 pub const LEARN_TAG: &str = "Learn";
 
+pub const ADMIN_TAG: &str = "Admin";
+
 // Main API doc that aggregates everything
 #[derive(OpenApi)]
 #[openapi(
