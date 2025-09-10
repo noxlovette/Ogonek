@@ -1,3 +1,5 @@
+use std::str::FromStr;
+
 use crate::api::AUTH_TAG;
 use crate::api::error::APIError;
 use crate::auth::Claims;
@@ -6,7 +8,7 @@ use crate::auth::password::{hash_password, verify_password};
 use crate::auth::tokens::{self, decode_token, generate_token};
 use crate::db::crud::core::account::auth;
 use crate::schema::AppState;
-use crate::types::{AuthPayload, BindPayload, SignUpPayload, TokenPair};
+use crate::types::{AuthPayload, BindPayload, SignUpPayload, TokenPair, UserRole};
 use crate::types::{InviteQuery, RefreshTokenPayload, RefreshTokenResponse};
 use axum::extract::{Json, Query, State};
 use axum::http::StatusCode;
@@ -18,6 +20,7 @@ use validator::Validate;
     tag = AUTH_TAG, responses(
         (status = 201, description = "User registered successfully"),
         (status = 400, description = "Invalid registration data"),
+        (status = 403, description = "Forbidden"),
         (status = 409, description = "User already exists")
     )
 )]
@@ -28,6 +31,11 @@ pub async fn signup(
     if payload.username.is_empty() || payload.pass.is_empty() {
         return Err(APIError::InvalidCredentials);
     }
+    let role = UserRole::from(payload.role.clone());
+    if !role.can_sign_up() {
+        return Err(APIError::AccessDenied);
+    }
+
     payload.validate().map_err(|e| {
         eprintln!("{e:?}");
         APIError::InvalidCredentials

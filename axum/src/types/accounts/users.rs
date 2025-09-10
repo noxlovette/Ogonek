@@ -32,6 +32,12 @@ pub enum UserRole {
     God,
 }
 
+impl UserRole {
+    pub fn can_sign_up(&self) -> bool {
+        matches!(self, Self::Student | Self::Teacher)
+    }
+}
+
 impl User {
     pub fn is_staff(&self) -> bool {
         matches!(
@@ -57,7 +63,7 @@ impl FromStr for UserRole {
 
 impl From<String> for UserRole {
     fn from(s: String) -> Self {
-        s.parse().unwrap_or(UserRole::Student) // Default fallback
+        s.parse().unwrap_or(UserRole::Student)
     }
 }
 
