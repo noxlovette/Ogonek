@@ -71,6 +71,21 @@ pub async fn update(db: &PgPool, user_id: &str, update: &UserUpdate) -> Result<(
     Ok(())
 }
 
+pub async fn get_email(db: &PgPool, user_id: &str) -> Result<String, DbError> {
+    let email = sqlx::query_scalar!(
+        r#"
+        SELECT email
+        FROM "user"
+        WHERE id = $1
+        "#,
+        user_id
+    )
+    .fetch_one(db)
+    .await?;
+
+    Ok(email)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

@@ -4,17 +4,15 @@ use axum::{
     response::IntoResponse,
     routing::get,
 };
-use ogonek::api::routes::*;
 use ogonek::schema::AppState;
 use ogonek::tools::daemons::task_cleanup::daily_cleanup;
 use ogonek::tools::logging::init_logging;
+use ogonek::{api::routes::*, tools::extractors::REQUEST_ID_HEADER};
 use tower_http::{
     cors::CorsLayer,
     request_id::{MakeRequestUuid, PropagateRequestIdLayer, SetRequestIdLayer},
     timeout::TimeoutLayer,
 };
-
-const REQUEST_ID_HEADER: &str = "x-request-id";
 
 async fn run_server() -> anyhow::Result<()> {
     let _ = init_logging().await;
@@ -82,7 +80,6 @@ async fn run_server() -> anyhow::Result<()> {
 
     let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await?;
     tracing::info!("🚀 Server starting on http://0.0.0.0:3000");
-    tracing::info!("📚 API docs available at http://0.0.0.0:3000/docs");
 
     axum::serve(listener, app).await?;
     Ok(())

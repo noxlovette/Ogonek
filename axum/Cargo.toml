@@ -14,7 +14,7 @@ sqlx = { version = "0.8.2", features = [
     "postgres",
     "uuid",
     "migrate",
-    "chrono"] }
+    "chrono", "ipnetwork"] }
 tokio = { version = "1.47", features = ["full"] }
 
 # Secondary Crates
