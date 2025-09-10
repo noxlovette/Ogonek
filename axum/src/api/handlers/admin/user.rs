@@ -3,11 +3,11 @@ use crate::api::error::APIError;
 use crate::auth::Claims;
 use crate::auth::password::hash_password;
 use crate::db::crud::core::account::{auth, user};
-
-use crate::db::crud::tracking;
+use crate::db::crud::tracking::audit;
+use crate::services::{AuditBuilder};
 use crate::schema::AppState;
 use crate::tools::extractors::RequestMetadata;
-use crate::types::{SignUpPayload, UserRole, AuditLogCreate}; // Add audit types
+use crate::types::{SignUpPayload, UserRole};
 use axum::extract::{Json, State};
 use validator::Validate;
 
@@ -34,48 +34,29 @@ pub async fn create_user(
     }
 
     let email = user::get_email(&state.db, &claims.sub).await?;
-    
     let target_role = UserRole::from(payload.role.clone());
+    
     if !target_role.can_be_assigned_by(&claims.role) {
         tracing::warn!(
             "User {} (role: {}) attempted to create user with role: {}",
-            claims.sub,
-            claims.role,
-            target_role
+            claims.sub, claims.role, target_role
         );
         
-        // Audit failed authorization attempt
-        let failed_audit = AuditLogCreate {
-            event_type: "user.create".to_string(),
-            action: "CREATE".to_string(),
-            outcome: Some("failure".to_string()),
-            user_id: Some(claims.sub.clone()),
-            user_email: email, 
-            user_role: claims.role.clone().to_string(),
-            impersonated_by: None,
-            resource_type: "user".to_string(),
-            resource_id: None,
-            resource_name: Some(payload.username.clone()),
-            payload: Some(serde_json::json!({
+        let failed_audit = AuditBuilder::user_operation("CREATE", &claims, email)
+            .failed()
+            .security_event()
+            .resource_name(payload.username.clone())
+            .with_metadata(&metadata)
+            .payload(serde_json::json!({
                 "attempted_role": payload.role,
                 "reason": "insufficient_privileges",
                 "target_username": payload.username,
                 "target_email": payload.email
-            })),
-            session_id: metadata.session_id, 
-            ip_address: metadata.ip_address, 
-            user_agent: Some(metadata.user_agent),
-            request_id: Some(metadata.request_id),
-            severity: Some("warning".to_string()),
-            tags: Some(vec!["authorization".to_string(), "security".to_string()]),
-            retention_until: None,
-        };
+            }))
+            .tag("authorization")
+            .build();
         
-        // Log the failed attempt (don't fail the request if audit fails)
-        if let Err(e) = tracking::create(&state.db, &failed_audit).await {
-            tracing::error!("Failed to log audit event: {}", e);
-        }
-        
+        let _ = audit::create(&state.db, &failed_audit).await?;
         return Err(APIError::AccessDenied);
     }
     
@@ -90,41 +71,22 @@ pub async fn create_user(
         ..payload
     };
     
-    // Create the user
-    let id = auth::signup(&state.db, &created).await?;
+    let user_id = auth::signup(&state.db, &created).await?;
     
-    // Audit successful user creation
-    let success_audit = AuditLogCreate {
-        event_type: "user.create".to_string(),
-        action: "CREATE".to_string(),
-        outcome: Some("success".to_string()),
-        user_id: Some(claims.sub.clone()),
-        user_email: email, 
-        user_role: claims.role.clone().to_string(),
-        impersonated_by: None,
-        resource_type: "user".to_string(),
-        resource_id: Some(id.clone()),
-        resource_name: Some(created.username.clone()),
-        payload: Some(serde_json::json!({
-            "created_user_id": id,
+    let success_audit = AuditBuilder::user_operation("CREATE", &claims, email)
+        .resource_id(user_id.clone())
+        .resource_name(created.username.clone())
+        .payload(serde_json::json!({
+            "created_user_id": user_id,
             "created_username": created.username,
             "created_email": created.email,
             "created_role": created.role,
             "created_name": created.name
-        })),
-        session_id: None,
-        ip_address: None,
-        user_agent: None,
-        request_id: None,
-        severity: Some("info".to_string()),
-        tags: Some(vec!["user_management".to_string(), "account_creation".to_string()]),
-        retention_until: None,
-    };
+        }))
+        .tag("account_creation")
+        .build();
     
-    // Log successful creation (don't fail the request if audit fails)
-    if let Err(e) = tracking::create(&state.db, &success_audit).await {
-        tracing::error!("Failed to log audit event: {}", e);
-    }
+    let _ = audit::create(&state.db, &success_audit).await?;
     
-    Ok(Json(id))
+    Ok(Json(user_id))
 }

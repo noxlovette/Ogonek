@@ -1,7 +1,6 @@
 pub mod crud;
 pub mod error;
 pub mod helpers;
-
 use anyhow::Context;
 use dotenvy::dotenv;
 use sqlx::migrate::Migrator;

@@ -4,10 +4,9 @@ use axum::{
     response::IntoResponse,
     routing::get,
 };
-use ogonek::schema::AppState;
 use ogonek::tools::daemons::task_cleanup::daily_cleanup;
-use ogonek::tools::logging::init_logging;
 use ogonek::{api::routes::*, tools::extractors::REQUEST_ID_HEADER};
+use ogonek::{schema::AppState, services::init_tracing};
 use tower_http::{
     cors::CorsLayer,
     request_id::{MakeRequestUuid, PropagateRequestIdLayer, SetRequestIdLayer},
@@ -15,7 +14,7 @@ use tower_http::{
 };
 
 async fn run_server() -> anyhow::Result<()> {
-    let _ = init_logging().await;
+    let _ = init_tracing().await;
     let state = AppState::new().await?;
     let cors = std::env::var("CORS").expect("CORS needs to be set");
     let cleanup_state = state.clone();
