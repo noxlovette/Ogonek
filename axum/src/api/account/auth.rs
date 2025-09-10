@@ -6,7 +6,7 @@ use crate::auth::password::{hash_password, verify_password};
 use crate::auth::tokens::{self, decode_token, generate_token};
 use crate::db::crud::core::account::auth;
 use crate::schema::AppState;
-use crate::types::users::{AuthPayload, BindPayload, SignUpPayload, TokenPair};
+use crate::types::{AuthPayload, BindPayload, SignUpPayload, TokenPair};
 use crate::types::{InviteQuery, RefreshTokenPayload, RefreshTokenResponse};
 use axum::extract::{Json, Query, State};
 use axum::http::StatusCode;

@@ -1,6 +1,4 @@
-use super::flashcards::DeckSmall;
-use super::lessons::LessonSmall;
-use super::tasks::TaskSmall;
+use super::super::{DeckSmall, LessonSmall, TaskSmall};
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
