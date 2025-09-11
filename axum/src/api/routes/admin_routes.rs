@@ -5,7 +5,7 @@ use crate::{
 use axum::{
     Router,
     middleware::from_fn,
-    routing::{get, post},
+    routing::{get, post, put},
 };
 
 pub fn admin_routes() -> Router<AppState> {
@@ -30,5 +30,9 @@ fn content_routes() -> Router<AppState> {
             get(admin::content::fetch_content)
                 .delete(admin::content::delete_content)
                 .patch(admin::content::update_content),
+        )
+        .route(
+            "/{id}/publish",
+            put(admin::content::publish_content).delete(admin::content::unpublish_content),
         )
 }

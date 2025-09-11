@@ -121,11 +121,7 @@ fn main() {
 async fn handler_404() -> impl IntoResponse {
     (
         StatusCode::NOT_FOUND,
-        axum::Json(serde_json::json!({
-            "error": "Not Found",
-            "message": "The requested resource was not found",
-            "status": 404
-        })),
+        "The requested endpoint was not found",
     )
 }
 

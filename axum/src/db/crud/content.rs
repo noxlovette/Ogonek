@@ -96,7 +96,7 @@ pub async fn publish(db: &PgPool, content_id: &str, user_id: &str) -> Result<(),
         content_id,
         user_id,
     )
-    .fetch_one(db)
+    .execute(db)
     .await?;
 
     Ok(())
@@ -116,7 +116,7 @@ pub async fn unpublish(db: &PgPool, content_id: &str, user_id: &str) -> Result<(
         content_id,
         user_id,
     )
-    .fetch_one(db)
+    .execute(db)
     .await?;
 
     Ok(())

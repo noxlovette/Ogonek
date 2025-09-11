@@ -1,8 +1,12 @@
+use crate::api::ADMIN_TAG;
 use crate::api::error::APIError;
-use crate::api::{ADMIN_TAG, LESSON_TAG};
 use crate::auth::Claims;
 use crate::db::crud::content;
+use crate::db::crud::core::account::user;
+use crate::db::crud::tracking::audit;
 use crate::schema::AppState;
+use crate::services::AuditBuilder;
+use crate::tools::extractors::RequestMetadata;
 use crate::types::{Content, UpdateContent};
 use axum::extract::Json;
 use axum::extract::Path;
@@ -62,8 +66,17 @@ pub async fn list_content(State(state): State<AppState>) -> Result<Json<Vec<Cont
 pub async fn create_content(
     State(state): State<AppState>,
     claims: Claims,
+    metadata: RequestMetadata,
 ) -> Result<Json<String>, APIError> {
     let id = content::create(&state.db, &claims.sub).await?;
+    let email = user::get_email(&state.db, &claims.sub).await?;
+    let audit = AuditBuilder::new("content.operation", "CREATE", &claims, email)
+        .resource_id(id.clone())
+        .with_metadata(&metadata)
+        .tag("content")
+        .build();
+
+    audit::create(&state.db, &audit).await?;
     Ok(Json(id))
 }
 /// Deletes content
@@ -73,7 +86,7 @@ pub async fn create_content(
     params(
         ("id" = String, Path, description = "Content ID")
     ),
-    tag = LESSON_TAG,responses(
+    tag = ADMIN_TAG,responses(
         (status = 204, description = "Content deleted successfully"),
         (status = 404, description = "Content not found"),
         (status = 401, description = "Unauthorized"),
@@ -82,10 +95,20 @@ pub async fn create_content(
 )]
 pub async fn delete_content(
     State(state): State<AppState>,
+    metadata: RequestMetadata,
+    claims: Claims,
     Path(id): Path<String>,
 ) -> Result<StatusCode, APIError> {
     content::delete(&state.db, &id).await?;
 
+    let email = user::get_email(&state.db, &claims.sub).await?;
+    let audit = AuditBuilder::new("content.operation", "DELETE", &claims, email)
+        .resource_id(id.clone())
+        .with_metadata(&metadata)
+        .tag("content")
+        .build();
+
+    audit::create(&state.db, &audit).await?;
     Ok(StatusCode::NO_CONTENT)
 }
 
@@ -97,7 +120,7 @@ pub async fn delete_content(
         ("id" = String, Path, description = "content ID")
     ),
     request_body = UpdateContent,
-    tag = LESSON_TAG,responses(
+    tag = ADMIN_TAG, responses(
         (status = 204, description = "content updated successfully"),
         (status = 404, description = "content not found"),
         (status = 403, description = "Forbidden"),
@@ -107,10 +130,66 @@ pub async fn delete_content(
 pub async fn update_content(
     State(state): State<AppState>,
     Path(id): Path<String>,
+    metadata: RequestMetadata,
     claims: Claims,
     Json(payload): Json<UpdateContent>,
 ) -> Result<StatusCode, APIError> {
     content::update(&state.db, &id, &claims.sub, &payload).await?;
+    let email = user::get_email(&state.db, &claims.sub).await?;
+    let audit = AuditBuilder::new("content.operation", "UPDATE", &claims, email)
+        .resource_id(id.clone())
+        .with_metadata(&metadata)
+        .tag("content")
+        .build();
+
+    audit::create(&state.db, &audit).await?;
+    Ok(StatusCode::NO_CONTENT)
+}
+
+/// Updates content
+#[utoipa::path(
+    put,
+    path = "/{id}/publish",
+    params(
+        ("id" = String, Path, description = "content ID")
+    ),
+    tag = ADMIN_TAG, responses(
+        (status = 204, description = "content published successfully"),
+        (status = 404, description = "content not found"),
+        (status = 403, description = "Forbidden"),
+        (status = 401, description = "Unauthorized")
+    )
+)]
+pub async fn publish_content(
+    State(state): State<AppState>,
+    Path(id): Path<String>,
+    claims: Claims,
+) -> Result<StatusCode, APIError> {
+    content::publish(&state.db, &id, &claims.sub).await?;
+
+    Ok(StatusCode::NO_CONTENT)
+}
+
+/// Updates content
+#[utoipa::path(
+    delete,
+    path = "/{id}/publish",
+    params(
+        ("id" = String, Path, description = "content ID")
+    ),
+    tag = ADMIN_TAG, responses(
+        (status = 204, description = "content published successfully"),
+        (status = 404, description = "content not found"),
+        (status = 403, description = "Forbidden"),
+        (status = 401, description = "Unauthorized")
+    )
+)]
+pub async fn unpublish_content(
+    State(state): State<AppState>,
+    Path(id): Path<String>,
+    claims: Claims,
+) -> Result<StatusCode, APIError> {
+    content::unpublish(&state.db, &id, &claims.sub).await?;
 
     Ok(StatusCode::NO_CONTENT)
 }

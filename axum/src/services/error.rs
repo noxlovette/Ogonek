@@ -71,17 +71,7 @@ impl IntoResponse for AppError {
                     5001..=5999 => StatusCode::INTERNAL_SERVER_ERROR,
                     _ => StatusCode::INTERNAL_SERVER_ERROR,
                 };
-
-                let body = json!({
-                    "error": {
-                        "code": notification_err.error_code(),
-                        "type": "notification_error",
-                        "message": notification_err.to_string(),
-                        "details": notification_err
-                    }
-                });
-
-                return (status_code, Json(body)).into_response();
+                return (status_code, notification_err.to_string()).into_response();
             }
 
             // Password handling errors -> 500
@@ -100,15 +90,7 @@ impl IntoResponse for AppError {
             }
         };
 
-        // Create a consistent error response format
-        let body = Json(json!({
-            "error": {
-                "message": message,
-                "code": status.as_u16()
-            }
-        }));
-
-        (status, body).into_response()
+        (status, message).into_response()
     }
 }
 
