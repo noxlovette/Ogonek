@@ -50,18 +50,8 @@
   method="POST"
   class="flex max-w-md flex-col gap-2 md:gap-3 lg:gap-4"
   use:enhance={enhanceForm({
-    handlers: {
-      success: async (result) => {
-        if (result.data) {
-          const { user = initialUser } = result.data;
-
-          notification.set({
-            message: message.auth.loginSuccess,
-            type: "success",
-          });
-          await goto(user.role === "teacher" ? "/t/dashboard" : "/s/dashboard");
-        }
-      },
+    messages: {
+      redirect: message.auth.loginSuccess,
     },
   })}
 >

@@ -107,8 +107,14 @@ export const actions: Actions = {
       setTokenCookie(cookies, "refreshToken", refreshToken);
       user = await ValidateAccess(accessToken.token);
 
+      console.log(user);
+      console.log(isSuperUser(user.role));
       if (isSuperUser(user.role)) {
         throw redirect(302, "/admin");
+      } else if (user.role == "teacher") {
+        throw redirect(302, "/t/dashboard");
+      } else if (user.role == "student") {
+        throw redirect(302, "/s/dashboard");
       }
 
       logger.debug({ userId: user?.id }, "Successful login");
@@ -117,7 +123,6 @@ export const actions: Actions = {
     }
 
     return {
-      user,
       username: false,
       pass: false,
       success: true,
