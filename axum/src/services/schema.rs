@@ -23,3 +23,25 @@ impl AppState {
         })
     }
 }
+/*
+
+#[cfg(test)]
+use crate::tests::integration::test_db;
+
+impl AppState {
+    #[cfg(test)]
+    pub async fn test() -> anyhow::Result<Self> {
+        let db = test_db().await?;
+        let s3 = S3Provider::test().await?;
+
+        let notification_service = NotificationService::test(db.clone())?;
+
+        Ok(Self {
+            db: db.clone(),
+            s3,
+            notification_service,
+        })
+    }
+}
+
+*/

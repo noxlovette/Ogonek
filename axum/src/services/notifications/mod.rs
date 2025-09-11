@@ -99,3 +99,16 @@ impl NotificationService {
         Ok(())
     }
 }
+
+#[cfg(test)]
+impl NotificationService {
+    pub fn test(db: PgPool) -> anyhow::Result<Self> {
+        let telegram_provider = TelegramProvider::test()?;
+        let apns_provider = ApnsProvider::test();
+        Ok(Self {
+            apns_provider,
+            db,
+            telegram_provider,
+        })
+    }
+}

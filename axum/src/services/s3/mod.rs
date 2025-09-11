@@ -58,4 +58,30 @@ impl S3Provider {
             bucket_name,
         })
     }
+
+    #[cfg(test)]
+    pub async fn test() -> anyhow::Result<Self> {
+        // Use dummy credentials for tests
+        let credentials = Credentials::new(
+            "test_access_key",
+            "test_secret_key",
+            None,
+            None,
+            "test-credentials",
+        );
+
+        let s3_config = aws_config::defaults(BehaviorVersion::latest())
+            .region(Region::new("us-east-1"))
+            .endpoint_url("http://localhost:9000") // fake endpoint
+            .credentials_provider(credentials)
+            .load()
+            .await;
+
+        let s3_client = S3Client::new(&s3_config);
+
+        Ok(Self {
+            client: s3_client,
+            bucket_name: "test-bucket".to_string(),
+        })
+    }
 }

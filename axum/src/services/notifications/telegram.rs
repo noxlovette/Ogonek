@@ -86,3 +86,12 @@ impl TelegramProvider {
         Ok(())
     }
 }
+
+#[cfg(test)]
+impl TelegramProvider {
+    pub fn test() -> anyhow::Result<Self> {
+        let client = Client::new();
+        let bot_token = "test_telegram_token".to_string();
+        Ok(Self { client, bot_token })
+    }
+}

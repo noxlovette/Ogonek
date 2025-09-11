@@ -1,3 +1,4 @@
+use crate::types::NotificationPayload;
 use a2::{
     Client, ClientConfig, DefaultNotificationBuilder, Endpoint, NotificationBuilder,
     NotificationOptions,
@@ -6,20 +7,17 @@ use anyhow::{Context, Result};
 use std::sync::Arc;
 use tracing::{debug, error, instrument};
 
-use crate::types::NotificationPayload;
-
 #[derive(Debug, Clone)]
 pub struct ApnsProvider {
-    client: Arc<Client>,
+    client: Option<Arc<Client>>,
     topic: String,
 }
 
 impl ApnsProvider {
     pub fn new() -> Result<Self> {
-        let is_production = match std::env::var("APP_ENV") {
-            Ok(env) => env == "production",
-            Err(_) => false,
-        };
+        let is_production = std::env::var("APP_ENV")
+            .map(|env| env == "production")
+            .unwrap_or(false);
 
         let endpoint = if is_production {
             Endpoint::Production
@@ -27,12 +25,10 @@ impl ApnsProvider {
             Endpoint::Sandbox
         };
 
-        let key = std::env::var("APNS_KEY").context("NO APNS KEY")?;
-
-        let key_id = std::env::var("APNS_KEY_ID").context("APNS_KEY_ID needs to be set")?;
-        let team_id = std::env::var("APNS_TEAM_ID").context("APNS_TEAM_ID needs to be set")?;
-
-        let topic = std::env::var("APNS_TOPIC").context("APNS_TOPIC needs to be set")?;
+        let key = std::env::var("APNS_KEY").context("APNS_KEY must be set")?;
+        let key_id = std::env::var("APNS_KEY_ID").context("APNS_KEY_ID must be set")?;
+        let team_id = std::env::var("APNS_TEAM_ID").context("APNS_TEAM_ID must be set")?;
+        let topic = std::env::var("APNS_TOPIC").context("APNS_TOPIC must be set")?;
 
         let client = Client::token(
             std::io::Cursor::new(key),
@@ -43,7 +39,7 @@ impl ApnsProvider {
         .context("Failed to create APNS client with P8 token")?;
 
         Ok(Self {
-            client: Arc::new(client),
+            client: Some(Arc::new(client)), // Fixed: wrap in Some()
             topic,
         })
     }
@@ -54,6 +50,12 @@ impl ApnsProvider {
         device_token: &str,
         payload: NotificationPayload,
     ) -> Result<()> {
+        // Early return if no client (test mode)
+        let client = self
+            .client
+            .as_ref()
+            .context("APNS client not available (test mode?)")?;
+
         debug!("Sending push notification to device");
 
         let mut builder = DefaultNotificationBuilder::new()
@@ -80,7 +82,7 @@ impl ApnsProvider {
             notification.add_custom_data("data", data)?;
         }
 
-        match self.client.send(notification).await {
+        match client.send(notification).await {
             Ok(response) => {
                 if let Some(error) = response.error {
                     error!("APNS returned error response: {:?}", error);
@@ -93,6 +95,16 @@ impl ApnsProvider {
                 error!("Failed to send notification: {}", e);
                 Err(e.into())
             }
+        }
+    }
+}
+
+#[cfg(test)]
+impl ApnsProvider {
+    pub fn test() -> Self {
+        Self {
+            client: None, // No client in tests
+            topic: "test.app.bundle".to_string(),
         }
     }
 }
