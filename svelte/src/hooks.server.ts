@@ -5,7 +5,8 @@ import logger from "$lib/logger";
 import { paraglideMiddleware } from "$lib/paraglide/server";
 import { ValidateAccess, setTokenCookie } from "$lib/server";
 import redis from "$lib/server/redisClient";
-import type { RefreshResponse } from "$lib/types";
+import { type Claims, type RefreshResponse, type User } from "$lib/types";
+import { isSuperUser } from "$lib/utils";
 import * as Sentry from "@sentry/sveltekit";
 import type {
   Handle,
@@ -16,6 +17,7 @@ import type {
 } from "@sveltejs/kit";
 import { redirect } from "@sveltejs/kit";
 import { sequence } from "@sveltejs/kit/hooks";
+import { nanoid } from "nanoid";
 
 Sentry.init({
   dsn: envPublic.PUBLIC_SENTRY_DSN,
@@ -64,6 +66,8 @@ export const authenticationHandle: Handle = async ({ event, resolve }) => {
         throw redirect(303, "/s/dashboard");
       } else if (user.role === "teacher") {
         throw redirect(303, "/t/dashboard");
+      } else if (isSuperUser(user.role)) {
+        throw redirect(303, "/admin");
       }
     }
   }
@@ -79,6 +83,7 @@ export const authenticationHandle: Handle = async ({ event, resolve }) => {
 
   const isTeacherRoute = role === "t";
   const isStudentRoute = role === "s";
+  const isAdminRoute = event.url.href.includes("/admin");
 
   if (isTeacherRoute && user.role !== "teacher") {
     logger.warn("Redirecting to unauthorised as student");
@@ -86,6 +91,10 @@ export const authenticationHandle: Handle = async ({ event, resolve }) => {
   }
   if (isStudentRoute && user.role !== "student") {
     logger.warn("Redirecting to unauthorised as teacher");
+    throw redirect(303, "/unauthorised");
+  }
+  if (isAdminRoute && !isSuperUser(user.role)) {
+    logger.warn("Unauthorised attempt to enter admin interfaces");
     throw redirect(303, "/unauthorised");
   }
 
@@ -151,17 +160,18 @@ async function handleTokenRefresh(event: RequestEvent) {
   }
 }
 
-async function getUserFromToken(event: RequestEvent) {
+async function getUserFromToken(event: RequestEvent): Promise<Claims | User> {
   if (envPublic.PUBLIC_MOCK_MODE) {
     return {
-      id: "dev-user",
+      id: nanoid(),
       email: "dev@example.com",
+      username: "dev-user",
       role: "teacher",
       name: "Dev Mode User",
     };
   }
   const accessToken = event.cookies.get("accessToken");
-  let user = null;
+  let user: Claims | null = null;
 
   if (accessToken) {
     try {
@@ -174,7 +184,7 @@ async function getUserFromToken(event: RequestEvent) {
     user = await handleTokenRefresh(event);
   }
 
-  return user;
+  return user!;
 }
 
 export const handleFetch: HandleFetch = async ({ event, request, fetch }) => {

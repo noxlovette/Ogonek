@@ -5,10 +5,9 @@ import logger from "$lib/logger";
 import { routes } from "$lib/routes";
 import { captchaVerify, setTokenCookie, ValidateAccess } from "$lib/server";
 import { createUser } from "$lib/server/mock/user";
-import type { User } from "$lib/types";
-import { validateForm } from "$lib/utils";
-import { fail } from "@sveltejs/kit";
-import type { JWTPayload } from "jose";
+import { type Claims, type User } from "$lib/types";
+import { isSuperUser, validateForm } from "$lib/utils";
+import { fail, redirect } from "@sveltejs/kit";
 import type { Actions } from "./$types";
 
 export const actions: Actions = {
@@ -100,21 +99,19 @@ export const actions: Actions = {
       });
     }
 
-    let user: JWTPayload | User;
+    let user: Claims | User;
     if (!env.PUBLIC_MOCK_MODE) {
       const { accessToken, refreshToken } = parsed.data;
 
-      try {
-        setTokenCookie(cookies, "accessToken", accessToken);
-        setTokenCookie(cookies, "refreshToken", refreshToken);
-        user = await ValidateAccess(accessToken.token);
-        logger.debug({ userId: user?.id }, "Successful login");
-      } catch (error) {
-        logger.error({ error }, "Token validation failed");
-        return fail(500, {
-          message: "Authentication processing error",
-        });
+      setTokenCookie(cookies, "accessToken", accessToken);
+      setTokenCookie(cookies, "refreshToken", refreshToken);
+      user = await ValidateAccess(accessToken.token);
+
+      if (isSuperUser(user.role)) {
+        throw redirect(302, "/admin");
       }
+
+      logger.debug({ userId: user?.id }, "Successful login");
     } else {
       user = createUser();
     }
