@@ -7,7 +7,9 @@ use utoipa::OpenApi;
     list_content,
     create_content,
     delete_content,
-    update_content
+    update_content,
+    publish_content,
+    unpublish_content
 ))]
 pub struct AdminContentApi;
 

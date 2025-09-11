@@ -110,7 +110,7 @@ export const actions: Actions = {
       console.log(user);
       console.log(isSuperUser(user.role));
       if (isSuperUser(user.role)) {
-        throw redirect(302, "/admin");
+        throw redirect(302, "/admin/dashboard");
       } else if (user.role == "teacher") {
         throw redirect(302, "/t/dashboard");
       } else if (user.role == "student") {

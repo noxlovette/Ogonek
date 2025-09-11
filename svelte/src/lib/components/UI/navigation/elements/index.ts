@@ -1,3 +1,4 @@
+export { default as Content } from "./Content.svelte";
 export { default as Dashboard } from "./Dashboard.svelte";
 export { default as Dictionary } from "./Dictionary.svelte";
 export { default as Forvo } from "./Forvo.svelte";

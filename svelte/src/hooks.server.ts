@@ -28,7 +28,7 @@ Sentry.init({
     : 1.0,
 });
 
-const PROTECTED_PATHS = new Set(["/t/", "/s/", "/auth/bind/"]);
+const PROTECTED_PATHS = new Set(["/t/", "/s/", "/auth/bind/", "/admin/"]);
 
 function isProtectedPath(path: string): boolean {
   return (
@@ -213,10 +213,13 @@ export const handleFetch: HandleFetch = async ({ event, request, fetch }) => {
     }
 
     const accessToken = event.cookies.get("accessToken");
+    console.log(accessToken);
     if (accessToken) {
       request.headers.set("Authorization", `Bearer ${accessToken}`);
     }
   }
+
+  console.log(request);
 
   return fetch(request);
 };

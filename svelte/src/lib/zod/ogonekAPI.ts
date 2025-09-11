@@ -15,13 +15,13 @@ import {
 export const listContentResponseItem = zod.object({
   "content": zod.string(),
   "id": zod.string(),
-  "meta_description": zod.string().nullish(),
-  "published_at": zod.iso.datetime({}).nullish(),
+  "metaDescription": zod.string().nullish(),
+  "publishedAt": zod.iso.datetime({}).nullish(),
   "slug": zod.string(),
-  "status": zod.enum(['Draft', 'Published']),
+  "status": zod.enum(['draft', 'published']),
   "title": zod.string(),
-  "updated_at": zod.iso.datetime({}),
-  "updated_by": zod.string(),
+  "updatedAt": zod.iso.datetime({}),
+  "updatedBy": zod.string(),
   "version": zod.number()
 })
 export const listContentResponse = zod.array(listContentResponseItem)
@@ -58,9 +58,25 @@ export const updateContentParams = zod.object({
 
 export const updateContentBody = zod.object({
   "content": zod.string().nullish(),
-  "meta_description": zod.string().nullish(),
+  "metaDescription": zod.string().nullish(),
   "slug": zod.string().nullish(),
   "title": zod.string().nullish()
+})
+
+
+/**
+ * @summary Updates content
+ */
+export const publishContentParams = zod.object({
+  "id": zod.string().describe('content ID')
+})
+
+
+/**
+ * @summary Updates content
+ */
+export const unpublishContentParams = zod.object({
+  "id": zod.string().describe('content ID')
 })
 
 

@@ -66,6 +66,9 @@
 </script>
 
 <WorkArea>
+  <h1 class="text-9xl leading-tight font-bold tracking-tighter">
+    Per igniculus ad astra
+  </h1>
   <Toolbar>
     <LargeTitle>
       {m.welcomeTo()}<span class="font-serif italic">Ogonek</span>
