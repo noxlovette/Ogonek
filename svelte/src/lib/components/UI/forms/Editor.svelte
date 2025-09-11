@@ -352,7 +352,7 @@
         bind:value={markdownContent}
         onkeydown={handleKeyDown}
         class="
-          focus:border-accent focus:ring-accent ring-default bg-default min-h-[400px] w-full resize-none rounded-2xl bg-white px-4 py-2 font-mono text-base leading-relaxed text-stone-900 placeholder-stone-400 shadow-sm focus:shadow-md focus:ring-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60
+          focus:border-accent focus:ring-accent ring-default bg-default min-h-[400px] w-full resize-none rounded-2xl bg-white px-4 py-2 font-mono text-base leading-relaxed placeholder-stone-400 shadow-sm focus:shadow-md focus:ring-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60
           "
         spellcheck="false"
         placeholder="Start typing your markdown here..."

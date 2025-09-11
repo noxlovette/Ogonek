@@ -5,7 +5,7 @@ use chrono::{DateTime, Utc};
 use serde_json::Value;
 use sqlx::types::ipnetwork::IpNetwork;
 
-/// Fluent builder for audit logs - because nobody wants to write 30 lines for basic logging
+/// Fluent builder for audit logs
 pub struct AuditBuilder {
     event_type: String,
     action: String,
@@ -28,7 +28,7 @@ pub struct AuditBuilder {
 }
 
 impl AuditBuilder {
-    /// Start building an audit log with the bare minimum
+    /// The bare minimum
     pub fn new(event_type: &str, action: &str, claims: &Claims, user_email: String) -> Self {
         Self {
             event_type: event_type.to_string(),
@@ -52,7 +52,7 @@ impl AuditBuilder {
         }
     }
 
-    /// Quick constructor for user operations - covers 80% of your use cases
+    /// Quick constructor for user operations - covers 80% of use cases
     pub fn user_operation(action: &str, claims: &Claims, user_email: String) -> Self {
         Self::new("user.operation", action, claims, user_email)
             .resource_type("user")

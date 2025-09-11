@@ -34,6 +34,7 @@ async fn run_server() -> anyhow::Result<()> {
         .nest("/learn", learn_routes())
         .nest("/notifications", notification_routes())
         .nest("/state", state_routes())
+        .nest("/content", content_routes())
         .nest("/admin", admin_routes());
 
     // Public routes (no auth required)

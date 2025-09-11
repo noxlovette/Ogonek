@@ -19,7 +19,7 @@ docker exec -it pg-ogonek-dev psql -U postgres -c "CREATE DATABASE \"pg-ogonek-d
 
 # Step 2: Set environment variable
 echo "🔧 Setting DATABASE_URL environment variable..."
-export DATABASE_URL="postgres://postgres:H8QheSCRFCKejvDsbu@localhost:5433/pg-ogonek-dev"
+export DATABASE_URL="postgres://postgres:H8QheSCRFCKejvDsbu@localhost:5432/pg-ogonek-dev"
 
 # Step 3: Run migrations
 cd axum

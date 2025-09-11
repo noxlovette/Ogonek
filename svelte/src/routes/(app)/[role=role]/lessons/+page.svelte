@@ -86,7 +86,7 @@
           method="post"
           use:enhance={enhanceForm({
             messages: {
-              redirect: m.newLessonCreated(),
+              redirect: m.created(),
             },
             navigate: true,
           })}

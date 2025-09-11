@@ -1,6 +1,8 @@
 use utoipa::OpenApi;
 
+pub mod admin;
 pub mod auth;
+pub mod content;
 pub mod deck;
 pub mod files;
 pub mod learn;
@@ -9,7 +11,6 @@ pub mod notifications;
 pub mod state;
 pub mod task;
 pub mod user;
-
 pub const LESSON_TAG: &str = "Lesson";
 pub const TASK_TAG: &str = "Task"; // files are here
 pub const DECK_TAG: &str = "Deck";
@@ -19,6 +20,7 @@ pub const AUTH_TAG: &str = "Auth";
 pub const LEARN_TAG: &str = "Learn";
 
 pub const ADMIN_TAG: &str = "Admin";
+pub const CONTENT_TAG: &str = "Content";
 
 // Main API doc that aggregates everything
 #[derive(OpenApi)]
@@ -33,6 +35,9 @@ pub const ADMIN_TAG: &str = "Admin";
         (path = "/api/v1/files", api = files::FilesApi),
         (path = "/api/v1/notifications", api = notifications::NotificationApi),
         (path = "/api/v1/state", api = state::StateApi),
+        (path = "/api/v1/content", api = content::ContentApi),
+        (path = "/api/v1/admin", api = admin::AdminApi)
+
     ),
     servers(
         (url = "https://api.ogonek.app", description = "Production server"),

@@ -56,7 +56,7 @@ pub async fn create_user(
             .tag("authorization")
             .build();
         
-        let _ = audit::create(&state.db, &failed_audit).await?;
+        audit::create(&state.db, &failed_audit).await?;
         return Err(APIError::AccessDenied);
     }
     
@@ -86,7 +86,7 @@ pub async fn create_user(
         .tag("account_creation")
         .build();
     
-    let _ = audit::create(&state.db, &success_audit).await?;
+    audit::create(&state.db, &success_audit).await?;
     
     Ok(Json(user_id))
 }
