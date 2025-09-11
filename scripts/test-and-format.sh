@@ -5,7 +5,7 @@ BLUE='\033[0;34m'
 NC='\033[0m' 
 
 # Configuration
-DB_URL="postgres://postgres:H8QheSCRFCKejvDsbu@localhost:5433/pg-ogonek-dev"
+DB_URL="postgres://postgres:H8QheSCRFCKejvDsbu@localhost:5432/pg-ogonek-dev"
 
 echo -e "${BLUE}🚀 Starting development checks...${NC}"
 

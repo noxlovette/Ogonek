@@ -31,12 +31,10 @@
     jsonLd,
   }: Props = $props();
 
-  // Generate canonical URL from current page if not provided
   const currentCanonical = $derived(
     canonicalUrl || `https://ogonek.app${page.url.pathname}`,
   );
 
-  // Default JSON-LD structured data
   const defaultJsonLd = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
@@ -112,7 +110,6 @@
   <meta property="og:type" content={ogType} />
   <meta property="og:site_name" content="Ogonek" />
 
-  <!-- Twitter Card -->
   <meta name="twitter:card" content={twitterCard} />
   <meta name="twitter:site" content={twitterSite} />
   <meta name="twitter:creator" content="@noxlovette" />
@@ -121,13 +118,11 @@
   <meta name="twitter:image" content={ogImage} />
   <meta name="twitter:image:alt" content={`${ogTitle} - ${description}`} />
 
-  <!-- Additional Meta Tags -->
   <meta name="author" content="noxlovette" />
   <meta name="language" content="en-GB" />
   <meta name="rating" content="general" />
   <meta name="revisit-after" content="7 days" />
 
-  <!-- JSON-LD Structured Data -->
   <script type="application/ld+json">
     {JSON.stringify(finalJsonLd)}
   </script>

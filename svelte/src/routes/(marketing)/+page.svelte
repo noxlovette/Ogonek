@@ -12,8 +12,6 @@
   import WorkArea from "$lib/components/UI/WorkArea.svelte";
   import HStack from "$lib/components/UI/HStack.svelte";
   import Divider from "$lib/components/UI/toolbar/Divider.svelte";
-
-  // Enhanced SEO data for homepage
   const seoData = {
     title: "Ogonek - Digital Classroom for Private Teachers & Tutors",
     description:

@@ -1,0 +1,32 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        INSERT INTO audit_logs (\n            id, \n            event_type, \n            action, \n            outcome,\n            user_id, \n            user_email, \n            user_role, \n            impersonated_by,\n            resource_type, \n            resource_id, \n            resource_name,\n            payload,\n            session_id, \n            ip_address, \n            user_agent, \n            request_id,\n            severity, \n            tags,\n            occurred_at, \n            retention_until\n        )\n        VALUES (\n            $1, \n            $2, \n            $3, \n            $4,\n            $5, \n            $6, \n            $7, \n            $8,\n            $9, \n            $10, \n            $11,\n            $12,\n            $13, \n            $14, \n            $15, \n            $16,\n            $17, \n            $18,\n            CURRENT_TIMESTAMP, \n            $19\n        )\n        ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Varchar",
+        "Varchar",
+        "Varchar",
+        "Varchar",
+        "Varchar",
+        "Varchar",
+        "Varchar",
+        "Varchar",
+        "Varchar",
+        "Varchar",
+        "Varchar",
+        "Jsonb",
+        "Varchar",
+        "Inet",
+        "Text",
+        "Varchar",
+        "Varchar",
+        "TextArray",
+        "Timestamptz"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "2441fad4e0c948b4572e7103e428adb4aae4b5b97d1bb43621592b2f63d15dda"
+}

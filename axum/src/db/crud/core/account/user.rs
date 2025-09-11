@@ -1,12 +1,12 @@
 use crate::db::error::DbError;
-use crate::types::{User, UserUpdate};
+use crate::types::{User, UserRole, UserUpdate};
 use sqlx::PgPool;
 
 pub async fn find_by_id(db: &PgPool, user_id: &str) -> Result<User, DbError> {
     let user = sqlx::query_as!(
         User,
         r#"
-        SELECT username, email, role, id, name, pass
+        SELECT username, email, role as "role!: UserRole", id, name, pass
         FROM "user"
         WHERE id = $1
         "#,
@@ -69,6 +69,21 @@ pub async fn update(db: &PgPool, user_id: &str, update: &UserUpdate) -> Result<(
     })?;
 
     Ok(())
+}
+
+pub async fn get_email(db: &PgPool, user_id: &str) -> Result<String, DbError> {
+    let email = sqlx::query_scalar!(
+        r#"
+        SELECT email
+        FROM "user"
+        WHERE id = $1
+        "#,
+        user_id
+    )
+    .fetch_one(db)
+    .await?;
+
+    Ok(email)
 }
 
 #[cfg(test)]

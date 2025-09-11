@@ -1,0 +1,34 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        SELECT title, content, meta_description\n        FROM content\n        WHERE slug = $1 AND status = 'published'\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "title",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 1,
+        "name": "content",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 2,
+        "name": "meta_description",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      true
+    ]
+  },
+  "hash": "93d7f1591df527df4dd22527eece08fc37833d122d0187e9f9c659a8f4d45343"
+}

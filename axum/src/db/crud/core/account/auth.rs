@@ -85,7 +85,7 @@ pub async fn fetch_by_id(db: &PgPool, user_id: &str) -> Result<User, AuthError> 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::types::{AuthPayload, SignUpPayload};
+    use crate::types::{AuthPayload, SignUpPayload, UserRole};
     use sqlx::PgPool;
 
     #[sqlx::test]
@@ -198,7 +198,7 @@ mod tests {
         let user = result.unwrap();
         assert_eq!(user.username, "janedoe");
         assert_eq!(user.email, "jane@example.com");
-        assert_eq!(user.role, "teacher");
+        assert_eq!(user.role, UserRole::Teacher);
         assert_eq!(user.name, "Jane Doe");
         assert_eq!(user.id, creation_result);
 
@@ -323,7 +323,7 @@ mod tests {
         assert_eq!(user.id, creation_result);
         assert_eq!(user.username, "alice");
         assert_eq!(user.email, "alice@example.com");
-        assert_eq!(user.role, "admin");
+        assert_eq!(user.role, UserRole::Admin);
         assert_eq!(user.name, "Alice Cooper");
 
         Ok(())

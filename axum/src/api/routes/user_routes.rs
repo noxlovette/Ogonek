@@ -26,3 +26,10 @@ fn student_routes() -> Router<AppState> {
 fn profile_routes() -> Router<AppState> {
     Router::new().route("/", get(fetch_profile).patch(upsert_profile))
 }
+
+pub fn preferences_routes() -> Router<AppState> {
+    Router::new().route(
+        "/",
+        get(preferences::get_preferences).patch(preferences::update_preferences),
+    )
+}

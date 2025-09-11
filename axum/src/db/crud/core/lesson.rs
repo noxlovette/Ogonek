@@ -184,7 +184,7 @@ pub async fn update(
         "UPDATE lessons
          SET
             title = COALESCE($1, title),
-            topic =COALESCE($2, topic),
+            topic = COALESCE($2, topic),
             markdown = COALESCE($3, markdown),
             assignee = COALESCE($4, assignee)
          WHERE id = $5 AND created_by = $6

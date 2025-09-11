@@ -1,0 +1,47 @@
+use super::super::{DeckSmall, LessonSmall, TaskSmall};
+use chrono::{DateTime, Utc};
+use serde::{Deserialize, Serialize};
+use utoipa::ToSchema;
+
+#[derive(Serialize, ToSchema)]
+#[serde(rename_all = "camelCase")]
+pub struct TeacherStudent {
+    pub teacher_id: String,
+    pub student_id: String,
+    pub status: String,
+    pub telegram_id: Option<String>,
+    pub markdown: Option<String>,
+    pub joined: DateTime<Utc>,
+}
+
+#[derive(Serialize, ToSchema)]
+#[serde(rename_all = "camelCase")]
+pub struct Student {
+    pub id: String,
+    pub name: String,
+    pub username: String,
+    pub email: String,
+    pub markdown: Option<String>,
+    pub student_telegram_id: Option<String>,
+}
+
+#[derive(Deserialize, ToSchema)]
+pub struct AddStudentRequest {
+    pub student_id: String,
+}
+
+#[derive(Deserialize, ToSchema)]
+#[serde(rename_all = "camelCase")]
+pub struct UpdateStudentRequest {
+    pub markdown: Option<String>,
+    pub student_telegram_id: Option<String>,
+}
+
+#[derive(Serialize, ToSchema)]
+#[serde(rename_all = "camelCase")]
+pub struct CompositeStudent {
+    pub student: Student,
+    pub decks: Vec<DeckSmall>,
+    pub lessons: Vec<LessonSmall>,
+    pub tasks: Vec<TaskSmall>,
+}

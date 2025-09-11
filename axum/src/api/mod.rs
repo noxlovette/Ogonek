@@ -1,9 +1,10 @@
-pub mod account;
-pub mod core;
 pub mod error;
-pub mod files;
-pub mod notifications;
-pub mod openapi;
+pub mod handlers;
+pub mod middleware;
 pub mod routes;
+pub use handlers::*;
 
-pub use openapi::*;
+// Re-export OpenAPI tags for use in handlers
+pub use crate::openapi::{
+    ADMIN_TAG, AUTH_TAG, DECK_TAG, LEARN_TAG, LESSON_TAG, STATE_TAG, TASK_TAG, USER_TAG,
+};

@@ -21,7 +21,7 @@ docker compose -f ./compose/compose.dev.yaml up -d
 cd axum
 echo -e "${YELLOW}Creating sqlx queries...${NC}"
 export DATABASE_URL="
-postgres://postgres:H8QheSCRFCKejvDsbu@localhost:5433/pg-ogonek-dev"
+postgres://postgres:H8QheSCRFCKejvDsbu@localhost:5432/pg-ogonek-dev"
 cargo sqlx prepare
 
 
@@ -29,6 +29,6 @@ echo -e "${GREEN}✅ Development environment started!${NC}"
 echo -e "${BLUE}📊 Services available at:${NC}"
 echo -e "  - Frontend: http://localhost:5173"
 echo -e "  - Backend: http://localhost:3000"
-echo -e "  - Database: localhost:5433"
+echo -e "  - Database: localhost:5432"
 echo -e "  - Redis: localhost:6379"
 echo -e "  - Redis UI: http://localhost:8003"
