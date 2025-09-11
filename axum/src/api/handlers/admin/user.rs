@@ -4,8 +4,8 @@ use crate::auth::Claims;
 use crate::auth::password::hash_password;
 use crate::db::crud::core::account::{auth, user};
 use crate::db::crud::tracking::audit;
-use crate::services::{AuditBuilder};
 use crate::schema::AppState;
+use crate::services::AuditBuilder;
 use crate::tools::extractors::RequestMetadata;
 use crate::types::{SignUpPayload, UserRole};
 use axum::extract::{Json, State};
@@ -15,7 +15,7 @@ use validator::Validate;
     post,
     path = "/signup",
     request_body = SignUpPayload,
-    tag = ADMIN_TAG, 
+    tag = ADMIN_TAG,
     responses(
         (status = 201, description = "User registered successfully"),
         (status = 400, description = "Invalid registration data"),
@@ -26,7 +26,7 @@ use validator::Validate;
 pub async fn create_user(
     State(state): State<AppState>,
     claims: Claims,
-    metadata: RequestMetadata, 
+    metadata: RequestMetadata,
     Json(payload): Json<SignUpPayload>,
 ) -> Result<Json<String>, APIError> {
     if payload.username.is_empty() || payload.pass.is_empty() {
@@ -35,13 +35,15 @@ pub async fn create_user(
 
     let email = user::get_email(&state.db, &claims.sub).await?;
     let target_role = UserRole::from(payload.role.clone());
-    
+
     if !target_role.can_be_assigned_by(&claims.role) {
         tracing::warn!(
             "User {} (role: {}) attempted to create user with role: {}",
-            claims.sub, claims.role, target_role
+            claims.sub,
+            claims.role,
+            target_role
         );
-        
+
         let failed_audit = AuditBuilder::user_operation("CREATE", &claims, email)
             .failed()
             .security_event()
@@ -55,24 +57,24 @@ pub async fn create_user(
             }))
             .tag("authorization")
             .build();
-        
+
         audit::create(&state.db, &failed_audit).await?;
         return Err(APIError::AccessDenied);
     }
-    
+
     payload.validate().map_err(|e| {
         eprintln!("{e:?}");
         APIError::InvalidCredentials
     })?;
-    
+
     let hashed_password = hash_password(&payload.pass)?;
     let created = SignUpPayload {
         pass: hashed_password,
         ..payload
     };
-    
+
     let user_id = auth::signup(&state.db, &created).await?;
-    
+
     let success_audit = AuditBuilder::user_operation("CREATE", &claims, email)
         .resource_id(user_id.clone())
         .resource_name(created.username.clone())
@@ -85,8 +87,8 @@ pub async fn create_user(
         }))
         .tag("account_creation")
         .build();
-    
+
     audit::create(&state.db, &success_audit).await?;
-    
+
     Ok(Json(user_id))
 }

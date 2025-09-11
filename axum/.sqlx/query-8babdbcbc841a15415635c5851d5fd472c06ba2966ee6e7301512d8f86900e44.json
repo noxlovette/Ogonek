@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n      UPDATE content\n      SET\n         published_at = NULL,\n         status = 'draft',\n         updated_by = $2\n      WHERE id = $1 \n        ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Varchar"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "8babdbcbc841a15415635c5851d5fd472c06ba2966ee6e7301512d8f86900e44"
+}

@@ -6,11 +6,15 @@
 const API_BASE = "/axum";
 
 export const routes = {
+  admin: {
+    content: () => `${API_BASE}/admin/content`,
+    new_content: () => `${API_BASE}/admin/content`,
+    delete_content: (id: string) => `${API_BASE}/admin/content/${id}`,
+    update_content: (id: string) => `${API_BASE}/admin/content/${id}`,
+  },
   auth: {
     bind_student_to_teacher: () => `${API_BASE}/auth/bind`,
-    generate_invite_link: (
-    isRegistered: string
-  ) => {
+    generate_invite_link: (isRegistered: string) => {
       const params = new URLSearchParams();
       if (isRegistered) params.set("isRegistered", isRegistered);
       const query = params.toString();
@@ -20,13 +24,16 @@ export const routes = {
     signin: () => `${API_BASE}/auth/signin`,
     signup: () => `${API_BASE}/auth/signup`,
   },
+  content: {
+    content: (slug: string) => `${API_BASE}/content/${slug}`,
+  },
   decks: {
     all: (
-    page?: string,
-    per_page?: string,
-    search?: string,
-    assignee?: string
-  ) => {
+      page?: string,
+      per_page?: string,
+      search?: string,
+      assignee?: string,
+    ) => {
       const params = new URLSearchParams();
       if (page) params.set("page", page);
       if (per_page) params.set("per_page", per_page);
@@ -46,8 +53,10 @@ export const routes = {
     abort_multipart_upload: () => `${API_BASE}/files/abort`,
     complete_multipart_upload: () => `${API_BASE}/files/complete`,
     init_multipart_upload: () => `${API_BASE}/files/init`,
-    presigned_urls_batch: (file_id: string) => `${API_BASE}/files/presigned/batch/${file_id}`,
-    presigned_url: (encoded_key: string) => `${API_BASE}/files/presigned/${encoded_key}`,
+    presigned_urls_batch: (file_id: string) =>
+      `${API_BASE}/files/presigned/batch/${file_id}`,
+    presigned_url: (encoded_key: string) =>
+      `${API_BASE}/files/presigned/${encoded_key}`,
     delete_file: (id: string) => `${API_BASE}/files/${id}`,
   },
   learn: {
@@ -59,11 +68,11 @@ export const routes = {
   },
   lessons: {
     all: (
-    page?: string,
-    per_page?: string,
-    search?: string,
-    assignee?: string
-  ) => {
+      page?: string,
+      per_page?: string,
+      search?: string,
+      assignee?: string,
+    ) => {
       const params = new URLSearchParams();
       if (page) params.set("page", page);
       if (per_page) params.set("per_page", per_page);
@@ -89,13 +98,13 @@ export const routes = {
   },
   tasks: {
     all: (
-    page?: string,
-    per_page?: string,
-    search?: string,
-    assignee?: string,
-    completed?: string,
-    priority?: string
-  ) => {
+      page?: string,
+      per_page?: string,
+      search?: string,
+      assignee?: string,
+      completed?: string,
+      priority?: string,
+    ) => {
       const params = new URLSearchParams();
       if (page) params.set("page", page);
       if (per_page) params.set("per_page", per_page);
@@ -116,9 +125,7 @@ export const routes = {
     me: () => `${API_BASE}/users`,
     delete_user: () => `${API_BASE}/users`,
     update_user: () => `${API_BASE}/users`,
-    inviter: (
-    invite?: string
-  ) => {
+    inviter: (invite?: string) => {
       const params = new URLSearchParams();
       if (invite) params.set("invite", invite);
       const query = params.toString();
@@ -131,7 +138,7 @@ export const routes = {
     upsert_student: (id: string) => `${API_BASE}/users/student/${id}`,
     remove_student: (id: string) => `${API_BASE}/users/student/${id}`,
     update_student: (id: string) => `${API_BASE}/users/student/${id}`,
-  }
+  },
 } as const;
 
 // Type helpers

@@ -1,0 +1,19 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "UPDATE lessons\n         SET\n            title = COALESCE($1, title),\n            topic = COALESCE($2, topic),\n            markdown = COALESCE($3, markdown),\n            assignee = COALESCE($4, assignee)\n         WHERE id = $5 AND created_by = $6\n",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Varchar",
+        "Varchar",
+        "Text",
+        "Varchar",
+        "Text",
+        "Text"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "ab70b2b78154921e2c655ddaec1ae438522312bc52fde45c34d8c8a03b4e5e81"
+}

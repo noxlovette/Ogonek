@@ -6,7 +6,7 @@ edition = "2024"
 
 [dependencies]
 # Primary Crates
-axum = { version = "0.8.1", features = ["macros", "multipart"] }
+axum = { version = "0.8.4", features = ["macros", "multipart"] }
 axum-extra = { version = "0.10.0", features = ["typed-header", "cookie"] }
 sqlx = { version = "0.8.2", features = [
     "runtime-tokio",

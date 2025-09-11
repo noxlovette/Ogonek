@@ -1,10 +1,8 @@
 use axum::{
-    Json,
     extract::multipart::MultipartError,
     http::StatusCode,
     response::{IntoResponse, Response},
 };
-use serde_json::json;
 use thiserror::Error;
 
 #[derive(Debug, Error, ToSchema)]
