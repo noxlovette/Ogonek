@@ -9,7 +9,7 @@ export const load = (async ({ params, fetch }) => {
   const response = await fetch(routes.admin.delete_content(id));
 
   const content: Content = await response.json();
-  const rendered = await parseMarkdown(content.content);
+  const rendered = await parseMarkdown(content.markdown);
   return {
     content,
     rendered,

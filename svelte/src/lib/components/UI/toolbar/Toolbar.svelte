@@ -8,8 +8,8 @@
   import type { Role } from "$lib/types";
 
   let { children, src = "", alt = "" } = $props();
-  function isRole(segment: string): segment is Role {
-    return segment === "t" || segment === "s";
+  function isAppRoot(segment: string): segment is "t" | "s" | "admin" {
+    return segment === "t" || segment === "s" || segment === "admin";
   }
 
   const showBack = $derived.by(() => {
@@ -17,7 +17,7 @@
 
     const [firstSegment] = segments;
 
-    if (!isRole(firstSegment)) {
+    if (!isAppRoot(firstSegment)) {
       return segments.length > 1;
     }
 

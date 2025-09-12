@@ -73,7 +73,7 @@ pub async fn update(
         user_id,
         update.slug,
         update.title,
-        update.content,
+        update.markdown,
         update.meta_description,
     )
     .execute(db)

@@ -12,6 +12,7 @@
   import { Settings, FileText, Home } from "lucide-svelte";
   import type { LayoutProps } from "./$types";
   import Loader from "$lib/components/UI/navigation/Loader.svelte";
+  import { setUser } from "$lib/stores";
 
   let { data, children }: LayoutProps = $props();
 
@@ -20,12 +21,7 @@
     { href: "/admin/content", label: "Content", icon: FileText },
   ];
 
-  function isActiveRoute(href: string) {
-    if (href === "/admin") {
-      return $page.url.pathname === "/admin";
-    }
-    return $page.url.pathname.startsWith(href);
-  }
+  setUser(data.context.user);
 </script>
 
 <div class="md:hidden">

@@ -16,3 +16,4 @@
 <Toolbar>
   <LargeTitle>Admin Dashboard</LargeTitle>
 </Toolbar>
+You are {data.context.user.role}

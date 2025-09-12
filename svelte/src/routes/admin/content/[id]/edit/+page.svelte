@@ -37,7 +37,7 @@
 
   let title: string = $state(data.content.title);
 
-  let markdown = $state(data.content.content);
+  let markdown = $state(data.content.markdown);
   function generateSlug(title: string) {
     return title
       .toLowerCase()
@@ -110,5 +110,6 @@
     />
     <input type="hidden" name="slug" value={slug} />
     <Editor bind:markdownContent={markdown} />
+    <input type="hidden" name="markdown" value={markdown} />
   </HStack>
 </form>

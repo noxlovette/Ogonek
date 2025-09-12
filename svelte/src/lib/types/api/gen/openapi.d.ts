@@ -716,8 +716,8 @@ export interface components {
             tasks: components["schemas"]["TaskSmall"][];
         };
         Content: {
-            content: string;
             id: string;
+            markdown: string;
             metaDescription?: string | null;
             /** Format: date-time */
             publishedAt?: string | null;
@@ -731,7 +731,7 @@ export interface components {
             version: number;
         };
         ContentPublic: {
-            content: string;
+            markdown: string;
             metaDescription?: string | null;
             title: string;
         };
@@ -1060,7 +1060,7 @@ export interface components {
             review_count: number;
         };
         UpdateContent: {
-            content?: string | null;
+            markdown?: string | null;
             metaDescription?: string | null;
             slug?: string | null;
             title?: string | null;

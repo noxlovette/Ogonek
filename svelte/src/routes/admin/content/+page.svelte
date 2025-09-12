@@ -6,14 +6,15 @@
     HStack,
     Toolbar,
     Table,
+    Divider,
+    Merger,
   } from "$lib/components";
-  import { Plus, Eye, Edit, Pencil } from "lucide-svelte";
+  import { Plus } from "lucide-svelte";
   import type { PageProps } from "./$types";
-  import type { components } from "$lib/types/api/gen/openapi";
-  import { formatDate } from "$lib/utils";
-  import Badge from "$lib/components/cards/Badge.svelte";
+  import { enhanceForm, formatDate } from "$lib/utils";
   import type { TableConfig, Content } from "$lib/types";
   import LargeTitle from "$lib/components/typography/LargeTitle.svelte";
+  import { enhance } from "$app/forms";
 
   let { data }: PageProps = $props();
 
@@ -34,6 +35,22 @@
 
 <Toolbar>
   <LargeTitle>Content</LargeTitle>
+  <Divider></Divider>
+
+  <Merger>
+    <form
+      action="?/new"
+      method="post"
+      use:enhance={enhanceForm({
+        messages: {
+          redirect: "New content added",
+        },
+        navigate: true,
+      })}
+    >
+      <UniButton Icon={Plus} type="submit">New</UniButton>
+    </form>
+  </Merger>
 </Toolbar>
 
 <Table config={contentConfig} items={data.content} href="content" />

@@ -3,4 +3,4 @@
   import SidebarItem from "./SidebarItem.svelte";
 </script>
 
-<SidebarItem href="content" name="Content" Icon={FileText} />
+<SidebarItem href="/admin/content" name="Content" Icon={FileText} />

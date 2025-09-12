@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "\n        SELECT title, content, meta_description\n        FROM content\n        WHERE slug = $1 AND status = 'published'\n        ",
+  "query": "\n        SELECT title, markdown, meta_description\n        FROM content\n        WHERE slug = $1 AND status = 'published'\n        ",
   "describe": {
     "columns": [
       {
@@ -10,7 +10,7 @@
       },
       {
         "ordinal": 1,
-        "name": "content",
+        "name": "markdown",
         "type_info": "Text"
       },
       {
@@ -30,5 +30,5 @@
       true
     ]
   },
-  "hash": "93d7f1591df527df4dd22527eece08fc37833d122d0187e9f9c659a8f4d45343"
+  "hash": "928a3b33be8719bdde68d07d0f732b3aed20759a984c67ad7aaa8939ff5c1ac1"
 }

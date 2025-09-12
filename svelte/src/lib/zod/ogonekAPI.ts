@@ -13,8 +13,8 @@ import {
  * @summary All content from the website
  */
 export const listContentResponseItem = zod.object({
-  "content": zod.string(),
   "id": zod.string(),
+  "markdown": zod.string(),
   "metaDescription": zod.string().nullish(),
   "publishedAt": zod.iso.datetime({}).nullish(),
   "slug": zod.string(),
@@ -35,8 +35,8 @@ export const fetchContentParams = zod.object({
 })
 
 export const fetchContentResponse = zod.object({
-  "content": zod.string(),
   "id": zod.string(),
+  "markdown": zod.string(),
   "metaDescription": zod.string().nullish(),
   "publishedAt": zod.iso.datetime({}).nullish(),
   "slug": zod.string(),
@@ -64,7 +64,7 @@ export const updateContentParams = zod.object({
 })
 
 export const updateContentBody = zod.object({
-  "content": zod.string().nullish(),
+  "markdown": zod.string().nullish(),
   "metaDescription": zod.string().nullish(),
   "slug": zod.string().nullish(),
   "title": zod.string().nullish()
@@ -181,7 +181,7 @@ export const fetchContentPublicParams = zod.object({
 })
 
 export const fetchContentPublicResponse = zod.object({
-  "content": zod.string(),
+  "markdown": zod.string(),
   "metaDescription": zod.string().nullish(),
   "title": zod.string()
 })

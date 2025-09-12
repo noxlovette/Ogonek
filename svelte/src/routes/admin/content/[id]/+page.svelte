@@ -10,8 +10,6 @@
     Merger,
     Caption1,
     EditButton,
-    Photo,
-    Content,
   } from "$lib/components";
 
   import { formatDateTime } from "$lib/utils";
@@ -46,7 +44,9 @@
     </VStack>
   </HStack>
 </Toolbar>
-{@html data.rendered}
+<div class="markdown">
+  {@html data.rendered}
+</div>
 <svelte:head>
   <title>Content | {data.content.title}</title>
 </svelte:head>
