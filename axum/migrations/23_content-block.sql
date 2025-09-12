@@ -2,7 +2,7 @@ CREATE TABLE content (
     id VARCHAR(21) PRIMARY KEY,
     slug VARCHAR NOT NULL UNIQUE, -- 'privacy-policy', 'about-us', etc
     title VARCHAR NOT NULL, -- for <title> tags and breadcrumbs
-    content TEXT NOT NULL,
+    markdown TEXT NOT NULL,
     meta_description TEXT, -- SEO juice
     version INTEGER NOT NULL DEFAULT 1,
     status VARCHAR NOT NULL DEFAULT 'draft', -- 'draft', 'published'

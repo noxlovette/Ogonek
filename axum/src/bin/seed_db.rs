@@ -99,6 +99,14 @@ async fn create_users(db: &PgPool) -> Result<Vec<String>> {
             "student",
         ),
         ("dev_student3", "Eve Pupil", "eve@dev.ogonek.app", "student"),
+        ("dev_god", "God User", "god@dev.ogonek.app", "god"),
+        (
+            "dev_moderator",
+            "Moderator User",
+            "moderator@dev.ogonek.app",
+            "moderator",
+        ),
+        ("dev_admin", "Admin User", "admin@dev.ogonek.app", "admin"),
     ];
 
     let mut user_ids = Vec::new();

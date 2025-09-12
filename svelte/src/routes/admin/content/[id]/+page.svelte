@@ -1,128 +1,52 @@
 <script lang="ts">
   import {
-    Title1,
-    UniButton,
-    VStack,
-    HStack,
-    Input,
-    Editor,
-    ConfirmDialogue,
-    Toolbar,
     LargeTitle,
+    Title3,
+    Toolbar,
+    TableOfContents,
+    HStack,
+    VStack,
     Divider,
     Merger,
-    SaveButton,
-    CancelButton,
-    DeleteButton,
+    Caption1,
+    EditButton,
+    Photo,
+    Content,
   } from "$lib/components";
-  import {
-    ArrowLeft,
-    Save,
-    Trash2,
-    Eye,
-    Rss,
-    RadioTower,
-    CloudOff,
-    MegaphoneOff,
-    Megaphone,
-    ScanSearch,
-  } from "lucide-svelte";
-  import { enhance } from "$app/forms";
-  import type { PageProps } from "./$types";
-  import { enhanceForm, formatDate, formatDateTime } from "$lib/utils";
+
+  import { formatDateTime } from "$lib/utils";
+  import type { PageData } from "./$types";
   import Badge from "$lib/components/cards/Badge.svelte";
-  import Caption1 from "$lib/components/typography/Caption1.svelte";
+  import { page } from "$app/state";
 
-  let { data }: PageProps = $props();
-
-  let { metaDescription } = data.content;
-
-  let title: string = $state(data.content.title);
-
-  function generateSlug(title: string) {
-    return title
-      .toLowerCase()
-      .replace(/[^a-z0-9\s-]/g, "")
-      .replace(/\s+/g, "-")
-      .replace(/-+/g, "-")
-      .trim();
-  }
-
-  const slug = $derived(generateSlug(title));
+  let { data }: { data: PageData } = $props();
 </script>
 
-<form
-  method="POST"
-  action="?/update"
-  use:enhance={enhanceForm({
-    messages: {
-      redirect: "Updated",
-      success: data.content.status == "draft" ? "Published" : "Unpublished",
-    },
-    shouldUpdate: true,
-  })}
->
-  <Toolbar>
-    <HStack>
-      <VStack>
-        <LargeTitle>Edit Content</LargeTitle>
-        <Divider />
-        <VStack>
-          <Merger>
-            {#if data.content.status == "published"}
-              <UniButton
-                type="submit"
-                formaction="?/unpublish"
-                Icon={MegaphoneOff}>Publish</UniButton
-              >
-              <UniButton Icon={ScanSearch} href="./preview/{data.content.slug}">
-                Preview
-              </UniButton>
-            {:else}
-              <UniButton type="submit" formaction="?/publish" Icon={Megaphone}
-                >Publish</UniButton
-              >
-            {/if}
-          </Merger>
-          <Merger>
-            <DeleteButton
-              confirmTitle="Delete Content"
-              confirmText="You are deleting this content"
-            ></DeleteButton>
-            <CancelButton />
-            <SaveButton />
-          </Merger>
-        </VStack>
-      </VStack>
-      <VStack>
-        <Badge
-          urgency={data.content.status == "published" ? "green" : "normal"}
-        >
-          {data.content.status}
-        </Badge>
-        <Caption1>
-          Last edited on {formatDateTime(data.content.updatedAt)}
-          {#if data.content.status == "published" && data.content.publishedAt}
-            , published on {formatDateTime(data.content.publishedAt)}
-          {/if}
-        </Caption1>
-      </VStack>
-    </HStack>
-  </Toolbar>
-
+<Toolbar>
   <HStack>
-    <Input
-      name="title"
-      bind:value={title}
-      placeholder="Enter content title"
-      required
-    />
-    <Input
-      name="metaDescription"
-      value={metaDescription}
-      placeholder="Brief description for SEO"
-    />
-    <input type="hidden" name="slug" value={slug} />
-    <Editor />
+    <VStack>
+      <LargeTitle>
+        {data.content.title}
+      </LargeTitle>
+      <Divider />
+      <Merger>
+        <EditButton href="{page.params.id}/edit" />
+      </Merger>
+    </VStack>
+    <VStack>
+      <Badge urgency={data.content.status == "published" ? "green" : "normal"}>
+        {data.content.status}
+      </Badge>
+      <Caption1>
+        Last edited on {formatDateTime(data.content.updatedAt)}
+        {#if data.content.status == "published" && data.content.publishedAt}
+          , published on {formatDateTime(data.content.publishedAt)}
+        {/if}
+      </Caption1>
+    </VStack>
   </HStack>
-</form>
+</Toolbar>
+{@html data.rendered}
+<svelte:head>
+  <title>Content | {data.content.title}</title>
+</svelte:head>

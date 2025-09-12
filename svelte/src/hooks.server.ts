@@ -67,7 +67,7 @@ export const authenticationHandle: Handle = async ({ event, resolve }) => {
       } else if (user.role === "teacher") {
         throw redirect(303, "/t/dashboard");
       } else if (isSuperUser(user.role)) {
-        throw redirect(303, "/admin");
+        throw redirect(303, "/admin/dashboard");
       }
     }
   }
