@@ -8,3 +8,5 @@ export type Student = components["schemas"]["Student"];
 export interface Claims extends JWTPayload {
   role: components["schemas"]["UserRole"];
 }
+
+export type UserRole = components["schemas"]["UserRole"];

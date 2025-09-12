@@ -13,6 +13,7 @@
   import { m } from "$lib/paraglide/messages";
   import type { PageProps } from "./$types";
   import message from "$lib/messages";
+  import { goto } from "$app/navigation";
 
   let password = $state("");
   let confirmPassword = $state("");
@@ -56,6 +57,11 @@
     messages: {
       redirect: message.auth.signupSuccess,
       defaultError: message.auth.signupFailure,
+    },
+    handlers: {
+      success: async () => {
+        goto("/auth/login");
+      },
     },
     navigate: true,
     shouldUpdate: true,

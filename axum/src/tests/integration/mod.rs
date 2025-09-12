@@ -9,7 +9,7 @@ pub async fn test_db() -> anyhow::Result<PgPool> {
     let connection_string =
         &format!("postgres://postgres:postgres@127.0.0.1:{host_port}/postgres",);
 
-    let pool = PgPool::connect(&connection_string)
+    let pool = PgPool::connect(connection_string)
         .await
         .expect("Failed to connect to test database");
 

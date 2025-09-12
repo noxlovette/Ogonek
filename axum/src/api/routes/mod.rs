@@ -114,7 +114,7 @@ mod tests {
     use tower::ServiceExt; // for `call`, `oneshot`, and `ready`
 
     async fn app() -> Router {
-        let state = AppState::new().await.unwrap();
+        let state = AppState::test().await.unwrap();
         let cors = std::env::var("CORS").expect("CORS needs to be set");
 
         root(state, cors).unwrap()
