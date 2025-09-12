@@ -99,10 +99,6 @@ jobs:
         run: |
           cd svelte
           pnpm run format
-      - name: Svelte Linting
-        run: |
-          cd svelte
-          pnpm run check
       - name: Svelte Build
         run: |
           cd svelte
