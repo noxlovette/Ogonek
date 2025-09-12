@@ -35,7 +35,7 @@ pub struct LessonFull {
     pub updated_at: DateTime<Utc>,
     pub assignee_name: String,
 }
-/// Version to indulge swift OpenAPI Generator
+/// Version to indulge swift OpenAPI Generator. ATTENTION: camelCase may break the iOS app! I fucked up the last build
 #[derive(Serialize, Debug, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct LessonWithPhoto {
