@@ -28,7 +28,7 @@
 
   let showPicker = $state(true);
 
-  $inspect(form);
+  let q = "";
 </script>
 
 <form
@@ -97,7 +97,7 @@
       {/if}
     </Merger>
 
-    <SearchBar placeholder="Search photos..." />
+    <SearchBar bind:q placeholder="Search photos..." />
   </VStack>
   {#if showPicker}
     <PhotoPicker
