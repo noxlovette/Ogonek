@@ -30,9 +30,6 @@ cd axum || handle_error "axum folder not found"
 # Set database URL for all operations
 export DATABASE_URL="$DB_URL"
 
-echo -e "${YELLOW}📦 Updating cargo dependencies...${NC}"
-run_cmd cargo update
-
 echo -e "${YELLOW}🎨 Checking Rust formatting...${NC}"
 if ! cargo fmt --check; then
     echo -e "${YELLOW}⚠️  Formatting issues found. Auto-fixing...${NC}"
