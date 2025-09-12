@@ -1,0 +1,19 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n      UPDATE content\n      SET\n        slug = COALESCE($3, slug),\n        title = COALESCE($4, title),\n        markdown = COALESCE($5, markdown),\n        meta_description = COALESCE($6, meta_description),\n        version = version + 1,\n        updated_at = NOW(),\n        updated_by = $2\n         WHERE id = $1 \n        ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Varchar",
+        "Varchar",
+        "Varchar",
+        "Text",
+        "Text"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "eca171c8c8c5f1989b2e7e0a2d08852758580f38df91a593fe805402fb608d9c"
+}

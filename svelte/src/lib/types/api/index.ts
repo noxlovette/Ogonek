@@ -1,3 +1,4 @@
+export * from "./content";
 export * from "./deck";
 export * from "./file";
 export * from "./lesson";

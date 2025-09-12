@@ -1,9 +1,14 @@
 <script lang="ts">
+  import type { Snippet } from "svelte";
   import { Caption1 } from "../typography";
+  import type { Urgency } from "$lib/types";
+  const {
+    urgency = "normal",
+    styling = "",
+    children,
+  }: { urgency?: Urgency; styling?: string; children: Snippet } = $props();
 
-  const { urgency = "normal", styling = "", children } = $props();
-
-  function getBadgeConfig(urgency: string) {
+  function getBadgeConfig(urgency: Urgency) {
     switch (urgency) {
       case "overdue":
         return {
@@ -19,6 +24,10 @@
         return {
           text: "Due Soon",
           color: "bg-yellow-600   ring-yellow-600/40",
+        };
+      case "green":
+        return {
+          color: "bg-green-600 ring-green-600/40",
         };
       case "normal":
       default:

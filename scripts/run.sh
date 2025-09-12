@@ -30,6 +30,7 @@ show_help() {
     echo ""
     echo -e "${GREEN}Utilities:${NC}"
     echo "  help                  - Show this help message"
+    echo "  update                - Update everything"
     echo ""
 }
 
@@ -51,6 +52,9 @@ case "$1" in
         ;;
     "db-reset")
         ./scripts/database/database-reset.sh
+        ;;
+    "update")
+        ./scripts/utils/update.sh
         ;;
     "help" | "-h" | "--help" | "")
         show_help

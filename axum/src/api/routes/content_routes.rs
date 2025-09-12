@@ -2,5 +2,5 @@ use crate::{api::content, schema::AppState};
 use axum::{Router, routing::get};
 
 pub fn content_routes() -> Router<AppState> {
-    Router::new().route("/{slug}", get(content::fetch_content))
+    Router::new().route("/{slug}", get(content::fetch_content_public))
 }

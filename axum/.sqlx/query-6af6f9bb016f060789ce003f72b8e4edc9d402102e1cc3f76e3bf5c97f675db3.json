@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "\n        SELECT\n        id,\n        slug,\n        title,\n        content,\n        meta_description,\n        version,\n        status as \"status: ContentStatus\",\n        published_at,\n        updated_at,\n        updated_by\n        FROM content\n        WHERE id = $1 \n        ",
+  "query": "\n        SELECT\n        id,\n        slug,\n        title,\n        markdown,\n        meta_description,\n        version,\n        status as \"status: ContentStatus\",\n        published_at,\n        updated_at,\n        updated_by\n        FROM content\n        ",
   "describe": {
     "columns": [
       {
@@ -20,7 +20,7 @@
       },
       {
         "ordinal": 3,
-        "name": "content",
+        "name": "markdown",
         "type_info": "Text"
       },
       {
@@ -55,9 +55,7 @@
       }
     ],
     "parameters": {
-      "Left": [
-        "Text"
-      ]
+      "Left": []
     },
     "nullable": [
       false,
@@ -72,5 +70,5 @@
       false
     ]
   },
-  "hash": "17e58743f6723f4b58dcaa83ad29c204e736f1c0d9b5a0390f8a213a30449884"
+  "hash": "6af6f9bb016f060789ce003f72b8e4edc9d402102e1cc3f76e3bf5c97f675db3"
 }

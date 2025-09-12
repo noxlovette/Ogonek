@@ -2,7 +2,11 @@
 use anyhow::Result;
 use chrono::Utc;
 use dotenvy::dotenv;
-use ogonek::{auth::password::hash_password, db::init_db, types::ProfileUpdate};
+use fake::Fake;
+use fake::faker::internet::en::SafeEmail;
+use fake::faker::lorem::en::{Paragraph, Sentence};
+use fake::faker::name::en::Name;
+use ogonek::{auth::password::hash_password, db::init_db};
 use sqlx::PgPool;
 
 #[tokio::main]
@@ -73,38 +77,23 @@ async fn create_users(db: &PgPool) -> Result<Vec<String>> {
     let dev_password = "!7!N6x$#62j0fE3zdGnS";
     let hashed_password = hash_password(dev_password)?;
 
-    let users = vec![
-        (
-            "dev_teacher1",
-            "Alice Teacher",
-            "alice@dev.ogonek.app",
-            "teacher",
-        ),
-        (
-            "dev_teacher2",
-            "Bob Instructor",
-            "bob@dev.ogonek.app",
-            "teacher",
-        ),
-        (
-            "dev_student1",
-            "Charlie Student",
-            "charlie@dev.ogonek.app",
-            "student",
-        ),
-        (
-            "dev_student2",
-            "Diana Learner",
-            "diana@dev.ogonek.app",
-            "student",
-        ),
-        ("dev_student3", "Eve Pupil", "eve@dev.ogonek.app", "student"),
+    let roles = vec![
+        ("dev_teacher1", "teacher"),
+        ("dev_teacher2", "teacher"),
+        ("dev_student1", "student"),
+        ("dev_student2", "student"),
+        ("dev_student3", "student"),
+        ("dev_god", "god"),
+        ("dev_moderator", "moderator"),
+        ("dev_admin", "admin"),
     ];
 
     let mut user_ids = Vec::new();
 
-    for (username, name, email, role) in users {
-        let user_id = format!("{}_{}", username, nanoid::nanoid!(8));
+    for (username, role) in roles {
+        let user_id = nanoid::nanoid!();
+        let name: String = Name().fake();
+        let email: String = SafeEmail().fake();
 
         sqlx::query!(
             r#"
@@ -133,36 +122,29 @@ async fn create_users(db: &PgPool) -> Result<Vec<String>> {
 async fn create_profiles(db: &PgPool, user_ids: &[String]) -> Result<()> {
     println!("📋 Updating profiles...");
 
-    let profiles = vec![
-        ProfileUpdate {
-            video_call_url: Some("https://zoom.us/j/alice123".to_string()),
-            avatar_url: Some("https://avatars.dev/alice.png".to_string()),
-            telegram_id: Some("900828558".to_string()),
-        },
-        ProfileUpdate {
-            video_call_url: Some("https://meet.google.com/bob-room".to_string()),
-            avatar_url: Some("https://avatars.dev/bob.png".to_string()),
-            telegram_id: Some("900828558".to_string()),
-        },
-        ProfileUpdate {
-            video_call_url: None,
-            avatar_url: Some("https://avatars.dev/charlie.png".to_string()),
-            telegram_id: Some("900828558".to_string()),
-        },
-        ProfileUpdate {
-            video_call_url: None,
-            avatar_url: Some("https://avatars.dev/diana.png".to_string()),
-            telegram_id: Some("900828558".to_string()),
-        },
-        ProfileUpdate {
-            video_call_url: None,
-            avatar_url: Some("https://avatars.dev/eve.png".to_string()),
-            telegram_id: Some("900828558".to_string()),
-        },
-    ];
+    for user_id in user_ids.iter() {
+        let video_call_url = if (0..10).fake::<i32>() < 6 {
+            // 60% chance of having video call URL
+            let meeting_id: u64 = (100000000000..999999999999).fake();
+            let password: u32 = (100000..999999).fake();
+            Some(format!("https://zoom.us/j/{}?pwd={}", meeting_id, password))
+        } else {
+            None
+        };
 
-    for (i, user_id) in user_ids.iter().enumerate() {
-        let profile = &profiles[i];
+        let avatar_url = if (0..10).fake::<i32>() < 8 {
+            // 80% chance of having avatar
+            let avatar_id: u32 = (1..1000).fake();
+            Some(format!("https://avatars.dev/avatar_{}.png", avatar_id))
+        } else {
+            None
+        };
+
+        let telegram_id = if (0..10).fake::<i32>() < 7 {
+            Some("900828558")
+        } else {
+            None
+        };
 
         sqlx::query!(
             r#"
@@ -171,9 +153,9 @@ async fn create_profiles(db: &PgPool, user_ids: &[String]) -> Result<()> {
             WHERE user_id = $1
             "#,
             user_id,
-            profile.video_call_url,
-            profile.avatar_url,
-            profile.telegram_id
+            video_call_url,
+            avatar_url,
+            telegram_id
         )
         .execute(db)
         .await?;
@@ -237,39 +219,24 @@ async fn create_lessons(db: &PgPool, user_ids: &[String]) -> Result<()> {
     let student2 = &user_ids[3];
     let student3 = &user_ids[4];
 
-    let lessons = vec![
-        (
-            teacher1,
-            student1,
-            "Rust Basics",
-            "Ownership and Borrowing",
-            "# Ownership in Rust\n\nOwnership is Rust's most unique feature...\n\n## Rules\n1. Each value has a single owner\n2. When owner goes out of scope, value is dropped",
-        ),
-        (
-            teacher1,
-            student2,
-            "Advanced Rust",
-            "Async Programming",
-            "# Async/Await in Rust\n\nAsynchronous programming in Rust uses futures...\n\n```rust\nasync fn fetch_data() -> Result<String, Error> {\n    // async code here\n}\n```",
-        ),
-        (
-            teacher2,
-            student2,
-            "Web Development",
-            "Axum Framework",
-            "# Building APIs with Axum\n\nAxum is a modern web framework for Rust...\n\n## Key Features\n- Type-safe routing\n- Extractors\n- Middleware support",
-        ),
-        (
-            teacher2,
-            student3,
-            "Database Design",
-            "PostgreSQL Fundamentals",
-            "# PostgreSQL Basics\n\nRelational databases and SQL...\n\n## Tables\n- Primary keys\n- Foreign keys\n- Constraints",
-        ),
+    let assignments = vec![
+        (teacher1, student1),
+        (teacher1, student2),
+        (teacher2, student2),
+        (teacher2, student3),
     ];
 
-    for (created_by, assignee, title, topic, markdown) in lessons {
+    for (created_by, assignee) in assignments {
         let lesson_id = nanoid::nanoid!();
+        let title: String = Sentence(3..6).fake();
+        let topic: String = Sentence(2..4).fake();
+        let markdown = format!(
+            "# {}\n\n{}\n\n## Key Points\n\n{}\n\n## Examples\n\n```\n{}\n```",
+            topic,
+            Paragraph(3..5).fake::<String>(),
+            Paragraph(2..3).fake::<String>(),
+            Paragraph(1..2).fake::<String>()
+        );
 
         sqlx::query!(
             r#"
@@ -301,43 +268,30 @@ async fn create_tasks(db: &PgPool, user_ids: &[String]) -> Result<()> {
 
     let now = Utc::now();
 
-    let tasks = vec![
-        (
-            teacher1,
-            student1,
-            "Complete Ownership Exercise",
-            "# Ownership Exercise\n\nImplement a simple string manipulation function that demonstrates ownership transfer.\n\n## Requirements\n- Take ownership of a String\n- Return modified String\n- No cloning allowed",
-            false,
-            Some(now + chrono::Duration::days(7)),
-        ),
-        (
-            teacher1,
-            student2,
-            "Build Async Web Scraper",
-            "# Web Scraper Project\n\nCreate an async web scraper using reqwest and tokio.\n\n## Features\n- Concurrent requests\n- Error handling\n- Rate limiting",
-            false,
-            Some(now + chrono::Duration::days(14)),
-        ),
-        (
-            teacher2,
-            student2,
-            "Design Database Schema",
-            "# E-commerce Database\n\nDesign a database schema for an e-commerce platform.\n\n## Tables Needed\n- Users\n- Products\n- Orders\n- Order Items",
-            true,
-            None,
-        ),
-        (
-            teacher2,
-            student3,
-            "SQL Practice Queries",
-            "# SQL Exercises\n\nComplete the following SQL queries:\n\n1. Join tables\n2. Aggregate functions\n3. Subqueries\n4. Window functions",
-            false,
-            Some(now + chrono::Duration::days(3)),
-        ),
+    let assignments = vec![
+        (teacher1, student1),
+        (teacher1, student2),
+        (teacher2, student2),
+        (teacher2, student3),
     ];
 
-    for (created_by, assignee, title, markdown, completed, due_date) in tasks {
+    for (created_by, assignee) in assignments {
         let task_id = nanoid::nanoid!();
+        let title: String = Sentence(3..6).fake();
+        let markdown = format!(
+            "# {}\n\n{}\n\n## Requirements\n\n{}\n\n## Guidelines\n\n{}",
+            Sentence(2..4).fake::<String>(),
+            Paragraph(2..4).fake::<String>(),
+            Paragraph(2..3).fake::<String>(),
+            Paragraph(1..2).fake::<String>()
+        );
+        let completed: bool = (0..10).fake::<i32>() < 3; // 30% chance of being completed
+        let due_date = if (0..10).fake::<i32>() < 7 {
+            // 70% chance of having a due date
+            Some(now + chrono::Duration::days((1..30).fake::<i64>()))
+        } else {
+            None
+        };
 
         sqlx::query!(
             r#"
@@ -369,35 +323,17 @@ async fn create_decks(db: &PgPool, user_ids: &[String]) -> Result<()> {
     let student2 = &user_ids[3];
     let student3 = &user_ids[4];
 
-    let decks = vec![
-        (
-            teacher1,
-            student1,
-            "Rust Vocabulary",
-            "Essential Rust terms and concepts for beginners",
-        ),
-        (
-            teacher1,
-            student2,
-            "Advanced Rust Patterns",
-            "Complex patterns and idioms in Rust programming",
-        ),
-        (
-            teacher2,
-            student2,
-            "Web Development Terms",
-            "HTTP, REST, and web framework concepts",
-        ),
-        (
-            teacher2,
-            student3,
-            "Database Fundamentals",
-            "SQL commands and database design principles",
-        ),
+    let assignments = vec![
+        (teacher1, student1),
+        (teacher1, student2),
+        (teacher2, student2),
+        (teacher2, student3),
     ];
 
-    for (created_by, assignee, name, description) in decks {
+    for (created_by, assignee) in assignments {
         let deck_id = nanoid::nanoid!();
+        let title: String = Sentence(2..5).fake();
+        let description: String = Sentence(5..10).fake();
 
         sqlx::query!(
             r#"
@@ -405,7 +341,7 @@ async fn create_decks(db: &PgPool, user_ids: &[String]) -> Result<()> {
             VALUES ($1, $2, $3, $4, $5)
             "#,
             deck_id,
-            name,
+            title,
             description,
             created_by,
             assignee

@@ -10,30 +10,37 @@ import { z as zod } from "zod";
  * @summary All content from the website
  */
 export const listContentResponseItem = zod.object({
-  content: zod.string(),
   id: zod.string(),
-  meta_description: zod.string().nullish(),
-  published_at: zod.iso.datetime({}).nullish(),
+  markdown: zod.string(),
+  metaDescription: zod.string().nullish(),
+  publishedAt: zod.iso.datetime({}).nullish(),
   slug: zod.string(),
-  status: zod.enum(["Draft", "Published"]),
+  status: zod.enum(["draft", "published"]),
   title: zod.string(),
-  updated_at: zod.iso.datetime({}),
-  updated_by: zod.string(),
+  updatedAt: zod.iso.datetime({}),
+  updatedBy: zod.string(),
   version: zod.number(),
 });
 export const listContentResponse = zod.array(listContentResponseItem);
 
 /**
- * @summary Fetches content by slug (public endpoint)
+ * @summary Fetches content by id (admin interface)
  */
 export const fetchContentParams = zod.object({
-  slug: zod.string().describe("Content Slug"),
+  id: zod.string().describe("Content ID"),
 });
 
 export const fetchContentResponse = zod.object({
-  content: zod.string(),
+  id: zod.string(),
+  markdown: zod.string(),
   metaDescription: zod.string().nullish(),
+  publishedAt: zod.iso.datetime({}).nullish(),
+  slug: zod.string(),
+  status: zod.enum(["draft", "published"]),
   title: zod.string(),
+  updatedAt: zod.iso.datetime({}),
+  updatedBy: zod.string(),
+  version: zod.number(),
 });
 
 /**
@@ -51,10 +58,24 @@ export const updateContentParams = zod.object({
 });
 
 export const updateContentBody = zod.object({
-  content: zod.string().nullish(),
-  meta_description: zod.string().nullish(),
+  markdown: zod.string().nullish(),
+  metaDescription: zod.string().nullish(),
   slug: zod.string().nullish(),
   title: zod.string().nullish(),
+});
+
+/**
+ * @summary Updates content
+ */
+export const publishContentParams = zod.object({
+  id: zod.string().describe("content ID"),
+});
+
+/**
+ * @summary Updates content
+ */
+export const unpublishContentParams = zod.object({
+  id: zod.string().describe("content ID"),
 });
 
 /**
@@ -134,6 +155,19 @@ export const signupBody = zod.object({
   pass: zod.string().min(signupBodyPassMin).max(signupBodyPassMax),
   role: zod.string(),
   username: zod.string().min(signupBodyUsernameMin).max(signupBodyUsernameMax),
+});
+
+/**
+ * @summary Fetches content by slug (public endpoint)
+ */
+export const fetchContentPublicParams = zod.object({
+  slug: zod.string().describe("Content Slug"),
+});
+
+export const fetchContentPublicResponse = zod.object({
+  markdown: zod.string(),
+  metaDescription: zod.string().nullish(),
+  title: zod.string(),
 });
 
 /**
@@ -421,8 +455,8 @@ export const fetchLessonParams = zod.object({
 export const fetchLessonResponse = zod
   .object({
     assignee: zod.string(),
-    assignee_name: zod.string(),
-    created_at: zod.iso.datetime({}),
+    assigneeName: zod.string(),
+    createdAt: zod.iso.datetime({}),
     id: zod.string(),
     markdown: zod.string(),
     photo: zod
@@ -440,9 +474,11 @@ export const fetchLessonResponse = zod
       .optional(),
     title: zod.string(),
     topic: zod.string(),
-    updated_at: zod.iso.datetime({}),
+    updatedAt: zod.iso.datetime({}),
   })
-  .describe("FUCK SWIFT OPEN API!");
+  .describe(
+    "Version to indulge swift OpenAPI Generator. ATTENTION: camelCase may break the iOS app! I fucked up the last build",
+  );
 
 /**
  * @summary Deletes lesson

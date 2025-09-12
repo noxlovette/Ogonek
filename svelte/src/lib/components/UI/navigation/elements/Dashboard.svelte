@@ -4,8 +4,19 @@
   import { user } from "$lib/stores";
   import { m } from "$lib/paraglide/messages";
   import MobileMenuElement from "../mobileMenu/MobileMenuElement.svelte";
+  import type { UserRole } from "$lib/types";
 
-  let href = $user.role === "teacher" ? "/t/dashboard" : "/s/dashboard";
+  function getHref(role: UserRole) {
+    switch (role) {
+      case "student":
+        return "/s/dashboard";
+      case "teacher":
+        return "/t/dashboard";
+      default:
+        return "/admin/dashboard";
+    }
+  }
+  let href = getHref($user.role);
 </script>
 
 <SidebarItem {href} name={m.dashboardName()} Icon={House} />

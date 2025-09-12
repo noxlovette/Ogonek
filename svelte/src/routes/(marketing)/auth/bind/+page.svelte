@@ -32,7 +32,7 @@
 >
   <input type="hidden" name="userId" value={$user.id} />
 
-  <Title1>{inviter.name}</Title1>
+  <Title1>{inviter?.name}</Title1>
   <Body>wants to add you to their students</Body>
 
   <Merger>

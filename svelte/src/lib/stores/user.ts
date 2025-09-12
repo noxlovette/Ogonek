@@ -5,7 +5,7 @@ export const initialUser: User = {
   id: "",
   username: "",
   name: "",
-  role: "",
+  role: "student",
   email: "",
 };
 
@@ -36,7 +36,7 @@ export function clearUser() {
     id: "",
     username: "",
     name: "",
-    role: "",
+    role: "student",
     email: "",
   }));
 }

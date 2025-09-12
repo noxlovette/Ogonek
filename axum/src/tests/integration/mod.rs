@@ -1,13 +1,12 @@
 use sqlx::PgPool;
-use testcontainers_modules::{postgres, testcontainers::runners::AsyncRunner};
 
 pub mod user;
 
+/// we might want to use testcontainers to make this work independently actually...
 pub async fn test_db() -> anyhow::Result<PgPool> {
-    let container = postgres::Postgres::default().start().await.unwrap();
-    let host_port = container.get_host_port_ipv4(5432).await.unwrap();
+    // Use existing postgres container for tests
     let connection_string =
-        &format!("postgres://postgres:postgres@127.0.0.1:{host_port}/postgres",);
+        std::env::var("DATABASE_URL").expect("DATABASE URL MUST BE SET FOR TESTS");
 
     let pool = PgPool::connect(&connection_string)
         .await

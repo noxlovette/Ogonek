@@ -26,11 +26,9 @@
 
   let markdown = $state(lesson.markdown);
 
-  let q = "";
-
   let showPicker = $state(true);
 
-  $inspect(form);
+  let q = "";
 </script>
 
 <form
@@ -58,7 +56,6 @@
     </VStack>
   </Toolbar>
 
-  <input type="hidden" name="id" value={lesson.id} />
   <input type="hidden" name="markdown" value={markdown} />
   <div class="grid grid-cols-1 gap-5 md:grid-cols-3">
     <Input name="title" value={lesson.title} placeholder="Title"></Input>

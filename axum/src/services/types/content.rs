@@ -3,11 +3,12 @@ use serde::{Deserialize, Serialize};
 use std::str::FromStr;
 use utoipa::ToSchema;
 #[derive(sqlx::FromRow, Serialize, Deserialize, ToSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct Content {
     pub id: String,
     pub slug: String,
     pub title: String,
-    pub content: String,
+    pub markdown: String,
     pub meta_description: Option<String>,
     pub version: i32,
     pub status: ContentStatus,
@@ -19,10 +20,11 @@ pub struct Content {
 }
 
 #[derive(sqlx::FromRow, Serialize, Deserialize, ToSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct UpdateContent {
     pub slug: Option<String>,
     pub title: Option<String>,
-    pub content: Option<String>,
+    pub markdown: Option<String>,
     pub meta_description: Option<String>,
 }
 
@@ -30,11 +32,12 @@ pub struct UpdateContent {
 #[serde(rename_all = "camelCase")]
 pub struct ContentPublic {
     pub title: String,
-    pub content: String,
+    pub markdown: String,
     pub meta_description: Option<String>,
 }
 #[derive(sqlx::Type, Serialize, Deserialize, ToSchema)]
 #[sqlx(type_name = "varchar", rename_all = "lowercase")]
+#[serde(rename_all = "camelCase")]
 pub enum ContentStatus {
     Draft,
     Published,

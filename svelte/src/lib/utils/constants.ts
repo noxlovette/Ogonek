@@ -1,3 +1,5 @@
+import type { superUser } from "$lib/types";
+
 export const qualityButtons = [
   {
     quality: 0,
@@ -19,3 +21,7 @@ export const qualityButtons = [
     key: 3,
   },
 ];
+
+export function isSuperUser(role: string): role is superUser {
+  return ["moderator", "admin", "god"].includes(role);
+}

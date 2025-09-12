@@ -37,6 +37,10 @@ export const actions = {
     if (!captchaToken || typeof captchaToken !== "string") {
       return fail(400, {
         captcha: true,
+        name: false,
+        username: false,
+        email: false,
+        pass: false,
         message: "Please complete the CAPTCHA verification",
       });
     }
@@ -47,6 +51,11 @@ export const actions = {
     } catch (error) {
       logger.error({ error }, "CAPTCHA verification network error");
       return fail(500, {
+        captcha: true,
+        name: false,
+        username: false,
+        email: false,
+        pass: false,
         message: "Verification service unavailable",
       });
     }
@@ -54,6 +63,10 @@ export const actions = {
     if (!captchaResponse.ok) {
       return fail(400, {
         captcha: true,
+        name: false,
+        username: false,
+        email: false,
+        pass: false,
         message: "Captcha verification failed",
       });
     }
@@ -70,48 +83,65 @@ export const actions = {
           message: "Username or email already exists",
           username: true,
           email: true,
+          pass: false,
+          name: false,
+          captcha: false,
         });
       }
       if (result.status === 422) {
         return fail(422, {
           message: "Invalid registration data",
+          username: false,
+          email: false,
+          pass: false,
+          name: false,
+          captcha: false,
         });
       }
       logger.error({ result }, "Signup failed");
-      return fail(result.status, { message: result.message });
+      return fail(400, {
+        message: result.message,
+        username: false,
+        email: false,
+        pass: false,
+        name: false,
+        captcha: false,
+      });
     }
 
     if (inviteToken && typeof inviteToken === "string") {
       const studentId = result.data;
 
-      try {
-        const inviteResponse = await fetch("/axum/auth/bind", {
-          method: "POST",
-          body: JSON.stringify({ inviteToken, studentId }),
-        });
+      const inviteResponse = await fetch("/axum/auth/bind", {
+        method: "POST",
+        body: JSON.stringify({ inviteToken, studentId }),
+      });
 
-        const inviteResult = await handleApiResponse(inviteResponse);
-        if (!isSuccessResponse(inviteResult)) {
-          logger.warn(
-            {
-              inviteToken: inviteToken.slice(0, 8) + "...",
-              studentId,
-              error: inviteResult,
-            },
-            "Invite binding failed - account created but not linked",
-          );
+      const inviteResult = await handleApiResponse(inviteResponse);
+      if (!isSuccessResponse(inviteResult)) {
+        logger.warn(
+          {
+            inviteToken: inviteToken.slice(0, 8) + "...",
+            studentId,
+            error: inviteResult,
+          },
+          "Invite binding failed - account created but not linked",
+        );
 
-          return redirect(302, "/auth/login?invite_failed=true");
-        }
-
-        logger.info({ studentId }, "Successfully bound invite to new account");
-      } catch (error) {
-        logger.error({ error, studentId }, "Invite binding network error");
         return redirect(302, "/auth/login?invite_failed=true");
       }
+
+      logger.info({ studentId }, "Successfully bound invite to new account");
     }
 
     logger.info({ username }, "Successful user registration");
-    return redirect(302, "/auth/login");
+    return {
+      success: true,
+      name: false,
+      username: false,
+      pass: false,
+      email: false,
+      captcha: false,
+    };
   },
 } satisfies Actions;

@@ -1,4 +1,4 @@
-export type UrgencyLevel = "overdue" | "urgent" | "soon" | "normal";
+export type Urgency = "overdue" | "urgent" | "soon" | "normal" | "green";
 
 export type Role = "t" | "s";
 

@@ -11,6 +11,9 @@ export const routes = {
     new_content: () => `${API_BASE}/admin/content`,
     delete_content: (id: string) => `${API_BASE}/admin/content/${id}`,
     update_content: (id: string) => `${API_BASE}/admin/content/${id}`,
+    publish_content: (id: string) => `${API_BASE}/admin/content/${id}/publish`,
+    unpublish_content: (id: string) =>
+      `${API_BASE}/admin/content/${id}/publish`,
   },
   auth: {
     bind_student_to_teacher: () => `${API_BASE}/auth/bind`,
@@ -25,7 +28,7 @@ export const routes = {
     signup: () => `${API_BASE}/auth/signup`,
   },
   content: {
-    content: (slug: string) => `${API_BASE}/content/${slug}`,
+    content_public: (slug: string) => `${API_BASE}/content/${slug}`,
   },
   decks: {
     all: (

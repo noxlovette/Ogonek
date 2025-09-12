@@ -41,6 +41,24 @@ export interface paths {
     patch: operations["update_content"];
     trace?: never;
   };
+  "/api/v1/admin/content/{id}/publish": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    /** Updates content */
+    put: operations["publish_content"];
+    post?: never;
+    /** Updates content */
+    delete: operations["unpublish_content"];
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/v1/auth/bind": {
     parameters: {
       query?: never;
@@ -132,7 +150,7 @@ export interface paths {
       cookie?: never;
     };
     /** Fetches content by slug (public endpoint) */
-    get: operations["fetch_content"];
+    get: operations["fetch_content_public"];
     put?: never;
     post?: never;
     delete?: never;
@@ -698,27 +716,27 @@ export interface components {
       tasks: components["schemas"]["TaskSmall"][];
     };
     Content: {
-      content: string;
       id: string;
-      meta_description?: string | null;
+      markdown: string;
+      metaDescription?: string | null;
       /** Format: date-time */
-      published_at?: string | null;
+      publishedAt?: string | null;
       slug: string;
       status: components["schemas"]["ContentStatus"];
       title: string;
       /** Format: date-time */
-      updated_at: string;
-      updated_by: string;
+      updatedAt: string;
+      updatedBy: string;
       /** Format: int32 */
       version: number;
     };
     ContentPublic: {
-      content: string;
+      markdown: string;
       metaDescription?: string | null;
       title: string;
     };
     /** @enum {string} */
-    ContentStatus: "Draft" | "Published";
+    ContentStatus: "draft" | "published";
     DashboardData: {
       activity: components["schemas"]["ActivityLog"][];
       decks: components["schemas"]["DeckSmall"][];
@@ -835,19 +853,19 @@ export interface components {
       title?: string | null;
       topic?: string | null;
     };
-    /** @description FUCK SWIFT OPEN API! */
+    /** @description Version to indulge swift OpenAPI Generator. ATTENTION: camelCase may break the iOS app! I fucked up the last build */
     LessonWithPhoto: {
       assignee: string;
-      assignee_name: string;
+      assigneeName: string;
       /** Format: date-time */
-      created_at: string;
+      createdAt: string;
       id: string;
       markdown: string;
       photo?: null | components["schemas"]["Photo"];
       title: string;
       topic: string;
       /** Format: date-time */
-      updated_at: string;
+      updatedAt: string;
     };
     MultipartUploadInit: {
       fileId: string;
@@ -1042,8 +1060,8 @@ export interface components {
       review_count: number;
     };
     UpdateContent: {
-      content?: string | null;
-      meta_description?: string | null;
+      markdown?: string | null;
+      metaDescription?: string | null;
       slug?: string | null;
       title?: string | null;
     };
@@ -1295,6 +1313,90 @@ export interface operations {
       };
     };
   };
+  publish_content: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        /** @description content ID */
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description content published successfully */
+      204: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Forbidden */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description content not found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+    };
+  };
+  unpublish_content: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        /** @description content ID */
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description content published successfully */
+      204: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Forbidden */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description content not found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+    };
+  };
   bind_student_to_teacher: {
     parameters: {
       query?: never;
@@ -1473,7 +1575,7 @@ export interface operations {
       };
     };
   };
-  fetch_content: {
+  fetch_content_public: {
     parameters: {
       query?: never;
       header?: never;

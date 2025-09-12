@@ -23,7 +23,6 @@ impl AppState {
         })
     }
 }
-/*
 
 #[cfg(test)]
 use crate::tests::integration::test_db;
@@ -43,5 +42,3 @@ impl AppState {
         })
     }
 }
-
-*/

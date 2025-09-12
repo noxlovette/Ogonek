@@ -1,0 +1,18 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n      INSERT INTO content (id, slug, title, markdown, meta_description, version, status, updated_at, updated_by)\n      VALUES (\n      $1,\n      $2,\n      $3,\n      $4,\n      NULL,\n      1,\n      'draft',\n      NOW(),\n      $5\n      )\n        ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Varchar",
+        "Varchar",
+        "Varchar",
+        "Text",
+        "Varchar"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "47b7b7b49faa2c289c5d8d65eacd1a6dbe86030b9ed9a89afe69e6bc9ddf7df7"
+}

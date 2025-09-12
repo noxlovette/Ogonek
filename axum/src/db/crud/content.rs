@@ -10,7 +10,7 @@ pub async fn find_by_slug(db: &PgPool, slug: &str) -> Result<ContentPublic, DbEr
     let content = sqlx::query_as!(
         ContentPublic,
         r#"
-        SELECT title, content, meta_description
+        SELECT title, markdown, meta_description
         FROM content
         WHERE slug = $1 AND status = 'published'
         "#,
@@ -31,7 +31,7 @@ pub async fn find_by_id(db: &PgPool, id: &str) -> Result<Content, DbError> {
         id,
         slug,
         title,
-        content,
+        markdown,
         meta_description,
         version,
         status as "status: ContentStatus",
@@ -62,7 +62,7 @@ pub async fn update(
       SET
         slug = COALESCE($3, slug),
         title = COALESCE($4, title),
-        content = COALESCE($5, content),
+        markdown = COALESCE($5, markdown),
         meta_description = COALESCE($6, meta_description),
         version = version + 1,
         updated_at = NOW(),
@@ -73,7 +73,7 @@ pub async fn update(
         user_id,
         update.slug,
         update.title,
-        update.content,
+        update.markdown,
         update.meta_description,
     )
     .execute(db)
@@ -146,7 +146,7 @@ pub async fn find_all(db: &PgPool) -> Result<Vec<Content>, DbError> {
         id,
         slug,
         title,
-        content,
+        markdown,
         meta_description,
         version,
         status as "status: ContentStatus",
@@ -169,7 +169,7 @@ pub async fn create(db: &PgPool, user_id: &str) -> Result<String, DbError> {
 
     sqlx::query!(
         r#"
-      INSERT INTO content (id, slug, title, content, meta_description, version, status, updated_at, updated_by)
+      INSERT INTO content (id, slug, title, markdown, meta_description, version, status, updated_at, updated_by)
       VALUES (
       $1,
       $2,
