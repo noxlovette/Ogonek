@@ -25,7 +25,7 @@ use validator::Validate;
 pub async fn signup(
     State(state): State<AppState>,
     Json(payload): Json<SignUpPayload>,
-) -> Result<Json<String>, APIError> {
+) -> Result<(StatusCode, Json<String>), APIError> {
     if payload.username.is_empty() || payload.pass.is_empty() {
         return Err(APIError::InvalidCredentials);
     }
@@ -46,7 +46,7 @@ pub async fn signup(
     };
     let id = auth::signup(&state.db, &created).await?;
 
-    Ok(Json(id))
+    Ok((StatusCode::CREATED, Json(id)))
 }
 #[utoipa::path(
     post,

@@ -8,6 +8,11 @@ mod tests {
     #[tokio::test]
     async fn test_user_creation() {
         let state = AppState::test().await.unwrap();
+
+        // Clean up any existing test user
+        let _ = sqlx::query!(r#"DELETE FROM "user" WHERE email = $1"#, "test@example.com")
+            .execute(&state.db)
+            .await;
         let app = root(state.clone(), "localhost".to_string()).unwrap();
         let response = app
         .oneshot(

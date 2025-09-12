@@ -35,8 +35,9 @@ pub struct LessonFull {
     pub updated_at: DateTime<Utc>,
     pub assignee_name: String,
 }
-/// FUCK SWIFT OPEN API!
+/// Version to indulge swift OpenAPI Generator
 #[derive(Serialize, Debug, ToSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct LessonWithPhoto {
     pub assignee: String,
     pub assignee_name: String,

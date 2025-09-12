@@ -25,7 +25,7 @@
       {
         key: "updatedAt",
         label: "Updated",
-        formatter: (value: string | boolean | undefined | null) =>
+        formatter: (value: string | number | undefined | null) =>
           formatDate(String(value)),
       },
     ],

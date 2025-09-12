@@ -26,8 +26,6 @@
 
   let markdown = $state(lesson.markdown);
 
-  let q = "";
-
   let showPicker = $state(true);
 
   $inspect(form);
@@ -100,7 +98,7 @@
       {/if}
     </Merger>
 
-    <SearchBar bind:q placeholder="Search photos..." />
+    <SearchBar placeholder="Search photos..." />
   </VStack>
   {#if showPicker}
     <PhotoPicker

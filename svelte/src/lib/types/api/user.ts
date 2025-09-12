@@ -10,3 +10,5 @@ export interface Claims extends JWTPayload {
 }
 
 export type UserRole = components["schemas"]["UserRole"];
+
+export type superUser = "moderator" | "admin" | "god";
