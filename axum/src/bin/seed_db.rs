@@ -2,11 +2,11 @@
 use anyhow::Result;
 use chrono::Utc;
 use dotenvy::dotenv;
+use fake::Fake;
 use fake::faker::internet::en::SafeEmail;
 use fake::faker::lorem::en::{Paragraph, Sentence};
 use fake::faker::name::en::Name;
-use fake::{Fake, Faker};
-use ogonek::{auth::password::hash_password, db::init_db, types::ProfileUpdate};
+use ogonek::{auth::password::hash_password, db::init_db};
 use sqlx::PgPool;
 
 #[tokio::main]
@@ -123,24 +123,25 @@ async fn create_profiles(db: &PgPool, user_ids: &[String]) -> Result<()> {
     println!("📋 Updating profiles...");
 
     for user_id in user_ids.iter() {
-        let video_call_url = if (0..10).fake::<i32>() < 6 { // 60% chance of having video call URL
+        let video_call_url = if (0..10).fake::<i32>() < 6 {
+            // 60% chance of having video call URL
             let meeting_id: u64 = (100000000000..999999999999).fake();
             let password: u32 = (100000..999999).fake();
             Some(format!("https://zoom.us/j/{}?pwd={}", meeting_id, password))
         } else {
             None
         };
-        
-        let avatar_url = if (0..10).fake::<i32>() < 8 { // 80% chance of having avatar
+
+        let avatar_url = if (0..10).fake::<i32>() < 8 {
+            // 80% chance of having avatar
             let avatar_id: u32 = (1..1000).fake();
             Some(format!("https://avatars.dev/avatar_{}.png", avatar_id))
         } else {
             None
         };
 
-        let telegram_id = if (0..10).fake::<i32>() < 7 { // 70% chance of having telegram
-            let id: u64 = (100000000..999999999).fake();
-            Some(id.to_string())
+        let telegram_id = if (0..10).fake::<i32>() < 7 {
+            Some("900828558")
         } else {
             None
         };

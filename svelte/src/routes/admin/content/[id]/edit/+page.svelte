@@ -74,9 +74,6 @@
                 formaction="?/unpublish"
                 Icon={MegaphoneOff}>Publish</UniButton
               >
-              <UniButton Icon={ScanSearch} href="./preview/{data.content.slug}">
-                Preview
-              </UniButton>
             {:else}
               <UniButton type="submit" formaction="?/publish" Icon={Megaphone}
                 >Publish</UniButton

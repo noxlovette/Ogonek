@@ -1,21 +1,21 @@
 <script lang="ts">
   import {
     LargeTitle,
-    Title3,
     Toolbar,
-    TableOfContents,
     HStack,
     VStack,
     Divider,
     Merger,
     Caption1,
     EditButton,
+    UniButton,
   } from "$lib/components";
 
   import { formatDateTime } from "$lib/utils";
   import type { PageData } from "./$types";
   import Badge from "$lib/components/cards/Badge.svelte";
   import { page } from "$app/state";
+  import { ScanSearch } from "lucide-svelte";
 
   let { data }: { data: PageData } = $props();
 </script>
@@ -28,6 +28,12 @@
       </LargeTitle>
       <Divider />
       <Merger>
+        <UniButton
+          Icon={ScanSearch}
+          href="/admin/content/preview/{data.content.slug}"
+        >
+          Preview
+        </UniButton>
         <EditButton href="{page.params.id}/edit" />
       </Merger>
     </VStack>
