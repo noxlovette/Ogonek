@@ -33,7 +33,6 @@ CREATE TABLE calendar_events (
     -- Temporal information
     dtstart TIMESTAMPTZ NOT NULL, -- Start date/time
     dtend TIMESTAMPTZ, -- End date/time (null for all-day events)
-    duration INTERVAL, -- Alternative to dtend
     all_day BOOLEAN NOT NULL DEFAULT FALSE,
     timezone VARCHAR(50), -- IANA timezone identifier
     
@@ -57,21 +56,15 @@ CREATE TABLE calendar_events (
     organiser_name VARCHAR(255),
     
     -- Metadata
-    sequence INTEGER DEFAULT 0, -- Version control for updates
+    sequence INTEGER NOT NULL DEFAULT 0, -- Version control for updates
     dtstamp TIMESTAMPTZ NOT NULL DEFAULT NOW(), -- Last modification timestamp
     
     -- CalDAV/WebDAV support
     etag VARCHAR(64) NOT NULL DEFAULT encode(sha256(random()::text::bytea), 'hex'),
     
     -- Soft delete support
-    deleted_at TIMESTAMPTZ,
+    deleted_at TIMESTAMPTZ
     
-    -- Indexes for performance
-    CONSTRAINT valid_time_range CHECK (
-        (dtend IS NULL AND duration IS NULL) OR 
-        (dtend IS NOT NULL AND duration IS NULL) OR 
-        (dtend IS NULL AND duration IS NOT NULL)
-    )
 );
 
 CREATE TABLE event_attendees (
@@ -99,7 +92,6 @@ CREATE TABLE event_alarms (
     attendee_email VARCHAR(255), -- For email alarms
     attendee_telegram_id VARCHAR, -- For TG notifications
     repeat_count INTEGER NOT NULL DEFAULT 0,
-    repeat_duration INTERVAL,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
