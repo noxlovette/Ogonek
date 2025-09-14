@@ -38,7 +38,7 @@
 </script>
 
 <svelte:head>
-  <title>Task From {formattedDate}</title>
+  <title>Task • {data.task.title}</title>
 </svelte:head>
 
 <Toolbar>

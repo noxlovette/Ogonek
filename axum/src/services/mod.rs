@@ -1,4 +1,5 @@
 pub mod auth;
+pub mod calendar;
 pub mod error;
 pub mod notifications;
 pub mod observability;
@@ -7,6 +8,7 @@ pub mod schema;
 pub mod tools;
 pub mod types;
 pub use auth::*;
+pub use calendar::*;
 pub use error::*;
 pub use notifications::*;
 pub use observability::*;

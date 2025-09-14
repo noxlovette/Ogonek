@@ -85,7 +85,7 @@
 </script>
 
 <svelte:head>
-  <title>Test Mode - {deck.title}</title>
+  <title>Test Mode • {deck.title}</title>
 </svelte:head>
 
 <svelte:window on:keydown={handleKeyPress} />

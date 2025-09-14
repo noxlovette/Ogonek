@@ -64,6 +64,3 @@
   </article>
   <TableOfContents />
 </div>
-<svelte:head>
-  <title>Lesson From {formattedDate}</title>
-</svelte:head>

@@ -1,9 +1,9 @@
 <script lang="ts">
-  let { children } = $props();
+  let { children, data } = $props();
 </script>
 
 {@render children()}
 
 <svelte:head>
-  <title>Lesson</title>
+  <title>Lesson • {data.lesson.topic}</title>
 </svelte:head>

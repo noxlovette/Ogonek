@@ -61,7 +61,7 @@
 </script>
 
 <svelte:head>
-  <title>{`${m.edit()} ${deck.title} | Flashcards`}</title>
+  <title>{m.edit()} • {deck.title}</title>
 </svelte:head>
 <form
   method="POST"
