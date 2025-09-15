@@ -63,7 +63,7 @@ pub struct CalendarEvent {
     pub deleted_at: Option<DateTime<Utc>>,
 }
 
-#[derive(ToSchema, Serialize, Deserialize, Type)]
+#[derive(ToSchema, Serialize, Deserialize, Type, Debug, PartialEq)]
 #[sqlx(type_name = "varchar", rename_all = "lowercase")]
 #[serde(rename_all = "lowercase")]
 pub enum EventStatus {
@@ -72,7 +72,7 @@ pub enum EventStatus {
     Cancelled,
 }
 
-#[derive(ToSchema, Serialize, Deserialize, Type)]
+#[derive(ToSchema, Serialize, Deserialize, Type, Debug, PartialEq)]
 #[sqlx(type_name = "varchar", rename_all = "lowercase")]
 #[serde(rename_all = "lowercase")]
 pub enum EventClass {
@@ -81,7 +81,7 @@ pub enum EventClass {
     Confidential,
 }
 
-#[derive(ToSchema, Serialize, Deserialize, Type)]
+#[derive(ToSchema, Serialize, Deserialize, Type, Debug, PartialEq)]
 #[sqlx(type_name = "varchar", rename_all = "lowercase")]
 #[serde(rename_all = "lowercase")]
 pub enum EventTransp {
@@ -99,7 +99,7 @@ pub struct CalendarEventCreate {
     pub dtend: Option<DateTime<Utc>>,
 }
 
-#[derive(Validate, ToSchema, Deserialize)]
+#[derive(Validate, ToSchema, Deserialize, Default)]
 #[serde(rename_all = "camelCase")]
 pub struct CalendarEventUpdate {
     pub summary: Option<String>,

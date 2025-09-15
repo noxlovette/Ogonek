@@ -70,4 +70,8 @@ pub fn calendar_routes() -> Router<AppState> {
                 .patch(core::update_calendar)
                 .delete(core::delete_calendar),
         )
+        .route("/{calendar_id}/events", get(core::list_events).post(core::create_event))
+        .route("/events/{id}", get(core::fetch_event).patch(core::update_event).delete(core::delete_event))
+        .route("/events/{event_id}/attendees", get(core::list_attendees).post(core::create_attendee))
+        .route("/attendees/{id}", get(core::fetch_attendee).patch(core::update_attendee).delete(core::delete_attendee))
 }

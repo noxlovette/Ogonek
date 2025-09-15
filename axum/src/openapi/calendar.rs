@@ -8,12 +8,33 @@ use utoipa::OpenApi;
         crate::api::handlers::core::calendar::create_calendar,
         crate::api::handlers::core::calendar::delete_calendar,
         crate::api::handlers::core::calendar::update_calendar,
+        crate::api::handlers::core::event::fetch_event,
+        crate::api::handlers::core::event::list_events,
+        crate::api::handlers::core::event::create_event,
+        crate::api::handlers::core::event::delete_event,
+        crate::api::handlers::core::event::update_event,
+        crate::api::handlers::core::event_attendee::fetch_attendee,
+        crate::api::handlers::core::event_attendee::list_attendees,
+        crate::api::handlers::core::event_attendee::create_attendee,
+        crate::api::handlers::core::event_attendee::delete_attendee,
+        crate::api::handlers::core::event_attendee::update_attendee,
     ),
     components(
         schemas(
             crate::types::Calendar,
             crate::types::CalendarCreate,
             crate::types::CalendarUpdate,
+            crate::types::CalendarEvent,
+            crate::types::CalendarEventCreate,
+            crate::types::CalendarEventUpdate,
+            crate::types::EventStatus,
+            crate::types::EventClass,
+            crate::types::EventTransp,
+            crate::types::EventAttendee,
+            crate::types::EventAttendeeCreate,
+            crate::types::EventAttendeeUpdate,
+            crate::types::EventAttendeeRole,
+            crate::types::EventAttendeeStatus,
         )
     )
 )]

@@ -56,7 +56,7 @@ type DateFormatOptions = {
 /**
  * Gets the locale from the PARAGLIDE_LOCALE cookie.
  */
-const getLocaleFromCookie = (): string => {
+export const getLocaleFromCookie = (): string => {
   if (typeof document === "undefined") return "en";
 
   const value = `; ${document.cookie}`;
@@ -65,14 +65,14 @@ const getLocaleFromCookie = (): string => {
     const langCode = parts.pop()!.split(";").shift() || "en";
     // Convert language codes to proper locale identifiers
     const localeMap: Record<string, string> = {
-      en: "en-US",
+      en: "en-UK",
       de: "de-DE",
       ru: "ru-RU",
       fr: "fr-FR",
     };
     return localeMap[langCode] || `${langCode}-${langCode.toUpperCase()}`;
   }
-  return "en-US";
+  return "en-UK";
 };
 
 /**

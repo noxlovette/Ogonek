@@ -20,7 +20,7 @@ pub struct EventAttendee {
     pub updated_at: DateTime<Utc>,
 }
 
-#[derive(ToSchema, Serialize, Deserialize, Type)]
+#[derive(ToSchema, Serialize, Deserialize, Type, Debug, PartialEq)]
 #[sqlx(type_name = "varchar", rename_all = "lowercase")]
 #[serde(rename_all = "kebab-case")]
 pub enum EventAttendeeRole {
@@ -30,7 +30,7 @@ pub enum EventAttendeeRole {
     NonParticipant,
 }
 
-#[derive(ToSchema, Serialize, Deserialize, Type)]
+#[derive(ToSchema, Serialize, Deserialize, Type, Debug, PartialEq)]
 #[sqlx(type_name = "varchar", rename_all = "lowercase")]
 #[serde(rename_all = "kebab-case")]
 pub enum EventAttendeeStatus {
@@ -48,7 +48,7 @@ pub struct EventAttendeeCreate {
     pub name: Option<String>,
 }
 
-#[derive(Validate, ToSchema, Deserialize)]
+#[derive(Validate, ToSchema, Deserialize, Default)]
 #[serde(rename_all = "camelCase")]
 pub struct EventAttendeeUpdate {
     pub email: Option<String>,

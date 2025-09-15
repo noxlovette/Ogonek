@@ -12,6 +12,7 @@
     QuickAdd,
     MobileMenu,
     StudentFilter,
+    Calendar,
   } from "$lib/components";
   import { studentStore, setUser, setProfile } from "$lib/stores";
 
@@ -49,6 +50,7 @@
       {:else}
         <Students />
       {/if}
+      <Calendar />
 
       <Divider />
       {#if role == "s"}
