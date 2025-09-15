@@ -9,48 +9,6 @@ use validator::Validate;
 
 #[derive(Validate, ToSchema, Serialize)]
 #[serde(rename_all = "camelCase")]
-pub struct Calendar {
-    pub id: String,
-    pub name: String,
-    pub description: Option<String>,
-
-    #[validate(length(equal = 7))]
-    pub colour: String,
-    #[serde(skip_serializing)]
-    pub timezone: String,
-    #[serde(skip_serializing)]
-    pub owner_id: String,
-
-    #[serde(skip_serializing)]
-    pub caldav_url: Option<String>,
-    #[serde(skip_serializing)]
-    pub sync_token: Option<String>,
-
-    #[serde(skip_serializing)]
-    pub created_at: DateTime<Utc>,
-    #[serde(skip_serializing)]
-    pub updated_at: DateTime<Utc>,
-}
-
-#[derive(Validate, ToSchema, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct CalendarUpdate {
-    pub name: Option<String>,
-    pub description: Option<String>,
-    pub colour: Option<String>,
-    pub timezone: Option<String>,
-    pub caldav_url: Option<String>,
-    pub sync_token: Option<String>,
-}
-
-#[derive(Validate, ToSchema, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct CalendarCreate {
-    pub name: String,
-}
-
-#[derive(Validate, ToSchema, Serialize)]
-#[serde(rename_all = "camelCase")]
 pub struct CalendarEvent {
     #[serde(skip_serializing)]
     pub id: String,
@@ -174,84 +132,6 @@ pub struct CalendarEventUpdate {
     pub etag: Option<String>,
 }
 
-#[derive(Validate, ToSchema, Serialize)]
-#[serde(rename_all = "camelCase")]
-pub struct EventAttendee {
-    id: String,
-    event_id: String,
-    email: String,
-    name: Option<String>,
-    role: EventAttendeeRole,
-    status: EventAttendeeStatus,
-    rsvp: bool,
-    created_at: DateTime<Utc>,
-    updated_at: DateTime<Utc>,
-}
-
-#[derive(ToSchema, Serialize, Deserialize)]
-#[serde(rename_all = "kebab-case")]
-pub enum EventAttendeeRole {
-    ReqParticipant,
-    Chair,
-    OptParticipant,
-    NonParticipant,
-}
-
-#[derive(ToSchema, Serialize, Deserialize)]
-#[serde(rename_all = "kebab-case")]
-pub enum EventAttendeeStatus {
-    NeedsAction,
-    Accepted,
-    Declined,
-    Tentative,
-    Delegated,
-}
-
-#[derive(Validate, ToSchema, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct EventAttendeeCreate {
-    pub event_id: String,
-    pub email: String,
-    pub name: Option<String>,
-    pub role: EventAttendeeRole,
-    pub status: EventAttendeeStatus,
-    pub rsvp: bool,
-}
-
-#[derive(Validate, ToSchema, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct EventAttendeeUpdate {
-    pub email: Option<String>,
-    pub name: Option<String>,
-    pub role: Option<EventAttendeeRole>,
-    pub status: Option<EventAttendeeStatus>,
-    pub rsvp: Option<bool>,
-}
-
-#[derive(Validate, ToSchema, Serialize)]
-#[serde(rename_all = "camelCase")]
-pub struct EventAlarm {
-    pub id: String,
-    pub event_id: String,
-    pub trigger_datetime: DateTime<Utc>,
-    pub action: EventAlarmAction,
-    pub description: Option<String>,
-    pub summary: Option<String>,
-    pub attendee_email: Option<String>,
-    pub attendee_telegram_id: Option<String>,
-    pub repeat_count: i32,
-    pub created_at: DateTime<Utc>,
-}
-
-#[derive(ToSchema, Serialize)]
-#[serde(rename_all = "kebab-case")]
-pub enum EventAlarmAction {
-    Display,
-    Audio,
-    Email,
-    Procedure,
-}
-
 impl fmt::Display for EventStatus {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
@@ -265,7 +145,7 @@ impl fmt::Display for EventStatus {
 impl fmt::Display for EventClass {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
-            EventClass::Public => write!(f, "publicc"),
+            EventClass::Public => write!(f, "public"),
             EventClass::Private => write!(f, "private"),
             EventClass::Confidential => write!(f, "confidential"),
         }

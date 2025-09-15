@@ -2,7 +2,10 @@ use sqlx::PgPool;
 
 use crate::{
     db::error::DbError,
-    types::{EventAttendee, EventAttendeeCreate, EventAttendeeUpdate},
+    types::{
+        EventAttendee, EventAttendeeCreate, EventAttendeeRole, EventAttendeeStatus,
+        EventAttendeeUpdate,
+    },
 };
 
 /// Finds an event attendee by id
@@ -15,8 +18,8 @@ pub async fn find_by_id(db: &PgPool, attendee_id: &str) -> Result<EventAttendee,
             event_id,
             email,
             name,
-            role as "role: _",
-            status as "status: _",
+            role as "role: EventAttendeeRole",
+            status as "status: EventAttendeeStatus",
             rsvp,
             created_at,
             updated_at
@@ -91,8 +94,8 @@ pub async fn update(
         "#,
         update.email,
         update.name,
-        update.role.as_ref().map(|r| serde_json::to_string(r).unwrap().trim_matches('"').to_string()),
-        update.status.as_ref().map(|s| serde_json::to_string(s).unwrap().trim_matches('"').to_string()),
+        update.role.as_ref().map(|r| r.to_string()),
+        update.status.as_ref().map(|s| s.to_string()),
         update.rsvp,
         attendee_id
     )
@@ -103,20 +106,21 @@ pub async fn update(
 }
 
 /// Creates an event attendee
-pub async fn create(db: &PgPool, create: EventAttendeeCreate) -> Result<String, DbError> {
+pub async fn create(
+    db: &PgPool,
+    event_id: &str,
+    create: EventAttendeeCreate,
+) -> Result<String, DbError> {
     let id = sqlx::query_scalar!(
         r#"
-        INSERT INTO event_attendees (id, event_id, email, name, role, status, rsvp)
-        VALUES ($1, $2, $3, $4, $5, $6, $7)
+        INSERT INTO event_attendees (id, event_id, email, name)
+        VALUES ($1, $2, $3, $4)
         RETURNING id
         "#,
         nanoid::nanoid!(),
-        create.event_id,
+        event_id,
         create.email,
         create.name,
-        serde_json::to_string(&create.role).unwrap().trim_matches('"'),
-        serde_json::to_string(&create.status).unwrap().trim_matches('"'),
-        create.rsvp,
     )
     .fetch_one(db)
     .await?;
