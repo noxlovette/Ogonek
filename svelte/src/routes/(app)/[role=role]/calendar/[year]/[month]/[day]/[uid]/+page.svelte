@@ -1,11 +1,7 @@
 <script lang="ts">
   import { page } from "$app/state";
   import { goto } from "$app/navigation";
-  import {
-    formatEventDateTime,
-    formatDuration,
-    parseRRuleToText,
-  } from "$lib/utils";
+  import { parseRRuleToText, getLocaleFromCookie } from "$lib/utils";
   import {
     ChevronLeft,
     MapPin,
@@ -36,7 +32,6 @@
   const { data } = $props();
   const event = data.event;
 
-  let isDeleting = $state(false);
   let isSharing = $state(false);
 
   async function shareEvent() {
@@ -59,6 +54,23 @@
       isSharing = false;
     }
   }
+
+  const start = new Date(event.dtstart);
+  const end = event.dtend ? new Date(event.dtend) : null;
+  const endDate = end ? new Date(end.getTime() - 24 * 60 * 60 * 1000) : null;
+
+  const dateOptions: Intl.DateTimeFormatOptions = {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+  };
+
+  const timeOptions: Intl.DateTimeFormatOptions = {
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: false,
+  };
+  const locale = getLocaleFromCookie();
 </script>
 
 <svelte:head>
@@ -73,42 +85,61 @@
       ></UniButton>
     </Merger>
   </VStack>
-  <Title1 styling={event.status === "cancelled" ? "line-through" : ""}>
-    {event.summary}
-  </Title1>
-  <!-- Date & Time -->
-  <div class="bg-default ring-default rounded-xl p-2">
-    <HStack>
+  <VStack>
+    <Title1 styling={event.status === "cancelled" ? "line-through" : ""}>
+      {event.summary}
+    </Title1>
+    <Divider />
+    <Merger>
+      <UniButton Icon={Share} onclick={shareEvent} disable={isSharing} />
+    </Merger>
+    <Merger>
+      <DeleteButton confirmText="Delete Event" confirmTitle="Delete Event"
+      ></DeleteButton>
+      <EditButton href="{event.uid}/edit" />
+    </Merger>
+  </VStack>
+  <HStack>
+    {#if !event.allDay}
+      <VStack>
+        <Title2>
+          {start.toLocaleTimeString(locale, timeOptions)}
+          {#if end}
+            -
+            {end.toLocaleTimeString(locale, timeOptions)}
+          {/if}
+        </Title2>
+        <Title3>
+          {start.toLocaleDateString(locale, dateOptions)}
+        </Title3>
+      </VStack>
+    {:else}
+      <Title2>Весь день</Title2>
+    {/if}
+    {#if event.rrule}
       <p class="text-stone-700 dark:text-stone-300">
-        {formatEventDateTime(event.dtstart, event.dtend, event.allDay)}
+        <!-- You'll need a helper to parse RRULE into human readable text -->
+        Повторяется {parseRRuleToText(event.rrule)}
       </p>
-      {#if event.dtend && !event.allDay}
-        <p class="text-sm text-stone-500 dark:text-stone-400">
-          Duration: {formatDuration(event.dtstart, event.dtend)}
-        </p>
-      {/if}
-      {#if event.rrule}
-        <p class="text-stone-700 dark:text-stone-300">
-          <!-- You'll need a helper to parse RRULE into human readable text -->
-          Повторяется {parseRRuleToText(event.rrule)}
-        </p>
-      {/if}
-    </HStack>
-  </div>
+    {/if}
+  </HStack>
 
-  <!-- Location -->
   {#if event.location}
     <div class="bg-default ring-default rounded-xl p-2">
-      <Headline>
-        {event.location}
-      </Headline>
+      <VStack>
+        <Callout>
+          {event.location}
+        </Callout>
 
-      <UniButton
-        href={"https://yandex.com/maps/?text=" +
-          encodeURIComponent(event.location)}
-        Icon={MapPin}
-        iconOnly={false}>Посмотреть на карте</UniButton
-      >
+        <Divider></Divider>
+        <Merger>
+          <UniButton
+            href={"https://yandex.com/maps/?text=" +
+              encodeURIComponent(event.location)}
+            Icon={MapPin}>Посмотреть на карте</UniButton
+          >
+        </Merger>
+      </VStack>
     </div>
   {/if}
 
@@ -128,7 +159,7 @@
         {#each event.attendees as attendee}
           <div class="flex items-center gap-3">
             <div
-              class="bg-accent/50 dark:bg-accent/30 flex size-8 items-center justify-center rounded-full"
+              class="bg-accent/50 dark:bg-accent/50 flex size-8 items-center justify-center rounded-full"
             >
               <Callout>
                 {attendee.name?.charAt(0).toUpperCase()}
@@ -154,16 +185,4 @@
   {/if}
 
   <!-- Recurrence info -->
-
-  <VStack>
-    <Merger>
-      <UniButton Icon={Share} onclick={shareEvent} disable={isSharing} />
-    </Merger>
-    <Divider />
-    <Merger>
-      <DeleteButton confirmText="Delete Event" confirmTitle="Delete Event"
-      ></DeleteButton>
-      <EditButton href="{event.uid}/edit" />
-    </Merger>
-  </VStack>
 </HStack>

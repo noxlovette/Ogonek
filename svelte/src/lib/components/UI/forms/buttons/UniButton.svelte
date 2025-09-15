@@ -4,6 +4,7 @@
   import type { MouseEventHandler } from "svelte/elements";
   import ConfirmDialogue from "../ConfirmDialogue.svelte";
   import { Headline } from "../../../typography";
+  import { Ban, Trash2, X } from "lucide-svelte";
 
   type ButtonVariant = "primary" | "danger" | "prominent";
 
@@ -30,7 +31,7 @@
     type = "button",
     href = undefined,
     formaction = undefined,
-    styling = "",
+    styling = "relative",
     disable = false,
     Icon = undefined,
     confirmText = undefined,
@@ -48,15 +49,15 @@
   function handleClick(event: MouseEvent) {
     if (variant === "danger" && (confirmText || confirmTitle)) {
       event.preventDefault();
-      showConfirmDialog = true;
+      deleteClicked = !deleteClicked;
+      showConfirmDialog = !showConfirmDialog;
     }
   }
 
   const baseClasses = `
   flex items-center justify-center flex-1 p-2 md:p-3
   rounded-full font-medium focus-visible:outline-none
-  disabled:opacity-50 disabled:pointer-events-none min-w-max
-  backdrop-blur-sm gap-2
+  disabled:opacity-50 disabled:pointer-events-none min-w-max gap-2
 `;
 
   const variantClasses = {
@@ -69,6 +70,8 @@
   const allClasses = $derived(
     [baseClasses, variantClasses[variant], styling].join(" "),
   );
+
+  let deleteClicked = $state(false);
 </script>
 
 {#if isLink}
@@ -92,8 +95,14 @@
     class={allClasses}
     onclick={variant === "danger" ? handleClick : onclick}
   >
-    {#if Icon}
+    {#if Icon && variant !== "danger"}
       <Icon class="size-5" />
+    {:else if variant == "danger"}
+      {#if !deleteClicked}
+        <Trash2 />
+      {:else}
+        <X />
+      {/if}
     {/if}
 
     {#if !iconOnly}

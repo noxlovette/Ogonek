@@ -6,14 +6,14 @@
     "dev": "vite dev",
     "build": "vite build",
     "preview": "vite preview",
-    "start": "pnpm build/index.js",
+    "start": "bun build/index.js",
     "test": "playwright test",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
     "lint": "prettier --check . && eslint .",
     "format": "prettier --write .",
-    "generate-types": "openapi-typescript ./openapi.json -o src/lib/types/api/gen/openapi.d.ts && node scripts/generate-routes.js && node scripts/generate-mock.js",
-    "generate-mock": "node scripts/generate-mock.js"
+    "generate-types": "openapi-typescript ./openapi.json -o src/lib/types/api/gen/openapi.d.ts && bun scripts/generate-routes.js && bun scripts/generate-mock.js",
+    "generate-mock": "bun scripts/generate-mock.js"
   },
   "type": "module",
   "dependencies": {
@@ -53,6 +53,7 @@
     "prettier-plugin-svelte": "^3.4.0",
     "prettier-plugin-tailwindcss": "^0.6.14",
     "svelte": "^5.38.10",
+    "svelte-adapter-bun": "^0.5.2",
     "svelte-check": "^4.3.1",
     "sveltekit-superforms": "^2.27.1",
     "tailwind-scrollbar": "^4.0.2",
@@ -61,11 +62,5 @@
     "vite": "^7.1.5",
     "vitest": "^3.2.4",
     "zod": "^4.1.8"
-  },
-  "packageManager": "pnpm@9.15.4+sha512.b2dc20e2fc72b3e18848459b37359a32064663e5627a51e4c74b2c29dd8e8e0491483c3abb40789cfd578bf362fb6ba8261b05f0387d76792ed6e23ea3b1b6a0",
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "esbuild"
-    ]
   }
 }

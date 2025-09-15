@@ -6,6 +6,7 @@
   import UniButton from "./buttons/UniButton.svelte";
   import VStack from "../VStack.svelte";
   import HStack from "../HStack.svelte";
+  import { Merger } from "../toolbar";
 
   let {
     confirmTitle = "You are deleting an item",
@@ -15,25 +16,13 @@
   } = $props();
 </script>
 
-<ModalBackGround>
-  <div role="dialog" aria-label="Confirmation Dialogue" class="gap-2">
-    <Title1>
-      {confirmTitle}
-    </Title1>
-
-    <Body>
-      {confirmText}
-    </Body>
-
+<div
+  role="dialog"
+  aria-label="Confirmation Dialogue"
+  class="absolute top-12 right-0"
+>
+  <Merger styling="bg-solid">
     <VStack>
-      <UniButton
-        Icon={Ban}
-        iconOnly={false}
-        onclick={() => (showConfirmDialog = false)}
-        ariaLabel="Cancel Deletion"
-      >
-        Cancel
-      </UniButton>
       <UniButton
         {formaction}
         Icon={Trash2}
@@ -43,5 +32,5 @@
         variant="danger">Confirm</UniButton
       >
     </VStack>
-  </div>
-</ModalBackGround>
+  </Merger>
+</div>

@@ -23,6 +23,6 @@
   });
 </script>
 
-<div class="flex h-full items-end gap-4 {layout} {styling}">
+<div class="relative flex h-full items-end gap-4 {layout} {styling}">
   {@render children()}
 </div>

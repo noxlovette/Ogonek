@@ -213,66 +213,6 @@ export const formatRelativeTime = (dateInput: string | Date): string => {
     return `${years} year${years > 1 ? "s" : ""} ago`;
   }
 };
-// $lib/utils/datetime.ts
-export function formatEventDateTime(
-  dtstart: string,
-  dtend?: string | null,
-  isAllDay?: boolean,
-): string {
-  const start = new Date(dtstart);
-  const end = dtend ? new Date(dtend) : null;
-
-  if (isAllDay) {
-    if (!end || start.toDateString() === end.toDateString()) {
-      return start.toLocaleDateString(getLocaleFromCookie(), {
-        weekday: "long",
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      });
-    }
-
-    // Multi-day all-day event
-    const endDate = new Date(end.getTime() - 24 * 60 * 60 * 1000); // Subtract 1 day
-    return `${start.toLocaleDateString()} - ${endDate.toLocaleDateString()}`;
-  }
-
-  const dateOptions: Intl.DateTimeFormatOptions = {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  };
-
-  const timeOptions: Intl.DateTimeFormatOptions = {
-    hour: "numeric",
-    minute: "2-digit",
-    hour12: true,
-  };
-
-  if (!end) {
-    return `${start.toLocaleDateString(getLocaleFromCookie(), dateOptions)} at ${start.toLocaleTimeString(getLocaleFromCookie(), timeOptions)}`;
-  }
-
-  if (start.toDateString() === end.toDateString()) {
-    return `${start.toLocaleDateString(getLocaleFromCookie(), dateOptions)} ${start.toLocaleTimeString(getLocaleFromCookie(), timeOptions)} to ${end.toLocaleTimeString(getLocaleFromCookie(), timeOptions)}`;
-  }
-
-  return `${start.toLocaleDateString(getLocaleFromCookie(), dateOptions)} ${start.toLocaleTimeString(getLocaleFromCookie(), timeOptions)} - ${end.toLocaleDateString(getLocaleFromCookie(), dateOptions)} ${end.toLocaleTimeString(getLocaleFromCookie(), timeOptions)}`;
-}
-
-export function formatDuration(dtstart: string, dtend: string): string {
-  const start = new Date(dtstart);
-  const end = new Date(dtend);
-  const diffMs = end.getTime() - start.getTime();
-
-  const hours = Math.floor(diffMs / (1000 * 60 * 60));
-  const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-
-  if (hours === 0) return `${minutes} minutes`;
-  if (minutes === 0) return `${hours} hour${hours !== 1 ? "s" : ""}`;
-  return `${hours} hour${hours !== 1 ? "s" : ""} ${minutes} minutes`;
-}
 
 export function parseRRuleToText(rrule?: string): string {
   // Basic RRULE parsing - you might want to use a library like rrule.js for this
