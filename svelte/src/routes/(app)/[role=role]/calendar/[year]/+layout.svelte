@@ -78,8 +78,8 @@
 
 <div
   bind:this={panelElement}
-  class="bg-default ring-default fixed z-50 w-1/2 max-w-md gap-2 rounded-lg
-         shadow-2xl transition-shadow md:gap-3 lg:gap-4
+  class="ring-default fixed z-50 max-w-lg gap-2 rounded-2xl bg-white shadow-2xl
+         transition-shadow md:gap-3 lg:gap-4 dark:bg-stone-900
          {isDragging ? 'shadow-3xl cursor-grabbing' : 'shadow-xl'}"
   style="left: {$panelPosition.x}px; top: {$panelPosition.y}px;"
 >
@@ -96,9 +96,9 @@
   <UniButton
     href="/{page.params.role}/calendar"
     Icon={X}
-    styling="absolute right-1 top-1"
+    styling="absolute right-1 z-50 top-1"
   />
-  <div class="overflow-y-auto p-4 pb-8">
+  <div class="scrollbar-none max-h-[768px] overflow-y-auto p-4 pb-8">
     {@render children()}
   </div>
 </div>

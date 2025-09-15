@@ -224,7 +224,7 @@ export function formatEventDateTime(
 
   if (isAllDay) {
     if (!end || start.toDateString() === end.toDateString()) {
-      return start.toLocaleDateString("en-US", {
+      return start.toLocaleDateString(getLocaleFromCookie(), {
         weekday: "long",
         year: "numeric",
         month: "long",
@@ -251,14 +251,14 @@ export function formatEventDateTime(
   };
 
   if (!end) {
-    return `${start.toLocaleDateString("en-US", dateOptions)} at ${start.toLocaleTimeString("en-US", timeOptions)}`;
+    return `${start.toLocaleDateString(getLocaleFromCookie(), dateOptions)} at ${start.toLocaleTimeString(getLocaleFromCookie(), timeOptions)}`;
   }
 
   if (start.toDateString() === end.toDateString()) {
-    return `${start.toLocaleDateString("en-US", dateOptions)} from ${start.toLocaleTimeString("en-US", timeOptions)} to ${end.toLocaleTimeString("en-US", timeOptions)}`;
+    return `${start.toLocaleDateString(getLocaleFromCookie(), dateOptions)} ${start.toLocaleTimeString(getLocaleFromCookie(), timeOptions)} to ${end.toLocaleTimeString(getLocaleFromCookie(), timeOptions)}`;
   }
 
-  return `${start.toLocaleDateString("en-US", dateOptions)} ${start.toLocaleTimeString("en-US", timeOptions)} - ${end.toLocaleDateString("en-US", dateOptions)} ${end.toLocaleTimeString("en-US", timeOptions)}`;
+  return `${start.toLocaleDateString(getLocaleFromCookie(), dateOptions)} ${start.toLocaleTimeString(getLocaleFromCookie(), timeOptions)} - ${end.toLocaleDateString(getLocaleFromCookie(), dateOptions)} ${end.toLocaleTimeString(getLocaleFromCookie(), timeOptions)}`;
 }
 
 export function formatDuration(dtstart: string, dtend: string): string {
@@ -274,11 +274,14 @@ export function formatDuration(dtstart: string, dtend: string): string {
   return `${hours} hour${hours !== 1 ? "s" : ""} ${minutes} minutes`;
 }
 
-export function parseRRuleToText(rrule: string): string {
+export function parseRRuleToText(rrule?: string): string {
   // Basic RRULE parsing - you might want to use a library like rrule.js for this
-  if (rrule.includes("FREQ=DAILY")) return "Daily";
-  if (rrule.includes("FREQ=WEEKLY")) return "Weekly";
-  if (rrule.includes("FREQ=MONTHLY")) return "Monthly";
-  if (rrule.includes("FREQ=YEARLY")) return "Yearly";
+
+  if (rrule) {
+    if (rrule.includes("FREQ=DAILY")) return "каждый день";
+    if (rrule.includes("FREQ=WEEKLY")) return "каждую неделю";
+    if (rrule.includes("FREQ=MONTHLY")) return "каждый месяц";
+    if (rrule.includes("FREQ=YEARLY")) return "каждый год";
+  }
   return "Custom recurrence";
 }
