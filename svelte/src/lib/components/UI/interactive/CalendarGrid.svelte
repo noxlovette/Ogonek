@@ -98,8 +98,18 @@
     });
   }
 
+  const selectedDate = $derived.by(() => {
+    if (page.params.year && page.params.month && page.params.day) {
+      return new Date(
+        Number(page.params.year),
+        Number(page.params.month) - 1,
+        Number(page.params.day),
+      );
+    }
+  });
+
   const isSelectedDay = (actualDate: Date): boolean => {
-    return actualDate.toISOString().split("T")[0] === page.params.iso;
+    return actualDate.getTime() === selectedDate?.getTime();
   };
 </script>
 
@@ -117,9 +127,9 @@
   <div class="grid grid-cols-7 gap-1">
     {#each monthDays as day}
       <a
-        href="/{page.params.role}/calendar/{day.actualDate
-          .toISOString()
-          .split('T')[0]}"
+        href="/{page.params
+          .role}/calendar/{day.actualDate.getFullYear()}/{day.actualDate.getMonth() +
+          1}/{day.actualDate.getDate()}"
         class=" flex aspect-3/2 flex-col items-end rounded-sm p-1
              {day.isCurrentMonth
           ? ' ring-default cursor-pointer hover:bg-stone-100'
