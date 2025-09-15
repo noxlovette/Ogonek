@@ -1,6 +1,6 @@
 use std::fmt;
 
-use crate::types::datetime_serialization;
+use crate::types::{EventAttendee, datetime_serialization};
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use sqlx::prelude::Type;
@@ -159,4 +159,12 @@ impl fmt::Display for EventTransp {
             EventTransp::Transparent => write!(f, "transparent"),
         }
     }
+}
+
+#[derive(Validate, ToSchema, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct EventWithAttendees {
+    #[serde(flatten)]
+    pub event: CalendarEvent,
+    pub attendees: Vec<EventAttendee>,
 }

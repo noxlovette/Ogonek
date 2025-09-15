@@ -354,39 +354,6 @@ export const createAttendeeBody = zod.object({
 
 
 /**
- * @summary Get a single event by ID
- */
-export const fetchEventParams = zod.object({
-  "id": zod.string().describe('Event ID')
-})
-
-export const fetchEventResponse = zod.object({
-  "allDay": zod.boolean(),
-  "categories": zod.array(zod.string()).nullish(),
-  "class": zod.enum(['public', 'private', 'confidential']),
-  "description": zod.string().nullish(),
-  "dtend": zod.iso.datetime({}).nullish(),
-  "dtstart": zod.iso.datetime({}),
-  "etag": zod.string(),
-  "exdate": zod.array(zod.string()).nullish(),
-  "location": zod.string().nullish(),
-  "organiserEmail": zod.string().nullish(),
-  "organiserName": zod.string().nullish(),
-  "priority": zod.number().nullish(),
-  "rdate": zod.array(zod.string()).nullish(),
-  "recurrenceId": zod.iso.datetime({}).nullish(),
-  "rrule": zod.string().nullish(),
-  "sequence": zod.number(),
-  "status": zod.enum(['confirmed', 'tentative', 'cancelled']),
-  "summary": zod.string(),
-  "timezone": zod.string().nullish(),
-  "transp": zod.enum(['opaque', 'transparent']),
-  "uid": zod.string(),
-  "url": zod.string().nullish()
-})
-
-
-/**
  * @summary Delete an event
  */
 export const deleteEventParams = zod.object({
@@ -425,6 +392,51 @@ export const updateEventBody = zod.object({
   "transp": zod.union([zod.null(),zod.enum(['opaque', 'transparent'])]).optional(),
   "url": zod.string().nullish()
 })
+
+
+/**
+ * @summary Get a single event by UID
+ */
+export const fetchEventParams = zod.object({
+  "uid": zod.string().describe('Event UID')
+})
+
+export const fetchEventResponse = zod.object({
+  "allDay": zod.boolean(),
+  "categories": zod.array(zod.string()).nullish(),
+  "class": zod.enum(['public', 'private', 'confidential']),
+  "description": zod.string().nullish(),
+  "dtend": zod.iso.datetime({}).nullish(),
+  "dtstart": zod.iso.datetime({}),
+  "etag": zod.string(),
+  "exdate": zod.array(zod.string()).nullish(),
+  "location": zod.string().nullish(),
+  "organiserEmail": zod.string().nullish(),
+  "organiserName": zod.string().nullish(),
+  "priority": zod.number().nullish(),
+  "rdate": zod.array(zod.string()).nullish(),
+  "recurrenceId": zod.iso.datetime({}).nullish(),
+  "rrule": zod.string().nullish(),
+  "sequence": zod.number(),
+  "status": zod.enum(['confirmed', 'tentative', 'cancelled']),
+  "summary": zod.string(),
+  "timezone": zod.string().nullish(),
+  "transp": zod.enum(['opaque', 'transparent']),
+  "uid": zod.string(),
+  "url": zod.string().nullish()
+}).and(zod.object({
+  "attendees": zod.array(zod.object({
+  "createdAt": zod.iso.datetime({}),
+  "email": zod.string(),
+  "eventId": zod.string(),
+  "id": zod.string(),
+  "name": zod.string().nullish(),
+  "role": zod.enum(['req-participant', 'chair', 'opt-participant', 'non-participant']),
+  "rsvp": zod.boolean(),
+  "status": zod.enum(['needs-action', 'accepted', 'declined', 'tentative', 'delegated']),
+  "updatedAt": zod.iso.datetime({})
+}))
+}))
 
 
 /**

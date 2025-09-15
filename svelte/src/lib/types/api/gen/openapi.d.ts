@@ -239,8 +239,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Get a single event by ID */
-        get: operations["fetch_event"];
+        get?: never;
         put?: never;
         post?: never;
         /** Delete an event */
@@ -249,6 +248,23 @@ export interface paths {
         head?: never;
         /** Update an event */
         patch: operations["update_event"];
+        trace?: never;
+    };
+    "/api/v1/calendars/events/{uid}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get a single event by UID */
+        get: operations["fetch_event"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
     "/api/v1/calendars/{id}": {
@@ -1036,6 +1052,9 @@ export interface components {
         EventStatus: "confirmed" | "tentative" | "cancelled";
         /** @enum {string} */
         EventTransp: "opaque" | "transparent";
+        EventWithAttendees: components["schemas"]["CalendarEvent"] & {
+            attendees: components["schemas"]["EventAttendee"][];
+        };
         FileSmall: {
             id: string;
             mimeType?: string | null;
@@ -2189,43 +2208,6 @@ export interface operations {
             };
         };
     };
-    fetch_event: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Event ID */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Event retrieved successfully */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CalendarEvent"];
-                };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Event not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
     delete_event: {
         parameters: {
             query?: never;
@@ -2283,6 +2265,43 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Event not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    fetch_event: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Event UID */
+                uid: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Event retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EventWithAttendees"];
+                };
             };
             /** @description Unauthorized */
             401: {

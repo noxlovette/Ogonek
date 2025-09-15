@@ -8,8 +8,8 @@ use crate::{
     },
 };
 
-/// Finds a calendar event by id
-pub async fn find_by_id(db: &PgPool, event_id: &str) -> Result<CalendarEvent, DbError> {
+/// Finds a calendar event by uid
+pub async fn find_by_uid(db: &PgPool, event_uid: &str) -> Result<CalendarEvent, DbError> {
     let event = sqlx::query_as!(
         CalendarEvent,
         r#"
@@ -43,9 +43,9 @@ pub async fn find_by_id(db: &PgPool, event_id: &str) -> Result<CalendarEvent, Db
             etag,
             deleted_at
         FROM calendar_events
-        WHERE id = $1 AND deleted_at IS NULL
+        WHERE uid = $1 AND deleted_at IS NULL
         "#,
-        event_id
+        event_uid
     )
     .fetch_one(db)
     .await?;
@@ -293,12 +293,12 @@ mod tests {
     }
 
     #[sqlx::test]
-    async fn test_find_by_id_success(db: PgPool) {
+    async fn test_find_by_uid_success(db: PgPool) {
         let user_id = create_test_user(&db, "testuser", "test@example.com").await;
         let calendar_id = create_test_calendar(&db, &user_id, "Test Calendar").await;
         let event_id = create_test_event(&db, &calendar_id, "Test Event").await;
 
-        let result = find_by_id(&db, &event_id).await;
+        let result = find_by_uid(&db, &event_id).await;
         assert!(result.is_ok());
 
         let event = result.unwrap();
@@ -308,9 +308,9 @@ mod tests {
     }
 
     #[sqlx::test]
-    async fn test_find_by_id_not_found(db: PgPool) {
+    async fn test_find_by_uid_not_found(db: PgPool) {
         let non_existent_id = "non-existent-id";
-        let result = find_by_id(&db, non_existent_id).await;
+        let result = find_by_uid(&db, non_existent_id).await;
         assert!(result.is_err());
     }
 
@@ -361,7 +361,7 @@ mod tests {
         let result = update(&db, &event_id, &update_data).await;
         assert!(result.is_ok());
 
-        let event = find_by_id(&db, &event_id).await.unwrap();
+        let event = find_by_uid(&db, &event_id).await.unwrap();
         assert_eq!(event.summary, "Updated Summary");
         assert_eq!(event.description, Some("Updated description".to_string()));
         assert_eq!(event.location, Some("Updated location".to_string()));
@@ -386,7 +386,7 @@ mod tests {
         let result = update(&db, &event_id, &update_data).await;
         assert!(result.is_ok());
 
-        let event = find_by_id(&db, &event_id).await.unwrap();
+        let event = find_by_uid(&db, &event_id).await.unwrap();
         assert_eq!(event.summary, "Updated Summary");
     }
 
@@ -399,7 +399,7 @@ mod tests {
         let result = delete(&db, &event_id).await;
         assert!(result.is_ok());
 
-        let find_result = find_by_id(&db, &event_id).await;
+        let find_result = find_by_uid(&db, &event_id).await;
         assert!(find_result.is_err());
     }
 

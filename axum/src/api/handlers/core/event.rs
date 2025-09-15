@@ -2,23 +2,24 @@ use crate::api::CALENDAR_TAG;
 use crate::api::error::APIError;
 use crate::auth::Claims;
 use crate::db::crud::core::calendar::event::{
-    create, delete, find_by_calendar_id, find_by_date, find_by_id, update,
+    create, delete, find_by_calendar_id, find_by_date, find_by_uid, update,
 };
+use crate::db::crud::core::calendar::event_attendee::find_by_event_id;
 use crate::schema::AppState;
-use crate::types::{CalendarEvent, CalendarEventCreate, CalendarEventUpdate};
+use crate::types::{CalendarEvent, CalendarEventCreate, CalendarEventUpdate, EventWithAttendees};
 use axum::extract::{Json, Path, State};
 use axum::http::StatusCode;
 
-/// Get a single event by ID
+/// Get a single event by UID
 #[utoipa::path(
     get,
-    path = "/events/{id}",
+    path = "/events/{uid}",
     tag = CALENDAR_TAG,
     params(
-        ("id" = String, Path, description = "Event ID")
+        ("uid" = String, Path, description = "Event UID")
     ),
     responses(
-        (status = 200, description = "Event retrieved successfully", body = CalendarEvent),
+        (status = 200, description = "Event retrieved successfully", body = EventWithAttendees),
         (status = 404, description = "Event not found"),
         (status = 401, description = "Unauthorized")
     )
@@ -27,9 +28,10 @@ pub async fn fetch_event(
     State(state): State<AppState>,
     Path(id): Path<String>,
     _claims: Claims,
-) -> Result<Json<CalendarEvent>, APIError> {
-    let event = find_by_id(&state.db, &id).await?;
-    Ok(Json(event))
+) -> Result<Json<EventWithAttendees>, APIError> {
+    let event = find_by_uid(&state.db, &id).await?;
+    let attendees = find_by_event_id(&state.db, &id).await?;
+    Ok(Json(EventWithAttendees { event, attendees }))
 }
 
 /// Get all events for a calendar
