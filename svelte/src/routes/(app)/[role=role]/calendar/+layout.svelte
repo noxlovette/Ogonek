@@ -1,6 +1,8 @@
 <script lang="ts">
-  import { Callout, LargeTitle, Toolbar } from "$lib/components";
+  import { page } from "$app/state";
+  import { Callout, LargeTitle, Toolbar, UniButton } from "$lib/components";
   import CalendarGrid from "$lib/components/UI/interactive/CalendarGrid.svelte";
+  import { X } from "lucide-svelte";
   import type { LayoutProps } from "./$types";
 
   let { data, children }: LayoutProps = $props();
@@ -9,8 +11,8 @@
 <Toolbar>
   <LargeTitle>Календарь</LargeTitle>
 </Toolbar>
-
-<div class="grid grid-cols-3">
+<div class="relative flex">
   <CalendarGrid events={data.events} />
+
   {@render children()}
 </div>

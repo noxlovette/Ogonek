@@ -87,3 +87,42 @@ function createToggleStore() {
 
 export const isLoading = createToggleStore();
 export const mobileMenuOpen = createToggleStore();
+
+// lib/stores/draggable.ts
+import { browser } from "$app/environment";
+
+interface Position {
+  x: number;
+  y: number;
+}
+
+function createDraggableStore() {
+  // Load from localStorage or default to right side
+  const defaultPos = {
+    x: typeof window !== "undefined" ? window.innerWidth * 0.5 : 400,
+    y: 0,
+  };
+  const storedPos = browser ? localStorage.getItem("panel-position") : null;
+
+  const { subscribe, set, update } = writable<Position>(
+    storedPos ? JSON.parse(storedPos) : defaultPos,
+  );
+
+  return {
+    subscribe,
+    setPosition: (pos: Position) => {
+      set(pos);
+      if (browser) localStorage.setItem("panel-position", JSON.stringify(pos));
+    },
+    updatePosition: (delta: { dx: number; dy: number }) => {
+      update((pos) => {
+        const newPos = { x: pos.x + delta.dx, y: pos.y + delta.dy };
+        if (browser)
+          localStorage.setItem("panel-position", JSON.stringify(newPos));
+        return newPos;
+      });
+    },
+  };
+}
+
+export const panelPosition = createDraggableStore();

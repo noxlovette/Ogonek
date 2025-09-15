@@ -3,6 +3,7 @@
   import { UniButton } from "../UI";
   import { ArrowBigUp } from "lucide-svelte";
   import { fade } from "svelte/transition";
+  import ThemeToggler from "../UI/interactive/ThemeToggler.svelte";
 
   let currentLocale = "en";
   let isOpen = false;
@@ -68,4 +69,5 @@
       {/each}
     </div>
   {/if}
+  <ThemeToggler></ThemeToggler>
 </div>
