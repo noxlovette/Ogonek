@@ -1,4 +1,4 @@
-use crate::api::core::{self, state};
+use crate::api::core::{self, list_events_day, state};
 use crate::schema::AppState;
 use axum::Router;
 use axum::routing::{get, post, put};
@@ -70,8 +70,25 @@ pub fn calendar_routes() -> Router<AppState> {
                 .patch(core::update_calendar)
                 .delete(core::delete_calendar),
         )
-        .route("/{calendar_id}/events", get(core::list_events).post(core::create_event))
-        .route("/events/{id}", get(core::fetch_event).patch(core::update_event).delete(core::delete_event))
-        .route("/events/{event_id}/attendees", get(core::list_attendees).post(core::create_attendee))
-        .route("/attendees/{id}", get(core::fetch_attendee).patch(core::update_attendee).delete(core::delete_attendee))
+        .route(
+            "/{calendar_id}/events",
+            get(core::list_events).post(core::create_event),
+        )
+        .route("/{calendar_id}/events/{day}", get(list_events_day))
+        .route(
+            "/events/{id}",
+            get(core::fetch_event)
+                .patch(core::update_event)
+                .delete(core::delete_event),
+        )
+        .route(
+            "/events/{event_id}/attendees",
+            get(core::list_attendees).post(core::create_attendee),
+        )
+        .route(
+            "/attendees/{id}",
+            get(core::fetch_attendee)
+                .patch(core::update_attendee)
+                .delete(core::delete_attendee),
+        )
 }

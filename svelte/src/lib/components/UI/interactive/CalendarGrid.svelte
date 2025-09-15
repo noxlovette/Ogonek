@@ -1,17 +1,19 @@
 <script lang="ts">
+  import { page } from "$app/state";
   import { Caption1, Title1 } from "$lib/components/typography";
   import type { CalendarEvent } from "$lib/types/api/calendar";
   import { getLocaleFromCookie } from "$lib/utils";
 
   const { events }: { events: CalendarEvent[] } = $props();
 
-  let monthDays = [];
+  let monthDays: MonthDay[] = [];
 
   type MonthDay = {
-    day?: number;
+    day: number;
     isCurrentMonth: boolean;
     isToday: boolean;
     events: CalendarEvent[];
+    actualDate: Date;
   };
   const now = new Date();
   const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
@@ -34,94 +36,123 @@
   );
 
   const startDayOfWeek = firstDay.getDay();
+  const prevMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+  const prevMonthLastDay = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    0,
+  ).getDate();
 
-  // Helper to get events for a specific day
   const getEventsForDay = (day: number, month: number, year: number) => {
     const dateKey = `${year}-${month}-${day}`;
     return eventsByDate[dateKey] || [];
   };
 
-  // Empty cells before month starts
   for (let i = 0; i < startDayOfWeek; i++) {
+    const dayNum = prevMonthLastDay - startDayOfWeek + i + 1;
     monthDays.push({
-      day: null,
+      day: dayNum,
       isCurrentMonth: false,
       isToday: false,
       events: [],
+      actualDate: new Date(
+        prevMonth.getFullYear(),
+        prevMonth.getMonth(),
+        dayNum,
+      ),
     });
   }
 
-  // Current month days with their events
   for (let day = 1; day <= lastDay.getDate(); day++) {
-    const isToday =
-      day === now.getDate() &&
-      firstDay.getMonth() === now.getMonth() &&
-      firstDay.getFullYear() === now.getFullYear();
-
+    const actualDate = new Date(
+      firstDay.getFullYear(),
+      firstDay.getMonth(),
+      day,
+    );
     monthDays.push({
       day,
       isCurrentMonth: true,
-      isToday,
+      isToday:
+        day === now.getDate() &&
+        firstDay.getMonth() === now.getMonth() &&
+        firstDay.getFullYear() === now.getFullYear(),
       events: getEventsForDay(day, firstDay.getMonth(), firstDay.getFullYear()),
+      actualDate,
     });
   }
 
-  // Fill remaining cells for next month
   const remainingCells = 42 - monthDays.length;
   const nextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
   for (let i = 1; i <= remainingCells; i++) {
+    const actualDate = new Date(
+      nextMonth.getFullYear(),
+      nextMonth.getMonth(),
+      i,
+    );
     monthDays.push({
       day: i,
       isCurrentMonth: false,
       isToday: false,
       events: getEventsForDay(i, nextMonth.getMonth(), nextMonth.getFullYear()),
+      actualDate,
     });
   }
+
+  const isSelectedDay = (actualDate: Date): boolean => {
+    return actualDate.toISOString().split("T")[0] === page.params.iso;
+  };
 </script>
 
-<Title1 styling="capitalize">
-  {monthName}
-  {year}
-</Title1>
-<div class="grid grid-cols-7 gap-1">
-  {#each ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"] as dayLabel}
-    <Caption1 styling="text-right">{dayLabel}</Caption1>
-  {/each}
-</div>
+<div class="col-span-2">
+  <Title1 styling="capitalize">
+    {monthName}
+    {year}
+  </Title1>
+  <div class="grid grid-cols-7 gap-1">
+    {#each ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"] as dayLabel}
+      <Caption1 styling="text-right">{dayLabel}</Caption1>
+    {/each}
+  </div>
 
-<div class="grid grid-cols-7">
-  {#each monthDays as day}
-    <div
-      class="ring-default flex aspect-3/2 flex-col items-end p-1
+  <div class="grid grid-cols-7 gap-1">
+    {#each monthDays as day}
+      <a
+        href="/{page.params.role}/calendar/{day.actualDate
+          .toISOString()
+          .split('T')[0]}"
+        class=" flex aspect-3/2 flex-col items-end rounded-sm p-1
              {day.isCurrentMonth
-        ? ' cursor-pointer hover:bg-stone-100 '
-        : 'cursor-default text-stone-400'}"
-    >
-      <div
-        class="rounded-full p-0.5 px-1 font-medium {day.isToday
-          ? 'bg-accent text-stone-50'
+          ? ' ring-default cursor-pointer hover:bg-stone-100'
+          : 'cursor-default text-stone-400'} {isSelectedDay(day.actualDate)
+          ? 'bg-stone-200'
           : ''}"
       >
-        {day.day || ""}
-      </div>
-
-      {#if day.events.length > 0}
-        <div class="flex w-full flex-col gap-0.5">
-          {#each day.events.slice(0, 3) as event}
-            <div
-              class="bg-accent/20 text-accent truncate rounded px-1 py-0.5 text-xs"
-            >
-              {event.summary}
-            </div>
-          {/each}
-
-          {#if day.events.length > 3}
-            <div class="text-xs text-stone-500">
-              +{day.events.length - 3} more
-            </div>
-          {/if}
+        <div
+          class="rounded-full px-1 font-medium {day.isToday
+            ? 'bg-accent text-stone-50'
+            : ''}"
+        >
+          {day.day || ""}
         </div>
-      {/if}
-    </div>
-  {/each}
+
+        {#if day.events.length > 0}
+          <div class="flex w-full flex-col gap-0.5">
+            {#each day.events.slice(0, 3) as event}
+              <div
+                class="bg-accent/20 text-accent truncate rounded px-1 py-0.5 text-xs"
+              >
+                {event.summary}
+              </div>
+            {/each}
+
+            {#if day.events.length > 3}
+              <div class="text-xs text-stone-500">
+                +{day.events.length - 3} more
+              </div>
+            {/if}
+          </div>
+        {/if}
+      </a>
+    {/each}
+  </div>
 </div>

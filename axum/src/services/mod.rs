@@ -8,7 +8,6 @@ pub mod schema;
 pub mod tools;
 pub mod types;
 pub use auth::*;
-pub use calendar::*;
 pub use error::*;
 pub use notifications::*;
 pub use observability::*;

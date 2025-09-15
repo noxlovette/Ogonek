@@ -6,3 +6,5 @@ export { default as LessonCard } from "./LessonCard.svelte";
 export { default as LoadingCard } from "./LoadingCard.svelte";
 export { default as TaskCard } from "./TaskCard.svelte";
 export { default as WordCard } from "./WordCard.svelte";
+
+export { default as EventCard } from "./EventCard.svelte";

@@ -238,6 +238,40 @@ export const updateAttendeeBody = zod.object({
 
 
 /**
+ * @summary Get all events for a given day
+ */
+export const listEventsDayParams = zod.object({
+  "day": zod.string().describe('Day')
+})
+
+export const listEventsDayResponseItem = zod.object({
+  "allDay": zod.boolean(),
+  "categories": zod.array(zod.string()).nullish(),
+  "class": zod.enum(['public', 'private', 'confidential']),
+  "description": zod.string().nullish(),
+  "dtend": zod.iso.datetime({}).nullish(),
+  "dtstart": zod.iso.datetime({}),
+  "etag": zod.string(),
+  "exdate": zod.array(zod.string()).nullish(),
+  "location": zod.string().nullish(),
+  "organiserEmail": zod.string().nullish(),
+  "organiserName": zod.string().nullish(),
+  "priority": zod.number().nullish(),
+  "rdate": zod.array(zod.string()).nullish(),
+  "recurrenceId": zod.iso.datetime({}).nullish(),
+  "rrule": zod.string().nullish(),
+  "sequence": zod.number(),
+  "status": zod.enum(['confirmed', 'tentative', 'cancelled']),
+  "summary": zod.string(),
+  "timezone": zod.string().nullish(),
+  "transp": zod.enum(['opaque', 'transparent']),
+  "uid": zod.string(),
+  "url": zod.string().nullish()
+})
+export const listEventsDayResponse = zod.array(listEventsDayResponseItem)
+
+
+/**
  * @summary Get all events for a calendar
  */
 export const listEventsParams = zod.object({

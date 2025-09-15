@@ -1,7 +1,9 @@
 use crate::api::CALENDAR_TAG;
 use crate::api::error::APIError;
 use crate::auth::Claims;
-use crate::db::crud::core::calendar::event::{create, delete, find_by_calendar_id, find_by_id, update};
+use crate::db::crud::core::calendar::event::{
+    create, delete, find_by_calendar_id, find_by_date, find_by_id, update,
+};
 use crate::schema::AppState;
 use crate::types::{CalendarEvent, CalendarEventCreate, CalendarEventUpdate};
 use axum::extract::{Json, Path, State};
@@ -50,6 +52,31 @@ pub async fn list_events(
     _claims: Claims,
 ) -> Result<Json<Vec<CalendarEvent>>, APIError> {
     let events = find_by_calendar_id(&state.db, &calendar_id).await?;
+    Ok(Json(events))
+}
+
+/// Get all events for a given day
+#[utoipa::path(
+    get,
+    path = "/calendars/events/{day}",
+    tag = CALENDAR_TAG,
+    params(
+        ("day" = String, Path, description = "Day")
+    ),
+    responses(
+        (status = 200, description = "Events retrieved successfully", body = Vec<CalendarEvent>),
+        (status = 404, description = "Calendar not found"),
+        (status = 401, description = "Unauthorized")
+    )
+)]
+pub async fn list_events_day(
+    State(state): State<AppState>,
+    Path(day): Path<String>,
+    _claims: Claims,
+) -> Result<Json<Vec<CalendarEvent>>, APIError> {
+    let naive_date = chrono::NaiveDate::parse_from_str(&day, "%Y-%m-%d")
+        .map_err(|_| APIError::BadRequest("Invalid Date Format".to_string()))?;
+    let events = find_by_date(&state.db, naive_date).await?;
     Ok(Json(events))
 }
 

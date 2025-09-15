@@ -101,6 +101,39 @@ pub async fn find_by_calendar_id(
 
     Ok(events)
 }
+pub async fn find_by_date(
+    db: &PgPool,
+    day: chrono::NaiveDate,
+) -> Result<Vec<CalendarEvent>, DbError> {
+    let events = sqlx::query_as!(
+        CalendarEvent,
+        r#"
+        SELECT 
+            id, uid, created_at, updated_at, calendar_id,
+            summary, description, location, url,
+            dtstart, dtend, all_day, timezone,
+            rrule, rdate, exdate, recurrence_id,
+            status as "status: EventStatus",
+            class as "class: EventClass", 
+            transp as "transp: EventTransp",
+            priority, categories,
+            organiser_email, organiser_name,
+            sequence, dtstamp, etag, deleted_at
+        FROM calendar_events
+        WHERE deleted_at IS NULL
+        AND (
+            dtstart::date = $1 OR 
+            dtend::date = $1 OR
+            (dtstart::date <= $1 AND dtend::date >= $1)
+        )
+        ORDER BY dtstart ASC
+        "#,
+        day,
+    )
+    .fetch_all(db)
+    .await?;
+    Ok(events)
+}
 
 /// Soft deletes a calendar event (sets deleted_at timestamp)
 pub async fn delete(db: &PgPool, event_id: &str) -> Result<(), DbError> {
@@ -215,14 +248,19 @@ mod tests {
     use super::*;
     use crate::db::crud::core::calendar::calendar;
     use crate::tests::create_test_user;
-    use crate::types::{CalendarCreate, CalendarEventCreate, CalendarEventUpdate, EventStatus, EventClass, EventTransp};
+    use crate::types::{
+        CalendarCreate, CalendarEventCreate, CalendarEventUpdate, EventClass, EventStatus,
+        EventTransp,
+    };
     use chrono::Utc;
 
     async fn create_test_calendar(db: &PgPool, user_id: &str, name: &str) -> String {
         let calendar_create = CalendarCreate {
             name: name.to_string(),
         };
-        calendar::create(db, user_id, calendar_create).await.unwrap()
+        calendar::create(db, user_id, calendar_create)
+            .await
+            .unwrap()
     }
 
     async fn create_test_event(db: &PgPool, calendar_id: &str, summary: &str) -> String {
@@ -280,7 +318,7 @@ mod tests {
     async fn test_find_by_calendar_id(db: PgPool) {
         let user_id = create_test_user(&db, "testuser", "test@example.com").await;
         let calendar_id = create_test_calendar(&db, &user_id, "Test Calendar").await;
-        
+
         create_test_event(&db, &calendar_id, "Event 1").await;
         create_test_event(&db, &calendar_id, "Event 2").await;
         create_test_event(&db, &calendar_id, "Event 3").await;

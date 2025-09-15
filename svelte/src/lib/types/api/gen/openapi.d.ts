@@ -179,6 +179,23 @@ export interface paths {
         patch: operations["update_attendee"];
         trace?: never;
     };
+    "/api/v1/calendars/calendars/events/{day}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get all events for a given day */
+        get: operations["list_events_day"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/calendars/calendars/{calendar_id}/events": {
         parameters: {
             query?: never;
@@ -1971,6 +1988,43 @@ export interface operations {
                 content?: never;
             };
             /** @description Attendee not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    list_events_day: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Day */
+                day: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Events retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CalendarEvent"][];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Calendar not found */
             404: {
                 headers: {
                     [name: string]: unknown;

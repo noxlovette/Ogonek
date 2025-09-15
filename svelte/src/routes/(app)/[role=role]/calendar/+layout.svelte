@@ -10,5 +10,7 @@
   <LargeTitle>Календарь</LargeTitle>
 </Toolbar>
 
-<CalendarGrid events={data.events} />
-{@render children()}
+<div class="grid grid-cols-3">
+  <CalendarGrid events={data.events} />
+  {@render children()}
+</div>

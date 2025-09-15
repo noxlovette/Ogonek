@@ -34,6 +34,7 @@ export const routes = {
     attendee: (id: string) => `${API_BASE}/calendars/attendees/${id}`,
     delete_attendee: (id: string) => `${API_BASE}/calendars/attendees/${id}`,
     update_attendee: (id: string) => `${API_BASE}/calendars/attendees/${id}`,
+    events_day: (day: string) => `${API_BASE}/calendars/calendars/events/${day}`,
     events: (calendar_id: string) => `${API_BASE}/calendars/calendars/${calendar_id}/events`,
     new_event: (calendar_id: string) => `${API_BASE}/calendars/calendars/${calendar_id}/events`,
     attendees: (event_id: string) => `${API_BASE}/calendars/events/${event_id}/attendees`,

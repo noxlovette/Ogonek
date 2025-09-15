@@ -25,7 +25,7 @@
 
     const [role, section, maybeId] = segments;
 
-    if (section === "dashboard") return false;
+    if (section === "dashboard" || section === "calendar") return false;
 
     return segments.length > 2;
   });

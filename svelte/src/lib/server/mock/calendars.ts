@@ -1,4 +1,8 @@
-import type { Calendar, CalendarEvent, EventAttendee } from "$lib/types/api/calendar";
+import type {
+  Calendar,
+  CalendarEvent,
+  EventAttendee,
+} from "$lib/types/api/calendar";
 import { faker } from "@faker-js/faker";
 import { nanoid } from "nanoid";
 
@@ -11,13 +15,15 @@ export function createCalendar(): Calendar {
   };
 }
 
-export function createCalendarEvent(calendarId?: string): CalendarEvent {
+export function createCalendarEvent(): CalendarEvent {
   const startDate = faker.date.between({
     from: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), // 30 days ago
     to: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000), // 60 days from now
   });
-  
-  const endDate = new Date(startDate.getTime() + faker.number.int({ min: 30, max: 240 }) * 60 * 1000); // 30min to 4hr duration
+
+  const endDate = new Date(
+    startDate.getTime() + faker.number.int({ min: 30, max: 240 }) * 60 * 1000,
+  ); // 30min to 4hr duration
   const allDay = faker.datatype.boolean({ probability: 0.2 });
 
   return {
@@ -32,7 +38,7 @@ export function createCalendarEvent(calendarId?: string): CalendarEvent {
       "Demo",
       "Planning Session",
       "Retrospective",
-      "All Hands"
+      "All Hands",
     ]),
     description: faker.lorem.paragraph(),
     dtstart: startDate.toISOString(),
@@ -44,7 +50,7 @@ export function createCalendarEvent(calendarId?: string): CalendarEvent {
       "Zoom",
       "Office",
       "Client Site",
-      null
+      null,
     ]),
     status: faker.helpers.arrayElement(["confirmed", "tentative", "cancelled"]),
     class: faker.helpers.arrayElement(["public", "private", "confidential"]),
@@ -53,12 +59,27 @@ export function createCalendarEvent(calendarId?: string): CalendarEvent {
     etag: nanoid(),
     organiserName: faker.person.fullName(),
     organiserEmail: faker.internet.email(),
-    categories: faker.helpers.maybe(() => 
-      faker.helpers.multiple(() => faker.helpers.arrayElement([
-        "work", "personal", "meeting", "travel", "training", "social"
-      ]), { count: { min: 1, max: 3 } })
+    categories: faker.helpers.maybe(() =>
+      faker.helpers.multiple(
+        () =>
+          faker.helpers.arrayElement([
+            "work",
+            "personal",
+            "meeting",
+            "travel",
+            "training",
+            "social",
+          ]),
+        { count: { min: 1, max: 3 } },
+      ),
     ),
-    timezone: faker.helpers.arrayElement(["UTC", "America/New_York", "Europe/London", "Asia/Tokyo", null]),
+    timezone: faker.helpers.arrayElement([
+      "UTC",
+      "America/New_York",
+      "Europe/London",
+      "Asia/Tokyo",
+      null,
+    ]),
     transp: faker.helpers.arrayElement(["opaque", "transparent"]),
     url: faker.helpers.maybe(() => faker.internet.url()),
     rrule: faker.helpers.maybe(() => "FREQ=WEEKLY;BYDAY=MO,WE,FR"),
@@ -70,16 +91,29 @@ export function createCalendarEvent(calendarId?: string): CalendarEvent {
 
 export function createEventAttendee(eventId?: string): EventAttendee {
   const createdAt = faker.date.past();
-  
+
   return {
     id: nanoid(),
     eventId: eventId || nanoid(),
     email: faker.internet.email(),
     name: faker.person.fullName(),
-    role: faker.helpers.arrayElement(["req-participant", "chair", "opt-participant", "non-participant"]),
-    status: faker.helpers.arrayElement(["needs-action", "accepted", "declined", "tentative", "delegated"]),
+    role: faker.helpers.arrayElement([
+      "req-participant",
+      "chair",
+      "opt-participant",
+      "non-participant",
+    ]),
+    status: faker.helpers.arrayElement([
+      "needs-action",
+      "accepted",
+      "declined",
+      "tentative",
+      "delegated",
+    ]),
     rsvp: faker.datatype.boolean(),
     createdAt: createdAt.toISOString(),
-    updatedAt: faker.date.between({ from: createdAt, to: new Date() }).toISOString(),
+    updatedAt: faker.date
+      .between({ from: createdAt, to: new Date() })
+      .toISOString(),
   };
 }
