@@ -40,6 +40,7 @@ fn api_routes() -> Router<AppState> {
         .nest("/notifications", notification_routes())
         .nest("/state", state_routes())
         .nest("/content", content_routes())
+        .nest("/calendars", calendar_routes())
         .nest("/admin", admin_routes())
 }
 

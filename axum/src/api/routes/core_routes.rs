@@ -60,3 +60,14 @@ pub fn state_routes() -> Router<AppState> {
         .route("/badges", get(state::fetch_badges))
         .route("/context", get(state::fetch_context))
 }
+
+pub fn calendar_routes() -> Router<AppState> {
+    Router::new()
+        .route("/", get(core::list_calendars).post(core::create_calendar))
+        .route(
+            "/{id}",
+            get(core::fetch_calendar)
+                .patch(core::update_calendar)
+                .delete(core::delete_calendar),
+        )
+}

@@ -1,9 +1,11 @@
+pub mod calendar;
 pub mod deck;
 pub mod learn;
 pub mod lesson;
 pub mod state;
 pub mod task;
 
+pub use calendar::*;
 pub use deck::*;
 pub use learn::*;
 pub use lesson::*;
