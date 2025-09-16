@@ -20,7 +20,7 @@ pub struct CalendarEvent {
 
     #[serde(skip_serializing)]
     pub calendar_id: String,
-
+    #[serde(alias = "title")]
     pub summary: String,
     pub description: Option<String>,
     pub location: Option<String>,

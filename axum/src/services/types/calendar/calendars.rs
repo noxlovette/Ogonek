@@ -7,6 +7,7 @@ use validator::Validate;
 #[serde(rename_all = "camelCase")]
 pub struct Calendar {
     pub id: String,
+    #[serde(alias = "title")]
     pub name: String,
     pub description: Option<String>,
 

@@ -3,8 +3,9 @@
   import type { ComponentType, Snippet } from "svelte";
   import type { MouseEventHandler } from "svelte/elements";
   import ConfirmDialogue from "../ConfirmDialogue.svelte";
-  import { Headline } from "../../../typography";
+  import { Footnote, Headline } from "../../../typography";
   import { Ban, Trash2, X } from "lucide-svelte";
+  import Caption1 from "$lib/components/typography/Caption1.svelte";
 
   type ButtonVariant = "primary" | "danger" | "prominent";
 
@@ -55,9 +56,9 @@
   }
 
   const baseClasses = `
-  flex items-center justify-center flex-1 p-2 md:p-3
+  flex items-center  justify-center flex-1 p-2 md:p-3
   rounded-full font-medium focus-visible:outline-none
-  disabled:opacity-50 disabled:pointer-events-none min-w-max gap-2
+  disabled:opacity-50 disabled:pointer-events-none  gap-2
 `;
 
   const variantClasses = {
@@ -106,9 +107,9 @@
     {/if}
 
     {#if !iconOnly}
-      <Headline>
+      <Footnote>
         {@render children?.()}
-      </Headline>
+      </Footnote>
     {/if}
   </button>
 {/if}

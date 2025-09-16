@@ -19,6 +19,7 @@
   import { enhance } from "$app/forms";
   import Optional from "$lib/components/UI/forms/Optional.svelte";
   import type { EventAttendeeCreate } from "$lib/types/api/calendar.js";
+  import RecurrenceSelector from "$lib/components/UI/forms/RecurrenceSelector.svelte";
 
   const { data } = $props();
   const event = data.event;
@@ -69,7 +70,10 @@
     </Merger>
   </VStack>
   <SectionBg>
-    <DateTimePicker dtstart={event.dtstart} dtend={event.dtend} />
+    <HStack>
+      <DateTimePicker dtstart={event.dtstart} dtend={event.dtend} />
+      <RecurrenceSelector rrule={event.rrule} />
+    </HStack>
   </SectionBg>
 
   {#if event.location || showLocation}
