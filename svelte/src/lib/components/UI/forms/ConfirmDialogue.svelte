@@ -19,7 +19,7 @@
 <div
   role="dialog"
   aria-label="Confirmation Dialogue"
-  class="absolute top-12 right-0"
+  class="absolute top-12 right-0 z-50"
 >
   <Merger styling="bg-solid">
     <VStack>

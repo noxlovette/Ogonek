@@ -1,6 +1,6 @@
 import { routes } from "$lib/routes";
 import type { EventWithAttendees } from "$lib/types/api/calendar";
-import type { PageServerLoad } from "./$types";
+import type { LayoutServerLoad } from "./$types";
 
 export const load = (async ({ fetch, params }) => {
   const event: EventWithAttendees = await fetch(
@@ -9,4 +9,4 @@ export const load = (async ({ fetch, params }) => {
   return {
     event,
   };
-}) satisfies PageServerLoad;
+}) satisfies LayoutServerLoad;

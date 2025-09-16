@@ -1,6 +1,6 @@
 <script lang="ts">
   import { page } from "$app/state";
-  import { UniButton } from "$lib/components";
+  import { Merger, UniButton } from "$lib/components";
   import { X, Move, Grip, GripVertical } from "lucide-svelte";
   import { panelPosition } from "$lib/stores";
   import type { LayoutProps } from "./$types";
@@ -93,11 +93,9 @@
   >
     <GripVertical></GripVertical>
   </div>
-  <UniButton
-    href="/{page.params.role}/calendar"
-    Icon={X}
-    styling="absolute right-1 z-50 top-1"
-  />
+  <Merger styling="absolute right-4 top-4 z-50">
+    <UniButton href="/{page.params.role}/calendar" Icon={X} />
+  </Merger>
   <div class="scrollbar-none max-h-[768px] overflow-y-auto p-4 pb-8">
     {@render children()}
   </div>

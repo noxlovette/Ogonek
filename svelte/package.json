@@ -20,12 +20,15 @@
     "@noxlovette/svarog": "^0.0.7",
     "@sentry/sveltekit": "^10.11.0",
     "@sveltejs/adapter-node": "^5.3.2",
+    "date-fns": "^4.1.0",
+    "date-fns-tz": "^3.2.0",
     "fflate": "^0.8.2",
     "ioredis": "^5.7.0",
     "jose": "^6.1.0",
     "lucide-svelte": "^0.544.0",
     "papaparse": "^5.5.3",
     "pino": "^9.9.5",
+    "tippy.js": "^6.3.7",
     "unsplash-js": "^7.0.20"
   },
   "devDependencies": {
@@ -33,6 +36,7 @@
     "@eslint/js": "^9.35.0",
     "@faker-js/faker": "^10.0.0",
     "@inlang/paraglide-js": "^2.3.0",
+    "@internationalized/date": "^3.9.0",
     "@playwright/test": "^1.55.0",
     "@sveltejs/adapter-auto": "^6.1.0",
     "@sveltejs/kit": "^2.39.0",

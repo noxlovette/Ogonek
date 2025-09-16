@@ -37,7 +37,7 @@
 </script>
 
 <a
-  class="ring-default flex flex-col items-start justify-between gap-3 rounded-2xl p-3 shadow-sm transition-shadow hover:bg-stone-200 hover:shadow-lg dark:hover:bg-stone-900"
+  class="ring-default flex flex-col items-start justify-between gap-3 rounded-2xl p-2.5 shadow-sm hover:bg-stone-100/80 dark:hover:bg-stone-900"
   href="{page.params.day}/{event.uid}"
 >
   <!-- Time indicator -->
