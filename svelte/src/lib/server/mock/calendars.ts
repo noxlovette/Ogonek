@@ -89,12 +89,9 @@ export function createCalendarEvent(): CalendarEvent {
   };
 }
 
-export function createEventAttendee(eventId?: string): EventAttendee {
-  const createdAt = faker.date.past();
-
+export function createEventAttendee(): EventAttendee {
   return {
     id: nanoid(),
-    eventId: eventId || nanoid(),
     email: faker.internet.email(),
     name: faker.person.fullName(),
     role: faker.helpers.arrayElement([
@@ -110,10 +107,5 @@ export function createEventAttendee(eventId?: string): EventAttendee {
       "tentative",
       "delegated",
     ]),
-    rsvp: faker.datatype.boolean(),
-    createdAt: createdAt.toISOString(),
-    updatedAt: faker.date
-      .between({ from: createdAt, to: new Date() })
-      .toISOString(),
   };
 }

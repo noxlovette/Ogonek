@@ -1,9 +1,11 @@
 <script lang="ts">
+  import ActivityCard from "$lib/components/cards/ActivityCard.svelte";
   import Caption1 from "$lib/components/typography/Caption1.svelte";
   import Label from "$lib/components/typography/Label.svelte";
   import { m } from "$lib/paraglide/messages";
   import { assigneeStore, studentStore, user } from "$lib/stores";
   import { Eye, EyeClosed } from "lucide-svelte";
+  import type { ChangeEventHandler, MouseEventHandler } from "svelte/elements";
 
   let {
     placeholder = "Edit here",
@@ -17,6 +19,7 @@
     required = false,
     showLabel = true,
     item,
+    onchange,
     type = "text",
   }: {
     placeholder?: string;
@@ -28,6 +31,7 @@
     invalidDescription?: string;
     disabled?: boolean;
     showLabel?: boolean;
+    onchange?: ChangeEventHandler<HTMLInputElement>;
     required?: boolean;
     item?: Assignable | null;
     type?:
@@ -35,10 +39,12 @@
       | "number"
       | "textarea"
       | "password"
+      | "time"
       | "email"
       | "checkbox"
       | "date"
       | "assignee"
+      | "attendee"
       | "visibility"
       | "role";
   } = $props();
@@ -121,6 +127,17 @@
       bind:value
       {disabled}
       class={baseStyle}
+      {onchange}
+    />
+  {:else if type === "time"}
+    <input
+      type="time"
+      {placeholder}
+      {name}
+      bind:value
+      {disabled}
+      class={baseStyle}
+      {onchange}
     />
   {:else if type === "visibility"}
     <select name="visibility" {value} class={baseStyle}>
@@ -130,7 +147,7 @@
     </select>
   {:else if type === "assignee" && item}
     <select id="assignee" name="assignee" class={baseStyle}>
-      <option {value}>Select an assignee</option>
+      <option {value}>{placeholder}</option>
       {#each $studentStore as student (student.id)}
         <option
           value={student.id}
@@ -138,6 +155,15 @@
             ? student.id === $assigneeStore
             : student.id === item.assignee}
         >
+          {student.name}
+        </option>
+      {/each}
+    </select>
+  {:else if type === "attendee"}
+    <select id="attendee" {name} class={baseStyle}>
+      <option {value}>{placeholder}</option>
+      {#each $studentStore as student (student.id)}
+        <option value={student.email}>
           {student.name}
         </option>
       {/each}

@@ -1,26 +1,14 @@
 <script lang="ts">
-  import { page } from "$app/state";
-  import { goto } from "$app/navigation";
   import { parseRRuleToText, getLocaleFromCookie } from "$lib/utils";
-  import {
-    ChevronLeft,
-    MapPin,
-    Clock,
-    Users,
-    Calendar,
-    Edit,
-    Trash2,
-    Share,
-  } from "lucide-svelte";
+  import { ChevronLeft, MapPin, Share } from "lucide-svelte";
   import {
     Body,
     Callout,
-    Caption1,
     DeleteButton,
     Divider,
-    Headline,
     HStack,
     Merger,
+    SectionBg,
     Title1,
     Title2,
     Title3,
@@ -118,14 +106,13 @@
     {/if}
     {#if event.rrule}
       <p class="text-stone-700 dark:text-stone-300">
-        <!-- You'll need a helper to parse RRULE into human readable text -->
         Повторяется {parseRRuleToText(event.rrule)}
       </p>
     {/if}
   </HStack>
 
   {#if event.location}
-    <div class="bg-default ring-default rounded-xl p-2">
+    <SectionBg>
       <VStack>
         <Callout>
           {event.location}
@@ -140,21 +127,20 @@
           >
         </Merger>
       </VStack>
-    </div>
+    </SectionBg>
   {/if}
 
   <!-- Description -->
   {#if event.description}
-    <div class="bg-default ring-default rounded-xl p-2">
+    <SectionBg>
       <Body>
         {event.description}
       </Body>
-    </div>
+    </SectionBg>
   {/if}
 
-  <!-- Attendees -->
   {#if event.attendees?.length}
-    <div class="bg-default ring-default rounded-xl p-2">
+    <SectionBg>
       <HStack>
         {#each event.attendees as attendee}
           <div class="flex items-center gap-3">
@@ -172,17 +158,14 @@
           </div>
         {/each}
       </HStack>
-    </div>
+    </SectionBg>
   {/if}
 
-  <!-- Organizer -->
   {#if event.organiserName}
-    <div class="bg-default ring-default rounded-xl p-2">
+    <SectionBg>
       <Body>
         Организатор: {event.organiserName}
       </Body>
-    </div>
+    </SectionBg>
   {/if}
-
-  <!-- Recurrence info -->
 </HStack>

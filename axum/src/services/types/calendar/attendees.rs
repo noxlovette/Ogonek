@@ -10,13 +10,17 @@ use validator::Validate;
 #[serde(rename_all = "camelCase")]
 pub struct EventAttendee {
     pub id: String,
+    #[serde(skip_serializing)]
     pub event_id: String,
     pub email: String,
     pub name: Option<String>,
     pub role: EventAttendeeRole,
     pub status: EventAttendeeStatus,
+    #[serde(skip_serializing)]
     pub rsvp: bool,
+    #[serde(skip_serializing)]
     pub created_at: DateTime<Utc>,
+    #[serde(skip_serializing)]
     pub updated_at: DateTime<Utc>,
 }
 

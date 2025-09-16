@@ -13,10 +13,10 @@ use axum::http::StatusCode;
 /// Get a single event by UID
 #[utoipa::path(
     get,
-    path = "/events/{uid}",
+    path = "/events/{id}",
     tag = CALENDAR_TAG,
     params(
-        ("uid" = String, Path, description = "Event UID")
+        ("id" = String, Path, description = "Event UID")
     ),
     responses(
         (status = 200, description = "Event retrieved successfully", body = EventWithAttendees),

@@ -1,121 +1,80 @@
 <script lang="ts">
   import { format, fromZonedTime, toZonedTime } from "date-fns-tz";
   import { isValid, parse } from "date-fns";
+  import { Divider, HStack, VStack } from "..";
+  import Input from "./Input.svelte";
 
-  let { value, label, required = false, disabled = false } = $props();
+  let { dtstart, dtend }: { dtstart: string; dtend?: string | null } = $props();
 
   const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
   let localDateString = $state("");
-  let localTimeString = $state("");
+  let dtstartLocalTimeString = $state("");
+  let dtendLocalTimeString = $state("");
 
   $effect(() => {
-    console.log(value);
-    if (isValid(new Date(value))) {
-      const localDate = toZonedTime(value, userTimezone);
+    if (isValid(new Date(dtstart))) {
+      const localDate = toZonedTime(dtstart, userTimezone);
       localDateString = format(localDate, "yyyy-MM-dd");
-      localTimeString = format(localDate, "HH:mm");
+      dtstartLocalTimeString = format(localDate, "HH:mm");
+      if (dtend && isValid(new Date(dtend))) {
+        const localEndDate = toZonedTime(dtend, userTimezone);
+        dtendLocalTimeString = format(localEndDate, "HH:mm");
+      }
     } else {
-      console.log("invalid");
-      resetToEmpty();
+      console.log("invalid date");
     }
   });
-  function resetToEmpty() {
-    localDateString = "";
-    localTimeString = "";
-  }
 
   function handleInputChange() {
-    if (!localDateString && !localTimeString) {
-      value = null;
-      return;
-    }
+    const localDateTimeString = `${localDateString} ${dtstartLocalTimeString}`;
 
-    try {
-      const localDateTimeString = `${localDateString} ${localTimeString}`;
-      const localDateTime = parse(
-        localDateTimeString,
-        "yyyy-MM-dd HH:mm",
-        new Date(),
-      );
+    const dtendLocalDateTimeString = `${localDateString} ${dtendLocalTimeString}`;
+    const localDateTime = parse(
+      localDateTimeString,
+      "yyyy-MM-dd HH:mm",
+      new Date(),
+    );
 
-      if (!isValid(localDateTime)) {
-        throw new Error("Invalid date/time format");
-      }
+    const dtendLocalDateTime = parse(
+      dtendLocalDateTimeString,
+      "yyyy-MM-dd HH:mm",
+      new Date(),
+    );
 
-      // Convert to UTC
-      const utcDateTime = fromZonedTime(localDateTime, userTimezone);
-      const utcIsoString = utcDateTime.toISOString();
+    const dtstartISO = fromZonedTime(localDateTime, userTimezone).toISOString();
 
-      value = utcIsoString;
-    } catch (error) {
-      console.error("DateTime parsing error:", error);
-    }
-  }
+    const dtendISO = fromZonedTime(
+      dtendLocalDateTime,
+      userTimezone,
+    ).toISOString();
 
-  function setToNow() {
-    const utcNow = new Date().toISOString();
-
-    value = utcNow;
-  }
-
-  function clearInput() {
-    value = null;
+    dtstart = dtstartISO;
+    dtend = dtendISO;
   }
 </script>
 
-<div class="space-y-2">
-  <div class="flex items-center justify-between">
-    <div class="flex gap-2">
-      <button
-        type="button"
-        onclick={setToNow}
-        class="text-accent-600 hover:text-accent-700 text-xs font-medium"
-        {disabled}
-      >
-        Now
-      </button>
-
-      {#if value}
-        <button
-          type="button"
-          onclick={clearInput}
-          class="text-xs text-stone-500 hover:text-stone-600"
-          {disabled}
-        >
-          Clear
-        </button>
-      {/if}
-    </div>
-  </div>
-
-  <div class="grid grid-cols-2 gap-3">
-    <div>
-      <input
-        type="date"
-        bind:value={localDateString}
-        onchange={handleInputChange}
-        class="focus:border-accent-500 focus:ring-accent-500 block w-full rounded-md
-               border-stone-300 shadow-sm
-               disabled:bg-stone-50 disabled:text-stone-500
-               "
-        {required}
-        {disabled}
-      />
-    </div>
-
-    <div>
-      <input
-        type="time"
-        bind:value={localTimeString}
-        onchange={handleInputChange}
-        class="focus:border-accent-500 focus:ring-accent-500 block w-full rounded-md
-               border-stone-300 shadow-sm
-               disabled:bg-stone-50 disabled:text-stone-500
-               "
-        {required}
-        {disabled}
-      />
-    </div>
-  </div>
-</div>
+<HStack>
+  <input type="hidden" name="dtstart" bind:value={dtstart} />
+  <input type="hidden" name="dtend" bind:value={dtend} />
+  <VStack>
+    <Input
+      type="date"
+      name="Дата"
+      onchange={handleInputChange}
+      bind:value={localDateString}
+    />
+    <Input
+      type="time"
+      name="Начало"
+      onchange={handleInputChange}
+      bind:value={dtstartLocalTimeString}
+    />
+    <Input
+      type="time"
+      name="Конец"
+      onchange={handleInputChange}
+      bind:value={dtendLocalTimeString}
+    />
+  </VStack>
+</HStack>

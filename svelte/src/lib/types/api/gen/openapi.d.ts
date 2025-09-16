@@ -239,7 +239,8 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        /** Get a single event by UID */
+        get: operations["fetch_event"];
         put?: never;
         post?: never;
         /** Delete an event */
@@ -248,23 +249,6 @@ export interface paths {
         head?: never;
         /** Update an event */
         patch: operations["update_event"];
-        trace?: never;
-    };
-    "/api/v1/calendars/events/{uid}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get a single event by UID */
-        get: operations["fetch_event"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
         trace?: never;
     };
     "/api/v1/calendars/{id}": {
@@ -1019,17 +1003,11 @@ export interface components {
             token: string;
         };
         EventAttendee: {
-            /** Format: date-time */
-            createdAt: string;
             email: string;
-            eventId: string;
             id: string;
             name?: string | null;
             role: components["schemas"]["EventAttendeeRole"];
-            rsvp: boolean;
             status: components["schemas"]["EventAttendeeStatus"];
-            /** Format: date-time */
-            updatedAt: string;
         };
         EventAttendeeCreate: {
             email: string;
@@ -2208,6 +2186,43 @@ export interface operations {
             };
         };
     };
+    fetch_event: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Event UID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Event retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EventWithAttendees"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Event not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     delete_event: {
         parameters: {
             query?: never;
@@ -2265,43 +2280,6 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Event not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    fetch_event: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Event UID */
-                uid: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Event retrieved successfully */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["EventWithAttendees"];
-                };
             };
             /** @description Unauthorized */
             401: {
