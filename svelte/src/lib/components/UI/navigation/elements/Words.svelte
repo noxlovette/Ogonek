@@ -5,20 +5,27 @@
   import { getContext } from "svelte";
   import { m } from "$lib/paraglide/messages";
   import MobileMenuElement from "../mobileMenu/MobileMenuElement.svelte";
+  import { writable } from "svelte/store";
+  import { page } from "$app/state";
 
-  let href = $user.role === "teacher" ? "/t/flashcards" : "/s/flashcards";
-
+  const href = writable<string>(`/${page.params.role}/flashcards`);
+  $effect(() => {
+    const path = page.url.pathname;
+    if (path.includes("/flashcards")) {
+      $href = path;
+    }
+  });
   const deckCount = getContext<number>("deckCount");
 </script>
 
 <SidebarItem
-  {href}
+  href={$href}
   Icon={GraduationCap}
   name={m.flashcards()}
   badge={deckCount}
 />
 <MobileMenuElement
-  {href}
+  href={$href}
   Icon={GraduationCap}
   name={m.flashcards()}
   badge={deckCount}
