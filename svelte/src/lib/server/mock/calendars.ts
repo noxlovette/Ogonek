@@ -45,10 +45,7 @@ export function createCalendarEvent(): CalendarEvent {
     dtend: allDay ? null : endDate.toISOString(),
     allDay,
     location: faker.helpers.arrayElement([
-      "Conference Room A",
-      "Meeting Room 1",
-      "Zoom",
-      "Office",
+      "https://us06web.zoom.us/j/3661071003?pwd=RTlrUkRPaHJaakljZXQxaGpOYmdIZz09",
       "Client Site",
       null,
     ]),

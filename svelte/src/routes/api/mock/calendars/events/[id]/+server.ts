@@ -4,14 +4,13 @@ import {
   createEventAttendee,
 } from "$lib/server/mock/calendars";
 import type { EventWithAttendees } from "$lib/types/api/calendar";
-import { faker } from "@faker-js/faker";
 import { json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
 
 export const GET: RequestHandler = async () => {
   const event: EventWithAttendees = {
     ...createCalendarEvent(),
-    attendees: faker.helpers.multiple(createEventAttendee),
+    attendees: [createEventAttendee()],
   };
   return json(event);
 };

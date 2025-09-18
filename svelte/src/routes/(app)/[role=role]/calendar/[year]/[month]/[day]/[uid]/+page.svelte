@@ -1,11 +1,17 @@
 <script lang="ts">
-  import { parseRRuleToText, getLocaleFromCookie } from "$lib/utils";
-  import { ChevronLeft, MapPin, Share } from "lucide-svelte";
+  import {
+    parseRRuleToText,
+    getLocaleFromCookie,
+    isVideoCallUrl,
+  } from "$lib/utils";
+  import { ChevronLeft, MapPin, Share, Video } from "lucide-svelte";
   import {
     Body,
     Callout,
+    Caption1,
     DeleteButton,
     Divider,
+    Headline,
     HStack,
     Merger,
     SectionBg,
@@ -16,6 +22,8 @@
     VStack,
   } from "$lib/components";
   import EditButton from "$lib/components/UI/forms/buttons/EditButton.svelte";
+  import { page } from "$app/state";
+  import Optional from "$lib/components/UI/forms/Optional.svelte";
 
   const { data } = $props();
   const event = data.event;
@@ -45,7 +53,6 @@
 
   const start = new Date(event.dtstart);
   const end = event.dtend ? new Date(event.dtend) : null;
-  const endDate = end ? new Date(end.getTime() - 24 * 60 * 60 * 1000) : null;
 
   const dateOptions: Intl.DateTimeFormatOptions = {
     weekday: "short",
@@ -75,7 +82,7 @@
   </VStack>
   <VStack>
     <Title1 styling={event.status === "cancelled" ? "line-through" : ""}>
-      {event.summary}
+      {page.params.role === "t" ? event.summary : "Занятие"}
     </Title1>
     <Divider />
     <Merger>
@@ -87,6 +94,7 @@
       <EditButton href="{event.uid}/edit" />
     </Merger>
   </VStack>
+
   <HStack>
     {#if !event.allDay}
       <VStack>
@@ -111,53 +119,49 @@
     {/if}
   </HStack>
 
+  <SectionBg>
+    {#each event.attendees as attendee, index}
+      <Headline>
+        {attendee.name}
+      </Headline>
+      <Caption1>
+        {attendee.email}
+      </Caption1>
+    {:else}
+      <Optional>Пригласить ученика</Optional>
+    {/each}
+  </SectionBg>
+
   {#if event.location}
     <SectionBg>
       <VStack>
         <Callout>
           {event.location}
         </Callout>
-
-        <Divider></Divider>
+        <Divider />
         <Merger>
-          <UniButton
-            href={"https://yandex.com/maps/?text=" +
-              encodeURIComponent(event.location)}
-            Icon={MapPin}>Посмотреть на карте</UniButton
-          >
+          {#if isVideoCallUrl(event.location)}
+            <UniButton href={event.location} Icon={Video}>
+              Присоединиться к звонку
+            </UniButton>
+          {:else}
+            <UniButton
+              href={`https://yandex.com/maps/?text=${encodeURIComponent(event.location)}`}
+              Icon={MapPin}
+            >
+              Посмотреть на карте
+            </UniButton>
+          {/if}
         </Merger>
       </VStack>
     </SectionBg>
   {/if}
 
-  <!-- Description -->
   {#if event.description}
     <SectionBg>
       <Body>
         {event.description}
       </Body>
-    </SectionBg>
-  {/if}
-
-  {#if event.attendees?.length}
-    <SectionBg>
-      <HStack>
-        {#each event.attendees as attendee}
-          <div class="flex items-center gap-3">
-            <div
-              class="bg-accent/50 dark:bg-accent/50 flex size-8 items-center justify-center rounded-full"
-            >
-              <Callout>
-                {attendee.name?.charAt(0).toUpperCase()}
-              </Callout>
-            </div>
-
-            <Body>
-              {attendee.name}
-            </Body>
-          </div>
-        {/each}
-      </HStack>
     </SectionBg>
   {/if}
 

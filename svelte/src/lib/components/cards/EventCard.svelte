@@ -1,9 +1,12 @@
 <script lang="ts">
   import { page } from "$app/state";
   import type { CalendarEvent } from "$lib/types/api/calendar";
+  import { isVideoCallUrl } from "$lib/utils";
+  import { Video } from "lucide-svelte";
   import { Caption1 } from "../typography";
   import Headline from "../typography/Headline.svelte";
-  import { Header } from "../UI";
+  import { Header, UniButton } from "../UI";
+  import Merger from "../UI/toolbar/Merger.svelte";
 
   const { event }: { event: CalendarEvent } = $props();
 
@@ -37,35 +40,26 @@
 </script>
 
 <a
-  class="ring-default flex flex-col items-start justify-between gap-3 rounded-2xl p-2.5 shadow-sm hover:bg-stone-100/80 dark:hover:bg-stone-900"
+  class="ring-default flex flex-col items-start justify-between gap-3 overflow-clip rounded-2xl p-2.5 shadow-sm hover:bg-stone-100/80 dark:hover:bg-stone-900"
   href="{page.params.day}/{event.uid}"
 >
-  <!-- Time indicator -->
-  <div class="flex w-full justify-between">
-    <Caption1>
-      {formatEventTime(event.dtstart, event.dtend ?? "", event.allDay)}
-    </Caption1>
-    {#if event.status === "cancelled"}
-      <Caption1 styling="text-red-500">Cancelled</Caption1>
-    {/if}
-  </div>
+  <Caption1>
+    {formatEventTime(event.dtstart, event.dtend ?? "", event.allDay)}
+  </Caption1>
 
-  <!-- Event content -->
-  <div class="flex min-w-0 flex-1 flex-col gap-1">
-    <Headline>
-      {event.summary}
+  <div>
+    <Headline styling={event.status === "cancelled" ? "line-through" : ""}>
+      {page.params.role === "t" ? event.summary : event.organiserName}
     </Headline>
 
-    {#if event.description}
-      <p class="line-clamp-2 text-xs text-stone-600 dark:text-stone-400">
-        {event.description}
-      </p>
-    {/if}
-
     {#if event.location}
-      <p class="truncate text-xs text-stone-500 dark:text-stone-500">
-        📍 {event.location}
-      </p>
+      {#if isVideoCallUrl(event.location)}
+        <Caption1>Онлайн</Caption1>
+      {:else}
+        <Caption1>
+          {event.location}
+        </Caption1>
+      {/if}
     {/if}
   </div>
 </a>

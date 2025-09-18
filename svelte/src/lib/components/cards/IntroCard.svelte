@@ -4,7 +4,9 @@
   let { children, title = "Title" } = $props();
 </script>
 
-<section class="max-w-md gap-2 md:gap-3 lg:gap-4">
+<section
+  class="flex flex-col items-center gap-2 md:max-w-md md:items-start md:gap-3 lg:gap-4"
+>
   <Title1>
     {title}
   </Title1>

@@ -21,3 +21,20 @@ export async function extractWordsFromRewordFile(file: File) {
 
   throw new Error("Invalid JSON format in .reword file");
 }
+export function isVideoCallUrl(location: string) {
+  if (!location || typeof location !== "string") return false;
+
+  const videoCallPatterns = [
+    /^https?:\/\/.*\.zoom\.us\//i,
+    /^https?:\/\/meet\.google\.com\//i,
+    /^https?:\/\/teams\.microsoft\.com\//i,
+    /^https?:\/\/.*\.webex\.com\//i,
+    /^https?:\/\/.*\.gotomeeting\.com\//i,
+    /^https?:\/\/discord\.gg\//i,
+    /^https?:\/\/.*\.discord\.com\//i,
+    /^https?:\/\/.*\.skype\.com\//i,
+    /^https?:\/\/.*\.whereby\.com\//i,
+  ];
+
+  return videoCallPatterns.some((pattern) => pattern.test(location.trim()));
+}

@@ -38,7 +38,7 @@ fi
 
 cd ../svelte
 
-run_cmd pnpm run generate-types
-run_cmd pnpm exec orval
+run_cmd bun run generate-types
+run_cmd bunx orval
 
 echo -e "${GREEN}Types generated${NC}"

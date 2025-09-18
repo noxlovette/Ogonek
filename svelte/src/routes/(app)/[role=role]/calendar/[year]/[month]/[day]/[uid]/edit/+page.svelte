@@ -20,6 +20,7 @@
   import Optional from "$lib/components/UI/forms/Optional.svelte";
   import type { EventAttendeeCreate } from "$lib/types/api/calendar.js";
   import RecurrenceSelector from "$lib/components/UI/forms/RecurrenceSelector.svelte";
+  import Label from "$lib/components/typography/Label.svelte";
 
   const { data } = $props();
   const event = data.event;
@@ -27,18 +28,7 @@
   let showDescription = $state(false);
   let showLocation = $state(false);
 
-  let newAttendees: EventAttendeeCreate[] = $state([]);
-
-  let updatedAttendees = $state(event.attendees);
-  function addAttendee() {
-    newAttendees = [
-      ...newAttendees,
-      {
-        name: null,
-        email: "",
-      },
-    ];
-  }
+  const student = event.attendees[0];
 </script>
 
 <svelte:head>
@@ -96,53 +86,17 @@
     <Optional bind:toggle={showDescription}>Добавить описание</Optional>
   {/if}
 
-  {#if updatedAttendees.length}
-    <SectionBg>
-      <HStack>
-        {#each updatedAttendees as attendee, index}
-          <VStack>
-            <div
-              class="bg-accent/50 dark:bg-accent/50 flex size-8 items-center justify-center rounded-full"
-            >
-              <Callout>
-                {attendee.name?.charAt(0).toUpperCase()}
-              </Callout>
-            </div>
-
-            <Body>
-              {attendee.name}
-            </Body>
-            <Divider></Divider>
-            <Merger>
-              <UniButton
-                Icon={X}
-                onclick={() =>
-                  (updatedAttendees = updatedAttendees.filter(
-                    (_, i) => i !== index,
-                  ))}
-              />
-            </Merger>
-          </VStack>
-          <input
-            type="hidden"
-            name={`old-attendees[${index}]`}
-            value={attendee.email}
-          />
-        {/each}
-        {#each newAttendees as _, index}
-          <Input
-            showLabel={false}
-            placeholder="Выберите ученика"
-            type="attendee"
-            name={`new-attendees[${index}]`}
-          />
-        {/each}
-        <Merger>
-          <UniButton Icon={Plus} onclick={addAttendee} iconOnly={false}
-            >Добавить участника</UniButton
-          >
-        </Merger>
-      </HStack>
-    </SectionBg>
-  {/if}
+  <SectionBg>
+    <HStack>
+      {#if student}
+        <Input
+          showLabel={false}
+          placeholder="Выберите ученика"
+          value={student.email}
+          type="attendee"
+          name="attendee"
+        />
+      {/if}
+    </HStack>
+  </SectionBg>
 </form>
