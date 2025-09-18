@@ -105,31 +105,14 @@ pub struct CalendarEventUpdate {
     pub summary: Option<String>,
     pub description: Option<String>,
     pub location: Option<String>,
-    pub url: Option<String>,
     #[serde(with = "datetime_serialization::option")]
     pub dtstart: Option<DateTime<Utc>>,
     #[serde(with = "datetime_serialization::option")]
     pub dtend: Option<DateTime<Utc>>,
-    pub all_day: Option<bool>,
     pub timezone: Option<String>,
     pub rrule: Option<String>,
-    pub rdate: Option<Vec<String>>,
-    pub exdate: Option<Vec<String>>,
-    #[serde(with = "datetime_serialization::option")]
-    pub recurrence_id: Option<DateTime<Utc>>,
-    pub status: Option<EventStatus>,
-    pub class: Option<EventClass>,
-    pub transp: Option<EventTransp>,
-    #[validate(range(min = 0, max = 9))]
-    pub priority: Option<i32>,
-    pub categories: Option<Vec<String>>,
-    pub organiser_email: Option<String>,
-    pub organiser_name: Option<String>,
-    pub sequence: Option<i32>,
-    #[serde(with = "datetime_serialization::option")]
-    pub dtstamp: Option<DateTime<Utc>>,
-    #[validate(length(equal = 64))]
-    pub etag: Option<String>,
+    /// The invited student's email
+    pub attendee: Option<String>,
 }
 
 impl fmt::Display for EventStatus {

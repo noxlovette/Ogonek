@@ -38,6 +38,7 @@
 <form
   use:enhance
   method="POST"
+  action="?/update"
   class="flex w-full flex-col gap-3 md:gap-3 lg:gap-4"
 >
   <VStack>

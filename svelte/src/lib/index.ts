@@ -1,1 +1,1 @@
-export * as z from "./zod/ogonekAPI";
+export * as z from "./zod";

@@ -159,54 +159,24 @@ pub async fn update(
         r#"
         UPDATE calendar_events 
         SET
-            summary = COALESCE($1, summary),
-            description = COALESCE($2, description),
-            location = COALESCE($3, location),
-            url = COALESCE($4, url),
+            summary = COALESCE($2, summary),
+            description = COALESCE($3, description),
+            location = COALESCE($4, location),
             dtstart = COALESCE($5, dtstart),
             dtend = COALESCE($6, dtend),
-            all_day = COALESCE($7, all_day),
-            timezone = COALESCE($8, timezone),
-            rrule = COALESCE($9, rrule),
-            rdate = COALESCE($10::TEXT[], rdate),
-            exdate = COALESCE($11::TEXT[], exdate),
-            recurrence_id = COALESCE($12, recurrence_id),
-            status = COALESCE($13::VARCHAR, status),
-            class = COALESCE($14::VARCHAR, class),
-            transp = COALESCE($15::VARCHAR, transp),
-            priority = COALESCE($16, priority),
-            categories = COALESCE($17::TEXT[], categories),
-            organiser_email = COALESCE($18, organiser_email),
-            organiser_name = COALESCE($19, organiser_name),
-            sequence = COALESCE($20, sequence),
-            dtstamp = COALESCE($21, dtstamp),
-            etag = COALESCE($22, etag),
+            timezone = COALESCE($7, timezone),
+            rrule = COALESCE($8, rrule),
             updated_at = NOW()
-        WHERE id = $23 AND deleted_at IS NULL
+        WHERE id = $1 AND deleted_at IS NULL
         "#,
+        event_id,
         update.summary,
         update.description,
         update.location,
-        update.url,
         update.dtstart,
         update.dtend,
-        update.all_day,
         update.timezone,
         update.rrule,
-        update.rdate.as_ref().map(|v| v.as_slice()), // Vec<String> → &[String]
-        update.exdate.as_ref().map(|v| v.as_slice()),
-        update.recurrence_id,
-        update.status.as_ref().map(|s| s.to_string().to_lowercase()), // Clean enum → string
-        update.class.as_ref().map(|c| c.to_string().to_lowercase()),
-        update.transp.as_ref().map(|t| t.to_string().to_lowercase()),
-        update.priority,
-        update.categories.as_ref().map(|v| v.as_slice()),
-        update.organiser_email,
-        update.organiser_name,
-        update.sequence,
-        update.dtstamp,
-        update.etag,
-        event_id
     )
     .execute(db)
     .await?;

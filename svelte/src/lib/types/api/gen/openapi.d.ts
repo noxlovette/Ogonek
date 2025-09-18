@@ -854,34 +854,17 @@ export interface components {
             summary: string;
         };
         CalendarEventUpdate: {
-            allDay?: boolean | null;
-            categories?: string[] | null;
-            class?: null | components["schemas"]["EventClass"];
+            /** @description The invited student's email */
+            attendee?: string | null;
             description?: string | null;
             /** Format: date-time */
             dtend?: string | null;
             /** Format: date-time */
-            dtstamp?: string | null;
-            /** Format: date-time */
             dtstart?: string | null;
-            etag?: string | null;
-            exdate?: string[] | null;
             location?: string | null;
-            organiserEmail?: string | null;
-            organiserName?: string | null;
-            /** Format: int32 */
-            priority?: number | null;
-            rdate?: string[] | null;
-            /** Format: date-time */
-            recurrenceId?: string | null;
             rrule?: string | null;
-            /** Format: int32 */
-            sequence?: number | null;
-            status?: null | components["schemas"]["EventStatus"];
             summary?: string | null;
             timezone?: string | null;
-            transp?: null | components["schemas"]["EventTransp"];
-            url?: string | null;
         };
         CalendarUpdate: {
             caldavUrl?: string | null;
