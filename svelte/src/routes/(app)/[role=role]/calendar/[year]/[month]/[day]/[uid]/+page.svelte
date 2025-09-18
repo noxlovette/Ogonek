@@ -6,6 +6,7 @@
   } from "$lib/utils";
   import { ChevronLeft, MapPin, Share, Video } from "lucide-svelte";
   import {
+    BackButton,
     Body,
     Callout,
     Caption1,
@@ -74,12 +75,7 @@
 </svelte:head>
 
 <HStack>
-  <VStack>
-    <Merger>
-      <UniButton onclick={() => window.history.back()} Icon={ChevronLeft}
-      ></UniButton>
-    </Merger>
-  </VStack>
+  <BackButton />
   <VStack>
     <Title1 styling={event.status === "cancelled" ? "line-through" : ""}>
       {page.params.role === "t" ? event.summary : "Занятие"}

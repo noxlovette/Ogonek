@@ -149,11 +149,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Get all calendars for the authenticated user */
-        get: operations["list_calendars"];
+        /** Get the user's calendar */
+        get: operations["fetch_calendar"];
         put?: never;
-        /** Create a new calendar */
-        post: operations["create_calendar"];
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -167,16 +166,32 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Get a single event attendee by ID */
-        get: operations["fetch_attendee"];
+        get?: never;
         put?: never;
         post?: never;
-        /** Delete an event attendee */
         delete: operations["delete_attendee"];
         options?: never;
         head?: never;
         /** Update an event attendee */
         patch: operations["update_attendee"];
+        trace?: never;
+    };
+    "/api/v1/calendars/calendars/events": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get all events */
+        get: operations["list_events"];
+        put?: never;
+        /** Create a new event */
+        post: operations["create_event"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
     "/api/v1/calendars/calendars/events/{day}": {
@@ -190,42 +205,6 @@ export interface paths {
         get: operations["list_events_day"];
         put?: never;
         post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/calendars/calendars/{calendar_id}/events": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get all events for a calendar */
-        get: operations["list_events"];
-        put?: never;
-        /** Create a new event */
-        post: operations["create_event"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/calendars/events/{event_id}/attendees": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get all attendees for an event */
-        get: operations["list_attendees"];
-        put?: never;
-        /** Create a new event attendee */
-        post: operations["create_attendee"];
         delete?: never;
         options?: never;
         head?: never;
@@ -258,8 +237,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Get a single calendar by ID */
-        get: operations["fetch_calendar"];
+        get?: never;
         put?: never;
         post?: never;
         /** Delete a calendar */
@@ -814,9 +792,6 @@ export interface components {
             id: string;
             name: string;
         };
-        CalendarCreate: {
-            name: string;
-        };
         CalendarEvent: {
             allDay: boolean;
             categories?: string[] | null;
@@ -847,11 +822,11 @@ export interface components {
             url?: string | null;
         };
         CalendarEventCreate: {
+            attendee: string;
             /** Format: date-time */
-            dtend?: string | null;
+            dtend: string;
             /** Format: date-time */
             dtstart: string;
-            summary: string;
         };
         CalendarEventUpdate: {
             /** @description The invited student's email */
@@ -991,10 +966,6 @@ export interface components {
             name?: string | null;
             role: components["schemas"]["EventAttendeeRole"];
             status: components["schemas"]["EventAttendeeStatus"];
-        };
-        EventAttendeeCreate: {
-            email: string;
-            name?: string | null;
         };
         /** @enum {string} */
         EventAttendeeRole: "req-participant" | "chair" | "opt-participant" | "non-participant";
@@ -1800,7 +1771,7 @@ export interface operations {
             };
         };
     };
-    list_calendars: {
+    fetch_calendar: {
         parameters: {
             query?: never;
             header?: never;
@@ -1809,13 +1780,13 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Calendars retrieved successfully */
+            /** @description Calendar retrieved successfully */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["Calendar"][];
+                    "application/json": components["schemas"]["Calendar"];
                 };
             };
             /** @description Unauthorized */
@@ -1825,75 +1796,7 @@ export interface operations {
                 };
                 content?: never;
             };
-        };
-    };
-    create_calendar: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CalendarCreate"];
-            };
-        };
-        responses: {
-            /** @description Calendar created successfully */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "text/plain": string;
-                };
-            };
-            /** @description Bad request */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    fetch_attendee: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Attendee ID */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Attendee retrieved successfully */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["EventAttendee"];
-                };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Attendee not found */
+            /** @description Calendar not found */
             404: {
                 headers: {
                     [name: string]: unknown;
@@ -1976,51 +1879,11 @@ export interface operations {
             };
         };
     };
-    list_events_day: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Day */
-                day: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Events retrieved successfully */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CalendarEvent"][];
-                };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Calendar not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
     list_events: {
         parameters: {
             query?: never;
             header?: never;
-            path: {
-                /** @description Calendar ID */
-                calendar_id: string;
-            };
+            path?: never;
             cookie?: never;
         };
         requestBody?: never;
@@ -2054,10 +1917,7 @@ export interface operations {
         parameters: {
             query?: never;
             header?: never;
-            path: {
-                /** @description Calendar ID */
-                calendar_id: string;
-            };
+            path?: never;
             cookie?: never;
         };
         requestBody: {
@@ -2091,25 +1951,25 @@ export interface operations {
             };
         };
     };
-    list_attendees: {
+    list_events_day: {
         parameters: {
             query?: never;
             header?: never;
             path: {
-                /** @description Event ID */
-                event_id: string;
+                /** @description Day */
+                day: string;
             };
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description Attendees retrieved successfully */
+            /** @description Events retrieved successfully */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["EventAttendee"][];
+                    "application/json": components["schemas"]["CalendarEvent"][];
                 };
             };
             /** @description Unauthorized */
@@ -2119,49 +1979,8 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Event not found */
+            /** @description Calendar not found */
             404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    create_attendee: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Event ID */
-                event_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["EventAttendeeCreate"];
-            };
-        };
-        responses: {
-            /** @description Attendee created successfully */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "text/plain": string;
-                };
-            };
-            /** @description Bad request */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Unauthorized */
-            401: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -2272,43 +2091,6 @@ export interface operations {
                 content?: never;
             };
             /** @description Event not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    fetch_calendar: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Calendar ID */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Calendar retrieved successfully */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Calendar"];
-                };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Calendar not found */
             404: {
                 headers: {
                     [name: string]: unknown;

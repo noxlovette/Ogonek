@@ -1,7 +1,7 @@
 <script lang="ts">
   import { format, fromZonedTime, toZonedTime } from "date-fns-tz";
   import { isValid, parse } from "date-fns";
-  import { Divider, HStack, VStack } from "..";
+  import { HStack, VStack } from "..";
   import Input from "./Input.svelte";
 
   let { dtstart, dtend }: { dtstart: string; dtend?: string | null } = $props();

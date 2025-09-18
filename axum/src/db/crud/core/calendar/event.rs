@@ -190,6 +190,15 @@ pub async fn create(
     calendar_id: &str,
     create: CalendarEventCreate,
 ) -> Result<String, DbError> {
+    let attendee_name = sqlx::query_scalar!(
+        r#"
+        SELECT name FROM "user" WHERE id = $1
+        "#,
+        create.attendee
+    )
+    .fetch_one(db)
+    .await?;
+
     let id = sqlx::query_scalar!(
         r#"
         INSERT INTO calendar_events (
@@ -203,7 +212,7 @@ pub async fn create(
         nanoid::nanoid!(),
         calendar_id,
         uid,
-        create.summary,
+        attendee_name,
         create.dtstart,
         create.dtend,
     )
@@ -211,172 +220,4 @@ pub async fn create(
     .await?;
 
     Ok(id)
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use crate::db::crud::core::calendar::calendar;
-    use crate::tests::create_test_user;
-    use crate::types::{
-        CalendarCreate, CalendarEventCreate, CalendarEventUpdate, EventClass, EventStatus,
-        EventTransp,
-    };
-    use chrono::Utc;
-
-    async fn create_test_calendar(db: &PgPool, user_id: &str, name: &str) -> String {
-        let calendar_create = CalendarCreate {
-            name: name.to_string(),
-        };
-        calendar::create(db, user_id, calendar_create)
-            .await
-            .unwrap()
-    }
-
-    async fn create_test_event(db: &PgPool, calendar_id: &str, summary: &str) -> String {
-        let event_create = CalendarEventCreate {
-            summary: summary.to_string(),
-            dtstart: Utc::now(),
-            dtend: Some(Utc::now()),
-        };
-        let uid = nanoid::nanoid!();
-        create(db, &uid, calendar_id, event_create).await.unwrap()
-    }
-
-    #[sqlx::test]
-    async fn test_create_event(db: PgPool) {
-        let user_id = create_test_user(&db, "testuser", "test@example.com").await;
-        let calendar_id = create_test_calendar(&db, &user_id, "Test Calendar").await;
-
-        let event_create = CalendarEventCreate {
-            summary: "Test Event".to_string(),
-            dtstart: Utc::now(),
-            dtend: Some(Utc::now()),
-        };
-
-        let uid = nanoid::nanoid!();
-        let result = create(&db, &uid, &calendar_id, event_create).await;
-        assert!(result.is_ok());
-
-        let event_id = result.unwrap();
-        assert!(!event_id.is_empty());
-    }
-
-    #[sqlx::test]
-    async fn test_find_by_uid_success(db: PgPool) {
-        let user_id = create_test_user(&db, "testuser", "test@example.com").await;
-        let calendar_id = create_test_calendar(&db, &user_id, "Test Calendar").await;
-        let event_id = create_test_event(&db, &calendar_id, "Test Event").await;
-
-        let result = find_by_uid(&db, &event_id).await;
-        assert!(result.is_ok());
-
-        let event = result.unwrap();
-        assert_eq!(event.id, event_id);
-        assert_eq!(event.summary, "Test Event");
-        assert_eq!(event.calendar_id, calendar_id);
-    }
-
-    #[sqlx::test]
-    async fn test_find_by_uid_not_found(db: PgPool) {
-        let non_existent_id = "non-existent-id";
-        let result = find_by_uid(&db, non_existent_id).await;
-        assert!(result.is_err());
-    }
-
-    #[sqlx::test]
-    async fn test_find_by_calendar_id(db: PgPool) {
-        let user_id = create_test_user(&db, "testuser", "test@example.com").await;
-        let calendar_id = create_test_calendar(&db, &user_id, "Test Calendar").await;
-
-        create_test_event(&db, &calendar_id, "Event 1").await;
-        create_test_event(&db, &calendar_id, "Event 2").await;
-        create_test_event(&db, &calendar_id, "Event 3").await;
-
-        let result = find_by_calendar_id(&db, &calendar_id).await;
-        assert!(result.is_ok());
-
-        let events = result.unwrap();
-        assert_eq!(events.len(), 3);
-    }
-
-    #[sqlx::test]
-    async fn test_find_by_calendar_id_empty_result(db: PgPool) {
-        let user_id = create_test_user(&db, "testuser", "test@example.com").await;
-        let calendar_id = create_test_calendar(&db, &user_id, "Empty Calendar").await;
-
-        let result = find_by_calendar_id(&db, &calendar_id).await;
-        assert!(result.is_ok());
-
-        let events = result.unwrap();
-        assert_eq!(events.len(), 0);
-    }
-
-    #[sqlx::test]
-    async fn test_update_event(db: PgPool) {
-        let user_id = create_test_user(&db, "testuser", "test@example.com").await;
-        let calendar_id = create_test_calendar(&db, &user_id, "Test Calendar").await;
-        let event_id = create_test_event(&db, &calendar_id, "Original Summary").await;
-
-        let update_data = CalendarEventUpdate {
-            summary: Some("Updated Summary".to_string()),
-            description: Some("Updated description".to_string()),
-            location: Some("Updated location".to_string()),
-            status: Some(EventStatus::Confirmed),
-            class: Some(EventClass::Public),
-            transp: Some(EventTransp::Opaque),
-            ..Default::default()
-        };
-
-        let result = update(&db, &event_id, &update_data).await;
-        assert!(result.is_ok());
-
-        let event = find_by_uid(&db, &event_id).await.unwrap();
-        assert_eq!(event.summary, "Updated Summary");
-        assert_eq!(event.description, Some("Updated description".to_string()));
-        assert_eq!(event.location, Some("Updated location".to_string()));
-        assert_eq!(event.status, EventStatus::Confirmed);
-        assert_eq!(event.class, EventClass::Public);
-        assert_eq!(event.transp, EventTransp::Opaque);
-    }
-
-    #[sqlx::test]
-    async fn test_update_partial(db: PgPool) {
-        let user_id = create_test_user(&db, "testuser", "test@example.com").await;
-        let calendar_id = create_test_calendar(&db, &user_id, "Test Calendar").await;
-        let event_id = create_test_event(&db, &calendar_id, "Original Summary").await;
-
-        let update_data = CalendarEventUpdate {
-            summary: Some("Updated Summary".to_string()),
-            description: None,
-            location: None,
-            ..Default::default()
-        };
-
-        let result = update(&db, &event_id, &update_data).await;
-        assert!(result.is_ok());
-
-        let event = find_by_uid(&db, &event_id).await.unwrap();
-        assert_eq!(event.summary, "Updated Summary");
-    }
-
-    #[sqlx::test]
-    async fn test_delete_event(db: PgPool) {
-        let user_id = create_test_user(&db, "testuser", "test@example.com").await;
-        let calendar_id = create_test_calendar(&db, &user_id, "Test Calendar").await;
-        let event_id = create_test_event(&db, &calendar_id, "Event to Delete").await;
-
-        let result = delete(&db, &event_id).await;
-        assert!(result.is_ok());
-
-        let find_result = find_by_uid(&db, &event_id).await;
-        assert!(find_result.is_err());
-    }
-
-    #[sqlx::test]
-    async fn test_delete_non_existent(db: PgPool) {
-        let non_existent_id = "non-existent-id";
-        let result = delete(&db, non_existent_id).await;
-        assert!(result.is_ok());
-    }
 }

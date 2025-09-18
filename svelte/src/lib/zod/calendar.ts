@@ -9,3 +9,9 @@ export const updateEventBody = z.object({
   timezone: z.string().nullish(),
   attendee: z.string().nullish(),
 });
+
+export const createEventBody = z.object({
+  attendee: z.string(),
+  dtstart: z.iso.datetime({}).nullish(),
+  dtend: z.iso.datetime({}).nullish(),
+});

@@ -92,11 +92,11 @@ pub enum EventTransp {
 #[derive(Validate, ToSchema, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct CalendarEventCreate {
-    pub summary: String,
+    pub attendee: String,
     #[serde(with = "datetime_serialization")]
     pub dtstart: DateTime<Utc>,
-    #[serde(with = "datetime_serialization::option")]
-    pub dtend: Option<DateTime<Utc>>,
+    #[serde(with = "datetime_serialization")]
+    pub dtend: DateTime<Utc>,
 }
 
 #[derive(Validate, ToSchema, Deserialize, Default)]

@@ -6,6 +6,7 @@ import { routes } from "$lib/routes";
 import { captchaVerify, setTokenCookie, ValidateAccess } from "$lib/server";
 import { createUser } from "$lib/server/mock/user";
 import { type Claims, type User } from "$lib/types";
+import type { components } from "$lib/types/api/gen/openapi";
 import { isSuperUser, validateForm } from "$lib/utils";
 import { fail, redirect } from "@sveltejs/kit";
 import type { Actions } from "./$types";
@@ -75,40 +76,16 @@ export const actions: Actions = {
       });
     }
 
-    let data: unknown;
-    try {
-      data = await response.json();
-    } catch (error) {
-      logger.error({ error }, "Failed to parse auth response JSON");
-      return fail(500, {
-        message: "Invalid server response",
-      });
-    }
-
-    const parsed = z.signinResponse.safeParse(data);
-    if (!parsed.success) {
-      logger.error(
-        {
-          parseErrors: parsed.error,
-          responseData: data,
-        },
-        "Auth response validation failed",
-      );
-      return fail(500, {
-        message: "Invalid authentication response",
-      });
-    }
+    const data: components["schemas"]["TokenPair"] = await response.json();
 
     let user: Claims | User;
     if (!env.PUBLIC_MOCK_MODE) {
-      const { accessToken, refreshToken } = parsed.data;
+      const { accessToken, refreshToken } = data;
 
       setTokenCookie(cookies, "accessToken", accessToken);
       setTokenCookie(cookies, "refreshToken", refreshToken);
       user = await ValidateAccess(accessToken.token);
 
-      console.log(user);
-      console.log(isSuperUser(user.role));
       if (isSuperUser(user.role)) {
         throw redirect(302, "/admin/dashboard");
       } else if (user.role == "teacher") {
@@ -116,8 +93,6 @@ export const actions: Actions = {
       } else if (user.role == "student") {
         throw redirect(302, "/s/dashboard");
       }
-
-      logger.debug({ userId: user?.id }, "Successful login");
     } else {
       user = createUser();
     }

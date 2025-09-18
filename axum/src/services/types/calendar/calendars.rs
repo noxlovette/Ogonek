@@ -39,9 +39,3 @@ pub struct CalendarUpdate {
     pub caldav_url: Option<String>,
     pub sync_token: Option<String>,
 }
-
-#[derive(Validate, ToSchema, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct CalendarCreate {
-    pub name: String,
-}

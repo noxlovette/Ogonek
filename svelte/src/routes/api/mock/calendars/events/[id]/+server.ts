@@ -25,8 +25,6 @@ export const DELETE: RequestHandler = async ({ request, params, url }) => {
 export const PATCH: RequestHandler = async ({ request, params, url }) => {
   const body = await request.json();
   logger.info("PATCH /api/v1/calendars/events/{id} with body:", body);
-  // Path params: id
-  // Update an event
-
-  return json(null);
+  const event = createCalendarEvent();
+  return json(204);
 };

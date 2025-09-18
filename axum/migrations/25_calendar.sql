@@ -7,10 +7,15 @@ CREATE TABLE calendars (
     colour VARCHAR(7) NOT NULL DEFAULT '#df7055', -- Brand colour
     timezone VARCHAR(50) NOT NULL DEFAULT 'UTC+3', -- Moscow
     owner_id VARCHAR(21) NOT NULL REFERENCES "user"(id),
+
+    
     caldav_url VARCHAR(500), -- CalDAV collection URL
     sync_token VARCHAR(255), -- For CalDAV sync
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+
+    -- Constraint: one calendar per user (can drop later for multical support)
+    CONSTRAINT unique_user_calendar UNIQUE (owner_id)
 );
 
 
@@ -102,6 +107,7 @@ CREATE INDEX idx_events_uid ON calendar_events(uid);
 CREATE INDEX idx_events_recurrence ON calendar_events(recurrence_id) WHERE recurrence_id IS NOT NULL;
 CREATE INDEX idx_events_deleted ON calendar_events(deleted_at) WHERE deleted_at IS NULL;
 CREATE INDEX idx_events_time_range ON calendar_events(dtstart, dtend) WHERE deleted_at IS NULL;
+CREATE INDEX idx_calendars_owner_id ON calendars(owner_id);
 
 CREATE INDEX idx_attendees_event_id ON event_attendees(event_id);
 CREATE INDEX idx_attendees_email ON event_attendees(email);

@@ -8,7 +8,7 @@
   let { data, children }: LayoutProps = $props();
 </script>
 
-<Toolbar>
+<Toolbar override={true}>
   <LargeTitle>Календарь</LargeTitle>
 </Toolbar>
 <div class="relative flex">

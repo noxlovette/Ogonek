@@ -1,25 +1,40 @@
 import { z } from "$lib";
+import logger from "$lib/logger";
 import { routes } from "$lib/routes";
+import { parseFormData } from "$lib/utils";
 import { fail, redirect } from "@sveltejs/kit";
 import type { Actions } from "./$types";
-
 export const actions = {
-  default: async ({ request, fetch, params }) => {
+  default: async ({ request, fetch }) => {
     const formData = await request.formData();
-    const { uid } = params;
 
-    const rawData = Object.fromEntries(formData);
+    const rawData = parseFormData(formData);
 
-    const data = z.updateEventBody.parse(rawData);
+    const data = z.createEventBody.safeParse(rawData);
 
-    const response = await fetch(routes.calendars.event(uid), {
-      body: JSON.stringify(data),
-      method: "PATCH",
-    }).then((res) => res.json());
+    if (!data.success) {
+      const fieldErrors: Record<string, boolean> = {};
+      data.error.issues.forEach((issue) => {
+        const fieldPath = issue.path[0];
+        if (typeof fieldPath === "string") {
+          fieldErrors[fieldPath] = true;
+        }
+      });
+      logger.error({ fieldErrors });
+      return fail(400, { ...fieldErrors });
+    }
+
+    const response = await fetch(routes.calendars.events(), {
+      body: JSON.stringify(data.data),
+      method: "POST",
+    });
 
     if (!response.ok) {
-      return fail(500);
+      return fail(500, { attendee: false, dtend: false, dtstart: false });
     }
-    return redirect(301, ".");
+
+    const { id } = await response.json();
+
+    return redirect(301, `event/${id}`);
   },
 } satisfies Actions;

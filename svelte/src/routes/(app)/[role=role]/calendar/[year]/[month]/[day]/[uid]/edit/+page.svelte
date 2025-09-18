@@ -2,6 +2,7 @@
   import { getLocaleFromCookie } from "$lib/utils";
   import { ChevronLeft, Plus, X } from "lucide-svelte";
   import {
+    BackButton,
     Body,
     Callout,
     CancelButton,
@@ -18,9 +19,7 @@
   import DateTimePicker from "$lib/components/UI/forms/DateTimePicker.svelte";
   import { enhance } from "$app/forms";
   import Optional from "$lib/components/UI/forms/Optional.svelte";
-  import type { EventAttendeeCreate } from "$lib/types/api/calendar.js";
   import RecurrenceSelector from "$lib/components/UI/forms/RecurrenceSelector.svelte";
-  import Label from "$lib/components/typography/Label.svelte";
 
   const { data } = $props();
   const event = data.event;
@@ -41,15 +40,7 @@
   action="?/update"
   class="flex w-full flex-col gap-3 md:gap-3 lg:gap-4"
 >
-  <VStack>
-    <Merger>
-      <UniButton
-        type="button"
-        onclick={() => window.history.back()}
-        Icon={ChevronLeft}
-      ></UniButton>
-    </Merger>
-  </VStack>
+  <BackButton />
   <VStack>
     <Title1 styling={event.status === "cancelled" ? "line-through" : ""}>
       {event.summary}
@@ -89,15 +80,13 @@
 
   <SectionBg>
     <HStack>
-      {#if student}
-        <Input
-          showLabel={false}
-          placeholder="Выберите ученика"
-          value={student.email}
-          type="attendee"
-          name="attendee"
-        />
-      {/if}
+      <Input
+        showLabel={false}
+        placeholder="Выберите ученика"
+        value={student?.email}
+        type="attendee"
+        name="attendee"
+      />
     </HStack>
   </SectionBg>
 </form>

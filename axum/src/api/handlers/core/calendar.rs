@@ -1,20 +1,17 @@
 use crate::api::CALENDAR_TAG;
 use crate::api::error::APIError;
 use crate::auth::Claims;
-use crate::db::crud::core::calendar::calendar::{create, delete, find_all, find_by_id, update};
+use crate::db::crud::core::calendar::calendar::{delete, get_or_create, update};
 use crate::schema::AppState;
-use crate::types::{Calendar, CalendarCreate, CalendarUpdate};
+use crate::types::{Calendar, CalendarUpdate};
 use axum::extract::{Json, Path, State};
 use axum::http::StatusCode;
 
-/// Get a single calendar by ID
+/// Get the user's calendar
 #[utoipa::path(
     get,
-    path = "/{id}",
+    path = "",
     tag = CALENDAR_TAG,
-    params(
-        ("id" = String, Path, description = "Calendar ID")
-    ),
     responses(
         (status = 200, description = "Calendar retrieved successfully", body = Calendar),
         (status = 404, description = "Calendar not found"),
@@ -23,50 +20,10 @@ use axum::http::StatusCode;
 )]
 pub async fn fetch_calendar(
     State(state): State<AppState>,
-    Path(id): Path<String>,
     claims: Claims,
 ) -> Result<Json<Calendar>, APIError> {
-    let calendar = find_by_id(&state.db, &id, &claims.sub).await?;
+    let calendar = get_or_create(&state.db, &claims.sub).await?;
     Ok(Json(calendar))
-}
-
-/// Get all calendars for the authenticated user
-#[utoipa::path(
-    get,
-    path = "",
-    tag = CALENDAR_TAG,
-    responses(
-        (status = 200, description = "Calendars retrieved successfully", body = Vec<Calendar>),
-        (status = 401, description = "Unauthorized")
-    )
-)]
-pub async fn list_calendars(
-    State(state): State<AppState>,
-    claims: Claims,
-) -> Result<Json<Vec<Calendar>>, APIError> {
-    let calendars = find_all(&state.db, &claims.sub).await?;
-    Ok(Json(calendars))
-}
-
-/// Create a new calendar
-#[utoipa::path(
-    post,
-    path = "",
-    tag = CALENDAR_TAG,
-    request_body = CalendarCreate,
-    responses(
-        (status = 201, description = "Calendar created successfully", body = String),
-        (status = 400, description = "Bad request"),
-        (status = 401, description = "Unauthorized")
-    )
-)]
-pub async fn create_calendar(
-    State(state): State<AppState>,
-    claims: Claims,
-    Json(payload): Json<CalendarCreate>,
-) -> Result<Json<String>, APIError> {
-    let id = create(&state.db, &claims.sub, payload).await?;
-    Ok(Json(id))
 }
 
 /// Delete a calendar
