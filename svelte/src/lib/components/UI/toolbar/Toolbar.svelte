@@ -30,9 +30,11 @@
     return segments.length > 2;
   });
 
-  function goBack() {
-    window.history.back();
-  }
+  const href = $derived(
+    page.url.pathname.split("/").slice(0, -1).join("/") || "/",
+  );
+
+  $inspect(href);
 </script>
 
 <div
@@ -46,7 +48,7 @@
   {#if showBack}
     <VStack>
       <Merger>
-        <UniButton onclick={goBack} Icon={ChevronLeft}></UniButton>
+        <UniButton {href} Icon={ChevronLeft}></UniButton>
       </Merger>
       <Divider></Divider>
     </VStack>

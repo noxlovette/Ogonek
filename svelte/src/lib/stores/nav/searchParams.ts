@@ -1,5 +1,6 @@
 import { writable } from "svelte/store";
 
+// URL Params
 function createPageStore() {
   const { subscribe, set, update } = writable(1);
 
@@ -87,35 +88,3 @@ function createToggleStore() {
 
 export const isLoading = createToggleStore();
 export const mobileMenuOpen = createToggleStore();
-
-// lib/stores/draggable.ts
-
-interface Position {
-  x: number;
-  y: number;
-}
-
-function createDraggableStore() {
-  // Load from localStorage or default to right side
-  const defaultPos = {
-    x: typeof window !== "undefined" ? window.innerWidth * 0.5 : 400,
-    y: 0,
-  };
-
-  const { subscribe, set, update } = writable<Position>(defaultPos);
-
-  return {
-    subscribe,
-    setPosition: (pos: Position) => {
-      set(pos);
-    },
-    updatePosition: (delta: { dx: number; dy: number }) => {
-      update((pos) => {
-        const newPos = { x: pos.x + delta.dx, y: pos.y + delta.dy };
-        return newPos;
-      });
-    },
-  };
-}
-
-export const panelPosition = createDraggableStore();
