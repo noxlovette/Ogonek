@@ -16,6 +16,10 @@
     {#each data.dayEvents as event}
       <EventCard {event} />
     {/each}
-    <NewCard addCard={goto(`${page.params.day}/new`)} />
+    <NewCard
+      addCard={() => {
+        goto(`${page.params.day}/new`);
+      }}
+    />
   </div>
 </HStack>

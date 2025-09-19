@@ -25,7 +25,7 @@
   use:keyEscape={goBack}
 >
   <div
-    class="caret-accent relative flex h-full min-h-[100dvh] w-full flex-col items-center font-medium selection:bg-stone-200 dark:caret-stone-200 dark:selection:bg-stone-700"
+    class="caret-accent relative flex h-full min-h-[100dvh] w-full flex-col items-center rounded-b-2xl font-medium shadow-xl selection:bg-stone-200 dark:caret-stone-200 dark:selection:bg-stone-700"
   >
     <div
       id="main"
@@ -40,7 +40,7 @@
     <MockController></MockController>
   {/if}
   <h1
-    class="w-full cursor-default text-center font-serif text-7xl text-stone-200 xl:text-[20rem] dark:text-stone-800"
+    class=" w-full cursor-default text-center font-serif text-7xl tracking-tighter text-stone-200 select-none xl:text-[20rem] dark:text-stone-800"
   >
     Ogonek
   </h1>

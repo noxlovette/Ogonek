@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { getLocaleFromCookie } from "$lib/utils";
-  import { ChevronLeft, Plus, X } from "lucide-svelte";
   import {
     BackButton,
     CancelButton,

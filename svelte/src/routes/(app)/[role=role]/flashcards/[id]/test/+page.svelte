@@ -14,10 +14,7 @@
     Title2,
     Title3,
     Toolbar,
-    UniButton,
-    VStack,
   } from "$lib/components";
-  import { shuffleArray } from "$lib/utils";
   import { onMount } from "svelte";
 
   let { data } = $props();

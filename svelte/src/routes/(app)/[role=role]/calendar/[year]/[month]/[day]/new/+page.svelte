@@ -1,21 +1,9 @@
 <script lang="ts">
-  import {
-    parseRRuleToText,
-    getLocaleFromCookie,
-    isVideoCallUrl,
-    enhanceForm,
-  } from "$lib/utils";
-  import { ChevronLeft, MapPin, Share, Video } from "lucide-svelte";
+  import { enhanceForm } from "$lib/utils";
   import {
     BackButton,
-    Body,
-    Callout,
-    CancelButton,
-    Caption1,
     DateTimePicker,
-    DeleteButton,
     Divider,
-    Headline,
     HStack,
     Input,
     Merger,
@@ -25,8 +13,6 @@
     VStack,
   } from "$lib/components";
   import { enhance } from "$app/forms";
-  import { goto } from "$app/navigation";
-  import { date } from "zod";
 
   const { form, data } = $props();
 </script>

@@ -1,102 +1,49 @@
 <script lang="ts">
   import { page } from "$app/state";
   import { Merger, UniButton } from "$lib/components";
-  import { X, Move, Grip, GripVertical } from "lucide-svelte";
-  import { panelPosition } from "$lib/stores";
+  import { X, ChevronLeft, ChevronRight } from "lucide-svelte";
+  import { panelSide } from "$lib/stores";
   import type { LayoutProps } from "./$types";
 
   let { data, children }: LayoutProps = $props();
 
-  let isDragging = $state(false);
-  let dragStart = { x: 0, y: 0 };
-  let panelElement: HTMLDivElement;
-
-  function startDrag(event: MouseEvent | TouchEvent) {
-    isDragging = true;
-
-    const clientX =
-      "touches" in event ? event.touches[0].clientX : event.clientX;
-    const clientY =
-      "touches" in event ? event.touches[0].clientY : event.clientY;
-
-    dragStart = {
-      x: clientX - $panelPosition.x,
-      y: clientY - $panelPosition.y,
-    };
-
-    // Prevent text selection while dragging
-    document.body.style.userSelect = "none";
-  }
-
-  function handleDrag(event: MouseEvent | TouchEvent) {
-    if (!isDragging) return;
-
-    const clientX =
-      "touches" in event ? event.touches[0].clientX : event.clientX;
-    const clientY =
-      "touches" in event ? event.touches[0].clientY : event.clientY;
-
-    const newX = clientX - dragStart.x;
-    const newY = clientY - dragStart.y;
-
-    // Boundary constraints
-    const maxX = window.innerWidth - panelElement.offsetWidth;
-    const maxY = window.innerHeight - panelElement.offsetHeight;
-
-    const constrainedX = Math.max(0, Math.min(newX, maxX));
-    const constrainedY = Math.max(0, Math.min(newY, maxY));
-
-    panelPosition.setPosition({ x: constrainedX, y: constrainedY });
-  }
-
-  function stopDrag() {
-    isDragging = false;
-    document.body.style.userSelect = "";
-  }
-
-  // Handle window resize
-  function handleResize() {
-    const maxX = window.innerWidth - panelElement.offsetWidth;
-    const maxY = window.innerHeight - panelElement.offsetHeight;
-
-    if ($panelPosition.x > maxX || $panelPosition.y > maxY) {
-      panelPosition.setPosition({
-        x: Math.min($panelPosition.x, maxX),
-        y: Math.min($panelPosition.y, maxY),
-      });
-    }
+  function toggleSide() {
+    panelSide.set($panelSide === "left" ? "right" : "left");
   }
 </script>
 
-<svelte:window
-  onmousemove={handleDrag}
-  onmouseup={stopDrag}
-  ontouchmove={handleDrag}
-  ontouchend={stopDrag}
-  onresize={handleResize}
-/>
-
 <div
-  bind:this={panelElement}
-  class="ring-default fixed z-50 w-[500px] gap-2 rounded-2xl bg-white shadow-2xl
-         transition-shadow md:gap-3 lg:gap-4 dark:bg-stone-950
-         {isDragging ? 'shadow-3xl cursor-grabbing' : 'shadow-xl'}"
-  style="left: {$panelPosition.x}px; top: {$panelPosition.y}px;"
+  data-panel
+  class="ring-default fixed inset-y-0 z-50 w-[500px] bg-white shadow-2xl transition-transform duration-300 ease-out
+         dark:bg-stone-950
+         {$panelSide === 'left'
+    ? 'left-0 translate-x-0 rounded-r-2xl'
+    : 'right-0 translate-x-0 rounded-l-2xl'}"
 >
-  <div
-    class="absolute top-4 -left-8 cursor-grab
-           px-2 py-1 select-none active:cursor-grabbing"
-    onmousedown={startDrag}
-    ontouchstart={startDrag}
-    role="button"
-    tabindex="0"
+  <!-- Toggle side button -->
+  <button
+    onclick={toggleSide}
+    class="bg-accent hover:bg-accent-600 absolute top-1/2 -translate-y-1/2 rounded-full p-2
+           text-white transition-all duration-200 hover:scale-110
+           {$panelSide === 'left' ? '-right-6' : '-left-6'}"
+    aria-label="Toggle panel side"
   >
-    <GripVertical></GripVertical>
-  </div>
+    {#if $panelSide === "left"}
+      <ChevronRight size={16} />
+    {:else}
+      <ChevronLeft size={16} />
+    {/if}
+  </button>
+
+  <!-- Close button -->
   <Merger styling="absolute right-4 top-4 z-50">
     <UniButton href="/{page.params.role}/calendar" Icon={X} />
   </Merger>
-  <div class="scrollbar-none max-h-[768px] overflow-y-auto p-4 pb-8">
+
+  <!-- Content -->
+  <div
+    class="scrollbar-thin scrollbar-track-stone-100 scrollbar-thumb-stone-300 dark:scrollbar-track-stone-800 dark:scrollbar-thumb-stone-600 h-full overflow-y-auto p-4 pb-8"
+  >
     {@render children()}
   </div>
 </div>

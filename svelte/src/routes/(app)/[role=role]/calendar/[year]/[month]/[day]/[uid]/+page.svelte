@@ -1,9 +1,5 @@
 <script lang="ts">
-  import {
-    parseRRuleToText,
-    getLocaleFromCookie,
-    isVideoCallUrl,
-  } from "$lib/utils";
+  import { getLocaleFromCookie, isVideoCallUrl } from "$lib/utils";
   import { ChevronLeft, MapPin, Share, Video } from "lucide-svelte";
   import {
     BackButton,
@@ -109,9 +105,7 @@
       <Title2>Весь день</Title2>
     {/if}
     {#if event.rrule}
-      <p class="text-stone-700 dark:text-stone-300">
-        Повторяется {parseRRuleToText(event.rrule)}
-      </p>
+      <p class="text-stone-700 dark:text-stone-300">Повторяется</p>
     {/if}
   </HStack>
 

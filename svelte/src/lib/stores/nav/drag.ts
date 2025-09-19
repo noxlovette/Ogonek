@@ -29,3 +29,10 @@ function createDraggableStore() {
 }
 
 export const panelPosition = createDraggableStore();
+export const panelSide = writable<"left" | "right">("left");
+export function setPanelSideFromCalendarClick(dayOfWeek: number) {
+  // 0-3 = left side (Sun, Mon, Tue, Wed) -> panel goes right
+  // 4-6 = right side (Thu, Fri, Sat) -> panel goes left
+  const side = dayOfWeek <= 3 ? "right" : "left";
+  panelSide.set(side);
+}

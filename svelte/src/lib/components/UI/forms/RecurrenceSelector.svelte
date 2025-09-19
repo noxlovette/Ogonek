@@ -1,25 +1,10 @@
 <script lang="ts">
   import Label from "$lib/components/typography/Label.svelte";
+  import { parseRRuleDays, WEEKDAYS } from "$lib/utils";
   import VStack from "../VStack.svelte";
 
   let { rrule }: { rrule?: string | null } = $props();
 
-  type iCalRecDay = {
-    label: string;
-    full: string;
-    ical: string;
-    index: number;
-  };
-
-  const days: iCalRecDay[] = [
-    { label: "S", full: "Sunday", ical: "SU", index: 0 },
-    { label: "M", full: "Monday", ical: "MO", index: 1 },
-    { label: "T", full: "Tuesday", ical: "TU", index: 2 },
-    { label: "W", full: "Wednesday", ical: "WE", index: 3 },
-    { label: "T", full: "Thursday", ical: "TH", index: 4 },
-    { label: "F", full: "Friday", ical: "FR", index: 5 },
-    { label: "S", full: "Saturday", ical: "SA", index: 6 },
-  ];
   function toggleDay(dayIndex: number) {
     console.log("toggle day");
     selectedDays = selectedDays.includes(dayIndex)
@@ -31,26 +16,13 @@
     return selectedDays.includes(dayIndex);
   }
 
-  let selectedDays = $state(
-    (() => {
-      if (rrule) {
-        const byDayMatch = rrule.match(/BYDAY=([^;]+)/);
-        if (byDayMatch) {
-          const ruleDays = byDayMatch[1].split(",");
-          return days
-            .filter((day) => ruleDays.includes(day.ical))
-            .map((day) => day.index);
-        }
-      }
-      return [];
-    })(),
-  );
+  let selectedDays = $state(parseRRuleDays(rrule));
 
   const rule = $derived.by(() => {
     if (selectedDays.length === 0) return "";
 
     const byDay = selectedDays
-      .map((index: number) => days.find((d) => d.index === index)?.ical)
+      .map((index: number) => WEEKDAYS.find((d) => d.index === index)?.ical)
       .filter(Boolean)
       .join(",");
 
@@ -61,7 +33,7 @@
 <div class="flex flex-col gap-1">
   <Label>Повторения</Label>
   <VStack>
-    {#each days as day}
+    {#each WEEKDAYS as day}
       <button
         type="button"
         class="flex h-12 w-12 items-center justify-center rounded-full font-bold {isSelected(
