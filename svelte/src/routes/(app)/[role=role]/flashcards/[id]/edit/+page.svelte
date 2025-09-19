@@ -93,7 +93,7 @@
             },
           })}
         >
-          <DeleteButton confirmText={deck.title} confirmTitle="Delete Deck" />
+          <DeleteButton />
         </form>
 
         <CancelButton />

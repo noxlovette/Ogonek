@@ -161,7 +161,7 @@
     <select id="attendee" {name} class={baseStyle}>
       <option {value}>{placeholder}</option>
       {#each $studentStore as student (student.id)}
-        <option value={student.email}>
+        <option value={student.id} selected={student.id === value}>
           {student.name}
         </option>
       {/each}

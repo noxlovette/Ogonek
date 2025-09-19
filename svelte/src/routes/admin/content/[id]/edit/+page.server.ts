@@ -1,4 +1,3 @@
-import { z } from "$lib";
 import logger from "$lib/logger";
 import { routes } from "$lib/routes";
 import { fail, redirect } from "@sveltejs/kit";
@@ -9,12 +8,10 @@ export const actions: Actions = {
     const { id } = params;
     const formData = await request.formData();
     const data = Object.fromEntries(formData);
-    const body = z.updateContentBody.safeParse(data).data;
 
-    console.log(body);
     const response = await fetch(routes.admin.update_content(id), {
       method: "PATCH",
-      body: JSON.stringify(body),
+      body: JSON.stringify(data),
     });
 
     if (!response.ok) {

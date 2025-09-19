@@ -18,8 +18,7 @@
     styling?: string;
     disable?: boolean;
     Icon?: ComponentType | undefined;
-    confirmText?: string | undefined;
-    confirmTitle?: string | undefined;
+    shouldConfirm?: boolean | undefined;
     onclick?: MouseEventHandler<HTMLButtonElement> | undefined;
     children?: Snippet;
     ariaLabel?: string;
@@ -34,8 +33,7 @@
     styling = "relative",
     disable = false,
     Icon = undefined,
-    confirmText = undefined,
-    confirmTitle = undefined,
+    shouldConfirm = false,
     onclick = undefined,
     children,
     ariaLabel = undefined,
@@ -47,7 +45,7 @@
   let showConfirmDialog = $state(false);
 
   function handleClick(event: MouseEvent) {
-    if (variant === "danger" && (confirmText || confirmTitle)) {
+    if (variant === "danger" && shouldConfirm) {
       event.preventDefault();
       deleteClicked = !deleteClicked;
       showConfirmDialog = !showConfirmDialog;

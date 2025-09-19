@@ -71,7 +71,10 @@ pub async fn update(db: &PgPool, user_id: &str, update: &UserUpdate) -> Result<(
     Ok(())
 }
 
-pub async fn get_email(db: &PgPool, user_id: &str) -> Result<String, DbError> {
+pub async fn get_email(
+    db: impl sqlx::Executor<'_, Database = sqlx::Postgres>,
+    user_id: &str,
+) -> Result<String, DbError> {
     let email = sqlx::query_scalar!(
         r#"
         SELECT email

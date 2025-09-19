@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "\n        SELECT \n            id,\n            uid,\n            created_at,\n            updated_at,\n            calendar_id,\n            summary,\n            description,\n            location,\n            url,\n            dtstart,\n            dtend,\n            all_day,\n            timezone,\n            rrule,\n            rdate,\n            exdate,\n            recurrence_id,\n            status as \"status: EventStatus\",\n            class as \"class: EventClass\",\n            transp as \"transp: EventTransp\",\n            priority,\n            categories,\n            organiser_email,\n            organiser_name,\n            sequence,\n            dtstamp,\n            etag,\n            deleted_at\n        FROM calendar_events\n        WHERE uid = $1 AND deleted_at IS NULL\n        ",
+  "query": "\n        SELECT \n            id,\n            uid,\n            created_at,\n            updated_at,\n            calendar_id,\n            summary,\n            description,\n            location,\n            url,\n            dtstart,\n            dtend,\n            all_day,\n            timezone,\n            rrule,\n            rdate,\n            exdate,\n            recurrence_id,\n            status as \"status: EventStatus\",\n            class as \"class: EventClass\",\n            transp as \"transp: EventTransp\",\n            priority,\n            categories,\n            organiser_email,\n            organiser_name,\n            sequence,\n            dtstamp,\n            etag,\n            deleted_at\n        FROM calendar_events\n        WHERE id = $1 AND deleted_at IS NULL\n        ",
   "describe": {
     "columns": [
       {
@@ -180,5 +180,5 @@
       true
     ]
   },
-  "hash": "139d8d398be024cdd04266a3b33076a0d41fbbb0830404702e8f91ebad2c18fb"
+  "hash": "b0b4e3e22c903f97f3695349f1028f8f1b76036f8194e97ee0291e5a75cf296e"
 }

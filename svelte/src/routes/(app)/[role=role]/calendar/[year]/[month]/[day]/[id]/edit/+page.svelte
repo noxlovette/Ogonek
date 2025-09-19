@@ -2,6 +2,7 @@
   import {
     BackButton,
     CancelButton,
+    DeleteButton,
     Divider,
     HStack,
     Input,
@@ -10,11 +11,14 @@
     SectionBg,
     Title1,
     VStack,
+    DateTimePicker,
+    Optional,
+    RecurrenceSelector,
+    UniButton,
   } from "$lib/components";
-  import DateTimePicker from "$lib/components/UI/forms/DateTimePicker.svelte";
   import { enhance } from "$app/forms";
-  import Optional from "$lib/components/UI/forms/Optional.svelte";
-  import RecurrenceSelector from "$lib/components/UI/forms/RecurrenceSelector.svelte";
+  import { Trash2 } from "lucide-svelte";
+  import { enhanceForm } from "@noxlovette/svarog";
 
   const { data } = $props();
   const event = data.event;
@@ -30,18 +34,26 @@
   <meta name="description" content={event.description || event.summary} />
 </svelte:head>
 <form
-  use:enhance
+  use:enhance={enhanceForm({
+    messages: {
+      success: "Изменения сохранены",
+      redirect: "Событие удалено",
+    },
+    shouldUpdate: true,
+    navigate: true,
+  })}
   method="POST"
   action="?/update"
   class="flex w-full flex-col gap-3 md:gap-3 lg:gap-4"
 >
   <BackButton />
   <VStack>
-    <Title1 styling={event.status === "cancelled" ? "line-through" : ""}>
+    <Title1>
       {event.summary}
     </Title1>
     <Divider />
     <Merger>
+      <DeleteButton />
       <CancelButton />
       <SaveButton />
     </Merger>
@@ -57,7 +69,7 @@
       <Input
         showLabel={false}
         placeholder="Выберите ученика"
-        value={student?.email}
+        value={student?.userId}
         type="attendee"
         name="attendee"
       />

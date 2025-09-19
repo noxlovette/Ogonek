@@ -15,6 +15,7 @@ pub async fn find_by_id(db: &PgPool, attendee_id: &str) -> Result<EventAttendee,
         r#"
         SELECT 
             id,
+            user_id,
             event_id,
             email,
             name,
@@ -41,11 +42,12 @@ pub async fn find_by_event_id(db: &PgPool, event_id: &str) -> Result<Vec<EventAt
         r#"
         SELECT 
             id,
+            user_id,
             event_id,
             email,
             name,
-            role as "role: _",
-            status as "status: _",
+            role as "role: EventAttendeeRole",
+            status as "status: EventAttendeeStatus",
             rsvp,
             created_at,
             updated_at
@@ -107,20 +109,22 @@ pub async fn update(
 
 /// Creates an event attendee
 pub async fn create(
-    db: &PgPool,
+    db: impl sqlx::Executor<'_, Database = sqlx::Postgres>,
     event_id: &str,
+    user_id: &str,
     create: EventAttendeeCreate,
 ) -> Result<String, DbError> {
     let id = sqlx::query_scalar!(
         r#"
-        INSERT INTO event_attendees (id, event_id, email, name)
-        VALUES ($1, $2, $3, $4)
+        INSERT INTO event_attendees (id, event_id, email, name, user_id)
+        VALUES ($1, $2, $3, $4, $5)
         RETURNING id
         "#,
         nanoid::nanoid!(),
         event_id,
         create.email,
         create.name,
+        user_id
     )
     .fetch_one(db)
     .await?;

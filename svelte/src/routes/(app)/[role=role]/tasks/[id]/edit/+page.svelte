@@ -51,7 +51,7 @@
     <VStack>
       <Merger>
         <CancelButton />
-        <DeleteButton confirmText={task.title} confirmTitle="Delete Task" />
+        <DeleteButton />
       </Merger>
       <Merger>
         <SaveButton />

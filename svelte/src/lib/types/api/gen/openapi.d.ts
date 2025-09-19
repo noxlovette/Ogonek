@@ -227,7 +227,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/calendars/events/{uid}": {
+    "/api/v1/calendars/events/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -811,31 +811,20 @@ export interface components {
         CalendarEvent: {
             allDay: boolean;
             categories?: string[] | null;
-            class: components["schemas"]["EventClass"];
             description?: string | null;
             /** Format: date-time */
             dtend?: string | null;
             /** Format: date-time */
             dtstart: string;
-            etag: string;
-            exdate?: string[] | null;
+            id: string;
             location?: string | null;
             organiserEmail?: string | null;
             organiserName?: string | null;
-            /** Format: int32 */
-            priority?: number | null;
-            rdate?: string[] | null;
-            /** Format: date-time */
-            recurrenceId?: string | null;
             rrule?: string | null;
-            /** Format: int32 */
-            sequence: number;
             status: components["schemas"]["EventStatus"];
             summary: string;
             timezone?: string | null;
-            transp: components["schemas"]["EventTransp"];
             uid: string;
-            url?: string | null;
         };
         CalendarEventCreate: {
             attendee: string;
@@ -845,7 +834,7 @@ export interface components {
             dtstart: string;
         };
         CalendarEventUpdate: {
-            /** @description The invited student's email */
+            /** @description The invited student's id */
             attendee?: string | null;
             description?: string | null;
             /** Format: date-time */
@@ -854,7 +843,6 @@ export interface components {
             dtstart?: string | null;
             location?: string | null;
             rrule?: string | null;
-            summary?: string | null;
             timezone?: string | null;
         };
         CalendarUpdate: {
@@ -982,6 +970,7 @@ export interface components {
             name?: string | null;
             role: components["schemas"]["EventAttendeeRole"];
             status: components["schemas"]["EventAttendeeStatus"];
+            userId: string;
         };
         /** @enum {string} */
         EventAttendeeRole: "req-participant" | "chair" | "opt-participant" | "non-participant";
@@ -995,11 +984,7 @@ export interface components {
             status?: null | components["schemas"]["EventAttendeeStatus"];
         };
         /** @enum {string} */
-        EventClass: "public" | "private" | "confidential";
-        /** @enum {string} */
         EventStatus: "confirmed" | "tentative" | "cancelled";
-        /** @enum {string} */
-        EventTransp: "opaque" | "transparent";
         EventWithAttendees: components["schemas"]["CalendarEvent"] & {
             attendees: components["schemas"]["EventAttendee"][];
         };
@@ -2022,7 +2007,7 @@ export interface operations {
             header?: never;
             path: {
                 /** @description Event UID */
-                uid: string;
+                id: string;
             };
             cookie?: never;
         };
@@ -2058,8 +2043,8 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description Event ID */
-                uid: string;
+                /** @description Event UID */
+                id: string;
             };
             cookie?: never;
         };
@@ -2093,8 +2078,8 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description Event ID */
-                uid: string;
+                /** @description Event UID */
+                id: string;
             };
             cookie?: never;
         };

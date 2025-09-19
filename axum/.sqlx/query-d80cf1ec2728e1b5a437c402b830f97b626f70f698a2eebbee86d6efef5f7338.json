@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "\n        SELECT \n            id,\n            event_id,\n            email,\n            name,\n            role as \"role: EventAttendeeRole\",\n            status as \"status: EventAttendeeStatus\",\n            rsvp,\n            created_at,\n            updated_at\n        FROM event_attendees\n        WHERE id = $1\n        ",
+  "query": "\n        SELECT \n            id,\n            user_id,\n            event_id,\n            email,\n            name,\n            role as \"role: EventAttendeeRole\",\n            status as \"status: EventAttendeeStatus\",\n            rsvp,\n            created_at,\n            updated_at\n        FROM event_attendees\n        WHERE event_id = $1\n        ",
   "describe": {
     "columns": [
       {
@@ -10,41 +10,46 @@
       },
       {
         "ordinal": 1,
-        "name": "event_id",
+        "name": "user_id",
         "type_info": "Varchar"
       },
       {
         "ordinal": 2,
-        "name": "email",
+        "name": "event_id",
         "type_info": "Varchar"
       },
       {
         "ordinal": 3,
-        "name": "name",
+        "name": "email",
         "type_info": "Varchar"
       },
       {
         "ordinal": 4,
-        "name": "role: EventAttendeeRole",
+        "name": "name",
         "type_info": "Varchar"
       },
       {
         "ordinal": 5,
-        "name": "status: EventAttendeeStatus",
+        "name": "role: EventAttendeeRole",
         "type_info": "Varchar"
       },
       {
         "ordinal": 6,
+        "name": "status: EventAttendeeStatus",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 7,
         "name": "rsvp",
         "type_info": "Bool"
       },
       {
-        "ordinal": 7,
+        "ordinal": 8,
         "name": "created_at",
         "type_info": "Timestamptz"
       },
       {
-        "ordinal": 8,
+        "ordinal": 9,
         "name": "updated_at",
         "type_info": "Timestamptz"
       }
@@ -58,6 +63,7 @@
       false,
       false,
       false,
+      false,
       true,
       false,
       false,
@@ -66,5 +72,5 @@
       false
     ]
   },
-  "hash": "1defbfd3583f6b9592e8a7fba1282a608ce0a2bad8b4314435941d3791255cbc"
+  "hash": "d80cf1ec2728e1b5a437c402b830f97b626f70f698a2eebbee86d6efef5f7338"
 }

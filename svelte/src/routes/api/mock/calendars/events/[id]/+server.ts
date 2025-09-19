@@ -4,7 +4,7 @@ import type { RequestHandler } from "./$types";
 type PATCHRequestBody = any;
 
 export const GET: RequestHandler = async ({ request, params, url }) => {
-  // Path params: uid
+  // Path params: id
   // Get a single event by UID
   
   
@@ -12,7 +12,7 @@ export const GET: RequestHandler = async ({ request, params, url }) => {
 };
 
 export const DELETE: RequestHandler = async ({ request, params, url }) => {
-  // Path params: uid
+  // Path params: id
   // Delete an event
   
   
@@ -21,8 +21,8 @@ export const DELETE: RequestHandler = async ({ request, params, url }) => {
 
 export const PATCH: RequestHandler = async ({ request, params, url }) => {
   const body = await request.json();
-  logger.info("PATCH /api/v1/calendars/events/{uid} with body:", body);
-  // Path params: uid
+  logger.info("PATCH /api/v1/calendars/events/{id} with body:", body);
+  // Path params: id
   // Update an event
   
   

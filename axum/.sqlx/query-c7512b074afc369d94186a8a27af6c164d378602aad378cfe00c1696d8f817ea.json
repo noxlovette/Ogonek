@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "\n        INSERT INTO event_attendees (id, event_id, email, name)\n        VALUES ($1, $2, $3, $4)\n        RETURNING id\n        ",
+  "query": "\n        INSERT INTO calendars (id, name, owner_id)\n        VALUES ($1, $2, $3)\n        ON CONFLICT (owner_id) \n        DO UPDATE SET owner_id = EXCLUDED.owner_id\n        RETURNING id\n        ",
   "describe": {
     "columns": [
       {
@@ -13,7 +13,6 @@
       "Left": [
         "Varchar",
         "Varchar",
-        "Varchar",
         "Varchar"
       ]
     },
@@ -21,5 +20,5 @@
       false
     ]
   },
-  "hash": "c9be39ef3fbaf985c61de16511f57df5d5f0a640cc9c197c248749f08c89372d"
+  "hash": "c7512b074afc369d94186a8a27af6c164d378602aad378cfe00c1696d8f817ea"
 }

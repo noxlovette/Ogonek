@@ -25,15 +25,15 @@ export function isVideoCallUrl(location: string) {
   if (!location || typeof location !== "string") return false;
 
   const videoCallPatterns = [
-    /^https?:\/\/.*\.zoom\.us\//i,
+    /^https?:\/\/([a-z0-9-]+\.)?zoom\.us\//i,
     /^https?:\/\/meet\.google\.com\//i,
     /^https?:\/\/teams\.microsoft\.com\//i,
-    /^https?:\/\/.*\.webex\.com\//i,
-    /^https?:\/\/.*\.gotomeeting\.com\//i,
+    /^https?:\/\/([a-z0-9-]+\.)?webex\.com\//i,
+    /^https?:\/\/([a-z0-9-]+\.)?gotomeeting\.com\//i,
     /^https?:\/\/discord\.gg\//i,
-    /^https?:\/\/.*\.discord\.com\//i,
-    /^https?:\/\/.*\.skype\.com\//i,
-    /^https?:\/\/.*\.whereby\.com\//i,
+    /^https?:\/\/([a-z0-9-]+\.)?discord\.com\//i,
+    /^https?:\/\/([a-z0-9-]+\.)?skype\.com\//i,
+    /^https?:\/\/([a-z0-9-]+\.)?whereby\.com\//i,
   ];
 
   return videoCallPatterns.some((pattern) => pattern.test(location.trim()));

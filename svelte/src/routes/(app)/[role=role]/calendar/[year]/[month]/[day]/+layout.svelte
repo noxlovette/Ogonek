@@ -37,7 +37,10 @@
 
   <!-- Close button -->
   <Merger styling="absolute right-4 top-4 z-50">
-    <UniButton href="/{page.params.role}/calendar" Icon={X} />
+    <UniButton
+      href="/{page.params.role}/calendar/{page.params.year}/{page.params.month}"
+      Icon={X}
+    />
   </Merger>
 
   <!-- Content -->

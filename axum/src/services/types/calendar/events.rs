@@ -10,7 +10,6 @@ use validator::Validate;
 #[derive(Validate, ToSchema, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct CalendarEvent {
-    #[serde(skip_serializing)]
     pub id: String,
     pub uid: String,
     #[serde(skip_serializing)]
@@ -24,6 +23,7 @@ pub struct CalendarEvent {
     pub summary: String,
     pub description: Option<String>,
     pub location: Option<String>,
+    #[serde(skip_serializing)]
     pub url: Option<String>,
 
     #[serde(with = "datetime_serialization")]
@@ -35,15 +35,21 @@ pub struct CalendarEvent {
     pub timezone: Option<String>,
 
     pub rrule: Option<String>,
+    #[serde(skip_serializing)]
     pub rdate: Option<Vec<String>>,
+    #[serde(skip_serializing)]
     pub exdate: Option<Vec<String>>,
     #[serde(with = "datetime_serialization::option")]
+    #[serde(skip_serializing)]
     pub recurrence_id: Option<DateTime<Utc>>,
 
     pub status: EventStatus,
+    #[serde(skip_serializing)]
     pub class: EventClass,
+    #[serde(skip_serializing)]
     pub transp: EventTransp,
 
+    #[serde(skip_serializing)]
     #[validate(range(min = 0, max = 9))]
     pub priority: Option<i32>,
 
@@ -52,10 +58,12 @@ pub struct CalendarEvent {
     pub organiser_email: Option<String>,
     pub organiser_name: Option<String>,
 
+    #[serde(skip_serializing)]
     pub sequence: i32,
     #[serde(skip_serializing)]
     pub dtstamp: DateTime<Utc>,
 
+    #[serde(skip_serializing)]
     #[validate(length(equal = 64))]
     pub etag: String,
 
@@ -102,7 +110,6 @@ pub struct CalendarEventCreate {
 #[derive(Validate, ToSchema, Deserialize, Default)]
 #[serde(rename_all = "camelCase")]
 pub struct CalendarEventUpdate {
-    pub summary: Option<String>,
     pub description: Option<String>,
     pub location: Option<String>,
     #[serde(with = "datetime_serialization::option")]
@@ -111,7 +118,7 @@ pub struct CalendarEventUpdate {
     pub dtend: Option<DateTime<Utc>>,
     pub timezone: Option<String>,
     pub rrule: Option<String>,
-    /// The invited student's email
+    /// The invited student's id
     pub attendee: Option<String>,
 }
 

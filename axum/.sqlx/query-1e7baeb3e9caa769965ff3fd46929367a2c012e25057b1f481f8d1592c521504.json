@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "\n        SELECT \n            id,\n            event_id,\n            email,\n            name,\n            role as \"role: _\",\n            status as \"status: _\",\n            rsvp,\n            created_at,\n            updated_at\n        FROM event_attendees\n        WHERE event_id = $1\n        ",
+  "query": "\n        INSERT INTO calendars (id, name, owner_id)\n        VALUES ($1, $2, $3)\n        ON CONFLICT (owner_id) \n        DO UPDATE SET \n            name = EXCLUDED.name,\n            updated_at = CURRENT_TIMESTAMP\n        RETURNING *\n        ",
   "describe": {
     "columns": [
       {
@@ -10,61 +10,69 @@
       },
       {
         "ordinal": 1,
-        "name": "event_id",
-        "type_info": "Varchar"
-      },
-      {
-        "ordinal": 2,
-        "name": "email",
-        "type_info": "Varchar"
-      },
-      {
-        "ordinal": 3,
         "name": "name",
         "type_info": "Varchar"
       },
       {
+        "ordinal": 2,
+        "name": "description",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 3,
+        "name": "colour",
+        "type_info": "Varchar"
+      },
+      {
         "ordinal": 4,
-        "name": "role: _",
+        "name": "timezone",
         "type_info": "Varchar"
       },
       {
         "ordinal": 5,
-        "name": "status: _",
+        "name": "owner_id",
         "type_info": "Varchar"
       },
       {
         "ordinal": 6,
-        "name": "rsvp",
-        "type_info": "Bool"
+        "name": "caldav_url",
+        "type_info": "Varchar"
       },
       {
         "ordinal": 7,
+        "name": "sync_token",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 8,
         "name": "created_at",
         "type_info": "Timestamptz"
       },
       {
-        "ordinal": 8,
+        "ordinal": 9,
         "name": "updated_at",
         "type_info": "Timestamptz"
       }
     ],
     "parameters": {
       "Left": [
-        "Text"
+        "Varchar",
+        "Varchar",
+        "Varchar"
       ]
     },
     "nullable": [
-      false,
       false,
       false,
       true,
       false,
       false,
       false,
+      true,
+      true,
       false,
       false
     ]
   },
-  "hash": "6dc3bc99aceb97f19ba191b48fa8b7ff32c24b6693bf3861d1a849d6d13f1b22"
+  "hash": "1e7baeb3e9caa769965ff3fd46929367a2c012e25057b1f481f8d1592c521504"
 }

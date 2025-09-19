@@ -8,14 +8,17 @@ import type { Actions } from "./$types";
 export const actions = {
   update: async ({ request, fetch, params }) => {
     const formData = await request.formData();
-    const { uid } = params;
+    const { id } = params;
 
     const rawData = parseFormData(formData);
 
     console.log(rawData);
+
     const data = z.updateEventBody.parse(rawData);
 
-    const response = await fetch(routes.calendars.event(uid), {
+    console.log(data);
+
+    const response = await fetch(routes.calendars.event(id), {
       body: JSON.stringify(data),
       method: "PATCH",
     });
@@ -29,9 +32,9 @@ export const actions = {
   },
 
   delete: async ({ params, fetch }) => {
-    const { uid } = params;
+    const { id } = params;
 
-    const response = await fetch(routes.calendars.event(uid), {
+    const response = await fetch(routes.calendars.event(id), {
       method: "DELETE",
     });
 
@@ -39,6 +42,6 @@ export const actions = {
       return fail(500);
     }
 
-    return redirect(301, "../");
+    return redirect(301, "..");
   },
 } satisfies Actions;

@@ -3,19 +3,22 @@ use sqlx::PgPool;
 use crate::{
     db::{
         crud::core::{
-            account::{profile::get_call_url, user::get_name},
-            calendar::calendar::get_calendar_id,
+            account::{
+                profile::get_call_url,
+                user::{get_email, get_name},
+            },
+            calendar::{calendar::get_calendar_id, event_attendee},
         },
         error::DbError,
     },
     types::{
-        CalendarEvent, CalendarEventCreate, CalendarEventUpdate, EventClass, EventStatus,
-        EventTransp,
+        CalendarEvent, CalendarEventCreate, CalendarEventUpdate, EventAttendeeCreate, EventClass,
+        EventStatus, EventTransp,
     },
 };
 
-/// Finds a calendar event by uid
-pub async fn find_by_uid(db: &PgPool, event_uid: &str) -> Result<CalendarEvent, DbError> {
+/// Finds a calendar event by id
+pub async fn find_by_id(db: &PgPool, event_id: &str) -> Result<CalendarEvent, DbError> {
     let event = sqlx::query_as!(
         CalendarEvent,
         r#"
@@ -49,9 +52,9 @@ pub async fn find_by_uid(db: &PgPool, event_uid: &str) -> Result<CalendarEvent, 
             etag,
             deleted_at
         FROM calendar_events
-        WHERE uid = $1 AND deleted_at IS NULL
+        WHERE id = $1 AND deleted_at IS NULL
         "#,
-        event_uid
+        event_id
     )
     .fetch_one(db)
     .await?;
@@ -156,25 +159,56 @@ pub async fn find_by_date(
 }
 
 /// Soft deletes a calendar event (sets deleted_at timestamp)
-pub async fn delete(db: &PgPool, event_id: &str) -> Result<(), DbError> {
+pub async fn delete(db: &PgPool, id: &str) -> Result<(), DbError> {
     sqlx::query!(
         r#"
         UPDATE calendar_events
         SET deleted_at = NOW()
         WHERE id = $1
         "#,
-        event_id
+        id
     )
     .execute(db)
     .await?;
 
     Ok(())
 }
-pub async fn update(
-    db: &PgPool,
-    event_id: &str,
-    update: &CalendarEventUpdate,
-) -> Result<(), DbError> {
+pub async fn update(db: &PgPool, id: &str, update: &CalendarEventUpdate) -> Result<(), DbError> {
+    let mut tx = db.begin().await?;
+
+    let mut attendee_name: Option<String> = None;
+
+    // Handle attendee updates if provided
+    if let Some(new_attendee_id) = &update.attendee {
+        // Check if attendee is different from current one
+        let current_attendee = sqlx::query_scalar!(
+            "SELECT user_id FROM event_attendees WHERE event_id = $1",
+            id,
+        )
+        .fetch_optional(&mut *tx)
+        .await?;
+
+        // Only update if attendee is different or none exists
+        if current_attendee.as_ref() != Some(new_attendee_id) {
+            // Delete existing attendee if any
+            if current_attendee.is_some() {
+                sqlx::query!("DELETE FROM event_attendees WHERE event_id = $1", id)
+                    .execute(&mut *tx)
+                    .await?;
+            }
+
+            // Create new attendee
+            let attendee_email = get_email(&mut *tx, new_attendee_id).await?;
+            attendee_name = Some(get_name(&mut *tx, new_attendee_id).await?);
+            let attendee_payload = EventAttendeeCreate {
+                email: attendee_email,
+                name: attendee_name.clone(),
+            };
+            event_attendee::create(&mut *tx, &id, &new_attendee_id, attendee_payload).await?;
+        }
+    }
+
+    // Update the main event
     sqlx::query!(
         r#"
         UPDATE calendar_events 
@@ -189,8 +223,8 @@ pub async fn update(
             updated_at = NOW()
         WHERE id = $1 AND deleted_at IS NULL
         "#,
-        event_id,
-        update.summary,
+        id,
+        attendee_name,
         update.description,
         update.location,
         update.dtstart,
@@ -198,8 +232,10 @@ pub async fn update(
         update.timezone,
         update.rrule,
     )
-    .execute(db)
+    .execute(&mut *tx)
     .await?;
+
+    tx.commit().await?;
     Ok(())
 }
 
@@ -209,15 +245,15 @@ pub async fn create(
     user_id: &str,
     create: CalendarEventCreate,
 ) -> Result<(), DbError> {
+    let calendar_id = get_calendar_id(db, user_id).await?;
+
     let mut tx = db.begin().await?;
 
-    let calendar_id = get_calendar_id(&mut *tx, user_id).await?;
-
-    let attendee_name = get_name(&mut *tx, user_id).await?;
+    let attendee_name = get_name(&mut *tx, &create.attendee).await?;
 
     let video_call_url = get_call_url(&mut *tx, &user_id).await?;
 
-    sqlx::query!(
+    let id = sqlx::query_scalar!(
         r#"
         INSERT INTO calendar_events (
             id, calendar_id, uid, summary, dtstart, dtend, location
@@ -225,6 +261,7 @@ pub async fn create(
         VALUES (
             $1, $2, $3, $4, $5, $6, $7
         )
+        RETURNING id
         "#,
         nanoid::nanoid!(),
         calendar_id,
@@ -232,10 +269,19 @@ pub async fn create(
         attendee_name,
         create.dtstart,
         create.dtend,
-        video_call_url
+        video_call_url,
     )
-    .execute(&mut *tx)
+    .fetch_one(&mut *tx)
     .await?;
+
+    let attendee_email = get_email(&mut *tx, &create.attendee).await?;
+
+    let attendee_payload = EventAttendeeCreate {
+        email: attendee_email,
+        name: Some(attendee_name),
+    };
+
+    event_attendee::create(&mut *tx, &id, &create.attendee, attendee_payload).await?;
 
     tx.commit().await?;
     Ok(())

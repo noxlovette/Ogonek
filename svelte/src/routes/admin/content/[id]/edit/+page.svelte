@@ -81,10 +81,7 @@
             {/if}
           </Merger>
           <Merger>
-            <DeleteButton
-              confirmTitle="Delete Content"
-              confirmText="You are deleting this content"
-            ></DeleteButton>
+            <DeleteButton />
             <CancelButton />
             <SaveButton />
           </Merger>

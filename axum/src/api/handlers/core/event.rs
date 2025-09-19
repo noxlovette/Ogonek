@@ -3,7 +3,7 @@ use crate::api::error::APIError;
 use crate::auth::Claims;
 use crate::db::crud::core::calendar::calendar::get_calendar_id;
 use crate::db::crud::core::calendar::event::{
-    create, delete, find_by_calendar_id_and_month, find_by_date, find_by_uid, update,
+    create, delete, find_by_calendar_id_and_month, find_by_date, find_by_id, update,
 };
 use crate::db::crud::core::calendar::event_attendee::find_by_event_id;
 use crate::schema::AppState;
@@ -14,10 +14,10 @@ use axum::http::StatusCode;
 /// Get a single event by UID
 #[utoipa::path(
     get,
-    path = "/events/{uid}",
+    path = "/events/{id}",
     tag = CALENDAR_TAG,
     params(
-        ("uid" = String, Path, description = "Event UID")
+        ("id" = String, Path, description = "Event UID")
     ),
     responses(
         (status = 200, description = "Event retrieved successfully", body = EventWithAttendees),
@@ -27,11 +27,11 @@ use axum::http::StatusCode;
 )]
 pub async fn fetch_event(
     State(state): State<AppState>,
-    Path(uid): Path<String>,
+    Path(id): Path<String>,
     _claims: Claims,
 ) -> Result<Json<EventWithAttendees>, APIError> {
-    let event = find_by_uid(&state.db, &uid).await?;
-    let attendees = find_by_event_id(&state.db, &uid).await?;
+    let event = find_by_id(&state.db, &id).await?;
+    let attendees = find_by_event_id(&state.db, &id).await?;
     Ok(Json(EventWithAttendees { event, attendees }))
 }
 /// Get events for a specific month
@@ -55,7 +55,6 @@ pub async fn list_events_by_month(
     State(state): State<AppState>,
     claims: Claims,
 ) -> Result<Json<Vec<CalendarEvent>>, APIError> {
-    // Validate month range
     if month < 1 || month > 12 {
         return Err(APIError::BadRequest(
             "Month must be between 1 and 12".to_string(),
@@ -121,10 +120,10 @@ pub async fn create_event(
 /// Delete an event
 #[utoipa::path(
     delete,
-    path = "/events/{uid}",
+    path = "/events/{id}",
     tag = CALENDAR_TAG,
     params(
-        ("uid" = String, Path, description = "Event ID")
+        ("id" = String, Path, description = "Event UID")
     ),
     responses(
         (status = 204, description = "Event deleted successfully"),
@@ -134,20 +133,20 @@ pub async fn create_event(
 )]
 pub async fn delete_event(
     State(state): State<AppState>,
-    Path(uid): Path<String>,
+    Path(id): Path<String>,
     _claims: Claims,
 ) -> Result<StatusCode, APIError> {
-    delete(&state.db, &uid).await?;
+    delete(&state.db, &id).await?;
     Ok(StatusCode::NO_CONTENT)
 }
 
 /// Update an event
 #[utoipa::path(
     patch,
-    path = "/events/{uid}",
+    path = "/events/{id}",
     tag = CALENDAR_TAG,
     params(
-        ("uid" = String, Path, description = "Event ID")
+        ("id" = String, Path, description = "Event UID")
     ),
     request_body = CalendarEventUpdate,
     responses(
@@ -158,10 +157,10 @@ pub async fn delete_event(
 )]
 pub async fn update_event(
     State(state): State<AppState>,
-    Path(uid): Path<String>,
+    Path(id): Path<String>,
     _claims: Claims,
     Json(payload): Json<CalendarEventUpdate>,
 ) -> Result<StatusCode, APIError> {
-    update(&state.db, &uid, &payload).await?;
+    update(&state.db, &id, &payload).await?;
     Ok(StatusCode::NO_CONTENT)
 }

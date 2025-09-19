@@ -74,6 +74,7 @@ CREATE TABLE calendar_events (
 
 CREATE TABLE event_attendees (
     id VARCHAR(21) PRIMARY KEY,
+    user_id VARCHAR(21) NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
     event_id VARCHAR(21) NOT NULL REFERENCES calendar_events(id) ON DELETE CASCADE,
     email VARCHAR(255) NOT NULL,
     name VARCHAR(255),

@@ -6,7 +6,6 @@
   let { rrule }: { rrule?: string | null } = $props();
 
   function toggleDay(dayIndex: number) {
-    console.log("toggle day");
     selectedDays = selectedDays.includes(dayIndex)
       ? selectedDays.filter((d: number) => d !== dayIndex)
       : [...selectedDays, dayIndex].sort();

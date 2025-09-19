@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "\n        INSERT INTO calendars (id, name, owner_id)\n        VALUES ($1, $2, $3)\n        RETURNING *\n        ",
+  "query": "\n        SELECT \n            id,\n            user_id,\n            event_id,\n            email,\n            name,\n            role as \"role: EventAttendeeRole\",\n            status as \"status: EventAttendeeStatus\",\n            rsvp,\n            created_at,\n            updated_at\n        FROM event_attendees\n        WHERE id = $1\n        ",
   "describe": {
     "columns": [
       {
@@ -10,38 +10,38 @@
       },
       {
         "ordinal": 1,
-        "name": "name",
+        "name": "user_id",
         "type_info": "Varchar"
       },
       {
         "ordinal": 2,
-        "name": "description",
-        "type_info": "Text"
+        "name": "event_id",
+        "type_info": "Varchar"
       },
       {
         "ordinal": 3,
-        "name": "colour",
+        "name": "email",
         "type_info": "Varchar"
       },
       {
         "ordinal": 4,
-        "name": "timezone",
+        "name": "name",
         "type_info": "Varchar"
       },
       {
         "ordinal": 5,
-        "name": "owner_id",
+        "name": "role: EventAttendeeRole",
         "type_info": "Varchar"
       },
       {
         "ordinal": 6,
-        "name": "caldav_url",
+        "name": "status: EventAttendeeStatus",
         "type_info": "Varchar"
       },
       {
         "ordinal": 7,
-        "name": "sync_token",
-        "type_info": "Varchar"
+        "name": "rsvp",
+        "type_info": "Bool"
       },
       {
         "ordinal": 8,
@@ -56,23 +56,21 @@
     ],
     "parameters": {
       "Left": [
-        "Varchar",
-        "Varchar",
-        "Varchar"
+        "Text"
       ]
     },
     "nullable": [
       false,
       false,
+      false,
+      false,
       true,
       false,
       false,
       false,
-      true,
-      true,
       false,
       false
     ]
   },
-  "hash": "554979be4218c91a49761829df8bb216fd145d33926e2824b235b788ea973671"
+  "hash": "907b5392c48489c76eda45aea699bf9004edbd63a0757c252b49ad7725c81182"
 }

@@ -4,7 +4,7 @@ import type { LayoutServerLoad } from "./$types";
 
 export const load = (async ({ fetch, params }) => {
   const event: EventWithAttendees = await fetch(
-    routes.calendars.event(params.uid),
+    routes.calendars.event(params.id),
   ).then((res) => res.json());
   return {
     event,

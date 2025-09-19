@@ -73,7 +73,7 @@ pub fn calendar_routes() -> Router<AppState> {
         .route("/events/month/{year}/{month}", get(list_events_by_month))
         .route("/events/day/{day}", get(list_events_day))
         .route(
-            "/events/{uid}",
+            "/events/{id}",
             get(core::fetch_event)
                 .patch(core::update_event)
                 .delete(core::delete_event),

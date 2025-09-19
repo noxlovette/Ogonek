@@ -36,9 +36,8 @@
       <UniButton variant="primary" type="submit" Icon={Check}>Save</UniButton>
       <UniButton
         variant="danger"
+        shouldConfirm={true}
         formaction="?/delete"
-        confirmText={student.name}
-        confirmTitle="Delete Student"
         Icon={Trash2}>Delete</UniButton
       >
     </div>

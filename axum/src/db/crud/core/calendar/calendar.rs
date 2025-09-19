@@ -6,26 +6,15 @@ use crate::{
 };
 /// Finds the calendar by user id
 pub async fn get_or_create(db: &PgPool, user_id: &str) -> Result<Calendar, DbError> {
-    if let Ok(calendar) = sqlx::query_as!(
-        Calendar,
-        r#"
-        SELECT *
-        FROM calendars 
-        WHERE owner_id = $1
-        "#,
-        user_id
-    )
-    .fetch_one(db)
-    .await
-    {
-        return Ok(calendar);
-    }
-
     let calendar = sqlx::query_as!(
         Calendar,
         r#"
         INSERT INTO calendars (id, name, owner_id)
         VALUES ($1, $2, $3)
+        ON CONFLICT (owner_id) 
+        DO UPDATE SET 
+            name = EXCLUDED.name,
+            updated_at = CURRENT_TIMESTAMP
         RETURNING *
         "#,
         nanoid::nanoid!(),
@@ -37,22 +26,22 @@ pub async fn get_or_create(db: &PgPool, user_id: &str) -> Result<Calendar, DbErr
 
     Ok(calendar)
 }
-
-/// Helper to find calendar id
-pub async fn get_calendar_id(
-    db: impl sqlx::Executor<'_, Database = sqlx::Postgres>,
-    user_id: &str,
-) -> Result<String, DbError> {
+pub async fn get_calendar_id(db: &PgPool, user_id: &str) -> Result<String, DbError> {
     let calendar_id = sqlx::query_scalar!(
         r#"
-        SELECT id
-        FROM calendars 
-        WHERE owner_id = $1
+        INSERT INTO calendars (id, name, owner_id)
+        VALUES ($1, $2, $3)
+        ON CONFLICT (owner_id) 
+        DO UPDATE SET owner_id = EXCLUDED.owner_id
+        RETURNING id
         "#,
+        nanoid::nanoid!(),
+        "My Calendar",
         user_id
     )
     .fetch_one(db)
     .await?;
+
     Ok(calendar_id)
 }
 

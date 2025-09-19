@@ -27,7 +27,6 @@ export const actions = {
     };
 
     const validation = z.updateTaskBody.safeParse(data);
-    console.log(validation);
     if (!validation.success) {
       return fail(400, {
         message: "Validation failed",

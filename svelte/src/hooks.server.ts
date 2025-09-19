@@ -213,13 +213,10 @@ export const handleFetch: HandleFetch = async ({ event, request, fetch }) => {
     }
 
     const accessToken = event.cookies.get("accessToken");
-    console.log(accessToken);
     if (accessToken) {
       request.headers.set("Authorization", `Bearer ${accessToken}`);
     }
   }
-
-  console.log(request);
 
   return fetch(request);
 };

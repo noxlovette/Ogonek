@@ -24,7 +24,6 @@ export const actions = {
     const data = Object.fromEntries(formData);
     const body = z.updateLessonBody.safeParse(data).data;
 
-    console.log(body);
     const response = await fetch(routes.lessons.lesson(id), {
       method: "PATCH",
       body: JSON.stringify(body),
@@ -72,7 +71,6 @@ export const actions = {
           unsplashError: false,
         };
       } else {
-        console.log(result);
         return fail(403, { unsplashError: true });
       }
     } catch (error) {
@@ -103,10 +101,9 @@ export const actions = {
           name: response.user.name,
         },
       };
-      const body = z.upsertPhotoBody.parse(rawBody);
       const axumResponse = await fetch(routes.lessons.upsert_photo(id), {
         method: "POST",
-        body: JSON.stringify(body),
+        body: JSON.stringify(rawBody),
       });
 
       if (!axumResponse.ok) {

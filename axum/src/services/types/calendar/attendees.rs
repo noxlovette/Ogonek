@@ -10,6 +10,7 @@ use validator::Validate;
 #[serde(rename_all = "camelCase")]
 pub struct EventAttendee {
     pub id: String,
+    pub user_id: String,
     #[serde(skip_serializing)]
     pub event_id: String,
     pub email: String,
@@ -25,7 +26,7 @@ pub struct EventAttendee {
 }
 
 #[derive(ToSchema, Serialize, Deserialize, Type, Debug, PartialEq)]
-#[sqlx(type_name = "varchar", rename_all = "lowercase")]
+#[sqlx(type_name = "varchar", rename_all = "kebab-case")]
 #[serde(rename_all = "kebab-case")]
 pub enum EventAttendeeRole {
     ReqParticipant,
@@ -35,7 +36,7 @@ pub enum EventAttendeeRole {
 }
 
 #[derive(ToSchema, Serialize, Deserialize, Type, Debug, PartialEq)]
-#[sqlx(type_name = "varchar", rename_all = "lowercase")]
+#[sqlx(type_name = "varchar", rename_all = "kebab-case")]
 #[serde(rename_all = "kebab-case")]
 pub enum EventAttendeeStatus {
     NeedsAction,

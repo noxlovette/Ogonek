@@ -1,12 +1,11 @@
 <script lang="ts">
   import { getLocaleFromCookie, isVideoCallUrl } from "$lib/utils";
-  import { ChevronLeft, MapPin, Share, Video } from "lucide-svelte";
+  import { MapPin, Share, Video } from "lucide-svelte";
   import {
     BackButton,
     Body,
     Callout,
     Caption1,
-    DeleteButton,
     Divider,
     Headline,
     HStack,
@@ -17,10 +16,9 @@
     Title3,
     UniButton,
     VStack,
+    EditButton,
   } from "$lib/components";
-  import EditButton from "$lib/components/UI/forms/buttons/EditButton.svelte";
   import { page } from "$app/state";
-  import Optional from "$lib/components/UI/forms/Optional.svelte";
 
   const { data } = $props();
   const event = data.event;
@@ -81,9 +79,7 @@
       <UniButton Icon={Share} onclick={shareEvent} disable={isSharing} />
     </Merger>
     <Merger>
-      <DeleteButton confirmText="Delete Event" confirmTitle="Delete Event"
-      ></DeleteButton>
-      <EditButton href="{event.uid}/edit" />
+      <EditButton href="{event.id}/edit" />
     </Merger>
   </VStack>
 
@@ -109,19 +105,18 @@
     {/if}
   </HStack>
 
-  <SectionBg>
-    {#each event.attendees as attendee, index}
-      <Headline>
-        {attendee.name}
-      </Headline>
-      <Caption1>
-        {attendee.email}
-      </Caption1>
-    {:else}
-      <Optional>Пригласить ученика</Optional>
-    {/each}
-  </SectionBg>
-
+  {#if event.attendees}
+    <SectionBg>
+      {#each event.attendees as attendee, index}
+        <Headline>
+          {attendee.name}
+        </Headline>
+        <Caption1>
+          {attendee.email}
+        </Caption1>
+      {/each}
+    </SectionBg>
+  {/if}
   {#if event.location}
     <SectionBg>
       <VStack>
