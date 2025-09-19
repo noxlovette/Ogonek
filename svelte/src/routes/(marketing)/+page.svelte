@@ -52,12 +52,12 @@
       potentialAction: [
         {
           "@type": "RegisterAction",
-          target: "https://ogonek.app/auth/signup",
+          target: "https://ogonek.app/signup",
           name: "Sign Up for Ogonek",
         },
         {
           "@type": "LoginAction",
-          target: "https://ogonek.app/auth/login",
+          target: "https://ogonek.app/login",
           name: "Login to Ogonek",
         },
       ],
@@ -78,7 +78,7 @@
       </LargeTitle>
       <Divider />
       <Merger>
-        <UniButton iconOnly={false} Icon={Flame} href="/auth/login"
+        <UniButton iconOnly={false} Icon={Flame} href="/login"
           >{m.logIn()}</UniButton
         >
         <UniButton

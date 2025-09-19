@@ -31,7 +31,7 @@
       name: "Login to Ogonek",
       description:
         "Sign in to your Ogonek account and access your digital teaching tools.",
-      url: "https://ogonek.app/auth/login",
+      url: "https://ogonek.app/login",
       isPartOf: {
         "@type": "WebSite",
         name: "Ogonek",
@@ -39,7 +39,7 @@
       },
       potentialAction: {
         "@type": "LoginAction",
-        target: "https://ogonek.app/auth/login",
+        target: "https://ogonek.app/login",
         name: "Login to Ogonek",
       },
     },

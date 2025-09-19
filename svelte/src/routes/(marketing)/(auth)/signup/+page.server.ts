@@ -128,7 +128,7 @@ export const actions = {
           "Invite binding failed - account created but not linked",
         );
 
-        return redirect(302, "/auth/login?invite_failed=true");
+        return redirect(302, "/login?invite_failed=true");
       }
 
       logger.info({ studentId }, "Successfully bound invite to new account");

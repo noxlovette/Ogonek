@@ -35,7 +35,7 @@
       name: "Sign Up for Ogonek",
       description:
         "Join thousands of teachers using Ogonek's digital classroom. Create your free teaching account today.",
-      url: "https://ogonek.app/auth/signup",
+      url: "https://ogonek.app/signup",
       isPartOf: {
         "@type": "WebSite",
         name: "Ogonek",
@@ -43,7 +43,7 @@
       },
       potentialAction: {
         "@type": "RegisterAction",
-        target: "https://ogonek.app/auth/signup",
+        target: "https://ogonek.app/signup",
         name: "Create Ogonek Account",
       },
     },
@@ -60,7 +60,7 @@
     },
     handlers: {
       success: async () => {
-        goto("/auth/login");
+        goto("/login");
       },
     },
     navigate: true,

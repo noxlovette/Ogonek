@@ -37,7 +37,7 @@ pub async fn fetch_event(
 /// Get events for a specific month
 #[utoipa::path(
     get,
-    path = "/calendars/events/{year}/{month}",
+    path = "/calendars/events/month/{year}/{month}",
     tag = CALENDAR_TAG,
     params(
         ("year" = i32, Path, description = "Year (e.g., 2024)"),
@@ -70,7 +70,7 @@ pub async fn list_events_by_month(
 /// Get all events for a given day
 #[utoipa::path(
     get,
-    path = "/calendars/events/{day}",
+    path = "/calendars/events/day/{day}",
     tag = CALENDAR_TAG,
     params(
         ("day" = String, Path, description = "Day")

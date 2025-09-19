@@ -3,15 +3,10 @@
 FROM oven/bun:1
 
 WORKDIR /app
-
 COPY bun.lock package.json ./
-
-RUN bun i
-
-RUN bun i -g nodemon chokidar
+RUN bun install --frozen-lockfile
 
 COPY . .
-
 EXPOSE 5173
 
 CMD ["bun", "run", "dev"]

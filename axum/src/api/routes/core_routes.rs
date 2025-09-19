@@ -70,8 +70,8 @@ pub fn calendar_routes() -> Router<AppState> {
                 .delete(core::delete_calendar),
         )
         .route("/events", post(core::create_event))
-        .route("/events/{year}/{month}", get(list_events_by_month))
-        .route("/events/{day}", get(list_events_day))
+        .route("/events/month/{year}/{month}", get(list_events_by_month))
+        .route("/events/day/{day}", get(list_events_day))
         .route(
             "/events/{id}",
             get(core::fetch_event)
