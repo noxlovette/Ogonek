@@ -26,10 +26,9 @@
   } from "$lib/components";
   import { enhance } from "$app/forms";
   import { goto } from "$app/navigation";
+  import { date } from "zod";
 
-  const { form } = $props();
-
-  $inspect(form);
+  const { form, data } = $props();
 </script>
 
 <svelte:head>
@@ -39,7 +38,7 @@
 <form
   use:enhance={enhanceForm({
     messages: {
-      success: "Событие добавлено",
+      redirect: "Событие добавлено",
     },
     navigate: true,
     shouldUpdate: true,
@@ -57,7 +56,7 @@
   </VStack>
 
   <HStack>
-    <DateTimePicker dtstart={new Date().toISOString()} />
+    <DateTimePicker dtstart={data.date.toISOString()} />
   </HStack>
   <SectionBg>
     <HStack>

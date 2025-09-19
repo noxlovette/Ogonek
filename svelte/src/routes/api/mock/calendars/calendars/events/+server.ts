@@ -3,7 +3,6 @@ import { faker } from "@faker-js/faker";
 import { json } from "@sveltejs/kit";
 import { nanoid } from "nanoid";
 import type { RequestHandler } from "./$types";
-type POSTRequestBody = any;
 
 export const GET: RequestHandler = async () => {
   const events = faker.helpers.multiple(() => createCalendarEvent(), {

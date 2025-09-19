@@ -78,7 +78,7 @@
 
 <div
   bind:this={panelElement}
-  class="ring-default fixed z-50 max-w-lg gap-2 rounded-2xl bg-white shadow-2xl
+  class="ring-default fixed z-50 w-[500px] gap-2 rounded-2xl bg-white shadow-2xl
          transition-shadow md:gap-3 lg:gap-4 dark:bg-stone-950
          {isDragging ? 'shadow-3xl cursor-grabbing' : 'shadow-xl'}"
   style="left: {$panelPosition.x}px; top: {$panelPosition.y}px;"

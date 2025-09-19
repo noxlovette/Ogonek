@@ -33,8 +33,6 @@ export const actions = {
       return fail(500, { attendee: false, dtend: false, dtstart: false });
     }
 
-    const { id } = await response.json();
-
-    return redirect(301, `event/${id}`);
+    return redirect(301, ".");
   },
 } satisfies Actions;

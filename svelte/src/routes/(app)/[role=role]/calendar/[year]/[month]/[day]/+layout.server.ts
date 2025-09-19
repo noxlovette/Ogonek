@@ -1,6 +1,6 @@
 import { routes } from "$lib/routes";
 import type { CalendarEvent } from "$lib/types/api/calendar";
-import type { PageServerLoad } from "./$types";
+import type { LayoutServerLoad } from "./$types";
 
 export const load = (async ({ fetch, params }) => {
   const date = new Date(
@@ -16,4 +16,4 @@ export const load = (async ({ fetch, params }) => {
     dayEvents,
     date,
   };
-}) satisfies PageServerLoad;
+}) satisfies LayoutServerLoad;
