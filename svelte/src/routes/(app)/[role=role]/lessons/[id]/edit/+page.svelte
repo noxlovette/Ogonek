@@ -64,8 +64,19 @@
       value={lesson.title}
       placeholder="Title"
     ></Input>
-    <Input name="topic" value={lesson.topic} placeholder="Topic"></Input>
-    <Input name="assignee" item={lesson} type="assignee" />
+    <Input
+      name="topic"
+      labelName="Тема"
+      value={lesson.topic}
+      placeholder="Topic"
+    ></Input>
+    <Input
+      name="assignee"
+      labelName="Назначено"
+      item={lesson}
+      type="assignee"
+      placeholder="С кем было занятие"
+    />
   </div>
 </form>
 

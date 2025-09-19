@@ -106,21 +106,32 @@
 
   <VStack>
     <Input
-      labelName="Deck Title"
+      labelName="Название колоды"
       name="title"
       placeholder="Give your deck a title"
       value={deck.title}
     />
     <Input
       name="description"
-      labelName="Tag 1; Tag2"
+      labelName="Описание"
       placeholder="What's this deck about?"
       value={deck.description}
     />
 
     {#if role === "t"}
-      <Input name="visibility" value={deck.visibility} type="visibility" />
-      <Input name="assignee" item={deck} type="assignee" />
+      <Input
+        name="visibility"
+        labelName="Видимость"
+        value={deck.visibility}
+        type="visibility"
+      />
+      <Input
+        name="assignee"
+        placeholder="Для кого колода"
+        labelName="Назначено"
+        item={deck}
+        type="assignee"
+      />
     {/if}
   </VStack>
 

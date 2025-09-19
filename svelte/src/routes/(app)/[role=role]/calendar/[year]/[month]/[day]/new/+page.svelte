@@ -54,6 +54,7 @@
         placeholder="Выберите ученика"
         type="attendee"
         name="attendee"
+        labelName="Ученик"
       />
     </HStack>
   </SectionBg>

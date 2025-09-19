@@ -60,19 +60,22 @@
   <VStack>
     <Input
       type="date"
-      name="Дата"
+      name="date"
+      labelName="Дата"
       onchange={handleInputChange}
       bind:value={localDateString}
     />
     <Input
       type="time"
-      name="Начало"
+      name="startTime"
+      labelName="Начало"
       onchange={handleInputChange}
       bind:value={dtstartLocalTimeString}
     />
     <Input
       type="time"
-      name="Конец"
+      name="endTime"
+      labelName="Конец"
       onchange={handleInputChange}
       bind:value={dtendLocalTimeString}
     />

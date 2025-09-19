@@ -103,6 +103,7 @@
           bind:disabled
           placeholder="Name"
           name="name"
+          labelName="Имя"
           value={$user.name}
         />
         <Input
@@ -110,6 +111,7 @@
           type="email"
           placeholder="Email"
           name="email"
+          labelName="Электронная почта"
           value={$user.email}
         />
       </HStack>
@@ -122,12 +124,14 @@
           bind:disabled
           placeholder="Your Telegram ID"
           name="telegramId"
+          labelName="Телеграм ID"
           value={$profile.telegramId}
         />
         <Input
           bind:disabled
           placeholder="The link for your lessons"
           name="videoCallUrl"
+          labelName="Ссылка на видеозвонок"
           value={$profile.videoCallUrl}
         />
       {/if}

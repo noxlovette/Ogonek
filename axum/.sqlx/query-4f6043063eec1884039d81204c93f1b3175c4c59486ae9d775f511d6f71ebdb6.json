@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n    DELETE\n      FROM calendars\n      WHERE owner_id = $2 AND id = $1\n      ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Text"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "4f6043063eec1884039d81204c93f1b3175c4c59486ae9d775f511d6f71ebdb6"
+}

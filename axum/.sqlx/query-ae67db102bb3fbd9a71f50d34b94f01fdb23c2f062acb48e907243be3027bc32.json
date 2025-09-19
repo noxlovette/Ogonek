@@ -1,0 +1,21 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        UPDATE calendar_events \n        SET\n            summary = COALESCE($2, summary),\n            description = COALESCE($3, description),\n            location = COALESCE($4, location),\n            dtstart = COALESCE($5, dtstart),\n            dtend = COALESCE($6, dtend),\n            timezone = COALESCE($7, timezone),\n            rrule = COALESCE($8, rrule),\n            updated_at = NOW()\n        WHERE id = $1 AND deleted_at IS NULL\n        ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Varchar",
+        "Text",
+        "Text",
+        "Timestamptz",
+        "Timestamptz",
+        "Varchar",
+        "Text"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "ae67db102bb3fbd9a71f50d34b94f01fdb23c2f062acb48e907243be3027bc32"
+}

@@ -32,7 +32,7 @@
     <div>
       <Input
         type="textarea"
-        labelName="front"
+        labelName="Лицевая сторона"
         name={`cards[${index}][front]`}
         bind:value={card.front}
         placeholder="Question or prompt"
@@ -42,7 +42,7 @@
     <!-- Back -->
     <div>
       <Input
-        labelName="back"
+        labelName="Обратная сторона"
         type="textarea"
         name={`cards[${index}][back]`}
         bind:value={card.back}

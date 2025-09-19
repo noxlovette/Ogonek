@@ -62,14 +62,25 @@
   <input type="hidden" name="markdown" value={markdown} />
 
   <div class="grid grid-cols-1 gap-5 md:grid-cols-4">
-    <Input name="title" value={task.title} placeholder="Title"></Input>
-    <Input name="assignee" type="assignee" item={task} />
+    <Input
+      name="title"
+      labelName="Название"
+      value={task.title}
+      placeholder="Title"
+    ></Input>
+    <Input
+      name="assignee"
+      labelName="Назначено"
+      type="assignee"
+      item={task}
+      placeholder="Для кого задание"
+    />
 
     <Input
       bind:value={dueDate}
       type="date"
       name="dueDate"
-      labelName="Due Date"
+      labelName="Срок выполнения"
       placeholder="Due Date"
     ></Input>
     <div class="mt-2 self-end">

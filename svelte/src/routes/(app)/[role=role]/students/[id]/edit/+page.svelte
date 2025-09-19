@@ -48,7 +48,7 @@
       value={student.studentTelegramId}
       name="studentTelegramId"
       placeholder="@username"
-      labelName="Telegram"
+      labelName="Телеграм"
     ></Input>
     <input type="hidden" name="id" value={student.id} />
     <input type="hidden" name="markdown" value={markdown} />

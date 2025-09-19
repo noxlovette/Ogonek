@@ -6,7 +6,7 @@
   import type { ChangeEventHandler, MouseEventHandler } from "svelte/elements";
 
   let {
-    placeholder = "Edit here",
+    placeholder = "Менять тут",
     name,
     labelName = name.charAt(0).toUpperCase() + name.slice(1),
     value = $bindable(),
