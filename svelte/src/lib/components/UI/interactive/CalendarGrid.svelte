@@ -19,11 +19,9 @@
     }
     return null;
   });
-  let currentMonth = $state(new Date().getMonth());
-  let currentYear = $state(new Date().getFullYear());
   const calendarData = $derived.by(() => {
-    const refDate = new Date(currentYear, currentMonth, 1);
-    return generateMonthDays(refDate, events, getLocaleFromCookie());
+    const now = new Date();
+    return generateMonthDays(now, events, getLocaleFromCookie());
   });
 
   const { monthDays, monthName, year } = $derived(calendarData);

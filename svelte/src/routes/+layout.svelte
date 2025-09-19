@@ -25,7 +25,7 @@
   use:keyEscape={goBack}
 >
   <div
-    class="caret-accent relative flex h-full min-h-[100dvh] w-full flex-col items-center rounded-b-2xl font-medium shadow-xl selection:bg-stone-200 dark:caret-stone-200 dark:selection:bg-stone-700"
+    class="caret-accent relative flex h-full min-h-[100dvh] w-full flex-col items-center rounded-b-2xl font-medium shadow-xl selection:bg-stone-200 dark:caret-stone-200 dark:shadow-stone-600/10 dark:selection:bg-stone-700"
   >
     <div
       id="main"

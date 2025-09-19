@@ -2,10 +2,13 @@ import { routes } from "$lib/routes";
 import type { CalendarEvent } from "$lib/types/api/calendar";
 import type { LayoutServerLoad } from "./$types";
 
-export const load = (async ({ fetch }) => {
-  const events: CalendarEvent[] = await fetch(routes.calendars.events()).then(
-    (res) => res.json(),
-  );
+export const load = (async ({ fetch, params }) => {
+  const events: CalendarEvent[] = await fetch(
+    routes.calendars.events_by_month(
+      params.year ?? "2025",
+      params.month ?? "5",
+    ),
+  ).then((res) => res.json());
 
   return { events };
 }) satisfies LayoutServerLoad;

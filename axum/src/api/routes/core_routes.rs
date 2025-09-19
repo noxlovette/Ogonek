@@ -1,4 +1,4 @@
-use crate::api::core::{self, list_events_day, state};
+use crate::api::core::{self, list_events_by_month, list_events_day, state};
 use crate::schema::AppState;
 use axum::Router;
 use axum::routing::{get, patch, post, put};
@@ -69,7 +69,8 @@ pub fn calendar_routes() -> Router<AppState> {
                 .patch(core::update_calendar)
                 .delete(core::delete_calendar),
         )
-        .route("/events", get(core::list_events).post(core::create_event))
+        .route("/events", post(core::create_event))
+        .route("/events/{year}/{month}", get(list_events_by_month))
         .route("/events/{day}", get(list_events_day))
         .route(
             "/events/{id}",

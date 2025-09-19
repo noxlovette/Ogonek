@@ -52,13 +52,28 @@
       <RecurrenceSelector rrule={event.rrule} />
     </HStack>
   </SectionBg>
-
+  <SectionBg>
+    <HStack>
+      <Input
+        showLabel={false}
+        placeholder="Выберите ученика"
+        value={student?.email}
+        type="attendee"
+        name="attendee"
+      />
+    </HStack>
+  </SectionBg>
   {#if event.location || showLocation}
     <SectionBg>
-      <Input name="location" labelName="Локация" value={event.location} />
+      <Input
+        placeholder="Или ссылка на видеозвонок"
+        name="location"
+        labelName="Локация"
+        value={event.location}
+      />
     </SectionBg>
   {:else}
-    <Optional bind:toggle={showLocation}>Добавить локацию</Optional>
+    <Optional bind:toggle={showLocation}>Добавить локацию / Ссылку</Optional>
   {/if}
   {#if event.description || showDescription}
     <SectionBg>
@@ -72,16 +87,4 @@
   {:else}
     <Optional bind:toggle={showDescription}>Добавить описание</Optional>
   {/if}
-
-  <SectionBg>
-    <HStack>
-      <Input
-        showLabel={false}
-        placeholder="Выберите ученика"
-        value={student?.email}
-        type="attendee"
-        name="attendee"
-      />
-    </HStack>
-  </SectionBg>
 </form>

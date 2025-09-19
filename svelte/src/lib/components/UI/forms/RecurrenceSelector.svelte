@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Label from "$lib/components/typography/Label.svelte";
+  import Caption1 from "$lib/components/typography/Caption1.svelte";
   import { parseRRuleDays, WEEKDAYS } from "$lib/utils";
   import VStack from "../VStack.svelte";
 
@@ -31,7 +31,7 @@
 </script>
 
 <div class="flex flex-col gap-1">
-  <Label>Повторения</Label>
+  <Caption1>Повторения</Caption1>
   <VStack>
     {#each WEEKDAYS as day}
       <button
@@ -40,7 +40,7 @@
           day.index,
         )
           ? 'border-accent bg-accent/10 border'
-          : 'bg-default ring-default hover:bg-stone-100'}"
+          : 'bg-default ring-default hover:bg-stone-100 dark:hover:bg-stone-800'}"
         title={day.full}
         onclick={() => toggleDay(day.index)}
         aria-pressed={isSelected(day.index)}

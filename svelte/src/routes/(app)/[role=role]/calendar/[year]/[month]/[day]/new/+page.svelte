@@ -13,6 +13,7 @@
     VStack,
   } from "$lib/components";
   import { enhance } from "$app/forms";
+  import Caption1 from "$lib/components/typography/Caption1.svelte";
 
   const { form, data } = $props();
 </script>
@@ -55,5 +56,11 @@
         name="attendee"
       />
     </HStack>
+  </SectionBg>
+  <SectionBg>
+    <Caption1>
+      Если вы настраивали ссылку на свою конференцию, она автоматически будет
+      присвоена этому событию.
+    </Caption1>
   </SectionBg>
 </form>

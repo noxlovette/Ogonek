@@ -9,7 +9,7 @@ use utoipa::OpenApi;
     delete_calendar,
     update_calendar,
     fetch_event,
-    list_events,
+    list_events_by_month,
     create_event,
     delete_event,
     update_event,

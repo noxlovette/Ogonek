@@ -58,7 +58,12 @@
 
   <input type="hidden" name="markdown" value={markdown} />
   <div class="grid grid-cols-1 gap-5 md:grid-cols-3">
-    <Input name="title" value={lesson.title} placeholder="Title"></Input>
+    <Input
+      name="title"
+      labelName="Название"
+      value={lesson.title}
+      placeholder="Title"
+    ></Input>
     <Input name="topic" value={lesson.topic} placeholder="Topic"></Input>
     <Input name="assignee" item={lesson} type="assignee" />
   </div>

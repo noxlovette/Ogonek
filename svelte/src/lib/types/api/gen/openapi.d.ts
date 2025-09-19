@@ -183,8 +183,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Get all events */
-        get: operations["list_events"];
+        get?: never;
         put?: never;
         /** Create a new event */
         post: operations["create_event"];
@@ -203,6 +202,23 @@ export interface paths {
         };
         /** Get all events for a given day */
         get: operations["list_events_day"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/calendars/calendars/events/{year}/{month}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get events for a specific month */
+        get: operations["list_events_by_month"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1879,40 +1895,6 @@ export interface operations {
             };
         };
     };
-    list_events: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Events retrieved successfully */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CalendarEvent"][];
-                };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Calendar not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
     create_event: {
         parameters: {
             query?: never;
@@ -1971,6 +1953,52 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["CalendarEvent"][];
                 };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Calendar not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    list_events_by_month: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Year (e.g., 2024) */
+                year: number;
+                /** @description Month (1-12) */
+                month: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Events retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CalendarEvent"][];
+                };
+            };
+            /** @description Invalid year or month */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Unauthorized */
             401: {

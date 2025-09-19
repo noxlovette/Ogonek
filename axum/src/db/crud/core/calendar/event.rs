@@ -53,10 +53,12 @@ pub async fn find_by_uid(db: &PgPool, event_uid: &str) -> Result<CalendarEvent, 
     Ok(event)
 }
 
-/// Finds all events for a calendar
-pub async fn find_by_calendar_id(
+/// Finds all events for a calendar within a specific month
+pub async fn find_by_calendar_id_and_month(
     db: &PgPool,
     calendar_id: &str,
+    year: i32,
+    month: u32,
 ) -> Result<Vec<CalendarEvent>, DbError> {
     let events = sqlx::query_as!(
         CalendarEvent,
@@ -91,14 +93,26 @@ pub async fn find_by_calendar_id(
             etag,
             deleted_at
         FROM calendar_events
-        WHERE calendar_id = $1 AND deleted_at IS NULL
+        WHERE calendar_id = $1 
+            AND deleted_at IS NULL
+            AND (
+                -- Events that start in the target month
+                (dtstart >= DATE_TRUNC('month', MAKE_DATE($2, $3, 1))
+                AND dtstart < DATE_TRUNC('month', MAKE_DATE($2, $3, 1)) + INTERVAL '1 month')
+                OR
+                -- Multi-day events that overlap with the target month
+                (dtend IS NOT NULL 
+                AND dtstart < DATE_TRUNC('month', MAKE_DATE($2, $3, 1)) + INTERVAL '1 month'
+                AND dtend >= DATE_TRUNC('month', MAKE_DATE($2, $3, 1)))
+            )
         ORDER BY dtstart ASC
         "#,
-        calendar_id
+        calendar_id,
+        year,
+        month as i32
     )
     .fetch_all(db)
     .await?;
-
     Ok(events)
 }
 pub async fn find_by_date(
@@ -188,6 +202,7 @@ pub async fn create(
     db: &PgPool,
     uid: &str,
     calendar_id: &str,
+    user_id: &str,
     create: CalendarEventCreate,
 ) -> Result<String, DbError> {
     let attendee_name = sqlx::query_scalar!(
@@ -199,13 +214,22 @@ pub async fn create(
     .fetch_one(db)
     .await?;
 
+    let video_call_url = sqlx::query_scalar!(
+        r#"
+        SELECT video_call_url FROM profile WHERE user_id = $1
+        "#,
+        user_id
+    )
+    .fetch_optional(db)
+    .await?;
+
     let id = sqlx::query_scalar!(
         r#"
         INSERT INTO calendar_events (
-            id, calendar_id, uid, summary, dtstart, dtend
+            id, calendar_id, uid, summary, dtstart, dtend, location
         )
         VALUES (
-            $1, $2, $3, $4, $5, $6
+            $1, $2, $3, $4, $5, $6, $7
         )
         RETURNING id
         "#,
@@ -215,6 +239,7 @@ pub async fn create(
         attendee_name,
         create.dtstart,
         create.dtend,
+        video_call_url.flatten()
     )
     .fetch_one(db)
     .await?;

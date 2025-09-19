@@ -1,7 +1,5 @@
 <script lang="ts">
-  import ActivityCard from "$lib/components/cards/ActivityCard.svelte";
   import Caption1 from "$lib/components/typography/Caption1.svelte";
-  import Label from "$lib/components/typography/Label.svelte";
   import { m } from "$lib/paraglide/messages";
   import { assigneeStore, studentStore, user } from "$lib/stores";
   import { Eye, EyeClosed } from "lucide-svelte";
@@ -10,7 +8,7 @@
   let {
     placeholder = "Edit here",
     name,
-    labelName = name,
+    labelName = name.charAt(0).toUpperCase() + name.slice(1),
     value = $bindable(),
     disabled = $bindable(),
     ref,
@@ -56,7 +54,7 @@
 
 <div class="relative space-y-1">
   {#if showLabel}
-    <Label>{labelName}</Label>
+    <Caption1>{labelName}</Caption1>
   {/if}
 
   {#if type === "text"}
