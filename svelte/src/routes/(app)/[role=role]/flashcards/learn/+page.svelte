@@ -101,7 +101,7 @@
   <div class="p-8">
     <div class="flex flex-col items-center space-y-6 py-10 text-center">
       <div
-        class="bg-accent mx-auto flex h-16 w-16 items-center justify-center rounded-full dark:bg-stone-800"
+        class="bg-accent ring-default mx-auto flex h-16 w-16 items-center justify-center rounded-full text-white dark:bg-stone-800"
       >
         <CheckCheck />
       </div>

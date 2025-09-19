@@ -3,7 +3,7 @@
   import { Merger, UniButton } from "$lib/components";
   import { X, ChevronLeft, ChevronRight } from "lucide-svelte";
   import { panelSide } from "$lib/stores";
-  import type { LayoutProps } from "./$types";
+  import type { LayoutProps } from "../../$types";
 
   let { data, children }: LayoutProps = $props();
 

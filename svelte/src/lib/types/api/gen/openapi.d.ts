@@ -176,7 +176,7 @@ export interface paths {
         patch: operations["update_attendee"];
         trace?: never;
     };
-    "/api/v1/calendars/calendars/events": {
+    "/api/v1/calendars/events": {
         parameters: {
             query?: never;
             header?: never;
@@ -193,7 +193,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/calendars/calendars/events/{day}": {
+    "/api/v1/calendars/events/day/{day}": {
         parameters: {
             query?: never;
             header?: never;
@@ -210,7 +210,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/calendars/calendars/events/{year}/{month}": {
+    "/api/v1/calendars/events/month/{year}/{month}": {
         parameters: {
             query?: never;
             header?: never;
@@ -227,7 +227,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/calendars/events/{id}": {
+    "/api/v1/calendars/events/{uid}": {
         parameters: {
             query?: never;
             header?: never;
@@ -840,7 +840,7 @@ export interface components {
         CalendarEventCreate: {
             attendee: string;
             /** Format: date-time */
-            dtend: string;
+            dtend?: string | null;
             /** Format: date-time */
             dtstart: string;
         };
@@ -2022,7 +2022,7 @@ export interface operations {
             header?: never;
             path: {
                 /** @description Event UID */
-                id: string;
+                uid: string;
             };
             cookie?: never;
         };
@@ -2059,7 +2059,7 @@ export interface operations {
             header?: never;
             path: {
                 /** @description Event ID */
-                id: string;
+                uid: string;
             };
             cookie?: never;
         };
@@ -2094,7 +2094,7 @@ export interface operations {
             header?: never;
             path: {
                 /** @description Event ID */
-                id: string;
+                uid: string;
             };
             cookie?: never;
         };

@@ -39,7 +39,10 @@ pub async fn get_or_create(db: &PgPool, user_id: &str) -> Result<Calendar, DbErr
 }
 
 /// Helper to find calendar id
-pub async fn get_calendar_id(db: &PgPool, user_id: &str) -> Result<String, DbError> {
+pub async fn get_calendar_id(
+    db: impl sqlx::Executor<'_, Database = sqlx::Postgres>,
+    user_id: &str,
+) -> Result<String, DbError> {
     let calendar_id = sqlx::query_scalar!(
         r#"
         SELECT id

@@ -129,7 +129,7 @@ async function handleTokenRefresh(event: RequestEvent) {
   await redis.set(refreshCacheKey, "true", "EX", 5);
 
   try {
-    const refreshRes = await event.fetch("/auth/refresh", {
+    const refreshRes = await event.fetch("/api/refresh", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

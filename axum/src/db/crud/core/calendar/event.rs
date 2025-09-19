@@ -1,7 +1,13 @@
 use sqlx::PgPool;
 
 use crate::{
-    db::error::DbError,
+    db::{
+        crud::core::{
+            account::{profile::get_call_url, user::get_name},
+            calendar::calendar::get_calendar_id,
+        },
+        error::DbError,
+    },
     types::{
         CalendarEvent, CalendarEventCreate, CalendarEventUpdate, EventClass, EventStatus,
         EventTransp,
@@ -200,30 +206,18 @@ pub async fn update(
 /// Creates a calendar event
 pub async fn create(
     db: &PgPool,
-    uid: &str,
-    calendar_id: &str,
     user_id: &str,
     create: CalendarEventCreate,
-) -> Result<String, DbError> {
-    let attendee_name = sqlx::query_scalar!(
-        r#"
-        SELECT name FROM "user" WHERE id = $1
-        "#,
-        create.attendee
-    )
-    .fetch_one(db)
-    .await?;
+) -> Result<(), DbError> {
+    let mut tx = db.begin().await?;
 
-    let video_call_url = sqlx::query_scalar!(
-        r#"
-        SELECT video_call_url FROM profile WHERE user_id = $1
-        "#,
-        user_id
-    )
-    .fetch_optional(db)
-    .await?;
+    let calendar_id = get_calendar_id(&mut *tx, user_id).await?;
 
-    let id = sqlx::query_scalar!(
+    let attendee_name = get_name(&mut *tx, user_id).await?;
+
+    let video_call_url = get_call_url(&mut *tx, &user_id).await?;
+
+    sqlx::query!(
         r#"
         INSERT INTO calendar_events (
             id, calendar_id, uid, summary, dtstart, dtend, location
@@ -231,18 +225,18 @@ pub async fn create(
         VALUES (
             $1, $2, $3, $4, $5, $6, $7
         )
-        RETURNING id
         "#,
         nanoid::nanoid!(),
         calendar_id,
-        uid,
+        nanoid::nanoid!(),
         attendee_name,
         create.dtstart,
         create.dtend,
-        video_call_url.flatten()
+        video_call_url
     )
-    .fetch_one(db)
+    .execute(&mut *tx)
     .await?;
 
-    Ok(id)
+    tx.commit().await?;
+    Ok(())
 }

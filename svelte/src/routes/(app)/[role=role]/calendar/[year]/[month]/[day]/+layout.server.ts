@@ -10,7 +10,7 @@ export const load = (async ({ fetch, params }) => {
   );
 
   const dayEvents: CalendarEvent[] = await fetch(
-    routes.calendars.events_day(date.toISOString()),
+    routes.calendars.events_day(date.toISOString().split("T")[0]),
   ).then((res) => res.json());
   return {
     dayEvents,

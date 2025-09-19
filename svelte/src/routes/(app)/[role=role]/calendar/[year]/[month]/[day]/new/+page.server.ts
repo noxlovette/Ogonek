@@ -24,12 +24,15 @@ export const actions = {
       return fail(400, { ...fieldErrors });
     }
 
-    const response = await fetch(routes.calendars.events(), {
+    const response = await fetch(routes.calendars.new_event(), {
       body: JSON.stringify(data.data),
       method: "POST",
     });
 
     if (!response.ok) {
+      const errorData = await response.text();
+
+      logger.error({ errorData });
       return fail(500, { attendee: false, dtend: false, dtstart: false });
     }
 

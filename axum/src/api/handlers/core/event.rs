@@ -14,10 +14,10 @@ use axum::http::StatusCode;
 /// Get a single event by UID
 #[utoipa::path(
     get,
-    path = "/events/{id}",
+    path = "/events/{uid}",
     tag = CALENDAR_TAG,
     params(
-        ("id" = String, Path, description = "Event UID")
+        ("uid" = String, Path, description = "Event UID")
     ),
     responses(
         (status = 200, description = "Event retrieved successfully", body = EventWithAttendees),
@@ -27,17 +27,17 @@ use axum::http::StatusCode;
 )]
 pub async fn fetch_event(
     State(state): State<AppState>,
-    Path(id): Path<String>,
+    Path(uid): Path<String>,
     _claims: Claims,
 ) -> Result<Json<EventWithAttendees>, APIError> {
-    let event = find_by_uid(&state.db, &id).await?;
-    let attendees = find_by_event_id(&state.db, &id).await?;
+    let event = find_by_uid(&state.db, &uid).await?;
+    let attendees = find_by_event_id(&state.db, &uid).await?;
     Ok(Json(EventWithAttendees { event, attendees }))
 }
 /// Get events for a specific month
 #[utoipa::path(
     get,
-    path = "/calendars/events/month/{year}/{month}",
+    path = "/events/month/{year}/{month}",
     tag = CALENDAR_TAG,
     params(
         ("year" = i32, Path, description = "Year (e.g., 2024)"),
@@ -70,7 +70,7 @@ pub async fn list_events_by_month(
 /// Get all events for a given day
 #[utoipa::path(
     get,
-    path = "/calendars/events/day/{day}",
+    path = "/events/day/{day}",
     tag = CALENDAR_TAG,
     params(
         ("day" = String, Path, description = "Day")
@@ -95,7 +95,7 @@ pub async fn list_events_day(
 /// Create a new event
 #[utoipa::path(
     post,
-    path = "/calendars/events",
+    path = "/events",
     tag = CALENDAR_TAG,
     request_body = CalendarEventCreate,
     responses(
@@ -107,21 +107,24 @@ pub async fn list_events_day(
 pub async fn create_event(
     State(state): State<AppState>,
     claims: Claims,
-    Json(payload): Json<CalendarEventCreate>,
-) -> Result<Json<String>, APIError> {
-    let uid = nanoid::nanoid!();
-    let calendar_id = get_calendar_id(&state.db, &claims.sub).await?;
-    let id = create(&state.db, &uid, &calendar_id, &claims.sub, payload).await?;
-    Ok(Json(id))
+    Json(mut payload): Json<CalendarEventCreate>,
+) -> Result<StatusCode, APIError> {
+    if payload.dtend.is_none() {
+        payload.dtend = Some(payload.dtstart + chrono::Duration::hours(1));
+    }
+
+    create(&state.db, &claims.sub, payload).await?;
+
+    Ok(StatusCode::NO_CONTENT)
 }
 
 /// Delete an event
 #[utoipa::path(
     delete,
-    path = "/events/{id}",
+    path = "/events/{uid}",
     tag = CALENDAR_TAG,
     params(
-        ("id" = String, Path, description = "Event ID")
+        ("uid" = String, Path, description = "Event ID")
     ),
     responses(
         (status = 204, description = "Event deleted successfully"),
@@ -131,20 +134,20 @@ pub async fn create_event(
 )]
 pub async fn delete_event(
     State(state): State<AppState>,
-    Path(id): Path<String>,
+    Path(uid): Path<String>,
     _claims: Claims,
 ) -> Result<StatusCode, APIError> {
-    delete(&state.db, &id).await?;
+    delete(&state.db, &uid).await?;
     Ok(StatusCode::NO_CONTENT)
 }
 
 /// Update an event
 #[utoipa::path(
     patch,
-    path = "/events/{id}",
+    path = "/events/{uid}",
     tag = CALENDAR_TAG,
     params(
-        ("id" = String, Path, description = "Event ID")
+        ("uid" = String, Path, description = "Event ID")
     ),
     request_body = CalendarEventUpdate,
     responses(
@@ -155,10 +158,10 @@ pub async fn delete_event(
 )]
 pub async fn update_event(
     State(state): State<AppState>,
-    Path(id): Path<String>,
+    Path(uid): Path<String>,
     _claims: Claims,
     Json(payload): Json<CalendarEventUpdate>,
 ) -> Result<StatusCode, APIError> {
-    update(&state.db, &id, &payload).await?;
+    update(&state.db, &uid, &payload).await?;
     Ok(StatusCode::NO_CONTENT)
 }
