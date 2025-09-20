@@ -12,15 +12,15 @@ use crate::{
         error::DbError,
     },
     types::{
-        CalendarEvent, CalendarEventCreate, CalendarEventUpdate, EventAttendeeCreate, EventClass,
-        EventStatus, EventTransp,
+        EventAttendeeCreate, EventClass, EventCreate, EventFull, EventSmall, EventStatus,
+        EventTransp, EventUpdate,
     },
 };
 
 /// Finds a calendar event by id
-pub async fn find_by_id(db: &PgPool, event_id: &str) -> Result<CalendarEvent, DbError> {
+pub async fn find_by_id(db: &PgPool, event_id: &str) -> Result<EventFull, DbError> {
     let event = sqlx::query_as!(
-        CalendarEvent,
+        EventFull,
         r#"
         SELECT 
             id,
@@ -65,42 +65,24 @@ pub async fn find_by_id(db: &PgPool, event_id: &str) -> Result<CalendarEvent, Db
 /// Finds all events for a calendar within a specific month
 pub async fn find_by_calendar_id_and_month(
     db: &PgPool,
-    calendar_id: &str,
+    user_id: &str,
     year: i32,
     month: u32,
-) -> Result<Vec<CalendarEvent>, DbError> {
+) -> Result<Vec<EventSmall>, DbError> {
+    let mut tx = db.begin().await?;
+
+    let calendar_id = get_calendar_id(&mut *tx, &user_id).await?;
     let events = sqlx::query_as!(
-        CalendarEvent,
+        EventSmall,
         r#"
         SELECT 
             id,
             uid,
-            created_at,
-            updated_at,
-            calendar_id,
             summary,
-            description,
             location,
-            url,
             dtstart,
             dtend,
-            all_day,
-            timezone,
-            rrule,
-            rdate,
-            exdate,
-            recurrence_id,
-            status as "status: EventStatus",
-            class as "class: EventClass",
-            transp as "transp: EventTransp",
-            priority,
-            categories,
-            organiser_email,
-            organiser_name,
-            sequence,
-            dtstamp,
-            etag,
-            deleted_at
+            rrule
         FROM calendar_events
         WHERE calendar_id = $1 
             AND deleted_at IS NULL
@@ -120,28 +102,22 @@ pub async fn find_by_calendar_id_and_month(
         year,
         month as i32
     )
-    .fetch_all(db)
+    .fetch_all(&mut *tx)
     .await?;
     Ok(events)
 }
-pub async fn find_by_date(
-    db: &PgPool,
-    day: chrono::NaiveDate,
-) -> Result<Vec<CalendarEvent>, DbError> {
+pub async fn find_by_date(db: &PgPool, day: chrono::NaiveDate) -> Result<Vec<EventSmall>, DbError> {
     let events = sqlx::query_as!(
-        CalendarEvent,
+        EventSmall,
         r#"
         SELECT 
-            id, uid, created_at, updated_at, calendar_id,
-            summary, description, location, url,
-            dtstart, dtend, all_day, timezone,
-            rrule, rdate, exdate, recurrence_id,
-            status as "status: EventStatus",
-            class as "class: EventClass", 
-            transp as "transp: EventTransp",
-            priority, categories,
-            organiser_email, organiser_name,
-            sequence, dtstamp, etag, deleted_at
+            id,
+            uid,
+            summary,
+            location,
+            dtstart,
+            dtend,
+            rrule
         FROM calendar_events
         WHERE deleted_at IS NULL
         AND (
@@ -173,7 +149,7 @@ pub async fn delete(db: &PgPool, id: &str) -> Result<(), DbError> {
 
     Ok(())
 }
-pub async fn update(db: &PgPool, id: &str, update: &CalendarEventUpdate) -> Result<(), DbError> {
+pub async fn update(db: &PgPool, id: &str, update: &EventUpdate) -> Result<(), DbError> {
     let mut tx = db.begin().await?;
 
     let mut attendee_name: Option<String> = None;
@@ -240,14 +216,9 @@ pub async fn update(db: &PgPool, id: &str, update: &CalendarEventUpdate) -> Resu
 }
 
 /// Creates a calendar event
-pub async fn create(
-    db: &PgPool,
-    user_id: &str,
-    create: CalendarEventCreate,
-) -> Result<(), DbError> {
-    let calendar_id = get_calendar_id(db, user_id).await?;
-
+pub async fn create(db: &PgPool, user_id: &str, create: EventCreate) -> Result<(), DbError> {
     let mut tx = db.begin().await?;
+    let calendar_id = get_calendar_id(&mut *tx, user_id).await?;
 
     let attendee_name = get_name(&mut *tx, &create.attendee).await?;
 

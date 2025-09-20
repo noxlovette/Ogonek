@@ -7,9 +7,29 @@ use sqlx::prelude::Type;
 use utoipa::ToSchema;
 use validator::Validate;
 
+pub struct CalendarQuery {
+    pub start: String,
+    pub end: String,
+}
+
 #[derive(Validate, ToSchema, Serialize)]
 #[serde(rename_all = "camelCase")]
-pub struct CalendarEvent {
+pub struct EventSmall {
+    pub id: String,
+    pub uid: String,
+    #[serde(alias = "title")]
+    pub summary: String,
+    pub location: Option<String>,
+    #[serde(with = "datetime_serialization")]
+    pub dtstart: DateTime<Utc>,
+    #[serde(with = "datetime_serialization::option")]
+    pub dtend: Option<DateTime<Utc>>,
+    pub rrule: Option<String>,
+}
+
+#[derive(Validate, ToSchema, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct EventFull {
     pub id: String,
     pub uid: String,
     #[serde(skip_serializing)]
@@ -99,7 +119,7 @@ pub enum EventTransp {
 
 #[derive(Validate, ToSchema, Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub struct CalendarEventCreate {
+pub struct EventCreate {
     pub attendee: String,
     #[serde(with = "datetime_serialization")]
     pub dtstart: DateTime<Utc>,
@@ -109,7 +129,7 @@ pub struct CalendarEventCreate {
 
 #[derive(Validate, ToSchema, Deserialize, Default)]
 #[serde(rename_all = "camelCase")]
-pub struct CalendarEventUpdate {
+pub struct EventUpdate {
     pub description: Option<String>,
     pub location: Option<String>,
     #[serde(with = "datetime_serialization::option")]
@@ -155,6 +175,6 @@ impl fmt::Display for EventTransp {
 #[serde(rename_all = "camelCase")]
 pub struct EventWithAttendees {
     #[serde(flatten)]
-    pub event: CalendarEvent,
+    pub event: EventFull,
     pub attendees: Vec<EventAttendee>,
 }

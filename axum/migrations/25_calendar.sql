@@ -45,7 +45,7 @@ CREATE TABLE calendar_events (
     rrule TEXT, -- RFC 5545 RRULE string
     rdate TEXT[], -- Additional recurrence dates
     exdate TEXT[], -- Exception dates
-    recurrence_id TIMESTAMPTZ, -- For recurring event instances
+    recurrence_id TIMESTAMPTZ, -- For recurring event instances. Contains the DateTime of this instance
     
     -- Status and classification
     status VARCHAR(20) NOT NULL DEFAULT 'confirmed' CHECK (status IN ('tentative', 'confirmed', 'cancelled')),
@@ -95,9 +95,11 @@ CREATE TABLE event_alarms (
     action VARCHAR(20) DEFAULT 'display' CHECK (action IN ('audio', 'display', 'email', 'procedure')),
     description TEXT,
     summary VARCHAR(255),
-    attendee_email VARCHAR(255), -- For email alarms
-    attendee_telegram_id VARCHAR, -- For TG notifications
+    attendee_email TEXT[], -- For email alarms
+    attendee_telegram_id TEXT[], -- For TG notifications
+    attendee_apns TEXT[], -- Apple Notifications
     repeat_count INTEGER NOT NULL DEFAULT 0,
+    repeat_interval INTERVAL,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 

@@ -7,7 +7,7 @@ use crate::db::crud::core::calendar::event::{
 };
 use crate::db::crud::core::calendar::event_attendee::find_by_event_id;
 use crate::schema::AppState;
-use crate::types::{CalendarEvent, CalendarEventCreate, CalendarEventUpdate, EventWithAttendees};
+use crate::types::{EventCreate, EventSmall, EventUpdate, EventWithAttendees};
 use axum::extract::{Json, Path, State};
 use axum::http::StatusCode;
 
@@ -44,7 +44,7 @@ pub async fn fetch_event(
         ("month" = u32, Path, description = "Month (1-12)")
     ),
     responses(
-        (status = 200, description = "Events retrieved successfully", body = Vec<CalendarEvent>),
+        (status = 200, description = "Events retrieved successfully", body = Vec<EventSmall>),
         (status = 400, description = "Invalid year or month"),
         (status = 404, description = "Calendar not found"),
         (status = 401, description = "Unauthorized")
@@ -54,7 +54,7 @@ pub async fn list_events_by_month(
     Path((year, month)): Path<(i32, u32)>,
     State(state): State<AppState>,
     claims: Claims,
-) -> Result<Json<Vec<CalendarEvent>>, APIError> {
+) -> Result<Json<Vec<EventSmall>>, APIError> {
     if month < 1 || month > 12 {
         return Err(APIError::BadRequest(
             "Month must be between 1 and 12".to_string(),
@@ -75,7 +75,7 @@ pub async fn list_events_by_month(
         ("day" = String, Path, description = "Day")
     ),
     responses(
-        (status = 200, description = "Events retrieved successfully", body = Vec<CalendarEvent>),
+        (status = 200, description = "Events retrieved successfully", body = Vec<EventSmall>),
         (status = 404, description = "Calendar not found"),
         (status = 401, description = "Unauthorized")
     )
@@ -84,7 +84,7 @@ pub async fn list_events_day(
     State(state): State<AppState>,
     Path(day): Path<String>,
     _claims: Claims,
-) -> Result<Json<Vec<CalendarEvent>>, APIError> {
+) -> Result<Json<Vec<EventSmall>>, APIError> {
     let naive_date = chrono::NaiveDate::parse_from_str(&day, "%Y-%m-%d")
         .map_err(|_| APIError::BadRequest("Invalid Date Format".to_string()))?;
     let events = find_by_date(&state.db, naive_date).await?;
@@ -96,7 +96,7 @@ pub async fn list_events_day(
     post,
     path = "/events",
     tag = CALENDAR_TAG,
-    request_body = CalendarEventCreate,
+    request_body = EventCreate,
     responses(
         (status = 201, description = "Event created successfully", body = String),
         (status = 400, description = "Bad request"),
@@ -106,7 +106,7 @@ pub async fn list_events_day(
 pub async fn create_event(
     State(state): State<AppState>,
     claims: Claims,
-    Json(mut payload): Json<CalendarEventCreate>,
+    Json(mut payload): Json<EventCreate>,
 ) -> Result<StatusCode, APIError> {
     if payload.dtend.is_none() {
         payload.dtend = Some(payload.dtstart + chrono::Duration::hours(1));
@@ -148,7 +148,7 @@ pub async fn delete_event(
     params(
         ("id" = String, Path, description = "Event UID")
     ),
-    request_body = CalendarEventUpdate,
+    request_body = EventUpdate,
     responses(
         (status = 204, description = "Event updated successfully"),
         (status = 404, description = "Event not found"),
@@ -159,7 +159,7 @@ pub async fn update_event(
     State(state): State<AppState>,
     Path(id): Path<String>,
     _claims: Claims,
-    Json(payload): Json<CalendarEventUpdate>,
+    Json(payload): Json<EventUpdate>,
 ) -> Result<StatusCode, APIError> {
     update(&state.db, &id, &payload).await?;
     Ok(StatusCode::NO_CONTENT)
