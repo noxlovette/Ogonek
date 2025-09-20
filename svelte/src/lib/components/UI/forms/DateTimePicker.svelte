@@ -36,22 +36,27 @@
       new Date(),
     );
 
-    const dtendLocalDateTime = parse(
-      dtendLocalDateTimeString,
-      "yyyy-MM-dd HH:mm",
-      new Date(),
-    );
+    if (dtend) {
+      const dtendLocalDateTime = parse(
+        dtendLocalDateTimeString,
+        "yyyy-MM-dd HH:mm",
+        new Date(),
+      );
+
+      const dtendISO = fromZonedTime(
+        dtendLocalDateTime,
+        userTimezone,
+      ).toISOString();
+      dtend = dtendISO;
+    }
 
     const dtstartISO = fromZonedTime(localDateTime, userTimezone).toISOString();
 
-    const dtendISO = fromZonedTime(
-      dtendLocalDateTime,
-      userTimezone,
-    ).toISOString();
-
     dtstart = dtstartISO;
-    dtend = dtendISO;
   }
+
+  $inspect(dtstart);
+  $inspect(dtend);
 </script>
 
 <HStack>
