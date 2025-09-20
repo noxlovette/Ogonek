@@ -1,3 +1,4 @@
+use chrono::{DateTime, Utc};
 use sqlx::PgPool;
 
 use crate::{
@@ -12,7 +13,7 @@ use crate::{
         error::DbError,
     },
     types::{
-        EventAttendeeCreate, EventClass, EventCreate, EventFull, EventSmall, EventStatus,
+        EventAttendeeCreate, EventClass, EventCreate, EventDB, EventFull, EventSmall, EventStatus,
         EventTransp, EventUpdate,
     },
 };
@@ -63,17 +64,17 @@ pub async fn find_by_id(db: &PgPool, event_id: &str) -> Result<EventFull, DbErro
 }
 
 /// Finds all events for a calendar within a specific month
-pub async fn find_by_calendar_id_and_month(
+pub async fn find_by_calendar_id_in_scope(
     db: &PgPool,
     user_id: &str,
-    year: i32,
-    month: u32,
-) -> Result<Vec<EventSmall>, DbError> {
+    start: DateTime<Utc>,
+    end: DateTime<Utc>,
+) -> Result<Vec<EventDB>, DbError> {
     let mut tx = db.begin().await?;
 
     let calendar_id = get_calendar_id(&mut *tx, &user_id).await?;
     let events = sqlx::query_as!(
-        EventSmall,
+        EventDB,
         r#"
         SELECT 
             id,
@@ -82,33 +83,31 @@ pub async fn find_by_calendar_id_and_month(
             location,
             dtstart,
             dtend,
+            recurrence_id,
             rrule
         FROM calendar_events
         WHERE calendar_id = $1 
             AND deleted_at IS NULL
             AND (
-                -- Events that start in the target month
-                (dtstart >= DATE_TRUNC('month', MAKE_DATE($2, $3, 1))
-                AND dtstart < DATE_TRUNC('month', MAKE_DATE($2, $3, 1)) + INTERVAL '1 month')
-                OR
-                -- Multi-day events that overlap with the target month
-                (dtend IS NOT NULL 
-                AND dtstart < DATE_TRUNC('month', MAKE_DATE($2, $3, 1)) + INTERVAL '1 month'
-                AND dtend >= DATE_TRUNC('month', MAKE_DATE($2, $3, 1)))
+                (rrule IS NOT NULL AND recurrence_id IS NULL) -- Master events
+            OR (dtstart BETWEEN $2 AND $3) -- Single events in range
+            OR (recurrence_id IS NOT NULL) -- All exceptions (we'll filter later)
             )
         ORDER BY dtstart ASC
         "#,
         calendar_id,
-        year,
-        month as i32
+        start,
+        end
     )
     .fetch_all(&mut *tx)
     .await?;
+
+    tx.commit().await?;
     Ok(events)
 }
-pub async fn find_by_date(db: &PgPool, day: chrono::NaiveDate) -> Result<Vec<EventSmall>, DbError> {
+pub async fn find_by_date(db: &PgPool, day: chrono::NaiveDate) -> Result<Vec<EventDB>, DbError> {
     let events = sqlx::query_as!(
-        EventSmall,
+        EventDB,
         r#"
         SELECT 
             id,
@@ -117,6 +116,7 @@ pub async fn find_by_date(db: &PgPool, day: chrono::NaiveDate) -> Result<Vec<Eve
             location,
             dtstart,
             dtend,
+            recurrence_id,
             rrule
         FROM calendar_events
         WHERE deleted_at IS NULL

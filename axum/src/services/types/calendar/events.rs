@@ -7,9 +7,10 @@ use sqlx::prelude::Type;
 use utoipa::ToSchema;
 use validator::Validate;
 
+#[derive(Debug, Deserialize, ToSchema)]
 pub struct CalendarQuery {
-    pub start: String,
-    pub end: String,
+    pub start: DateTime<Utc>,
+    pub end: DateTime<Utc>,
 }
 
 #[derive(Validate, ToSchema, Serialize)]
@@ -17,14 +18,31 @@ pub struct CalendarQuery {
 pub struct EventSmall {
     pub id: String,
     pub uid: String,
-    #[serde(alias = "title")]
+    pub master_id: Option<String>,
+    #[serde(rename(serialize = "title"))]
     pub summary: String,
     pub location: Option<String>,
     #[serde(with = "datetime_serialization")]
     pub dtstart: DateTime<Utc>,
     #[serde(with = "datetime_serialization::option")]
+    #[serde(rename(serialize = "end"))]
+    pub dtend: Option<DateTime<Utc>>,
+    pub is_recurring: bool,
+    pub is_exception: bool,
+}
+
+/// Internal Struct used to query the DB     
+#[derive(Validate, ToSchema, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct EventDB {
+    pub id: String,
+    pub uid: String,
+    pub summary: String,
+    pub location: Option<String>,
+    pub dtstart: DateTime<Utc>,
     pub dtend: Option<DateTime<Utc>>,
     pub rrule: Option<String>,
+    pub recurrence_id: Option<DateTime<Utc>>,
 }
 
 #[derive(Validate, ToSchema, Serialize)]

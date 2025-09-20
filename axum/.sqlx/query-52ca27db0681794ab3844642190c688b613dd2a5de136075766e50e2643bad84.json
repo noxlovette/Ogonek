@@ -1,0 +1,64 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        SELECT \n            id,\n            uid,\n            summary,\n            location,\n            dtstart,\n            dtend,\n            recurrence_id,\n            rrule\n        FROM calendar_events\n        WHERE deleted_at IS NULL\n        AND (\n            dtstart::date = $1 OR \n            dtend::date = $1 OR\n            (dtstart::date <= $1 AND dtend::date >= $1)\n        )\n        ORDER BY dtstart ASC\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 1,
+        "name": "uid",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 2,
+        "name": "summary",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 3,
+        "name": "location",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 4,
+        "name": "dtstart",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 5,
+        "name": "dtend",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 6,
+        "name": "recurrence_id",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 7,
+        "name": "rrule",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Date"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      true,
+      false,
+      true,
+      true,
+      true
+    ]
+  },
+  "hash": "52ca27db0681794ab3844642190c688b613dd2a5de136075766e50e2643bad84"
+}

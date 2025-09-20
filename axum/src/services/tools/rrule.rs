@@ -1,5 +1,4 @@
 use chrono::{DateTime, Datelike, Duration, Utc, Weekday};
-use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone)]
 pub struct RRule {
@@ -85,7 +84,7 @@ impl RRule {
 
         let freq = freq.ok_or("FREQ is required")?;
 
-        Ok(Some(SimpleRRule {
+        Ok(Some(RRule {
             freq,
             interval,
             by_day,
