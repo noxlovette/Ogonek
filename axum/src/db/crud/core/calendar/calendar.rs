@@ -2,12 +2,12 @@ use sqlx::PgPool;
 
 use crate::{
     db::error::DbError,
-    types::{Calendar, CalendarUpdate},
+    types::{CalendarFull, CalendarUpdate},
 };
 /// Finds the calendar by user id
-pub async fn get_or_create(db: &PgPool, user_id: &str) -> Result<Calendar, DbError> {
+pub async fn get_or_create(db: &PgPool, user_id: &str) -> Result<CalendarFull, DbError> {
     let calendar = sqlx::query_as!(
-        Calendar,
+        CalendarFull,
         r#"
         INSERT INTO calendars (id, name, owner_id)
         VALUES ($1, $2, $3)
@@ -18,7 +18,7 @@ pub async fn get_or_create(db: &PgPool, user_id: &str) -> Result<Calendar, DbErr
         RETURNING *
         "#,
         nanoid::nanoid!(),
-        "My Calendar",
+        "My CalendarFull",
         user_id
     )
     .fetch_one(db)
@@ -39,7 +39,7 @@ pub async fn read_calendar_id(
         RETURNING id
         "#,
         nanoid::nanoid!(),
-        "My Calendar",
+        "My CalendarFull",
         user_id
     )
     .fetch_one(db)

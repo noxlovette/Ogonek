@@ -3,7 +3,7 @@ use crate::api::error::APIError;
 use crate::auth::Claims;
 use crate::db::crud::core::calendar::calendar::{delete, get_or_create, update};
 use crate::schema::AppState;
-use crate::types::{Calendar, CalendarUpdate};
+use crate::types::{CalendarFull, CalendarUpdate};
 use axum::extract::{Json, Path, State};
 use axum::http::StatusCode;
 
@@ -13,7 +13,7 @@ use axum::http::StatusCode;
     path = "",
     tag = CALENDAR_TAG,
     responses(
-        (status = 200, description = "Calendar retrieved successfully", body = Calendar),
+        (status = 200, description = "Calendar retrieved successfully", body = CalendarFull),
         (status = 404, description = "Calendar not found"),
         (status = 401, description = "Unauthorized")
     )
@@ -21,7 +21,7 @@ use axum::http::StatusCode;
 pub async fn fetch_calendar(
     State(state): State<AppState>,
     claims: Claims,
-) -> Result<Json<Calendar>, APIError> {
+) -> Result<Json<CalendarFull>, APIError> {
     let calendar = get_or_create(&state.db, &claims.sub).await?;
     Ok(Json(calendar))
 }

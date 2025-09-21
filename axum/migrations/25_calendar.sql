@@ -36,7 +36,7 @@ CREATE TABLE calendars (
    -- CalDAV 
     caldav_url VARCHAR(500), -- CalDAV collection URL
     sync_token VARCHAR(255), -- For CalDAV sync
-    sync_state VARCHAR(20) DEFAULT 'active' CHECK (sync_state IN ('active', 'syncing', 'error')),
+    sync_state  VARCHAR(20) NOT NULL DEFAULT 'active' CHECK (sync_state IN ('active', 'syncing', 'error')),
     last_sync_at TIMESTAMPTZ,
     sync_error TEXT,
     -- Constraint: one calendar per user (can drop later for multical support)

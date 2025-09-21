@@ -2,12 +2,17 @@ use serde::{Deserialize, Serialize};
 use sqlx::prelude::Type;
 use std::fmt;
 use utoipa::ToSchema;
+#[derive(Deserialize, ToSchema)]
+#[serde(rename = "kebab-case")]
+pub enum DeleteScope {
+    ThisOnly,
+    ThisAndFuture,
+}
 
 #[derive(Deserialize, ToSchema)]
+#[serde(rename = "kebab-case")]
 pub enum EditScope {
-    #[serde(rename = "this")]
     ThisOnly,
-    #[serde(rename = "future")]
     ThisAndFuture,
 }
 // Event Status ENUM

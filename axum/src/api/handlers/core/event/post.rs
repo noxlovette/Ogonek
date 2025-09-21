@@ -23,8 +23,8 @@ pub async fn create_event(
     claims: Claims,
     Json(mut payload): Json<EventCreate>,
 ) -> Result<StatusCode, APIError> {
-    if payload.dtend.is_none() {
-        payload.dtend = Some(payload.dtstart + chrono::Duration::hours(1));
+    if payload.dtend_time.is_none() {
+        payload.dtend_time = Some(payload.dtstart_time + chrono::Duration::hours(1));
     }
 
     create(&state.db, &claims.sub, payload).await?;

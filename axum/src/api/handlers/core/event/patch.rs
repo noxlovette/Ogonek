@@ -3,7 +3,7 @@ use crate::api::error::APIError;
 use crate::auth::Claims;
 use crate::db::crud::core::calendar::event::update;
 use crate::schema::AppState;
-use crate::types::EventUpdate;
+use crate::types::{EventUpdate, EventUpdateRequest};
 use axum::extract::{Json, Path, State};
 use axum::http::StatusCode;
 
@@ -26,8 +26,8 @@ pub async fn update_event(
     State(state): State<AppState>,
     Path(id): Path<String>,
     _claims: Claims,
-    Json(payload): Json<EventUpdate>,
+    Json(payload): Json<EventUpdateRequest>,
 ) -> Result<StatusCode, APIError> {
-    update(&state.db, &id, &payload).await?;
+    update(&state.db, id, payload).await?;
     Ok(StatusCode::NO_CONTENT)
 }

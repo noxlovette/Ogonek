@@ -6,17 +6,17 @@ use crate::{
         crud::core::{
             account::user::{get_email, get_name},
             calendar::{
-                event::{create_exception, read_one},
+                event::{create_exception, create_master, read_one},
                 event_attendee,
             },
         },
         error::DbError,
     },
-    services::calendar::extract_id_and_occurence,
+    services::calendar::{extract_id_and_occurence, remove_until_from_rrule},
     types::{EditScope, EventAttendeeCreate, EventFull, EventUpdate, EventUpdateRequest},
 };
 
-/// EDIT ONE EVENT. ANY EVENT
+/// EDIT ONE EVENT
 pub async fn edit_single(
     db: &mut sqlx::Transaction<'_, sqlx::Postgres>,
     id: &str,
@@ -98,9 +98,10 @@ async fn update_attendee(
 }
 
 /// The super handler for recurring or single events
-async fn update_event(db: &PgPool, req: EventUpdateRequest) -> Result<(), DbError> {
+/// The id param is gonna be the master/regular event or a recurrence instance if there is an id_timestamp in it
+pub async fn update(db: &PgPool, event_id: String, req: EventUpdateRequest) -> Result<(), DbError> {
     // Extract the goddamn id and occurence to spot a virtual/real event
-    let (master_id, occurrence_date) = extract_id_and_occurence(req.event_id);
+    let (master_id, occurrence_date) = extract_id_and_occurence(event_id);
 
     let mut tx = db.begin().await?;
 
@@ -157,11 +158,20 @@ async fn edit_this_and_future(
     updates: &EventUpdate,
     tx: &mut sqlx::Transaction<'_, sqlx::Postgres>,
 ) -> Result<(), DbError> {
-    // Parse the RRULE to understand the recurrence pattern
+    let new_rrule = truncate_master(tx, &master, &occurrence_date).await?;
+    create_master(tx, master, updates, &new_rrule).await?;
+
+    Ok(())
+}
+
+pub(crate) async fn truncate_master(
+    tx: &mut sqlx::Transaction<'_, sqlx::Postgres>,
+    master: &EventFull,
+    occurrence_date: &DateTime<Utc>,
+) -> Result<String, DbError> {
     let rrule_str = master.rrule.as_ref().ok_or(DbError::NotRecurring)?;
 
-    // 1. Truncate original master event with UNTIL
-    let until_date = occurrence_date - Duration::seconds(1);
+    let until_date = *occurrence_date - Duration::seconds(1);
     let truncated_rrule = if rrule_str.contains("UNTIL=") {
         // Replace existing UNTIL
         let re = regex::Regex::new(r"UNTIL=[^;]*").unwrap();
@@ -182,10 +192,8 @@ async fn edit_this_and_future(
     sqlx::query!(
         r#"
         UPDATE calendar_events 
-        SET rrule = $1, 
-            updated_at = NOW(),
-            sequence = sequence + 1,
-            etag = encode(sha256(random()::text::bytea), 'hex')
+        SET rrule = $1,
+            sequence = sequence + 1
         WHERE id = $2
         "#,
         truncated_rrule,
@@ -193,91 +201,5 @@ async fn edit_this_and_future(
     )
     .execute(&mut **tx)
     .await?;
-
-    // 2. Create new master for this and future occurrences
-    let new_start = updates.dtstart_time.unwrap_or(occurrence_date);
-    let duration = master
-        .dtend_time
-        .map(|end| end - master.dtstart_time)
-        .unwrap_or(Duration::hours(1));
-    let new_end = updates.dtend_time.or_else(|| Some(new_start + duration));
-
-    // Clean the RRULE - remove UNTIL since this is a new open-ended series
-    let new_rrule = remove_until_from_rrule(rrule_str);
-
-    sqlx::query!(
-        r#"
-        INSERT INTO calendar_events (
-            id, uid, calendar_id, summary, description, location,
-            dtstart_time, dtend_time, all_day, timezone, rrule,
-            status, organiser_email, organiser_name, sequence
-        ) VALUES (
-            $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, 1
-        )
-        "#,
-        nanoid::nanoid!(),
-        nanoid::nanoid!(), // New UID for the split series
-        master.calendar_id,
-        updates.summary.as_ref().unwrap_or(&master.summary),
-        master.description.as_ref(),
-        updates.location.as_ref().or(master.location.as_ref()),
-        new_start,
-        new_end,
-        master.all_day,
-        master.timezone.as_ref(),
-        new_rrule,
-        master.status.as_ref(),
-        master.organiser_email.as_ref(),
-        master.organiser_name.as_ref()
-    )
-    .execute(&mut **tx)
-    .await?;
-
-    Ok(())
-}
-
-async fn edit_all_events(
-    master: &EventFull,
-    updates: &EventUpdate,
-    tx: &mut sqlx::Transaction<'_, sqlx::Postgres>,
-) -> Result<(), DbError> {
-    // Update the master event - all instances inherit these changes
-    sqlx::query!(
-        r#"
-        UPDATE calendar_events 
-        SET summary = COALESCE($1, summary),
-            location = COALESCE($2, location),
-            updated_at = NOW(),
-            sequence = sequence + 1,
-            etag = encode(sha256(random()::text::bytea), 'hex')
-        WHERE id = $3
-        "#,
-        updates.summary,
-        updates.location,
-        master.id
-    )
-    .execute(&mut **tx)
-    .await?;
-
-    // Also update any existing exceptions to maintain consistency
-    if updates.summary.is_some() || updates.location.is_some() {
-        sqlx::query!(
-            r#"
-            UPDATE calendar_events 
-            SET summary = COALESCE($1, summary),
-                location = COALESCE($2, location),
-                updated_at = NOW(),
-                sequence = sequence + 1,
-                etag = encode(sha256(random()::text::bytea), 'hex')
-            WHERE uid = $3 AND recurrence_id IS NOT NULL
-            "#,
-            updates.summary,
-            updates.location,
-            master.uid
-        )
-        .execute(&mut **tx)
-        .await?;
-    }
-
-    Ok(())
+    Ok(remove_until_from_rrule(&rrule_str))
 }

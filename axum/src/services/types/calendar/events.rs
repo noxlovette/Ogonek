@@ -1,5 +1,5 @@
 use crate::types::{
-    EditScope, EventAttendee, EventClass, EventStatus, EventTransp, RecurrenceRange,
+    DeleteScope, EditScope, EventAttendee, EventClass, EventStatus, EventTransp, RecurrenceRange,
     datetime_serialization,
 };
 use chrono::{DateTime, NaiveDate, Utc};
@@ -18,7 +18,6 @@ pub struct CalendarQuery {
 pub struct EventSmall {
     #[serde(flatten)]
     pub db_data: EventDB,
-    pub master_id: Option<String>,
     pub is_recurring: bool,
     pub is_exception: bool,
 }
@@ -67,7 +66,7 @@ pub struct EventFull {
     #[serde(with = "datetime_serialization::option")]
     pub dtend_time: Option<DateTime<Utc>>,
     pub dtend_tz: Option<String>,
-    pub dtstart_tz: String,
+    pub dtstart_tz: Option<String>,
     pub dtstart_date: Option<NaiveDate>,
     pub dtend_date: Option<NaiveDate>,
     pub all_day: bool,
@@ -98,8 +97,6 @@ pub struct EventFull {
 
     #[serde(skip_serializing)]
     pub sequence: i32,
-    #[serde(skip_serializing)]
-    pub dtstamp: DateTime<Utc>,
 
     #[serde(skip_serializing)]
     #[validate(length(equal = 64))]
@@ -126,11 +123,16 @@ pub struct EventCreate {
 
 #[derive(Validate, ToSchema, Deserialize)]
 #[serde(rename_all = "camelCase")]
+pub struct EventDelete {
+    pub occurrence_date: DateTime<Utc>,
+    pub scope: DeleteScope,
+}
+
+#[derive(Validate, ToSchema, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct EventUpdateRequest {
     pub edit_scope: EditScope,
     pub uid: String,
-    /// This is gonna be the master/regular event or a recurrence instance if there is an id_timestamp in it
-    pub event_id: String,
     #[serde(flatten)]
     pub updates: EventUpdate,
 }

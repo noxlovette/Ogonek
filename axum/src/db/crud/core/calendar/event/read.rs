@@ -47,7 +47,6 @@ pub async fn read_one(
             priority,
             categories,
             sequence,
-            dtstamp,
             etag,
             deleted_at,
             caldav_href,
@@ -140,33 +139,40 @@ pub async fn read_all(
                         .unwrap_or(false);
 
                     if !has_exception {
-                        // Generate virtual instance
+                        // Virtual instances
                         calendar_events.push(EventSmall {
-                            id: format!("{}_{}", master.id, occurrence.timestamp()),
-                            uid: master.uid.clone(),
-                            master_id: Some(master.id.clone()),
-                            summary: master.summary.clone(),
-                            dtstart_time: occurrence,
-                            location: master.location.clone(),
-                            // Calculate dtend_time based on duration
-                            dtend_time: master
-                                .dtend_time
-                                .map(|end| occurrence + (end - master.dtstart_time)),
+                            db_data: EventDB {
+                                id: format!("{}_{}", master.id, occurrence.timestamp()),
+                                uid: master.uid.clone(),
+                                rrule: master.rrule.clone(),
+                                recurrence_id: None,
+                                summary: master.summary.clone(),
+                                dtstart_time: occurrence,
+                                location: master.location.clone(),
+                                // Calculate dtend_time based on duration
+                                dtend_time: master
+                                    .dtend_time
+                                    .map(|end| occurrence + (end - master.dtstart_time)),
+                            },
                             is_recurring: true,
                             is_exception: false,
                         });
                     }
                 }
             }
+            // Just a regular guy
             None => {
                 calendar_events.push(EventSmall {
-                    id: master.id.clone(),
-                    uid: master.uid.clone(),
-                    master_id: None,
-                    summary: master.summary.clone(),
-                    location: master.location.clone(),
-                    dtstart_time: master.dtstart_time,
-                    dtend_time: master.dtend_time,
+                    db_data: EventDB {
+                        id: master.id.clone(),
+                        uid: master.uid.clone(),
+                        recurrence_id: None,
+                        rrule: None,
+                        summary: master.summary.clone(),
+                        location: master.location.clone(),
+                        dtstart_time: master.dtstart_time,
+                        dtend_time: master.dtend_time,
+                    },
                     is_recurring: false,
                     is_exception: false,
                 });
@@ -179,13 +185,16 @@ pub async fn read_all(
         for exception in exception_list {
             if exception.dtstart_time >= start && exception.dtstart_time <= end {
                 calendar_events.push(EventSmall {
-                    id: exception.id.clone(),
-                    uid: uid.clone(),
-                    master_id: None,
-                    summary: exception.summary.clone(),
-                    location: exception.location.clone(),
-                    dtstart_time: exception.dtstart_time,
-                    dtend_time: exception.dtend_time,
+                    db_data: EventDB {
+                        id: exception.id.clone(),
+                        uid: uid.clone(),
+                        recurrence_id: exception.recurrence_id,
+                        rrule: None,
+                        summary: exception.summary.clone(),
+                        location: exception.location.clone(),
+                        dtstart_time: exception.dtstart_time,
+                        dtend_time: exception.dtend_time,
+                    },
                     is_recurring: true,
                     is_exception: true,
                 });

@@ -3,6 +3,8 @@ use crate::api::error::APIError;
 use crate::auth::Claims;
 use crate::db::crud::core::calendar::event::delete;
 use crate::schema::AppState;
+use crate::types::EventDelete;
+use axum::Json;
 use axum::extract::{Path, State};
 use axum::http::StatusCode;
 
@@ -24,7 +26,8 @@ pub async fn delete_event(
     State(state): State<AppState>,
     Path(id): Path<String>,
     _claims: Claims,
+    Json(payload): Json<EventDelete>,
 ) -> Result<StatusCode, APIError> {
-    delete(&state.db, &id).await?;
+    delete(&state.db, id, payload).await?;
     Ok(StatusCode::NO_CONTENT)
 }

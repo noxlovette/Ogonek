@@ -5,7 +5,7 @@ use validator::Validate;
 
 #[derive(Validate, ToSchema, Serialize)]
 #[serde(rename_all = "camelCase")]
-pub struct Calendar {
+pub struct CalendarFull {
     pub id: String,
     #[serde(alias = "title")]
     pub name: String,
@@ -22,6 +22,13 @@ pub struct Calendar {
     pub caldav_url: Option<String>,
     #[serde(skip_serializing)]
     pub sync_token: Option<String>,
+    #[serde(skip_serializing)]
+    // Should be enumed
+    pub sync_state: String,
+    #[serde(skip_serializing)]
+    pub last_sync_at: Option<DateTime<Utc>>,
+    #[serde(skip_serializing)]
+    pub sync_error: Option<String>,
 
     #[serde(skip_serializing)]
     pub created_at: DateTime<Utc>,

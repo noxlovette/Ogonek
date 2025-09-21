@@ -101,3 +101,47 @@ pub async fn create_exception(
 
     Ok(())
 }
+
+pub async fn create_master(
+    tx: &mut sqlx::Transaction<'_, sqlx::Postgres>,
+    master: &EventFull,
+    update: &EventUpdate,
+    new_rrule: &str,
+) -> Result<(), DbError> {
+    sqlx::query!(
+        r#"
+        INSERT INTO calendar_events (
+                id, 
+                uid, 
+                calendar_id, 
+                summary, 
+                description, 
+                location,
+                dtstart_time, 
+                dtend_time, 
+                all_day,
+                dtstart_date,
+                dtend_date ,
+                rrule
+            ) VALUES (
+                $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12
+            )
+        "#,
+        nanoid::nanoid!(),
+        nanoid::nanoid!(),
+        master.calendar_id,
+        master.summary,
+        master.description,
+        update.location.as_ref().or(master.location.as_ref()),
+        update.dtstart_time,
+        update.dtend_time,
+        master.all_day,
+        master.dtstart_date.as_ref(),
+        master.dtend_date.as_ref(),
+        new_rrule
+    )
+    .execute(&mut **tx)
+    .await?;
+
+    Ok(())
+}
