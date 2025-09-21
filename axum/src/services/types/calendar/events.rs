@@ -16,17 +16,9 @@ pub struct CalendarQuery {
 #[derive(Validate, ToSchema, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct EventSmall {
-    pub id: String,
-    pub uid: String,
+    #[serde(flatten)]
+    pub db_data: EventDB,
     pub master_id: Option<String>,
-    #[serde(rename(serialize = "title"))]
-    pub summary: String,
-    pub location: Option<String>,
-    #[serde(with = "datetime_serialization")]
-    pub dtstart: DateTime<Utc>,
-    #[serde(with = "datetime_serialization::option")]
-    #[serde(rename(serialize = "end"))]
-    pub dtend: Option<DateTime<Utc>>,
     pub is_recurring: bool,
     pub is_exception: bool,
 }
@@ -37,10 +29,13 @@ pub struct EventSmall {
 pub struct EventDB {
     pub id: String,
     pub uid: String,
+    #[serde(rename(serialize = "title"))]
     pub summary: String,
     pub location: Option<String>,
-    pub dtstart: DateTime<Utc>,
-    pub dtend: Option<DateTime<Utc>>,
+    #[serde(with = "datetime_serialization")]
+    pub dtstart_time: DateTime<Utc>,
+    #[serde(with = "datetime_serialization::option")]
+    pub dtend_time: Option<DateTime<Utc>>,
     pub rrule: Option<String>,
     pub recurrence_id: Option<DateTime<Utc>>,
 }
@@ -68,9 +63,9 @@ pub struct EventFull {
 
     // Time data
     #[serde(with = "datetime_serialization::option")]
-    pub dtstart: Option<DateTime<Utc>>,
+    pub dtstart_time: Option<DateTime<Utc>>,
     #[serde(with = "datetime_serialization::option")]
-    pub dtend: Option<DateTime<Utc>>,
+    pub dtend_time: Option<DateTime<Utc>>,
     pub dtend_tz: Option<String>,
     pub dtstart_tz: String,
     pub dtstart_date: Option<NaiveDate>,
@@ -124,15 +119,14 @@ pub struct EventFull {
 pub struct EventCreate {
     pub attendee: String,
     #[serde(with = "datetime_serialization")]
-    pub dtstart: DateTime<Utc>,
+    pub dtstart_time: DateTime<Utc>,
     #[serde(with = "datetime_serialization::option")]
-    pub dtend: Option<DateTime<Utc>>,
+    pub dtend_time: Option<DateTime<Utc>>,
 }
 
 #[derive(Validate, ToSchema, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct EventUpdateRequest {
-    pub attendee: Option<String>,
     pub edit_scope: EditScope,
     pub uid: String,
     /// This is gonna be the master/regular event or a recurrence instance if there is an id_timestamp in it
@@ -144,11 +138,12 @@ pub struct EventUpdateRequest {
 #[serde(rename_all = "camelCase")]
 pub struct EventUpdate {
     pub description: Option<String>,
+    pub attendee: Option<String>,
     pub location: Option<String>,
     #[serde(with = "datetime_serialization::option")]
-    pub dtstart: Option<DateTime<Utc>>,
+    pub dtstart_time: Option<DateTime<Utc>>,
     #[serde(with = "datetime_serialization::option")]
-    pub dtend: Option<DateTime<Utc>>,
+    pub dtend_time: Option<DateTime<Utc>>,
     pub dtstart_tz: Option<String>,
     pub dtend_tz: Option<String>,
     pub rrule: Option<String>,

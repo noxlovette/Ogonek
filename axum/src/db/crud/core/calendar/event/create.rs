@@ -1,3 +1,4 @@
+use chrono::{DateTime, Utc};
 use sqlx::PgPool;
 
 use crate::{
@@ -11,7 +12,7 @@ use crate::{
         },
         error::DbError,
     },
-    types::{EventAttendeeCreate, EventCreate},
+    types::{EventAttendeeCreate, EventCreate, EventFull, EventUpdate},
 };
 
 /// Creates a master calendar event
@@ -26,7 +27,7 @@ pub async fn create(db: &PgPool, user_id: &str, create: EventCreate) -> Result<(
     let id = sqlx::query_scalar!(
         r#"
         INSERT INTO calendar_events (
-            id, calendar_id, uid, summary, dtstart, dtend, location
+            id, calendar_id, uid, summary, dtstart_time, dtend_time, location
         )
         VALUES (
             $1, $2, $3, $4, $5, $6, $7
@@ -37,8 +38,8 @@ pub async fn create(db: &PgPool, user_id: &str, create: EventCreate) -> Result<(
         calendar_id,
         nanoid::nanoid!(),
         attendee_name,
-        create.dtstart,
-        create.dtend,
+        create.dtstart_time,
+        create.dtend_time,
         video_call_url,
     )
     .fetch_one(&mut *tx)
@@ -54,5 +55,49 @@ pub async fn create(db: &PgPool, user_id: &str, create: EventCreate) -> Result<(
     event_attendee::create(&mut *tx, &id, &create.attendee, attendee_payload).await?;
 
     tx.commit().await?;
+    Ok(())
+}
+
+pub async fn create_exception(
+    tx: &mut sqlx::Transaction<'_, sqlx::Postgres>,
+    master: &EventFull,
+    update: &EventUpdate,
+    occurrence_date: &DateTime<Utc>,
+) -> Result<(), DbError> {
+    sqlx::query!(
+        r#"
+            INSERT INTO calendar_events (
+                id, 
+                uid, 
+                calendar_id, 
+                summary, 
+                description, 
+                location,
+                dtstart_time, 
+                dtend_time, 
+                all_day,
+                dtstart_date,
+                dtend_date, 
+                recurrence_id
+            ) VALUES (
+                $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12
+            )
+            "#,
+        nanoid::nanoid!(),
+        master.uid,
+        master.calendar_id,
+        master.summary,
+        master.description,
+        update.location.as_ref().or(master.location.as_ref()),
+        update.dtstart_time,
+        update.dtend_time,
+        master.all_day,
+        master.dtstart_date.as_ref(),
+        master.dtend_date.as_ref(),
+        occurrence_date
+    )
+    .execute(&mut **tx)
+    .await?;
+
     Ok(())
 }

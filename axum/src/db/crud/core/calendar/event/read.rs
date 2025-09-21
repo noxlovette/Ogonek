@@ -29,8 +29,8 @@ pub async fn read_one(
             description,
             location,
             url,
-            dtstart,
-            dtend,
+            dtstart_time,
+            dtend_time,
             dtend_tz,
             dtstart_tz,
             dtstart_date,
@@ -81,8 +81,8 @@ async fn read_all_master(
             uid,
             summary,
             location,
-            dtstart,
-            dtend,
+            dtstart_time,
+            dtend_time,
             recurrence_id,
             rrule
         FROM calendar_events
@@ -90,10 +90,10 @@ async fn read_all_master(
             AND deleted_at IS NULL
             AND (
                 (rrule IS NOT NULL AND recurrence_id IS NULL) -- Master events
-            OR (dtstart BETWEEN $2 AND $3) -- Single events in range
+            OR (dtstart_time BETWEEN $2 AND $3) -- Single events in range
             OR (recurrence_id IS NOT NULL) -- All exceptions (we'll filter later)
             )
-        ORDER BY dtstart ASC
+        ORDER BY dtstart_time ASC
         "#,
         calendar_id,
         start,
@@ -129,7 +129,7 @@ pub async fn read_all(
     for master in masters {
         match RRule::parse(master.rrule.clone())? {
             Some(rrule) => {
-                let occurrences = rrule.generate_occurrences(master.dtstart, start, end);
+                let occurrences = rrule.generate_occurrences(master.dtstart_time, start, end);
 
                 // that's why the map
                 for occurrence in occurrences {
@@ -146,10 +146,12 @@ pub async fn read_all(
                             uid: master.uid.clone(),
                             master_id: Some(master.id.clone()),
                             summary: master.summary.clone(),
-                            dtstart: occurrence,
+                            dtstart_time: occurrence,
                             location: master.location.clone(),
-                            // Calculate dtend based on duration
-                            dtend: master.dtend.map(|end| occurrence + (end - master.dtstart)),
+                            // Calculate dtend_time based on duration
+                            dtend_time: master
+                                .dtend_time
+                                .map(|end| occurrence + (end - master.dtstart_time)),
                             is_recurring: true,
                             is_exception: false,
                         });
@@ -163,8 +165,8 @@ pub async fn read_all(
                     master_id: None,
                     summary: master.summary.clone(),
                     location: master.location.clone(),
-                    dtstart: master.dtstart,
-                    dtend: master.dtend,
+                    dtstart_time: master.dtstart_time,
+                    dtend_time: master.dtend_time,
                     is_recurring: false,
                     is_exception: false,
                 });
@@ -175,15 +177,15 @@ pub async fn read_all(
     // Add exception instances
     for (uid, exception_list) in exceptions {
         for exception in exception_list {
-            if exception.dtstart >= start && exception.dtstart <= end {
+            if exception.dtstart_time >= start && exception.dtstart_time <= end {
                 calendar_events.push(EventSmall {
                     id: exception.id.clone(),
                     uid: uid.clone(),
                     master_id: None,
                     summary: exception.summary.clone(),
                     location: exception.location.clone(),
-                    dtstart: exception.dtstart,
-                    dtend: exception.dtend,
+                    dtstart_time: exception.dtstart_time,
+                    dtend_time: exception.dtend_time,
                     is_recurring: true,
                     is_exception: true,
                 });

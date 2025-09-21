@@ -48,8 +48,7 @@ CREATE TABLE calendar_events (
     -- Primary identification
     id VARCHAR(21) PRIMARY KEY,
     uid VARCHAR(255) NOT NULL, -- iCalendar UID (unique per calendar)
-    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+   
     
     -- Calendar association
     calendar_id VARCHAR(21) NOT NULL REFERENCES calendars(id) ON DELETE CASCADE,
@@ -118,15 +117,15 @@ CREATE TABLE calendar_events (
     
     -- Metadata
     sequence INTEGER NOT NULL DEFAULT 0, -- Version control for updates
-    dtstamp TIMESTAMPTZ NOT NULL DEFAULT NOW(), -- Last modification timestamp
-    
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    -- Soft delete support
+    deleted_at TIMESTAMPTZ,
     -- CalDAV/WebDAV support
     etag VARCHAR(64) NOT NULL DEFAULT replace(gen_random_uuid()::text, '-', ''),
     caldav_href VARCHAR(500), -- The actual CalDAV resource URL
     content_type VARCHAR(50) DEFAULT 'text/calendar',
     
-    -- Soft delete support
-    deleted_at TIMESTAMPTZ,
 
     -- Unique constraint for uid and calendar_id
     UNIQUE(uid, calendar_id)
