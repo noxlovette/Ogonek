@@ -35,23 +35,38 @@
       },
       {
         "ordinal": 6,
-        "name": "caldav_url",
-        "type_info": "Varchar"
-      },
-      {
-        "ordinal": 7,
-        "name": "sync_token",
-        "type_info": "Varchar"
-      },
-      {
-        "ordinal": 8,
         "name": "created_at",
         "type_info": "Timestamptz"
       },
       {
-        "ordinal": 9,
+        "ordinal": 7,
         "name": "updated_at",
         "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 8,
+        "name": "caldav_url",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 9,
+        "name": "sync_token",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 10,
+        "name": "sync_state",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 11,
+        "name": "last_sync_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 12,
+        "name": "sync_error",
+        "type_info": "Text"
       }
     ],
     "parameters": {
@@ -68,10 +83,13 @@
       false,
       false,
       false,
+      false,
+      false,
       true,
       true,
       false,
-      false
+      true,
+      true
     ]
   },
   "hash": "1e7baeb3e9caa769965ff3fd46929367a2c012e25057b1f481f8d1592c521504"

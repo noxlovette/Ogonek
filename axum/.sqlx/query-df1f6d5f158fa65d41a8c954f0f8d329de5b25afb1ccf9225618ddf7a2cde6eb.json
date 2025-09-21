@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        UPDATE calendar_events \n        SET rrule = $1,\n            sequence = sequence + 1\n        WHERE id = $2\n        ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Text"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "df1f6d5f158fa65d41a8c954f0f8d329de5b25afb1ccf9225618ddf7a2cde6eb"
+}

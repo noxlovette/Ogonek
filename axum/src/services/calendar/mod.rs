@@ -1,5 +1,8 @@
 use chrono::{DateTime, TimeZone, Utc};
 
+pub mod rrule;
+pub use rrule::*;
+
 const NANOID: usize = 21;
 
 /// A way to handle virtual occurences
@@ -20,21 +23,15 @@ pub fn extract_id_and_occurence(event_id: String) -> (String, Option<DateTime<Ut
     (event_id, None)
 }
 
-pub mod rrule;
-pub use rrule::*;
-/// Remove the UNTIL part from an RRULE string according to RFC 5545.
-///
-/// Example:
-/// ```
-/// let rrule = "FREQ=DAILY;UNTIL=20231231T235959Z;INTERVAL=2";
-/// assert_eq!(remove_until_from_rrule(rrule), "FREQ=DAILY;INTERVAL=2");
-/// ```
+/// Remove the UNTIL part from an RRULE string according to RFC 5545
 pub fn remove_until_from_rrule(rrule: &str) -> String {
-    regex::Regex::new(r";?UNTIL=[^;]*")
-        .unwrap()
-        .replace(rrule, "")
-        .to_string()
+    rrule
+        .split(";")
+        .filter(|part| !part.starts_with("UNTIL="))
+        .collect::<Vec<_>>()
+        .join(";")
 }
+
 #[cfg(test)]
 mod tests {
     use super::*;

@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "\n        SELECT \n            id,\n            uid,\n            summary,\n            location,\n            dtstart,\n            dtend,\n            recurrence_id,\n            rrule\n        FROM calendar_events\n        WHERE calendar_id = $1 \n            AND deleted_at IS NULL\n            AND (\n                (rrule IS NOT NULL AND recurrence_id IS NULL) -- Master events\n            OR (dtstart BETWEEN $2 AND $3) -- Single events in range\n            OR (recurrence_id IS NOT NULL) -- All exceptions (we'll filter later)\n            )\n        ORDER BY dtstart ASC\n        ",
+  "query": "\n        SELECT \n            id,\n            uid,\n            summary,\n            location,\n            dtstart_time,\n            dtend_time,\n            recurrence_id,\n            rrule\n        FROM calendar_events\n        WHERE calendar_id = $1 \n            AND deleted_at IS NULL\n            AND (\n                (rrule IS NOT NULL AND recurrence_id IS NULL) -- Master events\n            OR (dtstart_time BETWEEN $2 AND $3) -- Single events in range\n            OR (recurrence_id IS NOT NULL) -- All exceptions (we'll filter later)\n            )\n        ORDER BY dtstart_time ASC\n        ",
   "describe": {
     "columns": [
       {
@@ -25,12 +25,12 @@
       },
       {
         "ordinal": 4,
-        "name": "dtstart",
+        "name": "dtstart_time",
         "type_info": "Timestamptz"
       },
       {
         "ordinal": 5,
-        "name": "dtend",
+        "name": "dtend_time",
         "type_info": "Timestamptz"
       },
       {
@@ -62,5 +62,5 @@
       true
     ]
   },
-  "hash": "2442e6b9f56fad0c22c938a54d3c67e00916df167b7cdbc16dd5ad7482df3a35"
+  "hash": "def527f73830ba86aa73dee53017cd5e8a336576a36f8d860e3373976dba3422"
 }
