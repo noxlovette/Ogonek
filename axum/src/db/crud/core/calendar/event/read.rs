@@ -12,7 +12,10 @@ use crate::{
 };
 
 /// Reads a calendar event by id
-pub async fn read_one(db: &PgPool, event_id: &str) -> Result<EventFull, DbError> {
+pub async fn read_one(
+    db: impl sqlx::Executor<'_, Database = sqlx::Postgres>,
+    event_id: &str,
+) -> Result<EventFull, DbError> {
     let event = sqlx::query_as!(
         EventFull,
         r#"
@@ -38,8 +41,6 @@ pub async fn read_one(db: &PgPool, event_id: &str) -> Result<EventFull, DbError>
             exdate,
             recurrence_id,
             recurrence_range AS "recurrence_range!: RecurrenceRange",
-            is_master_event,
-            master_event_id,
             status AS "status!: EventStatus",
             class AS "class!: EventClass", 
             transp AS "transp!: EventTransp",
@@ -125,33 +126,48 @@ pub async fn read_all(
 
     let mut calendar_events: Vec<EventSmall> = Vec::new();
 
-    // Process recurring events
     for master in masters {
-        if let Some(rrule) = RRule::parse(master.rrule.clone())? {
-            let occurrences = rrule.generate_occurrences(master.dtstart, start, end);
+        match RRule::parse(master.rrule.clone())? {
+            Some(rrule) => {
+                let occurrences = rrule.generate_occurrences(master.dtstart, start, end);
 
-            for occurrence in occurrences {
-                // Check if this occurrence has an exception
-                let has_exception = exceptions
-                    .get(&master.uid)
-                    .map(|excs| excs.iter().any(|exc| exc.recurrence_id == Some(occurrence)))
-                    .unwrap_or(false);
+                // that's why the map
+                for occurrence in occurrences {
+                    // Check if this occurrence has an exception
+                    let has_exception = exceptions
+                        .get(&master.uid)
+                        .map(|excs| excs.iter().any(|exc| exc.recurrence_id == Some(occurrence)))
+                        .unwrap_or(false);
 
-                if !has_exception {
-                    // Generate virtual instance
-                    calendar_events.push(EventSmall {
-                        id: format!("{}_{}", master.id, occurrence.timestamp()),
-                        uid: master.uid.clone(),
-                        master_id: Some(master.id.clone()),
-                        summary: master.summary.clone(),
-                        dtstart: occurrence,
-                        location: master.location.clone(),
-                        // Calculate dtend based on duration
-                        dtend: master.dtend.map(|end| occurrence + (end - master.dtstart)),
-                        is_recurring: true,
-                        is_exception: false,
-                    });
+                    if !has_exception {
+                        // Generate virtual instance
+                        calendar_events.push(EventSmall {
+                            id: format!("{}_{}", master.id, occurrence.timestamp()),
+                            uid: master.uid.clone(),
+                            master_id: Some(master.id.clone()),
+                            summary: master.summary.clone(),
+                            dtstart: occurrence,
+                            location: master.location.clone(),
+                            // Calculate dtend based on duration
+                            dtend: master.dtend.map(|end| occurrence + (end - master.dtstart)),
+                            is_recurring: true,
+                            is_exception: false,
+                        });
+                    }
                 }
+            }
+            None => {
+                calendar_events.push(EventSmall {
+                    id: master.id.clone(),
+                    uid: master.uid.clone(),
+                    master_id: None,
+                    summary: master.summary.clone(),
+                    location: master.location.clone(),
+                    dtstart: master.dtstart,
+                    dtend: master.dtend,
+                    is_recurring: false,
+                    is_exception: false,
+                });
             }
         }
     }
@@ -163,7 +179,7 @@ pub async fn read_all(
                 calendar_events.push(EventSmall {
                     id: exception.id.clone(),
                     uid: uid.clone(),
-                    master_id: None, // Could find master if needed
+                    master_id: None,
                     summary: exception.summary.clone(),
                     location: exception.location.clone(),
                     dtstart: exception.dtstart,
@@ -173,25 +189,6 @@ pub async fn read_all(
                 });
             }
         }
-    }
-
-    // Add single events
-    let single_events = events
-        .iter()
-        .filter(|e| e.rrule.is_none() && e.recurrence_id.is_none());
-
-    for event in single_events {
-        calendar_events.push(EventSmall {
-            id: event.id.clone(),
-            uid: event.uid.clone(),
-            master_id: None,
-            summary: event.summary.clone(),
-            location: event.location.clone(),
-            dtstart: event.dtstart,
-            dtend: event.dtend,
-            is_recurring: false,
-            is_exception: false,
-        });
     }
 
     Ok(calendar_events)

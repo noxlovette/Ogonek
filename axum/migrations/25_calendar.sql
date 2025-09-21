@@ -50,8 +50,6 @@ CREATE TABLE calendar_events (
     uid VARCHAR(255) NOT NULL, -- iCalendar UID (unique per calendar)
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    master_event_id VARCHAR(21) REFERENCES calendar_events(id), -- Points to the master recurring event
-    is_master_event BOOLEAN NOT NULL DEFAULT TRUE,
     
     -- Calendar association
     calendar_id VARCHAR(21) NOT NULL REFERENCES calendars(id) ON DELETE CASCADE,
@@ -63,24 +61,50 @@ CREATE TABLE calendar_events (
     url TEXT, -- Associated URL
     
     -- Temporal information
-    dtstart TIMESTAMPTZ NOT NULL, -- Start date/time
-    dtend TIMESTAMPTZ, -- End date/time (null for all-day events)
+    dtstart_time TIMESTAMPTZ NOT NULL, -- Start date/time
+    dtend_time TIMESTAMPTZ, -- End date/time (null for all-day events)
     dtstart_date DATE,
     dtend_date DATE,
     all_day BOOLEAN NOT NULL DEFAULT FALSE,
-    dtstart_tz VARCHAR NOT NULL REFERENCES timezones(tzid),
-    dtend_tz VARCHAR NOT NULL REFERENCES timezones(tzid),
+    -- both can be null for all-day events
+    dtstart_tz VARCHAR  REFERENCES timezones(tzid),
+    dtend_tz VARCHAR  REFERENCES timezones(tzid),
+    duration_iso VARCHAR(50),
 
+    -- CRITICAL CONSTRAINTS
     CHECK (
-        (all_day AND dtstart_date IS NOT NULL AND dtstart IS NULL) OR
-        (NOT all_day AND dtstart IS NOT NULL AND dtstart_date IS NULL)
+        -- All-day events use date fields only
+        (all_day = TRUE AND 
+         dtstart_date IS NOT NULL AND 
+         dtstart_time IS NULL AND
+         dtend_time IS NULL AND
+         dtstart_tz IS NULL AND
+         dtend_tz IS NULL) 
+        OR
+        -- Timed events use time fields
+        (all_day = FALSE AND 
+         dtstart_time IS NOT NULL AND 
+         dtstart_date IS NULL AND
+         dtstart_tz IS NOT NULL)
+    ),
+    
+    -- iCal constraint: DTEND and DURATION are mutually exclusive
+    CHECK (
+        (dtend_date IS NULL AND dtend_time IS NULL) OR 
+        (duration_iso IS NULL)
+    ),
+    
+    -- Duration format validation (basic)
+    CHECK (
+        duration_iso IS NULL OR 
+        duration_iso ~ '^P(\d+Y)?(\d+M)?(\d+D)?(T(\d+H)?(\d+M)?(\d+S)?)?$'
     ),
     
     -- Recurrence
-    rrule TEXT, -- RFC 5545 RRULE string
-    rdate TEXT[], -- Additional recurrence dates
-    exdate TEXT[], -- Exception dates
-    recurrence_id TIMESTAMPTZ, -- For recurring event instances
+    rrule TEXT, -- RFC 5545 RRULE string "FREQ=WEEKLY;BYDAY=MO,WE,FR"
+    rdate TEXT[], -- Additional recurrence dates – creation ['2024-11-11', '2024-12-24']
+    exdate TEXT[], -- Exception dates – deletion ['2024-11-11', '2024-12-24']
+    recurrence_id TIMESTAMPTZ, -- Changed time in recurring events - NULL pour l'événement principal
     recurrence_range recurrence_range, -- RANGE parameter   
 
     -- Status and classification (using ENUMs now)
@@ -147,12 +171,14 @@ CREATE TABLE event_alarms (
 
 -- event indices
 CREATE INDEX idx_events_calendar_id ON calendar_events(calendar_id);
-CREATE INDEX idx_events_dtstart ON calendar_events(dtstart);
-CREATE INDEX idx_events_dtend ON calendar_events(dtend);
+CREATE INDEX idx_events_dtstart_time ON calendar_events(dtstart_time);
+CREATE INDEX idx_events_dtend_time ON calendar_events(dtend_time);
+CREATE INDEX idx_events_dtstart_date ON calendar_events(dtstart_date);
+CREATE INDEX idx_events_dtend_date ON calendar_events(dtend_date);
 CREATE INDEX idx_events_uid ON calendar_events(uid);
 CREATE INDEX idx_events_recurrence ON calendar_events(recurrence_id) WHERE recurrence_id IS NOT NULL;
 CREATE INDEX idx_events_deleted ON calendar_events(deleted_at) WHERE deleted_at IS NULL;
-CREATE INDEX idx_events_time_range ON calendar_events(dtstart, dtend) WHERE deleted_at IS NULL;
+CREATE INDEX idx_events_time_range ON calendar_events(dtstart_time, dtend_time) WHERE deleted_at IS NULL;
 
 -- calendar indices
 CREATE INDEX idx_calendars_owner_id ON calendars(owner_id);

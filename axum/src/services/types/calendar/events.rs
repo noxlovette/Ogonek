@@ -86,9 +86,8 @@ pub struct EventFull {
     #[serde(with = "datetime_serialization::option")]
     #[serde(skip_serializing)]
     pub recurrence_id: Option<DateTime<Utc>>,
+    #[serde(skip_serializing)]
     pub recurrence_range: Option<RecurrenceRange>,
-    pub is_master_event: bool,
-    pub master_event_id: Option<String>,
 
     pub status: EventStatus,
     #[serde(skip_serializing)]
@@ -114,7 +113,9 @@ pub struct EventFull {
     #[serde(skip_serializing)]
     pub deleted_at: Option<DateTime<Utc>>,
 
+    #[serde(skip_serializing)]
     pub caldav_href: Option<String>,
+    #[serde(skip_serializing)]
     pub content_type: Option<String>,
 }
 
@@ -130,20 +131,29 @@ pub struct EventCreate {
 
 #[derive(Validate, ToSchema, Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub struct EventUpdate {
+pub struct EventUpdateRequest {
+    pub attendee: Option<String>,
     pub edit_scope: EditScope,
+    pub uid: String,
     /// This is gonna be the master/regular event or a recurrence instance if there is an id_timestamp in it
     pub event_id: String,
+    #[serde(flatten)]
+    pub updates: EventUpdate,
+}
+#[derive(Validate, ToSchema, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct EventUpdate {
     pub description: Option<String>,
     pub location: Option<String>,
     #[serde(with = "datetime_serialization::option")]
     pub dtstart: Option<DateTime<Utc>>,
     #[serde(with = "datetime_serialization::option")]
     pub dtend: Option<DateTime<Utc>>,
-    pub timezone: Option<String>,
+    pub dtstart_tz: Option<String>,
+    pub dtend_tz: Option<String>,
     pub rrule: Option<String>,
-    /// The invited student's id
-    pub attendee: Option<String>,
+    pub dtstart_date: Option<NaiveDate>,
+    pub dtend_date: Option<NaiveDate>,
 }
 
 #[derive(Validate, ToSchema, Serialize)]

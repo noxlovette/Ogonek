@@ -9,8 +9,6 @@ pub enum EditScope {
     ThisOnly,
     #[serde(rename = "future")]
     ThisAndFuture,
-    #[serde(rename = "all")]
-    AllEvents,
 }
 // Event Status ENUM
 #[derive(ToSchema, Serialize, Deserialize, Type, Debug, PartialEq, Clone)]

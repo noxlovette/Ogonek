@@ -8,23 +8,26 @@ use crate::{
                 profile::get_call_url,
                 user::{get_email, get_name},
             },
-            calendar::{calendar::read_calendar_id, event_attendee},
+            calendar::{calendar::read_calendar_id, event::read_one, event_attendee},
         },
         error::DbError,
     },
-    services::calendar::{RRule, extract_occurrence_from_id},
+    services::calendar::{RRule, extract_id_and_occurence, extract_occurrence_from_id},
     types::{
         EditScope, EventAttendeeCreate, EventClass, EventCreate, EventDB, EventFull, EventStatus,
-        EventTransp, EventUpdate,
+        EventTransp, EventUpdate, EventUpdateRequest,
     },
 };
-pub async fn update(db: &PgPool, id: &str, update: &EventUpdate) -> Result<(), DbError> {
+pub async fn update_single(
+    db: &PgPool,
+    id: &str,
+    attendee: &Option<String>,
+    update: &EventUpdate,
+) -> Result<(), DbError> {
     let mut tx = db.begin().await?;
 
-    // Handle attendee updates and get the name if changed
-    let attendee_name = handle_attendee_update(&mut tx, id, &update.attendee).await?;
+    let attendee_name = update_attendee(&mut tx, id, attendee).await?;
 
-    // Update the main event
     sqlx::query!(
         r#"
         UPDATE calendar_events 
@@ -34,8 +37,11 @@ pub async fn update(db: &PgPool, id: &str, update: &EventUpdate) -> Result<(), D
             location = COALESCE($4, location),
             dtstart = COALESCE($5, dtstart),
             dtend = COALESCE($6, dtend),
-            timezone = COALESCE($7, timezone),
-            rrule = COALESCE($8, rrule),
+            dtstart_tz = COALESCE($7, dtstart_tz),
+            dtend_tz = COALESCE($8, dtstart_tz),
+            rrule = COALESCE($9, rrule),
+            dtstart_date = COALESCE($10, dtstart_date),
+            dtend_date = COALESCE($11, dtend_date),
             updated_at = NOW()
         WHERE id = $1 AND deleted_at IS NULL
         "#,
@@ -45,8 +51,11 @@ pub async fn update(db: &PgPool, id: &str, update: &EventUpdate) -> Result<(), D
         update.location,
         update.dtstart,
         update.dtend,
-        update.timezone,
+        update.dtstart_tz,
+        update.dtend_tz,
         update.rrule,
+        update.dtstart_date,
+        update.dtend_date,
     )
     .execute(&mut *tx)
     .await?;
@@ -55,7 +64,8 @@ pub async fn update(db: &PgPool, id: &str, update: &EventUpdate) -> Result<(), D
     Ok(())
 }
 
-async fn handle_attendee_update(
+/// Updates attendee and gets the name if changed
+async fn update_attendee(
     tx: &mut sqlx::Transaction<'_, sqlx::Postgres>,
     event_id: &str,
     new_attendee_id: &Option<String>,
@@ -92,53 +102,15 @@ async fn handle_attendee_update(
     }
     Ok(None)
 }
-/// Updates an event. Supports recursion with proper error handling
-async fn edit_recurring_event(db: &PgPool, req: EventUpdate) -> Result<(), DbError> {
-    let mut tx = db.begin().await?;
-    let master = sqlx::query_as!(
-        EventFull,
-        r#"
-       SELECT 
-            id,
-            uid,
-            created_at,
-            updated_at,
-            calendar_id,
-            summary,
-            description,
-            location,
-            url,
-            dtstart,
-            dtend,
-            all_day,
-            timezone,
-            rrule,
-            rdate,
-            exdate,
-            recurrence_id,
-            status as "status: EventStatus",
-            class as "class: EventClass",
-            transp as "transp: EventTransp",
-            priority,
-            categories,
-            organiser_email,
-            organiser_name,
-            sequence,
-            dtstamp,
-            etag,
-            deleted_at
-        FROM calendar_events
-        WHERE uid = (
-            SELECT uid FROM calendar_events WHERE id = $1
-        ) AND recurrence_id IS NULL"#,
-        req.event_id
-    )
-    .fetch_one(db)
-    .await?;
 
-    // Extract occurrence date - this should always exist for recurring events
-    let occurrence_date =
-        extract_occurrence_from_id(&req.event_id).ok_or(DbError::InvalidRecurrenceId)?;
+/// The super handler for recurring or single events
+async fn update_event(db: &PgPool, req: EventUpdateRequest) -> Result<(), DbError> {
+    // Extract the goddamn id and occurence to spot a virtual/real event
+    let (master_id, occurence) = extract_id_and_occurence(req.event_id);
+
+    let mut tx = db.begin().await?;
+
+    let master = read_one(&mut *tx, &master_id).await?;
 
     match req.edit_scope {
         EditScope::ThisOnly => {
@@ -146,9 +118,6 @@ async fn edit_recurring_event(db: &PgPool, req: EventUpdate) -> Result<(), DbErr
         }
         EditScope::ThisAndFuture => {
             edit_this_and_future(&master, occurrence_date, &req, &mut tx).await?;
-        }
-        EditScope::AllEvents => {
-            edit_all_events(&master, &req, &mut tx).await?;
         }
     }
 

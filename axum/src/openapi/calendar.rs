@@ -15,6 +15,5 @@ use utoipa::OpenApi;
     update_event,
     delete_attendee,
     update_attendee,
-    list_events_day,
 ))]
 pub struct CalendarApi;
