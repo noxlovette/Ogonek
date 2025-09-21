@@ -1,9 +1,9 @@
-use std::fmt;
-
-use crate::types::{EventAttendee, datetime_serialization};
-use chrono::{DateTime, Utc};
+use crate::types::{
+    EditScope, EventAttendee, EventClass, EventStatus, EventTransp, RecurrenceRange,
+    datetime_serialization,
+};
+use chrono::{DateTime, NaiveDate, Utc};
 use serde::{Deserialize, Serialize};
-use sqlx::prelude::Type;
 use utoipa::ToSchema;
 use validator::Validate;
 
@@ -31,7 +31,7 @@ pub struct EventSmall {
     pub is_exception: bool,
 }
 
-/// Internal Struct used to query the DB     
+/// Internal Struct used to query the DB
 #[derive(Validate, ToSchema, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct EventDB {
@@ -48,15 +48,17 @@ pub struct EventDB {
 #[derive(Validate, ToSchema, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct EventFull {
+    // Basic data
     pub id: String,
     pub uid: String,
     #[serde(skip_serializing)]
     pub created_at: DateTime<Utc>,
     #[serde(skip_serializing)]
     pub updated_at: DateTime<Utc>,
-
     #[serde(skip_serializing)]
     pub calendar_id: String,
+
+    // Secondary data
     #[serde(alias = "title")]
     pub summary: String,
     pub description: Option<String>,
@@ -64,14 +66,18 @@ pub struct EventFull {
     #[serde(skip_serializing)]
     pub url: Option<String>,
 
-    #[serde(with = "datetime_serialization")]
-    pub dtstart: DateTime<Utc>,
+    // Time data
+    #[serde(with = "datetime_serialization::option")]
+    pub dtstart: Option<DateTime<Utc>>,
     #[serde(with = "datetime_serialization::option")]
     pub dtend: Option<DateTime<Utc>>,
-
+    pub dtend_tz: Option<String>,
+    pub dtstart_tz: String,
+    pub dtstart_date: Option<NaiveDate>,
+    pub dtend_date: Option<NaiveDate>,
     pub all_day: bool,
-    pub timezone: Option<String>,
 
+    // Recurrence data
     pub rrule: Option<String>,
     #[serde(skip_serializing)]
     pub rdate: Option<Vec<String>>,
@@ -80,6 +86,9 @@ pub struct EventFull {
     #[serde(with = "datetime_serialization::option")]
     #[serde(skip_serializing)]
     pub recurrence_id: Option<DateTime<Utc>>,
+    pub recurrence_range: Option<RecurrenceRange>,
+    pub is_master_event: bool,
+    pub master_event_id: Option<String>,
 
     pub status: EventStatus,
     #[serde(skip_serializing)]
@@ -93,9 +102,6 @@ pub struct EventFull {
 
     pub categories: Option<Vec<String>>,
 
-    pub organiser_email: Option<String>,
-    pub organiser_name: Option<String>,
-
     #[serde(skip_serializing)]
     pub sequence: i32,
     #[serde(skip_serializing)]
@@ -107,32 +113,9 @@ pub struct EventFull {
 
     #[serde(skip_serializing)]
     pub deleted_at: Option<DateTime<Utc>>,
-}
 
-#[derive(ToSchema, Serialize, Deserialize, Type, Debug, PartialEq)]
-#[sqlx(type_name = "varchar", rename_all = "lowercase")]
-#[serde(rename_all = "lowercase")]
-pub enum EventStatus {
-    Confirmed,
-    Tentative,
-    Cancelled,
-}
-
-#[derive(ToSchema, Serialize, Deserialize, Type, Debug, PartialEq)]
-#[sqlx(type_name = "varchar", rename_all = "lowercase")]
-#[serde(rename_all = "lowercase")]
-pub enum EventClass {
-    Public,
-    Private,
-    Confidential,
-}
-
-#[derive(ToSchema, Serialize, Deserialize, Type, Debug, PartialEq)]
-#[sqlx(type_name = "varchar", rename_all = "lowercase")]
-#[serde(rename_all = "lowercase")]
-pub enum EventTransp {
-    Opaque,
-    Transparent,
+    pub caldav_href: Option<String>,
+    pub content_type: Option<String>,
 }
 
 #[derive(Validate, ToSchema, Deserialize)]
@@ -145,9 +128,12 @@ pub struct EventCreate {
     pub dtend: Option<DateTime<Utc>>,
 }
 
-#[derive(Validate, ToSchema, Deserialize, Default)]
+#[derive(Validate, ToSchema, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct EventUpdate {
+    pub edit_scope: EditScope,
+    /// This is gonna be the master/regular event or a recurrence instance if there is an id_timestamp in it
+    pub event_id: String,
     pub description: Option<String>,
     pub location: Option<String>,
     #[serde(with = "datetime_serialization::option")]
@@ -158,35 +144,6 @@ pub struct EventUpdate {
     pub rrule: Option<String>,
     /// The invited student's id
     pub attendee: Option<String>,
-}
-
-impl fmt::Display for EventStatus {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        match self {
-            EventStatus::Confirmed => write!(f, "confirmed"),
-            EventStatus::Tentative => write!(f, "tentative"),
-            EventStatus::Cancelled => write!(f, "cancelled"),
-        }
-    }
-}
-
-impl fmt::Display for EventClass {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        match self {
-            EventClass::Public => write!(f, "public"),
-            EventClass::Private => write!(f, "private"),
-            EventClass::Confidential => write!(f, "confidential"),
-        }
-    }
-}
-
-impl fmt::Display for EventTransp {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        match self {
-            EventTransp::Opaque => write!(f, "opaque"),
-            EventTransp::Transparent => write!(f, "transparent"),
-        }
-    }
 }
 
 #[derive(Validate, ToSchema, Serialize)]

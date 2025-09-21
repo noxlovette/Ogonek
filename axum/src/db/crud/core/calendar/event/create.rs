@@ -1,0 +1,58 @@
+use sqlx::PgPool;
+
+use crate::{
+    db::{
+        crud::core::{
+            account::{
+                profile::get_call_url,
+                user::{get_email, get_name},
+            },
+            calendar::{calendar::read_calendar_id, event_attendee},
+        },
+        error::DbError,
+    },
+    types::{EventAttendeeCreate, EventCreate},
+};
+
+/// Creates a master calendar event
+pub async fn create(db: &PgPool, user_id: &str, create: EventCreate) -> Result<(), DbError> {
+    let mut tx = db.begin().await?;
+    let calendar_id = read_calendar_id(&mut *tx, user_id).await?;
+
+    let attendee_name = get_name(&mut *tx, &create.attendee).await?;
+
+    let video_call_url = get_call_url(&mut *tx, &user_id).await?;
+
+    let id = sqlx::query_scalar!(
+        r#"
+        INSERT INTO calendar_events (
+            id, calendar_id, uid, summary, dtstart, dtend, location
+        )
+        VALUES (
+            $1, $2, $3, $4, $5, $6, $7
+        )
+        RETURNING id
+        "#,
+        nanoid::nanoid!(),
+        calendar_id,
+        nanoid::nanoid!(),
+        attendee_name,
+        create.dtstart,
+        create.dtend,
+        video_call_url,
+    )
+    .fetch_one(&mut *tx)
+    .await?;
+
+    let attendee_email = get_email(&mut *tx, &create.attendee).await?;
+
+    let attendee_payload = EventAttendeeCreate {
+        email: attendee_email,
+        name: Some(attendee_name),
+    };
+
+    event_attendee::create(&mut *tx, &id, &create.attendee, attendee_payload).await?;
+
+    tx.commit().await?;
+    Ok(())
+}

@@ -16,9 +16,27 @@ pub enum Frequency {
     Monthly,
     Yearly,
 }
+use thiserror::Error;
 
+#[derive(Error, Debug)]
+pub enum RRuleError {
+    #[error("Invalid RRULE format: {0}")]
+    InvalidFormat(String),
+    #[error("Missing required field: {0}")]
+    MissingField(String),
+    #[error("Unsupported frequency: {0}")]
+    UnsupportedFrequency(String),
+    #[error("Invalid interval: {0}")]
+    InvalidInterval(String),
+    #[error("Invalid day: {0}")]
+    InvalidDay(String),
+    #[error("Invalid count: {0}")]
+    InvalidCount(String),
+    #[error("Invalid until date: {0}")]
+    InvalidUntilDate(String),
+}
 impl RRule {
-    pub fn parse(rrule_str: Option<String>) -> Result<Option<Self>, String> {
+    pub fn parse(rrule_str: Option<String>) -> Result<Option<Self>, RRuleError> {
         let Some(rrule) = rrule_str else {
             return Ok(None);
         };
@@ -33,11 +51,14 @@ impl RRule {
         let mut count = None;
         let mut until = None;
 
-        // Parse "FREQ=WEEKLY;INTERVAL=2;BYDAY=MO,WE,FR;COUNT=10"
         for part in rrule.split(';') {
             let mut split = part.split('=');
-            let key = split.next().ok_or("Invalid RRULE format")?;
-            let value = split.next().ok_or("Invalid RRULE format")?;
+            let key = split.next().ok_or_else(|| {
+                RRuleError::InvalidFormat("Missing key in RRULE part".to_string())
+            })?;
+            let value = split.next().ok_or_else(|| {
+                RRuleError::InvalidFormat(format!("Missing value for key: {}", key))
+            })?;
 
             match key {
                 "FREQ" => {
@@ -46,11 +67,13 @@ impl RRule {
                         "WEEKLY" => Frequency::Weekly,
                         "MONTHLY" => Frequency::Monthly,
                         "YEARLY" => Frequency::Yearly,
-                        _ => return Err(format!("Unsupported frequency: {}", value)),
+                        _ => return Err(RRuleError::UnsupportedFrequency(value.to_string())),
                     });
                 }
                 "INTERVAL" => {
-                    interval = value.parse().map_err(|_| "Invalid interval")?;
+                    interval = value
+                        .parse()
+                        .map_err(|_| RRuleError::InvalidInterval(value.to_string()))?;
                 }
                 "BYDAY" => {
                     let days = value
@@ -63,18 +86,22 @@ impl RRule {
                             "FR" => Ok(Weekday::Fri),
                             "SA" => Ok(Weekday::Sat),
                             "SU" => Ok(Weekday::Sun),
-                            _ => Err(format!("Invalid day: {}", day)),
+                            _ => Err(RRuleError::InvalidDay(day.to_string())),
                         })
                         .collect::<Result<Vec<_>, _>>()?;
                     by_day = Some(days);
                 }
                 "COUNT" => {
-                    count = Some(value.parse().map_err(|_| "Invalid count")?);
+                    count = Some(
+                        value
+                            .parse()
+                            .map_err(|_| RRuleError::InvalidCount(value.to_string()))?,
+                    );
                 }
                 "UNTIL" => {
                     until = Some(
                         DateTime::parse_from_rfc3339(value)
-                            .map_err(|_| "Invalid until date")?
+                            .map_err(|_| RRuleError::InvalidUntilDate(value.to_string()))?
                             .with_timezone(&Utc),
                     );
                 }
@@ -82,7 +109,7 @@ impl RRule {
             }
         }
 
-        let freq = freq.ok_or("FREQ is required")?;
+        let freq = freq.ok_or_else(|| RRuleError::MissingField("FREQ".to_string()))?;
 
         Ok(Some(RRule {
             freq,

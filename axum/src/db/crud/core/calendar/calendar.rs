@@ -26,7 +26,7 @@ pub async fn get_or_create(db: &PgPool, user_id: &str) -> Result<Calendar, DbErr
 
     Ok(calendar)
 }
-pub async fn get_calendar_id(
+pub async fn read_calendar_id(
     db: impl sqlx::Executor<'_, Database = sqlx::Postgres>,
     user_id: &str,
 ) -> Result<String, DbError> {
