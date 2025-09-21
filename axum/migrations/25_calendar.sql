@@ -6,7 +6,6 @@ CREATE TYPE attendee_role AS ENUM ('chair', 'req-participant', 'opt-participant'
 CREATE TYPE attendee_status AS ENUM ('needs-action', 'accepted', 'declined', 'tentative', 'delegated');
 CREATE TYPE alarm_action AS ENUM ('audio', 'display', 'email', 'procedure');
 CREATE TYPE sync_state AS ENUM ('active', 'syncing', 'error');
-CREATE TYPE recurrence_range AS ENUM ('this-and-future'); 
 
 -- Timezones
 CREATE TABLE timezones (
@@ -42,13 +41,10 @@ CREATE TABLE calendars (
     -- Constraint: one calendar per user (can drop later for multical support)
     CONSTRAINT unique_user_calendar UNIQUE (owner_id)
 );
-
-
 CREATE TABLE calendar_events (
     -- Primary identification
     id VARCHAR(21) PRIMARY KEY,
     uid VARCHAR(255) NOT NULL, -- iCalendar UID (unique per calendar)
-   
     
     -- Calendar association
     calendar_id VARCHAR(21) NOT NULL REFERENCES calendars(id) ON DELETE CASCADE,
@@ -62,50 +58,29 @@ CREATE TABLE calendar_events (
     -- Temporal information
     dtstart_time TIMESTAMPTZ NOT NULL, -- Start date/time
     dtend_time TIMESTAMPTZ, -- End date/time (null for all-day events)
-    dtstart_date DATE,
-    dtend_date DATE,
-    all_day BOOLEAN NOT NULL DEFAULT FALSE,
     -- both can be null for all-day events
-    dtstart_tz VARCHAR  REFERENCES timezones(tzid),
-    dtend_tz VARCHAR  REFERENCES timezones(tzid),
+    dtstart_tz VARCHAR NOT NULL REFERENCES timezones(tzid) DEFAULT 'Europe/Moscow',
+    dtend_tz VARCHAR REFERENCES timezones(tzid),
+    -- excludes dtend
     duration_iso VARCHAR(50),
-
-    -- CRITICAL CONSTRAINTS
-    CHECK (
-        -- All-day events use date fields only
-        (all_day = TRUE AND 
-         dtstart_date IS NOT NULL AND 
-         dtstart_time IS NULL AND
-         dtend_time IS NULL AND
-         dtstart_tz IS NULL AND
-         dtend_tz IS NULL) 
-        OR
-        -- Timed events use time fields
-        (all_day = FALSE AND 
-         dtstart_time IS NOT NULL AND 
-         dtstart_date IS NULL AND
-         dtstart_tz IS NOT NULL)
-    ),
     
     -- iCal constraint: DTEND and DURATION are mutually exclusive
     CHECK (
-        (dtend_date IS NULL AND dtend_time IS NULL) OR 
+        (dtend_time IS NULL) OR 
         (duration_iso IS NULL)
     ),
-    
-    -- Duration format validation (basic)
+
     CHECK (
-        duration_iso IS NULL OR 
-        duration_iso ~ '^P(\d+Y)?(\d+M)?(\d+D)?(T(\d+H)?(\d+M)?(\d+S)?)?$'
+        (rrule IS NULL) OR
+        (recurrence_id IS NULL)
     ),
     
     -- Recurrence
     rrule TEXT, -- RFC 5545 RRULE string "FREQ=WEEKLY;BYDAY=MO,WE,FR"
     rdate TEXT[], -- Additional recurrence dates – creation ['2024-11-11', '2024-12-24']
-    exdate TEXT[], -- Exception dates – deletion ['2024-11-11', '2024-12-24']
+    exdate TEXT[], -- Exception dates – deletion ['2024-11-11', '2024-12-24']
     recurrence_id TIMESTAMPTZ, -- Changed time in recurring events - NULL pour l'événement principal
-    recurrence_range recurrence_range, -- RANGE parameter   
-
+    
     -- Status and classification (using ENUMs now)
     status event_status NOT NULL DEFAULT 'confirmed',
     class event_class NOT NULL DEFAULT 'public',
@@ -126,11 +101,9 @@ CREATE TABLE calendar_events (
     caldav_href VARCHAR(500), -- The actual CalDAV resource URL
     content_type VARCHAR(50) DEFAULT 'text/calendar',
     
-
-    -- Unique constraint for uid and calendar_id
-    UNIQUE(uid, calendar_id)
+    -- Unique constraint for uid and calendar_id (only for master events)
+    UNIQUE(uid, calendar_id, recurrence_id)
 );
-
 
 CREATE TABLE event_attendees (
     id VARCHAR(21) PRIMARY KEY,
@@ -172,8 +145,6 @@ CREATE TABLE event_alarms (
 CREATE INDEX idx_events_calendar_id ON calendar_events(calendar_id);
 CREATE INDEX idx_events_dtstart_time ON calendar_events(dtstart_time);
 CREATE INDEX idx_events_dtend_time ON calendar_events(dtend_time);
-CREATE INDEX idx_events_dtstart_date ON calendar_events(dtstart_date);
-CREATE INDEX idx_events_dtend_date ON calendar_events(dtend_date);
 CREATE INDEX idx_events_uid ON calendar_events(uid);
 CREATE INDEX idx_events_recurrence ON calendar_events(recurrence_id) WHERE recurrence_id IS NOT NULL;
 CREATE INDEX idx_events_deleted ON calendar_events(deleted_at) WHERE deleted_at IS NULL;

@@ -16,6 +16,8 @@ pub enum DbError {
     NotRecurring,
     #[error("Invalid recurrence id")]
     InvalidRecurrenceId,
+    #[error("Parse error: {0}")]
+    ParseError(String),
     #[error("Invalid recurrence rule: {0}")]
     InvalidRRule(#[from] RRuleError),
 }

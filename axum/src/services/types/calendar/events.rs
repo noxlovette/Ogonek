@@ -1,8 +1,8 @@
 use crate::types::{
-    DeleteScope, EditScope, EventAttendee, EventClass, EventStatus, EventTransp, RecurrenceRange,
+    DeleteScope, EditScope, EventAttendee, EventClass, EventStatus, EventTransp,
     datetime_serialization,
 };
-use chrono::{DateTime, NaiveDate, Utc};
+use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
 use validator::Validate;
@@ -28,14 +28,24 @@ pub struct EventSmall {
 pub struct EventDB {
     pub id: String,
     pub uid: String,
+
     #[serde(rename(serialize = "title"))]
     pub summary: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub location: Option<String>,
     #[serde(with = "datetime_serialization")]
     pub dtstart_time: DateTime<Utc>,
     #[serde(with = "datetime_serialization::option")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub dtend_time: Option<DateTime<Utc>>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub rrule: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub rdate: Option<Vec<String>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub exdate: Option<Vec<String>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub recurrence_id: Option<DateTime<Utc>>,
 }
 
@@ -67,9 +77,6 @@ pub struct EventFull {
     pub dtend_time: Option<DateTime<Utc>>,
     pub dtend_tz: Option<String>,
     pub dtstart_tz: Option<String>,
-    pub dtstart_date: Option<NaiveDate>,
-    pub dtend_date: Option<NaiveDate>,
-    pub all_day: bool,
 
     // Recurrence data
     pub rrule: Option<String>,
@@ -81,8 +88,6 @@ pub struct EventFull {
     #[serde(skip_serializing)]
     pub recurrence_id: Option<DateTime<Utc>>,
     #[serde(skip_serializing)]
-    pub recurrence_range: Option<RecurrenceRange>,
-
     pub status: EventStatus,
     #[serde(skip_serializing)]
     pub class: EventClass,
@@ -124,15 +129,13 @@ pub struct EventCreate {
 #[derive(Validate, ToSchema, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct EventDelete {
-    pub occurrence_date: DateTime<Utc>,
     pub scope: DeleteScope,
 }
 
 #[derive(Validate, ToSchema, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct EventUpdateRequest {
-    pub edit_scope: EditScope,
-    pub uid: String,
+    pub scope: EditScope,
     #[serde(flatten)]
     pub updates: EventUpdate,
 }
@@ -142,15 +145,11 @@ pub struct EventUpdate {
     pub description: Option<String>,
     pub attendee: Option<String>,
     pub location: Option<String>,
-    #[serde(with = "datetime_serialization::option")]
     pub dtstart_time: Option<DateTime<Utc>>,
-    #[serde(with = "datetime_serialization::option")]
     pub dtend_time: Option<DateTime<Utc>>,
     pub dtstart_tz: Option<String>,
     pub dtend_tz: Option<String>,
     pub rrule: Option<String>,
-    pub dtstart_date: Option<NaiveDate>,
-    pub dtend_date: Option<NaiveDate>,
 }
 
 #[derive(Validate, ToSchema, Serialize)]

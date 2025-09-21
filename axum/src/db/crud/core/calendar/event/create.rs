@@ -75,12 +75,9 @@ pub async fn create_exception(
                 location,
                 dtstart_time, 
                 dtend_time, 
-                all_day,
-                dtstart_date,
-                dtend_date, 
                 recurrence_id
             ) VALUES (
-                $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12
+                $1, $2, $3, $4, $5, $6, $7, $8, $9
             )
             "#,
         nanoid::nanoid!(),
@@ -91,9 +88,6 @@ pub async fn create_exception(
         update.location.as_ref().or(master.location.as_ref()),
         update.dtstart_time,
         update.dtend_time,
-        master.all_day,
-        master.dtstart_date.as_ref(),
-        master.dtend_date.as_ref(),
         occurrence_date
     )
     .execute(&mut **tx)
@@ -119,12 +113,9 @@ pub async fn create_master(
                 location,
                 dtstart_time, 
                 dtend_time, 
-                all_day,
-                dtstart_date,
-                dtend_date ,
                 rrule
             ) VALUES (
-                $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12
+                $1, $2, $3, $4, $5, $6, $7, $8, $9
             )
         "#,
         nanoid::nanoid!(),
@@ -135,9 +126,6 @@ pub async fn create_master(
         update.location.as_ref().or(master.location.as_ref()),
         update.dtstart_time,
         update.dtend_time,
-        master.all_day,
-        master.dtstart_date.as_ref(),
-        master.dtend_date.as_ref(),
         new_rrule
     )
     .execute(&mut **tx)

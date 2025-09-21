@@ -1,14 +1,12 @@
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
-use chrono::{DateTime, Utc};
+use chrono::{DateTime, NaiveDate, Utc};
 use sqlx::PgPool;
 
 use crate::{
     db::{crud::core::calendar::calendar::read_calendar_id, error::DbError},
-    services::calendar::RRule,
-    types::{
-        EventClass, EventDB, EventFull, EventSmall, EventStatus, EventTransp, RecurrenceRange,
-    },
+    services::calendar::{OCCURRENCE_SEPARATOR, RRule},
+    types::{EventClass, EventDB, EventFull, EventSmall, EventStatus, EventTransp},
 };
 
 /// Reads a calendar event by id
@@ -33,14 +31,10 @@ pub async fn read_one(
             dtend_time,
             dtend_tz,
             dtstart_tz,
-            dtstart_date,
-            dtend_date,
-            all_day,
             rrule,
             rdate,
             exdate,
             recurrence_id,
-            recurrence_range AS "recurrence_range!: RecurrenceRange",
             status AS "status!: EventStatus",
             class AS "class!: EventClass", 
             transp AS "transp!: EventTransp",
@@ -82,6 +76,8 @@ async fn read_all_master(
             location,
             dtstart_time,
             dtend_time,
+            rdate,
+            exdate,
             recurrence_id,
             rrule
         FROM calendar_events
@@ -104,7 +100,6 @@ async fn read_all_master(
     tx.commit().await?;
     Ok(events)
 }
-
 pub async fn read_all(
     db: &PgPool,
     user_id: &str,
@@ -115,7 +110,7 @@ pub async fn read_all(
 
     let masters: Vec<_> = events
         .iter()
-        .filter(|e| e.rrule.is_some() && e.recurrence_id.is_none())
+        .filter(|e| e.recurrence_id.is_none())
         .collect();
 
     let mut exceptions: HashMap<String, Vec<&EventDB>> = HashMap::new();
@@ -128,11 +123,32 @@ pub async fn read_all(
     for master in masters {
         match RRule::parse(master.rrule.clone())? {
             Some(rrule) => {
-                let occurrences = rrule.generate_occurrences(master.dtstart_time, start, end);
+                let mut all_occurrences = HashSet::new();
 
-                // that's why the map
-                for occurrence in occurrences {
-                    // Check if this occurrence has an exception
+                // Generate regular RRULE occurrences
+                let rrule_occurrences = rrule.generate_occurrences(master.dtstart_time, start, end);
+                all_occurrences.extend(rrule_occurrences);
+
+                // Add RDATE occurrences (additional dates)
+                if let Some(rdate_list) = &master.rdate {
+                    for date_str in rdate_list {
+                        let rdate = parse_date_flexible(date_str)?;
+                        if rdate >= start && rdate <= end {
+                            all_occurrences.insert(rdate);
+                        }
+                    }
+                }
+
+                // Parse EXDATE array from master event
+                let exdates = parse_exdates(&master.exdate)?;
+
+                for occurrence in all_occurrences {
+                    // Skip if this occurrence is in EXDATE
+                    if exdates.contains(&occurrence) {
+                        continue;
+                    }
+
+                    // Check if this occurrence has an exception (modified instance)
                     let has_exception = exceptions
                         .get(&master.uid)
                         .map(|excs| excs.iter().any(|exc| exc.recurrence_id == Some(occurrence)))
@@ -142,14 +158,20 @@ pub async fn read_all(
                         // Virtual instances
                         calendar_events.push(EventSmall {
                             db_data: EventDB {
-                                id: format!("{}_{}", master.id, occurrence.timestamp()),
+                                id: format!(
+                                    "{}{}{}",
+                                    master.id,
+                                    OCCURRENCE_SEPARATOR,
+                                    occurrence.timestamp()
+                                ),
                                 uid: master.uid.clone(),
                                 rrule: master.rrule.clone(),
+                                rdate: master.rdate.clone(),
+                                exdate: master.rdate.clone(),
                                 recurrence_id: None,
                                 summary: master.summary.clone(),
                                 dtstart_time: occurrence,
                                 location: master.location.clone(),
-                                // Calculate dtend_time based on duration
                                 dtend_time: master
                                     .dtend_time
                                     .map(|end| occurrence + (end - master.dtstart_time)),
@@ -160,14 +182,16 @@ pub async fn read_all(
                     }
                 }
             }
-            // Just a regular guy
             None => {
+                // Non-recurring event
                 calendar_events.push(EventSmall {
                     db_data: EventDB {
                         id: master.id.clone(),
                         uid: master.uid.clone(),
                         recurrence_id: None,
                         rrule: None,
+                        rdate: None,
+                        exdate: None,
                         summary: master.summary.clone(),
                         location: master.location.clone(),
                         dtstart_time: master.dtstart_time,
@@ -180,7 +204,7 @@ pub async fn read_all(
         }
     }
 
-    // Add exception instances
+    // Add exception instances (modified occurrences)
     for (uid, exception_list) in exceptions {
         for exception in exception_list {
             if exception.dtstart_time >= start && exception.dtstart_time <= end {
@@ -190,6 +214,8 @@ pub async fn read_all(
                         uid: uid.clone(),
                         recurrence_id: exception.recurrence_id,
                         rrule: None,
+                        exdate: None,
+                        rdate: None,
                         summary: exception.summary.clone(),
                         location: exception.location.clone(),
                         dtstart_time: exception.dtstart_time,
@@ -203,4 +229,50 @@ pub async fn read_all(
     }
 
     Ok(calendar_events)
+}
+
+// Helper function pour parser les EXDATE depuis TEXT[]
+fn parse_exdates(exdate_array: &Option<Vec<String>>) -> Result<HashSet<DateTime<Utc>>, DbError> {
+    let mut exdates = HashSet::new();
+
+    if let Some(exdate_list) = exdate_array {
+        for date_str in exdate_list {
+            let date_str = date_str.trim();
+            if !date_str.is_empty() {
+                // Support plusieurs formats de dates
+                let parsed_date = parse_date_flexible(date_str)?;
+                exdates.insert(parsed_date);
+            }
+        }
+    }
+
+    Ok(exdates)
+}
+
+// Parser flexible pour différents formats de dates
+fn parse_date_flexible(date_str: &str) -> Result<DateTime<Utc>, DbError> {
+    // Format ISO date seule (2024-11-11)
+    if let Ok(naive_date) = NaiveDate::parse_from_str(date_str, "%Y-%m-%d") {
+        return Ok(naive_date.and_hms_opt(0, 0, 0).unwrap().and_utc());
+    }
+
+    // Format avec temps (2024-11-11T10:00:00Z)
+    if let Ok(dt) = DateTime::parse_from_rfc3339(date_str) {
+        return Ok(dt.with_timezone(&Utc));
+    }
+
+    // Format iCal (20241111T100000Z)
+    if let Ok(dt) = DateTime::parse_from_str(date_str, "%Y%m%dT%H%M%SZ") {
+        return Ok(dt.with_timezone(&Utc));
+    }
+
+    // Format iCal date seule (20241111)
+    if let Ok(naive_date) = NaiveDate::parse_from_str(date_str, "%Y%m%d") {
+        return Ok(naive_date.and_hms_opt(0, 0, 0).unwrap().and_utc());
+    }
+
+    Err(DbError::ParseError(format!(
+        "Unsupported date format: {}",
+        date_str
+    )))
 }

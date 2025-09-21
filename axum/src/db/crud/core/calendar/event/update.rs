@@ -35,8 +35,6 @@ pub async fn edit_single(
             dtstart_tz = COALESCE($7, dtstart_tz),
             dtend_tz = COALESCE($8, dtstart_tz),
             rrule = COALESCE($9, rrule),
-            dtstart_date = COALESCE($10, dtstart_date),
-            dtend_date = COALESCE($11, dtend_date),
             sequence = sequence + 1
         WHERE id = $1 AND deleted_at IS NULL
         "#,
@@ -49,8 +47,6 @@ pub async fn edit_single(
         update.dtstart_tz,
         update.dtend_tz,
         update.rrule,
-        update.dtstart_date,
-        update.dtend_date,
     )
     .execute(&mut **db)
     .await?;
@@ -108,7 +104,7 @@ pub async fn update(db: &PgPool, event_id: String, req: EventUpdateRequest) -> R
     let master = read_one(&mut *tx, &master_id).await?;
 
     if let Some(occurrence) = occurrence_date {
-        match req.edit_scope {
+        match req.scope {
             EditScope::ThisOnly => {
                 edit_single_occurrence(&master, occurrence, &req.updates, &mut tx).await?;
             }
@@ -163,30 +159,25 @@ async fn edit_this_and_future(
 
     Ok(())
 }
-
 pub(crate) async fn truncate_master(
     tx: &mut sqlx::Transaction<'_, sqlx::Postgres>,
     master: &EventFull,
     occurrence_date: &DateTime<Utc>,
 ) -> Result<String, DbError> {
     let rrule_str = master.rrule.as_ref().ok_or(DbError::NotRecurring)?;
-
     let until_date = *occurrence_date - Duration::seconds(1);
+
+    // Format iCal compact conforme à la spec
+    let until_formatted = until_date.format("%Y%m%dT%H%M%SZ").to_string();
+
     let truncated_rrule = if rrule_str.contains("UNTIL=") {
         // Replace existing UNTIL
         let re = regex::Regex::new(r"UNTIL=[^;]*").unwrap();
-        re.replace(
-            rrule_str,
-            &format!("UNTIL={}", until_date.format("%Y%m%dT%H%M%SZ")),
-        )
-        .to_string()
+        re.replace(rrule_str, &format!("UNTIL={}", until_formatted))
+            .to_string()
     } else {
         // Add UNTIL
-        format!(
-            "{};UNTIL={}",
-            rrule_str,
-            until_date.format("%Y%m%dT%H%M%SZ")
-        )
+        format!("{};UNTIL={}", rrule_str, until_formatted)
     };
 
     sqlx::query!(
@@ -201,5 +192,6 @@ pub(crate) async fn truncate_master(
     )
     .execute(&mut **tx)
     .await?;
-    Ok(remove_until_from_rrule(&rrule_str))
+
+    Ok(remove_until_from_rrule(rrule_str))
 }

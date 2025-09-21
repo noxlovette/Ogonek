@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n                    DELETE FROM calendar_events \n                    WHERE uid = $1 \n                    AND recurrence_id IS NOT NULL \n                    AND recurrence_id >= $2\n                    ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Timestamptz"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "871f1bfb560b97c05bbf8ea3c468dc6be922939da5224a6d72b5b0517c44d9e6"
+}

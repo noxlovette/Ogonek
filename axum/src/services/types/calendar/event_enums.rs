@@ -3,14 +3,14 @@ use sqlx::prelude::Type;
 use std::fmt;
 use utoipa::ToSchema;
 #[derive(Deserialize, ToSchema)]
-#[serde(rename = "kebab-case")]
+#[serde(rename_all = "kebab-case")]
 pub enum DeleteScope {
     ThisOnly,
     ThisAndFuture,
 }
 
 #[derive(Deserialize, ToSchema)]
-#[serde(rename = "kebab-case")]
+#[serde(rename_all = "kebab-case")]
 pub enum EditScope {
     ThisOnly,
     ThisAndFuture,
@@ -107,15 +107,6 @@ pub enum SyncState {
     Syncing,
     #[sqlx(rename = "error")]
     Error,
-}
-
-// Recurrence Range ENUM
-#[derive(ToSchema, Serialize, Deserialize, Type, Debug, PartialEq, Clone)]
-#[sqlx(type_name = "recurrence_range")]
-#[serde(rename_all = "kebab-case")]
-pub enum RecurrenceRange {
-    #[sqlx(rename = "this-and-future")]
-    ThisAndFuture,
 }
 
 // Implement Display traits for better debugging/logging
