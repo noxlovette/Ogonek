@@ -12,7 +12,7 @@ use crate::{
         },
         error::DbError,
     },
-    types::{EventAttendeeCreate, EventCreate, EventFull, EventUpdate},
+    types::{EventAttendeeCreate, EventCreate, EventDBFull, EventUpdate},
 };
 
 /// Creates a master calendar event
@@ -60,11 +60,11 @@ pub async fn create(db: &PgPool, user_id: &str, create: EventCreate) -> Result<(
 
 pub(super) async fn create_exception(
     tx: &mut sqlx::Transaction<'_, sqlx::Postgres>,
-    master: &EventFull,
+    master: &EventDBFull,
     update: &EventUpdate,
     occurrence_date: &DateTime<Utc>,
 ) -> Result<(), DbError> {
-    sqlx::query!(
+    let exception_id = sqlx::query_scalar!(
         r#"
             INSERT INTO calendar_events (
                 id, 
@@ -79,6 +79,7 @@ pub(super) async fn create_exception(
             ) VALUES (
                 $1, $2, $3, $4, $5, $6, $7, $8, $9
             )
+            RETURNING id
             "#,
         nanoid::nanoid!(),
         master.uid,
@@ -90,19 +91,22 @@ pub(super) async fn create_exception(
         update.dtend_time,
         occurrence_date
     )
-    .execute(&mut **tx)
+    .fetch_one(&mut **tx)
     .await?;
+
+    // Copy attendees from master event
+    copy_attendees_to_event(tx, &master.id, &exception_id).await?;
 
     Ok(())
 }
 
 pub(super) async fn create_master(
     tx: &mut sqlx::Transaction<'_, sqlx::Postgres>,
-    master: &EventFull,
+    master: &EventDBFull,
     update: &EventUpdate,
     new_rrule: &str,
 ) -> Result<(), DbError> {
-    sqlx::query!(
+    let new_master_id = sqlx::query_scalar!(
         r#"
         INSERT INTO calendar_events (
                 id, 
@@ -117,6 +121,7 @@ pub(super) async fn create_master(
             ) VALUES (
                 $1, $2, $3, $4, $5, $6, $7, $8, $9
             )
+            RETURNING id
         "#,
         nanoid::nanoid!(),
         nanoid::nanoid!(),
@@ -128,8 +133,48 @@ pub(super) async fn create_master(
         update.dtend_time,
         new_rrule
     )
-    .execute(&mut **tx)
+    .fetch_one(&mut **tx)
     .await?;
+
+    // Copy attendees from original master event
+    copy_attendees_to_event(tx, &master.id, &new_master_id).await?;
+
+    Ok(())
+}
+
+/// Copy all attendees from one event to another
+async fn copy_attendees_to_event(
+    tx: &mut sqlx::Transaction<'_, sqlx::Postgres>,
+    source_event_id: &str,
+    target_event_id: &str,
+) -> Result<(), DbError> {
+    // Get all attendees from the source event
+    let attendees = sqlx::query!(
+        r#"
+        SELECT user_id, email, name 
+        FROM event_attendees 
+        WHERE event_id = $1
+        "#,
+        source_event_id
+    )
+    .fetch_all(&mut **tx)
+    .await?;
+
+    // Copy each attendee to the target event
+    for attendee in attendees {
+        let attendee_payload = EventAttendeeCreate {
+            email: attendee.email,
+            name: attendee.name,
+        };
+
+        event_attendee::create(
+            &mut **tx,
+            target_event_id,
+            &attendee.user_id,
+            attendee_payload,
+        )
+        .await?;
+    }
 
     Ok(())
 }

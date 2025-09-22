@@ -10,7 +10,7 @@
 <div
   data-panel
   transition:fade={{ duration: 200 }}
-  class="ring-default fixed right-0 bottom-0 z-50 h-1/2 w-[500px] rounded-tl-2xl bg-white shadow-2xl transition-transform duration-300 ease-out dark:bg-stone-950"
+  class="ring-default fixed right-0 bottom-0 z-50 h-max min-h-1/2 w-[500px] rounded-tl-2xl bg-white pb-8 shadow-2xl transition-transform duration-300 ease-out dark:bg-stone-950"
 >
   <!-- Close button -->
   <Merger styling="absolute right-4 top-4 z-50">
@@ -22,7 +22,7 @@
 
   <!-- Content -->
   <div
-    class="scrollbar-thin scrollbar-track-stone-100 scrollbar-thumb-stone-300 dark:scrollbar-track-stone-800 dark:scrollbar-thumb-stone-600 overflow-y-auto p-4 pb-8"
+    class="scrollbar-thin scrollbar-track-stone-100 scrollbar-thumb-stone-300 dark:scrollbar-track-stone-800 dark:scrollbar-thumb-stone-600 overflow-y-auto p-4"
   >
     {@render children()}
   </div>

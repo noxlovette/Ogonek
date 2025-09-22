@@ -5,6 +5,8 @@
   import { getLocaleFromCookie } from "$lib/utils";
   import { generateMonthDays } from "$lib/utils/time/calendar";
   import { HStack, Toolbar } from "..";
+  import Divider from "../toolbar/Divider.svelte";
+  import VStack from "../VStack.svelte";
 
   const { events }: { events: EventSmall[] } = $props();
 
@@ -34,6 +36,8 @@
 
 <Toolbar override={true}>
   <LargeTitle styling="capitalize">{monthName} {year}</LargeTitle>
+  <Divider />
+  <Caption1>Московское время</Caption1>
 </Toolbar>
 <div class="grid grid-cols-7 gap-1">
   {#each ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"] as dayLabel}

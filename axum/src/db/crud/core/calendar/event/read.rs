@@ -8,7 +8,7 @@ use crate::{
     services::calendar::{
         OCCURRENCE_SEPARATOR, RRule, extract_id_and_occurence, parse_date_flexible, parse_exdates,
     },
-    types::{EventClass, EventDB, EventFull, EventSmall, EventStatus, EventTransp},
+    types::{EventClass, EventDB, EventDBFull, EventFull, EventSmall, EventStatus, EventTransp},
 };
 
 /// Reads a calendar event by id (supports virtual instances)
@@ -43,16 +43,16 @@ pub async fn read_one(db: &PgPool, event_id: String) -> Result<EventFull, DbErro
     }
 
     tx.commit().await?;
-    Ok(master)
+    Ok(master.into())
 }
 
 /// Reads a calendar event by id
 pub(super) async fn read_one_internal(
     db: impl sqlx::Executor<'_, Database = sqlx::Postgres>,
     event_id: &str,
-) -> Result<EventFull, DbError> {
+) -> Result<EventDBFull, DbError> {
     let event = sqlx::query_as!(
-        EventFull,
+        EventDBFull,
         r#"
         SELECT 
             id,

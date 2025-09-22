@@ -6,86 +6,77 @@
   import {
     House,
     Send,
-    AlertTriangle,
-    Server,
-    FileQuestion,
+    ServerCrash,
+    Bug,
+    ShieldBan,
+    FileSearch,
+    Icon,
   } from "lucide-svelte";
   import { onMount } from "svelte";
 
-  const is404 = page.status === 404;
-  const is500 = page.status >= 500;
-  const is403 = page.status === 403;
+  type ErrorCode = 404 | 403 | 500;
+  type ErrorConfig = {
+    [key in ErrorCode]: {
+      title: string;
+      message: string;
+      icon: typeof Icon;
+      color: string;
+    };
+  } & {
+    default: {
+      title: string;
+      message: string;
+      icon: typeof Icon;
+      color: string;
+    };
+  };
 
-  // Professional error messages in Russian
-  const errorConfig = {
+  const errorConfig: ErrorConfig = {
     404: {
       title: "Страница не найдена",
-      message: "Запрашиваемый ресурс не существует или был перемещён.",
-      icon: FileQuestion,
+      message: "Ресурс не существует или был перемещён.",
+      icon: FileSearch,
       color: "text-amber-600 dark:text-amber-400",
     },
     403: {
       title: "Доступ запрещён",
-      message: "У вас недостаточно прав для просмотра этого содержимого.",
-      icon: AlertTriangle,
+      message: "У вас недостаточно прав для просмотра содержимого.",
+      icon: ShieldBan,
       color: "text-red-600 dark:text-red-400",
     },
     500: {
       title: "Внутренняя ошибка сервера",
-      message: "Произошла непредвиденная ошибка. Наши инженеры уже уведомлены.",
-      icon: Server,
+      message: "Произошла непредвиденная ошибка. Инженеры уведомлены.",
+      icon: ServerCrash,
       color: "text-red-600 dark:text-red-400",
     },
     default: {
       title: `Ошибка ${page.status}`,
       message: page.error?.message || "Произошла неожиданная ошибка.",
-      icon: AlertTriangle,
+      icon: Bug,
       color: "text-stone-600 dark:text-stone-400",
     },
   };
 
-  const currentError = errorConfig[page.status] || errorConfig.default;
+  const currentError =
+    errorConfig[page.status as ErrorCode] ?? errorConfig.default;
 
-  // Dev humor facts in Russian - cached to prevent re-renders
   const devFacts = [
-    "🐛 Первый компьютерный баг был настоящей молью, найденной в реле в 1947 году",
-    "📊 В среднем разработчик создаёт 70 багов на 1000 строк кода",
-    "🎯 10% багов ответственны за 90% всех крашей системы",
-    "⏰ Большинство разработчиков тратят 50% времени на дебаг кода",
-    "🌐 HTTP 404 якобы происходит от комнаты 404 в CERN, где стояли веб-серверы",
-    "☕ Количество выпитого кофе прямо пропорционально количеству исправленных багов",
-    "🚀 В NASA код проходит в среднем 11 стадий ревью перед продакшеном",
+    "🐛 Первый компьютерный баг был настоящей молью в 1947 году",
+    "📊 В среднем — 70 багов на 1000 строк кода",
+    "🎯 10% багов вызывают 90% крашей",
+    "⏰ Половина рабочего времени уходит на отладку",
+    "🌐 HTTP 404 якобы от комнаты №404 в CERN",
+    "☕ Чем больше кофе — тем меньше багов",
+    "🚀 В NASA код проходит 11 стадий ревью",
   ];
 
   let selectedFact: string;
-  let errorId: string;
+  const errorId = page.error?.errorID;
 
   onMount(() => {
-    // Generate error ID for support
-    errorId =
-      `ERR-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`.toUpperCase();
-
-    // Select random fact once on mount
     selectedFact = devFacts[Math.floor(Math.random() * devFacts.length)];
-
-    // Log error for monitoring (replace with your error tracking service)
-    if (typeof window !== "undefined" && page.status >= 400) {
-      console.warn(`Error ${page.status} encountered:`, {
-        errorId,
-        url: page.url.pathname,
-        userAgent: navigator.userAgent,
-        timestamp: new Date().toISOString(),
-      });
-    }
   });
-
-  const handleSupportContact = () => {
-    // Copy error details to clipboard for easier support
-    if (navigator.clipboard) {
-      const errorDetails = `Error ID: ${errorId}\nStatus: ${page.status}\nURL: ${page.url.pathname}\nTime: ${new Date().toLocaleString("ru-RU")}`;
-      navigator.clipboard.writeText(errorDetails);
-    }
-  };
 </script>
 
 <div
@@ -93,37 +84,33 @@
   in:fade={{ duration: 300, delay: 150 }}
 >
   <div
-    class="w-full max-w-lg overflow-hidden rounded-xl bg-white shadow-lg ring-1 ring-stone-200/50 dark:bg-stone-900 dark:ring-stone-700/50"
+    class="w-full max-w-lg rounded-xl bg-white shadow-lg ring-1 ring-stone-200/50 dark:bg-stone-900 dark:ring-stone-700/50"
   >
-    <!-- Header with icon -->
+    <!-- Header -->
     <div
-      class="flex w-full items-center justify-center bg-gradient-to-br from-stone-50 to-stone-100 p-8 dark:from-stone-800 dark:to-stone-700"
+      class="flex flex-col items-center space-y-4 bg-gradient-to-br from-stone-50 to-stone-100 p-8 dark:from-stone-800 dark:to-stone-700"
       in:fly={{ y: -20, duration: 400, delay: 200, easing: backOut }}
     >
-      <div class="flex flex-col items-center space-y-4">
-        <div
-          class="rounded-full bg-white/80 p-6 shadow-sm dark:bg-stone-800/80"
-        >
-          <svelte:component
-            this={currentError.icon}
-            class="h-16 w-16 {currentError.color}"
-            stroke-width="1.5"
-          />
-        </div>
-        <div class="text-center">
-          <h1 class="text-3xl font-bold text-stone-900 dark:text-stone-100">
-            {currentError.title}
-          </h1>
-          <p class="mt-2 text-lg text-stone-600 dark:text-stone-400">
-            {currentError.message}
-          </p>
-        </div>
+      <div class="rounded-full bg-white/80 p-6 shadow-sm dark:bg-stone-800/80">
+        <svelte:component
+          this={currentError.icon}
+          class="h-16 w-16 {currentError.color}"
+          stroke-width="1.5"
+        />
+      </div>
+      <div class="text-center">
+        <h1 class="text-3xl font-bold text-stone-900 dark:text-stone-100">
+          {currentError.title}
+        </h1>
+        <p class="mt-2 text-lg text-stone-600 dark:text-stone-400">
+          {currentError.message}
+        </p>
       </div>
     </div>
 
-    <!-- Content -->
+    <!-- Body -->
     <div class="space-y-6 p-8">
-      <!-- Error ID for support -->
+      <!-- Error ID -->
       {#if errorId}
         <div
           class="rounded-lg border border-stone-200 bg-stone-50 p-4 dark:border-stone-700 dark:bg-stone-800"
@@ -132,36 +119,29 @@
           <p
             class="mb-1 text-sm font-medium text-stone-700 dark:text-stone-300"
           >
-            ID ошибки для поддержки:
+            ID ошибки:
           </p>
           <code
-            class="text-accent rounded border bg-white px-2 py-1 font-mono text-sm dark:bg-stone-900"
+            class="rounded border bg-white px-2 py-1 font-mono text-sm dark:bg-stone-900"
           >
             {errorId}
           </code>
         </div>
       {/if}
 
-      <!-- Dev humor section -->
+      <!-- Dev fact -->
       {#if selectedFact}
         <div
-          class="from-accent/5 to-accent/10 border-accent/20 dark:from-accent/5 dark:to-accent/10 rounded-lg border bg-gradient-to-r p-4"
+          class="border-accent/20 from-accent/5 to-accent/10 dark:from-accent/5 dark:to-accent/10 rounded-lg border bg-gradient-to-r p-4"
           in:fly={{ y: 20, duration: 400, delay: 400 }}
         >
-          <div class="flex items-start space-x-3">
-            <div class="mt-0.5 flex-shrink-0">
-              <div class="bg-accent h-2 w-2 rounded-full"></div>
-            </div>
-            <p
-              class="text-sm leading-relaxed text-stone-700 dark:text-stone-300"
-            >
-              {selectedFact}
-            </p>
-          </div>
+          <p class="text-sm leading-relaxed text-stone-700 dark:text-stone-300">
+            {selectedFact}
+          </p>
         </div>
       {/if}
 
-      <!-- Action buttons -->
+      <!-- Actions -->
       <div
         class="flex flex-col gap-3 pt-2"
         in:fly={{ y: 20, duration: 400, delay: 500 }}
@@ -169,30 +149,23 @@
         <UniButton
           type="button"
           variant="primary"
-          iconOnly={false}
           Icon={House}
           href={`/${page.params.role || "s"}/dashboard`}
         >
-          Вернуться на главную
+          На главную
         </UniButton>
 
-        <UniButton
-          type="button"
-          Icon={Send}
-          href="https://t.me/noxlovette"
-          iconOnly={false}
-          onClick={handleSupportContact}
-        >
-          Связаться с поддержкой
+        <UniButton type="button" Icon={Send} href="https://t.me/noxlovette">
+          Поддержка
         </UniButton>
       </div>
 
-      <!-- Additional help text -->
+      <!-- Footer -->
       <div
         class="border-t border-stone-200 pt-4 text-center dark:border-stone-700"
       >
         <p class="text-xs text-stone-500 dark:text-stone-500">
-          Если проблема повторяется, приложите ID ошибки к обращению
+          При повторении ошибки укажите её ID в обращении.
         </p>
       </div>
     </div>

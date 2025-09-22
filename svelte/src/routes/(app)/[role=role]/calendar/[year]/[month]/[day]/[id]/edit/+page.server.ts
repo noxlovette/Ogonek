@@ -1,6 +1,7 @@
 import { z } from "$lib";
 import logger from "$lib/logger";
 import { routes } from "$lib/routes";
+import type { DeleteScope } from "$lib/types/api/calendar";
 import { parseFormData } from "$lib/utils";
 import { fail, redirect } from "@sveltejs/kit";
 import type { Actions } from "./$types";
@@ -12,11 +13,15 @@ export const actions = {
 
     const rawData = parseFormData(formData);
 
-    console.log(rawData);
-
     const data = z.updateEventBody.parse(rawData);
 
-    console.log(data);
+    if (
+      data.dtendTime == null ||
+      data.dtstartTime == null ||
+      data.dtendTime < data.dtstartTime
+    ) {
+      return fail(400, { dtend: true });
+    }
 
     const response = await fetch(routes.calendars.event(id), {
       body: JSON.stringify(data),
@@ -31,14 +36,20 @@ export const actions = {
     return redirect(301, ".");
   },
 
-  delete: async ({ params, fetch }) => {
+  delete: async ({ params, fetch, request }) => {
     const { id } = params;
+
+    const formData = await request.formData();
+    const scope = formData.get("scope") as DeleteScope;
 
     const response = await fetch(routes.calendars.event(id), {
       method: "DELETE",
+      body: JSON.stringify({ scope }),
     });
 
     if (!response.ok) {
+      const text = await response.text();
+      console.log(text);
       return fail(500);
     }
 

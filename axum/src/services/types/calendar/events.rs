@@ -54,6 +54,26 @@ pub struct EventDB {
 #[derive(Validate, ToSchema, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct EventFull {
+    #[serde(flatten)]
+    pub db_data: EventDBFull,
+    pub is_recurring: bool,
+    pub is_exception: bool,
+}
+impl From<EventDBFull> for EventFull {
+    fn from(db_data: EventDBFull) -> Self {
+        let is_recurring = db_data.rrule.is_some() && db_data.recurrence_id.is_none();
+        let is_exception = db_data.recurrence_id.is_some();
+
+        EventFull {
+            db_data,
+            is_recurring,
+            is_exception,
+        }
+    }
+}
+#[derive(Validate, ToSchema, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct EventDBFull {
     // Basic data
     pub id: String,
     pub uid: String,

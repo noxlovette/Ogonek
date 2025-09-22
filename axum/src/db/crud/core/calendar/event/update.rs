@@ -14,7 +14,9 @@ use crate::{
         error::DbError,
     },
     services::calendar::{extract_id_and_occurence, remove_until_from_rrule},
-    types::{EditScope, EventAttendeeCreate, EventFull, EventUpdate, EventUpdateRequest},
+    types::{
+        EditScope, EventAttendeeCreate, EventDBFull, EventFull, EventUpdate, EventUpdateRequest,
+    },
 };
 
 /// The super handler for recurring or single events
@@ -124,7 +126,7 @@ async fn update_attendee(
 
 /// Edit an exception – ATTENTION – THEY ARE NOT THE SAME AS SINGLE EVENTS
 async fn edit_single_occurrence(
-    master: &EventFull,
+    master: &EventDBFull,
     occurrence_date: DateTime<Utc>,
     updates: &EventUpdate,
     tx: &mut sqlx::Transaction<'_, sqlx::Postgres>,
@@ -150,7 +152,7 @@ async fn edit_single_occurrence(
 
 /// Splits a recurring series at the given occurrence
 async fn edit_this_and_future(
-    master: &EventFull,
+    master: &EventDBFull,
     occurrence_date: DateTime<Utc>,
     updates: &EventUpdate,
     tx: &mut sqlx::Transaction<'_, sqlx::Postgres>,
@@ -162,7 +164,7 @@ async fn edit_this_and_future(
 }
 pub(super) async fn truncate_master(
     tx: &mut sqlx::Transaction<'_, sqlx::Postgres>,
-    master: &EventFull,
+    master: &EventDBFull,
     occurrence_date: &DateTime<Utc>,
 ) -> Result<String, DbError> {
     let rrule_str = master.rrule.as_ref().ok_or(DbError::NotRecurring)?;

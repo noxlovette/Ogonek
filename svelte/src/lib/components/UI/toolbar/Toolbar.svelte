@@ -14,7 +14,7 @@
   {/if}
   <BackButton {override}></BackButton>
 
-  <div class="relative z-10 flex">
+  <div class="relative z-10 flex items-end">
     {@render children?.()}
   </div>
 </div>

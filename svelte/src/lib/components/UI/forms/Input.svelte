@@ -44,6 +44,7 @@
       | "assignee"
       | "attendee"
       | "visibility"
+      | "scope"
       | "role";
   } = $props();
 
@@ -168,9 +169,14 @@
     </select>
   {:else if type === "role"}
     <select {name} {required} class={baseStyle}>
-      <option value="">Select a role</option>
+      <option value="">{m.cool_seemly_raven_walk()}</option>
       <option value="teacher">Teacher</option>
       <option value="student">Student</option>
+    </select>
+  {:else if type === "scope"}
+    <select {name} {required} class={baseStyle}>
+      <option value="this-only">Только это событие</option>
+      <option value="this-and-future">Это и следующие события</option>
     </select>
   {/if}
   {#if invalid && invalidDescription}

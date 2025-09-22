@@ -3,11 +3,15 @@
   import { isValid, parse } from "date-fns";
   import { HStack, VStack } from "..";
   import Input from "./Input.svelte";
+  import Divider from "../toolbar/Divider.svelte";
+  import type { ActionData } from "../../../../routes/(app)/[role=role]/calendar/[year]/[month]/[day]/[id]/edit/$types";
 
   let {
     dtstartTime,
     dtendTime,
-  }: { dtstartTime: string; dtendTime?: string | null } = $props();
+    form,
+  }: { dtstartTime: string; dtendTime?: string | null; form: ActionData } =
+    $props();
 
   const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
@@ -57,9 +61,6 @@
 
     dtstartTime = dtstartISO;
   }
-
-  $inspect(dtstartTime);
-  $inspect(dtendTime);
 </script>
 
 <HStack>
@@ -73,6 +74,7 @@
       onchange={handleInputChange}
       bind:value={localDateString}
     />
+    <Divider />
     <Input
       type="time"
       name="startTime"
@@ -85,6 +87,8 @@
       name="endTime"
       labelName="Конец"
       onchange={handleInputChange}
+      invalid={form?.dtend}
+      invalidDescription="Проверьте время"
       bind:value={dtendLocalTimeString}
     />
   </VStack>

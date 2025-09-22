@@ -18,7 +18,7 @@
   import { enhance } from "$app/forms";
   import { enhanceForm } from "@noxlovette/svarog";
 
-  const { data } = $props();
+  const { data, form } = $props();
   const event = data.event;
 
   let showDescription = $state(false);
@@ -36,8 +36,7 @@
 <form
   use:enhance={enhanceForm({
     messages: {
-      success: "Изменения сохранены",
-      redirect: "Событие удалено",
+      redirect: "Изменения сохранены",
     },
     shouldUpdate: true,
     navigate: true,
@@ -46,7 +45,6 @@
   action="?/update"
   class="flex w-full flex-col gap-3 md:gap-3 lg:gap-4"
 >
-  <input type="hidden" name="scope" value="this-only" />
   <BackButton />
   <VStack>
     <Title1>
@@ -62,10 +60,13 @@
   <SectionBg>
     <HStack>
       <DateTimePicker
+        {form}
         dtstartTime={event.dtstartTime}
         dtendTime={event.dtendTime}
       />
-      <RecurrenceSelector rrule={event.rrule} />
+      {#if !event.isRecurring}
+        <RecurrenceSelector rrule={event.rrule} />
+      {/if}
     </HStack>
   </SectionBg>
   <SectionBg>
@@ -103,4 +104,5 @@
   {:else}
     <Optional bind:toggle={showDescription}>Добавить описание</Optional>
   {/if}
+  <Input type="scope" name="scope" labelName="Охват изменений" />
 </form>
