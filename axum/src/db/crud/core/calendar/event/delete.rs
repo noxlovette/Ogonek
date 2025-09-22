@@ -57,10 +57,34 @@ pub async fn delete(db: &PgPool, event_id: String, req: EventDelete) -> Result<(
         .fetch_optional(&mut *tx)
         .await?;
         if existing_exception.is_some() {
+            // Get the exception's recurrence_id before deleting
+            let exception_recurrence_id = sqlx::query_scalar!(
+                "SELECT recurrence_id FROM calendar_events WHERE id = $1",
+                master_id
+            )
+            .fetch_one(&mut *tx)
+            .await?;
+
             // Delete the existing exception instance
             sqlx::query!("DELETE FROM calendar_events WHERE id = $1", master_id)
                 .execute(&mut *tx)
                 .await?;
+
+            // Remove the occurrence from master's exdate array so it shows up again
+            if let Some(recurrence_date) = exception_recurrence_id {
+                sqlx::query!(
+                    r#"
+                    UPDATE calendar_events 
+                    SET exdate = array_remove(COALESCE(exdate, '{}'), $1),
+                        updated_at = NOW()
+                    WHERE uid = (SELECT uid FROM calendar_events WHERE id = $2 AND recurrence_id IS NULL)
+                    "#,
+                    recurrence_date.to_rfc3339(),
+                    master_id
+                )
+                .execute(&mut *tx)
+                .await?;
+            }
         }
         sqlx::query!(
             r#"

@@ -1,12 +1,15 @@
 <script lang="ts">
   import { page } from "$app/state";
-  import type { CalendarEvent } from "$lib/types/api/calendar";
-  import { formatEventTime, isVideoCallUrl } from "$lib/utils";
-  import { Video } from "lucide-svelte";
+  import type { EventSmall } from "$lib/types/api/calendar";
+  import { formatEventTime, getVideoCallService } from "$lib/utils";
   import { Caption1 } from "../typography";
   import Headline from "../typography/Headline.svelte";
 
-  const { event }: { event: CalendarEvent } = $props();
+  const { event }: { event: EventSmall } = $props();
+
+  const videoCallService = event.location
+    ? getVideoCallService(event.location)
+    : null;
 </script>
 
 <a
@@ -14,17 +17,17 @@
   href="{page.params.day}/{event.id}"
 >
   <Caption1>
-    {formatEventTime(event.dtstartTime, event.dtendTime ?? "", event.allDay)}
+    {formatEventTime(event.dtstartTime, event.dtendTime ?? "")}
   </Caption1>
 
   <div>
     <Headline styling={event.status === "cancelled" ? "line-through" : ""}>
-      {page.params.role === "t" ? event.title : event.organiserName}
+      {page.params.role === "t" ? event.title : "Занятие"}
     </Headline>
 
     {#if event.location}
-      {#if isVideoCallUrl(event.location)}
-        <Caption1>Онлайн</Caption1>
+      {#if videoCallService}
+        <Caption1>{videoCallService}</Caption1>
       {:else}
         <Caption1>
           {event.location}

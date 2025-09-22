@@ -97,6 +97,20 @@ pub(super) async fn create_exception(
     // Copy attendees from master event
     copy_attendees_to_event(tx, &master.id, &exception_id).await?;
 
+    // Add the occurrence date to master's exdate array to prevent original occurrence from showing
+    sqlx::query!(
+        r#"
+        UPDATE calendar_events 
+        SET exdate = array_append(COALESCE(exdate, '{}'), $1),
+            updated_at = NOW()
+        WHERE uid = $2 AND recurrence_id IS NULL
+        "#,
+        occurrence_date.to_rfc3339(),
+        master.uid
+    )
+    .execute(&mut **tx)
+    .await?;
+
     Ok(())
 }
 

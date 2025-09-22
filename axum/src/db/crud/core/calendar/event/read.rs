@@ -36,7 +36,6 @@ pub async fn read_one(db: &PgPool, event_id: String) -> Result<EventFull, DbErro
         master.id = event_id;
 
         // Clear recurrence info for the virtual instance
-        master.rrule = None;
         master.rdate = None;
         master.exdate = None;
         master.recurrence_id = Some(occurrence_dt);

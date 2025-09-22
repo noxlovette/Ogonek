@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { getLocaleFromCookie, isVideoCallUrl } from "$lib/utils";
+  import { getLocaleFromCookie, getVideoCallService } from "$lib/utils";
   import { MapPin, Share, Video } from "lucide-svelte";
   import {
     BackButton,
@@ -19,6 +19,7 @@
     EditButton,
   } from "$lib/components";
   import { page } from "$app/state";
+  import RRule from "$lib/components/UI/RRule.svelte";
 
   const { data } = $props();
   const event = data.event;
@@ -61,6 +62,10 @@
     hour12: false,
   };
   const locale = getLocaleFromCookie();
+
+  const videoCallService = event.location
+    ? getVideoCallService(event.location)
+    : null;
 </script>
 
 <svelte:head>
@@ -98,12 +103,12 @@
     </VStack>
 
     {#if event.rrule}
-      <p class="text-stone-700 dark:text-stone-300">Повторяется</p>
+      <RRule rrule={event.rrule} />
     {/if}
   </HStack>
 
-  {#if event.attendees}
-    <SectionBg>
+  <SectionBg>
+    {#if event.attendees}
       {#each event.attendees as attendee, index}
         <Headline>
           {attendee.name}
@@ -112,17 +117,19 @@
           {attendee.email}
         </Caption1>
       {/each}
-    </SectionBg>
-  {/if}
-  {#if event.location}
-    <SectionBg>
+    {/if}
+    {#if event.location}
       <VStack>
-        <Callout>
-          {event.location}
+        <Callout styling="truncate">
+          {#if videoCallService}
+            {videoCallService}
+          {:else}
+            {event.location}
+          {/if}
         </Callout>
         <Divider />
         <Merger>
-          {#if isVideoCallUrl(event.location)}
+          {#if videoCallService}
             <UniButton href={event.location} Icon={Video}>
               Присоединиться к звонку
             </UniButton>
@@ -136,8 +143,8 @@
           {/if}
         </Merger>
       </VStack>
-    </SectionBg>
-  {/if}
+    {/if}
+  </SectionBg>
 
   {#if event.description}
     <SectionBg>

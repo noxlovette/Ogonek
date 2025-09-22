@@ -64,7 +64,7 @@
         dtstartTime={event.dtstartTime}
         dtendTime={event.dtendTime}
       />
-      {#if !event.isRecurring}
+      {#if !event.isRecurring && !event.isException}
         <RecurrenceSelector rrule={event.rrule} />
       {/if}
     </HStack>

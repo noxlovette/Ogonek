@@ -21,20 +21,35 @@ export async function extractWordsFromRewordFile(file: File) {
 
   throw new Error("Invalid JSON format in .reword file");
 }
-export function isVideoCallUrl(location: string) {
-  if (!location || typeof location !== "string") return false;
+interface VideoCallService {
+  name: string;
+  pattern: RegExp;
+}
 
-  const videoCallPatterns = [
-    /^https?:\/\/([a-z0-9-]+\.)?zoom\.us\//i,
-    /^https?:\/\/meet\.google\.com\//i,
-    /^https?:\/\/teams\.microsoft\.com\//i,
-    /^https?:\/\/([a-z0-9-]+\.)?webex\.com\//i,
-    /^https?:\/\/([a-z0-9-]+\.)?gotomeeting\.com\//i,
-    /^https?:\/\/discord\.gg\//i,
-    /^https?:\/\/([a-z0-9-]+\.)?discord\.com\//i,
-    /^https?:\/\/([a-z0-9-]+\.)?skype\.com\//i,
-    /^https?:\/\/([a-z0-9-]+\.)?whereby\.com\//i,
-  ];
+const VIDEO_CALL_SERVICES: VideoCallService[] = [
+  { name: "Zoom", pattern: /^https?:\/\/([a-z0-9-]+\.)?zoom\.us\//i },
+  { name: "Google Meet", pattern: /^https?:\/\/meet\.google\.com\//i },
+  { name: "Microsoft Teams", pattern: /^https?:\/\/teams\.microsoft\.com\//i },
+  { name: "Webex", pattern: /^https?:\/\/([a-z0-9-]+\.)?webex\.com\//i },
+  {
+    name: "GoToMeeting",
+    pattern: /^https?:\/\/([a-z0-9-]+\.)?gotomeeting\.com\//i,
+  },
+  {
+    name: "Discord",
+    pattern: /^https?:\/\/(discord\.gg|([a-z0-9-]+\.)?discord\.com)\//i,
+  },
+  { name: "Skype", pattern: /^https?:\/\/([a-z0-9-]+\.)?skype\.com\//i },
+  { name: "Whereby", pattern: /^https?:\/\/([a-z0-9-]+\.)?whereby\.com\//i },
+];
 
-  return videoCallPatterns.some((pattern) => pattern.test(location.trim()));
+export function getVideoCallService(location: string): string | null {
+  if (!location || typeof location !== "string") return null;
+
+  const trimmedLocation = location.trim();
+  const service = VIDEO_CALL_SERVICES.find((service) =>
+    service.pattern.test(trimmedLocation),
+  );
+
+  return service?.name ?? null;
 }

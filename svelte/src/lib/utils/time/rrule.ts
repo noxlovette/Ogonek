@@ -4,15 +4,14 @@ type DayMapping = {
   ical: string;
   index: number;
 };
-
 export const WEEKDAYS: DayMapping[] = [
-  { label: "S", full: "Sunday", ical: "SU", index: 0 },
-  { label: "M", full: "Monday", ical: "MO", index: 1 },
-  { label: "T", full: "Tuesday", ical: "TU", index: 2 },
-  { label: "W", full: "Wednesday", ical: "WE", index: 3 },
-  { label: "T", full: "Thursday", ical: "TH", index: 4 },
-  { label: "F", full: "Friday", ical: "FR", index: 5 },
-  { label: "S", full: "Saturday", ical: "SA", index: 6 },
+  { label: "В", full: "Воскресенье", ical: "SU", index: 0 },
+  { label: "П", full: "Понедельник", ical: "MO", index: 1 },
+  { label: "В", full: "Вторник", ical: "TU", index: 2 },
+  { label: "С", full: "Среда", ical: "WE", index: 3 },
+  { label: "Ч", full: "Четверг", ical: "TH", index: 4 },
+  { label: "П", full: "Пятница", ical: "FR", index: 5 },
+  { label: "С", full: "Суббота", ical: "SA", index: 6 },
 ];
 
 export const parseRRuleDays = (

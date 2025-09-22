@@ -947,7 +947,7 @@ export interface components {
             title: string;
             uid: string;
         };
-        EventFull: {
+        EventDBFull: {
             categories?: string[] | null;
             description?: string | null;
             /** Format: date-time */
@@ -962,6 +962,10 @@ export interface components {
             status: components["schemas"]["EventStatus"];
             title: string;
             uid: string;
+        };
+        EventFull: components["schemas"]["EventDBFull"] & {
+            isException: boolean;
+            isRecurring: boolean;
         };
         EventSmall: components["schemas"]["EventDB"] & {
             isException: boolean;

@@ -1,3 +1,4 @@
+// generateMonthDays - Version corrigée
 import type { EventSmall } from "$lib/types/api/calendar";
 
 export type MonthDay = {
@@ -31,15 +32,31 @@ export const isSameDay = (date1: Date, date2: Date): boolean =>
   date1.getMonth() === date2.getMonth() &&
   date1.getDate() === date2.getDate();
 
-// SINGLE function that does what your original code did - no fancy breakdown
+// Helper pour convertir dimanche (0) vers lundi (0)
+const getMondayBasedDayOfWeek = (date: Date): number => {
+  const dayOfWeek = date.getDay();
+  return dayOfWeek === 0 ? 6 : dayOfWeek - 1; // Dimanche devient 6, lundi devient 0
+};
+
 export const generateMonthDays = (
   referenceDate: Date,
   events: EventSmall[],
   locale: string = "ru-RU",
 ): { monthDays: MonthDay[]; monthName: string; year: number } => {
-  const now = referenceDate;
-  const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
-  const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+  // FIX MAJEUR : Utilise la vraie date d'aujourd'hui, pas referenceDate
+  const today = new Date();
+  const displayMonth = referenceDate;
+
+  const firstDay = new Date(
+    displayMonth.getFullYear(),
+    displayMonth.getMonth(),
+    1,
+  );
+  const lastDay = new Date(
+    displayMonth.getFullYear(),
+    displayMonth.getMonth() + 1,
+    0,
+  );
 
   // Quick event grouping
   const eventsByDate = groupEventsByDate(events);
@@ -49,27 +66,38 @@ export const generateMonthDays = (
   };
 
   const monthDays: MonthDay[] = [];
-  const startDayOfWeek = firstDay.getDay();
-  const prevMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+
+  // FIX : Utilise getMondayBasedDayOfWeek au lieu de getDay()
+  const startDayOfWeek = getMondayBasedDayOfWeek(firstDay);
+  const prevMonth = new Date(
+    displayMonth.getFullYear(),
+    displayMonth.getMonth() - 1,
+    1,
+  );
   const prevMonthLastDay = new Date(
-    now.getFullYear(),
-    now.getMonth(),
+    displayMonth.getFullYear(),
+    displayMonth.getMonth(),
     0,
   ).getDate();
 
   // Previous month overflow
   for (let i = 0; i < startDayOfWeek; i++) {
     const dayNum = prevMonthLastDay - startDayOfWeek + i + 1;
+    const actualDate = new Date(
+      prevMonth.getFullYear(),
+      prevMonth.getMonth(),
+      dayNum,
+    );
     monthDays.push({
       day: dayNum,
       isCurrentMonth: false,
-      isToday: false,
-      events: [],
-      actualDate: new Date(
-        prevMonth.getFullYear(),
-        prevMonth.getMonth(),
+      isToday: isSameDay(actualDate, today), // Utilise today au lieu de displayMonth
+      events: getEventsForDay(
         dayNum,
+        prevMonth.getMonth(),
+        prevMonth.getFullYear(),
       ),
+      actualDate,
     });
   }
 
@@ -83,7 +111,7 @@ export const generateMonthDays = (
     monthDays.push({
       day,
       isCurrentMonth: true,
-      isToday: isSameDay(actualDate, now),
+      isToday: isSameDay(actualDate, today), // FIX : today au lieu de displayMonth
       events: getEventsForDay(day, firstDay.getMonth(), firstDay.getFullYear()),
       actualDate,
     });
@@ -91,7 +119,11 @@ export const generateMonthDays = (
 
   // Next month overflow
   const remainingCells = 42 - monthDays.length;
-  const nextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+  const nextMonth = new Date(
+    displayMonth.getFullYear(),
+    displayMonth.getMonth() + 1,
+    1,
+  );
   for (let i = 1; i <= remainingCells; i++) {
     const actualDate = new Date(
       nextMonth.getFullYear(),
@@ -101,7 +133,7 @@ export const generateMonthDays = (
     monthDays.push({
       day: i,
       isCurrentMonth: false,
-      isToday: false,
+      isToday: isSameDay(actualDate, today), // Utilise today
       events: getEventsForDay(i, nextMonth.getMonth(), nextMonth.getFullYear()),
       actualDate,
     });
