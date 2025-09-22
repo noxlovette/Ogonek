@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "\n        SELECT \n            id,\n            uid,\n            summary,\n            location,\n            dtstart_time,\n            dtend_time,\n            rdate,\n            exdate,\n            recurrence_id,\n            rrule\n        FROM calendar_events\n        WHERE calendar_id = $1 \n            AND deleted_at IS NULL\n            AND (\n                (rrule IS NOT NULL AND recurrence_id IS NULL) -- Master events\n            OR (dtstart_time BETWEEN $2 AND $3) -- Single events in range\n            OR (recurrence_id IS NOT NULL) -- All exceptions (we'll filter later)\n            )\n        ORDER BY dtstart_time ASC\n        ",
+  "query": "\n        SELECT \n            id,\n            uid,\n            summary,\n            location,\n            dtstart_time,\n            dtend_time,\n            rdate,\n            status AS \"status!: EventStatus\",\n            exdate,\n            recurrence_id,\n            rrule\n        FROM calendar_events\n        WHERE calendar_id = $1 \n            AND deleted_at IS NULL\n            AND (\n                (rrule IS NOT NULL AND recurrence_id IS NULL) -- Master events\n            OR (dtstart_time BETWEEN $2 AND $3) -- Single events in range\n            OR (recurrence_id IS NOT NULL) -- All exceptions (we'll filter later)\n            )\n        ORDER BY dtstart_time ASC\n        ",
   "describe": {
     "columns": [
       {
@@ -40,16 +40,32 @@
       },
       {
         "ordinal": 7,
+        "name": "status!: EventStatus",
+        "type_info": {
+          "Custom": {
+            "name": "event_status",
+            "kind": {
+              "Enum": [
+                "tentative",
+                "confirmed",
+                "cancelled"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "ordinal": 8,
         "name": "exdate",
         "type_info": "TextArray"
       },
       {
-        "ordinal": 8,
+        "ordinal": 9,
         "name": "recurrence_id",
         "type_info": "Timestamptz"
       },
       {
-        "ordinal": 9,
+        "ordinal": 10,
         "name": "rrule",
         "type_info": "Text"
       }
@@ -69,10 +85,11 @@
       false,
       true,
       true,
+      false,
       true,
       true,
       true
     ]
   },
-  "hash": "78b77ef4d6bb033e979f191c8bdcdf338af22b35c1f71b4b3752cb6d47c82a79"
+  "hash": "a59f759ef3365822a27299ca1b322576dae5fb02b37e135ef9079492aedc7996"
 }

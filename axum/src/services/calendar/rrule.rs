@@ -141,84 +141,196 @@ impl RRule {
 
     pub fn generate_occurrences(
         &self,
-        start: DateTime<Utc>,
+        dtstart: DateTime<Utc>,
         range_start: DateTime<Utc>,
         range_end: DateTime<Utc>,
     ) -> Vec<DateTime<Utc>> {
         let mut occurrences = Vec::new();
-        let mut current = start;
-        let mut count = 0;
 
-        while current <= range_end {
-            // Check count limit
-            if let Some(max_count) = self.count {
-                if count >= max_count {
-                    break;
-                }
-            }
+        match &self.freq {
+            Frequency::Weekly if self.by_day.is_some() => {
+                // Special handling for weekly events with BYDAY
+                if let Some(ref days) = self.by_day {
+                    let mut week_start = dtstart - Duration::days(dtstart.weekday().num_days_from_monday() as i64);
+                    let mut week_count = 0;
+                    let mut occurrence_count = 0;
 
-            // Check until limit
-            if let Some(until) = self.until {
-                if current > until {
-                    break;
-                }
-            }
+                    // Fast-forward to the first week that could contain occurrences in range
+                    if week_start < range_start {
+                        let weeks_diff = (range_start - week_start).num_weeks();
+                        let intervals_to_skip = (weeks_diff / self.interval as i64) as i64;
+                        week_start = week_start + Duration::weeks(intervals_to_skip * self.interval as i64);
+                        week_count = intervals_to_skip;
+                    }
 
-            // If in range, add occurrence
-            if current >= range_start {
-                match &self.freq {
-                    Frequency::Weekly if self.by_day.is_some() => {
-                        // Handle BYDAY for weekly events
-                        if let Some(ref days) = self.by_day {
-                            let week_start = current
-                                - Duration::days(current.weekday().num_days_from_monday() as i64);
-
-                            for &day in days {
-                                let occurrence =
-                                    week_start + Duration::days(day.num_days_from_monday() as i64);
-                                if occurrence >= range_start && occurrence <= range_end {
-                                    occurrences.push(occurrence);
-                                }
+                    while week_start <= range_end {
+                        // Check count limit
+                        if let Some(max_count) = self.count {
+                            if occurrence_count >= max_count {
+                                break;
                             }
                         }
-                    }
-                    _ => {
-                        occurrences.push(current);
+
+                        // Check until limit
+                        if let Some(until) = self.until {
+                            if week_start > until {
+                                break;
+                            }
+                        }
+
+                        // Generate occurrences for this week
+                        for &day in days {
+                            let occurrence = week_start + Duration::days(day.num_days_from_monday() as i64);
+                            
+                            // Check all constraints
+                            if occurrence >= dtstart
+                                && occurrence >= range_start
+                                && occurrence <= range_end
+                            {
+                                if let Some(until) = self.until {
+                                    if occurrence > until {
+                                        continue;
+                                    }
+                                }
+                                
+                                if let Some(max_count) = self.count {
+                                    if occurrence_count >= max_count {
+                                        break;
+                                    }
+                                }
+
+                                occurrences.push(occurrence);
+                                occurrence_count += 1;
+                            }
+                        }
+
+                        // Move to next week
+                        week_start = week_start + Duration::weeks(self.interval as i64);
+                        week_count += 1;
+
+                        // Safety break
+                        if week_count > 1000 {
+                            break;
+                        }
                     }
                 }
             }
+            _ => {
+                // Original logic for non-weekly-BYDAY events
+                let mut current = dtstart;
+                let mut count = 0;
 
-            // Move to next occurrence
-            current = match self.freq {
-                Frequency::Daily => current + Duration::days(self.interval as i64),
-                Frequency::Weekly => current + Duration::weeks(self.interval as i64),
-                Frequency::Monthly => {
-                    // This is tricky - month arithmetic
-                    let mut year = current.year();
-                    let mut month = current.month() as i32 + self.interval;
+                // Fast-forward to the first occurrence that could be in range
+                if current < range_start {
+                    current = self.fast_forward_to_range(dtstart, range_start);
+                }
 
-                    while month > 12 {
-                        year += 1;
-                        month -= 12;
+                while current <= range_end {
+                    // Check count limit
+                    if let Some(max_count) = self.count {
+                        if count >= max_count {
+                            break;
+                        }
                     }
 
-                    current
-                        .with_year(year)
-                        .unwrap()
-                        .with_month(month as u32)
-                        .unwrap()
+                    // Check until limit
+                    if let Some(until) = self.until {
+                        if current > until {
+                            break;
+                        }
+                    }
+
+                    // If in range, add occurrence
+                    if current >= range_start {
+                        occurrences.push(current);
+                    }
+
+                    // Move to next occurrence
+                    current = match self.freq {
+                        Frequency::Daily => current + Duration::days(self.interval as i64),
+                        Frequency::Weekly => current + Duration::weeks(self.interval as i64),
+                        Frequency::Monthly => {
+                            // This is tricky - month arithmetic
+                            let mut year = current.year();
+                            let mut month = current.month() as i32 + self.interval;
+
+                            while month > 12 {
+                                year += 1;
+                                month -= 12;
+                            }
+
+                            current
+                                .with_year(year)
+                                .unwrap()
+                                .with_month(month as u32)
+                                .unwrap()
+                        }
+                        Frequency::Yearly => current + Duration::days(365 * self.interval as i64), // Rough
+                    };
+
+                    count += 1;
+
+                    // Safety break
+                    if count > 1000 {
+                        break;
+                    }
                 }
-                Frequency::Yearly => current + Duration::days(365 * self.interval as i64), // Rough
-            };
-
-            count += 1;
-
-            // Safety break
-            if count > 1000 {
-                break;
             }
         }
 
         occurrences
+    }
+
+    fn fast_forward_to_range(
+        &self,
+        dtstart: DateTime<Utc>,
+        range_start: DateTime<Utc>,
+    ) -> DateTime<Utc> {
+        if dtstart >= range_start {
+            return dtstart;
+        }
+
+        match self.freq {
+            Frequency::Daily => {
+                let days_diff = (range_start - dtstart).num_days();
+                let intervals_to_skip = (days_diff / self.interval as i64) as i64;
+                dtstart + Duration::days(intervals_to_skip * self.interval as i64)
+            }
+            Frequency::Weekly => {
+                let weeks_diff = (range_start - dtstart).num_weeks();
+                let intervals_to_skip = (weeks_diff / self.interval as i64) as i64;
+                dtstart + Duration::weeks(intervals_to_skip * self.interval as i64)
+            }
+            Frequency::Monthly => {
+                let current = dtstart;
+                let months_diff = (range_start.year() - dtstart.year()) * 12
+                    + (range_start.month() as i32 - dtstart.month() as i32);
+                let intervals_to_skip = months_diff / self.interval;
+
+                let mut year = current.year();
+                let mut month = current.month() as i32 + (intervals_to_skip * self.interval);
+
+                while month > 12 {
+                    year += 1;
+                    month -= 12;
+                }
+                while month < 1 {
+                    year -= 1;
+                    month += 12;
+                }
+
+                current
+                    .with_year(year)
+                    .unwrap()
+                    .with_month(month as u32)
+                    .unwrap()
+            }
+            Frequency::Yearly => {
+                let years_diff = range_start.year() - dtstart.year();
+                let intervals_to_skip = years_diff / self.interval;
+                let target_year = dtstart.year() + (intervals_to_skip * self.interval);
+                dtstart.with_year(target_year).unwrap()
+            }
+        }
     }
 }
