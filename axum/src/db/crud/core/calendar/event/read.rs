@@ -4,13 +4,51 @@ use chrono::{DateTime, NaiveDate, Utc};
 use sqlx::PgPool;
 
 use crate::{
-    db::{crud::core::calendar::calendar::read_calendar_id, error::DbError},
-    services::calendar::{OCCURRENCE_SEPARATOR, RRule},
+    db::{
+        crud::core::calendar::{calendar::read_calendar_id, event_attendee::find_by_event_id},
+        error::DbError,
+    },
+    services::calendar::{OCCURRENCE_SEPARATOR, RRule, extract_id_and_occurence},
     types::{EventClass, EventDB, EventFull, EventSmall, EventStatus, EventTransp},
 };
 
+/// Reads a calendar event by id (supports virtual instances)
+pub async fn read_event(db: &PgPool, event_id: String) -> Result<EventFull, DbError> {
+    let (master_id, occurrence_date) = extract_id_and_occurence(event_id.clone());
+
+    let mut tx = db.begin().await?;
+
+    let mut master = read_one(&mut *tx, &master_id).await?;
+
+    // If this is a virtual instance, modify the dates
+    if let Some(occurrence_dt) = occurrence_date {
+        // Calculate the duration of the original event
+        let original_duration = master.dtend_time.map(|end| end - master.dtstart_time);
+
+        // Update the start time to the occurrence date
+        master.dtstart_time = occurrence_dt;
+
+        // Update the end time to maintain the same duration
+        if let Some(duration) = original_duration {
+            master.dtend_time = Some(occurrence_dt + duration);
+        }
+
+        // Update the ID to the virtual instance ID
+        master.id = event_id;
+
+        // Clear recurrence info for the virtual instance
+        master.rrule = None;
+        master.rdate = None;
+        master.exdate = None;
+        master.recurrence_id = Some(occurrence_dt);
+    }
+
+    tx.commit().await?;
+    Ok(master)
+}
+
 /// Reads a calendar event by id
-pub async fn read_one(
+pub(crate) async fn read_one(
     db: impl sqlx::Executor<'_, Database = sqlx::Postgres>,
     event_id: &str,
 ) -> Result<EventFull, DbError> {
