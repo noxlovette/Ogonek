@@ -1,10 +1,10 @@
-import type { CalendarEvent } from "$lib/types/api/calendar";
+import type { EventSmall } from "$lib/types/api/calendar";
 
 export type MonthDay = {
   day: number;
   isCurrentMonth: boolean;
   isToday: boolean;
-  events: CalendarEvent[];
+  events: EventSmall[];
   actualDate: Date;
 };
 
@@ -12,17 +12,17 @@ export const createDateKey = (date: Date): string =>
   `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
 
 export const groupEventsByDate = (
-  events: CalendarEvent[],
-): Record<string, CalendarEvent[]> => {
+  events: EventSmall[],
+): Record<string, EventSmall[]> => {
   return events.reduce(
     (acc, event) => {
-      const eventDate = new Date(event.dtstart);
+      const eventDate = new Date(event.dtstartTime);
       const dateKey = createDateKey(eventDate);
       if (!acc[dateKey]) acc[dateKey] = [];
       acc[dateKey].push(event);
       return acc;
     },
-    {} as Record<string, CalendarEvent[]>,
+    {} as Record<string, EventSmall[]>,
   );
 };
 
@@ -34,7 +34,7 @@ export const isSameDay = (date1: Date, date2: Date): boolean =>
 // SINGLE function that does what your original code did - no fancy breakdown
 export const generateMonthDays = (
   referenceDate: Date,
-  events: CalendarEvent[],
+  events: EventSmall[],
   locale: string = "en-US",
 ): { monthDays: MonthDay[]; monthName: string; year: number } => {
   const now = referenceDate;

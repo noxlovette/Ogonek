@@ -37,8 +37,8 @@ pub async fn fetch_event(
     path = "/events",
     tag = CALENDAR_TAG,
     params(
-        ("start" = DateTime<Utc>, description = "Year (e.g., 2024)"),
-        ("end" = DateTime<Utc>, Path, description = "Month (1-12)")
+        ("start" = String, Query),
+        ("end" = String, Query)
     ),
     responses(
         (status = 200, description = "Events retrieved successfully", body = Vec<EventSmall>),

@@ -2,12 +2,12 @@
   import { page } from "$app/state";
   import { Caption1, Title1 } from "$lib/components/typography";
   import { setPanelSideFromCalendarClick } from "$lib/stores";
-  import type { CalendarEvent } from "$lib/types/api/calendar";
+  import type { EventSmall } from "$lib/types/api/calendar";
   import { getLocaleFromCookie } from "$lib/utils";
   import { generateMonthDays } from "$lib/utils/time/calendar";
   import { HStack } from "..";
 
-  const { events }: { events: CalendarEvent[] } = $props();
+  const { events }: { events: EventSmall[] } = $props();
 
   const selectedDate = $derived.by(() => {
     if (page.params.year && page.params.month && page.params.day) {
@@ -72,7 +72,7 @@
               <div
                 class="bg-accent/20 text-accent truncate rounded px-1 py-0.5 text-xs"
               >
-                {page.params.role === "t" ? event.summary : "Занятие"}
+                {page.params.role === "t" ? event.title : "Занятие"}
               </div>
             {/each}
 

@@ -14,10 +14,8 @@
     DateTimePicker,
     Optional,
     RecurrenceSelector,
-    UniButton,
   } from "$lib/components";
   import { enhance } from "$app/forms";
-  import { Trash2 } from "lucide-svelte";
   import { enhanceForm } from "@noxlovette/svarog";
 
   const { data } = $props();
@@ -26,12 +24,14 @@
   let showDescription = $state(false);
   let showLocation = $state(false);
 
-  const student = event.attendees[0];
+  const student = event.attendees.filter(
+    (attendee) => attendee.role !== "chair",
+  )[0];
 </script>
 
 <svelte:head>
-  <title>{event.summary} • Календарь</title>
-  <meta name="description" content={event.description || event.summary} />
+  <title>{event.title} • Календарь</title>
+  <meta name="description" content={event.description || event.title} />
 </svelte:head>
 <form
   use:enhance={enhanceForm({
@@ -46,10 +46,11 @@
   action="?/update"
   class="flex w-full flex-col gap-3 md:gap-3 lg:gap-4"
 >
+  <input type="hidden" name="scope" value="this-only" />
   <BackButton />
   <VStack>
     <Title1>
-      {event.summary}
+      {event.title}
     </Title1>
     <Divider />
     <Merger>
@@ -60,7 +61,10 @@
   </VStack>
   <SectionBg>
     <HStack>
-      <DateTimePicker dtstart={event.dtstart} dtend={event.dtend} />
+      <DateTimePicker
+        dtstartTime={event.dtstartTime}
+        dtendTime={event.dtendTime}
+      />
       <RecurrenceSelector rrule={event.rrule} />
     </HStack>
   </SectionBg>

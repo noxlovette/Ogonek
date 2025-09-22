@@ -14,12 +14,12 @@
   href="{page.params.day}/{event.id}"
 >
   <Caption1>
-    {formatEventTime(event.dtstart, event.dtend ?? "", event.allDay)}
+    {formatEventTime(event.dtstartTime, event.dtendTime ?? "", event.allDay)}
   </Caption1>
 
   <div>
     <Headline styling={event.status === "cancelled" ? "line-through" : ""}>
-      {page.params.role === "t" ? event.summary : event.organiserName}
+      {page.params.role === "t" ? event.title : event.organiserName}
     </Headline>
 
     {#if event.location}

@@ -41,8 +41,8 @@ export function createCalendarEvent(): CalendarEvent {
       "All Hands",
     ]),
     description: faker.lorem.paragraph(),
-    dtstart: startDate.toISOString(),
-    dtend: allDay ? null : endDate.toISOString(),
+    dtstartTime: startDate.toISOString(),
+    dtendTime: allDay ? null : endDate.toISOString(),
     allDay,
     location: faker.helpers.arrayElement([
       "https://us06web.zoom.us/j/3661071003?pwd=RTlrUkRPaHJaakljZXQxaGpOYmdIZz09",

@@ -32,9 +32,17 @@ export const routes = {
     calendar: () => `${API_BASE}/calendars`,
     delete_attendee: (id: string) => `${API_BASE}/calendars/attendees/${id}`,
     update_attendee: (id: string) => `${API_BASE}/calendars/attendees/${id}`,
+    events: (
+    start: string,
+    end: string
+  ) => {
+      const params = new URLSearchParams();
+      if (start) params.set("start", start);
+      if (end) params.set("end", end);
+      const query = params.toString();
+      return `${API_BASE}/calendars/events${query ? `?${query}` : ""}`;
+    },
     new_event: () => `${API_BASE}/calendars/events`,
-    events_day: (day: string) => `${API_BASE}/calendars/events/day/${day}`,
-    events: (year: string, month: string) => `${API_BASE}/calendars/events/month/${year}/${month}`,
     event: (id: string) => `${API_BASE}/calendars/events/${id}`,
     delete_event: (id: string) => `${API_BASE}/calendars/events/${id}`,
     update_event: (id: string) => `${API_BASE}/calendars/events/${id}`,

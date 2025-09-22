@@ -33,7 +33,11 @@ export const actions = {
       const errorData = await response.text();
 
       logger.error({ errorData });
-      return fail(500, { attendee: false, dtend: false, dtstart: false });
+      return fail(500, {
+        attendee: false,
+        dtendTime: false,
+        dtstartTime: false,
+      });
     }
 
     return redirect(301, ".");

@@ -29,7 +29,7 @@ pub struct EventDB {
     pub id: String,
     pub uid: String,
 
-    #[serde(rename(serialize = "title"))]
+    #[serde(rename = "title")]
     pub summary: String,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub location: Option<String>,
@@ -38,6 +38,8 @@ pub struct EventDB {
     #[serde(with = "datetime_serialization::option")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub dtend_time: Option<DateTime<Utc>>,
+
+    pub status: EventStatus,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub rrule: Option<String>,
@@ -63,7 +65,7 @@ pub struct EventFull {
     pub calendar_id: String,
 
     // Secondary data
-    #[serde(alias = "title")]
+    #[serde(rename = "title")]
     pub summary: String,
     pub description: Option<String>,
     pub location: Option<String>,
@@ -71,8 +73,8 @@ pub struct EventFull {
     pub url: Option<String>,
 
     // Time data
-    #[serde(with = "datetime_serialization::option")]
-    pub dtstart_time: Option<DateTime<Utc>>,
+    #[serde(with = "datetime_serialization")]
+    pub dtstart_time: DateTime<Utc>,
     #[serde(with = "datetime_serialization::option")]
     pub dtend_time: Option<DateTime<Utc>>,
     pub dtend_tz: Option<String>,
@@ -87,7 +89,6 @@ pub struct EventFull {
     #[serde(with = "datetime_serialization::option")]
     #[serde(skip_serializing)]
     pub recurrence_id: Option<DateTime<Utc>>,
-    #[serde(skip_serializing)]
     pub status: EventStatus,
     #[serde(skip_serializing)]
     pub class: EventClass,

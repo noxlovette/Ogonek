@@ -30,7 +30,7 @@
     try {
       if (navigator.share) {
         await navigator.share({
-          title: event.summary,
+          title: event.title,
           text: event.description || "",
           url: window.location.href,
         });
@@ -46,8 +46,8 @@
     }
   }
 
-  const start = new Date(event.dtstart);
-  const end = event.dtend ? new Date(event.dtend) : null;
+  const start = new Date(event.dtstartTime);
+  const end = event.dtendTime ? new Date(event.dtendTime) : null;
 
   const dateOptions: Intl.DateTimeFormatOptions = {
     weekday: "short",
@@ -64,15 +64,15 @@
 </script>
 
 <svelte:head>
-  <title>{event.summary} • Календарь</title>
-  <meta name="description" content={event.description || event.summary} />
+  <title>{event.title} • Календарь</title>
+  <meta name="description" content={event.description || event.title} />
 </svelte:head>
 
 <HStack>
   <BackButton />
   <VStack>
     <Title1 styling={event.status === "cancelled" ? "line-through" : ""}>
-      {page.params.role === "t" ? event.summary : "Занятие"}
+      {page.params.role === "t" ? event.title : "Занятие"}
     </Title1>
     <Divider />
     <Merger>
@@ -84,22 +84,19 @@
   </VStack>
 
   <HStack>
-    {#if !event.allDay}
-      <VStack>
-        <Title2>
-          {start.toLocaleTimeString(locale, timeOptions)}
-          {#if end}
-            -
-            {end.toLocaleTimeString(locale, timeOptions)}
-          {/if}
-        </Title2>
-        <Title3>
-          {start.toLocaleDateString(locale, dateOptions)}
-        </Title3>
-      </VStack>
-    {:else}
-      <Title2>Весь день</Title2>
-    {/if}
+    <VStack>
+      <Title2>
+        {start.toLocaleTimeString(locale, timeOptions)}
+        {#if end}
+          -
+          {end.toLocaleTimeString(locale, timeOptions)}
+        {/if}
+      </Title2>
+      <Title3>
+        {start.toLocaleDateString(locale, dateOptions)}
+      </Title3>
+    </VStack>
+
     {#if event.rrule}
       <p class="text-stone-700 dark:text-stone-300">Повторяется</p>
     {/if}
@@ -146,14 +143,6 @@
     <SectionBg>
       <Body>
         {event.description}
-      </Body>
-    </SectionBg>
-  {/if}
-
-  {#if event.organiserName}
-    <SectionBg>
-      <Body>
-        Организатор: {event.organiserName}
       </Body>
     </SectionBg>
   {/if}

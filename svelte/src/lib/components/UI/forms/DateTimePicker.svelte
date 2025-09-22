@@ -4,7 +4,10 @@
   import { HStack, VStack } from "..";
   import Input from "./Input.svelte";
 
-  let { dtstart, dtend }: { dtstart: string; dtend?: string | null } = $props();
+  let {
+    dtstartTime,
+    dtendTime,
+  }: { dtstartTime: string; dtendTime?: string | null } = $props();
 
   const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
@@ -13,12 +16,12 @@
   let dtendLocalTimeString = $state("");
 
   $effect(() => {
-    if (isValid(new Date(dtstart))) {
-      const localDate = toZonedTime(dtstart, userTimezone);
+    if (isValid(new Date(dtstartTime))) {
+      const localDate = toZonedTime(dtstartTime, userTimezone);
       localDateString = format(localDate, "yyyy-MM-dd");
       dtstartLocalTimeString = format(localDate, "HH:mm");
-      if (dtend && isValid(new Date(dtend))) {
-        const localEndDate = toZonedTime(dtend, userTimezone);
+      if (dtendTime && isValid(new Date(dtendTime))) {
+        const localEndDate = toZonedTime(dtendTime, userTimezone);
         dtendLocalTimeString = format(localEndDate, "HH:mm");
       }
     } else {
@@ -36,7 +39,7 @@
       new Date(),
     );
 
-    if (dtend) {
+    if (dtendTime) {
       const dtendLocalDateTime = parse(
         dtendLocalDateTimeString,
         "yyyy-MM-dd HH:mm",
@@ -47,21 +50,21 @@
         dtendLocalDateTime,
         userTimezone,
       ).toISOString();
-      dtend = dtendISO;
+      dtendTime = dtendISO;
     }
 
     const dtstartISO = fromZonedTime(localDateTime, userTimezone).toISOString();
 
-    dtstart = dtstartISO;
+    dtstartTime = dtstartISO;
   }
 
-  $inspect(dtstart);
-  $inspect(dtend);
+  $inspect(dtstartTime);
+  $inspect(dtendTime);
 </script>
 
 <HStack>
-  <input type="hidden" name="dtstart" bind:value={dtstart} />
-  <input type="hidden" name="dtend" bind:value={dtend} />
+  <input type="hidden" name="dtstartTime" bind:value={dtstartTime} />
+  <input type="hidden" name="dtendTime" bind:value={dtendTime} />
   <VStack>
     <Input
       type="date"

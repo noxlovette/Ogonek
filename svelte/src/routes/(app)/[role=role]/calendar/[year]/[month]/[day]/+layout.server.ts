@@ -1,16 +1,17 @@
 import { routes } from "$lib/routes";
-import type { CalendarEvent } from "$lib/types/api/calendar";
+import type { EventSmall } from "$lib/types/api/calendar";
+import { createDaySpan } from "$lib/utils";
 import type { LayoutServerLoad } from "./$types";
 
 export const load = (async ({ fetch, params }) => {
-  const date = new Date(
-    Number(params.year),
-    Number(params.month) - 1,
-    Number(params.day),
+  const [year, month, day] = [params.year, params.month, params.day].map(
+    (item) => Number(item),
   );
 
-  const dayEvents: CalendarEvent[] = await fetch(
-    routes.calendars.events_day(date.toISOString().split("T")[0]),
+  const { start, end } = createDaySpan(year, month, day);
+  const date = new Date(year, month - 1, day);
+  const dayEvents: EventSmall[] = await fetch(
+    routes.calendars.events(start, end),
   ).then((res) => res.json());
   return {
     dayEvents,
