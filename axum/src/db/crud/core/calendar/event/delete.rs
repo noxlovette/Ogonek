@@ -1,10 +1,8 @@
 use sqlx::PgPool;
 
 use crate::{
-    db::{
-        crud::core::calendar::event::{read_one, truncate_master},
-        error::DbError,
-    },
+    crud::core::calendar::event::{read::read_one_internal, update::truncate_master},
+    db::error::DbError,
     services::calendar::extract_id_and_occurence,
     types::{DeleteScope, EventDelete},
 };
@@ -32,7 +30,7 @@ pub async fn delete(db: &PgPool, event_id: String, req: EventDelete) -> Result<(
                 .await?;
             }
             DeleteScope::ThisAndFuture => {
-                let master = read_one(&mut *tx, &master_id).await?;
+                let master = read_one_internal(&mut *tx, &master_id).await?;
 
                 // DELETE ALL EXCEPTIONS TOO!
                 sqlx::query!(

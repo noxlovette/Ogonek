@@ -2,6 +2,8 @@ use chrono::{DateTime, TimeZone, Utc};
 
 pub mod rrule;
 pub use rrule::*;
+pub mod parsers;
+pub use parsers::*;
 
 const NANOID: usize = 21;
 pub const OCCURRENCE_SEPARATOR: &str = "_occurrence_";

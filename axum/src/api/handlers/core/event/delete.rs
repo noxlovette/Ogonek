@@ -29,5 +29,6 @@ pub async fn delete_event(
     Json(payload): Json<EventDelete>,
 ) -> Result<StatusCode, APIError> {
     delete(&state.db, id, payload).await?;
+
     Ok(StatusCode::NO_CONTENT)
 }

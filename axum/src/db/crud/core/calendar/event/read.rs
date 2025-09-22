@@ -1,24 +1,23 @@
 use std::collections::{HashMap, HashSet};
 
-use chrono::{DateTime, NaiveDate, Utc};
+use chrono::{DateTime, Utc};
 use sqlx::PgPool;
 
 use crate::{
-    db::{
-        crud::core::calendar::{calendar::read_calendar_id, event_attendee::find_by_event_id},
-        error::DbError,
+    db::{crud::core::calendar::calendar::read_calendar_id, error::DbError},
+    services::calendar::{
+        OCCURRENCE_SEPARATOR, RRule, extract_id_and_occurence, parse_date_flexible, parse_exdates,
     },
-    services::calendar::{OCCURRENCE_SEPARATOR, RRule, extract_id_and_occurence},
     types::{EventClass, EventDB, EventFull, EventSmall, EventStatus, EventTransp},
 };
 
 /// Reads a calendar event by id (supports virtual instances)
-pub async fn read_event(db: &PgPool, event_id: String) -> Result<EventFull, DbError> {
+pub async fn read_one(db: &PgPool, event_id: String) -> Result<EventFull, DbError> {
     let (master_id, occurrence_date) = extract_id_and_occurence(event_id.clone());
 
     let mut tx = db.begin().await?;
 
-    let mut master = read_one(&mut *tx, &master_id).await?;
+    let mut master = read_one_internal(&mut *tx, &master_id).await?;
 
     // If this is a virtual instance, modify the dates
     if let Some(occurrence_dt) = occurrence_date {
@@ -48,7 +47,7 @@ pub async fn read_event(db: &PgPool, event_id: String) -> Result<EventFull, DbEr
 }
 
 /// Reads a calendar event by id
-pub(crate) async fn read_one(
+pub(super) async fn read_one_internal(
     db: impl sqlx::Executor<'_, Database = sqlx::Postgres>,
     event_id: &str,
 ) -> Result<EventFull, DbError> {
@@ -95,7 +94,7 @@ pub(crate) async fn read_one(
 }
 
 /// Reads all events for a calendar within a specific time frame
-async fn read_all_master(
+pub(super) async fn read_all_internal(
     db: &PgPool,
     user_id: &str,
     start: DateTime<Utc>,
@@ -139,13 +138,15 @@ async fn read_all_master(
     tx.commit().await?;
     Ok(events)
 }
+
+/// Public function that returns an array of events
 pub async fn read_all(
     db: &PgPool,
     user_id: &str,
     start: DateTime<Utc>,
     end: DateTime<Utc>,
 ) -> Result<Vec<EventSmall>, DbError> {
-    let events = read_all_master(db, user_id, start, end).await?;
+    let events = read_all_internal(db, user_id, start, end).await?;
 
     let masters: Vec<_> = events
         .iter()
@@ -271,50 +272,4 @@ pub async fn read_all(
     }
 
     Ok(calendar_events)
-}
-
-// Helper function pour parser les EXDATE depuis TEXT[]
-fn parse_exdates(exdate_array: &Option<Vec<String>>) -> Result<HashSet<DateTime<Utc>>, DbError> {
-    let mut exdates = HashSet::new();
-
-    if let Some(exdate_list) = exdate_array {
-        for date_str in exdate_list {
-            let date_str = date_str.trim();
-            if !date_str.is_empty() {
-                // Support plusieurs formats de dates
-                let parsed_date = parse_date_flexible(date_str)?;
-                exdates.insert(parsed_date);
-            }
-        }
-    }
-
-    Ok(exdates)
-}
-
-// Parser flexible pour différents formats de dates
-fn parse_date_flexible(date_str: &str) -> Result<DateTime<Utc>, DbError> {
-    // Format ISO date seule (2024-11-11)
-    if let Ok(naive_date) = NaiveDate::parse_from_str(date_str, "%Y-%m-%d") {
-        return Ok(naive_date.and_hms_opt(0, 0, 0).unwrap().and_utc());
-    }
-
-    // Format avec temps (2024-11-11T10:00:00Z)
-    if let Ok(dt) = DateTime::parse_from_rfc3339(date_str) {
-        return Ok(dt.with_timezone(&Utc));
-    }
-
-    // Format iCal (20241111T100000Z)
-    if let Ok(dt) = DateTime::parse_from_str(date_str, "%Y%m%dT%H%M%SZ") {
-        return Ok(dt.with_timezone(&Utc));
-    }
-
-    // Format iCal date seule (20241111)
-    if let Ok(naive_date) = NaiveDate::parse_from_str(date_str, "%Y%m%d") {
-        return Ok(naive_date.and_hms_opt(0, 0, 0).unwrap().and_utc());
-    }
-
-    Err(DbError::ParseError(format!(
-        "Unsupported date format: {}",
-        date_str
-    )))
 }

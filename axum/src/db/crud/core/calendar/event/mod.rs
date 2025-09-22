@@ -1,9 +1,9 @@
-pub mod create;
-pub mod delete;
-pub mod read;
-pub mod update;
+mod create;
+mod delete;
+pub(self) mod read;
+mod update;
 
-pub use create::*;
-pub use delete::*;
-pub use read::*;
-pub use update::*;
+pub use create::create;
+pub use delete::delete;
+pub use read::{read_all, read_one};
+pub use update::update;

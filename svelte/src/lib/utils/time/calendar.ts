@@ -35,7 +35,7 @@ export const isSameDay = (date1: Date, date2: Date): boolean =>
 export const generateMonthDays = (
   referenceDate: Date,
   events: EventSmall[],
-  locale: string = "en-US",
+  locale: string = "ru-RU",
 ): { monthDays: MonthDay[]; monthName: string; year: number } => {
   const now = referenceDate;
   const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);

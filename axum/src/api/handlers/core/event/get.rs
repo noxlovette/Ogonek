@@ -1,7 +1,8 @@
 use crate::api::CALENDAR_TAG;
 use crate::api::error::APIError;
 use crate::auth::Claims;
-use crate::db::crud::core::calendar::event::{read_all, read_event};
+use crate::crud::core::calendar::event::read_one;
+use crate::db::crud::core::calendar::event::read_all;
 use crate::db::crud::core::calendar::event_attendee::find_by_event_id;
 use crate::schema::AppState;
 
@@ -27,7 +28,7 @@ pub async fn fetch_event(
     Path(id): Path<String>,
     _claims: Claims,
 ) -> Result<Json<EventWithAttendees>, APIError> {
-    let event = read_event(&state.db, id.clone()).await?;
+    let event = read_one(&state.db, id.clone()).await?;
     let attendees = find_by_event_id(&state.db, &id).await?;
     Ok(Json(EventWithAttendees { event, attendees }))
 }

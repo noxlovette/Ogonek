@@ -58,7 +58,7 @@ pub async fn create(db: &PgPool, user_id: &str, create: EventCreate) -> Result<(
     Ok(())
 }
 
-pub async fn create_exception(
+pub(super) async fn create_exception(
     tx: &mut sqlx::Transaction<'_, sqlx::Postgres>,
     master: &EventFull,
     update: &EventUpdate,
@@ -96,7 +96,7 @@ pub async fn create_exception(
     Ok(())
 }
 
-pub async fn create_master(
+pub(super) async fn create_master(
     tx: &mut sqlx::Transaction<'_, sqlx::Postgres>,
     master: &EventFull,
     update: &EventUpdate,

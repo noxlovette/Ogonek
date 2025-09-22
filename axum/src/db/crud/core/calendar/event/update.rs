@@ -2,13 +2,14 @@ use chrono::{DateTime, Duration, Utc};
 use sqlx::PgPool;
 
 use crate::{
+    crud::core::calendar::event::{
+        create::{create_exception, create_master},
+        read::read_one_internal,
+    },
     db::{
         crud::core::{
             account::user::{get_email, get_name},
-            calendar::{
-                event::{create_exception, create_master, read_one},
-                event_attendee,
-            },
+            calendar::event_attendee,
         },
         error::DbError,
     },
@@ -16,8 +17,36 @@ use crate::{
     types::{EditScope, EventAttendeeCreate, EventFull, EventUpdate, EventUpdateRequest},
 };
 
+/// The super handler for recurring or single events
+/// The id param is gonna be the master/regular event or a recurrence instance if there is an id_timestamp in it
+pub async fn update(db: &PgPool, event_id: String, req: EventUpdateRequest) -> Result<(), DbError> {
+    // Extract the goddamn id and occurence to spot a virtual/real event
+    let (master_id, occurrence_date) = extract_id_and_occurence(event_id);
+
+    let mut tx = db.begin().await?;
+
+    let master = read_one_internal(&mut *tx, &master_id).await?;
+
+    if let Some(occurrence) = occurrence_date {
+        match req.scope {
+            EditScope::ThisOnly => {
+                edit_single_occurrence(&master, occurrence, &req.updates, &mut tx).await?;
+            }
+            EditScope::ThisAndFuture => {
+                edit_this_and_future(&master, occurrence, &req.updates, &mut tx).await?;
+            }
+        }
+    } else {
+        let attendee_name = update_attendee(&mut tx, &master_id, &req.updates.attendee).await?;
+        edit_single(&mut tx, &master_id, attendee_name, &req.updates).await?;
+    }
+
+    tx.commit().await?;
+    Ok(())
+}
+
 /// EDIT ONE EVENT
-pub async fn edit_single(
+async fn edit_single(
     db: &mut sqlx::Transaction<'_, sqlx::Postgres>,
     id: &str,
     attendee_name: Option<String>,
@@ -93,34 +122,6 @@ async fn update_attendee(
     Ok(None)
 }
 
-/// The super handler for recurring or single events
-/// The id param is gonna be the master/regular event or a recurrence instance if there is an id_timestamp in it
-pub async fn update(db: &PgPool, event_id: String, req: EventUpdateRequest) -> Result<(), DbError> {
-    // Extract the goddamn id and occurence to spot a virtual/real event
-    let (master_id, occurrence_date) = extract_id_and_occurence(event_id);
-
-    let mut tx = db.begin().await?;
-
-    let master = read_one(&mut *tx, &master_id).await?;
-
-    if let Some(occurrence) = occurrence_date {
-        match req.scope {
-            EditScope::ThisOnly => {
-                edit_single_occurrence(&master, occurrence, &req.updates, &mut tx).await?;
-            }
-            EditScope::ThisAndFuture => {
-                edit_this_and_future(&master, occurrence, &req.updates, &mut tx).await?;
-            }
-        }
-    } else {
-        let attendee_name = update_attendee(&mut tx, &master_id, &req.updates.attendee).await?;
-        edit_single(&mut tx, &master_id, attendee_name, &req.updates).await?;
-    }
-
-    tx.commit().await?;
-    Ok(())
-}
-
 /// Edit an exception – ATTENTION – THEY ARE NOT THE SAME AS SINGLE EVENTS
 async fn edit_single_occurrence(
     master: &EventFull,
@@ -159,7 +160,7 @@ async fn edit_this_and_future(
 
     Ok(())
 }
-pub(crate) async fn truncate_master(
+pub(super) async fn truncate_master(
     tx: &mut sqlx::Transaction<'_, sqlx::Postgres>,
     master: &EventFull,
     occurrence_date: &DateTime<Utc>,
