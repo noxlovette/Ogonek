@@ -7,6 +7,6 @@ export { default as LoadingCard } from "./LoadingCard.svelte";
 export { default as TaskCard } from "./TaskCard.svelte";
 export { default as WordCard } from "./WordCard.svelte";
 
-export { default as EventCard } from "./EventCard.svelte";
+export { default as EventTimelineItem } from "./EventTimelineItem.svelte";
 
 export { default as NewCard } from "./NewCard.svelte";

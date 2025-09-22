@@ -1,20 +1,19 @@
 import type { TimeSpan } from "$lib/types/api/calendar";
-
 /// Formats the day event for the day view
 export function formatEventTime(
   dtstartTime: string,
   dtendTime?: string,
   isAllDay?: boolean,
 ): string {
-  if (isAllDay) return "All day";
+  if (isAllDay) return "Весь день";
 
   const start = new Date(dtstartTime);
   const end = dtendTime ? new Date(dtendTime) : null;
 
-  const timeFormat = new Intl.DateTimeFormat("en-US", {
-    hour: "numeric",
+  const timeFormat = new Intl.DateTimeFormat("ru-RU", {
+    hour: "2-digit",
     minute: "2-digit",
-    hour12: true,
+    hour12: false,
   });
 
   if (!end) return timeFormat.format(start);
@@ -25,7 +24,7 @@ export function formatEventTime(
   }
 
   // Multi-day event
-  return `${timeFormat.format(start)} - ${end.toLocaleDateString()}`;
+  return `${timeFormat.format(start)} - ${end.toLocaleDateString("ru-RU")}`;
 }
 
 export function createMonthSpan(year: number, month: number): TimeSpan {

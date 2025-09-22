@@ -2,7 +2,7 @@
   import { page } from "$app/state";
   import type { EventSmall } from "$lib/types/api/calendar";
   import { formatEventTime, getVideoCallService } from "$lib/utils";
-  import { Caption1 } from "../typography";
+  import { Caption1, Title3 } from "../typography";
   import Headline from "../typography/Headline.svelte";
 
   const { event }: { event: EventSmall } = $props();
@@ -13,14 +13,14 @@
 </script>
 
 <a
-  class="ring-default flex h-30 flex-col items-start justify-between gap-3 overflow-clip rounded-2xl p-2.5 shadow-sm hover:bg-stone-100/80 dark:hover:bg-stone-900"
+  class="ring-default flex h-20 items-center justify-between gap-3 overflow-clip rounded-2xl p-2.5 shadow-sm hover:bg-stone-100/80 dark:hover:bg-stone-900"
   href="{page.params.day}/{event.id}"
 >
-  <Caption1>
+  <Title3>
     {formatEventTime(event.dtstartTime, event.dtendTime ?? "")}
-  </Caption1>
+  </Title3>
 
-  <div>
+  <div class="items-end text-right">
     <Headline styling={event.status === "cancelled" ? "line-through" : ""}>
       {page.params.role === "t" ? event.title : "Занятие"}
     </Headline>

@@ -31,7 +31,6 @@ export const getLocaleFromCookie = (): string => {
   }
   return "en-UK";
 };
-
 export const formatDate = (
   dateInput: string | Date,
   options: DateFormatOptions = {
@@ -40,9 +39,72 @@ export const formatDate = (
   },
   locale?: string,
 ): string => {
-  const date = typeof dateInput === "string" ? new Date(dateInput) : dateInput;
-  const formatOptions: Intl.DateTimeFormatOptions = {};
+  // Guard clause - si l'input est falsy, return fallback
+  if (!dateInput) {
+    console.warn("formatDate: dateInput is falsy, returning fallback");
+    return "Не понятно";
+  }
 
+  let date: Date;
+
+  try {
+    date = typeof dateInput === "string" ? new Date(dateInput) : dateInput;
+
+    // Check si la date est valide (NaN check)
+    if (isNaN(date.getTime())) {
+      console.warn(`formatDate: Invalid date created from input: ${dateInput}`);
+      return "Не понятно";
+    }
+  } catch (error) {
+    console.error("formatDate: Error creating date:", error);
+    return "Не понятно";
+  }
+
+  const now = new Date();
+
+  // Helper sécurisé pour strip time
+  const stripTime = (d: Date): Date | null => {
+    try {
+      if (!d || typeof d.getFullYear !== "function") {
+        console.warn("stripTime: Invalid date object received");
+        return null;
+      }
+      return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+    } catch (error) {
+      console.error("stripTime: Error stripping time:", error);
+      return null;
+    }
+  };
+
+  const strippedInput = stripTime(date);
+  const strippedToday = stripTime(now);
+
+  // Si on peut pas strip les dates, fallback vers format standard
+  if (!strippedInput || !strippedToday) {
+    console.warn("formatDate: Could not strip time, using standard format");
+    return date.toLocaleDateString(
+      options.locale || locale || getLocaleFromCookie(),
+    );
+  }
+
+  const inputDay = strippedInput.getTime();
+  const today = strippedToday.getTime();
+
+  // Plus safe de calculer tomorrow/yesterday depuis today
+  const tomorrow = today + 24 * 60 * 60 * 1000;
+  const yesterday = today - 24 * 60 * 60 * 1000;
+
+  const finalLocale = options.locale || locale || getLocaleFromCookie();
+
+  // Only apply Russian labels if locale is Russian
+  if (finalLocale.startsWith("ru")) {
+    if (inputDay === today) return "Сегодня";
+    if (inputDay === tomorrow) return "Завтра";
+    if (inputDay === yesterday) return "Вчера";
+  }
+
+  // Build format options
+  const formatOptions: Intl.DateTimeFormatOptions = {};
   if (options.year) formatOptions.year = "numeric";
   if (options.month) formatOptions.month = options.month;
   if (options.day) formatOptions.day = "numeric";
@@ -52,8 +114,12 @@ export const formatDate = (
   if (options.hour12 !== undefined) formatOptions.hour12 = options.hour12;
   if (options.timeZone) formatOptions.timeZone = options.timeZone;
 
-  const finalLocale = options.locale || locale || getLocaleFromCookie();
-  return new Intl.DateTimeFormat(finalLocale, formatOptions).format(date);
+  try {
+    return new Intl.DateTimeFormat(finalLocale, formatOptions).format(date);
+  } catch (error) {
+    console.error("formatDate: Error formatting date with Intl:", error);
+    return date.toLocaleDateString(); // Ultimate fallback
+  }
 };
 
 export const formatDateOnly = (

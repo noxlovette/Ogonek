@@ -10,7 +10,6 @@ export const actions = {
   update: async ({ request, fetch, params }) => {
     const formData = await request.formData();
     const { id } = params;
-
     const rawData = parseFormData(formData);
 
     const data = z.updateEventBody.parse(rawData);
@@ -40,7 +39,7 @@ export const actions = {
     const { id } = params;
 
     const formData = await request.formData();
-    const scope = formData.get("scope") as DeleteScope;
+    const scope = formData.get("scope") ?? ("this-only" as DeleteScope);
 
     const response = await fetch(routes.calendars.event(id), {
       method: "DELETE",

@@ -34,11 +34,6 @@ pub async fn read_one(db: &PgPool, event_id: String) -> Result<EventFull, DbErro
 
         // Update the ID to the virtual instance ID
         master.id = event_id;
-
-        // Clear recurrence info for the virtual instance
-        master.rdate = None;
-        master.exdate = None;
-        master.recurrence_id = Some(occurrence_dt);
     }
 
     tx.commit().await?;
@@ -167,6 +162,12 @@ pub async fn read_all(
                 // Generate regular RRULE occurrences
                 let rrule_occurrences = rrule.generate_occurrences(master.dtstart_time, start, end);
                 all_occurrences.extend(rrule_occurrences);
+
+                // Always include the original dtstart_time if it's in range
+                // This ensures the first occurrence isn't lost when adding recurrence
+                if master.dtstart_time >= start && master.dtstart_time <= end {
+                    all_occurrences.insert(master.dtstart_time);
+                }
 
                 // Add RDATE occurrences (additional dates)
                 if let Some(rdate_list) = &master.rdate {

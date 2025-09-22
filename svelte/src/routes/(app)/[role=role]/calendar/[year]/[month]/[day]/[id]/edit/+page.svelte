@@ -104,5 +104,9 @@
   {:else}
     <Optional bind:toggle={showDescription}>Добавить описание</Optional>
   {/if}
-  <Input type="scope" name="scope" labelName="Охват изменений" />
+  {#if event.isRecurring}
+    <Input type="scope" name="scope" labelName="Охват изменений" />
+  {:else}
+    <input type="hidden" name="scope" value="this-only" />
+  {/if}
 </form>
