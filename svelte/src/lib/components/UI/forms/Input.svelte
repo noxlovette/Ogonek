@@ -11,7 +11,7 @@
     labelName = name.charAt(0).toUpperCase() + name.slice(1),
     value = $bindable(),
     disabled = $bindable(),
-    ref,
+    ref = $bindable(),
     invalid = false,
     invalidDescription,
     required = false,

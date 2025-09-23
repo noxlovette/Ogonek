@@ -151,7 +151,8 @@ impl RRule {
             Frequency::Weekly if self.by_day.is_some() => {
                 // Special handling for weekly events with BYDAY
                 if let Some(ref days) = self.by_day {
-                    let mut week_start = dtstart - Duration::days(dtstart.weekday().num_days_from_monday() as i64);
+                    let mut week_start =
+                        dtstart - Duration::days(dtstart.weekday().num_days_from_monday() as i64);
                     let mut week_count = 0;
                     let mut occurrence_count = 0;
 
@@ -159,7 +160,8 @@ impl RRule {
                     if week_start < range_start {
                         let weeks_diff = (range_start - week_start).num_weeks();
                         let intervals_to_skip = (weeks_diff / self.interval as i64) as i64;
-                        week_start = week_start + Duration::weeks(intervals_to_skip * self.interval as i64);
+                        week_start =
+                            week_start + Duration::weeks(intervals_to_skip * self.interval as i64);
                         week_count = intervals_to_skip;
                     }
 
@@ -180,8 +182,9 @@ impl RRule {
 
                         // Generate occurrences for this week
                         for &day in days {
-                            let occurrence = week_start + Duration::days(day.num_days_from_monday() as i64);
-                            
+                            let occurrence =
+                                week_start + Duration::days(day.num_days_from_monday() as i64);
+
                             // Check all constraints
                             if occurrence >= dtstart
                                 && occurrence >= range_start
@@ -192,7 +195,7 @@ impl RRule {
                                         continue;
                                     }
                                 }
-                                
+
                                 if let Some(max_count) = self.count {
                                     if occurrence_count >= max_count {
                                         break;

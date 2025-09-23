@@ -13,7 +13,7 @@
       case "overdue":
         return {
           text: "Overdue",
-          color: "bg-red-600 ring-red-700/40  ",
+          color: "bg-rose-600 ring-rose-700/40  ",
         };
       case "urgent":
         return {
@@ -27,7 +27,7 @@
         };
       case "green":
         return {
-          color: "bg-green-600 ring-green-600/40",
+          color: "bg-emerald-600 ring-emerald-600/40",
         };
       case "normal":
       default:

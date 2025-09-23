@@ -2,10 +2,10 @@ use crate::api::CALENDAR_TAG;
 use crate::api::error::APIError;
 use crate::auth::Claims;
 use crate::crud::core::calendar::event::read_one;
-use crate::services::calendar::extract_id_and_occurence;
 use crate::db::crud::core::calendar::event::read_all;
 use crate::db::crud::core::calendar::event_attendee::find_by_event_id;
 use crate::schema::AppState;
+use crate::services::calendar::extract_id_and_occurence;
 
 use crate::types::{CalendarQuery, EventSmall, EventWithAttendees};
 use axum::extract::{Json, Path, Query, State};
@@ -30,11 +30,11 @@ pub async fn fetch_event(
     _claims: Claims,
 ) -> Result<Json<EventWithAttendees>, APIError> {
     let event = read_one(&state.db, id.clone()).await?;
-    
+
     // Extract master event ID for attendee lookup (virtual events use master's attendees)
     let (master_id, _) = extract_id_and_occurence(id);
     let attendees = find_by_event_id(&state.db, &master_id).await?;
-    
+
     Ok(Json(EventWithAttendees { event, attendees }))
 }
 /// Get events for a specific month

@@ -1,3 +1,4 @@
+import { m } from "$lib/paraglide/messages";
 import type { TaskFull, Urgency } from "$lib/types";
 
 // File Renders
@@ -45,21 +46,21 @@ Used in Test and Learn modes
 export const qualityButtons = [
   {
     quality: 0,
-    label: "1066",
-    color: "ring-red-600 hover:bg-red-700/10 ring",
+    label: m.such_loose_blackbird_offer(),
+    color: "ring-rose-600 hover:bg-rose-700/10 ring",
     key: 1,
   },
 
   {
     quality: 3,
-    label: "Ok",
-    color: "ring-yellow-500 hover:bg-yellow-600/10 ring",
+    label: m.fuzzy_noble_cod_borrow(),
+    color: "ring-amber-500 hover:bg-amber-600/10 ring",
     key: 2,
   },
   {
     quality: 5,
-    label: "Easy",
-    color: "ring-green-500 hover:bg-green-500 ring",
+    label: m.slow_vexed_pigeon_boil(),
+    color: "ring-emerald-500 hover:bg-emerald-500/10 ring",
     key: 3,
   },
 ];

@@ -48,7 +48,7 @@
       <input type="hidden" value={file.id} name="fileId" />
       <button
         type="submit"
-        class="text-stone-400 hover:text-red-500 dark:text-stone-300"
+        class="text-stone-400 hover:text-rose-500 dark:text-stone-300"
       >
         <X />
       </button>

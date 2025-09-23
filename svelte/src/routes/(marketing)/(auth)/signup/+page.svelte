@@ -115,7 +115,7 @@
     ></Input>
 
     {#if !passwordMatch}
-      <p class="mt-1 text-sm text-red-600">Passwords don't match</p>
+      <p class="mt-1 text-sm text-rose-600">Passwords don't match</p>
     {/if}
   </Grid>
   <Captcha />

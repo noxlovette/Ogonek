@@ -61,7 +61,7 @@
   const variantClasses = {
     primary: "hover:bg-stone-100 dark:hover:bg-stone-700",
     danger:
-      "text-red-600 dark:text-red-50 hover:bg-red-100 dark:hover:bg-red-800",
+      "text-rose-600 dark:text-rose-50 hover:bg-rose-100 dark:hover:bg-rose-800",
     prominent: "hover:bg-accent/80 bg-accent text-white",
   };
 
