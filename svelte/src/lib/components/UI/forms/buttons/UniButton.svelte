@@ -4,7 +4,7 @@
   import type { MouseEventHandler } from "svelte/elements";
   import ConfirmDialogue from "../ConfirmDialogue.svelte";
   import { Footnote, Headline } from "../../../typography";
-  import { Ban, Trash2, X } from "lucide-svelte";
+  import { Trash2, X } from "lucide-svelte";
 
   type ButtonVariant = "primary" | "danger" | "prominent";
 
@@ -22,6 +22,7 @@
     onclick?: MouseEventHandler<HTMLButtonElement> | undefined;
     children?: Snippet;
     ariaLabel?: string;
+    description?: string;
     iconOnly?: boolean;
   }
 
@@ -37,12 +38,16 @@
     onclick = undefined,
     children,
     ariaLabel = undefined,
+    description = undefined,
     iconOnly = true,
   }: Props = $props();
 
   const isLink = $derived(!!href);
   let disabled = $derived($isLoading || disable);
   let showConfirmDialog = $state(false);
+
+  // Generate unique ID for aria-describedby
+  const uniqueId = `btn-${Math.random().toString(36).substr(2, 9)}`;
 
   function handleClick(event: MouseEvent) {
     if (variant === "danger" && shouldConfirm) {
@@ -73,7 +78,14 @@
 </script>
 
 {#if isLink}
-  <a {href} class={allClasses} aria-disabled={disabled} aria-label={ariaLabel}>
+  <a
+    {href}
+    class={allClasses}
+    aria-disabled={disabled}
+    aria-label={ariaLabel}
+    aria-describedby={description ? `${uniqueId}-desc` : undefined}
+    role="button"
+  >
     {#if Icon}
       <Icon class="size-5" />
     {/if}
@@ -88,8 +100,9 @@
     {type}
     {formaction}
     {disabled}
-    id="btn"
+    id={uniqueId}
     aria-label={ariaLabel}
+    aria-describedby={description ? `${uniqueId}-desc` : undefined}
     class={allClasses}
     onclick={variant === "danger" ? handleClick : onclick}
   >
@@ -109,6 +122,12 @@
       </Footnote>
     {/if}
   </button>
+{/if}
+
+{#if description}
+  <div id="{uniqueId}-desc" class="sr-only">
+    {description}
+  </div>
 {/if}
 
 {#if showConfirmDialog}

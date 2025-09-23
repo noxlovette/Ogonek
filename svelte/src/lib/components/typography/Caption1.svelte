@@ -1,7 +1,11 @@
 <script lang="ts">
-  let { children, styling = "text-stone-500 dark:text-stone-400" } = $props();
+  let {
+    id = "caption",
+    children,
+    styling = "text-stone-500 dark:text-stone-400",
+  } = $props();
 </script>
 
-<p class="text-xs font-medium {styling}">
+<p {id} class="text-xs font-medium {styling}">
   {@render children?.()}
 </p>

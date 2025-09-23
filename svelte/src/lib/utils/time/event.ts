@@ -8,7 +8,10 @@ export function formatEventTime(
   if (isAllDay) return "Весь день";
 
   const start = new Date(dtstartTime);
+  if (isNaN(start.getTime())) return ""; // gracefully handle invalid start time
+
   const end = dtendTime ? new Date(dtendTime) : null;
+  if (end && isNaN(end.getTime())) return ""; // gracefully handle invalid end time
 
   const timeFormat = new Intl.DateTimeFormat("ru-RU", {
     hour: "2-digit",
