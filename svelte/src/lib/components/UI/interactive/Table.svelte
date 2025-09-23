@@ -1,6 +1,5 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
-  import { fade, fly } from "svelte/transition";
   import type { Student, TableConfig } from "$lib/types";
 
   interface Props {

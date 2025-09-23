@@ -1,12 +1,5 @@
 <script lang="ts">
-  import {
-    Caption1,
-    Grid,
-    HStack,
-    LargeTitle,
-    Toolbar,
-    VStack,
-  } from "$lib/components";
+  import { Caption1, Grid, HStack, LargeTitle, Toolbar } from "$lib/components";
   import { m } from "$lib/paraglide/messages";
 
   import { page } from "$app/state";

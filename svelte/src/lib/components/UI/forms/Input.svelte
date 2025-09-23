@@ -3,7 +3,7 @@
   import { m } from "$lib/paraglide/messages";
   import { assigneeStore, studentStore, user } from "$lib/stores";
   import { Eye, EyeClosed } from "lucide-svelte";
-  import type { ChangeEventHandler, MouseEventHandler } from "svelte/elements";
+  import type { ChangeEventHandler } from "svelte/elements";
 
   let {
     placeholder = "Менять тут",

@@ -20,7 +20,9 @@ export default defineConfig({
     }),
   ],
   optimizeDeps: { exclude: ["fsevents"] },
-  build: { rollupOptions: { external: ["fsevents"] } },
+  build: {
+    rollupOptions: { external: ["fsevents", "src/lib/routes/api/mock"] },
+  },
   ssr: {
     noExternal: process.env.NODE_ENV === "production" ? ["@carbon/charts"] : [],
   },

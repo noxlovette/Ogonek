@@ -14,5 +14,9 @@
     "isolatedModules": true,
     "verbatimModuleSyntax": true
   },
-  "exclude": ["src/lib/paraglide/messages", "src/lib/server/mock"]
+  "exclude": [
+    "src/lib/paraglide/*",
+    "src/lib/server/mock/*",
+    "src/routes/api/mock/*"
+  ]
 }

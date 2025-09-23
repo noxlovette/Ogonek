@@ -2,8 +2,8 @@ import type { PlaywrightTestConfig } from "@playwright/test";
 
 const config: PlaywrightTestConfig = {
   webServer: {
-    command: "pnpm run build && pnpm run dev",
-    port: 5173,
+    command: "pnpm run build && pnpm run preview",
+    port: 4173,
     env: {
       PUBLIC_MOCK_MODE: "true",
     },

@@ -43,7 +43,7 @@
     class="ring-default bg-default absolute right-0 bottom-14 min-w-32 overflow-hidden rounded-xl"
     in:fade
   >
-    {#each languages as lang}
+    {#each languages as lang, key}
       <button
         on:click={() => selectLanguage(lang.code)}
         class="flex w-full items-center gap-3 px-4 py-3 text-left text-sm transition-colors hover:bg-stone-50"

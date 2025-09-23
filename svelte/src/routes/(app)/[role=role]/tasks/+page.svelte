@@ -77,6 +77,10 @@
   }
 </script>
 
+<svelte:head>
+  <title>{m.tasks()}</title>
+</svelte:head>
+
 <Toolbar>
   <LargeTitle>{m.tasks()}</LargeTitle>
   <Divider />
@@ -158,7 +162,3 @@
 {:catch error: App.Error}
   <p>Error loading lessons: {error.errorID}</p>
 {/await}
-
-<svelte:head>
-  <title>{m.tasks()}</title>
-</svelte:head>

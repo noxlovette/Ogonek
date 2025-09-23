@@ -1,9 +1,7 @@
 <script lang="ts">
   import { Callout } from "$lib/components/typography";
   import type { Snippet } from "svelte";
-  import { UniButton } from "./buttons";
   import { Plus } from "lucide-svelte";
-  import { Merger } from "../toolbar";
 
   let {
     children,

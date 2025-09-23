@@ -8,7 +8,6 @@
     UniButton,
     Caption1,
     KBD,
-    Callout,
     Divider,
     ProgressBar,
     LargeTitle,

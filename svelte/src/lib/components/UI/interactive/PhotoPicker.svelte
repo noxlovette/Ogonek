@@ -1,6 +1,6 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
-  import { Ban, Check, ExternalLink, X } from "lucide-svelte";
+  import { Ban, Check } from "lucide-svelte";
   import type { Basic as Photo } from "unsplash-js/dist/methods/photos/types";
   import { UniButton } from "../forms";
   import { enhanceForm } from "$lib/utils";

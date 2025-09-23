@@ -10,14 +10,18 @@
   import { HStack, VStack } from "..";
   import Input from "./Input.svelte";
   import Divider from "../toolbar/Divider.svelte";
-  import type { ActionData } from "../../../../routes/(app)/[role=role]/calendar/[year]/[month]/[day]/[id]/edit/$types";
+  import type { ActionData as EditActionData } from "../../../../routes/(app)/[role=role]/calendar/[year]/[month]/[day]/[id]/edit/$types";
+  import type { ActionData as NewActionData } from "../../../../routes/(app)/[role=role]/calendar/[year]/[month]/[day]/new/$types";
 
   let {
     dtstartTime,
     dtendTime,
     form,
-  }: { dtstartTime: string; dtendTime?: string | null; form: ActionData } =
-    $props();
+  }: {
+    dtstartTime: string;
+    dtendTime?: string | null;
+    form: EditActionData | NewActionData;
+  } = $props();
 
   const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 

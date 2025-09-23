@@ -16,7 +16,7 @@
   import { page } from "$app/state";
   import { enhanceForm } from "$lib/utils";
 
-  import { Check, LogOut, Key, Bell, Merge, Ban } from "lucide-svelte";
+  import { Check, LogOut, Key, Bell, Ban } from "lucide-svelte";
   import { m } from "$lib/paraglide/messages";
   import {
     user,

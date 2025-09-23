@@ -1,12 +1,10 @@
 <script lang="ts">
   import {
-    Title1,
     UniButton,
     VStack,
     HStack,
     Input,
     Editor,
-    ConfirmDialogue,
     Toolbar,
     LargeTitle,
     Divider,
@@ -15,18 +13,7 @@
     CancelButton,
     DeleteButton,
   } from "$lib/components";
-  import {
-    ArrowLeft,
-    Save,
-    Trash2,
-    Eye,
-    Rss,
-    RadioTower,
-    CloudOff,
-    MegaphoneOff,
-    Megaphone,
-    ScanSearch,
-  } from "lucide-svelte";
+  import { MegaphoneOff, Megaphone } from "lucide-svelte";
   import { enhance } from "$app/forms";
   import type { PageProps } from "./$types";
   import { enhanceForm } from "$lib/utils";

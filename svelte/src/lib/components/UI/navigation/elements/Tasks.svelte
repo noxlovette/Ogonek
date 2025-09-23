@@ -1,7 +1,6 @@
 <script lang="ts">
   import { ListTodo } from "lucide-svelte";
   import SidebarItem from "./SidebarItem.svelte";
-  import { user } from "$lib/stores";
   import { getContext } from "svelte";
   import { m } from "$lib/paraglide/messages";
   import MobileMenuElement from "../mobileMenu/MobileMenuElement.svelte";

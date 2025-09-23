@@ -1,17 +1,7 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
   import { user } from "$lib/stores";
-  import {
-    Body,
-    Caption1,
-    HStack,
-    LargeTitle,
-    Merger,
-    Title1,
-    Title3,
-    Toolbar,
-    UniButton,
-  } from "$lib/components";
+  import { Body, Merger, Title1, UniButton } from "$lib/components";
   import { enhanceForm } from "$lib/utils";
   import { Cable } from "lucide-svelte";
 

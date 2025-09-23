@@ -6,8 +6,7 @@ type PATCHRequestBody = any;
 export const DELETE: RequestHandler = async ({ request, params, url }) => {
   // Path params: id
   // Delete a calendar
-  
-  
+
   return json(null);
 };
 
@@ -16,7 +15,6 @@ export const PATCH: RequestHandler = async ({ request, params, url }) => {
   logger.info("PATCH /api/v1/calendars/{id} with body:", body);
   // Path params: id
   // Update a calendar
-  
-  
+
   return json(null);
 };

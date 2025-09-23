@@ -43,7 +43,7 @@
   </VStack>
 
   <HStack>
-    <DateTimePicker dtstartTime={data.date.toISOString()} />
+    <DateTimePicker {form} dtstartTime={data.date.toISOString()} />
   </HStack>
   <SectionBg>
     <HStack>

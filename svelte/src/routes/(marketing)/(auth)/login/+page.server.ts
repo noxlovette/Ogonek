@@ -76,10 +76,9 @@ export const actions: Actions = {
       });
     }
 
-    const data: components["schemas"]["TokenPair"] = await response.json();
-
     let user: Claims | User;
     if (!env.PUBLIC_MOCK_MODE) {
+      const data: components["schemas"]["TokenPair"] = await response.json();
       const { accessToken, refreshToken } = data;
 
       setTokenCookie(cookies, "accessToken", accessToken);
@@ -95,6 +94,7 @@ export const actions: Actions = {
       }
     } else {
       user = createUser();
+      throw redirect(302, "/t/dashboard");
     }
 
     return {

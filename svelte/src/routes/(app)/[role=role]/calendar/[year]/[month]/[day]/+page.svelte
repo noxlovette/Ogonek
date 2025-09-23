@@ -7,7 +7,6 @@
     EventTimelineItem,
     HStack,
     NewCard,
-    Optional,
     Title1,
   } from "$lib/components";
   import { formatDate } from "$lib/utils";
@@ -37,8 +36,8 @@
       </EmptySpace>
     {/each}
     <NewCard
-      addCard={() => {
-        goto(`${page.params.day}/new`);
+      addCard={async () => {
+        await goto(`${page.params.day}/new`);
       }}
     />
   </div>

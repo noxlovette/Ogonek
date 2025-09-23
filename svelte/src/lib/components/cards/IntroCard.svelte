@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Callout, LargeTitle, Title1 } from "../typography";
+  import { Callout, Title1 } from "../typography";
 
   let { children, title = "Title" } = $props();
 </script>

@@ -1,4 +1,3 @@
-<!-- ActivityCard.svelte -->
 <script lang="ts">
   import type { ActivityLog } from "$lib/types";
   import { page } from "$app/state";
@@ -13,7 +12,6 @@
     Trash2,
     WholeWord,
   } from "lucide-svelte";
-  import Merger from "../UI/toolbar/Merger.svelte";
 
   let { activity }: { activity: ActivityLog } = $props();
 

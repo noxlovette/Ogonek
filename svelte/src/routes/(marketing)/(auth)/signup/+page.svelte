@@ -60,7 +60,7 @@
     },
     handlers: {
       success: async () => {
-        goto("/login");
+        await goto("/login");
       },
     },
     navigate: true,

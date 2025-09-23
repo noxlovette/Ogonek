@@ -3,9 +3,6 @@
   import type { Student } from "$lib/types";
 
   import { getContext } from "svelte";
-  import Title2 from "$lib/components/typography/Title2.svelte";
-  import { ChevronsUpDown } from "lucide-svelte";
-  import { Input } from "../../forms";
   import { m } from "$lib/paraglide/messages";
 
   const students: Student[] = getContext("students");

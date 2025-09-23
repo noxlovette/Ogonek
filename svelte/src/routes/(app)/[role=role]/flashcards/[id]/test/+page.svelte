@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { ArrowLeft, Ban, Check, Eye, RotateCcw } from "lucide-svelte";
   import {
     Body,
     Callout,
@@ -8,7 +7,6 @@
     Divider,
     HStack,
     LargeTitle,
-    Merger,
     ProgressBar,
     KBD,
     Title2,
@@ -25,10 +23,6 @@
   let totalAnswered = $state(0);
   let isTestComplete = $state(false);
   let startTime = Date.now();
-
-  function revealAnswer() {
-    showAnswer = true;
-  }
 
   function markAnswer(isCorrect: boolean) {
     totalAnswered++;

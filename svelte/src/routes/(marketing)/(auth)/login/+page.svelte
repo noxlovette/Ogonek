@@ -1,6 +1,5 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
-  import { goto } from "$app/navigation";
   import {
     Input,
     Captcha,
@@ -11,7 +10,6 @@
   } from "$lib/components";
   import message from "$lib/messages.js";
   import { m } from "$lib/paraglide/messages";
-  import { initialUser, notification } from "$lib/stores";
   import { enhanceForm } from "$lib/utils";
   import { DoorOpen } from "lucide-svelte";
 

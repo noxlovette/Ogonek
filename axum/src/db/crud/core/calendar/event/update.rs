@@ -14,9 +14,7 @@ use crate::{
         error::DbError,
     },
     services::calendar::{extract_id_and_occurence, remove_until_from_rrule},
-    types::{
-        EditScope, EventAttendeeCreate, EventDBFull, EventFull, EventUpdate, EventUpdateRequest,
-    },
+    types::{EditScope, EventAttendeeCreate, EventDBFull, EventUpdate, EventUpdateRequest},
 };
 
 /// The super handler for recurring or single events

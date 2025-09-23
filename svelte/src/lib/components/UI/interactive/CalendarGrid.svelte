@@ -1,6 +1,6 @@
 <script lang="ts">
   import { page } from "$app/state";
-  import { Caption1, LargeTitle, Title1 } from "$lib/components/typography";
+  import { Caption1, LargeTitle } from "$lib/components/typography";
   import type { EventSmall } from "$lib/types/api/calendar";
   import { getLocaleFromCookie } from "$lib/utils";
   import { generateMonthDays } from "$lib/utils/time/calendar";
@@ -8,7 +8,6 @@
   import { HStack, Toolbar } from "..";
   import UniButton from "../forms/buttons/UniButton.svelte";
   import Divider from "../toolbar/Divider.svelte";
-  import VStack from "../VStack.svelte";
   import Merger from "../toolbar/Merger.svelte";
 
   const { events }: { events: EventSmall[] } = $props();
