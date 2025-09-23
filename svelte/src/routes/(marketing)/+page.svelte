@@ -84,7 +84,7 @@
         <UniButton
           iconOnly={false}
           Icon={FlameKindling}
-          href="/auth/signup"
+          href="/signup"
           variant="primary"
         >
           {m.signUp()}</UniButton

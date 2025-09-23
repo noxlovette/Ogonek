@@ -1,3 +1,5 @@
+import { dev } from "$app/environment";
+import { env } from "$env/dynamic/public";
 import { z } from "$lib";
 import logger from "$lib/logger";
 import { routes } from "$lib/routes";
@@ -23,6 +25,8 @@ export const actions = {
           fieldErrors[fieldPath] = true;
         }
       });
+
+      console.log(validation);
       return fail(400, {
         ...fieldErrors,
         message: "Validation failed",
@@ -33,44 +37,45 @@ export const actions = {
 
     const inviteToken = url.searchParams.get("invite");
 
-    const captchaToken = formData.get("smart-token");
-    if (!captchaToken || typeof captchaToken !== "string") {
-      return fail(400, {
-        captcha: true,
-        name: false,
-        username: false,
-        email: false,
-        pass: false,
-        message: "Please complete the CAPTCHA verification",
-      });
-    }
+    if (!dev && !env.PUBLIC_MOCK_MODE) {
+      const captchaToken = formData.get("smart-token");
+      if (!captchaToken || typeof captchaToken !== "string") {
+        return fail(400, {
+          captcha: true,
+          name: false,
+          username: false,
+          email: false,
+          pass: false,
+          message: "Please complete the CAPTCHA verification",
+        });
+      }
 
-    let captchaResponse;
-    try {
-      captchaResponse = await captchaVerify(captchaToken);
-    } catch (error) {
-      logger.error({ error }, "CAPTCHA verification network error");
-      return fail(500, {
-        captcha: true,
-        name: false,
-        username: false,
-        email: false,
-        pass: false,
-        message: "Verification service unavailable",
-      });
-    }
+      let captchaResponse;
+      try {
+        captchaResponse = await captchaVerify(captchaToken);
+      } catch (error) {
+        logger.error({ error }, "CAPTCHA verification network error");
+        return fail(500, {
+          captcha: true,
+          name: false,
+          username: false,
+          email: false,
+          pass: false,
+          message: "Verification service unavailable",
+        });
+      }
 
-    if (!captchaResponse.ok) {
-      return fail(400, {
-        captcha: true,
-        name: false,
-        username: false,
-        email: false,
-        pass: false,
-        message: "Captcha verification failed",
-      });
+      if (!captchaResponse.ok) {
+        return fail(400, {
+          captcha: true,
+          name: false,
+          username: false,
+          email: false,
+          pass: false,
+          message: "Captcha verification failed",
+        });
+      }
     }
-
     const response = await fetch(routes.auth.signup(), {
       method: "POST",
       body: JSON.stringify({ username, pass, email, role, name }),

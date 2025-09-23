@@ -98,9 +98,9 @@
     ></Input>
 
     <Input
-      name="password"
+      name="pass"
       invalid={form?.pass}
-      invalidDescription="3+ characters"
+      invalidDescription="8+ characters"
       placeholder="Password"
       showLabel={false}
       type="password"

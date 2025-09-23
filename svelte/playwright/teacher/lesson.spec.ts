@@ -20,7 +20,7 @@ test("lesson edit", async ({ page }) => {
   await page.getByRole("textbox", { name: "Topic" }).fill("Hello");
   await page.getByRole("button", { name: "Save" }).click();
 
-  expect(page).toHaveTitle(/Lesson From/);
+  expect(page).toHaveTitle(/Lesson •/);
 });
 
 test("lesson delete", async ({ page }) => {

@@ -7,12 +7,13 @@ const config: PlaywrightTestConfig = {
     env: {
       PUBLIC_MOCK_MODE: "true",
     },
-    reuseExistingServer: true,
+    reuseExistingServer: false,
   },
   testDir: "playwright",
   testMatch: /(.+\.)?(test|spec)\.[jt]s/,
   use: {
-    baseURL: "http://localhost:5173",
+    baseURL: "http://localhost:4173",
   },
 };
+
 export default config;

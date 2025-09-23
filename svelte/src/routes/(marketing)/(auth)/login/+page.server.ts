@@ -30,7 +30,7 @@ export const actions: Actions = {
       });
     }
 
-    if (!dev) {
+    if (!dev && !env.PUBLIC_MOCK_MODE) {
       const captchaToken = formData.get("smart-token");
       if (!captchaToken || typeof captchaToken !== "string") {
         return fail(400, {
