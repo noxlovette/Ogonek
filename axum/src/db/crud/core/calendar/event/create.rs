@@ -8,7 +8,7 @@ use crate::{
                 profile::get_call_url,
                 user::{get_email, get_name},
             },
-            calendar::{calendar::read_calendar_id, event_attendee},
+            calendar::{cal::read_calendar_id, event_attendee},
         },
         error::DbError,
     },
@@ -22,7 +22,7 @@ pub async fn create(db: &PgPool, user_id: &str, create: EventCreate) -> Result<(
 
     let attendee_name = get_name(&mut *tx, &create.attendee).await?;
 
-    let video_call_url = get_call_url(&mut *tx, &user_id).await?;
+    let video_call_url = get_call_url(&mut *tx, user_id).await?;
 
     let id = sqlx::query_scalar!(
         r#"

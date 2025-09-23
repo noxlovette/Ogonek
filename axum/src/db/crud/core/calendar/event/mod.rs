@@ -1,6 +1,6 @@
 mod create;
 mod delete;
-pub(self) mod read;
+pub mod read;
 mod update;
 
 pub use create::create;

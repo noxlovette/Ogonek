@@ -1,7 +1,7 @@
 use crate::api::CALENDAR_TAG;
 use crate::api::error::APIError;
 use crate::auth::Claims;
-use crate::db::crud::core::calendar::calendar::{delete, get_or_create, update};
+use crate::db::crud::core::calendar::cal::{delete, get_or_create, update};
 use crate::schema::AppState;
 use crate::types::{CalendarFull, CalendarUpdate};
 use axum::extract::{Json, Path, State};

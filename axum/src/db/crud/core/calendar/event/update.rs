@@ -142,7 +142,7 @@ async fn edit_single_occurrence(
         let attendee_name = update_attendee(tx, &exception_id, &updates.attendee).await?;
         edit_single(tx, &exception_id, attendee_name, updates).await?;
     } else {
-        create_exception(tx, &master, &updates, &occurrence_date).await?;
+        create_exception(tx, master, updates, &occurrence_date).await?;
     }
 
     Ok(())
@@ -155,7 +155,7 @@ async fn edit_this_and_future(
     updates: &EventUpdate,
     tx: &mut sqlx::Transaction<'_, sqlx::Postgres>,
 ) -> Result<(), DbError> {
-    let new_rrule = truncate_master(tx, &master, &occurrence_date).await?;
+    let new_rrule = truncate_master(tx, master, &occurrence_date).await?;
     create_master(tx, master, updates, &new_rrule).await?;
 
     Ok(())

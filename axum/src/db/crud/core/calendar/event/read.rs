@@ -4,7 +4,7 @@ use chrono::{DateTime, Utc};
 use sqlx::PgPool;
 
 use crate::{
-    db::{crud::core::calendar::calendar::read_calendar_id, error::DbError},
+    db::{crud::core::calendar::cal::read_calendar_id, error::DbError},
     services::calendar::{
         OCCURRENCE_SEPARATOR, RRule, extract_id_and_occurence, parse_date_flexible, parse_exdates,
     },
@@ -96,7 +96,7 @@ pub(super) async fn read_all_internal(
 ) -> Result<Vec<EventDB>, DbError> {
     let mut tx = db.begin().await?;
 
-    let calendar_id = read_calendar_id(&mut *tx, &user_id).await?;
+    let calendar_id = read_calendar_id(&mut *tx, user_id).await?;
     let events = sqlx::query_as!(
         EventDB,
         r#"

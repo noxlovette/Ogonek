@@ -16,10 +16,11 @@ pub enum EditScope {
     ThisAndFuture,
 }
 // Event Status ENUM
-#[derive(ToSchema, Serialize, Deserialize, Type, Debug, PartialEq, Clone)]
+#[derive(ToSchema, Default, Serialize, Deserialize, Type, Debug, PartialEq, Clone)]
 #[sqlx(type_name = "event_status")]
 #[serde(rename_all = "lowercase")]
 pub enum EventStatus {
+    #[default]
     #[sqlx(rename = "tentative")]
     Tentative,
     #[sqlx(rename = "confirmed")]
@@ -29,20 +30,22 @@ pub enum EventStatus {
 }
 
 // Event Class ENUM
-#[derive(ToSchema, Serialize, PartialOrd, Deserialize, Type, Debug, PartialEq, Clone)]
+#[derive(ToSchema, Default, Serialize, PartialOrd, Deserialize, Type, Debug, PartialEq, Clone)]
 #[sqlx(type_name = "event_class", rename_all = "lowercase")]
 #[serde(rename_all = "lowercase")]
 pub enum EventClass {
+    #[default]
     Public,
     Private,
     Confidential,
 }
 
 // Event Transparency ENUM
-#[derive(ToSchema, Serialize, Deserialize, Type, Debug, PartialEq, Clone)]
+#[derive(ToSchema, Default, Serialize, Deserialize, Type, Debug, PartialEq, Clone)]
 #[sqlx(type_name = "event_transp")]
 #[serde(rename_all = "lowercase")]
 pub enum EventTransp {
+    #[default]
     #[sqlx(rename = "opaque")]
     Opaque,
     #[sqlx(rename = "transparent")]
@@ -50,12 +53,13 @@ pub enum EventTransp {
 }
 
 // Attendee Role ENUM
-#[derive(ToSchema, Serialize, Deserialize, Type, Debug, PartialEq, Clone)]
+#[derive(ToSchema, Default, Serialize, Deserialize, Type, Debug, PartialEq, Clone)]
 #[sqlx(type_name = "attendee_role")]
 #[serde(rename_all = "kebab-case")]
 pub enum AttendeeRole {
     #[sqlx(rename = "chair")]
     Chair,
+    #[default]
     #[sqlx(rename = "req-participant")]
     ReqParticipant,
     #[sqlx(rename = "opt-participant")]
@@ -65,10 +69,11 @@ pub enum AttendeeRole {
 }
 
 // Attendee Status ENUM
-#[derive(ToSchema, Serialize, Deserialize, Type, Debug, PartialEq, Clone)]
+#[derive(ToSchema, Default, Serialize, Deserialize, Type, Debug, PartialEq, Clone)]
 #[sqlx(type_name = "attendee_status")]
 #[serde(rename_all = "kebab-case")]
 pub enum AttendeeStatus {
+    #[default]
     #[sqlx(rename = "needs-action")]
     NeedsAction,
     #[sqlx(rename = "accepted")]
@@ -97,10 +102,11 @@ pub enum AlarmAction {
 }
 
 // Sync State ENUM
-#[derive(ToSchema, Serialize, Deserialize, Type, Debug, PartialEq, Clone)]
+#[derive(ToSchema, Serialize, Default, Deserialize, Type, Debug, PartialEq, Clone)]
 #[sqlx(type_name = "sync_state")]
 #[serde(rename_all = "lowercase")]
 pub enum SyncState {
+    #[default]
     #[sqlx(rename = "active")]
     Active,
     #[sqlx(rename = "syncing")]
@@ -159,42 +165,5 @@ impl fmt::Display for AttendeeStatus {
             AttendeeStatus::Tentative => write!(f, "tentative"),
             AttendeeStatus::Delegated => write!(f, "delegated"),
         }
-    }
-}
-
-// Default implementations for commonly used enums
-impl Default for EventStatus {
-    fn default() -> Self {
-        EventStatus::Confirmed
-    }
-}
-
-impl Default for EventClass {
-    fn default() -> Self {
-        EventClass::Public
-    }
-}
-
-impl Default for EventTransp {
-    fn default() -> Self {
-        EventTransp::Opaque
-    }
-}
-
-impl Default for AttendeeRole {
-    fn default() -> Self {
-        AttendeeRole::ReqParticipant
-    }
-}
-
-impl Default for AttendeeStatus {
-    fn default() -> Self {
-        AttendeeStatus::NeedsAction
-    }
-}
-
-impl Default for SyncState {
-    fn default() -> Self {
-        SyncState::Active
     }
 }

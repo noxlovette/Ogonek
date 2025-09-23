@@ -38,7 +38,7 @@
 {#if showBack && !override}
   <VStack>
     <Merger>
-      <UniButton {href} Icon={ChevronLeft}></UniButton>
+      <UniButton ariaLabel="Back" {href} Icon={ChevronLeft}></UniButton>
     </Merger>
     <Divider></Divider>
   </VStack>

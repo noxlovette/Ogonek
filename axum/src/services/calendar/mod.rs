@@ -26,10 +26,10 @@ pub fn extract_id_and_occurence(event_id: String) -> (String, Option<DateTime<Ut
         if timestamp_start < event_id.len() {
             let timestamp_str = &event_id[timestamp_start..];
 
-            if let Ok(timestamp) = timestamp_str.parse::<i64>() {
-                if let Some(datetime) = Utc.timestamp_opt(timestamp, 0).single() {
-                    return (base_id, Some(datetime));
-                }
+            if let Ok(timestamp) = timestamp_str.parse::<i64>()
+                && let Some(datetime) = Utc.timestamp_opt(timestamp, 0).single()
+            {
+                return (base_id, Some(datetime));
             }
         }
     }

@@ -77,8 +77,12 @@
   </Grid>
   <Captcha />
   <Merger>
-    <UniButton Icon={DoorOpen} type="submit" variant="primary" iconOnly={false}
-      >{m.logIn()}</UniButton
+    <UniButton
+      Icon={DoorOpen}
+      type="submit"
+      variant="primary"
+      ariaLabel="Login"
+      iconOnly={false}>{m.logIn()}</UniButton
     >
   </Merger>
 </form>

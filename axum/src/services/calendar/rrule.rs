@@ -159,25 +159,24 @@ impl RRule {
                     // Fast-forward to the first week that could contain occurrences in range
                     if week_start < range_start {
                         let weeks_diff = (range_start - week_start).num_weeks();
-                        let intervals_to_skip = (weeks_diff / self.interval as i64) as i64;
-                        week_start =
-                            week_start + Duration::weeks(intervals_to_skip * self.interval as i64);
+                        let intervals_to_skip = weeks_diff / self.interval as i64;
+                        week_start += Duration::weeks(intervals_to_skip * self.interval as i64);
                         week_count = intervals_to_skip;
                     }
 
                     while week_start <= range_end {
                         // Check count limit
-                        if let Some(max_count) = self.count {
-                            if occurrence_count >= max_count {
-                                break;
-                            }
+                        if let Some(max_count) = self.count
+                            && occurrence_count >= max_count
+                        {
+                            break;
                         }
 
                         // Check until limit
-                        if let Some(until) = self.until {
-                            if week_start > until {
-                                break;
-                            }
+                        if let Some(until) = self.until
+                            && week_start > until
+                        {
+                            break;
                         }
 
                         // Generate occurrences for this week
@@ -190,16 +189,16 @@ impl RRule {
                                 && occurrence >= range_start
                                 && occurrence <= range_end
                             {
-                                if let Some(until) = self.until {
-                                    if occurrence > until {
-                                        continue;
-                                    }
+                                if let Some(until) = self.until
+                                    && occurrence > until
+                                {
+                                    continue;
                                 }
 
-                                if let Some(max_count) = self.count {
-                                    if occurrence_count >= max_count {
-                                        break;
-                                    }
+                                if let Some(max_count) = self.count
+                                    && occurrence_count >= max_count
+                                {
+                                    break;
                                 }
 
                                 occurrences.push(occurrence);
@@ -208,7 +207,7 @@ impl RRule {
                         }
 
                         // Move to next week
-                        week_start = week_start + Duration::weeks(self.interval as i64);
+                        week_start += Duration::weeks(self.interval as i64);
                         week_count += 1;
 
                         // Safety break
@@ -230,17 +229,17 @@ impl RRule {
 
                 while current <= range_end {
                     // Check count limit
-                    if let Some(max_count) = self.count {
-                        if count >= max_count {
-                            break;
-                        }
+                    if let Some(max_count) = self.count
+                        && count >= max_count
+                    {
+                        break;
                     }
 
                     // Check until limit
-                    if let Some(until) = self.until {
-                        if current > until {
-                            break;
-                        }
+                    if let Some(until) = self.until
+                        && current > until
+                    {
+                        break;
                     }
 
                     // If in range, add occurrence
@@ -296,12 +295,12 @@ impl RRule {
         match self.freq {
             Frequency::Daily => {
                 let days_diff = (range_start - dtstart).num_days();
-                let intervals_to_skip = (days_diff / self.interval as i64) as i64;
+                let intervals_to_skip = days_diff / self.interval as i64;
                 dtstart + Duration::days(intervals_to_skip * self.interval as i64)
             }
             Frequency::Weekly => {
                 let weeks_diff = (range_start - dtstart).num_weeks();
-                let intervals_to_skip = (weeks_diff / self.interval as i64) as i64;
+                let intervals_to_skip = weeks_diff / self.interval as i64;
                 dtstart + Duration::weeks(intervals_to_skip * self.interval as i64)
             }
             Frequency::Monthly => {

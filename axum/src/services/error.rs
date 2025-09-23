@@ -227,7 +227,7 @@ impl From<crate::db::error::DbError> for AppError {
             crate::db::error::DbError::InvalidRRule(rrule) => {
                 Self::Validation(format!("Invalid recurrence rule: {rrule}"))
             }
-            crate::db::error::DbError::ParseError(error) => Self::Validation(format!("{error}")),
+            crate::db::error::DbError::ParseError(error) => Self::Validation(error.to_string()),
         }
     }
 }
