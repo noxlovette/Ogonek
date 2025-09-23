@@ -1,14 +1,6 @@
 <script lang="ts">
   import { m } from "$lib/paraglide/messages";
-  import { ArrowBigRight, Clock, Target, Zap, Calendar } from "lucide-svelte";
-  import UniButton from "../UI/forms/buttons/UniButton.svelte";
-  import {
-    Body,
-    Headline,
-    Subheadline,
-    Title2,
-    Title3,
-  } from "$lib/components/typography";
+  import { Headline, Subheadline, Title2 } from "$lib/components/typography";
   import { HStack, VStack } from "../UI";
   import CardClickable from "../cards/CardClickable.svelte";
 

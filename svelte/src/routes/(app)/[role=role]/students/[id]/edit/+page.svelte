@@ -36,9 +36,8 @@
       <UniButton variant="primary" type="submit" Icon={Check}>Save</UniButton>
       <UniButton
         variant="danger"
+        shouldConfirm={true}
         formaction="?/delete"
-        confirmText={student.name}
-        confirmTitle="Delete Student"
         Icon={Trash2}>Delete</UniButton
       >
     </div>
@@ -48,7 +47,7 @@
       value={student.studentTelegramId}
       name="studentTelegramId"
       placeholder="@username"
-      labelName="Telegram"
+      labelName="Телеграм"
     ></Input>
     <input type="hidden" name="id" value={student.id} />
     <input type="hidden" name="markdown" value={markdown} />

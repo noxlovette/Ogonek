@@ -12,8 +12,8 @@
       case 1:
         return {
           label: "High Priority",
-          color: "text-red-600 dark:text-red-400",
-          bgColor: "bg-red-500",
+          color: "text-rose-600 dark:text-rose-400",
+          bgColor: "bg-rose-500",
         };
       case 2:
         return {
@@ -24,8 +24,8 @@
       case 3:
         return {
           label: "Low Priority",
-          color: "text-green-600 dark:text-green-400",
-          bgColor: "bg-green-500",
+          color: "text-emerald-600 dark:text-emerald-400",
+          bgColor: "bg-emerald-500",
         };
       default:
         return {

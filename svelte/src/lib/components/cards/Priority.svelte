@@ -20,8 +20,8 @@
     switch (priority) {
       case 1:
         return {
-          color: "bg-red-500",
-          textColor: "text-red-600 dark:text-red-400",
+          color: "bg-rose-500",
+          textColor: "text-rose-600 dark:text-rose-400",
         };
       case 2:
         return {
@@ -30,8 +30,8 @@
         };
       case 3:
         return {
-          color: "bg-green-500",
-          textColor: "text-green-600 dark:text-green-400",
+          color: "bg-emerald-500",
+          textColor: "text-emerald-600 dark:text-emerald-400",
         };
       default:
         return {

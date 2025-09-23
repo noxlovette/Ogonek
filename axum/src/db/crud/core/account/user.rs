@@ -71,7 +71,10 @@ pub async fn update(db: &PgPool, user_id: &str, update: &UserUpdate) -> Result<(
     Ok(())
 }
 
-pub async fn get_email(db: &PgPool, user_id: &str) -> Result<String, DbError> {
+pub async fn get_email(
+    db: impl sqlx::Executor<'_, Database = sqlx::Postgres>,
+    user_id: &str,
+) -> Result<String, DbError> {
     let email = sqlx::query_scalar!(
         r#"
         SELECT email
@@ -84,6 +87,22 @@ pub async fn get_email(db: &PgPool, user_id: &str) -> Result<String, DbError> {
     .await?;
 
     Ok(email)
+}
+
+pub async fn get_name(
+    db: impl sqlx::Executor<'_, Database = sqlx::Postgres>,
+    user_id: &str,
+) -> Result<String, DbError> {
+    let name = sqlx::query_scalar!(
+        r#"
+        SELECT name FROM "user" WHERE id = $1
+        "#,
+        user_id
+    )
+    .fetch_one(db)
+    .await?;
+
+    Ok(name)
 }
 
 #[cfg(test)]

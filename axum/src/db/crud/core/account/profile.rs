@@ -19,7 +19,7 @@ pub async fn find_by_id(
     Ok(profile)
 }
 
-pub async fn get_call_url(
+pub async fn get_call_url_for_student(
     db: impl sqlx::Executor<'_, Database = sqlx::Postgres>,
     user_id: &str,
 ) -> Result<Option<String>, DbError> {
@@ -133,4 +133,20 @@ pub async fn get_teacher_user_id(
     .await?;
 
     Ok(id)
+}
+
+pub async fn get_call_url(
+    db: impl sqlx::Executor<'_, Database = sqlx::Postgres>,
+    user_id: &str,
+) -> Result<Option<String>, DbError> {
+    let video_call_url = sqlx::query_scalar!(
+        r#"
+        SELECT video_call_url FROM profile WHERE user_id = $1
+        "#,
+        user_id
+    )
+    .fetch_optional(db)
+    .await?;
+
+    Ok(video_call_url.flatten())
 }

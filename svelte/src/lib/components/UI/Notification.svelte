@@ -29,9 +29,9 @@
 "
   >
     {#if $notification.type === "success"}
-      <Check class="size-5 text-green-500" />
+      <Check class="size-5 text-emerald-500" />
     {:else if $notification.type === "error"}
-      <Ban class="size-5 text-red-500" />
+      <Ban class="size-5 text-rose-500" />
     {:else}
       <AlertCircle class="size-5 text-yellow-500" />
     {/if}

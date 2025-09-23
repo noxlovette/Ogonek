@@ -13,7 +13,8 @@ Disallow: /sentry-example-page/
 
 # Allow public pages
 Allow: /
-Allow: /*/auth/
+Allow: /login
+Allow: /signup
 Allow: /*/contact/
 Allow: /*/paperwork/
 

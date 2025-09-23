@@ -3,34 +3,80 @@
   import { fade, fly } from "svelte/transition";
   import { backOut } from "svelte/easing";
   import UniButton from "$lib/components/UI/forms/buttons/UniButton.svelte";
-  import { House, Send } from "lucide-svelte";
+  import {
+    House,
+    Send,
+    ServerCrash,
+    Bug,
+    ShieldBan,
+    FileSearch,
+    Icon,
+  } from "lucide-svelte";
+  import { onMount } from "svelte";
 
-  // Determine error category for custom messaging
-  const is404 = page.status === 404;
-  const is500 = page.status >= 500;
+  type ErrorCode = 404 | 403 | 500;
+  type ErrorConfig = {
+    [key in ErrorCode]: {
+      title: string;
+      message: string;
+      icon: typeof Icon;
+      color: string;
+    };
+  } & {
+    default: {
+      title: string;
+      message: string;
+      icon: typeof Icon;
+      color: string;
+    };
+  };
 
-  const errorTitle = is404
-    ? "Page Not Found"
-    : is500
-      ? "Server Error"
-      : `Error ${page.status}`;
+  const errorConfig: ErrorConfig = {
+    404: {
+      title: "Страница не найдена",
+      message: "Ресурс не существует или был перемещён.",
+      icon: FileSearch,
+      color: "text-amber-600 dark:text-amber-400",
+    },
+    403: {
+      title: "Доступ запрещён",
+      message: "У вас недостаточно прав для просмотра содержимого.",
+      icon: ShieldBan,
+      color: "text-rose-600 dark:text-rose-400",
+    },
+    500: {
+      title: "Внутренняя ошибка сервера",
+      message: "Произошла непредвиденная ошибка. Инженеры уведомлены.",
+      icon: ServerCrash,
+      color: "text-rose-600 dark:text-rose-400",
+    },
+    default: {
+      title: `Ошибка ${page.status}`,
+      message: page.error?.message || "Произошла неожиданная ошибка.",
+      icon: Bug,
+      color: "text-stone-600 dark:text-stone-400",
+    },
+  };
 
-  const errorMessage = is404
-    ? "We couldn't find the page you're looking for."
-    : is500
-      ? "Something went wrong on our end."
-      : page.error?.message || "An unexpected error occurred.";
+  const currentError =
+    errorConfig[page.status as ErrorCode] ?? errorConfig.default;
 
-  // For fun error facts (randomly selected)
-  const errorFacts = [
-    "Did you know? The first computer bug was an actual moth found in a relay in 1947.",
-    "The average developer creates 70 bugs per 1000 lines of code.",
-    "Studies show 10% of bugs are responsible for 90% of all system crashes.",
-    "Most developers spend 50% of their time debugging code.",
-    "The term '404' is said to originate from room 404 at CERN where the web servers were kept.",
+  const devFacts = [
+    "🐛 Первый компьютерный баг был настоящей молью в 1947 году",
+    "📊 В среднем — 70 багов на 1000 строк кода",
+    "🎯 10% багов вызывают 90% крашей",
+    "⏰ Половина рабочего времени уходит на отладку",
+    "🌐 HTTP 404 якобы от комнаты №404 в CERN",
+    "☕ Чем больше кофе — тем меньше багов",
+    "🚀 В NASA код проходит 11 стадий ревью",
   ];
 
-  const randomFact = errorFacts[Math.floor(Math.random() * errorFacts.length)];
+  let selectedFact: string;
+  const errorId = page.error?.errorID;
+
+  onMount(() => {
+    selectedFact = devFacts[Math.floor(Math.random() * devFacts.length)];
+  });
 </script>
 
 <div
@@ -38,86 +84,89 @@
   in:fade={{ duration: 300, delay: 150 }}
 >
   <div
-    class="w-full max-w-md overflow-hidden rounded-lg bg-white shadow-sm dark:bg-stone-800"
+    class="w-full max-w-lg rounded-xl bg-white shadow-lg ring-1 ring-stone-200/50 dark:bg-stone-900 dark:ring-stone-700/50"
   >
+    <!-- Header -->
     <div
-      class="ring-b flex w-full justify-center bg-stone-100 p-6 ring-stone-300/40 dark:bg-stone-700 dark:ring-stone-600"
+      class="flex flex-col items-center space-y-4 bg-gradient-to-br from-stone-50 to-stone-100 p-8 dark:from-stone-800 dark:to-stone-700"
+      in:fly={{ y: -20, duration: 400, delay: 200, easing: backOut }}
     >
-      <div in:fly={{ y: -20, duration: 400, delay: 200, easing: backOut }}>
-        {#if is404}
-          <img
-            src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNnk3eTZ1NzBjc3l3cmFkY2g2bmRwbGl6Z3MwN2E3amg3YmNpbDVteiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/14uQ3cOFteDaU/giphy.gif"
-            alt="Lost"
-            class="h-48 rounded object-cover"
-          />
-        {:else if is500}
-          <img
-            src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExd3BpbTRtbHAwNzg2cnEwem04aXd4c2ZsNG15YXF1bGg3Y2Y1c2VpdiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/xT5LMBauOi9MgA50L6/giphy.gif"
-            alt="Server error"
-            class="h-48 rounded object-cover"
-          />
-        {:else}
-          <img
-            src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExaHF3Y3F5bHdtYXBnMGh0bHNxeXhnZnRldDFuOTA0c2VudHU0YnJpciZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/xT5LMzIK1AdZJ4cYW4/giphy.gif"
-            alt="Confused"
-            class="h-48 rounded object-cover"
-          />
-        {/if}
+      <div class="rounded-full bg-white/80 p-6 shadow-sm dark:bg-stone-800/80">
+        <svelte:component
+          this={currentError.icon}
+          class="h-16 w-16 {currentError.color}"
+          stroke-width="1.5"
+        />
+      </div>
+      <div class="text-center">
+        <h1 class="text-3xl font-bold text-stone-900 dark:text-stone-100">
+          {currentError.title}
+        </h1>
+        <p class="mt-2 text-lg text-stone-600 dark:text-stone-400">
+          {currentError.message}
+        </p>
       </div>
     </div>
 
-    <!-- Error details -->
-    <div class="p-6">
-      <div
-        class="mb-4 text-center"
-        in:fly={{ y: 20, duration: 400, delay: 300 }}
-      >
-        <h1 class="text-accent dark:text-accent text-2xl font-bold">
-          {errorTitle}
-        </h1>
-        <p class="mt-2 text-stone-600 dark:text-stone-400">
-          {errorMessage}
-        </p>
-      </div>
-
-      <!-- Fun error fact -->
-      <div
-        class="bg-default mb-6 rounded-lg p-4 text-sm text-stone-700 dark:bg-stone-700/30 dark:text-stone-300"
-        in:fly={{ y: 20, duration: 400, delay: 400 }}
-      >
-        <p class="flex items-start">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="text-accent mr-2 h-5 w-5 flex-shrink-0"
-            viewBox="0 0 20 20"
-            fill="currentColor"
+    <!-- Body -->
+    <div class="space-y-6 p-8">
+      <!-- Error ID -->
+      {#if errorId}
+        <div
+          class="rounded-lg border border-stone-200 bg-stone-50 p-4 dark:border-stone-700 dark:bg-stone-800"
+          in:fly={{ y: 20, duration: 400, delay: 300 }}
+        >
+          <p
+            class="mb-1 text-sm font-medium text-stone-700 dark:text-stone-300"
           >
-            <path
-              fill-rule="evenodd"
-              d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-              clip-rule="evenodd"
-            />
-          </svg>
-          <span>{randomFact}</span>
-        </p>
-      </div>
+            ID ошибки:
+          </p>
+          <code
+            class="rounded border bg-white px-2 py-1 font-mono text-sm dark:bg-stone-900"
+          >
+            {errorId}
+          </code>
+        </div>
+      {/if}
 
-      <!-- Action buttons -->
-      <div class="flex flex-col gap-3">
+      <!-- Dev fact -->
+      {#if selectedFact}
+        <div
+          class="border-accent/20 from-accent/5 to-accent/10 dark:from-accent/5 dark:to-accent/10 rounded-lg border bg-gradient-to-r p-4"
+          in:fly={{ y: 20, duration: 400, delay: 400 }}
+        >
+          <p class="text-sm leading-relaxed text-stone-700 dark:text-stone-300">
+            {selectedFact}
+          </p>
+        </div>
+      {/if}
+
+      <!-- Actions -->
+      <div
+        class="flex flex-col gap-3 pt-2"
+        in:fly={{ y: 20, duration: 400, delay: 500 }}
+      >
         <UniButton
           type="button"
           variant="primary"
-          iconOnly={false}
           Icon={House}
           href={`/${page.params.role || "s"}/dashboard`}
-          >Back to Safety</UniButton
         >
-        <UniButton
-          type="button"
-          Icon={Send}
-          href="https://t.me/noxlovette"
-          iconOnly={false}>Contact Support</UniButton
-        >
+          На главную
+        </UniButton>
+
+        <UniButton type="button" Icon={Send} href="https://t.me/noxlovette">
+          Поддержка
+        </UniButton>
+      </div>
+
+      <!-- Footer -->
+      <div
+        class="border-t border-stone-200 pt-4 text-center dark:border-stone-700"
+      >
+        <p class="text-xs text-stone-500 dark:text-stone-500">
+          При повторении ошибки укажите её ID в обращении.
+        </p>
       </div>
     </div>
   </div>

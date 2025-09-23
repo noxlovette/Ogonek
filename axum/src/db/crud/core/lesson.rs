@@ -140,7 +140,7 @@ pub async fn create(db: &PgPool, user_id: &str, create: LessonCreate) -> Result<
     Ok(id)
 }
 
-/// Takes user preferences to define defaults
+/// Takes user preferences to define defaults (well, it currently doesn't but you get the point)
 pub async fn create_with_defaults(db: &PgPool, user_id: &str) -> Result<String, DbError> {
     let id = sqlx::query_scalar!(
         "INSERT INTO lessons (id, title, topic, markdown, created_by, assignee)

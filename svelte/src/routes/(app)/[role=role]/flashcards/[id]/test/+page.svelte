@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { ArrowLeft, Ban, Check, Eye, RotateCcw } from "lucide-svelte";
   import {
     Body,
     Callout,
@@ -8,16 +7,12 @@
     Divider,
     HStack,
     LargeTitle,
-    Merger,
     ProgressBar,
     KBD,
     Title2,
     Title3,
     Toolbar,
-    UniButton,
-    VStack,
   } from "$lib/components";
-  import { shuffleArray } from "$lib/utils";
   import { onMount } from "svelte";
 
   let { data } = $props();
@@ -28,10 +23,6 @@
   let totalAnswered = $state(0);
   let isTestComplete = $state(false);
   let startTime = Date.now();
-
-  function revealAnswer() {
-    showAnswer = true;
-  }
 
   function markAnswer(isCorrect: boolean) {
     totalAnswered++;
@@ -85,7 +76,7 @@
 </script>
 
 <svelte:head>
-  <title>Test Mode - {deck.title}</title>
+  <title>Test Mode • {deck.title}</title>
 </svelte:head>
 
 <svelte:window on:keydown={handleKeyPress} />
@@ -154,7 +145,7 @@
         </Title3>
 
         <button
-          class="flex h-full flex-col items-center justify-center gap-2 rounded-lg bg-red-500/20 p-2 font-medium transition"
+          class="flex h-full flex-col items-center justify-center gap-2 rounded-lg bg-rose-500/20 p-2 font-medium transition"
           data-key={1}
           type="button"
           onclick={() => markAnswer(false)}
@@ -163,7 +154,7 @@
           <KBD>1</KBD>
         </button>
         <button
-          class="flex h-full flex-col items-center justify-center gap-2 rounded-lg bg-green-500/20 p-2 font-medium transition"
+          class="flex h-full flex-col items-center justify-center gap-2 rounded-lg bg-emerald-500/20 p-2 font-medium transition"
           data-key={2}
           type="button"
           onclick={() => markAnswer(true)}

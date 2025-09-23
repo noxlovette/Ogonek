@@ -1,0 +1,16 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n            INSERT INTO timezones (tzid, display_name, utc_offset_std)\n            VALUES ($1, $2, $3)\n            ON CONFLICT (tzid) DO NOTHING\n            ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Varchar",
+        "Varchar",
+        "Int4"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "e17de47e400ae50826489e15ca64448bbc0fdbde18bb60433192be8f3dd67801"
+}

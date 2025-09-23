@@ -9,3 +9,5 @@ export { default as Todo } from "./Tasks.svelte";
 export { default as Thesaurus } from "./Thesaurus.svelte";
 export { default as Words } from "./Words.svelte";
 export { default as Zoom } from "./Zoom.svelte";
+
+export { default as Calendar } from "./Calendar.svelte";

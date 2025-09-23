@@ -424,12 +424,12 @@
               ({formatPercentage(fileState.progress.percentComplete)})
             </p>
           {:else if fileState.status === "complete"}
-            <div class="flex items-center text-xs text-green-600">
+            <div class="flex items-center text-xs text-emerald-600">
               <Check class="mr-1 size-4" />
               Upload complete
             </div>
           {:else if fileState.status === "error"}
-            <div class="flex items-center text-xs text-red-600">
+            <div class="flex items-center text-xs text-rose-600">
               <Ban class="mr-1 size-4" />
               {fileState.errorMessage || "Upload failed"}
             </div>

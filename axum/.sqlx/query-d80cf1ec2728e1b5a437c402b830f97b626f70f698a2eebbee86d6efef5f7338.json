@@ -1,0 +1,76 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        SELECT \n            id,\n            user_id,\n            event_id,\n            email,\n            name,\n            role as \"role: EventAttendeeRole\",\n            status as \"status: EventAttendeeStatus\",\n            rsvp,\n            created_at,\n            updated_at\n        FROM event_attendees\n        WHERE event_id = $1\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 1,
+        "name": "user_id",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 2,
+        "name": "event_id",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 3,
+        "name": "email",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 4,
+        "name": "name",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 5,
+        "name": "role: EventAttendeeRole",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 6,
+        "name": "status: EventAttendeeStatus",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 7,
+        "name": "rsvp",
+        "type_info": "Bool"
+      },
+      {
+        "ordinal": 8,
+        "name": "created_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 9,
+        "name": "updated_at",
+        "type_info": "Timestamptz"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "d80cf1ec2728e1b5a437c402b830f97b626f70f698a2eebbee86d6efef5f7338"
+}

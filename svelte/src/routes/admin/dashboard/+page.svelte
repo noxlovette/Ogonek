@@ -1,13 +1,5 @@
 <script lang="ts">
-  import {
-    Title1,
-    UniButton,
-    VStack,
-    HStack,
-    Toolbar,
-    LargeTitle,
-  } from "$lib/components";
-  import { FileText, Plus } from "lucide-svelte";
+  import { Toolbar, LargeTitle } from "$lib/components";
   import type { PageProps } from "./$types";
 
   let { data }: PageProps = $props();

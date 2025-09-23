@@ -1,0 +1,96 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        INSERT INTO calendars (id, name, owner_id)\n        VALUES ($1, $2, $3)\n        ON CONFLICT (owner_id) \n        DO UPDATE SET \n            name = EXCLUDED.name,\n            updated_at = CURRENT_TIMESTAMP\n        RETURNING *\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 1,
+        "name": "name",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 2,
+        "name": "description",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 3,
+        "name": "colour",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 4,
+        "name": "timezone",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 5,
+        "name": "owner_id",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 6,
+        "name": "created_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 7,
+        "name": "updated_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 8,
+        "name": "caldav_url",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 9,
+        "name": "sync_token",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 10,
+        "name": "sync_state",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 11,
+        "name": "last_sync_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 12,
+        "name": "sync_error",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Varchar",
+        "Varchar",
+        "Varchar"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      true,
+      false,
+      true,
+      true
+    ]
+  },
+  "hash": "1e7baeb3e9caa769965ff3fd46929367a2c012e25057b1f481f8d1592c521504"
+}

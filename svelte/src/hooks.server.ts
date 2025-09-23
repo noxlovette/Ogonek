@@ -28,7 +28,7 @@ Sentry.init({
     : 1.0,
 });
 
-const PROTECTED_PATHS = new Set(["/t/", "/s/", "/auth/bind/", "/admin/"]);
+const PROTECTED_PATHS = new Set(["/t/", "/s/", "/bind/", "/admin/"]);
 
 function isProtectedPath(path: string): boolean {
   return (
@@ -78,7 +78,7 @@ export const authenticationHandle: Handle = async ({ event, resolve }) => {
 
   const user = await getUserFromToken(event);
   if (!user) {
-    throw redirect(302, "/auth/login");
+    throw redirect(302, "/login");
   }
 
   const isTeacherRoute = role === "t";
@@ -106,7 +106,7 @@ async function handleTokenRefresh(event: RequestEvent) {
   const refreshToken = event.cookies.get("refreshToken");
   if (!refreshToken) {
     logger.warn("Redirecting unauthorised user");
-    throw redirect(302, "/auth/login");
+    throw redirect(302, "/login");
   }
 
   const refreshCacheKey = `refresh:${refreshToken}`;
@@ -129,7 +129,7 @@ async function handleTokenRefresh(event: RequestEvent) {
   await redis.set(refreshCacheKey, "true", "EX", 5);
 
   try {
-    const refreshRes = await event.fetch("/auth/refresh", {
+    const refreshRes = await event.fetch("/api/refresh", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -154,7 +154,7 @@ async function handleTokenRefresh(event: RequestEvent) {
     return user;
   } catch (error: any) {
     logger.error("Token refresh failed:", error);
-    throw redirect(302, "/auth/login");
+    throw redirect(302, "/login");
   } finally {
     await redis.del(refreshCacheKey);
   }
@@ -213,13 +213,10 @@ export const handleFetch: HandleFetch = async ({ event, request, fetch }) => {
     }
 
     const accessToken = event.cookies.get("accessToken");
-    console.log(accessToken);
     if (accessToken) {
       request.headers.set("Authorization", `Bearer ${accessToken}`);
     }
   }
-
-  console.log(request);
 
   return fetch(request);
 };

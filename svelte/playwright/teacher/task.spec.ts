@@ -18,11 +18,7 @@ test.beforeEach(async ({ page }) => {
 
 test("task edit", async ({ page }) => {
   await page.getByRole("link", { name: "Edit" }).click();
-  await page
-    .locator("form")
-    .filter({ hasText: "Editing... title assignee" })
-    .locator("#assignee")
-    .selectOption({ index: 0 });
+  await page.locator("form").locator("#assignee").selectOption({ index: 0 });
   await page.getByPlaceholder("Due Date").fill("2025-09-17");
   await page
     .getByRole("button", { name: "Set priority to High Priority" })

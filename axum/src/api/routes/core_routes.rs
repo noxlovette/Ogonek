@@ -1,7 +1,7 @@
-use crate::api::core::{self, state};
+use crate::api::core::{self, list_events, state};
 use crate::schema::AppState;
 use axum::Router;
-use axum::routing::{get, post, put};
+use axum::routing::{get, patch, post, put};
 
 pub fn lesson_routes() -> Router<AppState> {
     Router::new()
@@ -59,4 +59,26 @@ pub fn state_routes() -> Router<AppState> {
         .route("/dashboard", get(state::fetch_dashboard))
         .route("/badges", get(state::fetch_badges))
         .route("/context", get(state::fetch_context))
+}
+
+pub fn calendar_routes() -> Router<AppState> {
+    Router::new()
+        .route(
+            "/",
+            get(core::fetch_calendar)
+                .patch(core::update_calendar)
+                .delete(core::delete_calendar),
+        )
+        .route("/events", post(core::create_event))
+        .route("/events", get(list_events))
+        .route(
+            "/events/{id}",
+            get(core::fetch_event)
+                .patch(core::update_event)
+                .delete(core::delete_event),
+        )
+        .route(
+            "/attendees/{id}",
+            patch(core::update_attendee).delete(core::delete_attendee),
+        )
 }

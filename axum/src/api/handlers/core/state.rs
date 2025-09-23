@@ -122,7 +122,7 @@ pub async fn fetch_context(
     let user = user::find_by_id(&state.db, &claims.sub).await?;
     let students = student::find_all(&state.db, &claims.sub).await?;
     let profile = account::profile::find_by_id(&state.db, &claims.sub).await?;
-    let call_url = account::profile::get_call_url(&state.db, &claims.sub).await?;
+    let call_url = account::profile::get_call_url_for_student(&state.db, &claims.sub).await?;
 
     Ok(Json(AppContext {
         user,

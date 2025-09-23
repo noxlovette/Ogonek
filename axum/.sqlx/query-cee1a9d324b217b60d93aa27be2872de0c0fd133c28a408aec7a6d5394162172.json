@@ -1,0 +1,210 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        SELECT \n            id,\n            uid,\n            created_at,\n            updated_at,\n            calendar_id,\n            summary,\n            description,\n            location,\n            url,\n            dtstart_time,\n            dtend_time,\n            dtend_tz,\n            dtstart_tz,\n            rrule,\n            rdate,\n            exdate,\n            recurrence_id,\n            status AS \"status!: EventStatus\",\n            class AS \"class!: EventClass\", \n            transp AS \"transp!: EventTransp\",\n            priority,\n            categories,\n            sequence,\n            etag,\n            deleted_at,\n            caldav_href,\n            content_type\n        FROM calendar_events \n        WHERE id = $1 AND deleted_at IS NULL\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 1,
+        "name": "uid",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 2,
+        "name": "created_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 3,
+        "name": "updated_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 4,
+        "name": "calendar_id",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 5,
+        "name": "summary",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 6,
+        "name": "description",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 7,
+        "name": "location",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 8,
+        "name": "url",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 9,
+        "name": "dtstart_time",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 10,
+        "name": "dtend_time",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 11,
+        "name": "dtend_tz",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 12,
+        "name": "dtstart_tz",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 13,
+        "name": "rrule",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 14,
+        "name": "rdate",
+        "type_info": "TextArray"
+      },
+      {
+        "ordinal": 15,
+        "name": "exdate",
+        "type_info": "TextArray"
+      },
+      {
+        "ordinal": 16,
+        "name": "recurrence_id",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 17,
+        "name": "status!: EventStatus",
+        "type_info": {
+          "Custom": {
+            "name": "event_status",
+            "kind": {
+              "Enum": [
+                "tentative",
+                "confirmed",
+                "cancelled"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "ordinal": 18,
+        "name": "class!: EventClass",
+        "type_info": {
+          "Custom": {
+            "name": "event_class",
+            "kind": {
+              "Enum": [
+                "public",
+                "private",
+                "confidential"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "ordinal": 19,
+        "name": "transp!: EventTransp",
+        "type_info": {
+          "Custom": {
+            "name": "event_transp",
+            "kind": {
+              "Enum": [
+                "opaque",
+                "transparent"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "ordinal": 20,
+        "name": "priority",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 21,
+        "name": "categories",
+        "type_info": "TextArray"
+      },
+      {
+        "ordinal": 22,
+        "name": "sequence",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 23,
+        "name": "etag",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 24,
+        "name": "deleted_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 25,
+        "name": "caldav_href",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 26,
+        "name": "content_type",
+        "type_info": "Varchar"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      true,
+      true,
+      false,
+      true,
+      true,
+      false,
+      true,
+      true,
+      true,
+      true,
+      false,
+      false,
+      false,
+      true,
+      true,
+      false,
+      false,
+      true,
+      true,
+      true
+    ]
+  },
+  "hash": "cee1a9d324b217b60d93aa27be2872de0c0fd133c28a408aec7a6d5394162172"
+}

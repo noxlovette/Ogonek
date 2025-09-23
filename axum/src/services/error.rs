@@ -218,6 +218,16 @@ impl From<crate::db::error::DbError> for AppError {
             crate::db::error::DbError::AlreadyExists(msg) => {
                 Self::AlreadyExists(format!("Resource already exists: {msg}"))
             }
+            crate::db::error::DbError::NotRecurring => {
+                Self::Validation("Event is not recurring".into())
+            }
+            crate::db::error::DbError::InvalidRecurrenceId => {
+                Self::Validation("Invalid recurrence ID".into())
+            }
+            crate::db::error::DbError::InvalidRRule(rrule) => {
+                Self::Validation(format!("Invalid recurrence rule: {rrule}"))
+            }
+            crate::db::error::DbError::ParseError(error) => Self::Validation(error.to_string()),
         }
     }
 }

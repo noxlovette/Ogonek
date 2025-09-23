@@ -1,6 +1,7 @@
 import { paraglideVitePlugin } from "@inlang/paraglide-js";
 import { sveltekit } from "@sveltejs/kit/vite";
 import { defineConfig } from "vite";
+import { configDefaults } from "vitest/config";
 
 export default defineConfig({
   server: {
@@ -20,8 +21,16 @@ export default defineConfig({
     }),
   ],
   optimizeDeps: { exclude: ["fsevents"] },
-  build: { rollupOptions: { external: ["fsevents"] } },
+  build: {
+    rollupOptions: { external: ["fsevents", "src/lib/routes/api/mock"] },
+  },
   ssr: {
     noExternal: process.env.NODE_ENV === "production" ? ["@carbon/charts"] : [],
+  },
+  test: {
+    include: ["src/**/*.{test,spec}.{js,ts}"],
+    exclude: [...configDefaults.exclude, "playwright/**/*"],
+    environment: "node",
+    globals: true,
   },
 });

@@ -12,6 +12,7 @@
     DeleteButton,
     CancelButton,
     SaveButton,
+    NewCard,
   } from "$lib/components";
 
   import { enhanceForm } from "$lib/utils";
@@ -61,7 +62,7 @@
 </script>
 
 <svelte:head>
-  <title>{`${m.edit()} ${deck.title} | Flashcards`}</title>
+  <title>{m.edit()} • {deck.title}</title>
 </svelte:head>
 <form
   method="POST"
@@ -92,7 +93,7 @@
             },
           })}
         >
-          <DeleteButton confirmText={deck.title} confirmTitle="Delete Deck" />
+          <DeleteButton />
         </form>
 
         <CancelButton />
@@ -105,21 +106,32 @@
 
   <VStack>
     <Input
-      labelName="Deck Title"
+      labelName="Название колоды"
       name="title"
       placeholder="Give your deck a title"
       value={deck.title}
     />
     <Input
       name="description"
-      labelName="Tag 1; Tag2"
+      labelName="Описание"
       placeholder="What's this deck about?"
       value={deck.description}
     />
 
     {#if role === "t"}
-      <Input name="visibility" value={deck.visibility} type="visibility" />
-      <Input name="assignee" item={deck} type="assignee" />
+      <Input
+        name="visibility"
+        labelName="Видимость"
+        value={deck.visibility}
+        type="visibility"
+      />
+      <Input
+        name="assignee"
+        placeholder="Для кого колода"
+        labelName="Назначено"
+        item={deck}
+        type="assignee"
+      />
     {/if}
   </VStack>
 
@@ -140,13 +152,7 @@
       {#each updatedCards as card, index (index)}
         <FlashCardEdit {card} {index} {removeCard} />
       {/each}
-      <button
-        type="button"
-        class="group focus:ring-accent flex h-full w-full items-center justify-center rounded-2xl border border-dashed border-stone-200 shadow-sm transition focus:ring-2 focus:ring-offset-2 focus:outline-none dark:border-stone-800"
-        onclick={addCard}
-      >
-        <Plus class="group-hover:text-accent" />
-      </button>
+      <NewCard {addCard} />
     </div>
   {/if}
 </form>

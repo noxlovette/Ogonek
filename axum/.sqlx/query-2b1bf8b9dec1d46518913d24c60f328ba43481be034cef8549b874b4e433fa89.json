@@ -1,0 +1,19 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        UPDATE event_attendees \n        SET\n            email = COALESCE($1, email),\n            name = COALESCE($2, name),\n            role = COALESCE($3, role),\n            status = COALESCE($4, status),\n            rsvp = COALESCE($5, rsvp)\n        WHERE id = $6\n        ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Varchar",
+        "Varchar",
+        "Varchar",
+        "Varchar",
+        "Bool",
+        "Text"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "2b1bf8b9dec1d46518913d24c60f328ba43481be034cef8549b874b4e433fa89"
+}

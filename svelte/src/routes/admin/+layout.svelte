@@ -1,25 +1,10 @@
 <script lang="ts">
-  import { page } from "$app/stores";
-  import {
-    Body,
-    Content,
-    Dashboard,
-    HStack,
-    Sidebar,
-    VStack,
-    WorkArea,
-  } from "$lib/components";
-  import { Settings, FileText, Home } from "lucide-svelte";
+  import { Body, Content, Dashboard, Sidebar, WorkArea } from "$lib/components";
   import type { LayoutProps } from "./$types";
   import Loader from "$lib/components/UI/navigation/Loader.svelte";
   import { setUser } from "$lib/stores";
 
   let { data, children }: LayoutProps = $props();
-
-  const navItems = [
-    { href: "/admin", label: "Dashboard", icon: Home },
-    { href: "/admin/content", label: "Content", icon: FileText },
-  ];
 
   setUser(data.context.user);
 </script>

@@ -1,4 +1,4 @@
-use crate::auth::error::PasswordHashError;
+use crate::{auth::error::PasswordHashError, services::calendar::RRuleError};
 use sqlx::error::Error as SqlxError;
 use thiserror::Error;
 
@@ -12,6 +12,14 @@ pub enum DbError {
     TransactionFailed,
     #[error("Already exists: {0}")]
     AlreadyExists(String),
+    #[error("The event is not recurring")]
+    NotRecurring,
+    #[error("Invalid recurrence id")]
+    InvalidRecurrenceId,
+    #[error("Parse error: {0}")]
+    ParseError(String),
+    #[error("Invalid recurrence rule: {0}")]
+    InvalidRRule(#[from] RRuleError),
 }
 
 impl From<SqlxError> for DbError {

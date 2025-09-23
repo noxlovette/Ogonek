@@ -4,6 +4,17 @@ import { isLoading } from "$lib/stores";
 import { notification } from "$lib/stores/notification";
 import type { SubmitFunction } from "@sveltejs/kit";
 import type { ZodError, infer as ZodInfer, ZodObject, ZodRawShape } from "zod";
+
+export const parseFormData = (formData: FormData) => {
+  const result: Record<string, string | null> = {};
+  for (const [key, value] of formData.entries()) {
+    if (typeof value === "string") {
+      result[key] = value.trim() === "" ? null : value;
+    }
+  }
+  return result;
+};
+
 export function validateForm<T extends ZodRawShape>(
   formData: FormData,
   zodObject: ZodObject<T>,

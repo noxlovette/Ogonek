@@ -1,0 +1,30 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n            INSERT INTO calendar_events (\n                id, \n                uid, \n                calendar_id, \n                summary, \n                description, \n                location,\n                dtstart_time, \n                dtend_time, \n                recurrence_id\n            ) VALUES (\n                $1, $2, $3, $4, $5, $6, $7, $8, $9\n            )\n            RETURNING id\n            ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Varchar"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Varchar",
+        "Varchar",
+        "Varchar",
+        "Varchar",
+        "Text",
+        "Text",
+        "Timestamptz",
+        "Timestamptz",
+        "Timestamptz"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "fe0ad090d9181ebadd2620bafe755c804a8bb6de050fb519823d20274cb266f1"
+}

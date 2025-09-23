@@ -4,7 +4,6 @@ import { mockResponder } from "$lib/server/mock/helpers";
 import type { DeckUpdate } from "$lib/types";
 import { json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
-type PATCHRequestBody = any;
 
 export const GET: RequestHandler = async ({ url }) => {
   return mockResponder(url, {

@@ -142,6 +142,95 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/v1/calendars": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get the user's calendar */
+    get: operations["fetch_calendar"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/calendars/attendees/{id}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    delete: operations["delete_attendee"];
+    options?: never;
+    head?: never;
+    /** Update an event attendee */
+    patch: operations["update_attendee"];
+    trace?: never;
+  };
+  "/api/v1/calendars/events": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get events for a specific month */
+    get: operations["list_events"];
+    put?: never;
+    /** Create a new event */
+    post: operations["create_event"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/calendars/events/{id}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get a single event by UID */
+    get: operations["fetch_event"];
+    put?: never;
+    post?: never;
+    /** Delete an event */
+    delete: operations["delete_event"];
+    options?: never;
+    head?: never;
+    /** Update an event */
+    patch: operations["update_event"];
+    trace?: never;
+  };
+  "/api/v1/calendars/{id}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    /** Delete a calendar */
+    delete: operations["delete_calendar"];
+    options?: never;
+    head?: never;
+    /** Update a calendar */
+    patch: operations["update_calendar"];
+    trace?: never;
+  };
   "/api/v1/content/{slug}": {
     parameters: {
       query?: never;
@@ -680,6 +769,26 @@ export interface components {
       inviteToken: string;
       studentId: string;
     };
+    CalendarFull: {
+      colour: string;
+      description?: string | null;
+      id: string;
+      name: string;
+    };
+    CalendarQuery: {
+      /** Format: date-time */
+      end: string;
+      /** Format: date-time */
+      start: string;
+    };
+    CalendarUpdate: {
+      caldavUrl?: string | null;
+      colour?: string | null;
+      description?: string | null;
+      name?: string | null;
+      syncToken?: string | null;
+      timezone?: string | null;
+    };
     Card: {
       back: string;
       front: string;
@@ -787,9 +896,106 @@ export interface components {
       cards: components["schemas"]["CardUpsert"][];
       deck: components["schemas"]["DeckUpdate"];
     };
+    /** @enum {string} */
+    DeleteScope: "this-only" | "this-and-future";
     DeviceTokenPayload: {
       platform: string;
       token: string;
+    };
+    /** @enum {string} */
+    EditScope: "this-only" | "this-and-future";
+    EventAttendee: {
+      email: string;
+      id: string;
+      name?: string | null;
+      role: components["schemas"]["EventAttendeeRole"];
+      status: components["schemas"]["EventAttendeeStatus"];
+      userId: string;
+    };
+    /** @enum {string} */
+    EventAttendeeRole:
+      | "req-participant"
+      | "chair"
+      | "opt-participant"
+      | "non-participant";
+    /** @enum {string} */
+    EventAttendeeStatus:
+      | "needs-action"
+      | "accepted"
+      | "declined"
+      | "tentative"
+      | "delegated";
+    EventAttendeeUpdate: {
+      email?: string | null;
+      name?: string | null;
+      role?: null | components["schemas"]["EventAttendeeRole"];
+      rsvp?: boolean | null;
+      status?: null | components["schemas"]["EventAttendeeStatus"];
+    };
+    EventCreate: {
+      attendee: string;
+      /** Format: date-time */
+      dtendTime?: string | null;
+      /** Format: date-time */
+      dtstartTime: string;
+    };
+    /** @description Internal Struct used to query the DB */
+    EventDB: {
+      /** Format: date-time */
+      dtendTime?: string | null;
+      /** Format: date-time */
+      dtstartTime: string;
+      exdate?: string[] | null;
+      id: string;
+      location?: string | null;
+      rdate?: string[] | null;
+      /** Format: date-time */
+      recurrenceId?: string | null;
+      rrule?: string | null;
+      status: components["schemas"]["EventStatus"];
+      title: string;
+      uid: string;
+    };
+    EventDBFull: {
+      categories?: string[] | null;
+      description?: string | null;
+      /** Format: date-time */
+      dtendTime?: string | null;
+      dtendTz?: string | null;
+      /** Format: date-time */
+      dtstartTime: string;
+      dtstartTz?: string | null;
+      id: string;
+      location?: string | null;
+      rrule?: string | null;
+      status: components["schemas"]["EventStatus"];
+      title: string;
+      uid: string;
+    };
+    EventFull: components["schemas"]["EventDBFull"] & {
+      isException: boolean;
+      isRecurring: boolean;
+    };
+    EventSmall: components["schemas"]["EventDB"] & {
+      isException: boolean;
+      isRecurring: boolean;
+    };
+    /** @enum {string} */
+    EventStatus: "tentative" | "confirmed" | "cancelled";
+    EventUpdate: {
+      attendee?: string | null;
+      description?: string | null;
+      /** Format: date-time */
+      dtendTime?: string | null;
+      dtendTz?: string | null;
+      /** Format: date-time */
+      dtstartTime?: string | null;
+      dtstartTz?: string | null;
+      location?: string | null;
+      rrule?: string | null;
+    };
+    EventWithAttendees: components["schemas"]["EventFull"] & {
+      attendees: components["schemas"]["EventAttendee"][];
     };
     FileSmall: {
       id: string;
@@ -1568,6 +1774,381 @@ export interface operations {
       };
       /** @description User already exists */
       409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+    };
+  };
+  fetch_calendar: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Calendar retrieved successfully */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["CalendarFull"];
+        };
+      };
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Calendar not found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+    };
+  };
+  delete_attendee: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        /** @description Attendee ID */
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Attendee deleted successfully */
+      204: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Attendee not found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+    };
+  };
+  update_attendee: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        /** @description Attendee ID */
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["EventAttendeeUpdate"];
+      };
+    };
+    responses: {
+      /** @description Attendee updated successfully */
+      204: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Attendee not found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+    };
+  };
+  list_events: {
+    parameters: {
+      query: {
+        start: string;
+        end: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Events retrieved successfully */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["EventSmall"][];
+        };
+      };
+      /** @description Invalid year or month */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Calendar not found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+    };
+  };
+  create_event: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["EventCreate"];
+      };
+    };
+    responses: {
+      /** @description Event created successfully */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "text/plain": string;
+        };
+      };
+      /** @description Bad request */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+    };
+  };
+  fetch_event: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        /** @description Event UID */
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Event retrieved successfully */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["EventWithAttendees"];
+        };
+      };
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Event not found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+    };
+  };
+  delete_event: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        /** @description Event UID */
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Event deleted successfully */
+      204: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Event not found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+    };
+  };
+  update_event: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        /** @description Event UID */
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["EventUpdate"];
+      };
+    };
+    responses: {
+      /** @description Event updated successfully */
+      204: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Event not found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+    };
+  };
+  delete_calendar: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        /** @description Calendar ID */
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Calendar deleted successfully */
+      204: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Calendar not found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+    };
+  };
+  update_calendar: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        /** @description Calendar ID */
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CalendarUpdate"];
+      };
+    };
+    responses: {
+      /** @description Calendar updated successfully */
+      204: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Calendar not found */
+      404: {
         headers: {
           [name: string]: unknown;
         };

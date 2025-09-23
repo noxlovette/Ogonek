@@ -1,4 +1,5 @@
 pub mod accounts;
+pub mod calendar;
 pub mod content;
 pub mod core;
 pub mod preferences;
@@ -6,6 +7,7 @@ pub mod responses;
 pub mod state;
 pub mod tracking;
 pub use accounts::*;
+pub use calendar::*;
 pub use content::*;
 pub mod third_party;
 pub use core::*;

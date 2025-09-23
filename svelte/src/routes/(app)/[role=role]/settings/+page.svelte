@@ -16,7 +16,7 @@
   import { page } from "$app/state";
   import { enhanceForm } from "$lib/utils";
 
-  import { Check, LogOut, Key, Bell, Merge, Ban } from "lucide-svelte";
+  import { Check, LogOut, Key, Bell, Ban } from "lucide-svelte";
   import { m } from "$lib/paraglide/messages";
   import {
     user,
@@ -35,27 +35,6 @@
   import Title3 from "$lib/components/typography/Title3.svelte";
 
   let disabled = $state(true);
-
-  const defaultFields = [
-    { id: "name", label: "Name", type: "text", storeKey: "" },
-    { id: "username", label: "Username", type: "text", storeKey: "" },
-    { id: "email", label: "Email", type: "email", storeKey: "" },
-  ];
-
-  const teacherFields = [
-    {
-      id: "telegramId",
-      label: "Telegram ID",
-      type: "text",
-      storeKey: "telegramId",
-    },
-    {
-      id: "videoCallUrl",
-      label: m.warm_fit_antelope_bump(),
-      type: "text",
-      storeKey: "videoCallUrl",
-    },
-  ];
 </script>
 
 <svelte:head>
@@ -124,6 +103,7 @@
           bind:disabled
           placeholder="Name"
           name="name"
+          labelName="Имя"
           value={$user.name}
         />
         <Input
@@ -131,6 +111,7 @@
           type="email"
           placeholder="Email"
           name="email"
+          labelName="Электронная почта"
           value={$user.email}
         />
       </HStack>
@@ -143,12 +124,14 @@
           bind:disabled
           placeholder="Your Telegram ID"
           name="telegramId"
+          labelName="Телеграм ID"
           value={$profile.telegramId}
         />
         <Input
           bind:disabled
           placeholder="The link for your lessons"
           name="videoCallUrl"
+          labelName="Ссылка на видеозвонок"
           value={$profile.videoCallUrl}
         />
       {/if}

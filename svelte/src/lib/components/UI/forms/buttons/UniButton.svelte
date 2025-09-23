@@ -3,7 +3,8 @@
   import type { ComponentType, Snippet } from "svelte";
   import type { MouseEventHandler } from "svelte/elements";
   import ConfirmDialogue from "../ConfirmDialogue.svelte";
-  import { Headline } from "../../../typography";
+  import { Footnote, Headline } from "../../../typography";
+  import { Trash2, X } from "lucide-svelte";
 
   type ButtonVariant = "primary" | "danger" | "prominent";
 
@@ -17,11 +18,11 @@
     styling?: string;
     disable?: boolean;
     Icon?: ComponentType | undefined;
-    confirmText?: string | undefined;
-    confirmTitle?: string | undefined;
+    shouldConfirm?: boolean | undefined;
     onclick?: MouseEventHandler<HTMLButtonElement> | undefined;
     children?: Snippet;
     ariaLabel?: string;
+    description?: string;
     iconOnly?: boolean;
   }
 
@@ -30,14 +31,14 @@
     type = "button",
     href = undefined,
     formaction = undefined,
-    styling = "",
+    styling = "relative",
     disable = false,
     Icon = undefined,
-    confirmText = undefined,
-    confirmTitle = undefined,
+    shouldConfirm = false,
     onclick = undefined,
     children,
     ariaLabel = undefined,
+    description = undefined,
     iconOnly = true,
   }: Props = $props();
 
@@ -45,34 +46,46 @@
   let disabled = $derived($isLoading || disable);
   let showConfirmDialog = $state(false);
 
+  // Generate unique ID for aria-describedby
+  const uniqueId = `btn-${Math.random().toString(36).substr(2, 9)}`;
+
   function handleClick(event: MouseEvent) {
-    if (variant === "danger" && (confirmText || confirmTitle)) {
+    if (variant === "danger" && shouldConfirm) {
       event.preventDefault();
-      showConfirmDialog = true;
+      deleteClicked = !deleteClicked;
+      showConfirmDialog = !showConfirmDialog;
     }
   }
 
   const baseClasses = `
-  flex items-center justify-center flex-1 p-2 md:p-3
+  flex items-center  justify-center flex-1 p-2 md:p-3
   rounded-full font-medium focus-visible:outline-none
-  disabled:opacity-50 disabled:pointer-events-none min-w-max
-  backdrop-blur-sm gap-2
+  disabled:opacity-50 disabled:pointer-events-none z-40 gap-2
 `;
 
   const variantClasses = {
     primary: "hover:bg-stone-100 dark:hover:bg-stone-700",
     danger:
-      "text-red-600 dark:text-red-50 hover:bg-red-100 dark:hover:bg-red-800",
+      "text-rose-600 dark:text-rose-50 hover:bg-rose-100 dark:hover:bg-rose-800",
     prominent: "hover:bg-accent/80 bg-accent text-white",
   };
 
   const allClasses = $derived(
     [baseClasses, variantClasses[variant], styling].join(" "),
   );
+
+  let deleteClicked = $state(false);
 </script>
 
 {#if isLink}
-  <a {href} class={allClasses} aria-disabled={disabled} aria-label={ariaLabel}>
+  <a
+    {href}
+    class={allClasses}
+    aria-disabled={disabled}
+    aria-label={ariaLabel}
+    aria-describedby={description ? `${uniqueId}-desc` : undefined}
+    role="button"
+  >
     {#if Icon}
       <Icon class="size-5" />
     {/if}
@@ -87,21 +100,34 @@
     {type}
     {formaction}
     {disabled}
-    id="btn"
+    id={uniqueId}
     aria-label={ariaLabel}
+    aria-describedby={description ? `${uniqueId}-desc` : undefined}
     class={allClasses}
     onclick={variant === "danger" ? handleClick : onclick}
   >
-    {#if Icon}
+    {#if Icon && variant !== "danger"}
       <Icon class="size-5" />
+    {:else if variant == "danger"}
+      {#if !deleteClicked}
+        <Trash2 />
+      {:else}
+        <X />
+      {/if}
     {/if}
 
     {#if !iconOnly}
-      <Headline>
+      <Footnote>
         {@render children?.()}
-      </Headline>
+      </Footnote>
     {/if}
   </button>
+{/if}
+
+{#if description}
+  <div id="{uniqueId}-desc" class="sr-only">
+    {description}
+  </div>
 {/if}
 
 {#if showConfirmDialog}

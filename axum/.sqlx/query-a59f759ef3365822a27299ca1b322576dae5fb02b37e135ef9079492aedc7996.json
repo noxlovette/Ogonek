@@ -1,0 +1,95 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        SELECT \n            id,\n            uid,\n            summary,\n            location,\n            dtstart_time,\n            dtend_time,\n            rdate,\n            status AS \"status!: EventStatus\",\n            exdate,\n            recurrence_id,\n            rrule\n        FROM calendar_events\n        WHERE calendar_id = $1 \n            AND deleted_at IS NULL\n            AND (\n                (rrule IS NOT NULL AND recurrence_id IS NULL) -- Master events\n            OR (dtstart_time BETWEEN $2 AND $3) -- Single events in range\n            OR (recurrence_id IS NOT NULL) -- All exceptions (we'll filter later)\n            )\n        ORDER BY dtstart_time ASC\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 1,
+        "name": "uid",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 2,
+        "name": "summary",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 3,
+        "name": "location",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 4,
+        "name": "dtstart_time",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 5,
+        "name": "dtend_time",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 6,
+        "name": "rdate",
+        "type_info": "TextArray"
+      },
+      {
+        "ordinal": 7,
+        "name": "status!: EventStatus",
+        "type_info": {
+          "Custom": {
+            "name": "event_status",
+            "kind": {
+              "Enum": [
+                "tentative",
+                "confirmed",
+                "cancelled"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "ordinal": 8,
+        "name": "exdate",
+        "type_info": "TextArray"
+      },
+      {
+        "ordinal": 9,
+        "name": "recurrence_id",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 10,
+        "name": "rrule",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Timestamptz",
+        "Timestamptz"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      true,
+      false,
+      true,
+      true,
+      false,
+      true,
+      true,
+      true
+    ]
+  },
+  "hash": "a59f759ef3365822a27299ca1b322576dae5fb02b37e135ef9079492aedc7996"
+}

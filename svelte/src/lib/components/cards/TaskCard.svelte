@@ -8,7 +8,7 @@
   import Priority from "./Priority.svelte";
   import SeenBadge from "./SeenBadge.svelte";
   import { m } from "$lib/paraglide/messages";
-  import { HStack, VStack } from "../UI";
+  import { VStack } from "../UI";
   import Divider from "../UI/toolbar/Divider.svelte";
 
   let { task } = $props();

@@ -2,6 +2,7 @@ use utoipa::OpenApi;
 
 pub mod admin;
 pub mod auth;
+pub mod calendar;
 pub mod content;
 pub mod deck;
 pub mod files;
@@ -18,6 +19,7 @@ pub const USER_TAG: &str = "User"; // profile, self, student
 pub const STATE_TAG: &str = "State"; // preferences, badges, dashboard
 pub const AUTH_TAG: &str = "Auth";
 pub const LEARN_TAG: &str = "Learn";
+pub const CALENDAR_TAG: &str = "Calendar";
 
 pub const ADMIN_TAG: &str = "Admin";
 pub const CONTENT_TAG: &str = "Content";
@@ -36,6 +38,7 @@ pub const CONTENT_TAG: &str = "Content";
         (path = "/api/v1/notifications", api = notifications::NotificationApi),
         (path = "/api/v1/state", api = state::StateApi),
         (path = "/api/v1/content", api = content::ContentApi),
+        (path = "/api/v1/calendars", api = calendar::CalendarApi),
         (path = "/api/v1/admin", api = admin::AdminApi)
 
     ),
@@ -52,6 +55,7 @@ pub const CONTENT_TAG: &str = "Content";
         (name = AUTH_TAG,description = "Auth API"),
         (name = LEARN_TAG,description = "Learn API"),
         (name = STATE_TAG,description = "State API"),
+        (name = CALENDAR_TAG,description = "Calendar API"),
     ),
     info(
         title = "Ogonek API",

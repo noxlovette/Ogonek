@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        UPDATE calendar_events \n        SET exdate = array_append(COALESCE(exdate, '{}'), $1),\n            updated_at = NOW()\n        WHERE uid = $2 AND recurrence_id IS NULL\n        ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Text"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "8076df0b415dab5c9171526aafe02b6137aac5e3269aa626de3114512d0a0a5a"
+}

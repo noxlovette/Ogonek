@@ -12,6 +12,7 @@
     QuickAdd,
     MobileMenu,
     StudentFilter,
+    Calendar,
   } from "$lib/components";
   import { studentStore, setUser, setProfile } from "$lib/stores";
 
@@ -20,6 +21,7 @@
   import type { Student } from "$lib/types/index.js";
   import Divider from "$lib/components/UI/toolbar/Divider.svelte";
   import Loader from "$lib/components/UI/navigation/Loader.svelte";
+  import { env } from "$env/dynamic/public";
 
   let { data, children } = $props();
   const role = page.params.role;
@@ -48,6 +50,9 @@
         <Zoom />
       {:else}
         <Students />
+      {/if}
+      {#if !env.PUBLIC_TURN_OFF_CALENDAR}
+        <Calendar />
       {/if}
 
       <Divider />
