@@ -4,6 +4,10 @@
   import { m } from "$lib/paraglide/messages";
 </script>
 
-<UniButton variant="prominent" type="submit" ariaLabel="Save" Icon={Check}
-  >{m.save()}</UniButton
->
+<UniButton
+  content={m.save()}
+  variant="prominent"
+  type="submit"
+  ariaLabel="Save"
+  Icon={Check}
+></UniButton>

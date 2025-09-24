@@ -1,6 +1,6 @@
 {
   "name": "ogonek",
-  "version": "1.11.0",
+  "version": "1.11.1",
   "private": true,
   "scripts": {
     "dev": "vite dev",
@@ -30,6 +30,7 @@
     "lucide-svelte": "^0.544.0",
     "papaparse": "^5.5.3",
     "pino": "^9.11.0",
+    "tippy.js": "^6.3.7",
     "unsplash-js": "^7.0.20",
     "zod": "^4.1.11"
   },

@@ -78,17 +78,19 @@
       </LargeTitle>
       <Divider />
       <Merger>
-        <UniButton iconOnly={false} Icon={Flame} href="/login"
-          >{m.logIn()}</UniButton
-        >
+        <UniButton
+          content={m.logIn()}
+          iconOnly={false}
+          Icon={Flame}
+          href="/login"
+        ></UniButton>
         <UniButton
           iconOnly={false}
           Icon={FlameKindling}
           href="/signup"
           variant="primary"
-        >
-          {m.signUp()}</UniButton
-        >
+          content={m.signUp()}
+        ></UniButton>
       </Merger>
     </HStack>
   </Toolbar>

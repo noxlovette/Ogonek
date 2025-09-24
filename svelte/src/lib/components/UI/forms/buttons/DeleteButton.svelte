@@ -7,7 +7,8 @@
 <UniButton
   variant="danger"
   formaction="?/delete"
+  content={m.delete()}
   Icon={Trash2}
   ariaLabel="Delete"
-  shouldConfirm={true}>{m.delete()}</UniButton
->
+  shouldConfirm={true}
+/>

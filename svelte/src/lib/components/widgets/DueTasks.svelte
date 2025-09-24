@@ -33,9 +33,12 @@
           },
         })}
       >
-        <UniButton type="submit" variant="primary" Icon={Lightbulb}>
-          {m.tense_mealy_kitten_aid()}
-        </UniButton>
+        <UniButton
+          content={m.tense_mealy_kitten_aid()}
+          type="submit"
+          variant="primary"
+          Icon={Lightbulb}
+        ></UniButton>
       </form>
     </EmptySpace>
   {/if}

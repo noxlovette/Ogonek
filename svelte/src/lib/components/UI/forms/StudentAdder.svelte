@@ -8,6 +8,7 @@
   import { Caption1 } from "$lib/components/typography";
   import Headline from "$lib/components/typography/Headline.svelte";
   import Toggler from "../interactive/Toggler.svelte";
+  import { m } from "$lib/paraglide/messages";
 
   let showPopover = false;
   let generatedLink = "";
@@ -37,9 +38,8 @@
     variant="primary"
     iconOnly={false}
     Icon={Plus}
-  >
-    Invite Students
-  </UniButton>
+    content={m.tangy_bad_goat_fade()}
+  ></UniButton>
   {#if showPopover}
     <div
       class="absolute right-0 z-50 mt-2 w-64 space-y-2 rounded-xl bg-white p-4 shadow-lg ring ring-stone-300/50 dark:bg-stone-900"
@@ -74,9 +74,13 @@
         <Caption1>Do they have an account?</Caption1>
         <Toggler name="isRegistered" title="Yes"></Toggler>
 
-        <UniButton type="submit" iconOnly={false} variant="primary" Icon={Link}>
-          Generate Link
-        </UniButton>
+        <UniButton
+          type="submit"
+          iconOnly={false}
+          variant="primary"
+          Icon={Link}
+          content={m.sour_trite_peacock_zip()}
+        ></UniButton>
       </form>
 
       {#if generatedLink}

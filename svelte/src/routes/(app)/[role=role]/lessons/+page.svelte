@@ -31,6 +31,7 @@
   import { m } from "$lib/paraglide/messages.js";
   import LoadingCard from "$lib/components/cards/LoadingCard.svelte";
   import VStack from "$lib/components/UI/VStack.svelte";
+  import NewButton from "$lib/components/UI/forms/buttons/NewButton.svelte";
 
   let { data } = $props();
 
@@ -91,7 +92,7 @@
             navigate: true,
           })}
         >
-          <UniButton Icon={Plus} type="submit">{m.new()}</UniButton>
+          <NewButton />
         </form>
       </Merger>
     {/if}

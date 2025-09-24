@@ -20,32 +20,10 @@
   } from "$lib/components";
   import { page } from "$app/state";
   import RRule from "$lib/components/UI/RRule.svelte";
+  import { m } from "$lib/paraglide/messages.js";
 
   const { data } = $props();
   const event = data.event;
-
-  let isSharing = $state(false);
-
-  async function shareEvent() {
-    isSharing = true;
-    try {
-      if (navigator.share) {
-        await navigator.share({
-          title: event.title,
-          text: event.description || "",
-          url: window.location.href,
-        });
-      } else {
-        // Fallback: copy to clipboard
-        await navigator.clipboard.writeText(window.location.href);
-        alert("Link copied to clipboard!");
-      }
-    } catch (error) {
-      console.log("Share cancelled or failed");
-    } finally {
-      isSharing = false;
-    }
-  }
 
   const start = new Date(event.dtstartTime);
   const end = event.dtendTime ? new Date(event.dtendTime) : null;
@@ -80,9 +58,6 @@
       {page.params.role === "t" ? event.title : "Занятие"}
     </Title1>
     <Divider />
-    <Merger>
-      <UniButton Icon={Share} onclick={shareEvent} disable={isSharing} />
-    </Merger>
     <Merger>
       <EditButton href="{event.id}/edit" />
     </Merger>
@@ -130,16 +105,17 @@
         <Divider />
         <Merger>
           {#if videoCallService}
-            <UniButton href={event.location} Icon={Video}>
-              Присоединиться к звонку
-            </UniButton>
+            <UniButton
+              content={m.mealy_zesty_pony_grow()}
+              href={event.location}
+              Icon={Video}
+            ></UniButton>
           {:else}
             <UniButton
-              href={`https://yandex.com/maps/?text=${encodeURIComponent(event.location)}`}
+              content="Посмотреть на карте"
+              href={`https://yandex.ru/maps/?text=${encodeURIComponent(event.location)}`}
               Icon={MapPin}
-            >
-              Посмотреть на карте
-            </UniButton>
+            ></UniButton>
           {/if}
         </Merger>
       </VStack>

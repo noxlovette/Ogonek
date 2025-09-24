@@ -28,6 +28,7 @@
   import TableSkeleton from "$lib/components/UI/interactive/TableSkeleton.svelte";
   import Title1 from "$lib/components/typography/Title1.svelte";
   import message from "$lib/messages.js";
+  import NewButton from "$lib/components/UI/forms/buttons/NewButton.svelte";
 
   let { data } = $props();
   const { students } = data;
@@ -96,16 +97,15 @@
           navigate: true,
         })}
       >
-        <UniButton Icon={Plus} type="submit" variant="primary"
-          >{m.new()}</UniButton
-        >
+        <NewButton />
       </form>
       {#if data.cards?.length}
         <UniButton
           variant="primary"
+          content={m.helpful_slow_flea_catch()}
           Icon={GraduationCap}
-          href="flashcards/learn">{m.helpful_slow_flea_catch()}</UniButton
-        >
+          href="flashcards/learn"
+        ></UniButton>
       {/if}
     </Merger>
     <SearchBar bind:q={$searchTerm} />

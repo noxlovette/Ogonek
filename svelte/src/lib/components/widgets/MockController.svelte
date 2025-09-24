@@ -60,13 +60,14 @@
     {/each}
     <ThemeToggler></ThemeToggler>
     <UniButton
+      content="Teacher"
       href={`/t/${page.url.pathname.split("/").slice(2).join("/")}`}
-      iconOnly={false}>Teacher</UniButton
-    >
+      iconOnly={false}
+    ></UniButton>
     <UniButton
+      content="Student"
       iconOnly={false}
       href={`/s/${page.url.pathname.split("/").slice(2).join("/")}`}
-      >Student</UniButton
-    >
+    ></UniButton>
   </div>
 </div>

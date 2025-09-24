@@ -52,13 +52,9 @@
       type="button"
       onclick={toggleDropdown}
       iconOnly={false}
+      content={selectLanguage.name}
       variant="primary"
-    >
-      <div class="flex items-center gap-3">
-        <span class="text-base">{selectedLanguage.flag}</span>
-        <span class="font-medium">{selectedLanguage.name}</span>
-      </div>
-    </UniButton>
+    ></UniButton>
   </Merger>
   {#if isOpen}
     <div

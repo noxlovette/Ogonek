@@ -31,6 +31,7 @@
   import { formatDate } from "$lib/utils";
   import { m } from "$lib/paraglide/messages";
   import message from "$lib/messages.js";
+  import NewButton from "$lib/components/UI/forms/buttons/NewButton.svelte";
 
   const { data } = $props();
   const role = page.params.role;
@@ -97,9 +98,7 @@
             navigate: true,
           })}
         >
-          <UniButton Icon={Plus} type="submit" variant="primary"
-            >{m.new()}</UniButton
-          >
+          <NewButton />
         </form>
       {:else if role == "s"}
         <form
@@ -111,9 +110,12 @@
             },
           })}
         >
-          <UniButton Icon={Bell} type="submit" variant="primary"
-            >{m.tense_mealy_kitten_aid()}</UniButton
-          >
+          <UniButton
+            content={m.tense_mealy_kitten_aid()}
+            Icon={Bell}
+            type="submit"
+            variant="primary"
+          ></UniButton>
         </form>
       {/if}
     </Merger>
@@ -121,14 +123,13 @@
     <Merger>
       <UniButton
         type="button"
+        content={$completedStore === true
+          ? m.steep_zany_tern_zip()
+          : m.direct_slow_bobcat_shine()}
         onclick={toggleCompletedTasks}
         variant="primary"
         Icon={$completedStore === true ? EyeClosed : Eye}
-      >
-        {$completedStore === true
-          ? m.steep_zany_tern_zip()
-          : m.direct_slow_bobcat_shine()}
-      </UniButton>
+      ></UniButton>
     </Merger>
     <SearchBar bind:q={$searchTerm} />
   </VStack>

@@ -35,9 +35,11 @@
   </div>
   <Divider />
   <Merger>
-    <UniButton href="settings" Icon={Settings}>
-      {m.settings()}
-    </UniButton>
+    <UniButton
+      content={m.settings()}
+      href="settings"
+      Icon={Settings}
+    ></UniButton>
   </Merger>
 </Toolbar>
 

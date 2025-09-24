@@ -7,6 +7,7 @@
   import { VStack } from "..";
   import Divider from "../toolbar/Divider.svelte";
   import HStack from "../HStack.svelte";
+  import { m } from "$lib/paraglide/messages";
 
   let {
     markdownContent = $bindable(
@@ -260,13 +261,15 @@
       <UniButton
         variant={preview ? "primary" : "prominent"}
         Icon={ChartNoAxesGantt}
-        onclick={() => (preview = false)}>Edit</UniButton
-      >
+        content={m.edit()}
+        onclick={() => (preview = false)}
+      ></UniButton>
       <UniButton
         variant={preview ? "prominent" : "primary"}
         Icon={Eye}
-        onclick={() => (preview = true)}>Preview</UniButton
-      >
+        content="Предпросмотр"
+        onclick={() => (preview = true)}
+      ></UniButton>
     </Merger>
   </VStack>
   {#if !preview}

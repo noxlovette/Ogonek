@@ -150,14 +150,18 @@
           type="button"
           variant="primary"
           Icon={House}
+          content="На главную"
+          iconOnly={false}
           href={`/${page.params.role || "s"}/dashboard`}
-        >
-          На главную
-        </UniButton>
+        ></UniButton>
 
-        <UniButton type="button" Icon={Send} href="https://t.me/noxlovette">
-          Поддержка
-        </UniButton>
+        <UniButton
+          content="Поддержка"
+          type="button"
+          iconOnly={false}
+          Icon={Send}
+          href="https://t.me/noxlovette"
+        ></UniButton>
       </div>
 
       <!-- Footer -->

@@ -30,10 +30,9 @@
       <Merger>
         <UniButton
           Icon={ScanSearch}
+          content="Preview"
           href="/admin/content/preview/{data.content.slug}"
-        >
-          Preview
-        </UniButton>
+        ></UniButton>
         <EditButton href="{page.params.id}/edit" />
       </Merger>
     </VStack>

@@ -1,10 +1,12 @@
 <script lang="ts">
   import { isLoading } from "$lib/stores";
-  import type { ComponentType, Snippet } from "svelte";
+  import type { ComponentType } from "svelte";
   import type { MouseEventHandler } from "svelte/elements";
   import ConfirmDialogue from "../ConfirmDialogue.svelte";
   import { Footnote, Headline } from "../../../typography";
   import { Trash2, X } from "lucide-svelte";
+  import tippy from "tippy.js";
+  import type { Attachment } from "svelte/attachments";
 
   type ButtonVariant = "primary" | "danger" | "prominent";
 
@@ -12,6 +14,7 @@
 
   interface Props {
     variant?: ButtonVariant;
+    content: string;
     type?: ButtonType;
     href?: string | undefined;
     formaction?: string | undefined;
@@ -20,7 +23,6 @@
     Icon?: ComponentType | undefined;
     shouldConfirm?: boolean | undefined;
     onclick?: MouseEventHandler<HTMLButtonElement> | undefined;
-    children?: Snippet;
     ariaLabel?: string;
     description?: string;
     iconOnly?: boolean;
@@ -29,6 +31,7 @@
   let {
     variant = "primary",
     type = "button",
+    content,
     href = undefined,
     formaction = undefined,
     styling = "relative",
@@ -36,9 +39,8 @@
     Icon = undefined,
     shouldConfirm = false,
     onclick = undefined,
-    children,
     ariaLabel = undefined,
-    description = undefined,
+    description = content,
     iconOnly = true,
   }: Props = $props();
 
@@ -58,7 +60,7 @@
   }
 
   const baseClasses = `
-  flex items-center  justify-center flex-1 p-2 md:p-3
+  flex items-center justify-center flex-1 p-2 md:p-3
   rounded-full font-medium focus-visible:outline-none
   disabled:opacity-50 disabled:pointer-events-none z-40 gap-2
 `;
@@ -75,10 +77,27 @@
   );
 
   let deleteClicked = $state(false);
+
+  function tooltip(content?: string): Attachment {
+    return (element) => {
+      const tooltip = tippy(element, {
+        content,
+        arrow: false,
+        duration: 0,
+        delay: [200, 200],
+      });
+      return tooltip.destroy;
+    };
+  }
 </script>
 
 {#if isLink}
   <a
+    {@attach () => {
+      if (iconOnly) {
+        tooltip(description);
+      }
+    }}
     {href}
     class={allClasses}
     aria-disabled={disabled}
@@ -91,12 +110,13 @@
     {/if}
     {#if !iconOnly}
       <Headline>
-        {@render children?.()}
+        {content}
       </Headline>
     {/if}
   </a>
 {:else}
   <button
+    {@attach tooltip(description)}
     {type}
     {formaction}
     {disabled}
@@ -118,18 +138,16 @@
 
     {#if !iconOnly}
       <Footnote>
-        {@render children?.()}
+        {content}
       </Footnote>
     {/if}
   </button>
 {/if}
-
 {#if description}
   <div id="{uniqueId}-desc" class="sr-only">
     {description}
   </div>
 {/if}
-
 {#if showConfirmDialog}
   <ConfirmDialogue {formaction} bind:showConfirmDialog />
 {/if}

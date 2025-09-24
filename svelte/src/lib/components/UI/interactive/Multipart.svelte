@@ -53,7 +53,7 @@
     const input = event.target as HTMLInputElement;
     if (!input.files?.length) return;
 
-    // Add new files to the uploads array
+    // Add new files with "uploading" status to auto-start
     const newFiles = Array.from(input.files).map((file) => ({
       id: crypto.randomUUID(),
       file,
@@ -64,14 +64,15 @@
         totalBytes: file.size,
         percentComplete: 0,
       },
-      status: "waiting" as UploadStatus,
+      status: "uploading" as UploadStatus, // Direct to uploading
     }));
 
     fileUploads = [...fileUploads, ...newFiles];
-
     input.value = "";
-  }
 
+    // Start uploads immediately
+    newFiles.forEach(uploadFile);
+  }
   // Start upload process for a file
   async function uploadFile(fileState: FileUploadState) {
     const { id, file } = fileState;
@@ -436,12 +437,6 @@
           {/if}
         </div>
       {/each}
-
-      {#if fileUploads.some((upload) => upload.status === "waiting")}
-        <UniButton variant="primary" Icon={Upload} onclick={startUploads}>
-          Begin Upload
-        </UniButton>
-      {/if}
     </div>
   {/if}
 </div>

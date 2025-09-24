@@ -8,8 +8,9 @@
 
 <UniButton
   variant="prominent"
+  content={m.edit()}
   type="submit"
   ariaLabel="Edit"
   Icon={Pencil}
-  {href}>{m.edit()}</UniButton
->
+  {href}
+></UniButton>

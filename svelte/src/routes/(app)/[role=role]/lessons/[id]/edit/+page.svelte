@@ -102,11 +102,13 @@
           type="submit"
           variant="danger"
           Icon={ImageOff}
+          content="Убрать фотографию"
           formaction="?/removePhoto"
         ></UniButton>
       {/if}
       {#if form?.photos}
         <UniButton
+          content="Показать/скрыть фотографии"
           Icon={showPicker ? Eye : EyeClosed}
           onclick={() => (showPicker = !showPicker)}
         />
