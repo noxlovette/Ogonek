@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { ActivityLog } from "$lib/types";
   import { page } from "$app/state";
-  import { formatDateTime } from "@noxlovette/svarog";
+
   import {
     Bell,
     BellOff,
@@ -12,6 +12,7 @@
     Trash2,
     WholeWord,
   } from "lucide-svelte";
+  import { formatDateTime } from "$lib/utils";
 
   let { activity }: { activity: ActivityLog } = $props();
 

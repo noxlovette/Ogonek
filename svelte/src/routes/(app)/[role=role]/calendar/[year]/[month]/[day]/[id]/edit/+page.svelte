@@ -16,7 +16,7 @@
     RecurrenceSelector,
   } from "$lib/components";
   import { enhance } from "$app/forms";
-  import { enhanceForm } from "@noxlovette/svarog";
+  import { enhanceForm } from "$lib/utils/form.js";
 
   const { data, form } = $props();
   const event = data.event;

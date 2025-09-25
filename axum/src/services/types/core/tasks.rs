@@ -55,7 +55,6 @@ pub struct TaskCreate {
 pub struct TaskUpdate {
     pub title: Option<String>,
     pub markdown: Option<String>,
-    pub priority: Option<i16>,
     pub completed: Option<bool>,
     #[serde(with = "datetime_serialization::option")]
     pub due_date: Option<DateTime<Utc>>,

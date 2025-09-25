@@ -262,16 +262,14 @@ pub async fn update(
          SET
             title = COALESCE($3, title),
             markdown = COALESCE($4, markdown),
-            priority = COALESCE($5, priority),
-            completed = COALESCE($6, completed),
-            due_date = COALESCE($7, due_date),
-            assignee = COALESCE($8, assignee)
+            completed = COALESCE($5, completed),
+            due_date = COALESCE($6, due_date),
+            assignee = COALESCE($7, assignee)
          WHERE id = $1 AND (assignee = $2 OR created_by = $2)",
         id,
         user_id,
         update.title,
         update.markdown,
-        update.priority,
         update.completed,
         update.due_date,
         update.assignee,

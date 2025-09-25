@@ -1216,8 +1216,6 @@ export interface components {
             /** Format: date-time */
             dueDate?: string | null;
             markdown?: string | null;
-            /** Format: int32 */
-            priority?: number | null;
             title?: string | null;
         };
         TaskWithFilesResponse: {

@@ -1,6 +1,6 @@
 <script lang="ts">
   import Title2 from "$lib/components/typography/Title2.svelte";
-  import { parseMarkdown } from "@noxlovette/svarog";
+
   import { UniButton } from "./buttons";
   import { ChartNoAxesGantt, Eye } from "lucide-svelte";
   import { Merger } from "../toolbar";
@@ -8,6 +8,7 @@
   import Divider from "../toolbar/Divider.svelte";
   import { m } from "$lib/paraglide/messages";
   import HStack from "../layout/HStack.svelte";
+  import { parseMarkdown } from "$lib/utils/markdown";
   let {
     markdownContent = $bindable(
       "# Start writing\n\nYour **markdown** goes here...",

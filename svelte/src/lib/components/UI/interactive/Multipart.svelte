@@ -9,9 +9,12 @@
   import { m } from "$lib/paraglide/messages";
   import ProgressBar from "./ProgressBar.svelte";
   import { UniButton } from "../forms";
-  import { HStack } from "..";
+  import { HStack, VStack } from "..";
+  import Merger from "../toolbar/Merger.svelte";
+  import Body from "$lib/components/typography/Body.svelte";
+  import Divider from "../toolbar/Divider.svelte";
 
-  type UploadStatus = "uploading" | "complete" | "error";
+  type UploadStatus = "waiting" | "uploading" | "complete" | "error";
 
   interface PartUploadUrl {
     partNumber: number;
@@ -55,7 +58,7 @@
     return Math.ceil(file.size / CHUNK_SIZE);
   }
 
-  function handleFileSelect(event: Event) {
+  async function handleFileSelect(event: Event) {
     const input = event.target as HTMLInputElement;
     if (!input.files?.length) return;
 
@@ -75,10 +78,13 @@
     fileUploads = [...fileUploads, ...newFiles];
 
     input.value = "";
-
-    newFiles.forEach(uploadFile);
+    startUploads();
   }
-
+  function startUploads() {
+    fileUploads
+      .filter((upload) => upload.status === "waiting")
+      .forEach(uploadFile);
+  }
   async function uploadFile(fileState: FileUploadState) {
     const { id, file } = fileState;
     let uploadIdLocal = "";
@@ -137,11 +143,11 @@
             chunk,
             signal,
             (loaded) => {
-              const chunkStart = (partNumber - 1) * CHUNK_SIZE;
-              fileState.progress.bytes = chunkStart + loaded;
+              // LE FIX: calcul propre du progress
+              const previousBytes = (partNumber - 1) * CHUNK_SIZE;
+              fileState.progress.bytes = previousBytes + loaded;
               fileState.progress.percentComplete =
-                (fileState.progress.bytes / fileState.progress.totalBytes) *
-                100;
+                (fileState.progress.bytes / file.size) * 100;
             },
           );
 
@@ -155,12 +161,8 @@
             uploadResult.headers.get("ETag")?.replace(/['"]/g, "") || "";
           completedParts.push({ partNumber, etag });
 
+          // Pas besoin de double update ici, c'est déjà fait dans le callback
           fileState.progress.uploaded = i + 1;
-
-          const chunkEnd = Math.min(file.size, partNumber * CHUNK_SIZE);
-          fileState.progress.bytes = chunkEnd;
-          fileState.progress.percentComplete =
-            (chunkEnd / fileState.progress.totalBytes) * 100;
         } catch (error) {
           console.error(error);
           throw new Error("Failed to upload");
@@ -319,6 +321,8 @@
     // Use your existing file handling function
     handleFileSelect(mockEvent);
   }
+
+  $inspect(fileUploads);
 </script>
 
 <HStack>
@@ -332,7 +336,7 @@
 			 flex-col items-center justify-center rounded-lg border-2
 			 border-dashed p-12 duration-200
 			 {isDragging
-      ? 'border-accent bg-accent'
+      ? 'border-accent bg-accent/12'
       : 'border-stone-300/30 hover:border-stone-400 dark:border-stone-600/30 dark:bg-stone-950 dark:hover:border-stone-700'}"
   >
     <input
@@ -347,42 +351,41 @@
   </label>
 
   {#if fileUploads.length > 0}
-    <HStack>
-      {#each fileUploads as fileState, index (index)}
-        <div
-          class="ring-default bg-default gap-default flex flex-col rounded-2xl p-2"
-        >
-          <Footnote>
+    {#each fileUploads as fileState, index (index)}
+      <div
+        class="ring-default bg-default gap-default flex flex-col rounded-2xl p-2 shadow-sm"
+      >
+        <VStack>
+          <Body>
             {fileState.file.name.length > 15
               ? fileState.file.name.slice(0, 15) + "..."
               : fileState.file.name}
-          </Footnote>
-          <Caption2>
-            {formatFileSize(fileState.file.size)}
-          </Caption2>
+          </Body>
 
-          <UniButton
-            content="Удалить файл"
-            Icon={X}
-            type="button"
-            onclick={() => removeFile(fileState)}
-          />
-
-          {#if fileState.status === "uploading"}
-            <ProgressBar
-              progress={formatPercentage(fileState.progress.percentComplete)}
+          <Divider></Divider>
+          <Merger>
+            <UniButton
+              content="Удалить файл"
+              Icon={X}
+              type="button"
+              onclick={() => removeFile(fileState)}
             />
-          {:else if fileState.status === "complete"}
-            <Caption1 styling="text-emerald-600"
-              >{m.every_sunny_pelican_buzz()}</Caption1
-            >
-          {:else if fileState.status === "error"}
-            <Caption1 styling="text-emerald-600"
-              >{m.weird_level_sheep_imagine()}</Caption1
-            >
-          {/if}
-        </div>
-      {/each}</HStack
-    >
+          </Merger>
+        </VStack>
+        {#if fileState.status === "uploading"}
+          <ProgressBar
+            progress={formatPercentage(fileState.progress.percentComplete)}
+          />
+        {:else if fileState.status === "complete"}
+          <Caption1 styling="text-emerald-600"
+            >{m.every_sunny_pelican_buzz()}</Caption1
+          >
+        {:else if fileState.status === "error"}
+          <Caption1 styling="text-emerald-600"
+            >{m.weird_level_sheep_imagine()}</Caption1
+          >
+        {/if}
+      </div>
+    {/each}
   {/if}
 </HStack>

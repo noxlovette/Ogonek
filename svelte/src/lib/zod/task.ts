@@ -5,6 +5,5 @@ export const updateTaskBody = z.object({
   completed: z.boolean().nullish(),
   dueDate: z.iso.datetime({}).nullish(),
   markdown: z.string().nullish(),
-  priority: z.number().nullish(),
   title: z.string().nullish(),
 });

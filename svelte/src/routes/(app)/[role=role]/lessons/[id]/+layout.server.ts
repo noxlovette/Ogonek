@@ -1,6 +1,7 @@
 import { routes } from "$lib/routes";
 import type { LessonFull } from "$lib/types";
-import { parseMarkdown } from "@noxlovette/svarog";
+
+import { parseMarkdown } from "$lib/utils/markdown";
 import { redirect } from "@sveltejs/kit";
 import type { LayoutServerLoad } from "./$types";
 

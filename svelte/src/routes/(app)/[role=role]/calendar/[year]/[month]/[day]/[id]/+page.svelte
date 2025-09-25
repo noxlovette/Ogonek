@@ -17,9 +17,9 @@
     UniButton,
     VStack,
     EditButton,
+    RRule,
   } from "$lib/components";
   import { page } from "$app/state";
-  import RRule from "$lib/components/UI/RRule.svelte";
   import { m } from "$lib/paraglide/messages.js";
 
   const { data } = $props();

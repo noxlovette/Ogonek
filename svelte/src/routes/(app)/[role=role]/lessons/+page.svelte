@@ -27,7 +27,6 @@
     assigneeStore,
   } from "$lib/stores";
   import { goto } from "$app/navigation";
-  import { Plus } from "lucide-svelte";
   import { m } from "$lib/paraglide/messages.js";
   import LoadingCard from "$lib/components/cards/LoadingCard.svelte";
   import VStack from "$lib/components/UI/layout/VStack.svelte";

@@ -22,8 +22,8 @@ export function formatFileSize(bytes: number): string {
   return (bytes / (1024 * 1024)).toFixed(2) + " MB";
 }
 
-export function formatPercentage(value: number): string {
-  return Math.min(100, Math.max(0, Math.round(value))) + "%";
+export function formatPercentage(value: number): number {
+  return Math.min(100, Math.max(0, Math.round(value)));
 }
 
 /* 

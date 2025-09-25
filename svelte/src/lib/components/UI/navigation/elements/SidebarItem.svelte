@@ -40,7 +40,7 @@
   {target}
   {rel}
   class={`${baseClasses}
-      ${isActive ? " text-accent bg-stone-100/80 hover:bg-stone-200/50 dark:bg-stone-900/80" : "hover-default"}
+      ${isActive ? " text-accent bg-stone-100/80 hover:bg-stone-200/50 dark:bg-stone-900/80 dark:hover:bg-stone-900/50" : "hover-default"}
     `}
   class:pointer-events-none={disabled}
   role={disabled ? "button" : "link"}

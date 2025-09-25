@@ -5,7 +5,7 @@
 
 <div
   class={`
-    ring-default bg-default bg-default relative z-30
+    ring-default bg-default relative z-30
     flex h-max w-full
     flex-shrink-0 flex-col rounded-2xl
     shadow-md 

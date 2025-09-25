@@ -1,0 +1,20 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "UPDATE tasks\n         SET\n            title = COALESCE($3, title),\n            markdown = COALESCE($4, markdown),\n            completed = COALESCE($5, completed),\n            due_date = COALESCE($6, due_date),\n            assignee = COALESCE($7, assignee)\n         WHERE id = $1 AND (assignee = $2 OR created_by = $2)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Text",
+        "Varchar",
+        "Text",
+        "Bool",
+        "Timestamptz",
+        "Varchar"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "3c8f18d4fdc68fc60ae1cbb2ae344ea61c9d194b0a74a9798224e547f5175370"
+}
