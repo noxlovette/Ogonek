@@ -2,7 +2,7 @@
   import { enhance } from "$app/forms";
   import { invalidate } from "$app/navigation";
   import { enhanceForm, qualityButtons } from "$lib/utils";
-  import { CheckCheck, GraduationCap } from "lucide-svelte";
+  import { GraduationCap } from "lucide-svelte";
   import {
     Toolbar,
     UniButton,
@@ -15,6 +15,7 @@
     Input,
     Headline,
     Subheadline,
+    Body,
   } from "$lib/components";
   import { m } from "$lib/paraglide/messages";
 
@@ -85,7 +86,7 @@
   label: string;
 })}
   <button
-    class={`flex h-full items-center justify-center gap-2 rounded-lg p-2 font-medium transition ${quality.color}`}
+    class={`flex h-full items-center justify-center gap-2 rounded-lg p-2  font-medium transition ${quality.color}`}
     name="quality"
     value={quality.quality}
     data-key={quality.key}
@@ -103,21 +104,17 @@
 {#if isComplete || data.cards.length === 0}
   <div class="p-8">
     <div class="flex flex-col items-center space-y-6 py-10 text-center">
-      <div
-        class="bg-accent ring-default mx-auto flex h-16 w-16 items-center justify-center rounded-full text-white dark:bg-stone-800"
-      >
-        <CheckCheck />
-      </div>
-      <p class="max-w-md text-stone-600 dark:text-stone-400">
+      <Body>
         {m.quiet_lost_whale_exhale()}
-      </p>
+      </Body>
 
       <UniButton
         href="."
         Icon={GraduationCap}
+        content={m.decks()}
         variant="primary"
-        iconOnly={false}>{m.decks()}</UniButton
-      >
+        iconOnly={false}
+      ></UniButton>
     </div>
   </div>
 {:else if currentCard}

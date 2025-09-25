@@ -13,6 +13,8 @@
     MobileMenu,
     StudentFilter,
     Calendar,
+    Footnote,
+    HLine,
   } from "$lib/components";
   import { studentStore, setUser, setProfile } from "$lib/stores";
 
@@ -43,9 +45,11 @@
   <div class="hidden w-max flex-col md:block">
     <Sidebar
       ><Dashboard />
+      <HLine />
       <Todo />
       <Lessons />
       <Words />
+      <HLine></HLine>
       {#if role == "s"}
         <Zoom />
       {:else}
@@ -54,8 +58,7 @@
       {#if !env.PUBLIC_TURN_OFF_CALENDAR}
         <Calendar />
       {/if}
-
-      <Divider />
+      <HLine></HLine>
       {#if role == "s"}
         <UsefulLinks />
       {:else}

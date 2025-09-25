@@ -13,7 +13,7 @@
 >
   <div class="w-full overflow-hidden py-2">
     <ul
-      class="flex flex-col gap-4 divide-stone-200/40 px-3 dark:divide-stone-600/80"
+      class="flex flex-col gap-2 divide-stone-200/40 px-3 dark:divide-stone-600/80"
     >
       {@render children?.()}
     </ul>

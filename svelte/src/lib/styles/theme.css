@@ -32,7 +32,12 @@
   }
 
   .bg-clickable {
-    @apply bg-stone-100/20 hover:bg-stone-100/80 active:bg-stone-100 dark:bg-stone-900/30 dark:hover:bg-stone-900/80 active:dark:bg-stone-900;
+    @apply bg-stone-100/20 hover:bg-stone-100/80 active:bg-stone-100 dark:bg-stone-900/30 dark:hover:bg-stone-900 active:dark:bg-stone-800;
+    @apply transition-colors duration-150;
+  }
+
+  .hover-default {
+    @apply transition-colors duration-150 hover:bg-stone-100 dark:hover:bg-stone-900;
   }
 }
 

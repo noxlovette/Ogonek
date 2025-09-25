@@ -71,21 +71,15 @@
           <UniButton
             variant="prominent"
             type="submit"
+            content={completed ? m.complete() : m.notCompleted()}
             Icon={completed ? Check : Circle}
-          >
-            {#if completed}
-              <p class="">{m.completed()}</p>
-            {:else}
-              <p class="">{m.notCompleted()}</p>
-            {/if}
-          </UniButton>
+          ></UniButton>
         </form>
       </Merger>
     </VStack>
     <VStack>
       <VStack>
         <Badge {urgency}>{formattedDate}</Badge>
-        <Priority priority={data.task.priority}></Priority>
       </VStack>
       {#if role === "t"}
         <Caption1>

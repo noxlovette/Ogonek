@@ -28,7 +28,7 @@
   );
 
   const baseClasses =
-    "group relative p-1 px-2 hidden md:flex items-center gap-2 font-medium rounded-2xl";
+    "group relative hover-default p-2 px-2.5 hidden md:flex items-center gap-2 font-medium rounded-2xl";
 
   const iconClasses = $derived(() => {
     return `size-5 ${isActive ? "text-accent" : "text-stone-500 dark:text-stone-400"}`;
@@ -40,7 +40,7 @@
   {target}
   {rel}
   class={`${baseClasses}
-      ${isActive ? "bg-accent text-stone-50" : ""}
+      ${isActive ? "dark:bg-accent/90 bg-accent text-stone-50" : ""}
     `}
   class:pointer-events-none={disabled}
   role={disabled ? "button" : "link"}

@@ -1,5 +1,7 @@
 <script lang="ts">
+  import { m } from "$lib/paraglide/messages";
   import type { Card } from "$lib/types";
+  import { Callout, Caption1 } from "../typography";
 
   let {
     toggleCard,
@@ -32,20 +34,16 @@
 >
   <!-- Card Front -->
   <div
-    class="ring-default absolute inset-0 flex h-full w-full items-center justify-center rounded-sm bg-white p-5 shadow-sm duration-150 backface-hidden hover:shadow-sm dark:bg-stone-900 {flippedCards.has(
+    class="ring-default absolute inset-0 flex h-full w-full items-center justify-center rounded-2xl bg-white p-5 shadow-sm duration-150 backface-hidden hover:shadow-sm dark:bg-stone-900/30 {flippedCards.has(
       card.id,
     )
       ? 'opacity-0'
       : 'opacity-100'}"
   >
     <div class="flex h-full w-full flex-col items-center justify-center">
-      <p
-        class="max-w-full overflow-auto text-center font-medium break-words {truncateIfNeeded(
-          card.front,
-        )}"
-      >
+      <Callout styling={truncateIfNeeded(card.front)}>
         {card.front}
-      </p>
+      </Callout>
 
       {#if card.mediaUrl}
         <div class="absolute top-2 right-2">
@@ -58,47 +56,26 @@
       {/if}
 
       <div class="absolute right-3 bottom-2">
-        <span class="text-xs text-stone-400 dark:text-stone-500"
-          >Click to flip</span
-        >
+        <Caption1>
+          {m.noble_dry_skunk_reside()}
+        </Caption1>
       </div>
     </div>
   </div>
 
   <!-- Card Back -->
   <div
-    class="bg-default ring-accent absolute inset-0 flex h-full w-full items-center justify-center rounded-sm p-5 shadow-sm ring-1 duration-150 backface-hidden hover:shadow-sm {flippedCards.has(
+    class="bg-default ring-accent/50 absolute inset-0 flex h-full w-full items-center justify-center rounded-2xl p-5 shadow-sm ring-1 duration-150 backface-hidden hover:shadow-xl {flippedCards.has(
       card.id,
     )
       ? 'opacity-100'
       : 'opacity-0'}"
   >
     <div class="flex h-full w-full flex-col items-center justify-center">
-      <p
-        class="max-w-full overflow-auto text-center font-medium break-words {truncateIfNeeded(
-          card.back,
-        )}"
-      >
+      <Callout styling={truncateIfNeeded(card.back)}>
         {card.back}
-      </p>
-
-      <div class="absolute right-3 bottom-2">
-        <span class="text-xs text-stone-400 dark:text-stone-700"
-          >Click to flip</span
-        >
-      </div>
+      </Callout>
     </div>
-  </div>
-
-  <!-- Flip Indicator -->
-  <div class="absolute -top-1 -right-1 z-10 h-8 w-8 overflow-hidden">
-    <div
-      class="absolute top-0 right-0 h-2 w-2 rounded-full {flippedCards.has(
-        card.id,
-      )
-        ? 'bg-accent dark:bg-accent'
-        : 'bg-stone-200 dark:bg-stone-700'}"
-    ></div>
   </div>
 </div>
 

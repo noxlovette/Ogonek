@@ -47,20 +47,23 @@ export const qualityButtons = [
   {
     quality: 0,
     label: m.such_loose_blackbird_offer(),
-    color: "ring-rose-600 hover:bg-rose-700/10 ring",
+    color:
+      "ring-rose-600 dark:ring-rose-500/50 hover:bg-rose-700/10 dark:hover:rose-900/20 ring",
     key: 1,
   },
 
   {
     quality: 3,
     label: m.fuzzy_noble_cod_borrow(),
-    color: "ring-amber-500 hover:bg-amber-600/10 ring",
+    color:
+      "ring-amber-500 dark:ring-amber-500/50 hover:bg-amber-600/10 dark:hover:bg-amber-900/20 ring",
     key: 2,
   },
   {
     quality: 5,
     label: m.slow_vexed_pigeon_boil(),
-    color: "ring-emerald-500 hover:bg-emerald-500/10 ring",
+    color:
+      "ring-emerald-500 dark:ring-emerald-500/50 hover:bg-emerald-500/10 dark:hover:bg-emerald-900/20 ring",
     key: 3,
   },
 ];

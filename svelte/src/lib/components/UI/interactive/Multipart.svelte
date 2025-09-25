@@ -1,11 +1,10 @@
 <script lang="ts">
   import { onDestroy } from "svelte";
-  import UniButton from "../forms/buttons/UniButton.svelte";
   import { Ban, Check, Upload, X } from "lucide-svelte";
-  import { Caption1 } from "$lib/components/typography";
   import logger from "$lib/logger";
+  import { formatFileSize, formatPercentage } from "$lib/utils";
 
-  type UploadStatus = "waiting" | "uploading" | "complete" | "error";
+  type UploadStatus = "uploading" | "complete" | "error";
 
   interface PartUploadUrl {
     partNumber: number;
@@ -43,7 +42,7 @@
 
   let fileUploads: FileUploadState[] = $state([]);
 
-  const CHUNK_SIZE = 5 * 1024 * 1024; // 5MB per chunk
+  const CHUNK_SIZE = 5 * 1024 * 1024;
 
   function calculateChunks(file: File): number {
     return Math.ceil(file.size / CHUNK_SIZE);
@@ -53,7 +52,6 @@
     const input = event.target as HTMLInputElement;
     if (!input.files?.length) return;
 
-    // Add new files with "uploading" status to auto-start
     const newFiles = Array.from(input.files).map((file) => ({
       id: crypto.randomUUID(),
       file,
@@ -64,16 +62,16 @@
         totalBytes: file.size,
         percentComplete: 0,
       },
-      status: "uploading" as UploadStatus, // Direct to uploading
+      status: "waiting" as UploadStatus,
     }));
 
     fileUploads = [...fileUploads, ...newFiles];
+
     input.value = "";
 
-    // Start uploads immediately
     newFiles.forEach(uploadFile);
   }
-  // Start upload process for a file
+
   async function uploadFile(fileState: FileUploadState) {
     const { id, file } = fileState;
     let uploadIdLocal = "";
@@ -84,7 +82,6 @@
       fileState.status = "uploading";
       fileState.abortController = new AbortController();
 
-      // 1. Initialize multipart upload
       const initResponse = await fetch("/api/multipart/init", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -117,9 +114,7 @@
       const signal = fileState.abortController.signal;
       const completedParts: CompletedPart[] = [];
 
-      // 2. Upload each chunk directly to S3
       for (let i = 0; i < parts.length; i++) {
-        // Check if upload was aborted
         if (signal.aborted) {
           throw new Error("Upload aborted by user");
         }
@@ -130,13 +125,11 @@
         const chunk = file.slice(start, end);
 
         try {
-          // Upload chunk directly to S3 using presigned URL with progress tracking
           const uploadResult = await uploadWithProgress(
             url,
             chunk,
             signal,
             (loaded) => {
-              // Update byte-level progress
               const chunkStart = (partNumber - 1) * CHUNK_SIZE;
               fileState.progress.bytes = chunkStart + loaded;
               fileState.progress.percentComplete =
@@ -151,15 +144,12 @@
             );
           }
 
-          // Extract ETag from response headers, removing quotes if present
           const etag =
             uploadResult.headers.get("ETag")?.replace(/['"]/g, "") || "";
           completedParts.push({ partNumber, etag });
 
-          // Update chunk-level progress
           fileState.progress.uploaded = i + 1;
 
-          // Ensure bytes progress is accurate at chunk boundaries
           const chunkEnd = Math.min(file.size, partNumber * CHUNK_SIZE);
           fileState.progress.bytes = chunkEnd;
           fileState.progress.percentComplete =
@@ -215,13 +205,6 @@
         }
       }
     }
-  }
-
-  // Start uploading all waiting files
-  function startUploads() {
-    fileUploads
-      .filter((upload) => upload.status === "waiting")
-      .forEach(uploadFile);
   }
 
   // Cancel an upload
@@ -303,19 +286,6 @@
       }
     });
   }
-
-  // Format file size with appropriate units
-  function formatFileSize(bytes: number): string {
-    if (bytes < 1024) return bytes + " B";
-    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(2) + " KB";
-    return (bytes / (1024 * 1024)).toFixed(2) + " MB";
-  }
-
-  // Format percentage display
-  function formatPercentage(value: number): string {
-    return Math.min(100, Math.max(0, Math.round(value))) + "%";
-  }
-
   let isDragging = $state(false);
 
   function handleDragOver(e: DragEvent) {

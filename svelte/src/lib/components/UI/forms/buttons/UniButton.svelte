@@ -60,16 +60,16 @@
   }
 
   const baseClasses = `
-  flex items-center justify-center flex-1 p-2 md:p-3
+  flex items-center transition-all duration-150 justify-center flex-1 p-2 md:p-3
   rounded-full font-medium focus-visible:outline-none
   disabled:opacity-50 disabled:pointer-events-none z-40 gap-2
 `;
 
   const variantClasses = {
-    primary: "hover:bg-stone-100 dark:hover:bg-stone-700",
+    primary: "hover-default",
     danger:
       "text-rose-600 dark:text-rose-50 hover:bg-rose-100 dark:hover:bg-rose-800",
-    prominent: "hover:bg-accent/80 bg-accent text-white",
+    prominent: "hover:bg-accent/60 bg-accent dark:bg-accent/90 text-white",
   };
 
   const allClasses = $derived(
@@ -78,7 +78,9 @@
 
   let deleteClicked = $state(false);
 
-  function tooltip(content?: string): Attachment {
+  function tooltip(content?: string): Attachment | undefined {
+    if (!iconOnly) return undefined;
+
     return (element) => {
       const tooltip = tippy(element, {
         content,
@@ -93,11 +95,7 @@
 
 {#if isLink}
   <a
-    {@attach () => {
-      if (iconOnly) {
-        tooltip(description);
-      }
-    }}
+    {@attach tooltip(description)}
     {href}
     class={allClasses}
     aria-disabled={disabled}
@@ -126,9 +124,9 @@
     class={allClasses}
     onclick={variant === "danger" ? handleClick : onclick}
   >
-    {#if Icon && variant !== "danger"}
+    {#if Icon}
       <Icon class="size-5" />
-    {:else if variant == "danger"}
+    {:else if variant == "danger" && !Icon}
       {#if !deleteClicked}
         <Trash2 />
       {:else}

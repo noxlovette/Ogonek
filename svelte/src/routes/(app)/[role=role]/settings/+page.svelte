@@ -16,7 +16,7 @@
   import { page } from "$app/state";
   import { enhanceForm } from "$lib/utils";
 
-  import { Check, LogOut, Key, Bell, Ban } from "lucide-svelte";
+  import { Check, LogOut, Bell, Ban, Pencil } from "lucide-svelte";
   import { m } from "$lib/paraglide/messages";
   import {
     user,
@@ -65,31 +65,30 @@
       <Merger>
         {#if disabled}
           <UniButton
-            Icon={Key}
+            Icon={Pencil}
             variant="prominent"
             onclick={() => {
               disabled = !disabled;
             }}
             type="button"
-          >
-            {disabled ? m.edit() : m.editing()}
-          </UniButton>
+            content={disabled ? m.edit() : m.editing()}
+          ></UniButton>
         {:else}
           <UniButton
             onclick={() => {
               disabled = !disabled;
             }}
             Icon={Ban}
-          >
-            {m.cancel()}
-          </UniButton>
+            content={m.cancel()}
+          ></UniButton>
           <UniButton
             Icon={Check}
             type="submit"
             variant="prominent"
             disable={disabled}
-            formaction="?/update">{m.save()}</UniButton
-          >
+            content={m.save()}
+            formaction="?/update"
+          ></UniButton>
         {/if}
       </Merger>
     </VStack>
@@ -150,9 +149,8 @@
             href="https://t.me/fz_notif_bot"
             Icon={Bell}
             iconOnly={false}
-          >
-            {m.suave_teary_emu_expand()}
-          </UniButton>
+            content={m.suave_teary_emu_expand()}
+          ></UniButton>
         </VStack>
         <Caption1>
           {m.broad_clear_snake_peel()}
@@ -186,9 +184,8 @@
               type="submit"
               Icon={LogOut}
               iconOnly={false}
-            >
-              {m.seemly_any_ostrich_believe()}
-            </UniButton>
+              content={m.seemly_any_ostrich_believe()}
+            ></UniButton>
           </form>
         </VStack>
         <Caption1>

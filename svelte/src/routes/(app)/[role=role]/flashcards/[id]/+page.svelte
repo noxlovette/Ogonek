@@ -53,9 +53,11 @@
       <Divider></Divider>
       <VStack>
         <Merger>
-          <UniButton href="{deck.id}/test" Icon={BookOpenCheck}
-            >Test Mode</UniButton
-          >
+          <UniButton
+            content={m.knotty_ideal_marten_zip()}
+            href="{deck.id}/test"
+            Icon={BookOpenCheck}
+          ></UniButton>
         </Merger>
         <Merger>
           <form
@@ -67,7 +69,11 @@
               },
             })}
           >
-            <UniButton Icon={Copy} type="submit">Duplicate</UniButton>
+            <UniButton
+              Icon={Copy}
+              content={m.less_calm_blackbird_play()}
+              type="submit"
+            ></UniButton>
           </form>
           {#if $user.id === deck.createdBy}
             <EditButton href="{deck.id}/edit" />
@@ -96,11 +102,10 @@
               Icon={isSubscribed === true ? Check : Circle}
               type="submit"
               variant="prominent"
-            >
-              {isSubscribed
+              content={isSubscribed
                 ? m.fluffy_elegant_coyote_assure()
                 : m.fit_least_baboon_imagine()}
-            </UniButton>
+            ></UniButton>
           </form>
         </Merger>
       </VStack>
