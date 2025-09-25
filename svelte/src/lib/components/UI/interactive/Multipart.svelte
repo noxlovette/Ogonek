@@ -3,6 +3,13 @@
   import { Ban, Check, Upload, X } from "lucide-svelte";
   import logger from "$lib/logger";
   import { formatFileSize, formatPercentage } from "$lib/utils";
+  import { Footnote } from "$lib/components/typography";
+  import Caption2 from "$lib/components/typography/Caption2.svelte";
+  import Caption1 from "$lib/components/typography/Caption1.svelte";
+  import { m } from "$lib/paraglide/messages";
+  import ProgressBar from "./ProgressBar.svelte";
+  import { UniButton } from "../forms";
+  import { HStack } from "..";
 
   type UploadStatus = "uploading" | "complete" | "error";
 
@@ -38,7 +45,7 @@
     abortController?: AbortController;
   }
 
-  let { taskId = null, folderId = null, onComplete = () => {} } = $props();
+  let { taskId = null, folderId = null } = $props();
 
   let fileUploads: FileUploadState[] = $state([]);
 
@@ -182,7 +189,6 @@
       }
 
       fileState.status = "complete";
-      onComplete(fileIdLocal);
     } catch (error: any) {
       logger.error(`Upload failed for ${file.name}:`, error);
       fileState.status = "error";
@@ -313,10 +319,9 @@
     // Use your existing file handling function
     handleFileSelect(mockEvent);
   }
-  let fileInput: HTMLInputElement;
 </script>
 
-<div class="flex flex-col space-y-2 rounded-lg">
+<HStack>
   <label
     for="fileInput"
     ondragover={handleDragOver}
@@ -331,7 +336,6 @@
       : 'border-stone-300/30 hover:border-stone-400 dark:border-stone-600/30 dark:bg-stone-950 dark:hover:border-stone-700'}"
   >
     <input
-      bind:this={fileInput}
       id="fileInput"
       type="file"
       name="file"
@@ -339,74 +343,46 @@
       multiple
       class="hidden"
     />
-    <span
-      class="flex flex-col items-center justify-center space-y-2 text-center"
-    >
-      <Upload />
-    </span>
+    <Upload class="self-center" />
   </label>
 
   {#if fileUploads.length > 0}
-    <div class="space-y-4">
+    <HStack>
       {#each fileUploads as fileState, index (index)}
         <div
-          class="ring-default bg-default flex flex-col space-y-2 rounded-sm p-2"
+          class="ring-default bg-default gap-default flex flex-col rounded-2xl p-2"
         >
-          <div class="relative flex items-start justify-between">
-            <div>
-              <p
-                class="max-w-full text-sm font-medium text-stone-700 dark:text-stone-400"
-                title={fileState.file.name}
-              >
-                {fileState.file.name.length > 15
-                  ? fileState.file.name.slice(0, 15) + "..."
-                  : fileState.file.name}
-              </p>
-              <p class="text-xs text-stone-500">
-                {formatFileSize(fileState.file.size)}
-              </p>
-            </div>
+          <Footnote>
+            {fileState.file.name.length > 15
+              ? fileState.file.name.slice(0, 15) + "..."
+              : fileState.file.name}
+          </Footnote>
+          <Caption2>
+            {formatFileSize(fileState.file.size)}
+          </Caption2>
 
-            <button
-              class="absolute top-0 right-0 text-stone-400 hover:text-stone-600"
-              onclick={() => removeFile(fileState)}
-              title="Remove file"
-              aria-label="Remove file"
-            >
-              <X />
-            </button>
-          </div>
+          <UniButton
+            content="Удалить файл"
+            Icon={X}
+            type="button"
+            onclick={() => removeFile(fileState)}
+          />
 
           {#if fileState.status === "uploading"}
-            <div
-              class="mb-1 h-1.5 w-full rounded-full bg-stone-200 dark:bg-stone-600"
-            >
-              <div
-                class="bg-accent h-1.5 rounded-full duration-150 dark:bg-stone-100"
-                style="width: {formatPercentage(
-                  fileState.progress.percentComplete,
-                )}"
-              ></div>
-            </div>
-            <p class="text-xs text-stone-500">
-              {formatFileSize(fileState.progress.bytes)} of {formatFileSize(
-                fileState.progress.totalBytes,
-              )}
-              ({formatPercentage(fileState.progress.percentComplete)})
-            </p>
+            <ProgressBar
+              progress={formatPercentage(fileState.progress.percentComplete)}
+            />
           {:else if fileState.status === "complete"}
-            <div class="flex items-center text-xs text-emerald-600">
-              <Check class="mr-1 size-4" />
-              Upload complete
-            </div>
+            <Caption1 styling="text-emerald-600"
+              >{m.every_sunny_pelican_buzz()}</Caption1
+            >
           {:else if fileState.status === "error"}
-            <div class="flex items-center text-xs text-rose-600">
-              <Ban class="mr-1 size-4" />
-              {fileState.errorMessage || "Upload failed"}
-            </div>
+            <Caption1 styling="text-emerald-600"
+              >{m.weird_level_sheep_imagine()}</Caption1
+            >
           {/if}
         </div>
-      {/each}
-    </div>
+      {/each}</HStack
+    >
   {/if}
-</div>
+</HStack>

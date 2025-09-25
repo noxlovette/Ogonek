@@ -6,7 +6,6 @@ export async function extractWordsFromRewordFile(file: File) {
 
   const files = unzipSync(uint8);
 
-  // Assume only one file inside the archive — get the first one
   const [filename, content] = Object.entries(files)[0] || [];
 
   if (!filename || !content) {
@@ -52,14 +51,4 @@ export function getVideoCallService(location: string): string | null {
   );
 
   return service?.name ?? null;
-}
-
-export function formatFileSize(bytes: number): string {
-  if (bytes < 1024) return bytes + " B";
-  if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(2) + " KB";
-  return (bytes / (1024 * 1024)).toFixed(2) + " MB";
-}
-
-export function formatPercentage(value: number): string {
-  return Math.min(100, Math.max(0, Math.round(value))) + "%";
 }

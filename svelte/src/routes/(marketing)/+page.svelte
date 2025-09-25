@@ -5,13 +5,13 @@
     Merger,
     Toolbar,
     UniButton,
+    HStack,
+    Divider,
+    WorkArea,
     MetaData,
   } from "$lib/components";
   import { Flame, FlameKindling } from "lucide-svelte";
   import { m } from "$lib/paraglide/messages";
-  import WorkArea from "$lib/components/UI/WorkArea.svelte";
-  import HStack from "$lib/components/UI/HStack.svelte";
-  import Divider from "$lib/components/UI/toolbar/Divider.svelte";
   const seoData = {
     title: "Ogonek - Digital Classroom for Private Teachers & Tutors",
     description:

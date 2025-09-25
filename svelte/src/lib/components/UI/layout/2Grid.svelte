@@ -3,7 +3,7 @@
 </script>
 
 <div
-  class="grid items-center gap-2 md:grid-cols-2 md:items-start md:gap-3 lg:gap-4 {styling}"
+  class="gap-default grid items-center md:grid-cols-2 md:items-start {styling}"
 >
   {@render children()}
 </div>

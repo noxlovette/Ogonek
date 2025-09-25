@@ -46,7 +46,7 @@
 
 <form
   method="POST"
-  class="flex max-w-md flex-col gap-2 md:gap-3 lg:gap-4"
+  class="gap-default flex max-w-md flex-col"
   use:enhance={enhanceForm({
     messages: {
       redirect: message.auth.loginSuccess,
@@ -81,9 +81,10 @@
       Icon={DoorOpen}
       type="submit"
       variant="primary"
+      content={m.logIn()}
       ariaLabel="Login"
-      iconOnly={false}>{m.logIn()}</UniButton
-    >
+      iconOnly={false}
+    ></UniButton>
   </Merger>
 </form>
 

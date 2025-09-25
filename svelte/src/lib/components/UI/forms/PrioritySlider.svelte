@@ -18,8 +18,8 @@
       case 2:
         return {
           label: "Medium Priority",
-          color: "text-orange-600 dark:text-orange-400",
-          bgColor: "bg-orange-500",
+          color: "text-amber-600 dark:text-amber-400",
+          bgColor: "bg-amber-500",
         };
       case 3:
         return {

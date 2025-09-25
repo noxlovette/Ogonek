@@ -20,7 +20,7 @@
   import { getUrgency } from "$lib/utils";
   import Priority from "$lib/components/cards/Priority.svelte";
   import { m } from "$lib/paraglide/messages.js";
-  import VStack from "$lib/components/UI/VStack.svelte";
+  import VStack from "$lib/components/UI/layout/VStack.svelte";
 
   let { data } = $props();
   const { files, rendered } = $derived(data);

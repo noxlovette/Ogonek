@@ -1,7 +1,7 @@
 <!-- TableOfContents.svelte -->
 <script lang="ts">
+  import { Title2 } from "$lib/components/typography";
   import { onMount, onDestroy } from "svelte";
-  import { Title2 } from "../typography";
 
   export let targetSelector: string = ".markdown";
   export let minLevel: number = 1;

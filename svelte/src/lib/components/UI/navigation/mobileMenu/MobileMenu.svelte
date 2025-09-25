@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { Component } from "svelte";
-  import VStack from "../../VStack.svelte";
+  import VStack from "../../layout/VStack.svelte";
 
   interface MobileMenuProps {
     elements: Component[];

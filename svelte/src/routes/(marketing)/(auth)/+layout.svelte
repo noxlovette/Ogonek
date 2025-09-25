@@ -3,7 +3,7 @@
   import { m } from "$lib/paraglide/messages";
 
   import { page } from "$app/state";
-  import WorkArea from "$lib/components/UI/WorkArea.svelte";
+  import WorkArea from "$lib/components/UI/layout/WorkArea.svelte";
 
   const isLogin = $derived(
     page.url.href.includes("login") || page.url.href.includes("bind"),

@@ -30,7 +30,7 @@
   } from "$lib/stores";
   import { goto } from "$app/navigation";
   import Headline from "$lib/components/typography/Headline.svelte";
-  import VStack from "$lib/components/UI/VStack.svelte";
+  import VStack from "$lib/components/UI/layout/VStack.svelte";
   import ThemeToggler from "$lib/components/UI/interactive/ThemeToggler.svelte";
   import Title3 from "$lib/components/typography/Title3.svelte";
 

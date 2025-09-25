@@ -3,7 +3,7 @@
   import { ChevronLeft } from "lucide-svelte";
   import { Merger } from ".";
   import UniButton from "../forms/buttons/UniButton.svelte";
-  import VStack from "../VStack.svelte";
+  import VStack from "../layout/VStack.svelte";
   import Divider from "./Divider.svelte";
   import { m } from "$lib/paraglide/messages";
 

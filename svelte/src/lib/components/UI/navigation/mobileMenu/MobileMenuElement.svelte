@@ -2,8 +2,7 @@
   import { page } from "$app/state";
   import Caption1 from "$lib/components/typography/Caption1.svelte";
   import { HStack } from "../..";
-  import NotificationBadge from "../../NotificationBadge.svelte";
-
+  import NotificationBadge from "../../content/NotificationBadge.svelte";
   let {
     Icon,
     href = "/",

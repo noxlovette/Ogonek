@@ -1,7 +1,7 @@
 <script lang="ts">
   import { Trash2 } from "lucide-svelte";
   import UniButton from "./buttons/UniButton.svelte";
-  import VStack from "../VStack.svelte";
+  import VStack from "../layout/VStack.svelte";
   import { Merger } from "../toolbar";
 
   let { showConfirmDialog = $bindable(false), formaction = null } = $props();

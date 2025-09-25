@@ -6,9 +6,8 @@
   import { Merger } from "../toolbar";
   import { VStack } from "..";
   import Divider from "../toolbar/Divider.svelte";
-  import HStack from "../HStack.svelte";
   import { m } from "$lib/paraglide/messages";
-
+  import HStack from "../layout/HStack.svelte";
   let {
     markdownContent = $bindable(
       "# Start writing\n\nYour **markdown** goes here...",
@@ -253,7 +252,7 @@
   }
 </script>
 
-<HStack styling="col-span-2 gap-2 md:gap-3 lg:gap-4">
+<HStack styling="col-span-2 gap-default">
   <VStack>
     <Title2>Markdown</Title2>
     <Divider></Divider>

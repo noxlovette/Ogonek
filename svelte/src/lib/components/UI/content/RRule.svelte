@@ -1,6 +1,6 @@
 <script lang="ts">
+  import { Caption1 } from "$lib/components/typography";
   import { parseRRuleDays, WEEKDAYS } from "$lib/utils";
-  import { Caption1 } from "../typography";
 
   let { rrule, compact = false }: { rrule: string | null; compact?: boolean } =
     $props();

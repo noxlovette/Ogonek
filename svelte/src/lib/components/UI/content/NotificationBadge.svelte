@@ -10,7 +10,7 @@
             text-white hover:animate-none
             md:relative md:-top-0 md:-right-0 md:ml-2
             md:flex md:h-6
-            md:min-w-[24px] dark:bg-rose-700
+            md:min-w-[24px]
           "
   >
     {badge > 99 ? "99+" : badge}

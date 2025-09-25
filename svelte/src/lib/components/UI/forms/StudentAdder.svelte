@@ -9,6 +9,7 @@
   import Headline from "$lib/components/typography/Headline.svelte";
   import Toggler from "../interactive/Toggler.svelte";
   import { m } from "$lib/paraglide/messages";
+  import { TickMorph } from "../interactive";
 
   let showPopover = false;
   let generatedLink = "";
@@ -46,7 +47,7 @@
       use:clickOutside={() => (showPopover = false)}
     >
       <div class="flex items-center justify-between">
-        <Headline>Invite Students</Headline>
+        <Headline>{m.tangy_bad_goat_fade()}</Headline>
         <button
           class="text-stone-400 hover:text-stone-700"
           type="button"
@@ -71,9 +72,8 @@
           },
         })}
       >
-        <Caption1>Do they have an account?</Caption1>
-        <Toggler name="isRegistered" title="Yes"></Toggler>
-
+        <Caption1>{m.moving_slow_mantis_shine()}</Caption1>
+        <TickMorph name="isRegistered" title={m.yes()} />
         <UniButton
           type="submit"
           iconOnly={false}

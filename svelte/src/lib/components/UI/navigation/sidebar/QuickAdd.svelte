@@ -2,8 +2,8 @@
   import UniButton from "$lib/components/UI/forms/buttons/UniButton.svelte";
   import { BookOpenCheck, ListTodo, WholeWord } from "lucide-svelte";
   import { enhance } from "$app/forms";
-  import HStack from "../../HStack.svelte";
   import { m } from "$lib/paraglide/messages";
+  import HStack from "../../layout/HStack.svelte";
 </script>
 
 <HStack styling="gap-2">

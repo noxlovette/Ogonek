@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { TickMorph, Toggler } from "$lib/components";
   import { notification } from "$lib/stores";
 </script>
 
@@ -29,3 +30,8 @@
 >
   A really long message
 </button>
+
+<Toggler name="test" value={false}></Toggler>
+<Toggler name="test" value={true}></Toggler>
+<TickMorph name="test" value={false} />
+<TickMorph name="test" value={true} />

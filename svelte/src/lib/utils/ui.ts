@@ -2,15 +2,6 @@ import { m } from "$lib/paraglide/messages";
 import type { TaskFull, Urgency } from "$lib/types";
 
 // File Renders
-export function formatFileSize(bytes: number): string {
-  if (bytes === 0) return "0 Bytes";
-  const k = 1024;
-  const sizes = ["Bytes", "KB", "MB", "GB"];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
-}
-
-// File Renders
 export function getFileExtension(filename: string): string {
   return filename.split(".").pop()?.toUpperCase() || "";
 }
@@ -23,6 +14,16 @@ export function shuffleArray<T>(array: T[]): T[] {
     [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
   }
   return newArray;
+}
+
+export function formatFileSize(bytes: number): string {
+  if (bytes < 1024) return bytes + " B";
+  if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(2) + " KB";
+  return (bytes / (1024 * 1024)).toFixed(2) + " MB";
+}
+
+export function formatPercentage(value: number): string {
+  return Math.min(100, Math.max(0, Math.round(value))) + "%";
 }
 
 /* 

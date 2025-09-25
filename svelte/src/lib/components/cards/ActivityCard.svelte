@@ -43,7 +43,7 @@
     {:else if activity.action.startsWith("updated")}
       <BookOpen
         strokeWidth="1"
-        class="size-5 text-orange-600 dark:text-orange-400"
+        class="size-5 text-amber-600 dark:text-amber-400"
       />
     {:else if activity.action.startsWith("deleted")}
       <Trash2 strokeWidth="1" class="size-5 text-rose-600 dark:text-rose-400" />
@@ -54,7 +54,7 @@
     {:else if activity.action.startsWith("updated")}
       <ListTodo
         strokeWidth="1"
-        class="size-5 text-orange-600 dark:text-orange-400"
+        class="size-5 text-amber-600 dark:text-amber-400"
       />
     {:else if activity.action.startsWith("deleted")}
       <Trash2
@@ -70,7 +70,7 @@
     {:else if activity.action.startsWith("updated")}
       <WholeWord
         strokeWidth="1"
-        class="size-5 text-orange-600 dark:text-orange-400"
+        class="size-5 text-amber-600 dark:text-amber-400"
       ></WholeWord>
     {:else if activity.action.startsWith("deleted")}
       <Trash2 strokeWidth="1" class="size-5 text-rose-600 dark:text-rose-400"

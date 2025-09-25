@@ -11,12 +11,12 @@
     Caption1,
     EditButton,
     Photo,
+    Badge,
   } from "$lib/components";
 
   import { formatDate } from "$lib/utils";
   import type { PageData } from "./$types";
   import { page } from "$app/state";
-  import Badge from "$lib/components/cards/Badge.svelte";
 
   let role = $derived(page.params.role);
 
