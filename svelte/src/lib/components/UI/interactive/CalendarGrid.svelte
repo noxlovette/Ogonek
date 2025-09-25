@@ -75,11 +75,22 @@
   </HStack>
   <Divider />
   <Merger>
-    <UniButton href={navigationUrls.prev} Icon={ChevronLeft} />
-    <UniButton variant="prominent" href={todayUrl} Icon={Calendar1}
-      >Сегодня</UniButton
-    >
-    <UniButton href={navigationUrls.next} Icon={ChevronRight} />
+    <UniButton
+      content="Предыдущий месяц"
+      href={navigationUrls.prev}
+      Icon={ChevronLeft}
+    />
+    <UniButton
+      content="Сегодня"
+      variant="prominent"
+      href={todayUrl}
+      Icon={Calendar1}
+    ></UniButton>
+    <UniButton
+      content="Следующий месяц"
+      href={navigationUrls.next}
+      Icon={ChevronRight}
+    />
   </Merger>
   <Divider />
 </Toolbar>

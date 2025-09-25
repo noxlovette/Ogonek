@@ -25,8 +25,6 @@
   </Headline>
   <VStack>
     <Badge {urgency}>{badgeText}</Badge>
-    <Divider />
-    <Priority priority={task.priority} />
   </VStack>
   <SeenBadge seen={task.seen} />
 </CardClickable>

@@ -1,0 +1,10 @@
+/* Tippy.js custom styles using Tailwind @apply */
+
+/* Base tooltip styling */
+.tippy-box {
+  @apply text-xs font-medium;
+  @apply rounded-lg border border-stone-100 shadow-xs;
+  @apply dark:border-stone-900 dark:text-stone-300;
+  @apply max-w-xs p-1 px-1.5;
+  @apply backdrop-blur-sm;
+}

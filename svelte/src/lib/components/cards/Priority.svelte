@@ -25,8 +25,8 @@
         };
       case 2:
         return {
-          color: "bg-orange-500",
-          textColor: "text-orange-600 dark:text-orange-400",
+          color: "bg-amber-500",
+          textColor: "text-amber-600 dark:text-amber-400",
         };
       case 3:
         return {

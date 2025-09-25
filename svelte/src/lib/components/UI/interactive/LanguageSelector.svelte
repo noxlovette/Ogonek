@@ -1,11 +1,8 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { Merger, UniButton } from "../";
-  import { ChevronDown } from "lucide-svelte";
-  import { fade } from "svelte/transition";
+  import { Callout } from "$lib/components/typography";
 
-  let currentLocale = "en";
-  let isOpen = false;
+  let currentLocale = "ru";
 
   const languages = [
     { code: "en", name: "English", flag: "🇺🇸" },
@@ -26,17 +23,9 @@
     window.location.reload();
   }
 
-  function toggleDropdown() {
-    isOpen = !isOpen;
-  }
-
   function selectLanguage(locale: string) {
     setLanguageCookie(locale);
-    isOpen = false;
   }
-
-  $: selectedLanguage =
-    languages.find((lang) => lang.code === currentLocale) || languages[0];
 
   onMount(() => {
     const savedLocale = getCookie("PARAGLIDE_LOCALE");
@@ -46,41 +35,23 @@
   });
 </script>
 
-<div class="relative">
-  <Merger>
-    <UniButton
-      type="button"
-      onclick={toggleDropdown}
-      iconOnly={false}
-      variant="primary"
+<div class="grid gap-2">
+  {#each languages as lang}
+    <button
+      onclick={() => selectLanguage(lang.code)}
+      class="hover-default ring-default flex w-full items-center gap-2 rounded-2xl bg-stone-100 p-2 dark:bg-stone-950"
+      class:bg-stone-50={currentLocale === lang.code}
+      class:dark:bg-stone-700={currentLocale === lang.code}
+      class:text-stone-800={currentLocale === lang.code}
+      class:font-medium={currentLocale === lang.code}
     >
-      <div class="flex items-center gap-3">
-        <span class="text-base">{selectedLanguage.flag}</span>
-        <span class="font-medium">{selectedLanguage.name}</span>
-      </div>
-    </UniButton>
-  </Merger>
-  {#if isOpen}
-    <div
-      class="bg-default ring-default absolute top-full left-0 z-50 mt-1 w-full overflow-hidden rounded-2xl shadow-xl"
-      in:fade={{ duration: 200 }}
-    >
-      {#each languages as lang}
-        <button
-          onclick={() => selectLanguage(lang.code)}
-          class="flex w-full items-center gap-3 px-4 py-3 text-left text-sm transition-colors hover:bg-stone-100 dark:hover:bg-stone-700"
-          class:bg-stone-50={currentLocale === lang.code}
-          class:dark:bg-stone-700={currentLocale === lang.code}
-          class:text-stone-800={currentLocale === lang.code}
-          class:font-medium={currentLocale === lang.code}
-        >
-          <span class="text-base">{lang.flag}</span>
-          <span>{lang.name}</span>
-          {#if currentLocale === lang.code}
-            <div class="bg-accent ml-auto h-2 w-2 rounded-full"></div>
-          {/if}
-        </button>
-      {/each}
-    </div>
-  {/if}
+      <span class="text-base">{lang.flag}</span>
+      <Callout>
+        {lang.name}
+      </Callout>
+      {#if currentLocale === lang.code}
+        <div class="bg-accent ml-auto h-2 w-2 rounded-full"></div>
+      {/if}
+    </button>
+  {/each}
 </div>

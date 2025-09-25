@@ -8,12 +8,14 @@
     FileText,
     Image,
     FileAudio,
-    FileVideo,
     File,
     Loader,
     X,
+    FilePlay,
   } from "lucide-svelte";
   import Caption1 from "../typography/Caption1.svelte";
+  import { m } from "$lib/paraglide/messages";
+  import { Merger, UniButton } from "../UI";
 
   let { file }: { file: FileSmall } = $props();
   let downloading = $state(false);
@@ -25,7 +27,7 @@
   {:else if mimeType.startsWith("audio/")}
     <FileAudio class="size-10 text-stone-600" />
   {:else if mimeType.startsWith("video/")}
-    <FileVideo class="size-10 text-stone-600" />
+    <FilePlay class="size-10 text-stone-600" />
   {:else if mimeType.startsWith("text/")}
     <FileText class="size-10 text-stone-600" />
   {:else}
@@ -33,82 +35,47 @@
   {/if}
 {/snippet}
 
-<div class="relative">
-  {#if file.ownerId === $user.id}
-    <form
-      action="?/deleteFile"
-      method="POST"
-      class="absolute top-1 right-1 z-50"
-      use:enhance={enhanceForm({
-        messages: {
-          success: "Deleted File",
-        },
-      })}
-    >
-      <input type="hidden" value={file.id} name="fileId" />
-      <button
-        type="submit"
-        class="text-stone-400 hover:text-rose-500 dark:text-stone-300"
-      >
-        <X />
-      </button>
-    </form>
-  {/if}
-  <form
-    method="POST"
-    class="relative flex w-full flex-col"
-    action="?/download"
-    use:enhance={enhanceForm({
-      messages: {
-        failure: "Meow",
-        success: "Download started",
-      },
-      handlers: {
-        success: async (result) => {
-          const url = result.data?.url;
+<form
+  method="POST"
+  class="gap-default relative flex w-full items-center"
+  action="?/download"
+  use:enhance={enhanceForm({
+    handlers: {
+      success: async (result) => {
+        const url = result.data?.url;
 
-          const iframe = document.createElement("iframe");
-          iframe.style.display = "none";
-          iframe.src = url;
-          document.body.appendChild(iframe);
+        const iframe = document.createElement("iframe");
+        iframe.style.display = "none";
+        iframe.src = url;
+        document.body.appendChild(iframe);
 
-          await new Promise((resolve) => setTimeout(resolve, 5000));
-          document.body.removeChild(iframe);
-        },
+        await new Promise((resolve) => setTimeout(resolve, 5000));
+        document.body.removeChild(iframe);
       },
-    })}
+    },
+  })}
+>
+  <input type="hidden" value={file.s3Key} name="key" />
+  <button
+    type="submit"
+    disabled={downloading}
+    class="group ring-default bg-clickable relative flex w-full items-center justify-between gap-4 overflow-clip rounded-xl p-2 shadow-sm"
   >
-    <input type="hidden" value={file.s3Key} name="key" />
-    <button
-      type="submit"
-      disabled={downloading}
-      class="group ring-default relative flex w-full flex-col items-center justify-between gap-4 overflow-clip rounded-md p-2 hover:bg-stone-100 dark:hover:bg-stone-800"
-    >
-      <Caption1>
-        {file.name.split(".").shift()?.slice(0, 15)}
-      </Caption1>
+    <Caption1>
+      {file.name.split(".").shift()?.slice(0, 15)}
+    </Caption1>
 
-      <div class="">
-        {@render icon(file.mimeType || "")}
-      </div>
-      <div
-        class="flex items-center space-x-2 text-xs text-stone-500 dark:text-stone-400"
-      >
-        {#if getFileExtension(file.name)}
-          <span
-            class="rounded bg-stone-100 px-1.5 py-0.5 text-xs dark:bg-stone-800"
-          >
-            {getFileExtension(file.name)}
-          </span>
-        {/if}
-      </div>
-      {#if $isLoading}
-        <div
-          class="absolute inset-0 flex items-center justify-center bg-white/80 dark:bg-stone-900/80"
-        >
-          <Loader class="size-16 animate-spin" />
-        </div>
-      {/if}
-    </button>
-  </form>
-</div>
+    {@render icon(file.mimeType || "")}
+  </button>
+  {#if file.ownerId === $user.id}
+    <input type="hidden" value={file.id} name="fileId" />
+    <Merger>
+      <UniButton
+        content="Удалить файл"
+        Icon={X}
+        formaction="?/deleteFile"
+        type="submit"
+      ></UniButton>
+    </Merger>
+  {/if}
+</form>

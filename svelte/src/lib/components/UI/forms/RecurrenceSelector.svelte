@@ -1,7 +1,7 @@
 <script lang="ts">
   import Caption1 from "$lib/components/typography/Caption1.svelte";
   import { parseRRuleDays, WEEKDAYS } from "$lib/utils";
-  import VStack from "../VStack.svelte";
+  import VStack from "../layout/VStack.svelte";
 
   let { rrule }: { rrule?: string | null } = $props();
 

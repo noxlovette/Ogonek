@@ -1,6 +1,7 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
   import type { Student, TableConfig } from "$lib/types";
+  import { fade } from "svelte/transition";
 
   interface Props {
     items: any[];
@@ -53,7 +54,10 @@
               {/each}
             </tr>
           </thead>
-          <tbody class="divide-y divide-stone-200 dark:divide-stone-800">
+          <tbody
+            class="divide-y divide-stone-200 dark:divide-stone-800"
+            in:fade|global
+          >
             {#each items as item, rowIndex (item.id)}
               <tr
                 class="group cursor-pointer duration-150 ease-in-out hover:bg-stone-50/80 dark:hover:bg-stone-900/80"

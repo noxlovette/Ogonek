@@ -4,4 +4,5 @@
   import { m } from "$lib/paraglide/messages";
 </script>
 
-<UniButton ariaLabel="Cancel" Icon={Ban} href=".">{m.cancel()}</UniButton>
+<UniButton content={m.cancel()} ariaLabel="Cancel" Icon={Ban} href="."
+></UniButton>

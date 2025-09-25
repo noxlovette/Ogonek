@@ -8,6 +8,8 @@
   import { Caption1 } from "$lib/components/typography";
   import Headline from "$lib/components/typography/Headline.svelte";
   import Toggler from "../interactive/Toggler.svelte";
+  import { m } from "$lib/paraglide/messages";
+  import { TickMorph } from "../interactive";
 
   let showPopover = false;
   let generatedLink = "";
@@ -37,16 +39,15 @@
     variant="primary"
     iconOnly={false}
     Icon={Plus}
-  >
-    Invite Students
-  </UniButton>
+    content={m.tangy_bad_goat_fade()}
+  ></UniButton>
   {#if showPopover}
     <div
-      class="absolute right-0 z-50 mt-2 w-64 space-y-2 rounded-xl bg-white p-4 shadow-lg ring ring-stone-300/50 dark:bg-stone-900"
+      class="ring-default absolute right-0 z-50 mt-2 w-64 space-y-2 rounded-2xl bg-white p-4 shadow-lg dark:bg-stone-900"
       use:clickOutside={() => (showPopover = false)}
     >
       <div class="flex items-center justify-between">
-        <Headline>Invite Students</Headline>
+        <Headline>{m.tangy_bad_goat_fade()}</Headline>
         <button
           class="text-stone-400 hover:text-stone-700"
           type="button"
@@ -71,12 +72,15 @@
           },
         })}
       >
-        <Caption1>Do they have an account?</Caption1>
-        <Toggler name="isRegistered" title="Yes"></Toggler>
-
-        <UniButton type="submit" iconOnly={false} variant="primary" Icon={Link}>
-          Generate Link
-        </UniButton>
+        <Caption1>{m.moving_slow_mantis_shine()}</Caption1>
+        <TickMorph name="isRegistered" title={m.yes()} />
+        <UniButton
+          type="submit"
+          iconOnly={false}
+          variant="primary"
+          Icon={Link}
+          content={m.sour_trite_peacock_zip()}
+        ></UniButton>
       </form>
 
       {#if generatedLink}

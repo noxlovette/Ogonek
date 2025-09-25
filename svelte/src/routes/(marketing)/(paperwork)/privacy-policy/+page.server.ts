@@ -1,4 +1,4 @@
-import { parseMarkdown } from "@noxlovette/svarog";
+import { parseMarkdown } from "$lib/utils/markdown";
 import type { PageServerLoad } from "./$types";
 import termsContent from "./privacy.md?raw";
 

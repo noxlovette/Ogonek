@@ -31,10 +31,10 @@
 </script>
 
 <div
-  class="relative inline-flex w-max rounded-full bg-stone-200/60 p-1 dark:bg-stone-800"
+  class="ring-default relative inline-flex w-max rounded-full bg-stone-200/60 p-1 dark:bg-stone-900"
 >
   <div
-    class="absolute top-1 h-8 w-10 rounded-full bg-white shadow-sm duration-200 ease-out dark:bg-stone-600"
+    class="ring-default absolute top-1 h-8 w-10 rounded-full bg-white shadow-sm duration-150 ease-out dark:bg-stone-800"
     style="transform: translateX({theme === 'light'
       ? '0px'
       : theme === 'dark'

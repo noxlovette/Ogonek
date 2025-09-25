@@ -52,7 +52,7 @@
 
 <form
   method="post"
-  class="flex max-w-md flex-col gap-2 md:gap-3 lg:gap-4"
+  class="gap-default flex max-w-md flex-col"
   use:enhance={enhanceForm({
     messages: {
       redirect: message.auth.signupSuccess,
@@ -74,7 +74,7 @@
       placeholder="Name"
       value=""
       invalid={form?.name}
-      invalidDescription="3+ characters"
+      invalidDescription={`3+ ${m.factual_caring_blackbird_ripple()}`}
     ></Input>
     <Input
       name="username"
@@ -82,7 +82,7 @@
       placeholder="Username"
       value=""
       invalid={form?.username}
-      invalidDescription="2+ characters"
+      invalidDescription={`2+ ${m.factual_caring_blackbird_ripple()}`}
     ></Input>
 
     <Input name="role" showLabel={false} type="role" />
@@ -90,7 +90,7 @@
     <Input
       name="email"
       invalid={form?.email}
-      invalidDescription="Invalid email"
+      invalidDescription={m.direct_big_ape_yell()}
       showLabel={false}
       placeholder="Email"
       type="email"
@@ -100,7 +100,7 @@
     <Input
       name="pass"
       invalid={form?.pass}
-      invalidDescription="8+ characters"
+      invalidDescription={`8+ ${m.factual_caring_blackbird_ripple()}`}
       placeholder="Password"
       showLabel={false}
       type="password"
@@ -115,14 +115,20 @@
     ></Input>
 
     {#if !passwordMatch}
-      <p class="mt-1 text-sm text-rose-600">Passwords don't match</p>
+      <p class="mt-1 text-sm text-rose-600">
+        {m.extra_grand_angelfish_transform()}
+      </p>
     {/if}
   </Grid>
   <Captcha />
   <Merger>
-    <UniButton Icon={DoorOpen} type="submit" variant="primary" iconOnly={false}
-      >{m.signUp()}</UniButton
-    >
+    <UniButton
+      content={m.signUp()}
+      Icon={DoorOpen}
+      type="submit"
+      variant="primary"
+      iconOnly={false}
+    ></UniButton>
   </Merger>
 </form>
 <MetaData {...seoData} />

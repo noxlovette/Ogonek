@@ -1,6 +1,6 @@
 import { routes } from "$lib/routes";
 import type { CompositeStudent } from "$lib/types";
-import { parseMarkdown } from "@noxlovette/svarog";
+import { parseMarkdown } from "$lib/utils/markdown";
 import type { LayoutServerLoad } from "./$types";
 
 export const load: LayoutServerLoad = async ({ params, fetch }) => {

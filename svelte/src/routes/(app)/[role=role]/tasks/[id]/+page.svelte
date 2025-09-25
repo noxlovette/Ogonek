@@ -18,9 +18,8 @@
   import Multipart from "$lib/components/UI/interactive/Multipart.svelte";
   import Badge from "$lib/components/cards/Badge.svelte";
   import { getUrgency } from "$lib/utils";
-  import Priority from "$lib/components/cards/Priority.svelte";
   import { m } from "$lib/paraglide/messages.js";
-  import VStack from "$lib/components/UI/VStack.svelte";
+  import VStack from "$lib/components/UI/layout/VStack.svelte";
 
   let { data } = $props();
   const { files, rendered } = $derived(data);
@@ -71,21 +70,15 @@
           <UniButton
             variant="prominent"
             type="submit"
+            content={completed ? m.complete() : m.notCompleted()}
             Icon={completed ? Check : Circle}
-          >
-            {#if completed}
-              <p class="">{m.completed()}</p>
-            {:else}
-              <p class="">{m.notCompleted()}</p>
-            {/if}
-          </UniButton>
+          ></UniButton>
         </form>
       </Merger>
     </VStack>
     <VStack>
       <VStack>
         <Badge {urgency}>{formattedDate}</Badge>
-        <Priority priority={data.task.priority}></Priority>
       </VStack>
       {#if role === "t"}
         <Caption1>
@@ -102,7 +95,7 @@
   </div>
   <div class="flex gap-4 md:flex-col">
     {#if files.length > 0}
-      <div class="flex w-full flex-col gap-4">
+      <div class="gap-default flex w-full flex-col">
         <Caption1>{m.stock_wise_cowfish_roam()}</Caption1>
         {#each files as file (file.id)}
           <FileTaskCard {file} />
@@ -112,7 +105,7 @@
       <EmptySpace>{m.sleek_empty_zebra_harbor()}</EmptySpace>
     {/if}
     {#if page.params.role === "s"}
-      <div class="flex w-full flex-col space-y-2">
+      <div class="gap-default flex w-full flex-col">
         <Caption1>{m.bright_helpful_firefox_stir()}</Caption1>
         <Multipart taskId={data.task.id} />
       </div>

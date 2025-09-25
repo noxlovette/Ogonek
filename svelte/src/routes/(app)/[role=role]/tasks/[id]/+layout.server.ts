@@ -1,7 +1,7 @@
 import logger from "$lib/logger";
 import { routes } from "$lib/routes";
 import type { TaskWithFiles } from "$lib/types";
-import { parseMarkdown } from "@noxlovette/svarog";
+import { parseMarkdown } from "$lib/utils/markdown";
 import { redirect } from "@sveltejs/kit";
 import type { LayoutServerLoad } from "./$types";
 

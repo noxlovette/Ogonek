@@ -15,9 +15,8 @@
     SaveButton,
   } from "$lib/components";
   import type { PageData } from "./$types";
-  import PrioritySlider from "$lib/components/UI/forms/PrioritySlider.svelte";
   import { m } from "$lib/paraglide/messages";
-  import VStack from "$lib/components/UI/VStack.svelte";
+  import VStack from "$lib/components/UI/layout/VStack.svelte";
 
   let { data }: { data: PageData } = $props();
   let { task } = data;
@@ -61,7 +60,7 @@
 
   <input type="hidden" name="markdown" value={markdown} />
 
-  <div class="grid grid-cols-1 gap-5 md:grid-cols-4">
+  <div class="grid grid-cols-1 gap-5 md:grid-cols-3">
     <Input
       name="title"
       labelName="Название"
@@ -83,9 +82,6 @@
       labelName="Срок выполнения"
       placeholder="Due Date"
     ></Input>
-    <div class="mt-2 self-end">
-      <PrioritySlider priority={task.priority} />
-    </div>
   </div>
 </form>
 

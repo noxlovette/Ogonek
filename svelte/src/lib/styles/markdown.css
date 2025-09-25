@@ -1,6 +1,6 @@
 @layer components {
   .markdown {
-    @apply mx-auto w-full;
+    @apply mx-auto w-full select-text;
     > *:first-child {
       @apply mt-0;
     }

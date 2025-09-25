@@ -20,7 +20,6 @@ export const actions = {
     const data = {
       title: formData.get("title")?.toString(),
       dueDate: new Date(formData.get("dueDate") + "T23:59:59").toISOString(),
-      priority: Number(formData.get("priority")),
       completed: formData.has("completed"),
       assignee: formData.get("assignee")?.toString(),
       markdown: formData.get("markdown")?.toString(),

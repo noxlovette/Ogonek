@@ -5,15 +5,15 @@
 
 <div
   class={`
-    ring-default bg-default bg-default relative z-30
+    ring-default bg-default relative z-30
     flex h-max w-full
     flex-shrink-0 flex-col rounded-2xl
-    shadow-lg 
+    shadow-md 
   `}
 >
-  <div class="w-full overflow-hidden py-2">
+  <div class="w-full overflow-hidden py-3">
     <ul
-      class="flex flex-col gap-4 divide-stone-200/40 px-3 dark:divide-stone-600/80"
+      class="flex flex-col gap-2 divide-stone-200/40 px-2.5 dark:divide-stone-600/80"
     >
       {@render children?.()}
     </ul>

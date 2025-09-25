@@ -262,16 +262,14 @@ pub async fn update(
          SET
             title = COALESCE($3, title),
             markdown = COALESCE($4, markdown),
-            priority = COALESCE($5, priority),
-            completed = COALESCE($6, completed),
-            due_date = COALESCE($7, due_date),
-            assignee = COALESCE($8, assignee)
+            completed = COALESCE($5, completed),
+            due_date = COALESCE($6, due_date),
+            assignee = COALESCE($7, assignee)
          WHERE id = $1 AND (assignee = $2 OR created_by = $2)",
         id,
         user_id,
         update.title,
         update.markdown,
-        update.priority,
         update.completed,
         update.due_date,
         update.assignee,
@@ -553,7 +551,6 @@ mod tests {
         let update_task = TaskUpdate {
             title: Some("Updated Task".to_string()),
             markdown: Some("# Updated\nThis task has been updated.".to_string()),
-            priority: Some(1),
             completed: Some(true),
             due_date: Some(Utc::now()),
             assignee: None,
@@ -579,7 +576,6 @@ mod tests {
         let update_task = TaskUpdate {
             title: Some("Hacked Title".to_string()),
             markdown: None,
-            priority: Some(2),
             completed: Some(true),
             due_date: None,
             assignee: None,
@@ -678,7 +674,6 @@ mod tests {
                 let update_task = TaskUpdate {
                     title: None,
                     markdown: None,
-                    priority: None,
                     completed: Some(true),
                     due_date: None,
                     assignee: None,

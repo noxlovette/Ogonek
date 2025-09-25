@@ -1,9 +1,18 @@
 <script lang="ts">
   import { onDestroy } from "svelte";
-  import UniButton from "../forms/buttons/UniButton.svelte";
   import { Ban, Check, Upload, X } from "lucide-svelte";
-  import { Caption1 } from "$lib/components/typography";
   import logger from "$lib/logger";
+  import { formatFileSize, formatPercentage } from "$lib/utils";
+  import { Footnote } from "$lib/components/typography";
+  import Caption2 from "$lib/components/typography/Caption2.svelte";
+  import Caption1 from "$lib/components/typography/Caption1.svelte";
+  import { m } from "$lib/paraglide/messages";
+  import ProgressBar from "./ProgressBar.svelte";
+  import { UniButton } from "../forms";
+  import { HStack, VStack } from "..";
+  import Merger from "../toolbar/Merger.svelte";
+  import Body from "$lib/components/typography/Body.svelte";
+  import Divider from "../toolbar/Divider.svelte";
 
   type UploadStatus = "waiting" | "uploading" | "complete" | "error";
 
@@ -39,21 +48,20 @@
     abortController?: AbortController;
   }
 
-  let { taskId = null, folderId = null, onComplete = () => {} } = $props();
+  let { taskId = null, folderId = null } = $props();
 
   let fileUploads: FileUploadState[] = $state([]);
 
-  const CHUNK_SIZE = 5 * 1024 * 1024; // 5MB per chunk
+  const CHUNK_SIZE = 5 * 1024 * 1024;
 
   function calculateChunks(file: File): number {
     return Math.ceil(file.size / CHUNK_SIZE);
   }
 
-  function handleFileSelect(event: Event) {
+  async function handleFileSelect(event: Event) {
     const input = event.target as HTMLInputElement;
     if (!input.files?.length) return;
 
-    // Add new files to the uploads array
     const newFiles = Array.from(input.files).map((file) => ({
       id: crypto.randomUUID(),
       file,
@@ -70,9 +78,13 @@
     fileUploads = [...fileUploads, ...newFiles];
 
     input.value = "";
+    startUploads();
   }
-
-  // Start upload process for a file
+  function startUploads() {
+    fileUploads
+      .filter((upload) => upload.status === "waiting")
+      .forEach(uploadFile);
+  }
   async function uploadFile(fileState: FileUploadState) {
     const { id, file } = fileState;
     let uploadIdLocal = "";
@@ -83,7 +95,6 @@
       fileState.status = "uploading";
       fileState.abortController = new AbortController();
 
-      // 1. Initialize multipart upload
       const initResponse = await fetch("/api/multipart/init", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -116,9 +127,7 @@
       const signal = fileState.abortController.signal;
       const completedParts: CompletedPart[] = [];
 
-      // 2. Upload each chunk directly to S3
       for (let i = 0; i < parts.length; i++) {
-        // Check if upload was aborted
         if (signal.aborted) {
           throw new Error("Upload aborted by user");
         }
@@ -129,18 +138,16 @@
         const chunk = file.slice(start, end);
 
         try {
-          // Upload chunk directly to S3 using presigned URL with progress tracking
           const uploadResult = await uploadWithProgress(
             url,
             chunk,
             signal,
             (loaded) => {
-              // Update byte-level progress
-              const chunkStart = (partNumber - 1) * CHUNK_SIZE;
-              fileState.progress.bytes = chunkStart + loaded;
+              // LE FIX: calcul propre du progress
+              const previousBytes = (partNumber - 1) * CHUNK_SIZE;
+              fileState.progress.bytes = previousBytes + loaded;
               fileState.progress.percentComplete =
-                (fileState.progress.bytes / fileState.progress.totalBytes) *
-                100;
+                (fileState.progress.bytes / file.size) * 100;
             },
           );
 
@@ -150,19 +157,12 @@
             );
           }
 
-          // Extract ETag from response headers, removing quotes if present
           const etag =
             uploadResult.headers.get("ETag")?.replace(/['"]/g, "") || "";
           completedParts.push({ partNumber, etag });
 
-          // Update chunk-level progress
+          // Pas besoin de double update ici, c'est déjà fait dans le callback
           fileState.progress.uploaded = i + 1;
-
-          // Ensure bytes progress is accurate at chunk boundaries
-          const chunkEnd = Math.min(file.size, partNumber * CHUNK_SIZE);
-          fileState.progress.bytes = chunkEnd;
-          fileState.progress.percentComplete =
-            (chunkEnd / fileState.progress.totalBytes) * 100;
         } catch (error) {
           console.error(error);
           throw new Error("Failed to upload");
@@ -191,7 +191,6 @@
       }
 
       fileState.status = "complete";
-      onComplete(fileIdLocal);
     } catch (error: any) {
       logger.error(`Upload failed for ${file.name}:`, error);
       fileState.status = "error";
@@ -214,13 +213,6 @@
         }
       }
     }
-  }
-
-  // Start uploading all waiting files
-  function startUploads() {
-    fileUploads
-      .filter((upload) => upload.status === "waiting")
-      .forEach(uploadFile);
   }
 
   // Cancel an upload
@@ -302,19 +294,6 @@
       }
     });
   }
-
-  // Format file size with appropriate units
-  function formatFileSize(bytes: number): string {
-    if (bytes < 1024) return bytes + " B";
-    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(2) + " KB";
-    return (bytes / (1024 * 1024)).toFixed(2) + " MB";
-  }
-
-  // Format percentage display
-  function formatPercentage(value: number): string {
-    return Math.min(100, Math.max(0, Math.round(value))) + "%";
-  }
-
   let isDragging = $state(false);
 
   function handleDragOver(e: DragEvent) {
@@ -342,10 +321,11 @@
     // Use your existing file handling function
     handleFileSelect(mockEvent);
   }
-  let fileInput: HTMLInputElement;
+
+  $inspect(fileUploads);
 </script>
 
-<div class="flex flex-col space-y-2 rounded-lg">
+<HStack>
   <label
     for="fileInput"
     ondragover={handleDragOver}
@@ -356,11 +336,10 @@
 			 flex-col items-center justify-center rounded-lg border-2
 			 border-dashed p-12 duration-200
 			 {isDragging
-      ? 'border-accent bg-accent'
+      ? 'border-accent bg-accent/12'
       : 'border-stone-300/30 hover:border-stone-400 dark:border-stone-600/30 dark:bg-stone-950 dark:hover:border-stone-700'}"
   >
     <input
-      bind:this={fileInput}
       id="fileInput"
       type="file"
       name="file"
@@ -368,80 +347,45 @@
       multiple
       class="hidden"
     />
-    <span
-      class="flex flex-col items-center justify-center space-y-2 text-center"
-    >
-      <Upload />
-    </span>
+    <Upload class="self-center" />
   </label>
 
   {#if fileUploads.length > 0}
-    <div class="space-y-4">
-      {#each fileUploads as fileState, index (index)}
-        <div
-          class="ring-default bg-default flex flex-col space-y-2 rounded-sm p-2"
-        >
-          <div class="relative flex items-start justify-between">
-            <div>
-              <p
-                class="max-w-full text-sm font-medium text-stone-700 dark:text-stone-400"
-                title={fileState.file.name}
-              >
-                {fileState.file.name.length > 15
-                  ? fileState.file.name.slice(0, 15) + "..."
-                  : fileState.file.name}
-              </p>
-              <p class="text-xs text-stone-500">
-                {formatFileSize(fileState.file.size)}
-              </p>
-            </div>
+    {#each fileUploads as fileState, index (index)}
+      <div
+        class="ring-default bg-default gap-default flex flex-col rounded-2xl p-2 shadow-sm"
+      >
+        <VStack>
+          <Body>
+            {fileState.file.name.length > 15
+              ? fileState.file.name.slice(0, 15) + "..."
+              : fileState.file.name}
+          </Body>
 
-            <button
-              class="absolute top-0 right-0 text-stone-400 hover:text-stone-600"
+          <Divider></Divider>
+          <Merger>
+            <UniButton
+              content="Удалить файл"
+              Icon={X}
+              type="button"
               onclick={() => removeFile(fileState)}
-              title="Remove file"
-              aria-label="Remove file"
-            >
-              <X />
-            </button>
-          </div>
-
-          {#if fileState.status === "uploading"}
-            <div
-              class="mb-1 h-1.5 w-full rounded-full bg-stone-200 dark:bg-stone-600"
-            >
-              <div
-                class="bg-accent h-1.5 rounded-full duration-150 dark:bg-stone-100"
-                style="width: {formatPercentage(
-                  fileState.progress.percentComplete,
-                )}"
-              ></div>
-            </div>
-            <p class="text-xs text-stone-500">
-              {formatFileSize(fileState.progress.bytes)} of {formatFileSize(
-                fileState.progress.totalBytes,
-              )}
-              ({formatPercentage(fileState.progress.percentComplete)})
-            </p>
-          {:else if fileState.status === "complete"}
-            <div class="flex items-center text-xs text-emerald-600">
-              <Check class="mr-1 size-4" />
-              Upload complete
-            </div>
-          {:else if fileState.status === "error"}
-            <div class="flex items-center text-xs text-rose-600">
-              <Ban class="mr-1 size-4" />
-              {fileState.errorMessage || "Upload failed"}
-            </div>
-          {/if}
-        </div>
-      {/each}
-
-      {#if fileUploads.some((upload) => upload.status === "waiting")}
-        <UniButton variant="primary" Icon={Upload} onclick={startUploads}>
-          Begin Upload
-        </UniButton>
-      {/if}
-    </div>
+            />
+          </Merger>
+        </VStack>
+        {#if fileState.status === "uploading"}
+          <ProgressBar
+            progress={formatPercentage(fileState.progress.percentComplete)}
+          />
+        {:else if fileState.status === "complete"}
+          <Caption1 styling="text-emerald-600"
+            >{m.every_sunny_pelican_buzz()}</Caption1
+          >
+        {:else if fileState.status === "error"}
+          <Caption1 styling="text-emerald-600"
+            >{m.weird_level_sheep_imagine()}</Caption1
+          >
+        {/if}
+      </div>
+    {/each}
   {/if}
-</div>
+</HStack>

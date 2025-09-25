@@ -3,12 +3,14 @@
 
   let {
     children,
-    styling = "",
+    styling = "items-end",
     align = "left",
+    override = "gap-default",
   }: {
     children: Snippet;
     styling?: string;
     align?: "center" | "left" | "right";
+    override?: string;
   } = $props();
 
   const layout = $derived.by(() => {
@@ -23,6 +25,6 @@
   });
 </script>
 
-<div class="relative flex h-full items-end gap-4 {layout} {styling}">
+<div class="relative flex h-full {override} {layout} {styling}">
   {@render children()}
 </div>

@@ -115,7 +115,8 @@
       <Divider></Divider>
       <VStack>
         <Merger>
-          <UniButton Icon={Ban} onclick={clearSelection}></UniButton>
+          <UniButton content="Убрать выбор" Icon={Ban} onclick={clearSelection}
+          ></UniButton>
           <form
             use:enhance={enhanceForm({
               messages: {
@@ -127,9 +128,12 @@
             class="ml-auto"
           >
             <input type="hidden" name="photoId" value={selectedPhoto.id} />
-            <UniButton variant="prominent" type="submit" Icon={Check}>
-              Confirm Selection
-            </UniButton>
+            <UniButton
+              content="Подтвердить выбор"
+              variant="prominent"
+              type="submit"
+              Icon={Check}
+            ></UniButton>
           </form>
         </Merger>
       </VStack>

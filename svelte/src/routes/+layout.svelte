@@ -1,7 +1,6 @@
 <script lang="ts">
   import "../app.css";
   import { env } from "$env/dynamic/public";
-
   import {
     Footer,
     Notification,

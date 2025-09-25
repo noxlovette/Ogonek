@@ -6,6 +6,7 @@
   import type { TableConfig, Content } from "$lib/types";
   import LargeTitle from "$lib/components/typography/LargeTitle.svelte";
   import { enhance } from "$app/forms";
+  import NewButton from "$lib/components/UI/forms/buttons/NewButton.svelte";
 
   let { data }: PageProps = $props();
 
@@ -39,7 +40,7 @@
         navigate: true,
       })}
     >
-      <UniButton Icon={Plus} type="submit">New</UniButton>
+      <NewButton />
     </form>
   </Merger>
 </Toolbar>

@@ -2,7 +2,7 @@
   import { page } from "$app/state";
   import { SquareArrowUpRight } from "lucide-svelte";
   import { Headline } from "$lib/components/typography";
-  import NotificationBadge from "../../NotificationBadge.svelte";
+  import { NotificationBadge } from "../../content";
 
   let {
     Icon,
@@ -28,7 +28,7 @@
   );
 
   const baseClasses =
-    "group relative p-1 px-2 hidden md:flex items-center gap-2 font-medium rounded-2xl";
+    "group relative transition-all duration-150 p-2 px-2.5 hidden md:flex items-center gap-2 font-medium rounded-2xl";
 
   const iconClasses = $derived(() => {
     return `size-5 ${isActive ? "text-accent" : "text-stone-500 dark:text-stone-400"}`;
@@ -40,14 +40,14 @@
   {target}
   {rel}
   class={`${baseClasses}
-      ${isActive ? "bg-accent text-stone-50" : ""}
+      ${isActive ? " text-accent bg-stone-100/80 hover:bg-stone-200/50 dark:bg-stone-900/80 dark:hover:bg-stone-900/50" : "hover-default"}
     `}
   class:pointer-events-none={disabled}
   role={disabled ? "button" : "link"}
   aria-disabled={disabled}
 >
   <div class="relative">
-    <Icon class={`${iconClasses} ${isActive ? "drop-shadow-sm" : ""}`} />
+    <Icon class={`${iconClasses} ${isActive ? "" : ""}`} />
   </div>
 
   <div class="flex min-w-0 flex-1 items-center justify-between">

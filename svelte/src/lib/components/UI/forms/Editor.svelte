@@ -1,13 +1,14 @@
 <script lang="ts">
   import Title2 from "$lib/components/typography/Title2.svelte";
-  import { parseMarkdown } from "@noxlovette/svarog";
+
   import { UniButton } from "./buttons";
   import { ChartNoAxesGantt, Eye } from "lucide-svelte";
   import { Merger } from "../toolbar";
   import { VStack } from "..";
   import Divider from "../toolbar/Divider.svelte";
-  import HStack from "../HStack.svelte";
-
+  import { m } from "$lib/paraglide/messages";
+  import HStack from "../layout/HStack.svelte";
+  import { parseMarkdown } from "$lib/utils/markdown";
   let {
     markdownContent = $bindable(
       "# Start writing\n\nYour **markdown** goes here...",
@@ -252,7 +253,7 @@
   }
 </script>
 
-<HStack styling="col-span-2 gap-2 md:gap-3 lg:gap-4">
+<HStack styling="col-span-2 gap-default">
   <VStack>
     <Title2>Markdown</Title2>
     <Divider></Divider>
@@ -260,13 +261,15 @@
       <UniButton
         variant={preview ? "primary" : "prominent"}
         Icon={ChartNoAxesGantt}
-        onclick={() => (preview = false)}>Edit</UniButton
-      >
+        content={m.edit()}
+        onclick={() => (preview = false)}
+      ></UniButton>
       <UniButton
         variant={preview ? "prominent" : "primary"}
         Icon={Eye}
-        onclick={() => (preview = true)}>Preview</UniButton
-      >
+        content="Предпросмотр"
+        onclick={() => (preview = true)}
+      ></UniButton>
     </Merger>
   </VStack>
   {#if !preview}

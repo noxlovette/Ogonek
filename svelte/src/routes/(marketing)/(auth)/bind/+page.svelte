@@ -12,7 +12,7 @@
 
 <form
   method="POST"
-  class="flex flex-col gap-2 md:gap-3 lg:gap-4"
+  class="gap-default flex flex-col"
   use:enhance={enhanceForm({
     messages: {
       redirect: "Bound to teacher",
@@ -26,9 +26,13 @@
   <Body>wants to add you to their students</Body>
 
   <Merger>
-    <UniButton iconOnly={false} variant="primary" type="submit" Icon={Cable}
-      >Connect</UniButton
-    >
+    <UniButton
+      content="Присоединиться"
+      iconOnly={false}
+      variant="primary"
+      type="submit"
+      Icon={Cable}
+    ></UniButton>
   </Merger>
 </form>
 

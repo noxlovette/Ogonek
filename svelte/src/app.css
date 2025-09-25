@@ -2,4 +2,5 @@
 @import "./lib/styles/colours.css";
 @import "./lib/styles/theme.css";
 @import "./lib/styles/markdown.css";
+@import "./lib/styles/tippy.css";
 @plugin 'tailwind-scrollbar';

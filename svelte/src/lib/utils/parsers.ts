@@ -6,7 +6,6 @@ export async function extractWordsFromRewordFile(file: File) {
 
   const files = unzipSync(uint8);
 
-  // Assume only one file inside the archive — get the first one
   const [filename, content] = Object.entries(files)[0] || [];
 
   if (!filename || !content) {

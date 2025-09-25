@@ -127,6 +127,12 @@ describe("getUrgency", () => {
       status: "pending",
       createdAt: "2025-01-01T00:00:00Z",
       updatedAt: "2025-01-01T00:00:00Z",
+      assignee: "user1",
+      assigneeName: "User One",
+      completed: false,
+      createdBy: "user1",
+      markdown: "",
+      priority: 1,
     }) as TaskFull;
 
   it("should return 'overdue' for past due dates", () => {

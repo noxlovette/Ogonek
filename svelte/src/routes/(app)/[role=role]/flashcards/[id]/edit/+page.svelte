@@ -24,6 +24,7 @@
   import { onMount } from "svelte";
   import { m } from "$lib/paraglide/messages.js";
   import Title1 from "$lib/components/typography/Title1.svelte";
+  import NewButton from "$lib/components/UI/forms/buttons/NewButton.svelte";
 
   onMount(() => {
     if (updatedCards.length > 0) {
@@ -80,9 +81,12 @@
 
     <VStack>
       <Merger>
-        <UniButton type="button" onclick={showImportModal} Icon={Import}
-          >Import</UniButton
-        >
+        <UniButton
+          content={m.legal_suave_poodle_edit()}
+          type="button"
+          onclick={showImportModal}
+          Icon={Import}
+        ></UniButton>
       </Merger>
       <Merger>
         <form
@@ -142,9 +146,7 @@
       </Title1>
 
       <Merger>
-        <UniButton Icon={Plus} onclick={addCard}>
-          {m.new()}
-        </UniButton>
+        <NewButton />
       </Merger>
     </EmptySpace>
   {:else}
