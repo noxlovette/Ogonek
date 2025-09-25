@@ -58,13 +58,17 @@
             {#if data.content.status == "published"}
               <UniButton
                 type="submit"
+                content="Unpublish"
                 formaction="?/unpublish"
-                Icon={MegaphoneOff}>Publish</UniButton
-              >
+                Icon={MegaphoneOff}
+              ></UniButton>
             {:else}
-              <UniButton type="submit" formaction="?/publish" Icon={Megaphone}
-                >Publish</UniButton
-              >
+              <UniButton
+                type="submit"
+                formaction="?/publish"
+                Icon={Megaphone}
+                content="Publish"
+              ></UniButton>
             {/if}
           </Merger>
           <Merger>

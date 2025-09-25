@@ -20,8 +20,9 @@
         ariaLabel="Confirm"
         type="submit"
         iconOnly={false}
-        variant="danger">Подтвердить</UniButton
-      >
+        content="Подтвердить"
+        variant="danger"
+      ></UniButton>
     </VStack>
   </Merger>
 </div>

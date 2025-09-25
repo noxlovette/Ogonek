@@ -23,10 +23,10 @@
     <Merger>
       <UniButton
         Icon={ArrowLeft}
+        content={m.level_low_angelfish_peel()}
         iconOnly={false}
         onclick={() => window.history.back()}
-        >{m.level_low_angelfish_peel()}</UniButton
-      >
+      ></UniButton>
     </Merger>
   </HStack>
 </div>

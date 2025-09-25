@@ -9,8 +9,10 @@
     LessonCard,
     TaskCard,
     UniButton,
+    Divider,
   } from "$lib/components";
   import Title2 from "$lib/components/typography/Title2.svelte";
+  import EditButton from "$lib/components/UI/forms/buttons/EditButton.svelte";
   import type { PageData } from "./$types";
   import { Pencil } from "lucide-svelte";
   let { data }: { data: PageData } = $props();
@@ -23,14 +25,12 @@
   <title>{student.name}</title>
 </svelte:head>
 <Toolbar>
-  <div>
-    <LargeTitle>{student.name}</LargeTitle>
-    <Title3>
-      {student.email}
-    </Title3>
-  </div>
-
-  <UniButton Icon={Pencil} href="/t/students/{student.id}/edit">Edit</UniButton>
+  <LargeTitle>{student.name}</LargeTitle>
+  <Title3>
+    {student.email}
+  </Title3>
+  <Divider />
+  <EditButton href="/t/students/{student.id}/edit" />
 </Toolbar>
 <grid class="grid gap-4 md:grid-cols-2">
   <GridCell>

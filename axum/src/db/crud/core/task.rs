@@ -551,7 +551,6 @@ mod tests {
         let update_task = TaskUpdate {
             title: Some("Updated Task".to_string()),
             markdown: Some("# Updated\nThis task has been updated.".to_string()),
-            priority: Some(1),
             completed: Some(true),
             due_date: Some(Utc::now()),
             assignee: None,
@@ -577,7 +576,6 @@ mod tests {
         let update_task = TaskUpdate {
             title: Some("Hacked Title".to_string()),
             markdown: None,
-            priority: Some(2),
             completed: Some(true),
             due_date: None,
             assignee: None,
@@ -676,7 +674,6 @@ mod tests {
                 let update_task = TaskUpdate {
                     title: None,
                     markdown: None,
-                    priority: None,
                     completed: Some(true),
                     due_date: None,
                     assignee: None,

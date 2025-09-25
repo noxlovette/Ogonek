@@ -6,11 +6,15 @@
     Toolbar,
     UniButton,
     Input,
+    SaveButton,
+    CancelButton,
+    DeleteButton,
   } from "$lib/components";
   import type { Student } from "$lib/types";
   import { Ban, Check, Trash2 } from "lucide-svelte";
   import type { PageData } from "./$types";
   import { enhanceForm } from "$lib/utils";
+  import VStack from "$lib/components/UI/layout/VStack.svelte";
 
   let { data }: { data: PageData } = $props();
   let { student }: { student: Student } = data;
@@ -31,16 +35,11 @@
 >
   <Toolbar>
     <LargeTitle>{student.name}</LargeTitle>
-    <div class="flex items-center space-x-3">
-      <UniButton href="." Icon={Ban}>Cancel</UniButton>
-      <UniButton variant="primary" type="submit" Icon={Check}>Save</UniButton>
-      <UniButton
-        variant="danger"
-        shouldConfirm={true}
-        formaction="?/delete"
-        Icon={Trash2}>Delete</UniButton
-      >
-    </div>
+    <VStack>
+      <CancelButton />
+      <SaveButton></SaveButton>
+      <DeleteButton />
+    </VStack>
   </Toolbar>
   <div class="grid grid-cols-1 gap-5 md:grid-cols-4">
     <Input

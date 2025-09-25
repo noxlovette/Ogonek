@@ -19,19 +19,17 @@
       type="button"
       variant="primary"
       Icon={Mail}
+      content="Email"
       href={`mailto:${contactInfo.email}`}
-    >
-      Email</UniButton
-    >
+    ></UniButton>
 
     <UniButton
       type="button"
       variant="primary"
       Icon={Send}
+      content="Telegram"
       href="https://t.me/noxlovette"
-    >
-      Telegram</UniButton
-    >
+    ></UniButton>
   </div>
 
   <p class="text-center text-stone-600 dark:text-stone-400">
