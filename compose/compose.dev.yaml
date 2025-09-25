@@ -26,6 +26,11 @@ services:
       timeout: 3s
       retries: 5
       start_period: 30s
+  gotenberg:
+    image: gotenberg/gotenberg:8
+    container_name: gotenberg-ogonek-dev
+    ports:
+      - "3002:3000"
   axum:
     build:
       context: ../axum

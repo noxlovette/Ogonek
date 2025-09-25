@@ -15,3 +15,5 @@ pub use s3::*;
 pub use schema::*;
 pub use tools::*;
 pub use types::*;
+pub mod download;
+pub use download::*;

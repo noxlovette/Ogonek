@@ -117,8 +117,14 @@ impl From<crate::auth::error::AuthError> for AppError {
 }
 
 impl From<reqwest::Error> for AppError {
-    fn from(_err: reqwest::Error) -> Self {
-        Self::BadRequest("HTTP client error".into())
+    fn from(err: reqwest::Error) -> Self {
+        Self::BadRequest(format!("HTTP client error: {err}"))
+    }
+}
+
+impl From<axum::http::Error> for AppError {
+    fn from(err: axum::http::Error) -> Self {
+        Self::BadRequest(format!("HTTP client error: {err}"))
     }
 }
 
@@ -141,6 +147,7 @@ use aws_credential_types::provider::error::CredentialsError;
 use aws_sdk_s3::error::SdkError;
 use aws_sdk_s3::presigning::PresigningConfigError;
 use utoipa::ToSchema;
+use zip::result::ZipError;
 
 // Generic handler for all S3 SDK errors
 impl<E> From<SdkError<E>> for AppError
@@ -243,6 +250,18 @@ impl From<crate::auth::error::PasswordHashError> for AppError {
 impl From<validator::ValidationErrors> for AppError {
     fn from(errs: validator::ValidationErrors) -> Self {
         Self::Validation(errs.to_string())
+    }
+}
+
+impl From<ZipError> for AppError {
+    fn from(err: ZipError) -> Self {
+        Self::Internal(format!("Zip creation error: {err}"))
+    }
+}
+
+impl From<std::io::Error> for AppError {
+    fn from(err: std::io::Error) -> Self {
+        Self::Internal(format!("IO Error: {err}"))
     }
 }
 
