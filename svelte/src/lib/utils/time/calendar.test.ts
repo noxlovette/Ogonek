@@ -26,21 +26,33 @@ describe("groupEventsByDate", () => {
   const mockEvents: EventSmall[] = [
     {
       id: "1",
+      uid: "uid-1",
       title: "Event 1",
       dtstartTime: "2025-01-15T10:00:00Z",
       dtendTime: "2025-01-15T11:00:00Z",
+      status: "confirmed",
+      isException: false,
+      isRecurring: false,
     },
     {
       id: "2",
+      uid: "uid-2",
       title: "Event 2",
       dtstartTime: "2025-01-15T14:00:00Z",
       dtendTime: "2025-01-15T15:00:00Z",
+      status: "confirmed",
+      isException: false,
+      isRecurring: false,
     },
     {
       id: "3",
+      uid: "uid-3",
       title: "Event 3",
       dtstartTime: "2025-01-16T09:00:00Z",
       dtendTime: "2025-01-16T10:00:00Z",
+      status: "confirmed",
+      isException: false,
+      isRecurring: false,
     },
   ];
 
@@ -106,9 +118,13 @@ describe("generateMonthDays", () => {
   const mockEvents: EventSmall[] = [
     {
       id: "1",
+      uid: "uid-1",
       title: "Event 1",
       dtstartTime: "2025-01-15T10:00:00Z",
       dtendTime: "2025-01-15T11:00:00Z",
+      status: "confirmed",
+      isException: false,
+      isRecurring: false,
     },
   ];
 
@@ -173,9 +189,13 @@ describe("generateMonthDays", () => {
     const events: EventSmall[] = [
       {
         id: "1",
+        uid: "uid-1",
         title: "Event on 15th",
         dtstartTime: "2025-01-15T10:00:00Z",
         dtendTime: "2025-01-15T11:00:00Z",
+        status: "confirmed",
+        isException: false,
+        isRecurring: false,
       },
     ];
 

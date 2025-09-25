@@ -1,4 +1,3 @@
-import matter from "gray-matter";
 import rehypeSanitize, { defaultSchema } from "rehype-sanitize";
 import rehypeStringify from "rehype-stringify";
 import remarkGfm from "remark-gfm";
@@ -16,14 +15,4 @@ export async function parseMarkdown(content: string): Promise<string> {
 
   const result = await processor.process(content);
   return String(result);
-}
-
-/**
- * Extract frontmatter if you need it (keeping this since you use it)
- */
-export function extractFrontmatter(
-  content: string,
-): [Record<string, any>, string] {
-  const { data, content: markdownContent } = matter(content);
-  return [data, markdownContent];
 }

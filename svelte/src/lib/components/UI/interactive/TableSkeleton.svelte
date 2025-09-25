@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { fade } from "svelte/transition";
+
   const { rows = 8 } = $props();
 
   const columns = 5;
