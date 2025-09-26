@@ -115,7 +115,7 @@
 {#if data.decksPaginated.data.length}
   {#if role === "s"}
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      {#each data.decksPaginatedd.data as deck (deck.id)}
+      {#each data.decksPaginated.data as deck (deck.id)}
         <DeckCard {deck} />
       {/each}
     </div>
