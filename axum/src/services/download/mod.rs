@@ -3,7 +3,7 @@ use axum::{
     http::{StatusCode, header},
     response::Response,
 };
-use comrak::Options;
+use comrak::{ComrakOptions, Options, markdown_to_html};
 use reqwest::multipart;
 use serde::Deserialize;
 use std::io::Write;
@@ -14,18 +14,39 @@ pub struct PdfGenerationRequest {
     pub html_content: String,
     pub css_content: Option<String>,
 }
+fn render_markdown_page(markdown: &str, css_path: &str) -> String {
+    let mut options = Options::default();
+    options.extension.table = true;
+    let content = markdown_to_html(markdown, &options);
 
+    let topic = "Flying Whales";
+    format!(
+        r#"<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="{}">
+    <title>Document</title>
+</head>
+<body>
+<h1>{}</h1>
+    <article>
+        {}
+    </article>
+</body>
+</html>"#,
+        css_path, topic, content
+    )
+}
 pub async fn generate_report_zip() -> Result<Response, AppError> {
     let css = fs::read_to_string("./mdconfig.css")?;
 
     let raw = fs::read_to_string("./input.md")?;
 
-    let mut options = Options::default();
-    options.extension.table = true;
+    let html = render_markdown_page(&raw, "mdconfig.css");
 
-    let html = comrak::markdown_to_html(&raw, &options);
-
-    // 1. Préparer le multipart pour Gotenberg
     let mut form = multipart::Form::new();
 
     form = form.part(
@@ -38,11 +59,10 @@ pub async fn generate_report_zip() -> Result<Response, AppError> {
     form = form.part(
         "files",
         multipart::Part::text(css)
-            .file_name("style.css")
+            .file_name("mdconfig.css")
             .mime_str("text/css")?,
     );
 
-    // 2. Appeler Gotenberg
     let client = reqwest::Client::new();
     let gotenberg_response = client
         .post(&format!(

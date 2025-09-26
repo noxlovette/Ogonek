@@ -1,69 +1,104 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,500;1,400&display=swap");
-
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
-
-body {
-  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
-    sans-serif;
-  line-height: 1.6;
-  color: #292524; /* stone-800 */
-  background: white;
-  font-size: 16px;
-  max-width: 100%;
-}
-
-/* Headings - inspiré de tes styles */
-h1 {
-  font-size: 2.25rem; /* text-4xl */
-  font-weight: 600;
-  color: #1c1917; /* stone-900 */
-  margin: 2rem 0 1rem 0;
-  padding-left: 1rem;
-  border-left: 4px solid #d6d3d1; /* stone-300 */
-  letter-spacing: -0.025em;
-}
-
-h2 {
-  font-size: 1.5rem; /* text-2xl */
-  font-weight: 500;
-  color: #292524; /* stone-800 */
-  margin: 1.5rem 0 0.75rem 0;
-  background: #f5f5f4; /* stone-100 */
-  padding: 0.25rem 0.75rem;
-  border-radius: 0.25rem;
-}
-
+h1,
+h2,
 h3 {
-  font-size: 1.125rem; /* text-lg */
+  margin-top: 18pt;
+}
+
+/* Default Body */
+body {
+  font-family: "Atkinson Hyperlegible", sans-serif;
+  position: relative;
+  font-weight: 400;
+  letter-spacing: -0.31pt;
+  line-height: 18pt;
+  background: oklch(98.5% 0.001 106.423);
+  color: oklch(14.7% 0.004 49.25);
+  font-size: 13pt;
+  padding: 2.5cm 3cm;
+}
+
+html::after {
+  content: "Ogonëk";
+  font-family: "Lora", serif;
   font-weight: 500;
-  color: #44403c; /* stone-700 */
-  margin: 1rem 0 0.5rem 0;
+  font-size: 72pt;
+  color: oklch(70.9% 0.01 56.259);
+  position: fixed; /* Changed from absolute to fixed */
+  top: 50%;
+  transform-origin: left center; /* Better anchor point */
+  transform: translateY(-50%) rotate(-90deg);
+  left: 48px; /* Small margin from edge instead of 0 */
+  letter-spacing: 1pt;
+  opacity: 0.12;
+  pointer-events: none;
+  z-index: -1; /* Behind content instead of 0 */
 }
 
-/* Paragraphes */
+article {
+  padding: 0;
+  position: relative;
+}
+
+/* Large Title */
+h1 {
+  font-size: 26pt;
+  letter-spacing: 0.22pt;
+  line-height: 37pt;
+}
+
+/* Title 1 */
+article h1 {
+  font-size: 22pt;
+  line-height: 31pt;
+  letter-spacing: -0.26pt;
+  font-weight: 700;
+  margin: 18pt 0 18pt 0;
+  letter-spacing: -0.025em;
+  page-break-after: avoid;
+}
+
+/* Title 2 */
+h2 {
+  font-size: 17pt;
+  letter-spacing: -0.43pt;
+  line-height: 24pt;
+  margin: 15pt 0 9pt 0;
+  page-break-after: avoid;
+}
+
+/* Headline */
+h3 {
+  font-size: 13pt;
+  line-height: 18pt;
+  font-weight: 700;
+  letter-spacing: -0.08pt;
+  margin: 12pt 0 6pt 0;
+  page-break-after: avoid;
+}
+
+/* Paragraphs - print spacing */
 p {
-  margin-bottom: 1rem;
-  font-size: 17px;
-  line-height: 1.7;
-  color: #292524; /* stone-800 */
+  margin-bottom: 12pt;
+  text-align: justify;
+  hyphens: auto;
 }
 
-/* Listes */
 ul,
 ol {
-  margin: 0.5rem 0 0.5rem 1.25rem;
+  margin: 12pt 0 12pt 18pt;
   list-style: none;
 }
 
 li {
   position: relative;
-  padding-left: 1.5rem;
-  margin-bottom: 0.375rem;
-  color: #44403c; /* stone-700 */
+  padding-left: 18pt;
+  margin-bottom: 6pt;
+  page-break-inside: avoid;
 }
 
 li::before {
@@ -71,57 +106,56 @@ li::before {
   position: absolute;
   left: 0;
   font-weight: bold;
-  color: #a8a29e; /* stone-400 */
 }
 
-/* Links - version print-friendly */
+/* Links - no URLs by default for print */
 a {
-  color: #1c1917; /* stone-900 */
   text-decoration: underline;
-  text-underline-offset: 2px;
-  text-decoration-thickness: 1px;
+  text-underline-offset: 1pt;
+  text-decoration-thickness: 0.5pt;
 }
 
+/* Hide URLs by default (too cluttered for print) */
 a::after {
-  content: " (" attr(href) ")";
-  font-size: 0.875rem;
-  color: #78716c; /* stone-500 */
-  font-style: italic;
+  display: none;
 }
 
-/* Blockquotes */
+/* Your blockquote style, print-optimized */
 blockquote {
-  margin: 1rem 0;
-  padding: 0.5rem 0 0.5rem 3rem;
-  border-left: 4px solid #d6d3d1; /* stone-300 */
-  background: #fafaf9; /* stone-50 */
+  margin: 18pt 0; /* était 9pt */
+  padding: 12pt 0 12pt 36pt; /* était 6pt - plus de padding vertical */
+  border-left: 2pt solid #666;
+  background: #f8f8f8;
   font-style: italic;
-  color: #44403c; /* stone-700 */
+  color: #333;
   position: relative;
+  page-break-inside: avoid;
 }
 
-/* Code blocks */
+/* Code - your style but print-friendly */
 pre {
-  margin: 1.5rem 0;
-  padding: 1rem;
-  background: #1c1917; /* stone-900 */
-  color: #f5f5f4; /* stone-100 */
+  margin: 12pt 0;
+  padding: 9pt;
+  background: #f0f0f0; /* Lighter for print */
+  color: #000;
   font-family: "SF Mono", "Monaco", "Inconsolata", "Roboto Mono", monospace;
-  font-size: 0.875rem;
-  border-radius: 0.5rem;
-  border-top: 2px solid #44403c; /* stone-700 */
-  overflow-x: auto;
-  line-height: 1.5;
+  font-size: 9pt;
+  border-radius: 3pt;
+  border-top: 1pt solid #666;
+  overflow: visible; /* Let it break naturally */
+  line-height: 1.3;
+  page-break-inside: avoid;
+  white-space: pre-wrap; /* Allow wrapping */
 }
 
 code {
   font-family: "SF Mono", "Monaco", "Inconsolata", "Roboto Mono", monospace;
-  font-size: 0.875rem;
-  padding: 0.125rem 0.375rem;
-  background: #f5f5f4; /* stone-100 */
-  color: #292524; /* stone-800 */
-  border: 1px solid #e7e5e4; /* stone-200 */
-  border-radius: 0.25rem;
+  font-size: 9pt;
+  padding: 1pt 3pt;
+  background: #f0f0f0;
+  color: #000;
+  border: 0.5pt solid #ccc;
+  border-radius: 2pt;
 }
 
 pre code {
@@ -131,113 +165,105 @@ pre code {
   color: inherit;
 }
 
-/* Tables */
 table {
   width: 100%;
-  margin: 1.5rem 0;
+  margin: 12pt 0;
   border-collapse: collapse;
-  border: 1px solid #d6d3d1; /* stone-300 */
+  page-break-inside: avoid;
 }
 
 th {
-  padding: 0.75rem;
+  padding: 6pt 9pt;
   text-align: left;
-  font-weight: 500;
-  font-size: 0.875rem;
-  background: #f5f5f4; /* stone-100 */
-  color: #44403c; /* stone-700 */
-  border-bottom: 1px solid #d6d3d1; /* stone-300 */
+  font-weight: 700;
+  font-size: 11pt;
+  letter-spacing: 0.06;
+  background: oklch(0.923 0.003 48.717);
 }
 
 td {
-  padding: 0.75rem;
-  font-size: 0.875rem;
-  color: #44403c; /* stone-700 */
-  border-bottom: 1px solid #e7e5e4; /* stone-200 */
+  padding: 6pt 9pt;
+  color: #000;
 }
 
 tr:nth-child(even) td {
-  background: #fafaf9; /* stone-50 */
+  background: oklch(0.97 0.001 106.424);
 }
 
-/* Images */
+/* Images - print constrained */
 img {
   max-width: 100%;
   height: auto;
-  margin: 1.5rem 0;
-  border-radius: 0.5rem;
+  margin: 12pt 0;
+  border-radius: 3pt;
+  max-height: 6cm; /* Reasonable print height */
+  page-break-inside: avoid;
 }
 
-/* HR */
+/* HR - simpler for print */
 hr {
-  margin: 2rem 0;
+  margin: 18pt 0;
   border: none;
-  border-top: 2px solid #d6d3d1; /* stone-300 */
+  border-top: 1pt solid #666;
   background: none;
   height: 0;
+  page-break-after: avoid;
 }
 
-/* Callouts adaptés pour PDF */
+/* Your callouts, print-adapted */
 .info-callout {
-  margin: 1rem 0;
-  padding: 1rem;
-  border: 1px solid #d6d3d1; /* stone-300 */
-  background: #f5f5f4; /* stone-100 */
-  border-radius: 0.5rem;
+  margin: 9pt 0;
+  padding: 9pt;
+  border: 0.5pt solid #666;
+  background: #f5f5f5;
+  border-radius: 3pt;
+  page-break-inside: avoid;
 }
 
 .info-callout::before {
   content: "ℹ️ ";
-  color: #78716c; /* stone-500 */
+  color: #666;
 }
 
 .warning-callout {
-  margin: 1rem 0;
-  padding: 1rem;
-  border: 1px solid #f59e0b; /* amber-500 */
-  background: #fffbeb; /* amber-50 */
-  border-radius: 0.5rem;
+  margin: 9pt 0;
+  padding: 9pt;
+  border: 1pt solid #000;
+  background: #f0f0f0;
+  border-radius: 3pt;
+  page-break-inside: avoid;
 }
 
 .warning-callout::before {
   content: "⚠️ ";
-  color: #d97706; /* amber-600 */
+  color: #000;
 }
 
-/* Print optimizations */
+/* Print optimizations - enhanced */
 @media print {
-  body {
-    font-size: 12pt;
-    line-height: 1.4;
-  }
-
-  h1 {
-    font-size: 20pt;
-    page-break-after: avoid;
-  }
-
-  h2 {
-    font-size: 16pt;
-    page-break-after: avoid;
-  }
-
-  h3 {
-    font-size: 14pt;
-    page-break-after: avoid;
+  p,
+  li {
+    orphans: 3;
+    widows: 3;
   }
 
   pre,
   blockquote,
-  table {
-    page-break-inside: avoid;
-  }
-
+  table,
   img {
     page-break-inside: avoid;
-    max-height: 250px;
   }
 
-  a::after {
-    font-size: 10pt;
+  /* Page setup */
+  @page {
+    size: A4;
+  }
+}
+
+/* Screen preview to simulate print */
+@media screen {
+  body {
+    max-width: 21cm;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   }
 }
