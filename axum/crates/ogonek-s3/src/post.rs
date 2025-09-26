@@ -1,7 +1,7 @@
-use crate::{error::AppError, s3::S3Provider};
+use crate::{S3Provider, error::S3Error};
 
 impl S3Provider {
-    pub async fn delete_s3(&self, s3_key: &String) -> Result<(), AppError> {
+    pub async fn delete_s3(&self, s3_key: &String) -> Result<(), S3Error> {
         self.client
             .delete_object()
             .bucket(self.bucket_name.clone())
@@ -14,7 +14,7 @@ impl S3Provider {
                     s3_key = %s3_key,
                     "Failed to delete object from S3"
                 );
-                AppError::from(err)
+                S3Error::from(err)
             })?;
 
         tracing::info!(s3_key = %s3_key, "File deletion completed successfully");

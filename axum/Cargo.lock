@@ -2265,9 +2265,14 @@ dependencies = [
 name = "ogonek_s3"
 version = "0.1.0"
 dependencies = [
+ "anyhow",
  "aws-config",
  "aws-credential-types",
  "aws-sdk-s3",
+ "axum",
+ "ogonek_types",
+ "thiserror 2.0.16",
+ "tracing",
 ]
 
 [[package]]

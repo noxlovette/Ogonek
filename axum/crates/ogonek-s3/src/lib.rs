@@ -1,10 +1,8 @@
+mod error;
 mod get;
 mod multipart;
 mod post;
-
-pub use get::*;
-pub use multipart::*;
-pub use post::*;
+pub use error::*;
 
 use anyhow::Context;
 

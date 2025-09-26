@@ -1,4 +1,4 @@
-use crate::{error::AppError, s3::S3Provider};
+use crate::{S3Error, S3Provider};
 use axum::http::StatusCode;
 
 impl S3Provider {
@@ -6,7 +6,7 @@ impl S3Provider {
         &self,
         key: String,
         filename: String,
-    ) -> Result<String, AppError> {
+    ) -> Result<String, S3Error> {
         tracing::debug!("presigning url");
         let presigned_req = self
             .client
@@ -18,17 +18,17 @@ impl S3Provider {
                 std::time::Duration::from_secs(15 * 60),
             )?)
             .await
-            .map_err(|e| AppError::Internal(format!("Failed to create presigned URL: {e}")))?;
+            .map_err(|e| S3Error::Internal(format!("Failed to create presigned URL: {e}")))?;
 
         let presigned_url = presigned_req.uri().to_string();
 
         Ok(presigned_url)
     }
 
-    pub async fn check_s3_connection(&self) -> Result<StatusCode, AppError> {
+    pub async fn check_s3_connection(&self) -> Result<StatusCode, S3Error> {
         let result = self.client.list_buckets().send().await.map_err(|e| {
             tracing::error!("S3 connection test failed: {e:?}");
-            AppError::Internal(format!("S3 connection test failed: {e}"))
+            S3Error::Internal(format!("S3 connection test failed: {e}"))
         })?;
 
         let bucket_count = result.buckets().len();

@@ -1,9 +1,6 @@
-use crate::{
-    error::AppError,
-    s3::S3Provider,
-    types::{CompletedPart, MultipartInitResultS3, PartUploadUrl},
-};
+use crate::{S3Provider, error::S3Error};
 use aws_sdk_s3::presigning::PresigningConfig;
+use ogonek_types::{CompletedPart, MultipartInitResultS3, PartUploadUrl};
 use std::error::Error;
 
 impl S3Provider {
@@ -13,7 +10,7 @@ impl S3Provider {
         s3_key: &str,
         content_type: &str,
         total_parts: i32,
-    ) -> Result<MultipartInitResultS3, AppError> {
+    ) -> Result<MultipartInitResultS3, S3Error> {
         // Create multipart upload in S3
         let response = self
             .client
@@ -23,11 +20,11 @@ impl S3Provider {
             .content_type(content_type)
             .send()
             .await
-            .map_err(|e| AppError::Internal(format!("Failed to create multipart upload: {e}")))?;
+            .map_err(|e| S3Error::Internal(format!("Failed to create multipart upload: {e}")))?;
 
         let upload_id = response
             .upload_id()
-            .ok_or(AppError::BadRequest("Missing upload ID".into()))?;
+            .ok_or(S3Error::BadRequest("Missing upload ID".into()))?;
 
         // Generate presigned URLs for each part
         let mut presigned_urls = Vec::new();
@@ -43,9 +40,7 @@ impl S3Provider {
                     std::time::Duration::from_secs(3600),
                 )?)
                 .await
-                .map_err(|e| {
-                    AppError::Internal(format!("Failed to generate presigned URL: {e}"))
-                })?;
+                .map_err(|e| S3Error::Internal(format!("Failed to generate presigned URL: {e}")))?;
 
             presigned_urls.push(PartUploadUrl {
                 part_number,
@@ -64,7 +59,7 @@ impl S3Provider {
         s3_key: &str,
         upload_id: &str,
         parts: Vec<CompletedPart>,
-    ) -> Result<(), AppError> {
+    ) -> Result<(), S3Error> {
         let mut parts = parts;
         parts.sort_by_key(|p| p.part_number);
 
@@ -98,14 +93,14 @@ impl S3Provider {
                 if let Some(source) = e.source() {
                     tracing::error!("Inner error: {:?}", source);
                 }
-                Err(AppError::Internal(format!(
+                Err(S3Error::Internal(format!(
                     "Failed to complete multipart upload: {e}"
                 )))
             }
         }
     }
 
-    pub async fn abort_multipart_s3(&self, s3_key: &str, upload_id: &str) -> Result<(), AppError> {
+    pub async fn abort_multipart_s3(&self, s3_key: &str, upload_id: &str) -> Result<(), S3Error> {
         self.client
             .abort_multipart_upload()
             .bucket(self.bucket_name.clone())
@@ -113,7 +108,7 @@ impl S3Provider {
             .upload_id(upload_id)
             .send()
             .await
-            .map_err(|e| AppError::Internal(format!("Failed to abort multipart upload: {e}")))?;
+            .map_err(|e| S3Error::Internal(format!("Failed to abort multipart upload: {e}")))?;
 
         Ok(())
     }
