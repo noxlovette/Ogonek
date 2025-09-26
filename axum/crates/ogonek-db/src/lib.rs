@@ -1,6 +1,9 @@
 pub mod crud;
 pub mod error;
-pub mod helpers;
+
+pub use crud::*;
+
+mod helpers;
 use anyhow::Context;
 use chrono::Offset;
 use chrono_tz::TZ_VARIANTS;

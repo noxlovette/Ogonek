@@ -1,4 +1,4 @@
-use crate::types::{
+use crate::{
     ActivityLog, DeckSmall, LessonSmall, Profile, SimpleStats, Student, TaskSmall, User,
     UserPreferences,
 };

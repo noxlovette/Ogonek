@@ -2,7 +2,7 @@ use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use sqlx::prelude::FromRow;
 
-use crate::types::datetime_serialization;
+use crate::datetime_serialization;
 
 #[derive(Serialize, ToSchema)]
 #[serde(rename_all = "camelCase")]

@@ -1,4 +1,4 @@
-use crate::types::datetime_serialization;
+use crate::datetime_serialization;
 use chrono::{DateTime, Utc};
 use serde::Serialize;
 use utoipa::ToSchema;

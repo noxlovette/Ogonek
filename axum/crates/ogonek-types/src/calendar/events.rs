@@ -1,4 +1,4 @@
-use crate::types::{
+use crate::{
     DeleteScope, EditScope, EventAttendee, EventClass, EventStatus, EventTransp,
     datetime_serialization,
 };

@@ -1,7 +1,8 @@
-use crate::types::datetime_serialization;
+use crate::datetime_serialization;
 use serde::{Deserialize, Serialize};
 use std::str::FromStr;
 use utoipa::ToSchema;
+
 #[derive(sqlx::FromRow, Serialize, Deserialize, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct Content {

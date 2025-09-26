@@ -1,0 +1,13 @@
+[package]
+name = "ogonek_db"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+sqlx = { workspace = true, features = [
+    "runtime-tokio",
+    "tls-rustls-ring",
+    "postgres",
+    "uuid",
+    "migrate",
+    ] }
