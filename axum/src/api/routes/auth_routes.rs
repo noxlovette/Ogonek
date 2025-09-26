@@ -1,7 +1,5 @@
-use crate::api::account;
-use crate::schema::AppState;
-use axum::Router;
-use axum::routing::post;
+use crate::{api::account, schema::AppState};
+use axum::{Router, routing::post};
 
 pub fn auth_routes() -> Router<AppState> {
     Router::new()

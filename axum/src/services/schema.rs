@@ -1,6 +1,4 @@
-use crate::db::init_db;
-use crate::notifications::NotificationService;
-use crate::s3::S3Provider;
+use crate::{db::init_db, notifications::NotificationService, s3::S3Provider};
 use sqlx::postgres::PgPool;
 #[derive(Clone, Debug)]
 pub struct AppState {

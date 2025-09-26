@@ -1,5 +1,4 @@
-use crate::error::AppError;
-use crate::s3::S3Provider;
+use crate::{error::AppError, s3::S3Provider};
 use axum::http::StatusCode;
 
 impl S3Provider {

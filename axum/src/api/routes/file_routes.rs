@@ -1,8 +1,8 @@
-use crate::api::files;
-use crate::schema::AppState;
-use crate::services::generate_report_zip;
-use axum::Router;
-use axum::routing::{delete, get, post};
+use crate::{api::files, schema::AppState, services::generate_report_zip};
+use axum::{
+    Router,
+    routing::{delete, get, post},
+};
 
 pub fn file_routes() -> Router<AppState> {
     Router::new()

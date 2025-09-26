@@ -1,13 +1,16 @@
-use crate::api::TASK_TAG;
-use crate::api::error::APIError;
-use crate::auth::Claims;
-use crate::crud::core::task::{self, toggle};
-use crate::db::crud::{core::task::find_assignee, tracking::log_activity};
-use crate::schema::AppState;
-use crate::services::messages::NotificationType;
-use crate::types::{ActionType, ModelType, TaskWithFilesResponse};
-use axum::extract::{Path, State};
-use axum::http::StatusCode;
+use crate::{
+    api::{TASK_TAG, error::APIError},
+    auth::Claims,
+    crud::core::task::{self, toggle},
+    db::crud::{core::task::find_assignee, tracking::log_activity},
+    schema::AppState,
+    services::messages::NotificationType,
+    types::{ActionType, ModelType, TaskWithFilesResponse},
+};
+use axum::{
+    extract::{Path, State},
+    http::StatusCode,
+};
 
 /// Toggles completed/not completed on a task
 #[utoipa::path(

@@ -1,6 +1,7 @@
-use crate::api::error::APIError;
-use crate::db::crud::content;
-use crate::{openapi::CONTENT_TAG, schema::AppState, types::ContentPublic};
+use crate::{
+    api::error::APIError, db::crud::content, openapi::CONTENT_TAG, schema::AppState,
+    types::ContentPublic,
+};
 use axum::{
     Json,
     extract::{Path, State},

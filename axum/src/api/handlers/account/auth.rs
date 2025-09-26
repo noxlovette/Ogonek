@@ -1,15 +1,21 @@
-use crate::api::AUTH_TAG;
-use crate::api::error::APIError;
-use crate::auth::password::{hash_password, verify_password};
-use crate::auth::tokens::{self, decode_token, generate_token};
-use crate::db::crud::core::account::auth;
-use crate::schema::AppState;
-use crate::services::AuthError;
-use crate::services::Claims;
-use crate::types::{AuthPayload, BindPayload, SignUpPayload, TokenPair, UserRole};
-use crate::types::{InviteQuery, RefreshTokenPayload, RefreshTokenResponse};
-use axum::extract::{Json, Query, State};
-use axum::http::StatusCode;
+use crate::{
+    api::{AUTH_TAG, error::APIError},
+    auth::{
+        password::{hash_password, verify_password},
+        tokens::{self, decode_token, generate_token},
+    },
+    db::crud::core::account::auth,
+    schema::AppState,
+    services::{AuthError, Claims},
+    types::{
+        AuthPayload, BindPayload, InviteQuery, RefreshTokenPayload, RefreshTokenResponse,
+        SignUpPayload, TokenPair, UserRole,
+    },
+};
+use axum::{
+    extract::{Json, Query, State},
+    http::StatusCode,
+};
 use validator::Validate;
 #[utoipa::path(
     post,

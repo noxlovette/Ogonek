@@ -1,8 +1,10 @@
 use super::card::{self, batch_upsert, delete_cards};
-use crate::db::error::DbError;
-use crate::types::{
-    CardUpsert, DeckCreate, DeckFull, DeckPublic, DeckSmall, DeckWithCards, DeckWithCardsUpdate,
-    PaginationParams,
+use crate::{
+    db::error::DbError,
+    types::{
+        CardUpsert, DeckCreate, DeckFull, DeckPublic, DeckSmall, DeckWithCards,
+        DeckWithCardsUpdate, PaginationParams,
+    },
 };
 use sqlx::PgPool;
 
@@ -391,8 +393,10 @@ pub async fn count(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::tests::create_test_user;
-    use crate::types::{CardUpsert, DeckUpdate};
+    use crate::{
+        tests::create_test_user,
+        types::{CardUpsert, DeckUpdate},
+    };
     use sqlx::PgPool;
 
     // Helper function to create a test deck

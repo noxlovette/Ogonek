@@ -1,21 +1,23 @@
-use crate::api::LESSON_TAG;
-use crate::api::error::APIError;
-use crate::auth::Claims;
-use crate::db::crud::core::lesson;
-use crate::db::crud::photo;
-use crate::db::crud::tracking::{self, activity::log_activity};
-use crate::notifications::messages::NotificationType;
-use crate::schema::AppState;
-use crate::types::{
-    ActionType, LessonSmall, LessonUpdate, LessonWithPhoto, ModelType, PaginatedLessons,
-    PaginatedResponse, PaginationParams, Photo, UpsertPhoto,
+use crate::{
+    api::{LESSON_TAG, error::APIError},
+    auth::Claims,
+    db::crud::{
+        core::lesson,
+        photo,
+        tracking::{self, activity::log_activity},
+    },
+    notifications::messages::NotificationType,
+    schema::AppState,
+    types::{
+        ActionType, LessonSmall, LessonUpdate, LessonWithPhoto, ModelType, PaginatedLessons,
+        PaginatedResponse, PaginationParams, Photo, UpsertPhoto,
+    },
 };
-use axum::extract::Path;
-use axum::extract::State;
-use axum::extract::{Json, Query};
-use axum::http::StatusCode;
-use utoipa_axum::router::OpenApiRouter;
-use utoipa_axum::routes;
+use axum::{
+    extract::{Json, Path, Query, State},
+    http::StatusCode,
+};
+use utoipa_axum::{router::OpenApiRouter, routes};
 
 pub fn router() -> OpenApiRouter<AppState> {
     OpenApiRouter::new().routes(routes!(

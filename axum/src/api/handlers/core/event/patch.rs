@@ -1,11 +1,14 @@
-use crate::api::CALENDAR_TAG;
-use crate::api::error::APIError;
-use crate::auth::Claims;
-use crate::db::crud::core::calendar::event::update;
-use crate::schema::AppState;
-use crate::types::{EventUpdate, EventUpdateRequest};
-use axum::extract::{Json, Path, State};
-use axum::http::StatusCode;
+use crate::{
+    api::{CALENDAR_TAG, error::APIError},
+    auth::Claims,
+    db::crud::core::calendar::event::update,
+    schema::AppState,
+    types::{EventUpdate, EventUpdateRequest},
+};
+use axum::{
+    extract::{Json, Path, State},
+    http::StatusCode,
+};
 
 /// Update an event
 #[utoipa::path(

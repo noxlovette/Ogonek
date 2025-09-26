@@ -1,15 +1,20 @@
-use crate::api::TASK_TAG;
-use crate::api::error::APIError;
-use crate::auth::Claims;
-use crate::crud::core::task::{self, update};
-use crate::crud::tracking::seen;
-use crate::db::crud::{core::task::find_assignee, tracking::log_activity};
-use crate::schema::AppState;
-use crate::services::messages::NotificationType;
-use crate::types::{ActionType, ModelType, TaskUpdate};
-use axum::Json;
-use axum::extract::{Path, State};
-use axum::http::StatusCode;
+use crate::{
+    api::{TASK_TAG, error::APIError},
+    auth::Claims,
+    crud::{
+        core::task::{self, update},
+        tracking::seen,
+    },
+    db::crud::{core::task::find_assignee, tracking::log_activity},
+    schema::AppState,
+    services::messages::NotificationType,
+    types::{ActionType, ModelType, TaskUpdate},
+};
+use axum::{
+    Json,
+    extract::{Path, State},
+    http::StatusCode,
+};
 
 #[utoipa::path(
     patch,

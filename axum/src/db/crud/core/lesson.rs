@@ -1,5 +1,7 @@
-use crate::db::error::DbError;
-use crate::types::{LessonCreate, LessonFull, LessonSmall, LessonUpdate, PaginationParams};
+use crate::{
+    db::error::DbError,
+    types::{LessonCreate, LessonFull, LessonSmall, LessonUpdate, PaginationParams},
+};
 use sqlx::PgPool;
 
 /// Finds a list of mini-lessons (no markdown) according to passed Pagination params
@@ -239,8 +241,10 @@ pub async fn count(db: &PgPool, user_id: &str) -> Result<i64, DbError> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::tests::create_test_user;
-    use crate::types::{LessonCreate, LessonUpdate, PaginationParams};
+    use crate::{
+        tests::create_test_user,
+        types::{LessonCreate, LessonUpdate, PaginationParams},
+    };
     use sqlx::PgPool;
 
     #[sqlx::test]

@@ -1,5 +1,4 @@
-use crate::api::account::*;
-use crate::types::DashboardData;
+use crate::{api::account::*, types::DashboardData};
 use utoipa::OpenApi;
 
 #[derive(OpenApi)]

@@ -144,8 +144,7 @@ impl From<MultipartError> for AppError {
 }
 
 use aws_credential_types::provider::error::CredentialsError;
-use aws_sdk_s3::error::SdkError;
-use aws_sdk_s3::presigning::PresigningConfigError;
+use aws_sdk_s3::{error::SdkError, presigning::PresigningConfigError};
 use utoipa::ToSchema;
 use zip::result::ZipError;
 

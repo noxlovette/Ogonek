@@ -1,6 +1,8 @@
-use crate::auth::error::AuthError;
-use crate::db::error::DbError;
-use crate::types::{AuthPayload, SignUpPayload, User};
+use crate::{
+    auth::error::AuthError,
+    db::error::DbError,
+    types::{AuthPayload, SignUpPayload, User},
+};
 use nanoid::nanoid;
 use sqlx::PgPool;
 
@@ -189,7 +191,7 @@ mod tests {
         // Now test authorisation
         let auth_payload = AuthPayload {
             username: "janedoe".to_string(),
-            pass: "plainpassword456".to_string(), // Note: this would normally be checked against the hash
+            pass: "plainpassword456".to_string(), /* Note: this would normally be checked against the hash */
         };
 
         let result = authorise(&pool, &auth_payload).await;

@@ -1,10 +1,11 @@
-use crate::db::crud::core::account::profile;
-use crate::db::crud::core::account::student;
-use crate::db::crud::notifications::get_device_tokens;
-use crate::notifications::messages::NotificationType;
-use crate::notifications::telegram::TelegramProvider;
-use crate::services::AppError;
-use crate::services::notifications::apns::ApnsProvider;
+use crate::{
+    db::crud::{
+        core::account::{profile, student},
+        notifications::get_device_tokens,
+    },
+    notifications::{messages::NotificationType, telegram::TelegramProvider},
+    services::{AppError, notifications::apns::ApnsProvider},
+};
 
 use sqlx::PgPool;
 use tracing::info;

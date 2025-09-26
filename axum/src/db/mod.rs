@@ -5,9 +5,10 @@ use anyhow::Context;
 use chrono::Offset;
 use chrono_tz::TZ_VARIANTS;
 use dotenvy::dotenv;
-use sqlx::migrate::Migrator;
-use sqlx::postgres::PgPool;
-use sqlx::postgres::PgPoolOptions;
+use sqlx::{
+    migrate::Migrator,
+    postgres::{PgPool, PgPoolOptions},
+};
 
 static MIGRATOR: Migrator = sqlx::migrate!();
 

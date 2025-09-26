@@ -1,11 +1,14 @@
-use crate::api::CALENDAR_TAG;
-use crate::api::error::APIError;
-use crate::auth::Claims;
-use crate::db::crud::core::calendar::cal::{delete, get_or_create, update};
-use crate::schema::AppState;
-use crate::types::{CalendarFull, CalendarUpdate};
-use axum::extract::{Json, Path, State};
-use axum::http::StatusCode;
+use crate::{
+    api::{CALENDAR_TAG, error::APIError},
+    auth::Claims,
+    db::crud::core::calendar::cal::{delete, get_or_create, update},
+    schema::AppState,
+    types::{CalendarFull, CalendarUpdate},
+};
+use axum::{
+    extract::{Json, Path, State},
+    http::StatusCode,
+};
 
 /// Get the user's calendar
 #[utoipa::path(

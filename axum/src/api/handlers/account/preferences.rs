@@ -1,11 +1,15 @@
 // src/api/account/preferences.rs
-use crate::api::error::APIError;
-use crate::auth::Claims;
-use crate::db::crud::core::account::preferences;
-use crate::schema::AppState;
-use crate::types::preferences::{UserPreferencesResponse, UserPreferencesUpdate};
-use axum::extract::{Json, State};
-use axum::http::StatusCode;
+use crate::{
+    api::error::APIError,
+    auth::Claims,
+    db::crud::core::account::preferences,
+    schema::AppState,
+    types::preferences::{UserPreferencesResponse, UserPreferencesUpdate},
+};
+use axum::{
+    extract::{Json, State},
+    http::StatusCode,
+};
 
 pub async fn get_preferences(
     State(state): State<AppState>,

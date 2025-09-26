@@ -267,7 +267,7 @@ impl RRule {
                                 .with_month(month as u32)
                                 .unwrap()
                         }
-                        Frequency::Yearly => current + Duration::days(365 * self.interval as i64), // Rough
+                        Frequency::Yearly => current + Duration::days(365 * self.interval as i64), /* Rough */
                     };
 
                     count += 1;

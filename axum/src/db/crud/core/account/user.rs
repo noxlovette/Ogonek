@@ -1,5 +1,7 @@
-use crate::db::error::DbError;
-use crate::types::{User, UserRole, UserUpdate};
+use crate::{
+    db::error::DbError,
+    types::{User, UserRole, UserUpdate},
+};
 use sqlx::PgPool;
 
 pub async fn find_by_id(db: &PgPool, user_id: &str) -> Result<User, DbError> {
@@ -108,9 +110,11 @@ pub async fn get_name(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::db::error::DbError;
-    use crate::tests::{cleanup_user, create_test_user};
-    use crate::types::UserUpdate;
+    use crate::{
+        db::error::DbError,
+        tests::{cleanup_user, create_test_user},
+        types::UserUpdate,
+    };
     use sqlx::PgPool;
 
     #[sqlx::test]

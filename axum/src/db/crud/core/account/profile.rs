@@ -1,5 +1,7 @@
-use crate::db::error::DbError;
-use crate::types::{Profile, ProfileUpdate};
+use crate::{
+    db::error::DbError,
+    types::{Profile, ProfileUpdate},
+};
 
 pub async fn find_by_id(
     db: impl sqlx::Executor<'_, Database = sqlx::Postgres>,

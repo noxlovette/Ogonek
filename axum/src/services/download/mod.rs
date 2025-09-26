@@ -3,17 +3,14 @@ use axum::{
     http::{StatusCode, header},
     response::Response,
 };
-use comrak::{ComrakOptions, Options, markdown_to_html};
+use comrak::{Options, markdown_to_html};
 use reqwest::multipart;
-use serde::Deserialize;
-use std::io::Write;
-use std::{fs, io::Cursor};
+use std::{
+    fs,
+    io::{Cursor, Write},
+};
 use zip::ZipWriter;
-#[derive(Deserialize)]
-pub struct PdfGenerationRequest {
-    pub html_content: String,
-    pub css_content: Option<String>,
-}
+
 fn render_markdown_page(markdown: &str, css_path: &str) -> String {
     let mut options = Options::default();
     options.extension.table = true;

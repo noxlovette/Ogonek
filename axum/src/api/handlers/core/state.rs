@@ -1,20 +1,23 @@
-use crate::api::STATE_TAG;
-use crate::api::error::APIError;
-use crate::auth::Claims;
-use crate::db::crud::core::flashcards::deck;
-use crate::db::crud::core::{
-    account,
-    account::{preferences, student, user},
-    flashcards, lesson, task,
+use crate::{
+    api::{STATE_TAG, error::APIError},
+    auth::Claims,
+    db::crud::{
+        core::{
+            account,
+            account::{preferences, student, user},
+            flashcards,
+            flashcards::deck,
+            lesson, task,
+        },
+        tracking::{activity, seen},
+    },
+    schema::AppState,
+    types::{
+        AppContext, DashboardData, ModelType, NotificationBadges, PaginationParams,
+        TaskPaginationParams,
+    },
 };
-use crate::db::crud::tracking::{activity, seen};
-use crate::schema::AppState;
-use crate::types::{
-    AppContext, DashboardData, ModelType, NotificationBadges, PaginationParams,
-    TaskPaginationParams,
-};
-use axum::extract::Json;
-use axum::extract::State;
+use axum::extract::{Json, State};
 
 /// This data populates the dashboard/home view
 #[utoipa::path(

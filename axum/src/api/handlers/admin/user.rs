@@ -1,13 +1,15 @@
-use crate::api::ADMIN_TAG;
-use crate::api::error::APIError;
-use crate::auth::Claims;
-use crate::auth::password::hash_password;
-use crate::db::crud::core::account::{auth, user};
-use crate::db::crud::tracking::audit;
-use crate::schema::AppState;
-use crate::services::AuditBuilder;
-use crate::tools::extractors::RequestMetadata;
-use crate::types::{SignUpPayload, UserRole};
+use crate::{
+    api::{ADMIN_TAG, error::APIError},
+    auth::{Claims, password::hash_password},
+    db::crud::{
+        core::account::{auth, user},
+        tracking::audit,
+    },
+    schema::AppState,
+    services::AuditBuilder,
+    tools::extractors::RequestMetadata,
+    types::{SignUpPayload, UserRole},
+};
 use axum::extract::{Json, State};
 use validator::Validate;
 

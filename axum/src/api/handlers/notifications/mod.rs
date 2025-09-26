@@ -1,12 +1,15 @@
-use crate::api::error::APIError;
-use crate::auth::Claims;
-use crate::db::crud::core::account::user;
-use crate::db::crud::notifications::device_tokens;
-use crate::notifications::messages::NotificationType;
-use crate::schema::AppState;
-use crate::types::DeviceTokenPayload;
-use axum::extract::{Json, State};
-use axum::http::StatusCode;
+use crate::{
+    api::error::APIError,
+    auth::Claims,
+    db::crud::{core::account::user, notifications::device_tokens},
+    notifications::messages::NotificationType,
+    schema::AppState,
+    types::DeviceTokenPayload,
+};
+use axum::{
+    extract::{Json, State},
+    http::StatusCode,
+};
 
 #[utoipa::path(
     post,

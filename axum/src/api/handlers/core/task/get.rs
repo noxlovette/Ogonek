@@ -4,10 +4,13 @@ use axum::{
 };
 
 use crate::{
-    api::TASK_TAG,
+    api::{TASK_TAG, error::APIError},
     auth::Claims,
     crud::{
-        core::{files::file::fetch_files_task, task::find_by_id},
+        core::{
+            files::file::fetch_files_task,
+            task::{find_all, find_by_id},
+        },
         tracking::seen,
     },
     schema::AppState,
@@ -16,7 +19,6 @@ use crate::{
         TaskWithFilesResponse,
     },
 };
-use crate::{api::error::APIError, crud::core::task::find_all};
 
 /// Tasks belonging to a user (through assignment or direct ownership)
 #[utoipa::path(

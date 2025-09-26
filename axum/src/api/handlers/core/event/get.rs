@@ -1,11 +1,11 @@
-use crate::api::CALENDAR_TAG;
-use crate::api::error::APIError;
-use crate::auth::Claims;
-use crate::crud::core::calendar::event::read_one;
-use crate::db::crud::core::calendar::event::read_all;
-use crate::db::crud::core::calendar::event_attendee::find_by_event_id;
-use crate::schema::AppState;
-use crate::services::calendar::extract_id_and_occurence;
+use crate::{
+    api::{CALENDAR_TAG, error::APIError},
+    auth::Claims,
+    crud::core::calendar::event::read_one,
+    db::crud::core::calendar::{event::read_all, event_attendee::find_by_event_id},
+    schema::AppState,
+    services::calendar::extract_id_and_occurence,
+};
 
 use crate::types::{CalendarQuery, EventSmall, EventWithAttendees};
 use axum::extract::{Json, Path, Query, State};

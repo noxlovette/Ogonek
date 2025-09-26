@@ -1,6 +1,4 @@
-use crate::api::handlers::core::calendar::*;
-use crate::api::handlers::core::event::*;
-use crate::api::handlers::core::event_attendee::*;
+use crate::api::handlers::core::{calendar::*, event::*, event_attendee::*};
 use utoipa::OpenApi;
 
 #[derive(OpenApi)]

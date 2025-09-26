@@ -1,8 +1,9 @@
 use crate::auth::claims::{Claims, KEYS};
 
-use crate::auth::error::AuthError;
-use crate::types::TokenWithExpiry;
-use crate::types::{InviteToken, UserRole};
+use crate::{
+    auth::error::AuthError,
+    types::{InviteToken, TokenWithExpiry, UserRole},
+};
 use base64::{Engine as _, engine::general_purpose::URL_SAFE};
 
 use jsonwebtoken::{Algorithm, Header, Validation, decode, encode};

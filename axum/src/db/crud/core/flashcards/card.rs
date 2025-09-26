@@ -1,5 +1,7 @@
-use crate::db::error::DbError;
-use crate::types::{Card, CardUpsert};
+use crate::{
+    db::error::DbError,
+    types::{Card, CardUpsert},
+};
 
 /// Find all cards belonging to a deck
 pub async fn find_all(

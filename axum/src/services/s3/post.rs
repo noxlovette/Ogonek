@@ -1,5 +1,4 @@
-use crate::error::AppError;
-use crate::s3::S3Provider;
+use crate::{error::AppError, s3::S3Provider};
 
 impl S3Provider {
     pub async fn delete_s3(&self, s3_key: &String) -> Result<(), AppError> {

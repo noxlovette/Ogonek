@@ -1,17 +1,16 @@
-use crate::api::ADMIN_TAG;
-use crate::api::error::APIError;
-use crate::auth::Claims;
-use crate::db::crud::content;
-use crate::db::crud::core::account::user;
-use crate::db::crud::tracking::audit;
-use crate::schema::AppState;
-use crate::services::AuditBuilder;
-use crate::tools::extractors::RequestMetadata;
-use crate::types::{Content, UpdateContent};
-use axum::extract::Json;
-use axum::extract::Path;
-use axum::extract::State;
-use axum::http::StatusCode;
+use crate::{
+    api::{ADMIN_TAG, error::APIError},
+    auth::Claims,
+    db::crud::{content, core::account::user, tracking::audit},
+    schema::AppState,
+    services::AuditBuilder,
+    tools::extractors::RequestMetadata,
+    types::{Content, UpdateContent},
+};
+use axum::{
+    extract::{Json, Path, State},
+    http::StatusCode,
+};
 
 /// Fetches content by id (admin interface)
 #[utoipa::path(

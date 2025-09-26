@@ -1,15 +1,21 @@
-use crate::api::error::APIError;
-use crate::auth::Claims;
-use crate::db::crud::core::flashcards::{self, deck};
-use crate::db::crud::tracking::{delete_seen, insert_as_unseen, log_activity, mark_as_seen};
-use crate::notifications::messages::NotificationType;
-use crate::schema::AppState;
-use crate::types::{
-    ActionType, DeckPublic, DeckSmall, DeckWithCards, DeckWithCardsUpdate, ModelType,
-    PaginatedDecks, PaginatedResponse, PaginationParams,
+use crate::{
+    api::error::APIError,
+    auth::Claims,
+    db::crud::{
+        core::flashcards::{self, deck},
+        tracking::{delete_seen, insert_as_unseen, log_activity, mark_as_seen},
+    },
+    notifications::messages::NotificationType,
+    schema::AppState,
+    types::{
+        ActionType, DeckPublic, DeckSmall, DeckWithCards, DeckWithCardsUpdate, ModelType,
+        PaginatedDecks, PaginatedResponse, PaginationParams,
+    },
 };
-use axum::extract::{Json, Path, Query, State};
-use axum::http::StatusCode;
+use axum::{
+    extract::{Json, Path, Query, State},
+    http::StatusCode,
+};
 
 use crate::api::DECK_TAG;
 /// Creates a new Deck using user defaults

@@ -1,6 +1,8 @@
-use crate::error::AppError;
-use crate::s3::S3Provider;
-use crate::types::{CompletedPart, MultipartInitResultS3, PartUploadUrl};
+use crate::{
+    error::AppError,
+    s3::S3Provider,
+    types::{CompletedPart, MultipartInitResultS3, PartUploadUrl},
+};
 use aws_sdk_s3::presigning::PresigningConfig;
 use std::error::Error;
 

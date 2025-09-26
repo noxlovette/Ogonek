@@ -1,6 +1,4 @@
-use crate::auth::Claims;
-use crate::tools::extractors::RequestMetadata;
-use crate::types::AuditLogCreate;
+use crate::{auth::Claims, tools::extractors::RequestMetadata, types::AuditLogCreate};
 use chrono::{DateTime, Utc};
 use serde_json::Value;
 use sqlx::types::ipnetwork::IpNetwork;

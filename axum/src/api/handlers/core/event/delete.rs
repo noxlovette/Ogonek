@@ -1,12 +1,15 @@
-use crate::api::CALENDAR_TAG;
-use crate::api::error::APIError;
-use crate::auth::Claims;
-use crate::db::crud::core::calendar::event::delete;
-use crate::schema::AppState;
-use crate::types::EventDelete;
-use axum::Json;
-use axum::extract::{Path, State};
-use axum::http::StatusCode;
+use crate::{
+    api::{CALENDAR_TAG, error::APIError},
+    auth::Claims,
+    db::crud::core::calendar::event::delete,
+    schema::AppState,
+    types::EventDelete,
+};
+use axum::{
+    Json,
+    extract::{Path, State},
+    http::StatusCode,
+};
 
 /// Delete an event
 #[utoipa::path(

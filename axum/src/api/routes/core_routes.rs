@@ -1,7 +1,11 @@
-use crate::api::core::{self, list_events, state};
-use crate::schema::AppState;
-use axum::Router;
-use axum::routing::{get, patch, post, put};
+use crate::{
+    api::core::{self, list_events, state},
+    schema::AppState,
+};
+use axum::{
+    Router,
+    routing::{get, patch, post, put},
+};
 
 pub fn lesson_routes() -> Router<AppState> {
     Router::new()

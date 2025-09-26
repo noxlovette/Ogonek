@@ -1,8 +1,8 @@
-use crate::api::account::*;
-use crate::api::core::state;
-use crate::schema::AppState;
-use axum::Router;
-use axum::routing::get;
+use crate::{
+    api::{account::*, core::state},
+    schema::AppState,
+};
+use axum::{Router, routing::get};
 
 pub fn user_routes() -> Router<AppState> {
     Router::new()

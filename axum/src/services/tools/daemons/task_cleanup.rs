@@ -1,6 +1,8 @@
-use crate::db::crud::core::task::{delete_system, fetch_old_tasks};
-use crate::error::AppError;
-use crate::schema::AppState;
+use crate::{
+    db::crud::core::task::{delete_system, fetch_old_tasks},
+    error::AppError,
+    schema::AppState,
+};
 
 use crate::db::crud::core::files::file::fetch_files_task;
 pub async fn daily_cleanup(state: AppState) {

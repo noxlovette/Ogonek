@@ -2,10 +2,14 @@
 use anyhow::Result;
 use chrono::Utc;
 use dotenvy::dotenv;
-use fake::Fake;
-use fake::faker::internet::en::SafeEmail;
-use fake::faker::lorem::en::{Paragraph, Sentence};
-use fake::faker::name::en::Name;
+use fake::{
+    Fake,
+    faker::{
+        internet::en::SafeEmail,
+        lorem::en::{Paragraph, Sentence},
+        name::en::Name,
+    },
+};
 use ogonek::{auth::password::hash_password, db::init_db};
 use sqlx::PgPool;
 

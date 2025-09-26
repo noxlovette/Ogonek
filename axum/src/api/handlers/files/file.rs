@@ -1,16 +1,19 @@
-use crate::api::TASK_TAG;
-use crate::api::error::APIError;
-use crate::auth::Claims;
-use crate::db::crud::core::files::file::{self, fetch_files_task};
-use crate::schema::AppState;
-use crate::types::files::{
-    BatchPresignedUrlResponse, File, FileListParams, FileUpdate, PresignedFileUrl,
-    PresignedUrlResponse,
+use crate::{
+    api::{TASK_TAG, error::APIError},
+    auth::Claims,
+    db::crud::core::files::file::{self, fetch_files_task},
+    schema::AppState,
+    types::files::{
+        BatchPresignedUrlResponse, File, FileListParams, FileUpdate, PresignedFileUrl,
+        PresignedUrlResponse,
+    },
 };
-use axum::Json;
-use axum::extract::{Path, Query, State};
-use axum::http::StatusCode;
-use axum::response::IntoResponse;
+use axum::{
+    Json,
+    extract::{Path, Query, State},
+    http::StatusCode,
+    response::IntoResponse,
+};
 use base64::{Engine as _, engine::general_purpose::STANDARD as BASE64};
 
 pub async fn fetch_file(

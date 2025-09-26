@@ -45,6 +45,7 @@ pub enum ContentStatus {
 
 impl FromStr for ContentStatus {
     type Err = anyhow::Error;
+
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s.to_lowercase().as_str() {
             "draft" => Ok(ContentStatus::Draft),

@@ -1,5 +1,4 @@
-use crate::db::error::DbError;
-use crate::types::AuditLogCreate;
+use crate::{db::error::DbError, types::AuditLogCreate};
 use nanoid::nanoid;
 
 /// Insert a new audit log entry

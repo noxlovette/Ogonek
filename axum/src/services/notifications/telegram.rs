@@ -1,5 +1,7 @@
-use super::error::{NotificationError, TelegramApiResponse};
-use super::messages::NotificationType;
+use super::{
+    error::{NotificationError, TelegramApiResponse},
+    messages::NotificationType,
+};
 use anyhow::Context;
 use reqwest::Client;
 use serde_json::json;

@@ -1,12 +1,14 @@
-use crate::api::USER_TAG;
-use crate::api::error::APIError;
-use crate::auth::Claims;
-use crate::db::crud::core::account::profile;
-use crate::schema::AppState;
-use crate::types::Profile;
-use crate::types::profiles::ProfileUpdate;
-use axum::extract::{Json, State};
-use axum::http::StatusCode;
+use crate::{
+    api::{USER_TAG, error::APIError},
+    auth::Claims,
+    db::crud::core::account::profile,
+    schema::AppState,
+    types::{Profile, profiles::ProfileUpdate},
+};
+use axum::{
+    extract::{Json, State},
+    http::StatusCode,
+};
 
 /// Update the profile, or create a new one if already there
 #[utoipa::path(

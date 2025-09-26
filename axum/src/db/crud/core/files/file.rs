@@ -1,6 +1,7 @@
-use crate::db::error::DbError;
-use crate::types::files::FileSmall;
-use crate::types::{File, FileListParams, FileUpdate, S3KeyRecord};
+use crate::{
+    db::error::DbError,
+    types::{File, FileListParams, FileUpdate, S3KeyRecord, files::FileSmall},
+};
 use sqlx::PgPool;
 
 pub async fn find_by_id(db: &PgPool, id: &str, user_id: &str) -> Result<File, DbError> {
@@ -168,8 +169,10 @@ pub async fn fetch_files_task(db: &PgPool, id: &str) -> Result<Vec<FileSmall>, D
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::tests::create_test_user;
-    use crate::types::{FileListParams, FileUpdate};
+    use crate::{
+        tests::create_test_user,
+        types::{FileListParams, FileUpdate},
+    };
     use sqlx::PgPool;
 
     async fn create_test_file(

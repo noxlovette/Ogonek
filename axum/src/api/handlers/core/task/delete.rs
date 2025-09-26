@@ -1,15 +1,20 @@
-use crate::api::TASK_TAG;
-use crate::api::error::APIError;
-use crate::auth::Claims;
-use crate::db::crud::{
-    core::files::file::fetch_files_task,
-    core::task::{delete, find_assignee},
-    tracking::{delete_seen, log_activity},
+use crate::{
+    api::{TASK_TAG, error::APIError},
+    auth::Claims,
+    db::crud::{
+        core::{
+            files::file::fetch_files_task,
+            task::{delete, find_assignee},
+        },
+        tracking::{delete_seen, log_activity},
+    },
+    schema::AppState,
+    types::{ActionType, ModelType},
 };
-use crate::schema::AppState;
-use crate::types::{ActionType, ModelType};
-use axum::extract::{Path, State};
-use axum::http::StatusCode;
+use axum::{
+    extract::{Path, State},
+    http::StatusCode,
+};
 
 /// Deletes a task
 #[utoipa::path(
