@@ -1,0 +1,29 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        SELECT markdown, topic AS \"title!: String\"\n        FROM lessons\n        WHERE id = $1\n        AND (assignee = $2 OR created_by = $2)\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "markdown",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 1,
+        "name": "title!: String",
+        "type_info": "Varchar"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Text"
+      ]
+    },
+    "nullable": [
+      false,
+      false
+    ]
+  },
+  "hash": "9582911f88e1e094b5b71f736881b0bdca07e05ed1b8b481724670d1ce6ad6ee"
+}

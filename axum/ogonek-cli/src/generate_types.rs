@@ -1,8 +1,9 @@
-use ogonek::openapi::*;
+use anyhow::Result;
+use ogonek_server::openapi::*;
 use std::fs;
 use utoipa::OpenApi;
 
-fn main() {
+pub fn run() -> Result<()> {
     let openapi = ApiDoc::openapi();
 
     // Generate JSON
@@ -12,4 +13,6 @@ fn main() {
     // Generate YAML
     let yaml = serde_yaml::to_string(&openapi).unwrap();
     fs::write("./openapi.yaml", yaml).expect("Failed to write OpenAPI YAML spec");
+
+    Ok(())
 }

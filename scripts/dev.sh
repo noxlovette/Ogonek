@@ -20,7 +20,7 @@ export DATABASE_URL="
 postgres://postgres:H8QheSCRFCKejvDsbu@localhost:5432/pg-ogonek-dev"
 
 ./scripts/backend/generate-types.sh
-cd axum
+cd axum/crates/ogonek-db
 echo -e "${YELLOW}Creating sqlx queries...${NC}"
 cargo sqlx prepare
 

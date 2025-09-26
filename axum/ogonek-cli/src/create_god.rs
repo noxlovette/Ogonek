@@ -2,10 +2,12 @@ use anyhow::{Context, Result};
 use rpassword::read_password;
 use std::io::{self, Write};
 
-use ogonek::{auth::password::hash_password, db::init_db, types::UserRole};
+use ogonek_db::init_db;
+use ogonek_server::services::hash_password;
+use ogonek_types::UserRole;
 const EXPECTED_SECRET_HASH: &str = "$argon2id$v=19$m=19456,t=2,p=1$PoJVUnhR1uC4La2JtAQZJA$kF3T1R9+AqX6DnfYwBrp10z8G1qPlW1XjsqsQvH8y/E";
 #[tokio::main]
-async fn main() -> Result<()> {
+pub async fn run() -> Result<()> {
     println!("🚀 God User Creation Tool");
     println!("⚠️  This tool creates a user with ultimate system privileges\n");
 

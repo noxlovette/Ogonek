@@ -10,7 +10,7 @@ use axum::{
 };
 use base64::{Engine as _, engine::general_purpose::STANDARD as BASE64};
 use ogonek_db::core::file::{self, fetch_files_task};
-use ogonek_types::files::{
+use ogonek_types::{
     BatchPresignedUrlResponse, File, FileListParams, FileUpdate, PresignedFileUrl,
     PresignedUrlResponse,
 };

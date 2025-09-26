@@ -1,11 +1,11 @@
 use comrak::{Options, markdown_to_html};
+use ogonek_types::PDFData;
 
-pub(super) fn render_markdown_page(markdown: &str, css_path: &str) -> String {
+pub(super) fn render_markdown_page(pdf_data: &PDFData, css_path: &str) -> String {
     let mut options = Options::default();
     options.extension.table = true;
-    let content = markdown_to_html(markdown, &options);
+    let content = markdown_to_html(&pdf_data.markdown, &options);
 
-    let topic = "Flying Whales";
     format!(
         r#"<!DOCTYPE html>
 <html lang="en">
@@ -23,6 +23,6 @@ pub(super) fn render_markdown_page(markdown: &str, css_path: &str) -> String {
     </article>
 </body>
 </html>"#,
-        css_path, topic, content
+        css_path, pdf_data.title, content
     )
 }

@@ -1,12 +1,13 @@
 use std::fs;
 
 use crate::{AppError, services::download::markdown};
+use ogonek_types::PDFData;
 use reqwest::multipart;
 
-pub async fn generate_pdf() -> Result<axum::body::Bytes, AppError> {
-    let css = fs::read_to_string("./mdconfig.css")?;
-
-    let raw = fs::read_to_string("./input.md")?;
+pub async fn generate_pdf(raw: PDFData) -> Result<axum::body::Bytes, AppError> {
+    const CSS_CONFIG: &str = include_str!("./mdconfig.css");
+    const GOTENBERG_ADDRESS: &str = "http://gotenberg:3000";
+    let css = fs::read_to_string(CSS_CONFIG)?;
 
     let html = markdown::render_markdown_page(&raw, "mdconfig.css");
 
@@ -30,7 +31,7 @@ pub async fn generate_pdf() -> Result<axum::body::Bytes, AppError> {
     let gotenberg_response = client
         .post(&format!(
             "{}/forms/chromium/convert/html",
-            "http://localhost:3002"
+            GOTENBERG_ADDRESS
         ))
         .multipart(form)
         .send()

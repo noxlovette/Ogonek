@@ -84,14 +84,14 @@ pub struct PresignedFileUrl {
     pub file_id: String,
     pub url: String,
 }
-#[derive(Serialize, ToSchema, Debug)]
+#[derive(Deserialize, ToSchema, Debug)]
 #[serde(rename_all = "camelCase")]
 pub enum PDFType {
     Task,
     Lesson,
 }
 
-#[derive(Serialize, ToSchema, Debug)]
+#[derive(Deserialize, ToSchema, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct PDFQuery {
     pub pdf_type: Option<PDFType>,

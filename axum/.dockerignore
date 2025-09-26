@@ -12,3 +12,4 @@ debug/
 target/
 *.tmp
 *.md
+.claude

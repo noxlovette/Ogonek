@@ -1,6 +1,6 @@
 use crate::DbError;
 
-use ogonek_types::{TaskFull, TaskPaginationParams, TaskSmall};
+use ogonek_types::{PDFData, TaskFull, TaskPaginationParams, TaskSmall};
 use sqlx::PgPool;
 /// Mini-tasks
 pub async fn read_all(
@@ -119,6 +119,25 @@ pub async fn read_assignee(
     .await?;
 
     Ok(assignee)
+}
+
+/// Finds the markdown and the title
+pub async fn read_for_pdf(db: &PgPool, task_id: &str, user_id: &str) -> Result<PDFData, DbError> {
+    let data = sqlx::query_as!(
+        PDFData,
+        r#"
+        SELECT markdown, title
+        FROM tasks
+        WHERE id = $1
+        AND (assignee = $2 OR created_by = $2)
+        "#,
+        task_id,
+        user_id
+    )
+    .fetch_one(db)
+    .await?;
+
+    Ok(data)
 }
 
 pub async fn read_old_tasks(db: &PgPool) -> Result<Vec<String>, DbError> {

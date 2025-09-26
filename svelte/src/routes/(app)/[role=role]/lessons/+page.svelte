@@ -99,34 +99,20 @@
   </VStack>
 </Toolbar>
 
-{#await data.lessonsPaginated}
-  {#if role === "s"}
-    <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
-      <LoadingCard />
-      <LoadingCard />
-      <LoadingCard />
-    </div>
-  {:else}
-    <TableSkeleton />
-  {/if}
-{:then lessons}
-  {#if lessons.data.length < 1}
-    <EmptySpace>
-      <Title1>{m.noLessons()}</Title1>
-    </EmptySpace>
-  {/if}
-  {#if role === "s"}
-    <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
-      {#each lessons.data as lesson (lesson.id)}
-        <LessonCard {lesson} />
-      {/each}
-    </div>
-  {:else}
-    <Table items={lessons.data} {href} config={lessonConfig} />
-  {/if}
-{:catch error: App.Error}
-  <p>Error loading lessons: {error.errorID}</p>
-{/await}
+{#if data.lessonsPaginated.data.length < 1}
+  <EmptySpace>
+    <Title1>{m.noLessons()}</Title1>
+  </EmptySpace>
+{/if}
+{#if role === "s"}
+  <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+    {#each data.lessonsPaginated.data as lesson (lesson.id)}
+      <LessonCard {lesson} />
+    {/each}
+  </div>
+{:else}
+  <Table items={data.lessonsPaginated.data} {href} config={lessonConfig} />
+{/if}
 
 <svelte:head>
   <title>{m.lessons()}</title>

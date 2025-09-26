@@ -5,6 +5,8 @@ pub mod core;
 pub mod preferences;
 pub mod responses;
 pub mod state;
+pub use files::*;
+mod files;
 pub mod tracking;
 pub use accounts::*;
 pub use calendar::*;

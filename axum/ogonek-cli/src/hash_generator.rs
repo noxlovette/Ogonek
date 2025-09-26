@@ -3,10 +3,10 @@ use anyhow::{Context, Result};
 use rpassword::read_password;
 use std::io::{self, Write};
 
-use ogonek::auth::password::hash_password;
+use ogonek_server::services::hash_password;
 
 #[tokio::main]
-async fn main() -> Result<()> {
+pub async fn run() -> Result<()> {
     println!("🔐 Admin Password Hash Generator");
     println!("This generates the hash for your admin creation password\n");
 
