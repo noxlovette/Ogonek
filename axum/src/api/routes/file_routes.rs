@@ -1,4 +1,4 @@
-use crate::{api::files, schema::AppState, services::generate_report_zip};
+use crate::{api::files, schema::AppState};
 use axum::{
     Router,
     routing::{delete, get, post},
@@ -15,5 +15,4 @@ pub fn file_routes() -> Router<AppState> {
             post(files::fetch_presigned_urls_batch),
         )
         .route("/{file_id}", delete(files::delete_file))
-        .route("/html", post(generate_report_zip))
 }

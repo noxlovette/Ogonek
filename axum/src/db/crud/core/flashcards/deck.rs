@@ -298,7 +298,7 @@ pub async fn delete(
 }
 
 /// Finds the assignee for the deck
-pub async fn find_assignee(
+pub async fn read_assignee(
     db: impl sqlx::Executor<'_, Database = sqlx::Postgres>,
     lesson_id: &str,
     user_id: &str,

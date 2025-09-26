@@ -34,7 +34,7 @@ pub async fn fetch_dashboard(
     claims: Claims,
 ) -> Result<Json<DashboardData>, APIError> {
     // Limit to three tasks
-    let tasks = task::find_all(
+    let tasks = task::read_all(
         &state.db,
         &claims.sub,
         &TaskPaginationParams {

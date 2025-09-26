@@ -2,7 +2,7 @@ use crate::{
     api::{TASK_TAG, error::APIError},
     auth::Claims,
     crud::core::task::{self, toggle},
-    db::crud::{core::task::find_assignee, tracking::log_activity},
+    db::crud::{core::task::read_assignee, tracking::log_activity},
     schema::AppState,
     services::messages::NotificationType,
     types::{ActionType, ModelType, TaskWithFilesResponse},
@@ -31,7 +31,7 @@ pub async fn toggle_task(
     Path(id): Path<String>,
     claims: Claims,
 ) -> Result<StatusCode, APIError> {
-    let current_assignee = find_assignee(&state.db, &id, &claims.sub).await?;
+    let current_assignee = read_assignee(&state.db, &id, &claims.sub).await?;
     let should_notify = toggle(&state.db, &id, &claims.sub).await?;
 
     if should_notify {
@@ -45,7 +45,7 @@ pub async fn toggle_task(
         )
         .await?;
 
-        let task = task::find_by_id(&state.db, &id, &claims.sub).await?;
+        let task = task::read_by_id(&state.db, &id, &claims.sub).await?;
 
         state
             .notification_service

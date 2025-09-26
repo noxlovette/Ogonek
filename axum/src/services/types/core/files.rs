@@ -84,3 +84,68 @@ pub struct PresignedFileUrl {
     pub file_id: String,
     pub url: String,
 }
+#[derive(Serialize, ToSchema, Debug)]
+#[serde(rename_all = "camelCase")]
+pub enum PDFType {
+    Task,
+    Lesson,
+}
+
+#[derive(Serialize, ToSchema, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct PDFQuery {
+    pub pdf_type: Option<PDFType>,
+}
+
+/// File creation parameters - groups all the file metadata together
+#[derive(Debug, Clone)]
+pub struct FileCreateParams {
+    pub file_id: String,
+    pub file_name: String,
+    pub s3_key: String,
+    pub content_type: String,
+    pub file_size: i64,
+    pub parent_id: Option<String>,
+    pub owner_id: String,
+}
+
+/// Optional linking parameters for files
+#[derive(Debug, Clone, Default)]
+pub struct FileLinkOptions {
+    pub task_id: Option<String>,
+}
+
+impl FileCreateParams {
+    /// Builder pattern for cleaner construction
+    pub fn new(file_id: String, file_name: String, owner_id: String) -> Self {
+        Self {
+            file_id,
+            file_name: file_name.clone(),
+            s3_key: String::new(), // Will be set later
+            content_type: "application/octet-stream".to_string(),
+            file_size: 0,
+            parent_id: None,
+            owner_id,
+        }
+    }
+
+    pub fn with_s3_key(mut self, s3_key: String) -> Self {
+        self.s3_key = s3_key;
+        self
+    }
+
+    pub fn with_content_type(mut self, content_type: String) -> Self {
+        self.content_type = content_type;
+        self
+    }
+
+    pub fn with_size(mut self, file_size: i64) -> Self {
+        self.file_size = file_size;
+        self
+    }
+
+    pub fn with_parent(mut self, parent_id: Option<String>) -> Self {
+        self.parent_id = parent_id;
+        self
+    }
+}

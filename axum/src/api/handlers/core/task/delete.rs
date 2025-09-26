@@ -3,8 +3,8 @@ use crate::{
     auth::Claims,
     db::crud::{
         core::{
-            files::file::fetch_files_task,
-            task::{delete, find_assignee},
+            file::fetch_files_task,
+            task::{delete, read_assignee},
         },
         tracking::{delete_seen, log_activity},
     },
@@ -38,7 +38,7 @@ pub async fn delete_task(
     let files = fetch_files_task(&state.db, &id).await?;
 
     let file_ids: Vec<String> = files.iter().map(|f| f.id.clone()).collect();
-    let assignee = find_assignee(&state.db, &id, &claims.sub).await?;
+    let assignee = read_assignee(&state.db, &id, &claims.sub).await?;
 
     delete(&state.db, &id, &claims.sub, file_ids).await?;
 

@@ -23,6 +23,7 @@ pub const CALENDAR_TAG: &str = "Calendar";
 
 pub const ADMIN_TAG: &str = "Admin";
 pub const CONTENT_TAG: &str = "Content";
+pub const FILE_TAG: &str = "File";
 
 // Main API doc that aggregates everything
 #[derive(OpenApi)]

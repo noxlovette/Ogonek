@@ -1,14 +1,11 @@
 use crate::{
     api::error::APIError,
     auth::Claims,
-    db::crud::core::files::{
-        file, multipart,
-        multipart::{FileCreateParams, FileLinkOptions},
-    },
+    crud::core::file,
     schema::AppState,
     types::{
-        AbortMultipartRequest, CompleteMultipartRequest, InitUploadRequest, MultipartInitResultS3,
-        MultipartUploadInit,
+        AbortMultipartRequest, CompleteMultipartRequest, FileCreateParams, FileLinkOptions,
+        InitUploadRequest, MultipartInitResultS3, MultipartUploadInit,
     },
 };
 use axum::{Json, extract::State, http::StatusCode};
@@ -55,7 +52,7 @@ pub async fn init_multipart_upload(
         task_id: payload.task_id,
     };
 
-    multipart::create_multipart_file(&state.db, file_params, link_options).await?;
+    file::create_multipart_file(&state.db, file_params, link_options).await?;
 
     let MultipartInitResultS3 { upload_id, parts } = state
         .s3
@@ -96,7 +93,7 @@ pub async fn complete_multipart_upload(
         .await?;
 
     // Mark as complete in DB
-    multipart::mark_upload_complete(&state.db, &payload.file_id, &claims.sub).await?;
+    file::mark_upload_complete(&state.db, &payload.file_id, &claims.sub).await?;
 
     Ok(StatusCode::CREATED)
 }

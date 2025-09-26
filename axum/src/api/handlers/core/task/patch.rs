@@ -5,7 +5,7 @@ use crate::{
         core::task::{self, update},
         tracking::seen,
     },
-    db::crud::{core::task::find_assignee, tracking::log_activity},
+    db::crud::{core::task::read_assignee, tracking::log_activity},
     schema::AppState,
     services::messages::NotificationType,
     types::{ActionType, ModelType, TaskUpdate},
@@ -38,7 +38,7 @@ pub async fn update_task(
     Json(payload): Json<TaskUpdate>,
 ) -> Result<StatusCode, APIError> {
     // fetch assignee before update
-    let current_assignee = find_assignee(&state.db, &id, &claims.sub).await?;
+    let current_assignee = read_assignee(&state.db, &id, &claims.sub).await?;
 
     // update the task
     update(&state.db, &id, &claims.sub, &payload).await?;
@@ -76,7 +76,7 @@ pub async fn update_task(
                 None,
             )
             .await?;
-            let task = task::find_by_id(&state.db, &id, &claims.sub).await?;
+            let task = task::read_by_id(&state.db, &id, &claims.sub).await?;
             let _ = state
                 .notification_service
                 .notify_student(

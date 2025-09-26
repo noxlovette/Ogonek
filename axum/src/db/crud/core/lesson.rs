@@ -205,7 +205,7 @@ pub async fn update(
 }
 
 /// Finds assignee for the lesson by its id, will return null if the user doesn't have access to the data
-pub async fn find_assignee(
+pub async fn read_assignee(
     db: &PgPool,
     lesson_id: &str,
     user_id: &str,

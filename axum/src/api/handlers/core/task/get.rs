@@ -8,8 +8,8 @@ use crate::{
     auth::Claims,
     crud::{
         core::{
-            files::file::fetch_files_task,
-            task::{find_all, find_by_id},
+            file::fetch_files_task,
+            task::{self, read_by_id},
         },
         tracking::seen,
     },
@@ -43,7 +43,7 @@ pub async fn list_tasks(
     claims: Claims,
     Query(params): Query<TaskPaginationParams>,
 ) -> Result<Json<PaginatedResponse<TaskSmall>>, APIError> {
-    let tasks = find_all(&state.db, &claims.sub, &params).await?;
+    let tasks = task::read_all(&state.db, &claims.sub, &params).await?;
 
     Ok(Json(PaginatedResponse {
         data: tasks,
@@ -70,7 +70,7 @@ pub async fn fetch_task(
     Path(id): Path<String>,
     claims: Claims,
 ) -> Result<Json<TaskWithFilesResponse>, APIError> {
-    let task = find_by_id(&state.db, &id, &claims.sub).await?;
+    let task = read_by_id(&state.db, &id, &claims.sub).await?;
     let files = fetch_files_task(&state.db, &id).await?;
     seen::mark_as_seen(&state.db, &claims.sub, &id, ModelType::Task).await?;
 

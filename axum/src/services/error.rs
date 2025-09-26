@@ -146,7 +146,6 @@ impl From<MultipartError> for AppError {
 use aws_credential_types::provider::error::CredentialsError;
 use aws_sdk_s3::{error::SdkError, presigning::PresigningConfigError};
 use utoipa::ToSchema;
-use zip::result::ZipError;
 
 // Generic handler for all S3 SDK errors
 impl<E> From<SdkError<E>> for AppError
@@ -249,12 +248,6 @@ impl From<crate::auth::error::PasswordHashError> for AppError {
 impl From<validator::ValidationErrors> for AppError {
     fn from(errs: validator::ValidationErrors) -> Self {
         Self::Validation(errs.to_string())
-    }
-}
-
-impl From<ZipError> for AppError {
-    fn from(err: ZipError) -> Self {
-        Self::Internal(format!("Zip creation error: {err}"))
     }
 }
 

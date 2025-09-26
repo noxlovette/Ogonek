@@ -195,7 +195,7 @@ pub async fn update_deck(
     Path(id): Path<String>,
     Json(payload): Json<DeckWithCardsUpdate>,
 ) -> Result<StatusCode, APIError> {
-    let current_assignee = deck::find_assignee(&state.db, &id, &claims.sub).await?;
+    let current_assignee = deck::read_assignee(&state.db, &id, &claims.sub).await?;
     let new_assignee = payload.deck.assignee.clone();
 
     flashcards::deck::update(&state.db, &id, &claims.sub, payload).await?;
@@ -277,7 +277,7 @@ pub async fn delete_deck(
     Path(id): Path<String>,
 ) -> Result<StatusCode, APIError> {
     let mut target_id: Option<String> = None;
-    let assignee = deck::find_assignee(&state.db, &id, &claims.sub).await?;
+    let assignee = deck::read_assignee(&state.db, &id, &claims.sub).await?;
 
     flashcards::deck::delete(&state.db, &id, &claims.sub).await?;
     if let Some(user) = assignee {

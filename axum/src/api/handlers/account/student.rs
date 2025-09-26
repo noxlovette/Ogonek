@@ -96,7 +96,7 @@ pub async fn fetch_student(
     let student = student::find_by_id(&state.db, &id, &claims.sub).await?;
     let decks = deck::find_recent(&state.db, &student.id).await?;
     let lessons = lesson::find_recent(&state.db, &student.id).await?;
-    let tasks = task::find_recent(&state.db, &student.id).await?;
+    let tasks = task::read_recent(&state.db, &student.id).await?;
 
     Ok(Json(CompositeStudent {
         student,

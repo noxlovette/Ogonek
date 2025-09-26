@@ -143,7 +143,7 @@ pub async fn delete_lesson(
     Path(id): Path<String>,
     claims: Claims,
 ) -> Result<StatusCode, APIError> {
-    let assignee = lesson::find_assignee(&state.db, &id, &claims.sub).await?;
+    let assignee = lesson::read_assignee(&state.db, &id, &claims.sub).await?;
     lesson::delete(&state.db, &id, &claims.sub).await?;
 
     if let Some(user) = assignee {
@@ -186,7 +186,7 @@ pub async fn update_lesson(
     Json(payload): Json<LessonUpdate>,
 ) -> Result<StatusCode, APIError> {
     // fetch assignee before update
-    let current_assignee = lesson::find_assignee(&state.db, &id, &claims.sub).await?;
+    let current_assignee = lesson::read_assignee(&state.db, &id, &claims.sub).await?;
 
     // update the lesson
     lesson::update(&state.db, &id, &claims.sub, &payload).await?;
