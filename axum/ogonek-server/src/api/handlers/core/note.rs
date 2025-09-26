@@ -3,7 +3,7 @@
 use crate::api::error::APIError;
 use crate::auth::Claims;
 use crate::models::lessons::{StudentNote, StudentNoteUpdate};
-use crate::schema::AppState;
+use crate::AppState;
 use axum::extract::Json;
 use axum::extract::Path;
 use axum::extract::State;

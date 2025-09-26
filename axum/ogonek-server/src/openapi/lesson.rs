@@ -13,9 +13,9 @@ use utoipa::OpenApi;
         lesson::delete_photo
     ),
     components(schemas(
-        crate::types::LessonFull,
-        crate::types::LessonSmall,
-        crate::types::LessonUpdate,
+        ogonek_types::LessonFull,
+        ogonek_types::LessonSmall,
+        ogonek_types::LessonUpdate,
     ))
 )]
 pub struct LessonApi;

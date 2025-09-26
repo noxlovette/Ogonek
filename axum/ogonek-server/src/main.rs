@@ -1,4 +1,4 @@
-use ogonek::app::{sentry, server};
+use ogonek_server::app::{sentry, server};
 
 fn main() {
     dotenvy::dotenv().ok();

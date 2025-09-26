@@ -1,4 +1,3 @@
-use crate::{auth::error::AuthError, types::UserRole};
 use axum::{RequestPartsExt, extract::FromRequestParts, http::request::Parts};
 use axum_extra::{
     TypedHeader,
@@ -6,8 +5,11 @@ use axum_extra::{
 };
 use dotenvy::dotenv;
 use jsonwebtoken::{Algorithm, DecodingKey, EncodingKey, Validation, decode};
+use ogonek_types::UserRole;
 use serde::{Deserialize, Serialize};
 use std::sync::LazyLock;
+
+use crate::services::AuthError;
 
 pub static KEYS: LazyLock<Keys> = LazyLock::new(|| {
     dotenv().ok();

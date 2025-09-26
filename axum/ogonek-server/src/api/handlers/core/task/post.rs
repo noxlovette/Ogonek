@@ -1,11 +1,13 @@
 use crate::{
     api::{TASK_TAG, error::APIError},
-    auth::Claims,
-    crud::core::task::create_with_defaults,
-    db::crud::tracking::log_activity,
-    schema::AppState,
-    types::{ActionType, ModelType},
+    Claims,
+    AppState,
 };
+use ogonek_db::{
+    core::task::create_with_defaults,
+    tracking::log_activity,
+};
+use ogonek_types::{ActionType, ModelType};
 use axum::{Json, extract::State};
 
 /// Creates a new task

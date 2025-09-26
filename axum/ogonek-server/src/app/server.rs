@@ -1,4 +1,4 @@
-use crate::{api::routes::root, schema::AppState, services::init_tracing};
+use crate::{api::routes::root, app::AppState, services::init_tracing};
 
 pub async fn server() -> anyhow::Result<()> {
     init_tracing().await?;

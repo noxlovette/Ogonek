@@ -1,10 +1,10 @@
 use crate::{
+    AppState,
     api::{CALENDAR_TAG, error::APIError},
-    auth::Claims,
-    db::crud::core::calendar::event_attendee::{delete, update},
-    schema::AppState,
-    types::EventAttendeeUpdate,
+    Claims,
 };
+use ogonek_db::core::calendar::event_attendee::{delete, update};
+use ogonek_types::EventAttendeeUpdate;
 use axum::{
     extract::{Json, Path, State},
     http::StatusCode,

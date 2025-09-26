@@ -5,7 +5,7 @@ use axum::{
 };
 use thiserror::Error;
 
-#[derive(Debug, Error, ToSchema)]
+#[derive(Debug, Error)]
 pub enum AppError {
     // Authentication errors
     #[error("Invalid credentials")]
@@ -43,7 +43,7 @@ pub enum AppError {
     BadRequest(String),
 
     #[error("Notification failed: {0}")]
-    NotificationFailed(#[from] crate::notifications::error::NotificationError),
+    NotificationFailed(#[from] ogonek_notifications::NotificationError),
 }
 
 impl IntoResponse for AppError {
@@ -92,26 +92,21 @@ impl IntoResponse for AppError {
     }
 }
 
+use crate::services::AuthError;
 // Convert from AuthError
-impl From<crate::auth::error::AuthError> for AppError {
-    fn from(err: crate::auth::error::AuthError) -> Self {
+impl From<AuthError> for AppError {
+    fn from(err: AuthError) -> Self {
         match err {
-            crate::auth::error::AuthError::WrongCredentials => Self::InvalidCredentials,
-            crate::auth::error::AuthError::InvalidCredentials => Self::InvalidCredentials,
-            crate::auth::error::AuthError::SignUpFail => Self::Internal("Failed to sign up".into()),
-            crate::auth::error::AuthError::TokenCreation => {
-                Self::Internal("Failed to create token".into())
-            }
-            crate::auth::error::AuthError::InvalidToken => Self::InvalidToken,
-            crate::auth::error::AuthError::EmailTaken => {
-                Self::AlreadyExists("Email already taken".into())
-            }
-            crate::auth::error::AuthError::UsernameTaken => {
-                Self::AlreadyExists("Username already taken".into())
-            }
-            crate::auth::error::AuthError::UserNotFound => Self::NotFound("User not found".into()),
-            crate::auth::error::AuthError::AuthenticationFailed => Self::AuthenticationFailed,
-            crate::auth::error::AuthError::Conflict(msg) => Self::AlreadyExists(msg),
+            AuthError::WrongCredentials => Self::InvalidCredentials,
+            AuthError::InvalidCredentials => Self::InvalidCredentials,
+            AuthError::SignUpFail => Self::Internal("Failed to sign up".into()),
+            AuthError::TokenCreation => Self::Internal("Failed to create token".into()),
+            AuthError::InvalidToken => Self::InvalidToken,
+            AuthError::EmailTaken => Self::AlreadyExists("Email already taken".into()),
+            AuthError::UsernameTaken => Self::AlreadyExists("Username already taken".into()),
+            AuthError::UserNotFound => Self::NotFound("User not found".into()),
+            AuthError::AuthenticationFailed => Self::AuthenticationFailed,
+            AuthError::Conflict(msg) => Self::AlreadyExists(msg),
         }
     }
 }
@@ -143,38 +138,46 @@ impl From<MultipartError> for AppError {
     }
 }
 
+use ogonek_db::DbError;
 // Convert from DbError
-impl From<crate::db::error::DbError> for AppError {
-    fn from(err: crate::db::error::DbError) -> Self {
+impl From<DbError> for AppError {
+    fn from(err: DbError) -> Self {
         match err {
-            crate::db::error::DbError::Database(msg) => {
-                Self::Internal(format!("Database operation failed: {msg}"))
-            }
-            crate::db::error::DbError::NotFound(msg) => Self::NotFound(format!("Not found: {msg}")),
-            crate::db::error::DbError::TransactionFailed => {
-                Self::Internal("Transaction failed".into())
-            }
-            crate::db::error::DbError::AlreadyExists(msg) => {
+            DbError::Database(msg) => Self::Internal(format!("Database operation failed: {msg}")),
+            DbError::NotFound(msg) => Self::NotFound(format!("Not found: {msg}")),
+            DbError::TransactionFailed => Self::Internal("Transaction failed".into()),
+            DbError::AlreadyExists(msg) => {
                 Self::AlreadyExists(format!("Resource already exists: {msg}"))
             }
-            crate::db::error::DbError::NotRecurring => {
-                Self::Validation("Event is not recurring".into())
-            }
-            crate::db::error::DbError::InvalidRecurrenceId => {
-                Self::Validation("Invalid recurrence ID".into())
-            }
-            crate::db::error::DbError::InvalidRRule(rrule) => {
+            DbError::NotRecurring => Self::Validation("Event is not recurring".into()),
+            DbError::InvalidRecurrenceId => Self::Validation("Invalid recurrence ID".into()),
+            DbError::InvalidRRule(rrule) => {
                 Self::Validation(format!("Invalid recurrence rule: {rrule}"))
             }
-            crate::db::error::DbError::ParseError(error) => Self::Validation(error.to_string()),
+            DbError::ParseError(error) => Self::Validation(error.to_string()),
         }
     }
 }
-
+use crate::services::PasswordHashError;
 // Convert from PasswordHashError
-impl From<crate::auth::error::PasswordHashError> for AppError {
-    fn from(_err: crate::auth::error::PasswordHashError) -> Self {
+impl From<PasswordHashError> for AppError {
+    fn from(_err: PasswordHashError) -> Self {
         Self::PasswordHash
+    }
+}
+
+use ogonek_s3::S3Error;
+// Convert from S3Error
+impl From<S3Error> for AppError {
+    fn from(err: S3Error) -> Self {
+        match err {
+            S3Error::AccessDenied => Self::AccessDenied,
+            S3Error::NotFound(msg) => Self::NotFound(msg),
+            S3Error::Validation(msg) => Self::Validation(msg),
+            S3Error::Internal(msg) => Self::Internal(format!("S3 error: {msg}")),
+            S3Error::BadRequest(msg) => Self::BadRequest(format!("S3 bad request: {msg}")),
+            S3Error::AlreadyExists(msg) => Self::AlreadyExists(msg),
+        }
     }
 }
 

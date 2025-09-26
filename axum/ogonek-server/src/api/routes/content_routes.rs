@@ -1,4 +1,4 @@
-use crate::{api::content, schema::AppState};
+use crate::{api::content, AppState};
 use axum::{Router, routing::get};
 
 pub fn content_routes() -> Router<AppState> {

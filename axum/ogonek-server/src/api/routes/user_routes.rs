@@ -1,6 +1,6 @@
 use crate::{
     api::{account::*, core::state},
-    schema::AppState,
+    AppState,
 };
 use axum::{Router, routing::get};
 

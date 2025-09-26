@@ -1,13 +1,13 @@
-use crate::{
-    api::{USER_TAG, error::APIError},
-    auth::Claims,
-    db::crud::core::{account::student, flashcards::deck, lesson, task},
-    schema::AppState,
-    types::{CompositeStudent, Student, UpdateStudentRequest},
-};
+use crate::api::{USER_TAG, error::APIError};
+use crate::app::AppState;
+use crate::services::Claims;
 use axum::extract::{Json, Path, State};
 
 use axum::http::StatusCode;
+use ogonek_db::core::account::student;
+use ogonek_db::core::flashcards::deck;
+use ogonek_db::core::{lesson, task};
+use ogonek_types::{CompositeStudent, Student, UpdateStudentRequest};
 #[utoipa::path(
     post,
     path = "/student/{id}",

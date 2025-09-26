@@ -1,12 +1,6 @@
 use crate::{
+    AppState, Claims,
     api::{TASK_TAG, error::APIError},
-    auth::Claims,
-    db::crud::core::file::{self, fetch_files_task},
-    schema::AppState,
-    types::files::{
-        BatchPresignedUrlResponse, File, FileListParams, FileUpdate, PresignedFileUrl,
-        PresignedUrlResponse,
-    },
 };
 use axum::{
     Json,
@@ -15,6 +9,11 @@ use axum::{
     response::IntoResponse,
 };
 use base64::{Engine as _, engine::general_purpose::STANDARD as BASE64};
+use ogonek_db::core::file::{self, fetch_files_task};
+use ogonek_types::files::{
+    BatchPresignedUrlResponse, File, FileListParams, FileUpdate, PresignedFileUrl,
+    PresignedUrlResponse,
+};
 
 pub async fn fetch_file(
     State(state): State<AppState>,

@@ -1,9 +1,6 @@
-use crate::{
-    api::core::task,
-    types::{PaginationParams, TaskFull, TaskSmall, TaskUpdate, TaskWithFilesResponse},
-};
+use crate::api::core::task;
+use ogonek_types::{PaginationParams, TaskFull, TaskSmall, TaskUpdate, TaskWithFilesResponse};
 use utoipa::OpenApi;
-
 #[derive(OpenApi)]
 #[openapi(
     paths(

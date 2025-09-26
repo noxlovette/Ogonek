@@ -1,10 +1,10 @@
 use crate::{
     api::{CALENDAR_TAG, error::APIError},
-    auth::Claims,
-    db::crud::core::calendar::event::create,
-    schema::AppState,
-    types::EventCreate,
+    Claims,
+    AppState,
 };
+use ogonek_db::core::calendar::event::create;
+use ogonek_types::EventCreate;
 use axum::{
     extract::{Json, State},
     http::StatusCode,

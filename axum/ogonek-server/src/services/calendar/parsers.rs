@@ -1,8 +1,7 @@
 use std::collections::HashSet;
 
 use chrono::{DateTime, NaiveDate, Utc};
-
-use crate::db::error::DbError;
+use ogonek_db::DbError;
 
 // Helper function pour parser les EXDATE depuis TEXT[]
 pub fn parse_exdates(

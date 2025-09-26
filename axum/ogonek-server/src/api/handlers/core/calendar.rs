@@ -1,14 +1,13 @@
 use crate::{
+    AppState, Claims,
     api::{CALENDAR_TAG, error::APIError},
-    auth::Claims,
-    db::crud::core::calendar::cal::{delete, get_or_create, update},
-    schema::AppState,
-    types::{CalendarFull, CalendarUpdate},
 };
 use axum::{
     extract::{Json, Path, State},
     http::StatusCode,
 };
+use ogonek_db::core::calendar::cal::{delete, get_or_create, update};
+use ogonek_types::{CalendarFull, CalendarUpdate};
 
 /// Get the user's calendar
 #[utoipa::path(

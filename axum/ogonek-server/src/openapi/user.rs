@@ -1,5 +1,7 @@
-use crate::{api::account::*, types::DashboardData};
+use crate::api::account::*;
 use utoipa::OpenApi;
+
+use ogonek_types::DashboardData;
 
 #[derive(OpenApi)]
 #[openapi(
@@ -16,6 +18,6 @@ use utoipa::OpenApi;
         fetch_student,
         list_students,
     ),
-    components(schemas(crate::types::User, crate::types::InviteToken, DashboardData))
+    components(schemas(ogonek_types::User, ogonek_types::InviteToken, DashboardData))
 )]
 pub struct UserApi;

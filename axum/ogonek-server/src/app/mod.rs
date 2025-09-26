@@ -1,5 +1,7 @@
-pub mod sentry;
-pub mod server;
+mod schema;
+mod sentry;
+mod server;
 
+pub use schema::AppState;
 pub use sentry::*;
 pub use server::*;

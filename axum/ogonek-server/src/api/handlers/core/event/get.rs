@@ -1,14 +1,15 @@
 use crate::{
+    AppState, Claims,
     api::{CALENDAR_TAG, error::APIError},
-    auth::Claims,
-    crud::core::calendar::event::read_one,
-    db::crud::core::calendar::{event::read_all, event_attendee::find_by_event_id},
-    schema::AppState,
     services::calendar::extract_id_and_occurence,
 };
+use ogonek_db::core::calendar::{
+    event::{read_all, read_one},
+    event_attendee::find_by_event_id,
+};
 
-use crate::types::{CalendarQuery, EventSmall, EventWithAttendees};
 use axum::extract::{Json, Path, Query, State};
+use ogonek_types::{CalendarQuery, EventSmall, EventWithAttendees};
 
 /// Get a single event by UID
 #[utoipa::path(

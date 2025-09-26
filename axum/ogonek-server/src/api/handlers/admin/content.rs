@@ -1,16 +1,14 @@
 use crate::{
     api::{ADMIN_TAG, error::APIError},
-    auth::Claims,
-    db::crud::{content, core::account::user, tracking::audit},
-    schema::AppState,
-    services::AuditBuilder,
-    tools::extractors::RequestMetadata,
-    types::{Content, UpdateContent},
+    app::AppState,
+    services::{AuditBuilder, Claims, RequestMetadata},
 };
 use axum::{
     extract::{Json, Path, State},
     http::StatusCode,
 };
+use ogonek_db::{content, core::account::user, tracking::audit};
+use ogonek_types::{Content, UpdateContent};
 
 /// Fetches content by id (admin interface)
 #[utoipa::path(

@@ -1,9 +1,9 @@
-use crate::db::error::DbError;
 use axum::{
     Json,
     http::StatusCode,
     response::{IntoResponse, Response},
 };
+use ogonek_db::DbError;
 use serde_json::json;
 use thiserror::Error;
 

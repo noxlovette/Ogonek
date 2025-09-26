@@ -1,10 +1,10 @@
 use crate::{
+    AppState,
     api::{CALENDAR_TAG, error::APIError},
-    auth::Claims,
-    db::crud::core::calendar::event::delete,
-    schema::AppState,
-    types::EventDelete,
+    Claims,
 };
+use ogonek_db::core::calendar::event::delete;
+use ogonek_types::EventDelete;
 use axum::{
     Json,
     extract::{Path, State},

@@ -1,4 +1,4 @@
-use crate::auth::error::PasswordHashError;
+use crate::services::PasswordHashError;
 use argon2::{
     Argon2,
     password_hash::{PasswordHash, PasswordHasher, PasswordVerifier, SaltString, rand_core::OsRng},

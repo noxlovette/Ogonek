@@ -1,21 +1,21 @@
 use crate::{
     api::{STATE_TAG, error::APIError},
-    auth::Claims,
-    db::crud::{
-        core::{
-            account,
-            account::{preferences, student, user},
-            flashcards,
-            flashcards::deck,
-            lesson, task,
-        },
-        tracking::{activity, seen},
+    Claims,
+    AppState,
+};
+use ogonek_db::{
+    core::{
+        account,
+        account::{preferences, student, user},
+        flashcards,
+        flashcards::deck,
+        lesson, task,
     },
-    schema::AppState,
-    types::{
-        AppContext, DashboardData, ModelType, NotificationBadges, PaginationParams,
-        TaskPaginationParams,
-    },
+    tracking::{activity, seen},
+};
+use ogonek_types::{
+    AppContext, DashboardData, ModelType, NotificationBadges, PaginationParams,
+    TaskPaginationParams,
 };
 use axum::extract::{Json, State};
 

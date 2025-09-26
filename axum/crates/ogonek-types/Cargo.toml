@@ -8,7 +8,7 @@ serde.workspace = true
 serde_json.workspace = true
 sqlx.workspace = true
 
-validator = { version = "0.20.0", features = ["derive"] }
 anyhow.workspace = true
+validator.workspace = true
 chrono.workspace = true
 utoipa.workspace = true

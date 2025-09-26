@@ -1,7 +1,7 @@
 use axum::{extract::Request, middleware::Next, response::Response};
 use reqwest::StatusCode;
 
-use crate::auth::Claims;
+use crate::services::Claims;
 pub async fn require_elevated_role(
     claims: Claims, // Custom extractors come after Request
     req: Request,   // Request should be first

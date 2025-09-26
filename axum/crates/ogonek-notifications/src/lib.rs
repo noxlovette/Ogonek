@@ -4,17 +4,17 @@ use ogonek_db::{
 };
 
 use crate::apns::ApnsProvider;
-use crate::error::NotificationError;
-use crate::messages::NotificationType;
+pub use crate::messages::NotificationType;
 use crate::telegram::TelegramProvider;
 
 use sqlx::PgPool;
 use tracing::info;
 
-pub mod apns;
-pub mod error;
-pub mod messages;
-pub mod telegram;
+mod apns;
+mod error;
+pub use error::NotificationError;
+mod messages;
+mod telegram;
 
 #[derive(Debug, Clone)]
 pub struct NotificationService {

@@ -13,10 +13,10 @@ use utoipa::OpenApi;
         deck::duplicate_deck,
     ),
     components(schemas(
-        crate::types::DeckSmall,
-        crate::types::DeckFull,
-        crate::types::DeckUpdate,
-        crate::types::DeckPublic,
+        ogonek_types::DeckSmall,
+        ogonek_types::DeckFull,
+        ogonek_types::DeckUpdate,
+        ogonek_types::DeckPublic,
     ))
 )]
 pub struct DeckApi;

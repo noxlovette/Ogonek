@@ -1,20 +1,20 @@
 use crate::{
     api::{AUTH_TAG, error::APIError},
-    auth::{
-        password::{hash_password, verify_password},
-        tokens::{self, decode_token, generate_token},
-    },
-    db::crud::core::account::auth,
-    schema::AppState,
-    services::{AuthError, Claims},
-    types::{
-        AuthPayload, BindPayload, InviteQuery, RefreshTokenPayload, RefreshTokenResponse,
-        SignUpPayload, TokenPair, UserRole,
+    app::AppState,
+    services::{
+        AuthError, Claims, decode_invite_token, decode_token, encode_invite_token, generate_token,
+        hash_password, verify_password,
     },
 };
+
 use axum::{
     extract::{Json, Query, State},
     http::StatusCode,
+};
+use ogonek_db::core::account::auth;
+use ogonek_types::{
+    AuthPayload, BindPayload, InviteQuery, RefreshTokenPayload, RefreshTokenResponse,
+    SignUpPayload, TokenPair, UserRole,
 };
 use validator::Validate;
 #[utoipa::path(
@@ -137,7 +137,7 @@ pub async fn generate_invite_link(
         .trim_end_matches('/')
         .to_string();
 
-    let encoded = tokens::encode_invite_token(claims.sub).await?;
+    let encoded = encode_invite_token(claims.sub).await?;
 
     tracing::info!("Encoded token: {encoded}");
 
@@ -166,9 +166,11 @@ pub async fn bind_student_to_teacher(
     State(state): State<AppState>,
     Json(payload): Json<BindPayload>,
 ) -> Result<StatusCode, AuthError> {
-    let teacher_id = tokens::decode_invite_token(payload.invite_token).await?;
+    let teacher_id = decode_invite_token(payload.invite_token).await?;
 
-    auth::bind(&state.db, &teacher_id, &payload.student_id).await?;
+    auth::bind(&state.db, &teacher_id, &payload.student_id)
+        .await
+        .map_err(|_| AuthError::InvalidToken);
 
     Ok(StatusCode::NO_CONTENT)
 }

@@ -1,16 +1,11 @@
-use crate::{
-    api::error::APIError,
-    auth::Claims,
-    db::crud::{core::account::user, notifications::device_tokens},
-    notifications::messages::NotificationType,
-    schema::AppState,
-    types::DeviceTokenPayload,
-};
+use crate::{AppState, Claims, api::error::APIError};
 use axum::{
     extract::{Json, State},
     http::StatusCode,
 };
-
+use ogonek_db::{core::account::user, notifications::device_tokens};
+use ogonek_notifications::NotificationType;
+use ogonek_types::DeviceTokenPayload;
 #[utoipa::path(
     post,
     path = "/register",

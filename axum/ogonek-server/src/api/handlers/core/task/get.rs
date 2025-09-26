@@ -5,19 +5,19 @@ use axum::{
 
 use crate::{
     api::{TASK_TAG, error::APIError},
-    auth::Claims,
-    crud::{
-        core::{
-            file::fetch_files_task,
-            task::{self, read_by_id},
-        },
-        tracking::seen,
+    Claims,
+    AppState,
+};
+use ogonek_db::{
+    core::{
+        file::fetch_files_task,
+        task::{self, read_by_id},
     },
-    schema::AppState,
-    types::{
-        ModelType, PaginatedResponse, PaginatedTasks, TaskPaginationParams, TaskSmall,
-        TaskWithFilesResponse,
-    },
+    tracking::seen,
+};
+use ogonek_types::{
+    ModelType, PaginatedResponse, PaginatedTasks, TaskPaginationParams, TaskSmall,
+    TaskWithFilesResponse,
 };
 
 /// Tasks belonging to a user (through assignment or direct ownership)

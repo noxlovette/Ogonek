@@ -16,9 +16,9 @@ use utoipa::OpenApi;
         update_attendee,
     ),
     components(schemas(
-        crate::types::CalendarQuery,
-        crate::types::EditScope,
-        crate::types::DeleteScope
+        ogonek_types::CalendarQuery,
+        ogonek_types::EditScope,
+        ogonek_types::DeleteScope
     ))
 )]
 pub struct CalendarApi;

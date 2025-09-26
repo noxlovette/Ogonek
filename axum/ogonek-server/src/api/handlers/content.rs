@@ -1,7 +1,8 @@
 use crate::{
-    api::error::APIError, db::crud::content, openapi::CONTENT_TAG, schema::AppState,
-    types::ContentPublic,
+    AppState, api::error::APIError, openapi::CONTENT_TAG,
 };
+use ogonek_db::content;
+use ogonek_types::ContentPublic;
 use axum::{
     Json,
     extract::{Path, State},

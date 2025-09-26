@@ -1,8 +1,9 @@
-use crate::{auth::Claims, tools::extractors::RequestMetadata, types::AuditLogCreate};
 use chrono::{DateTime, Utc};
+use ogonek_types::AuditLogCreate;
 use serde_json::Value;
 use sqlx::types::ipnetwork::IpNetwork;
 
+use crate::services::{Claims, RequestMetadata};
 /// Fluent builder for audit logs
 pub struct AuditBuilder {
     event_type: String,

@@ -1,15 +1,15 @@
 use crate::{
     api::{USER_TAG, error::APIError},
-    auth::Claims,
-    db::crud::core::account::profile,
-    schema::AppState,
-    types::{Profile, profiles::ProfileUpdate},
+    app::AppState,
+    services::Claims,
 };
 use axum::{
     extract::{Json, State},
     http::StatusCode,
 };
 
+use ogonek_db::core::account::profile;
+use ogonek_types::{Profile, profiles::ProfileUpdate};
 /// Update the profile, or create a new one if already there
 #[utoipa::path(
     patch,

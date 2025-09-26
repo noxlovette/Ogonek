@@ -1,16 +1,15 @@
 use crate::{
     api::{USER_TAG, error::APIError},
-    auth::{Claims, password::hash_password, tokens},
-    db::crud::core::account::user,
-    schema::AppState,
-    types::{InviterQuery, User},
+    app::AppState,
+    services::{Claims, decode_invite_token, hash_password},
 };
 use axum::{
     extract::{Json, Query, State},
     http::StatusCode,
 };
 
-use crate::types::users::UserUpdate;
+use ogonek_db::core::account::user;
+use ogonek_types::{InviterQuery, User, users::UserUpdate};
 /// Gets the inviter's credentials
 #[utoipa::path(
     get,
@@ -30,7 +29,7 @@ pub async fn fetch_inviter(
     State(state): State<AppState>,
     query: Query<InviterQuery>,
 ) -> Result<Json<User>, APIError> {
-    let teacher_id = tokens::decode_invite_token(query.invite.clone()).await?;
+    let teacher_id = decode_invite_token(query.invite.clone()).await?;
     let inviter = user::find_by_id(&state.db, &teacher_id).await?;
 
     Ok(Json(inviter))

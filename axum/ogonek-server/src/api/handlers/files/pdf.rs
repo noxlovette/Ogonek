@@ -6,14 +6,14 @@ use reqwest::{StatusCode, header};
 
 use crate::{
     api::error::APIError,
-    auth::Claims,
+    Claims,
     openapi::FILE_TAG,
-    schema::AppState,
+    AppState,
     services::generate_pdf,
-    types::{
-        ModelType, PDFQuery, PDFType, PaginatedResponse, PaginatedTasks, TaskPaginationParams,
-        TaskSmall, TaskWithFilesResponse,
-    },
+};
+use ogonek_types::{
+    ModelType, PDFQuery, PDFType, PaginatedResponse, PaginatedTasks, TaskPaginationParams,
+    TaskSmall, TaskWithFilesResponse,
 };
 
 /// Generate the PDF for the requested resource

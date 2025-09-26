@@ -1,12 +1,9 @@
-use crate::auth::claims::{Claims, KEYS};
+use crate::services::{Claims, KEYS};
 
-use crate::{
-    auth::error::AuthError,
-    types::{InviteToken, TokenWithExpiry, UserRole},
-};
+use crate::services::AuthError;
 use base64::{Engine as _, engine::general_purpose::URL_SAFE};
-
 use jsonwebtoken::{Algorithm, Header, Validation, decode, encode};
+use ogonek_types::{InviteToken, TokenWithExpiry, UserRole};
 use std::time::{SystemTime, UNIX_EPOCH};
 
 pub fn generate_token(

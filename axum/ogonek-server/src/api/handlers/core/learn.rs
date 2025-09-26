@@ -1,16 +1,17 @@
 use crate::{
+    AppState, Claims,
     api::{LEARN_TAG, error::APIError},
-    auth::Claims,
-    db::crud::{core::flashcards, tracking::log_activity},
-    schema::AppState,
-    tools::sm2::SM2Calculator,
-    types::{ActionType, CardProgressWithFields, ModelType, ReviewPayload, UpdateCardProgress},
+    services::SM2Calculator,
 };
 use axum::{
     extract::{Json, Path, State},
     http::StatusCode,
 };
 use chrono::{Duration, Utc};
+use ogonek_db::{core::flashcards, tracking::log_activity};
+use ogonek_types::{
+    ActionType, CardProgressWithFields, ModelType, ReviewPayload, UpdateCardProgress,
+};
 
 /// Subscribes the user to the deck
 #[utoipa::path(

@@ -1,16 +1,14 @@
 use crate::{
     api::{ADMIN_TAG, error::APIError},
-    auth::{Claims, password::hash_password},
-    db::crud::{
-        core::account::{auth, user},
-        tracking::audit,
-    },
-    schema::AppState,
-    services::AuditBuilder,
-    tools::extractors::RequestMetadata,
-    types::{SignUpPayload, UserRole},
+    app::AppState,
+    services::{AuditBuilder, Claims, RequestMetadata, hash_password},
 };
 use axum::extract::{Json, State};
+use ogonek_db::{
+    core::account::{auth, user},
+    tracking::audit,
+};
+use ogonek_types::{SignUpPayload, UserRole};
 use validator::Validate;
 
 #[utoipa::path(

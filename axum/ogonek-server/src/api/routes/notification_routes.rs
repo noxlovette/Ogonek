@@ -1,6 +1,6 @@
 use crate::{
     api::notifications::{self, request_hw},
-    schema::AppState,
+    AppState,
 };
 use axum::{Router, routing::post};
 

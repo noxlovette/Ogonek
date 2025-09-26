@@ -1,15 +1,13 @@
 // src/api/account/preferences.rs
-use crate::{
-    api::error::APIError,
-    auth::Claims,
-    db::crud::core::account::preferences,
-    schema::AppState,
-    types::preferences::{UserPreferencesResponse, UserPreferencesUpdate},
-};
+use crate::{api::error::APIError, app::AppState, services::Claims};
 use axum::{
     extract::{Json, State},
     http::StatusCode,
 };
+
+use ogonek_db::core::account::preferences;
+
+use ogonek_types::preferences::{UserPreferencesResponse, UserPreferencesUpdate};
 
 pub async fn get_preferences(
     State(state): State<AppState>,

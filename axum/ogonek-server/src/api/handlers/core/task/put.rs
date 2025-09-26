@@ -1,16 +1,15 @@
 use crate::{
+    AppState, Claims,
     api::{TASK_TAG, error::APIError},
-    auth::Claims,
-    crud::core::task::{self, toggle},
-    db::crud::{core::task::read_assignee, tracking::log_activity},
-    schema::AppState,
-    services::messages::NotificationType,
-    types::{ActionType, ModelType, TaskWithFilesResponse},
 };
 use axum::{
     extract::{Path, State},
     http::StatusCode,
 };
+use ogonek_db::core::task::{self, read_assignee, toggle};
+use ogonek_db::tracking::log_activity;
+use ogonek_notifications::NotificationType;
+use ogonek_types::{ActionType, ModelType, TaskWithFilesResponse};
 
 /// Toggles completed/not completed on a task
 #[utoipa::path(
