@@ -1,14 +1,13 @@
 use crate::{
+    AppState, Claims,
     api::{CALENDAR_TAG, error::APIError},
-    Claims,
-    AppState,
 };
-use ogonek_db::core::calendar::event::update;
-use ogonek_types::{EventUpdate, EventUpdateRequest};
 use axum::{
     extract::{Json, Path, State},
     http::StatusCode,
 };
+use ogonek_db::core::calendar::event::update;
+use ogonek_types::{EventUpdate, EventUpdateRequest};
 
 /// Update an event
 #[utoipa::path(

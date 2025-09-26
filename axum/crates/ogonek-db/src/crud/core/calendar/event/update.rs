@@ -2,13 +2,15 @@ use chrono::{DateTime, Duration, Utc};
 use sqlx::PgPool;
 
 use crate::{
-    crud::core::calendar::event::{
-        create::{create_exception, create_master},
-        read::read_one_internal,
-    },
     crud::core::{
         account::user::{get_email, get_name},
-        calendar::event_attendee,
+        calendar::{
+            event::{
+                create::{create_exception, create_master},
+                read::read_one_internal,
+            },
+            event_attendee,
+        },
     },
     error::DbError,
     helpers::{extract_id_and_occurence, remove_until_from_rrule},

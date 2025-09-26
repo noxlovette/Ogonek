@@ -1,7 +1,7 @@
 use crate::DbError;
 use sqlx::PgPool;
 
-use ogonek_types::preferences::{UserPreferences, UserPreferencesUpdate};
+use ogonek_types::{UserPreferences, UserPreferencesUpdate};
 pub async fn find_by_user_id(
     db: &PgPool,
     user_id: &str,
@@ -71,7 +71,7 @@ pub async fn get_or_create_defaults(
 mod additional_tests {
     use super::*;
     use crate::tests::create_test_user;
-    use ogonek_types::preferences::UserPreferencesUpdate;
+    use ogonek_types::UserPreferencesUpdate;
     use sqlx::PgPool;
 
     #[sqlx::test]

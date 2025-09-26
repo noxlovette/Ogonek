@@ -1,8 +1,8 @@
 use crate::{
+    AppState, Claims,
     api::{STATE_TAG, error::APIError},
-    Claims,
-    AppState,
 };
+use axum::extract::{Json, State};
 use ogonek_db::{
     core::{
         account,
@@ -17,7 +17,6 @@ use ogonek_types::{
     AppContext, DashboardData, ModelType, NotificationBadges, PaginationParams,
     TaskPaginationParams,
 };
-use axum::extract::{Json, State};
 
 /// This data populates the dashboard/home view
 #[utoipa::path(

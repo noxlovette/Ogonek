@@ -1,14 +1,10 @@
 use crate::{
+    AppState, Claims,
     api::{TASK_TAG, error::APIError},
-    Claims,
-    AppState,
 };
-use ogonek_db::{
-    core::task::create_with_defaults,
-    tracking::log_activity,
-};
-use ogonek_types::{ActionType, ModelType};
 use axum::{Json, extract::State};
+use ogonek_db::{core::task::create_with_defaults, tracking::log_activity};
+use ogonek_types::{ActionType, ModelType};
 
 /// Creates a new task
 #[utoipa::path(

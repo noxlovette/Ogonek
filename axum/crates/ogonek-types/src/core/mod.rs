@@ -1,7 +1,7 @@
-pub mod files;
-pub mod flashcards;
-pub mod lessons;
-pub mod tasks;
+mod files;
+mod flashcards;
+mod lessons;
+mod tasks;
 pub use files::*;
 pub use flashcards::*;
 pub use lessons::*;

@@ -1,13 +1,11 @@
-use std::fs;
-
 use crate::{AppError, services::download::markdown};
 use ogonek_types::PDFData;
 use reqwest::multipart;
 
 pub async fn generate_pdf(raw: PDFData) -> Result<axum::body::Bytes, AppError> {
-    const CSS_CONFIG: &str = include_str!("./mdconfig.css");
+    const CSS_CONFIG: &str = include_str!("mdconfig.css");
     const GOTENBERG_ADDRESS: &str = "http://gotenberg:3000";
-    let css = fs::read_to_string(CSS_CONFIG)?;
+    let css = CSS_CONFIG;
 
     let html = markdown::render_markdown_page(&raw, "mdconfig.css");
 
@@ -29,10 +27,7 @@ pub async fn generate_pdf(raw: PDFData) -> Result<axum::body::Bytes, AppError> {
 
     let client = reqwest::Client::new();
     let gotenberg_response = client
-        .post(&format!(
-            "{}/forms/chromium/convert/html",
-            GOTENBERG_ADDRESS
-        ))
+        .post(format!("{}/forms/chromium/convert/html", GOTENBERG_ADDRESS))
         .multipart(form)
         .send()
         .await?;
@@ -46,8 +41,8 @@ pub async fn generate_pdf(raw: PDFData) -> Result<axum::body::Bytes, AppError> {
             .unwrap_or_else(|_| "Failed to read error response".to_string());
         tracing::error!("Gotenberg failed with status {}: {}", status, error_body);
 
-        return Err(AppError::Internal(format!("{error_body}")));
+        Err(AppError::Internal(error_body.to_string()))
     } else {
-        return Ok(gotenberg_response.bytes().await?);
+        Ok(gotenberg_response.bytes().await?)
     }
 }

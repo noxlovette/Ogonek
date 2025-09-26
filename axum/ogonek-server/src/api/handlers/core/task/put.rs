@@ -6,8 +6,10 @@ use axum::{
     extract::{Path, State},
     http::StatusCode,
 };
-use ogonek_db::core::task::{self, read_assignee, toggle};
-use ogonek_db::tracking::log_activity;
+use ogonek_db::{
+    core::task::{self, read_assignee, toggle},
+    tracking::log_activity,
+};
 use ogonek_notifications::NotificationType;
 use ogonek_types::{ActionType, ModelType, TaskWithFilesResponse};
 

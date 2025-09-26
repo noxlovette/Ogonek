@@ -7,7 +7,7 @@ use axum::{
 
 use ogonek_db::core::account::preferences;
 
-use ogonek_types::preferences::{UserPreferencesResponse, UserPreferencesUpdate};
+use ogonek_types::{UserPreferencesResponse, UserPreferencesUpdate};
 
 pub async fn get_preferences(
     State(state): State<AppState>,

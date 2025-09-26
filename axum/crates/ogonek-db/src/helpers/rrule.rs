@@ -125,20 +125,6 @@ impl RRule {
         }))
     }
 
-    pub fn parse_until_date(value: &str) -> Result<DateTime<Utc>, RRuleError> {
-        // Format compact iCal: 20250925T000000Z
-        if let Ok(dt) = DateTime::parse_from_str(&format!("{}+00:00", value), "%Y%m%dT%H%M%SZ%z") {
-            return Ok(dt.with_timezone(&Utc));
-        }
-
-        // Format avec séparateurs: 2025-09-25T00:00:00Z (fallback)
-        if let Ok(dt) = DateTime::parse_from_rfc3339(value) {
-            return Ok(dt.with_timezone(&Utc));
-        }
-
-        Err(RRuleError::InvalidUntilDate(value.to_string()))
-    }
-
     pub fn generate_occurrences(
         &self,
         dtstart: DateTime<Utc>,

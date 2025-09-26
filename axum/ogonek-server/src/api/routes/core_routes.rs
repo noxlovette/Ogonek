@@ -1,6 +1,6 @@
 use crate::{
-    api::core::{self, list_events, state},
     AppState,
+    api::core::{self, list_events, state},
 };
 use axum::{
     Router,

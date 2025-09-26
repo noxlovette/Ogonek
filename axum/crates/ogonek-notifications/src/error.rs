@@ -50,9 +50,3 @@ pub struct TelegramApiResponse {
     pub error_code: Option<u32>,
     pub description: Option<String>,
 }
-
-#[derive(Deserialize, Debug)]
-pub struct TelegramError {
-    pub error_code: u32,
-    pub description: String,
-}

@@ -114,6 +114,10 @@ pub struct FileCreateParams {
 pub struct FileLinkOptions {
     pub task_id: Option<String>,
 }
+pub struct PDFData {
+    pub title: String,
+    pub markdown: String,
+}
 
 impl FileCreateParams {
     /// Builder pattern for cleaner construction

@@ -3,9 +3,8 @@ use ogonek_db::{
     notifications::get_device_tokens,
 };
 
-use crate::apns::ApnsProvider;
 pub use crate::messages::NotificationType;
-use crate::telegram::TelegramProvider;
+use crate::{apns::ApnsProvider, telegram::TelegramProvider};
 
 use sqlx::PgPool;
 use tracing::info;

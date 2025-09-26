@@ -1,9 +1,9 @@
-use ogonek_types::NotificationPayload;
 use a2::{
     Client, ClientConfig, DefaultNotificationBuilder, Endpoint, NotificationBuilder,
     NotificationOptions,
 };
 use anyhow::{Context, Result};
+use ogonek_types::NotificationPayload;
 use std::sync::Arc;
 use tracing::{debug, error, instrument};
 

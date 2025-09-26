@@ -1,14 +1,13 @@
 use crate::{
+    AppState, Claims,
     api::{CALENDAR_TAG, error::APIError},
-    Claims,
-    AppState,
 };
-use ogonek_db::core::calendar::event::create;
-use ogonek_types::EventCreate;
 use axum::{
     extract::{Json, State},
     http::StatusCode,
 };
+use ogonek_db::core::calendar::event::create;
+use ogonek_types::EventCreate;
 /// Create a new event
 #[utoipa::path(
     post,

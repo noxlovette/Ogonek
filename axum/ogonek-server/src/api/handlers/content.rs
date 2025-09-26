@@ -1,12 +1,10 @@
-use crate::{
-    AppState, api::error::APIError, openapi::CONTENT_TAG,
-};
-use ogonek_db::content;
-use ogonek_types::ContentPublic;
+use crate::{AppState, api::error::APIError, openapi::CONTENT_TAG};
 use axum::{
     Json,
     extract::{Path, State},
 };
+use ogonek_db::content;
+use ogonek_types::ContentPublic;
 
 /// Fetches content by slug (public endpoint)
 #[utoipa::path(

@@ -18,5 +18,5 @@ pub fn file_routes() -> Router<AppState> {
             post(files::fetch_presigned_urls_batch),
         )
         .route("/{file_id}", delete(files::delete_file))
-        .route("/pdf/{id}", get(get_pdf))
+        .route("/pdf/{id}", post(get_pdf))
 }

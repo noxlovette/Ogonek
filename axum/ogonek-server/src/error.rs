@@ -193,19 +193,3 @@ impl From<std::io::Error> for AppError {
         Self::Internal(format!("IO Error: {err}"))
     }
 }
-
-// result extention trait
-pub trait ResultExt<T, E> {
-    fn context(self, context: impl Into<String>) -> Result<T, AppError>;
-}
-
-impl<T, E: Into<AppError>> ResultExt<T, E> for Result<T, E> {
-    fn context(self, context: impl Into<String>) -> Result<T, AppError> {
-        self.map_err(|err| {
-            let app_err = err.into();
-            // Optionally log or modify the error based on context
-            tracing::debug!("{}: {:?}", context.into(), app_err);
-            app_err
-        })
-    }
-}

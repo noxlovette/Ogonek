@@ -1,14 +1,13 @@
 use crate::{
-    AppState,
+    AppState, Claims,
     api::{CALENDAR_TAG, error::APIError},
-    Claims,
 };
-use ogonek_db::core::calendar::event_attendee::{delete, update};
-use ogonek_types::EventAttendeeUpdate;
 use axum::{
     extract::{Json, Path, State},
     http::StatusCode,
 };
+use ogonek_db::core::calendar::event_attendee::{delete, update};
+use ogonek_types::EventAttendeeUpdate;
 // Delete an event attendee
 #[utoipa::path(
     delete,

@@ -1,7 +1,9 @@
 use crate::{app::AppState, error::AppError};
 
-use ogonek_db::core::file::fetch_files_task;
-use ogonek_db::core::task::{delete_system, read_old_tasks};
+use ogonek_db::core::{
+    file::fetch_files_task,
+    task::{delete_system, read_old_tasks},
+};
 pub async fn daily_cleanup(state: AppState) {
     loop {
         tracing::info!("Starting daily cleanup job...");

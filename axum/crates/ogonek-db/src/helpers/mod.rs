@@ -1,20 +1,8 @@
-use crate::DbError;
-use chrono::TimeZone;
-use chrono::{DateTime, Utc};
-use ogonek_types::User;
 mod parsers;
 mod rrule;
-
+use chrono::{DateTime, TimeZone, Utc};
 pub use parsers::*;
 pub use rrule::*;
-
-pub trait FromQuery: Sized {
-    fn from_query_result(result: Vec<Self>) -> Result<Self, DbError> {
-        result.into_iter().next().ok_or(DbError::TransactionFailed)
-    }
-}
-
-impl FromQuery for User {}
 
 const NANOID: usize = 21;
 pub const OCCURRENCE_SEPARATOR: &str = "_occurrence_";

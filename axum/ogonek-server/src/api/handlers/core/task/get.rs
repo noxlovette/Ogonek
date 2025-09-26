@@ -4,9 +4,8 @@ use axum::{
 };
 
 use crate::{
+    AppState, Claims,
     api::{TASK_TAG, error::APIError},
-    Claims,
-    AppState,
 };
 use ogonek_db::{
     core::{

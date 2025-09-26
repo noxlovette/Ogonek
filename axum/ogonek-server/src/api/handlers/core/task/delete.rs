@@ -1,7 +1,10 @@
 use crate::{
+    AppState, Claims,
     api::{TASK_TAG, error::APIError},
-    Claims,
-    AppState,
+};
+use axum::{
+    extract::{Path, State},
+    http::StatusCode,
 };
 use ogonek_db::{
     core::{
@@ -11,10 +14,6 @@ use ogonek_db::{
     tracking::{delete_seen, log_activity},
 };
 use ogonek_types::{ActionType, ModelType};
-use axum::{
-    extract::{Path, State},
-    http::StatusCode,
-};
 
 /// Deletes a task
 #[utoipa::path(

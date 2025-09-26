@@ -1,6 +1,6 @@
 use crate::{
-    api::{admin, middleware::require_elevated_role},
     AppState,
+    api::{admin, middleware::require_elevated_role},
 };
 use axum::{
     Router,

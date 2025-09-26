@@ -168,7 +168,7 @@ pub async fn bind_student_to_teacher(
 ) -> Result<StatusCode, AuthError> {
     let teacher_id = decode_invite_token(payload.invite_token).await?;
 
-    auth::bind(&state.db, &teacher_id, &payload.student_id)
+    let _ = auth::bind(&state.db, &teacher_id, &payload.student_id)
         .await
         .map_err(|_| AuthError::InvalidToken);
 
