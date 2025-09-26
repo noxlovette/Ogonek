@@ -6,17 +6,15 @@ use crate::{
         create::{create_exception, create_master},
         read::read_one_internal,
     },
-    db::{
-        crud::core::{
-            account::user::{get_email, get_name},
-            calendar::event_attendee,
-        },
-        error::DbError,
+    crud::core::{
+        account::user::{get_email, get_name},
+        calendar::event_attendee,
     },
-    services::calendar::{extract_id_and_occurence, remove_until_from_rrule},
-    types::{EditScope, EventAttendeeCreate, EventDBFull, EventUpdate, EventUpdateRequest},
+    error::DbError,
+    helpers::{extract_id_and_occurence, remove_until_from_rrule},
 };
 
+use ogonek_types::{EditScope, EventAttendeeCreate, EventDBFull, EventUpdate, EventUpdateRequest};
 /// The super handler for recurring or single events
 /// The id param is gonna be the master/regular event or a recurrence instance if there is an id_timestamp in it
 pub async fn update(db: &PgPool, event_id: String, req: EventUpdateRequest) -> Result<(), DbError> {

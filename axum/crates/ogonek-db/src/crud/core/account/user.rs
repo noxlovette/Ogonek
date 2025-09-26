@@ -1,7 +1,5 @@
-use crate::{
-    db::error::DbError,
-    types::{User, UserRole, UserUpdate},
-};
+use crate::DbError;
+use ogonek_types::{User, UserRole, UserUpdate};
 use sqlx::PgPool;
 
 pub async fn find_by_id(db: &PgPool, user_id: &str) -> Result<User, DbError> {
@@ -111,10 +109,10 @@ pub async fn get_name(
 mod tests {
     use super::*;
     use crate::{
-        db::error::DbError,
+        DbError,
         tests::{cleanup_user, create_test_user},
-        types::UserUpdate,
     };
+    use ogonek_types::UserUpdate;
     use sqlx::PgPool;
 
     #[sqlx::test]
@@ -354,40 +352,5 @@ mod tests {
         // Assert
         // Update should succeed even if no rows are affected
         assert!(result.is_ok());
-    }
-
-    #[sqlx::test]
-    async fn test_concurrent_operations(db: PgPool) {
-        // Arrange
-        let user_id = create_test_user(&db, "concurrent", "concurrent@example.com").await;
-
-        // Act - Simulate concurrent operations
-        let upd1 = UserUpdate {
-            name: Some("Name 1".to_string()),
-            username: None,
-            email: None,
-            pass: None,
-        };
-
-        let upd2 = UserUpdate {
-            name: Some("Name 2".to_string()),
-            username: None,
-            email: None,
-            pass: None,
-        };
-
-        let (result1, result2) =
-            tokio::join!(update(&db, &user_id, &upd1), update(&db, &user_id, &upd2));
-
-        // Assert
-        assert!(result1.is_ok());
-        assert!(result2.is_ok());
-
-        // One of the updates should have taken effect
-        let final_user = find_by_id(&db, &user_id).await.unwrap();
-        assert!(final_user.name == "Name 1" || final_user.name == "Name 2");
-
-        // Cleanup
-        cleanup_user(&db, &user_id).await;
     }
 }

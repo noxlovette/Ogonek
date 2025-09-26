@@ -1,8 +1,6 @@
-use crate::{
-    db::error::DbError,
-    types::{Profile, ProfileUpdate},
-};
+use crate::DbError;
 
+use ogonek_types::{Profile, ProfileUpdate};
 pub async fn find_by_id(
     db: impl sqlx::Executor<'_, Database = sqlx::Postgres>,
     user_id: &str,

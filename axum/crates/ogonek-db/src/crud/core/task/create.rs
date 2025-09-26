@@ -1,4 +1,5 @@
-use crate::{db::error::DbError, types::TaskCreate};
+use crate::DbError;
+use ogonek_types::TaskCreate;
 use sqlx::PgPool;
 /// Creates a task, needs data to create FROM
 pub async fn create(

@@ -1,5 +1,5 @@
 use crate::{
-    db::error::DbError,
+    DbError,
     types::{File, FileListParams, FileUpdate, S3KeyRecord, files::FileSmall},
 };
 use sqlx::PgPool;

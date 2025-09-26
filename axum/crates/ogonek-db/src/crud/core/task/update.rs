@@ -1,4 +1,6 @@
-use crate::{db::error::DbError, types::TaskUpdate};
+use crate::DbError;
+
+use ogonek_types::TaskUpdate;
 use sqlx::PgPool;
 /// Finds the assignee for the task
 pub async fn toggle(db: &PgPool, task_id: &str, user_id: &str) -> Result<bool, DbError> {

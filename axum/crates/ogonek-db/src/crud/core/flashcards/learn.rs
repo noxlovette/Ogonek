@@ -1,9 +1,7 @@
-use crate::{
-    db::error::DbError,
-    types::{CardProgress, CardProgressWithFields, SimpleStats, UpdateCardProgress},
-};
+use crate::DbError;
 use sqlx::PgPool;
 
+use ogonek_types::{CardProgress, CardProgressWithFields, SimpleStats, UpdateCardProgress};
 pub async fn fetch_due(db: &PgPool, user_id: &str) -> Result<Vec<CardProgressWithFields>, DbError> {
     let due = sqlx::query_as!(
         CardProgressWithFields,

@@ -1,4 +1,5 @@
-use crate::{db::error::DbError, types::ModelType};
+use crate::DbError;
+use ogonek_types::ModelType;
 use sqlx::PgPool;
 
 /// Lets mark an object as seen

@@ -1,4 +1,5 @@
-use crate::{db::error::DbError, types::S3KeyRecord};
+use crate::DbError;
+use ogonek_types::S3KeyRecord;
 use sqlx::PgPool;
 
 pub async fn delete(db: &PgPool, file_id: &str, user_id: &str) -> Result<S3KeyRecord, DbError> {

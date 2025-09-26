@@ -2,18 +2,17 @@ use chrono::{DateTime, Utc};
 use sqlx::PgPool;
 
 use crate::{
-    db::{
-        crud::core::{
-            account::{
-                profile::get_call_url,
-                user::{get_email, get_name},
-            },
-            calendar::{cal::read_calendar_id, event_attendee},
+    DbError,
+    crud::core::{
+        account::{
+            profile::get_call_url,
+            user::{get_email, get_name},
         },
-        error::DbError,
+        calendar::{cal::read_calendar_id, event_attendee},
     },
-    types::{EventAttendeeCreate, EventCreate, EventDBFull, EventUpdate},
 };
+
+use ogonek_types::{EventAttendeeCreate, EventCreate, EventDBFull, EventUpdate};
 
 /// Creates a master calendar event
 pub async fn create(db: &PgPool, user_id: &str, create: EventCreate) -> Result<(), DbError> {

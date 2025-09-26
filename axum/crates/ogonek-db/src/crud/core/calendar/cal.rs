@@ -1,9 +1,8 @@
 use sqlx::PgPool;
 
-use crate::{
-    db::error::DbError,
-    types::{CalendarFull, CalendarUpdate},
-};
+use crate::DbError;
+
+use ogonek_types::{CalendarFull, CalendarUpdate};
 /// Finds the calendar by user id
 pub async fn get_or_create(db: &PgPool, user_id: &str) -> Result<CalendarFull, DbError> {
     let calendar = sqlx::query_as!(

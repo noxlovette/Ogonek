@@ -1,11 +1,12 @@
-use crate::{
-    db::crud::{
-        core::account::{profile, student},
-        notifications::get_device_tokens,
-    },
-    notifications::{messages::NotificationType, telegram::TelegramProvider},
-    services::{AppError, notifications::apns::ApnsProvider},
+use ogonek_db::{
+    core::account::{profile, student},
+    notifications::get_device_tokens,
 };
+
+use crate::apns::ApnsProvider;
+use crate::error::NotificationError;
+use crate::messages::NotificationType;
+use crate::telegram::TelegramProvider;
 
 use sqlx::PgPool;
 use tracing::info;
@@ -39,7 +40,7 @@ impl NotificationService {
         teacher_id: &str,
         student_id: &str,
         notification_type: NotificationType,
-    ) -> Result<(), AppError> {
+    ) -> Result<(), NotificationError> {
         info!(
             "Teacher {} notifying student {}: {:?}",
             teacher_id, student_id, notification_type
@@ -63,7 +64,7 @@ impl NotificationService {
         &self,
         student_id: &str,
         notification_type: NotificationType,
-    ) -> Result<(), AppError> {
+    ) -> Result<(), NotificationError> {
         info!(
             "Student {} notifying teacher: {:?}",
             student_id, notification_type
@@ -88,7 +89,7 @@ impl NotificationService {
         &self,
         recipient_id: &str,
         notification_type: &NotificationType,
-    ) -> Result<(), AppError> {
+    ) -> Result<(), NotificationError> {
         if let Ok(device_tokens) = get_device_tokens(&self.db, recipient_id).await {
             for token in device_tokens {
                 let payload = notification_type.to_apns_payload();

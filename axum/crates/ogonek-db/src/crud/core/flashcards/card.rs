@@ -1,8 +1,6 @@
-use crate::{
-    db::error::DbError,
-    types::{Card, CardUpsert},
-};
+use crate::DbError;
 
+use ogonek_types::{Card, CardUpsert};
 /// Find all cards belonging to a deck
 pub async fn find_all(
     executor: impl sqlx::Executor<'_, Database = sqlx::Postgres>,

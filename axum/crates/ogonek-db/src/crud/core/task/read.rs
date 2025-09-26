@@ -1,7 +1,6 @@
-use crate::{
-    db::error::DbError,
-    types::{TaskFull, TaskPaginationParams, TaskSmall},
-};
+use crate::DbError;
+
+use ogonek_types::{TaskFull, TaskPaginationParams, TaskSmall};
 use sqlx::PgPool;
 /// Mini-tasks
 pub async fn read_all(

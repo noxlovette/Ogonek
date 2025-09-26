@@ -1,12 +1,12 @@
 use sqlx::PgPool;
 
 use crate::{
+    DbError,
     crud::core::calendar::event::{read::read_one_internal, update::truncate_master},
-    db::error::DbError,
-    services::calendar::extract_id_and_occurence,
-    types::{DeleteScope, EventDelete},
+    helpers::extract_id_and_occurence,
 };
 
+use ogonek_types::{DeleteScope, EventDelete};
 pub async fn delete(db: &PgPool, event_id: String, req: EventDelete) -> Result<(), DbError> {
     let mut tx = db.begin().await?;
 

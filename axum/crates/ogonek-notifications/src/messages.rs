@@ -1,7 +1,7 @@
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 
-use crate::types::NotificationPayload;
+use ogonek_types::NotificationPayload;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum NotificationType {

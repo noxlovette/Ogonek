@@ -1,147 +1,46 @@
 use std::collections::{HashMap, HashSet};
+services::calendar::{extract_id_and_occurence, remove_until_from_rrule},
 
-use chrono::{DateTime, Utc};
-use sqlx::PgPool;
 
-use crate::{crud::core::calendar::cal::read_calendar_id, error::DbError};
+    let new_rrule = truncate_master(tx, master, &occurrence_date).await?;
+pub(super) async fn truncate_master(
+    tx: &mut sqlx::Transaction<'_, sqlx::Postgres>,
+    master: &EventDBFull,
+    occurrence_date: &DateTime<Utc>,
+) -> Result<String, DbError> {
+    let rrule_str = master.rrule.as_ref().ok_or(DbError::NotRecurring)?;
+    let until_date = *occurrence_date - Duration::seconds(1);
 
-use crate::helpers::{
-    OCCURRENCE_SEPARATOR, RRule, extract_id_and_occurence, parse_date_flexible, parse_exdates,
-};
-use ogonek_types::{
-    EventClass, EventDB, EventDBFull, EventFull, EventSmall, EventStatus, EventTransp,
-};
+    // Format iCal compact conforme à la spec
+    let until_formatted = until_date.format("%Y%m%dT%H%M%SZ").to_string();
 
-/// Reads a calendar event by id (supports virtual instances)
-pub async fn read_one(db: &PgPool, event_id: String) -> Result<EventFull, DbError> {
-    let (master_id, occurrence_date) = extract_id_and_occurence(event_id.clone());
+    let truncated_rrule = if rrule_str.contains("UNTIL=") {
+        // Replace existing UNTIL
+        let re = regex::Regex::new(r"UNTIL=[^;]*").unwrap();
+        re.replace(rrule_str, &format!("UNTIL={}", until_formatted))
+            .to_string()
+    } else {
+        // Add UNTIL
+        format!("{};UNTIL={}", rrule_str, until_formatted)
+    };
 
-    let mut tx = db.begin().await?;
-
-    let mut master = read_one_internal(&mut *tx, &master_id).await?;
-
-    // If this is a virtual instance, modify the dates
-    if let Some(occurrence_dt) = occurrence_date {
-        // Calculate the duration of the original event
-        let original_duration = master.dtend_time.map(|end| end - master.dtstart_time);
-
-        // Update the start time to the occurrence date
-        master.dtstart_time = occurrence_dt;
-
-        // Update the end time to maintain the same duration
-        if let Some(duration) = original_duration {
-            master.dtend_time = Some(occurrence_dt + duration);
-        }
-
-        // Update the ID to the virtual instance ID
-        master.id = event_id;
-    }
-
-    tx.commit().await?;
-    Ok(master.into())
-}
-
-/// Reads a calendar event by id
-pub(super) async fn read_one_internal(
-    db: impl sqlx::Executor<'_, Database = sqlx::Postgres>,
-    event_id: &str,
-) -> Result<EventDBFull, DbError> {
-    let event = sqlx::query_as!(
-        EventDBFull,
+    sqlx::query!(
         r#"
-        SELECT 
-            id,
-            uid,
-            created_at,
-            updated_at,
-            calendar_id,
-            summary,
-            description,
-            location,
-            url,
-            dtstart_time,
-            dtend_time,
-            dtend_tz,
-            dtstart_tz,
-            rrule,
-            rdate,
-            exdate,
-            recurrence_id,
-            status AS "status!: EventStatus",
-            class AS "class!: EventClass", 
-            transp AS "transp!: EventTransp",
-            priority,
-            categories,
-            sequence,
-            etag,
-            deleted_at,
-            caldav_href,
-            content_type
-        FROM calendar_events 
-        WHERE id = $1 AND deleted_at IS NULL
+        UPDATE calendar_events 
+        SET rrule = $1,
+            sequence = sequence + 1
+        WHERE id = $2
         "#,
-        event_id
+        truncated_rrule,
+        master.id
     )
-    .fetch_one(db)
+    .execute(&mut **tx)
     .await?;
 
-    Ok(event)
+    Ok(remove_until_from_rrule(rrule_str))
 }
 
-/// Reads all events for a calendar within a specific time frame
-pub(super) async fn read_all_internal(
-    db: &PgPool,
-    user_id: &str,
-    start: DateTime<Utc>,
-    end: DateTime<Utc>,
-) -> Result<Vec<EventDB>, DbError> {
-    let mut tx = db.begin().await?;
 
-    let calendar_id = read_calendar_id(&mut *tx, user_id).await?;
-    let events = sqlx::query_as!(
-        EventDB,
-        r#"
-        SELECT 
-            id,
-            uid,
-            summary,
-            location,
-            dtstart_time,
-            dtend_time,
-            rdate,
-            status AS "status!: EventStatus",
-            exdate,
-            recurrence_id,
-            rrule
-        FROM calendar_events
-        WHERE calendar_id = $1 
-            AND deleted_at IS NULL
-            AND (
-                (rrule IS NOT NULL AND recurrence_id IS NULL) -- Master events
-            OR (dtstart_time BETWEEN $2 AND $3) -- Single events in range
-            OR (recurrence_id IS NOT NULL) -- All exceptions (we'll filter later)
-            )
-        ORDER BY dtstart_time ASC
-        "#,
-        calendar_id,
-        start,
-        end
-    )
-    .fetch_all(&mut *tx)
-    .await?;
-
-    tx.commit().await?;
-    Ok(events)
-}
-
-/// Public function that returns an array of events
-pub async fn read_all(
-    db: &PgPool,
-    user_id: &str,
-    start: DateTime<Utc>,
-    end: DateTime<Utc>,
-) -> Result<Vec<EventSmall>, DbError> {
-    let events = read_all_internal(db, user_id, start, end).await?;
 
     let masters: Vec<_> = events
         .iter()
@@ -271,6 +170,3 @@ pub async fn read_all(
             }
         }
     }
-
-    Ok(calendar_events)
-}

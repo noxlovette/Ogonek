@@ -1,5 +1,6 @@
-use crate::{db::error::DbError, types::AuditLogCreate};
+use crate::DbError;
 use nanoid::nanoid;
+use ogonek_types::AuditLogCreate;
 
 /// Insert a new audit log entry
 pub async fn create(

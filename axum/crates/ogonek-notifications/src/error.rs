@@ -1,6 +1,5 @@
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
-use utoipa::ToSchema;
 
 #[derive(Error, Debug, Serialize)]
 #[serde(tag = "type", content = "details")]

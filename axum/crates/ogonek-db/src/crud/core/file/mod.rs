@@ -13,11 +13,8 @@ pub use update::*;
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{
-        db::error::DbError,
-        tests::create_test_user,
-        types::{FileListParams, FileUpdate},
-    };
+    use crate::{DbError, tests::create_test_user};
+    use ogonek_types::{FileListParams, FileUpdate};
     use sqlx::PgPool;
 
     async fn create_test_file(

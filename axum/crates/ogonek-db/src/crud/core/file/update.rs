@@ -1,6 +1,7 @@
+use ogonek_types::FileUpdate;
 use sqlx::PgPool;
 
-use crate::{crud::core::file::check_file_exists, db::error::DbError, types::FileUpdate};
+use crate::{DbError, crud::core::file::check_file_exists};
 
 pub async fn update(
     db: &PgPool,

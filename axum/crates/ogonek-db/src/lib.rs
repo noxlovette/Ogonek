@@ -1,7 +1,8 @@
-pub mod crud;
-pub mod error;
-
+mod crud;
+mod error;
+mod tests;
 pub use crud::*;
+pub use error::DbError;
 
 mod helpers;
 use anyhow::Context;

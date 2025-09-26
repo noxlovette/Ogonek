@@ -1,9 +1,6 @@
-use crate::{
-    db::error::DbError,
-    types::{FileCreateParams, FileLinkOptions},
-};
+use crate::DbError;
+use ogonek_types::{FileCreateParams, FileLinkOptions};
 use sqlx::{PgPool, Postgres, Transaction};
-
 /// Creates a new file record in the database with pending upload status
 pub async fn create_pending_file(
     tx: &mut Transaction<'_, Postgres>,

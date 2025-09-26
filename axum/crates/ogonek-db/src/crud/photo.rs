@@ -1,7 +1,6 @@
-use crate::{
-    db::error::DbError,
-    types::{Photo, UpsertPhoto},
-};
+use crate::DbError;
+
+use ogonek_types::{Photo, UpsertPhoto};
 use serde_json::json;
 /// Returns the lesson's photo
 pub async fn find_by_id(

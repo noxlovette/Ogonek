@@ -1,4 +1,4 @@
-use crate::db::error::DbError;
+use crate::DbError;
 use sqlx::PgPool;
 
 pub async fn add_files(db: &PgPool, task_id: &str, file_ids: Vec<String>) -> Result<(), DbError> {

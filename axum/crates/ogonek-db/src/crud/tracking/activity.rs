@@ -1,7 +1,5 @@
-use crate::{
-    db::error::DbError,
-    types::{ActionType, ActivityLog, ModelType},
-};
+use crate::DbError;
+use ogonek_types::{ActionType, ActivityLog, ModelType};
 use sqlx::PgPool;
 
 /// Logs activity in the activity

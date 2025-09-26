@@ -1,13 +1,10 @@
 use sqlx::PgPool;
 
-use crate::{
-    db::error::DbError,
-    types::{
-        EventAttendee, EventAttendeeCreate, EventAttendeeRole, EventAttendeeStatus,
-        EventAttendeeUpdate,
-    },
-};
+use crate::DbError;
 
+use ogonek_types::{
+    EventAttendee, EventAttendeeCreate, EventAttendeeRole, EventAttendeeStatus, EventAttendeeUpdate,
+};
 /// Finds an event attendee by id
 pub async fn find_by_id(db: &PgPool, attendee_id: &str) -> Result<EventAttendee, DbError> {
     let attendee = sqlx::query_as!(

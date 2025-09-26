@@ -1,4 +1,4 @@
-use crate::types::NotificationPayload;
+use ogonek_types::NotificationPayload;
 use a2::{
     Client, ClientConfig, DefaultNotificationBuilder, Endpoint, NotificationBuilder,
     NotificationOptions,

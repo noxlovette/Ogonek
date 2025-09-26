@@ -12,13 +12,9 @@ pub use update::*;
 mod tests {
     use super::*;
 
-    use crate::{
-        crud::core::file::add_files,
-        tests::create_test_user,
-        types::{TaskCreate, TaskPaginationParams, TaskUpdate},
-    };
-
+    use crate::{crud::core::file::add_files, tests::create_test_user};
     use chrono::Utc;
+    use ogonek_types::{TaskCreate, TaskPaginationParams, TaskUpdate};
     use sqlx::PgPool;
 
     // Helper function to create test files

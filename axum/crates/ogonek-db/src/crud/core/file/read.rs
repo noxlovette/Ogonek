@@ -1,10 +1,8 @@
 use sqlx::PgPool;
 
-use crate::{
-    db::error::DbError,
-    types::{File, FileListParams, FileSmall},
-};
+use crate::DbError;
 
+use ogonek_types::{File, FileListParams, FileSmall};
 pub async fn find_by_id(db: &PgPool, id: &str, user_id: &str) -> Result<File, DbError> {
     let file = sqlx::query_as!(
         File,

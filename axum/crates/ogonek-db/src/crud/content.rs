@@ -1,9 +1,6 @@
+use crate::DbError;
+use ogonek_types::{Content, ContentPublic, ContentStatus, UpdateContent};
 use sqlx::PgPool;
-
-use crate::{
-    db::error::DbError,
-    types::{Content, ContentPublic, ContentStatus, UpdateContent},
-};
 
 /// For public endpoints that renders content
 pub async fn find_by_slug(db: &PgPool, slug: &str) -> Result<ContentPublic, DbError> {

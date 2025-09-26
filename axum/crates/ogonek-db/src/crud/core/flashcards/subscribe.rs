@@ -1,4 +1,4 @@
-use crate::db::error::DbError;
+use crate::DbError;
 use sqlx::PgPool;
 
 pub async fn subscribe(db: &PgPool, deck_id: &str, user_id: &str) -> Result<(), DbError> {

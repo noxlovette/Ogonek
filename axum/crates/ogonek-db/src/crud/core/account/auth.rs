@@ -1,9 +1,6 @@
-use crate::{
-    auth::error::AuthError,
-    db::error::DbError,
-    types::{AuthPayload, SignUpPayload, User},
-};
+use crate::DbError;
 use nanoid::nanoid;
+use ogonek_types::{AuthPayload, SignUpPayload, User};
 use sqlx::PgPool;
 
 pub async fn signup(db: &PgPool, create: &SignUpPayload) -> Result<String, DbError> {
@@ -37,7 +34,7 @@ pub async fn signup(db: &PgPool, create: &SignUpPayload) -> Result<String, DbErr
     Ok(id)
 }
 
-pub async fn authorise(db: &PgPool, user: &AuthPayload) -> Result<User, AuthError> {
+pub async fn authorise(db: &PgPool, user: &AuthPayload) -> Result<User, DbError> {
     let user = sqlx::query_as!(
         User,
         r#"
@@ -53,7 +50,7 @@ pub async fn authorise(db: &PgPool, user: &AuthPayload) -> Result<User, AuthErro
     Ok(user)
 }
 
-pub async fn bind(db: &PgPool, teacher_id: &str, student_id: &str) -> Result<(), AuthError> {
+pub async fn bind(db: &PgPool, teacher_id: &str, student_id: &str) -> Result<(), DbError> {
     sqlx::query!(
         r#"
         INSERT INTO teacher_student (teacher_id, student_id)
@@ -68,7 +65,7 @@ pub async fn bind(db: &PgPool, teacher_id: &str, student_id: &str) -> Result<(),
 
     Ok(())
 }
-pub async fn fetch_by_id(db: &PgPool, user_id: &str) -> Result<User, AuthError> {
+pub async fn fetch_by_id(db: &PgPool, user_id: &str) -> Result<User, DbError> {
     let user = sqlx::query_as!(
         User,
         r#"
@@ -87,7 +84,7 @@ pub async fn fetch_by_id(db: &PgPool, user_id: &str) -> Result<User, AuthError> 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::types::{AuthPayload, SignUpPayload, UserRole};
+    use ogonek_types::{AuthPayload, SignUpPayload, UserRole};
     use sqlx::PgPool;
 
     #[sqlx::test]

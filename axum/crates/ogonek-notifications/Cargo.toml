@@ -5,3 +5,14 @@ edition = "2024"
 
 [dependencies]
 a2 = "0.10.0"
+ogonek_db = {path = "../ogonek-db"}
+ogonek_types = {path = "../ogonek-types"}
+
+anyhow.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+chrono.workspace = true
+reqwest.workspace = true
+tracing.workspace = true
+sqlx.workspace = true

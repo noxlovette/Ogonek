@@ -19,13 +19,6 @@ impl From<sqlx::Error> for AuthError {
     }
 }
 
-impl From<PasswordHashError> for AuthError {
-    fn from(error: PasswordHashError) -> Self {
-        eprintln!("{error}");
-        Self::WrongCredentials
-    }
-}
-
 impl From<ValidationError> for AuthError {
     fn from(error: ValidationError) -> Self {
         eprintln!("{error}");

@@ -1,4 +1,5 @@
-use crate::{db::error::DbError, types::DeviceTokenPayload};
+use crate::DbError;
+use ogonek_types::DeviceTokenPayload;
 use sqlx::PgPool;
 
 pub async fn upsert(

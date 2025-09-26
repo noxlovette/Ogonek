@@ -1,4 +1,4 @@
-use crate::db::error::DbError;
+use crate::DbError;
 use sqlx::PgPool;
 /// Deletes a task
 pub async fn delete(

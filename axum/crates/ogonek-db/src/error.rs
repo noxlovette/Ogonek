@@ -1,4 +1,4 @@
-use crate::{auth::error::PasswordHashError, services::calendar::RRuleError};
+use crate::helpers::RRuleError;
 use sqlx::error::Error as SqlxError;
 use thiserror::Error;
 
@@ -31,12 +31,5 @@ impl From<SqlxError> for DbError {
                 Self::Database(other)
             }
         }
-    }
-}
-
-impl From<PasswordHashError> for DbError {
-    fn from(error: PasswordHashError) -> Self {
-        eprintln!("{error}");
-        Self::TransactionFailed
     }
 }
