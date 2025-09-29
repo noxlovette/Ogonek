@@ -64,28 +64,11 @@ export const actions = {
     const { urls } =
       (await response1.json()) as components["schemas"]["BatchPresignedUrlResponse"];
 
-    const pdfBlob = (await response2.json()) as Blob;
-    return { urls, pdfBlob, success: true };
+    const pdfUrl = (await response2.json()) as URLResponse;
+
+    return { urls: [pdfUrl, ...urls], success: true };
   },
-  downloadPdf: async ({ fetch, params }) => {
-    if (!params.id) {
-      return fail(400);
-    }
 
-    const response = await fetch(routes.files.pdf(params.id, "task"), {
-      method: "POST",
-    });
-
-    if (!response.ok) {
-      const error = await response.text();
-      logger.error({ error });
-      return fail(400);
-    }
-
-    const pdfBlob = await response.blob();
-
-    return { pdfBlob, success: true };
-  },
   deleteFile: async ({ request, fetch }) => {
     const formData = await request.formData();
     const id = formData.get("fileId") as string;

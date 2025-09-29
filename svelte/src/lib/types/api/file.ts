@@ -34,8 +34,3 @@ export interface FileUploadState {
   errorMessage?: string;
   abortController?: AbortController;
 }
-
-export interface BatchPresign {
-  fileId: string;
-  url: string;
-}

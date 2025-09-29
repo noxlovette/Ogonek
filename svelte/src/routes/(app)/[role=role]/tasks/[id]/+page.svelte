@@ -60,14 +60,15 @@
           action="?/downloadAll"
           use:enhance={enhanceForm({
             messages: {
-              success: "downloads starts",
+              success: "Загрузка началась",
             },
             shouldUpdate: true,
           })}
         >
-          <DownloadButton pdfBlob={form?.pdfBlob} urls={form?.urls}
-          ></DownloadButton>
+          <DownloadButton urls={form?.urls}></DownloadButton>
         </form>
+      </Merger>
+      <Merger>
         <form
           class="flex"
           method="post"
