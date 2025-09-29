@@ -2,6 +2,7 @@ import logger from "$lib/logger";
 import { routes } from "$lib/routes";
 import { handleApiResponse, isSuccessResponse } from "$lib/server";
 import type { EmptyResponse, URLResponse } from "$lib/types";
+import type { components } from "$lib/types/api/gen/openapi";
 import type { Actions } from "@sveltejs/kit";
 import { fail } from "@sveltejs/kit";
 
@@ -49,6 +50,25 @@ export const actions = {
 
     return { url, success: true };
   },
+  downloadAll: async ({ fetch, params }) => {
+    if (!params.id) {
+      return fail(400);
+    }
+
+    const files = fetch(routes.files.presigned_urls_batch(params.id), {
+      method: "POST",
+    });
+    const pdf = fetch(routes.files.pdf(params.id, "task"), { method: "POST" });
+    const [response1, response2] = await Promise.all([files, pdf]);
+
+    const { urls } =
+      (await response1.json()) as components["schemas"]["BatchPresignedUrlResponse"];
+
+    const pdfUrl = (await response2.json()) as URLResponse;
+
+    return { urls: [pdfUrl, ...urls], success: true };
+  },
+
   deleteFile: async ({ request, fetch }) => {
     const formData = await request.formData();
     const id = formData.get("fileId") as string;

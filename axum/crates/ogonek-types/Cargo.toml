@@ -1,0 +1,14 @@
+[package]
+name = "ogonek_types"
+version = "1.12.0"
+edition = "2024"
+
+[dependencies]
+serde.workspace = true
+serde_json.workspace = true
+sqlx.workspace = true
+
+anyhow.workspace = true
+validator.workspace = true
+chrono.workspace = true
+utoipa.workspace = true

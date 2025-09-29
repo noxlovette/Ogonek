@@ -4,4 +4,4 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y pkg-config libssl-dev
 RUN cargo install cargo-watch 
 RUN cargo install sqlx-cli --no-default-features --features postgres
-CMD ["cargo", "watch", "-x", "run --bin ogonek"]
+CMD ["cargo", "watch", "-x", "run --bin ogonek_server"]

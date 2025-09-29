@@ -145,9 +145,7 @@
         {m.noFlashcards()}
       </Title1>
 
-      <Merger>
-        <NewButton />
-      </Merger>
+      <NewCard {addCard} />
     </EmptySpace>
   {:else}
     <div class="grid auto-rows-fr items-stretch gap-4 md:grid-cols-2">

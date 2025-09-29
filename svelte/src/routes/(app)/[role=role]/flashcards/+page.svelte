@@ -5,7 +5,6 @@
     Table,
     UniButton,
     Toolbar,
-    LoadingCard,
     SearchBar,
     Divider,
     Merger,
@@ -15,7 +14,7 @@
   import { enhanceForm } from "$lib/utils";
   import { page } from "$app/state";
   import type { TableConfig, DeckSmall } from "$lib/types/index.js";
-  import { GraduationCap, Plus } from "lucide-svelte";
+  import { GraduationCap } from "lucide-svelte";
   import { m } from "$lib/paraglide/messages";
   import {
     searchTerm,
@@ -25,7 +24,6 @@
   } from "$lib/stores";
   import { goto } from "$app/navigation";
   import EmptySpace from "$lib/components/typography/EmptySpace.svelte";
-  import TableSkeleton from "$lib/components/UI/interactive/TableSkeleton.svelte";
   import Title1 from "$lib/components/typography/Title1.svelte";
   import message from "$lib/messages.js";
   import NewButton from "$lib/components/UI/forms/buttons/NewButton.svelte";
@@ -112,37 +110,23 @@
   </VStack>
 </Toolbar>
 
-{#await data.decksPaginated}
+{#if data.decksPaginated.data.length}
   {#if role === "s"}
-    <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
-      <LoadingCard />
-      <LoadingCard />
-      <LoadingCard />
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {#each data.decksPaginated.data as deck (deck.id)}
+        <DeckCard {deck} />
+      {/each}
     </div>
   {:else}
-    <TableSkeleton />
+    <Table
+      config={deckConfig}
+      href="flashcards"
+      {students}
+      items={data.decksPaginated.data}
+    />
   {/if}
-{:then decks}
-  {#if decks.data.length}
-    {#if role === "s"}
-      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {#each decks.data as deck (deck.id)}
-          <DeckCard {deck} />
-        {/each}
-      </div>
-    {:else}
-      <Table
-        config={deckConfig}
-        href="flashcards"
-        {students}
-        items={decks.data}
-      />
-    {/if}
-  {:else}
-    <EmptySpace>
-      <Title1>{m.noDecks()}</Title1>
-    </EmptySpace>
-  {/if}
-{:catch error: App.Error}
-  <p>Error loading decks: {error.errorID} {error.message}</p>
-{/await}
+{:else}
+  <EmptySpace>
+    <Title1>{m.noDecks()}</Title1>
+  </EmptySpace>
+{/if}

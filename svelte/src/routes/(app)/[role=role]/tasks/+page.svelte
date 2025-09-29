@@ -27,7 +27,7 @@
     currentPage,
     assigneeStore,
   } from "$lib/stores";
-  import { Bell, Eye, EyeClosed, Plus, PlusCircle } from "lucide-svelte";
+  import { Bell, Eye, EyeClosed } from "lucide-svelte";
   import { formatDate } from "$lib/utils";
   import { m } from "$lib/paraglide/messages";
   import message from "$lib/messages.js";
@@ -135,31 +135,17 @@
   </VStack>
 </Toolbar>
 
-{#await data.tasksPaginated}
-  {#if role === "s"}
-    <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
-      <LoadingCard />
-      <LoadingCard />
-      <LoadingCard />
-    </div>
-  {:else}
-    <TableSkeleton />
-  {/if}
-{:then tasks}
-  {#if tasks.data.length < 1}
-    <EmptySpace>
-      <Title1>{m.noTasks()}</Title1>
-    </EmptySpace>
-  {/if}
-  {#if role === "s"}
-    <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
-      {#each tasks.data as task (task.id)}
-        <TaskCard {task} />
-      {/each}
-    </div>
-  {:else}
-    <Table items={tasks.data} {href} config={taskConfig} />
-  {/if}
-{:catch error: App.Error}
-  <p>Error loading lessons: {error.errorID}</p>
-{/await}
+{#if data.tasksPaginated.data.length < 1}
+  <EmptySpace>
+    <Title1>{m.noTasks()}</Title1>
+  </EmptySpace>
+{/if}
+{#if role === "s"}
+  <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+    {#each data.tasksPaginated.data as task (task.id)}
+      <TaskCard {task} />
+    {/each}
+  </div>
+{:else}
+  <Table items={data.tasksPaginated.data} {href} config={taskConfig} />
+{/if}

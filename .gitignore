@@ -21,6 +21,10 @@ test-results/
 *.key
 *.p8
 
+input.md
+output.pdf
+*.zip
+
 caddy-*
 .claude/
 svelte/static/uploads/

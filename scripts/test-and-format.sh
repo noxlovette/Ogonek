@@ -31,9 +31,9 @@ cd axum || handle_error "axum folder not found"
 export DATABASE_URL="$DB_URL"
 
 echo -e "${YELLOW}🎨 Checking Rust formatting...${NC}"
-if ! cargo fmt --check; then
+if ! cargo +nightly fmt --check; then
     echo -e "${YELLOW}⚠️  Formatting issues found. Auto-fixing...${NC}"
-    run_cmd cargo fmt
+    run_cmd cargo +nightly fmt
 fi
 
 echo -e "${YELLOW}🔍 Running cargo clippy...${NC}"
@@ -41,9 +41,6 @@ run_cmd cargo clippy -- -D warnings
 
 echo -e "${YELLOW}🧪 Running cargo tests...${NC}"
 run_cmd cargo test
-
-echo -e "${YELLOW}🗄️  Preparing sqlx queries...${NC}"
-run_cmd cargo sqlx prepare
 
 echo -e "${GREEN}✅ Rust checks completed successfully${NC}"
 

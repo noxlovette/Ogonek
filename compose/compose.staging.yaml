@@ -18,6 +18,11 @@ services:
       timeout: 3s
       retries: 5
       start_period: 30s
+  gotenberg:
+    build:
+      context: ../gotenberg
+      dockerfile: Dockerfile
+    container_name: gotenberg-ogonek-staging
   axum:
     image: ghcr.io/noxlovette/axum-ogonek:1.9.0
     container_name: axum-ogonek-staging

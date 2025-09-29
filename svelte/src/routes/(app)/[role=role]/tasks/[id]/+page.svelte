@@ -20,8 +20,9 @@
   import { getUrgency } from "$lib/utils";
   import { m } from "$lib/paraglide/messages.js";
   import VStack from "$lib/components/UI/layout/VStack.svelte";
+  import DownloadButton from "$lib/components/UI/forms/buttons/DownloadButton.svelte";
 
-  let { data } = $props();
+  let { data, form } = $props();
   const { files, rendered } = $derived(data);
 
   let role = $derived(page.params.role);
@@ -34,6 +35,8 @@
   }
 
   const urgency = getUrgency(data.task);
+
+  $inspect(form);
 </script>
 
 <svelte:head>
@@ -49,6 +52,21 @@
         {#if role === "t"}
           <EditButton href="/t/tasks/{data.task.id}/edit" />
         {/if}
+      </Merger>
+      <Merger>
+        <form
+          class="flex"
+          method="POST"
+          action="?/downloadAll"
+          use:enhance={enhanceForm({
+            messages: {
+              success: "Загрузка началась",
+            },
+            shouldUpdate: true,
+          })}
+        >
+          <DownloadButton urls={form?.urls}></DownloadButton>
+        </form>
       </Merger>
       <Merger>
         <form

@@ -27,7 +27,7 @@ echo -e "${YELLOW}Generating types...${NC}"
 cd axum || handle_error "axum folder not found"
 
 echo -e "${YELLOW}📋 Generating OpenAPI spec...${NC}"
-run_cmd cargo run --bin generate_types
+run_cmd cargo run --bin ogonek_cli generate-types 
 
 # Copy OpenAPI spec to Swift project
 if [ -f openapi.yaml ]; then

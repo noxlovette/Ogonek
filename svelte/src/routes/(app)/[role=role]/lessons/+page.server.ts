@@ -1,9 +1,7 @@
-import { dev } from "$app/environment";
 import logger from "$lib/logger";
 import { routes } from "$lib/routes";
 import { handleApiResponse, isSuccessResponse } from "$lib/server";
 import type { LessonSmall, PaginatedResponse } from "$lib/types";
-import { delay } from "$lib/utils";
 import { fail, redirect, type Actions } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 
@@ -13,10 +11,12 @@ export const load: PageServerLoad = async ({ fetch, url }) => {
   const search = url.searchParams.get("search") || "";
   const assignee = url.searchParams.get("assignee") || "";
 
+  const lessonsPaginated = (await fetch(
+    routes.lessons.all(page, per_page, search, assignee),
+  ).then((res) => res.json())) as PaginatedResponse<LessonSmall>;
+
   return {
-    lessonsPaginated: (dev ? delay(100) : Promise.resolve())
-      .then(() => fetch(routes.lessons.all(page, per_page, search, assignee)))
-      .then((res) => res.json()) as Promise<PaginatedResponse<LessonSmall>>,
+    lessonsPaginated,
   };
 };
 

@@ -1,0 +1,27 @@
+[package]
+name = "ogonek_db"
+version = "1.12.0"
+edition = "2024"
+
+[dependencies]
+anyhow.workspace = true
+nanoid.workspace = true
+tracing.workspace = true
+thiserror.workspace = true
+chrono.workspace = true
+dotenvy.workspace = true
+serde_json.workspace = true
+regex = "1.11.2"
+chrono-tz = "0.10.4"
+
+ogonek_types = { path = "../ogonek-types"}
+sqlx = { workspace = true, features = [
+    "runtime-tokio",
+    "tls-rustls-ring",
+    "postgres",
+    "uuid",
+    "migrate",
+    ] }
+
+[package.metadata.sqlx]
+migrations = "./migrations"

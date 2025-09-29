@@ -1,20 +1,10 @@
 <script lang="ts">
   import { enhanceForm } from "$lib/utils";
-  import { isLoading, user } from "$lib/stores";
+  import { user } from "$lib/stores";
   import { enhance } from "$app/forms";
   import type { FileSmall } from "$lib/types";
-  import { getFileExtension } from "$lib/utils";
-  import {
-    FileText,
-    Image,
-    FileAudio,
-    File,
-    Loader,
-    X,
-    FilePlay,
-  } from "lucide-svelte";
+  import { FileText, Image, FileAudio, File, X, FilePlay } from "lucide-svelte";
   import Caption1 from "../typography/Caption1.svelte";
-  import { m } from "$lib/paraglide/messages";
   import { Merger, UniButton } from "../UI";
 
   let { file }: { file: FileSmall } = $props();
