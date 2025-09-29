@@ -1,21 +1,20 @@
 use axum::{
-    body::Body,
+    Json,
     extract::{Path, Query, State},
-    http::Response,
+    response::IntoResponse,
 };
 use ogonek_db::core::{lesson, task};
-use reqwest::{StatusCode, header};
 
 use crate::{AppState, Claims, api::error::APIError, openapi::FILE_TAG, services::generate_pdf};
 use ogonek_types::{PDFQuery, PDFType};
 
-#[axum::debug_handler]
 /// Generate the PDF for the requested resource
 #[utoipa::path(
     post,
     path = "/pdf/{id}", tag = FILE_TAG,
     params(
-        ("id" = String, Path, description = "Resource ID")
+        ("id" = String, Path, description = "Resource ID"),
+        ("pdfType" = String, Query, description = "Resource type")
     ),
     responses(
         (status = 200, description = "Requested PDF generated"),
@@ -28,34 +27,52 @@ pub async fn get_pdf(
     Path(id): Path<String>,
     Query(query): Query<PDFQuery>,
     claims: Claims,
-) -> Result<Response<Body>, APIError> {
+) -> Result<impl IntoResponse, APIError> {
     let pdf_type = query
         .pdf_type
         .ok_or_else(|| APIError::BadRequest("No PDF type specified".into()))?;
 
-    let (raw_data, filename) = match pdf_type {
+    let (raw_data, filename, s3_key) = match pdf_type {
         PDFType::Task => {
             let data = task::read_for_pdf(&state.db, &id, &claims.sub).await?;
             let filename = format!("task_{}.pdf", sanitize_filename(&data.title));
-            (data, filename)
+            let s3_key = format!("exports/{}/tasks/{}.pdf", claims.sub, id);
+            (data, filename, s3_key)
         }
         PDFType::Lesson => {
             let data = lesson::read_for_pdf(&state.db, &id, &claims.sub).await?;
             let filename = format!("lesson_{}.pdf", sanitize_filename(&data.title));
-            (data, filename)
+            let s3_key = format!("exports/{}/lessons/{}.pdf", claims.sub, id);
+            (data, filename, s3_key)
         }
     };
 
-    let pdf_bytes = generate_pdf(raw_data).await?;
+    // Check si le PDF existe déjà sur S3
+    let presigned_url = match state.s3.object_exists(&s3_key).await {
+        Ok(true) => {
+            // Déjà là, just presign
+            tracing::info!(s3_key = %s3_key, "PDF exists, generating presigned URL");
+            state.s3.get_presigned_url(s3_key, filename).await?
+        }
+        _ => {
+            // Pas là ou erreur, génère + upload
+            tracing::info!(s3_key = %s3_key, "Generating new PDF");
+            let pdf_bytes = generate_pdf(raw_data).await?;
 
-    Ok(Response::builder()
-        .status(StatusCode::OK)
-        .header(header::CONTENT_TYPE, "application/pdf")
-        .header(
-            header::CONTENT_DISPOSITION,
-            format!(r#"attachment; filename="{}""#, filename),
-        )
-        .body(pdf_bytes.into())?)
+            state
+                .s3
+                .upload_object(&s3_key, pdf_bytes.into(), Some("application/pdf"))
+                .await?;
+
+            // Presign
+            state.s3.get_presigned_url(s3_key, filename).await?
+        }
+    };
+
+    // Return JSON avec l'URL au lieu du blob
+    Ok(Json(serde_json::json!({
+        "url": presigned_url
+    })))
 }
 
 // Helper function pour nettoyer le nom de fichier

@@ -40,4 +40,24 @@ impl S3Provider {
 
         Ok(StatusCode::OK)
     }
+
+    pub async fn object_exists(&self, s3_key: &str) -> Result<bool, S3Error> {
+        match self
+            .client
+            .head_object()
+            .bucket(&self.bucket_name)
+            .key(s3_key)
+            .send()
+            .await
+        {
+            Ok(_) => Ok(true),
+            Err(e) => {
+                if e.to_string().contains("404") || e.to_string().contains("NotFound") {
+                    Ok(false)
+                } else {
+                    Err(S3Error::from(e))
+                }
+            }
+        }
+    }
 }

@@ -8,6 +8,7 @@ use utoipa::OpenApi;
     abort_multipart_upload,
     fetch_presigned_url,
     fetch_presigned_urls_batch,
+    get_pdf,
     delete_file,
 ))]
 pub struct FilesApi;

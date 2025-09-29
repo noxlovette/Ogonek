@@ -43,13 +43,9 @@ pub async fn fetch_presigned_url(
     State(state): State<AppState>,
     Path(encoded_key): Path<String>,
 ) -> Result<impl IntoResponse, APIError> {
-    tracing::debug!("Reached the presign url endpoint");
-
     let key = BASE64
         .decode(encoded_key)
         .map_err(|_| APIError::BadRequest("Invalid base64 encoding".into()))?;
-
-    tracing::debug!("Decyphered base64 into url");
 
     let key_str = String::from_utf8(key)
         .map_err(|_| APIError::BadRequest("Invalid UTF-8 in decoded key".into()))?;
@@ -61,8 +57,6 @@ pub async fn fetch_presigned_url(
         .split(".")
         .next()
         .unwrap();
-
-    tracing::debug!("File ID decyphered: {}", file_id);
 
     let file = file::find_by_id_no_owner(&state.db, file_id).await?;
     let presigned_url = state.s3.get_presigned_url(key_str, file.name).await?;
@@ -77,9 +71,9 @@ pub async fn fetch_presigned_url(
 /// Fetches all the files associated with a task and returns their presigned URLs
 #[utoipa::path(
     post,
-    path = "/presigned/batch/{file_id}",
+    path = "/presigned/batch/{task_id}",
     params(
-        ("file_id" = String, Path, description = "The DB id of the task the files belong to")
+        ("task_id" = String, Path, description = "The DB id of the task the files belong to")
     ),
     tag = TASK_TAG,
     responses(
@@ -100,7 +94,6 @@ pub async fn fetch_presigned_urls_batch(
         // Get file info
         let file = file::find_by_id_no_owner(&state.db, &file_id).await?;
 
-        // Generate presigned URL using the file's s3_key
         let presigned_url = state
             .s3
             .get_presigned_url(file.s3_key.clone(), file.name.clone())
