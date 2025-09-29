@@ -35,6 +35,18 @@ services:
       resources:
         limits:
           memory: 1G
+  gotenberg:
+    build:
+      context: ../gotenberg
+      dockerfile: Dockerfile
+    container_name: gotenberg-fl-prod
+    restart: unless-stopped
+    networks:
+      - internal
+    deploy:
+      resources:
+        limits:
+          memory: 512M
   axum:
     image: ghcr.io/noxlovette/axum-ogonek:1.7.4
     container_name: axum-fl-prod
