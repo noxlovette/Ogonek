@@ -1,6 +1,6 @@
 services:
   svelte:
-    image: ghcr.io/noxlovette/svelte-ogonek:1.7.2
+    image: cr.yandex/crphgfk6iflm2vci0i1b/svelte-ogonek:1.12.0
     container_name: svelte-fl-prod
     env_file:
       - ./.env.svelte
@@ -17,7 +17,18 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-
+  gotenberg:
+    build:
+      context: ../gotenberg
+      dockerfile: Dockerfile
+    container_name: gotenberg-fl-prod
+    restart: unless-stopped
+    networks:
+      - internal
+    deploy:
+      resources:
+        limits:
+          memory: 512M
   redis:
     image: redis/redis-stack-server:latest
     container_name: redis-fl-prod
@@ -36,7 +47,7 @@ services:
         limits:
           memory: 1G
   axum:
-    image: ghcr.io/noxlovette/axum-ogonek:1.7.4
+    image: cr.yandex/crphgfk6iflm2vci0i1b/axum-ogonek:1.12.0
     container_name: axum-fl-prod
     logging:
       driver: "json-file"
