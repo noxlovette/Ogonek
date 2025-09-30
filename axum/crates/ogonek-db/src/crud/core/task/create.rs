@@ -28,14 +28,13 @@ pub async fn create(
 /// Creates a task based on user preferences, faster – no JSON
 pub async fn create_with_defaults(db: &PgPool, user_id: &str) -> Result<String, DbError> {
     let id = sqlx::query_scalar!(
-        "INSERT INTO tasks (id, title, markdown, assignee, created_by)
-         VALUES ($1, $2, $3, $4, $5 )
+        "INSERT INTO tasks (id, title, markdown,  created_by)
+         VALUES ($1, $2, $3, $4)
          RETURNING id
          ",
         nanoid::nanoid!(),
         "Default Title", // TODO: feed in preferred title
         "# Default markdown",
-        user_id,
         user_id,
     )
     .fetch_one(db)

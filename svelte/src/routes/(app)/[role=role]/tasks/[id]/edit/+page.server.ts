@@ -1,4 +1,3 @@
-import { z } from "$lib";
 import logger from "$lib/logger";
 import { routes } from "$lib/routes";
 import { handleApiResponse, isSuccessResponse } from "$lib/server";
@@ -17,31 +16,31 @@ export const actions = {
   update: async ({ request, fetch, params }) => {
     const { id } = params;
     const formData = await request.formData();
+    const dateString = formData.get("dueDate")?.toString();
+
+    const dueDate =
+      dateString && dateString.trim() !== ""
+        ? new Date(dateString + "T23:59:59").toISOString()
+        : null;
+    const assignee = formData.get("assignee")?.toString();
+
     const data = {
       title: formData.get("title")?.toString(),
-      dueDate: new Date(formData.get("dueDate") + "T23:59:59").toISOString(),
-      completed: formData.has("completed"),
-      assignee: formData.get("assignee")?.toString(),
+      assignee: assignee && assignee.trim() !== "" ? assignee : null,
+      unassign: formData.has("unassign"),
+      dueDate,
       markdown: formData.get("markdown")?.toString(),
     };
 
-    const validation = z.updateTaskBody.safeParse(data);
-    if (!validation.success) {
-      return fail(400, {
-        message: "Validation failed",
-      });
-    }
     const response = await fetch(routes.tasks.task(id || ""), {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(validation.data),
+      body: JSON.stringify(data),
     });
     if (!response.ok) {
-      const errorData: App.Error = await response.json();
+      const errorData = await response.text();
       logger.error({ errorData, id }, "Error updating task");
-      return fail(response.status, {
-        message: errorData.message || "Update failed",
-      });
+      return fail(500);
     }
     return redirect(303, `/t/tasks/${id}`);
   },

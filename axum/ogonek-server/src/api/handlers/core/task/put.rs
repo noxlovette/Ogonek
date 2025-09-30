@@ -54,7 +54,7 @@ pub async fn toggle_task(
                 &claims.sub,
                 NotificationType::Completed {
                     task_title: task.title,
-                    username: task.assignee_name,
+                    username: task.assignee_name.unwrap_or("unknown username".to_string()),
                     task_id: task.id,
                 },
             )

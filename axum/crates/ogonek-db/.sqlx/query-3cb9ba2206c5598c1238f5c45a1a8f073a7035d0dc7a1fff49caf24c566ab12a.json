@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "\n            SELECT\n                t.id,\n                t.title,\n                t.markdown,\n                t.priority,\n                t.completed,\n                t.due_date,\n                t.assignee,\n                t.created_by,\n                t.created_at,\n                t.updated_at,\n                u.name as assignee_name\n            FROM tasks t\n            LEFT JOIN \"user\" u ON t.assignee = u.id\n            WHERE t.id = $1\n            AND (t.assignee = $2 OR t.created_by = $2)\n            ",
+  "query": "\n            SELECT\n                t.id,\n                t.title,\n                t.markdown,\n                t.priority,\n                t.completed,\n                t.due_date,\n                t.assignee,\n                t.created_by,\n                t.created_at,\n                t.updated_at,\n                u.name as \"assignee_name?\"\n            FROM tasks t\n            LEFT JOIN \"user\" u ON t.assignee = u.id\n            WHERE t.id = $1\n            AND (t.assignee = $2 OR t.created_by = $2)\n            ",
   "describe": {
     "columns": [
       {
@@ -55,7 +55,7 @@
       },
       {
         "ordinal": 10,
-        "name": "assignee_name",
+        "name": "assignee_name?",
         "type_info": "Varchar"
       }
     ],
@@ -72,12 +72,12 @@
       false,
       false,
       true,
-      false,
+      true,
       false,
       false,
       false,
       false
     ]
   },
-  "hash": "9d527bae7e27887426bff3e268bcaa7237e5857c7c66983ad04ed8aa994e0773"
+  "hash": "3cb9ba2206c5598c1238f5c45a1a8f073a7035d0dc7a1fff49caf24c566ab12a"
 }

@@ -22,8 +22,8 @@ pub struct TaskFull {
     #[serde(with = "datetime_serialization::option")]
     pub due_date: Option<DateTime<Utc>>,
     pub created_by: String,
-    pub assignee: String,
-    pub assignee_name: String,
+    pub assignee: Option<String>,
+    pub assignee_name: Option<String>,
 }
 
 #[derive(Serialize, Debug, FromRow, ToSchema)]
@@ -33,7 +33,7 @@ pub struct TaskSmall {
     pub title: String,
     pub priority: i16,
     pub completed: bool,
-    pub assignee_name: String,
+    pub assignee_name: Option<String>,
     pub seen: Option<bool>,
     #[serde(with = "datetime_serialization::option")]
     pub due_date: Option<DateTime<Utc>>,
@@ -44,21 +44,20 @@ pub struct TaskSmall {
 pub struct TaskCreate {
     pub title: String,
     pub markdown: String,
-    pub priority: Option<i16>,
     #[serde(with = "datetime_serialization::option")]
     pub due_date: Option<DateTime<Utc>>,
     pub assignee: Option<String>,
 }
 
-#[derive(Serialize, Deserialize, Debug, ToSchema)]
+#[derive(Deserialize, Debug, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct TaskUpdate {
     pub title: Option<String>,
     pub markdown: Option<String>,
-    pub completed: Option<bool>,
-    #[serde(with = "datetime_serialization::option")]
+    #[serde(default, with = "datetime_serialization::option")]
     pub due_date: Option<DateTime<Utc>>,
     pub assignee: Option<String>,
+    pub unassign: Option<bool>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]

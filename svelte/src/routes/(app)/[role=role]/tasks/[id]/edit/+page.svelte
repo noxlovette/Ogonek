@@ -18,7 +18,7 @@
   import { m } from "$lib/paraglide/messages";
   import VStack from "$lib/components/UI/layout/VStack.svelte";
 
-  let { data }: { data: PageData } = $props();
+  let { data, form } = $props();
   let { task } = data;
 
   let markdown = $state(task.markdown);
@@ -79,6 +79,7 @@
       bind:value={dueDate}
       type="date"
       name="dueDate"
+      invalidDescription="Что-то не так со временем"
       labelName="Срок выполнения"
       placeholder="Due Date"
     ></Input>

@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "INSERT INTO tasks (id, title, markdown, assignee, created_by)\n         VALUES ($1, $2, $3, $4, $5 )\n         RETURNING id\n         ",
+  "query": "INSERT INTO tasks (id, title, markdown,  created_by)\n         VALUES ($1, $2, $3, $4)\n         RETURNING id\n         ",
   "describe": {
     "columns": [
       {
@@ -14,7 +14,6 @@
         "Varchar",
         "Varchar",
         "Text",
-        "Varchar",
         "Varchar"
       ]
     },
@@ -22,5 +21,5 @@
       false
     ]
   },
-  "hash": "5bf3f8eef3d629c581baa7a49bdb6daaeb2497a50d19e000695a5cdd5584571a"
+  "hash": "ccdfaf3e5fc4ac4b00b605353d40944a6d6b60d56308d932661725618b5e7b8e"
 }

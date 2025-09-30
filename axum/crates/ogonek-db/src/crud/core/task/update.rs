@@ -46,16 +46,18 @@ pub async fn update(
          SET
             title = COALESCE($3, title),
             markdown = COALESCE($4, markdown),
-            completed = COALESCE($5, completed),
-            due_date = COALESCE($6, due_date),
-            assignee = COALESCE($7, assignee)
+            due_date = COALESCE($5, due_date),
+            assignee = CASE 
+            WHEN $6 = true THEN NULL
+            ELSE COALESCE($7, assignee)
+            END
          WHERE id = $1 AND (assignee = $2 OR created_by = $2)",
         id,
         user_id,
         update.title,
         update.markdown,
-        update.completed,
         update.due_date,
+        update.unassign,
         update.assignee,
     )
     .execute(db)

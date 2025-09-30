@@ -83,7 +83,7 @@ pub async fn read_by_id(db: &PgPool, id: &str, user_id: &str) -> Result<TaskFull
                 t.created_by,
                 t.created_at,
                 t.updated_at,
-                u.name as assignee_name
+                u.name as "assignee_name?"
             FROM tasks t
             LEFT JOIN "user" u ON t.assignee = u.id
             WHERE t.id = $1
@@ -92,9 +92,8 @@ pub async fn read_by_id(db: &PgPool, id: &str, user_id: &str) -> Result<TaskFull
         id,
         user_id,
     )
-    .fetch_optional(db)
-    .await?
-    .ok_or_else(|| DbError::NotFound("Task not found".into()))?;
+    .fetch_one(db)
+    .await?;
 
     Ok(task)
 }
@@ -118,7 +117,7 @@ pub async fn read_assignee(
     .fetch_optional(db)
     .await?;
 
-    Ok(assignee)
+    Ok(assignee.flatten())
 }
 
 /// Finds the markdown and the title

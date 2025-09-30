@@ -1200,8 +1200,8 @@ export interface components {
             username: string;
         };
         TaskFull: {
-            assignee: string;
-            assigneeName: string;
+            assignee?: string | null;
+            assigneeName?: string | null;
             completed: boolean;
             /** Format: date-time */
             createdAt: string;
@@ -1217,7 +1217,7 @@ export interface components {
             updatedAt: string;
         };
         TaskSmall: {
-            assigneeName: string;
+            assigneeName?: string | null;
             completed: boolean;
             /** Format: date-time */
             dueDate?: string | null;
@@ -1229,11 +1229,11 @@ export interface components {
         };
         TaskUpdate: {
             assignee?: string | null;
-            completed?: boolean | null;
             /** Format: date-time */
             dueDate?: string | null;
             markdown?: string | null;
             title?: string | null;
+            unassign?: boolean | null;
         };
         TaskWithFilesResponse: {
             files: components["schemas"]["FileSmall"][];
