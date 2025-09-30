@@ -59,6 +59,8 @@
   function removeCard(index: number) {
     updatedCards = updatedCards.filter((_, i) => i !== index);
   }
+
+  let visibility = $state(deck.visibility);
 </script>
 
 <svelte:head>
@@ -121,19 +123,22 @@
       value={deck.description}
     />
 
+    <Divider />
     {#if role === "t"}
+      {#if visibility === "assigned"}
+        <Input
+          name="assignee"
+          placeholder="Для кого колода"
+          labelName="Назначено"
+          item={deck}
+          type="assignee"
+        />
+      {/if}
       <Input
         name="visibility"
-        labelName="Видимость"
-        value={deck.visibility}
+        labelName="Кто видит"
+        bind:value={visibility}
         type="visibility"
-      />
-      <Input
-        name="assignee"
-        placeholder="Для кого колода"
-        labelName="Назначено"
-        item={deck}
-        type="assignee"
       />
     {/if}
   </VStack>

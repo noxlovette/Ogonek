@@ -31,21 +31,21 @@
     <div>
       <Input
         type="textarea"
-        labelName="Лицевая сторона"
+        labelName="Незнакомая информация"
         name={`cards[${index}][front]`}
         bind:value={card.front}
-        placeholder="Question or prompt"
+        placeholder="Незнакомая информация"
       />
     </div>
 
     <!-- Back -->
     <div>
       <Input
-        labelName="Обратная сторона"
+        labelName="Объяснение"
         type="textarea"
         name={`cards[${index}][back]`}
         bind:value={card.back}
-        placeholder="Answer or explanation"
+        placeholder="Объяснение"
       />
     </div>
   </div>

@@ -109,7 +109,7 @@
 <svelte:window on:keydown={handleKeyPress} />
 {#if isComplete || data.cards.length === 0}
   <div class="p-8">
-    <div class="flex flex-col items-center space-y-6 py-10 text-center">
+    <div class="gap-default flex flex-col items-center py-10 text-center">
       <Body>
         {m.quiet_lost_whale_exhale()}
       </Body>

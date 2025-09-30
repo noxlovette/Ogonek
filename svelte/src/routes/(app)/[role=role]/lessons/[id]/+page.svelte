@@ -42,7 +42,7 @@
         </Merger>
       {/if}
     </VStack>
-    <VStack styling="">
+    <VStack>
       {#if role === "t"}
         <Title3>
           {data.lesson.topic}

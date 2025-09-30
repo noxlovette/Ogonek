@@ -1,10 +1,8 @@
 <script lang="ts">
   import { onDestroy } from "svelte";
-  import { Ban, Check, Upload, X } from "lucide-svelte";
+  import { Upload, X } from "lucide-svelte";
   import logger from "$lib/logger";
-  import { formatFileSize, formatPercentage } from "$lib/utils";
-  import { Footnote } from "$lib/components/typography";
-  import Caption2 from "$lib/components/typography/Caption2.svelte";
+  import { formatPercentage } from "$lib/utils";
   import Caption1 from "$lib/components/typography/Caption1.svelte";
   import { m } from "$lib/paraglide/messages";
   import ProgressBar from "./ProgressBar.svelte";
@@ -53,6 +51,7 @@
   let fileUploads: FileUploadState[] = $state([]);
 
   const CHUNK_SIZE = 5 * 1024 * 1024;
+  const MAX_FILE_SIZE = 99 * 1024 * 1024; // 99MB
 
   function calculateChunks(file: File): number {
     return Math.ceil(file.size / CHUNK_SIZE);
@@ -62,7 +61,22 @@
     const input = event.target as HTMLInputElement;
     if (!input.files?.length) return;
 
-    const newFiles = Array.from(input.files).map((file) => ({
+    const validFiles: File[] = [];
+    const rejectedFiles: string[] = [];
+
+    Array.from(input.files).forEach((file) => {
+      if (file.size > MAX_FILE_SIZE) {
+        rejectedFiles.push(file.name);
+      } else {
+        validFiles.push(file);
+      }
+    });
+
+    if (rejectedFiles.length > 0) {
+      logger.warn(`Files rejected (>99MB): ${rejectedFiles.join(", ")}`);
+    }
+
+    const newFiles = validFiles.map((file) => ({
       id: crypto.randomUUID(),
       file,
       progress: {
@@ -388,4 +402,5 @@
       </div>
     {/each}
   {/if}
+  <Caption1>Максимальный размер файла – 100 Мб</Caption1>
 </HStack>

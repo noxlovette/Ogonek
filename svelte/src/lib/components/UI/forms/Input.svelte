@@ -194,7 +194,7 @@
   {:else if type === "visibility"}
     <select
       name="visibility"
-      {value}
+      bind:value
       class={baseStyle}
       {required}
       data-cy={dataCy}

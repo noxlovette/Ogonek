@@ -39,7 +39,7 @@
 <form
   method="POST"
   action="?/update"
-  class="mb-4 space-y-6"
+  class="gap-default mb-4 flex flex-col"
   use:enhance={enhanceForm({
     messages: {
       redirect: m.changesSaved(),
@@ -62,7 +62,7 @@
 
   <input type="hidden" name="markdown" value={markdown} />
 
-  <div class="grid grid-cols-1 gap-5 md:grid-cols-3">
+  <div class="gap-default grid grid-cols-1 md:grid-cols-3">
     <Input
       name="title"
       labelName="Название"

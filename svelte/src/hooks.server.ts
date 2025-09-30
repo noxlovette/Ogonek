@@ -87,11 +87,11 @@ export const authenticationHandle: Handle = async ({ event, resolve }) => {
 
   if (isTeacherRoute && user.role !== "teacher") {
     logger.warn("Redirecting to unauthorised as student");
-    throw Error("Вам здесь не рады");
+    throw redirect(303, "/unauthorised");
   }
   if (isStudentRoute && user.role !== "student") {
     logger.warn("Redirecting to unauthorised as teacher");
-    throw Error("Вам здесь не рады");
+    throw redirect(303, "/unauthorised");
   }
   if (isAdminRoute && !isSuperUser(user.role)) {
     logger.warn("Unauthorised attempt to enter admin interfaces");
