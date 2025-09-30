@@ -94,6 +94,7 @@
     class={`flex h-full items-center justify-center gap-2 rounded-lg p-2  font-medium transition ${quality.color}`}
     name="quality"
     value={quality.quality}
+    data-cy="quality-button"
     data-key={quality.key}
     type="submit"
     ><KBD>
@@ -147,6 +148,7 @@
         {#if showCloze}
           {#if !showAnswer}
             <Input
+              dataCy="answer-input"
               bind:ref={inputRef}
               name={m.icy_moving_buzzard_swim()}
               placeholder={m.vexed_born_butterfly_dream()}
