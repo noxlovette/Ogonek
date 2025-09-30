@@ -9,7 +9,7 @@
 </script>
 
 <nav
-  class="ring-default fixed bottom-0 left-0 w-full bg-stone-100 pt-4 pb-8 md:hidden dark:bg-stone-800"
+  class="ring-default fixed bottom-2 left-1/2 z-50 h-20 w-[90vw] max-w-xl -translate-x-1/2 rounded-full bg-stone-100/50 p-2 backdrop-blur-sm md:hidden"
 >
   <div class="flex justify-around">
     {#each elements as Element, index (index)}
