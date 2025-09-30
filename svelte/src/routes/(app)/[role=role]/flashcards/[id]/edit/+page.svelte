@@ -13,18 +13,18 @@
     CancelButton,
     SaveButton,
     NewCard,
+    Caption1,
   } from "$lib/components";
 
   import { enhanceForm } from "$lib/utils";
   import { enhance } from "$app/forms";
   import { page } from "$app/state";
-  import { Plus, Import } from "lucide-svelte";
+  import { Import } from "lucide-svelte";
   import UniButton from "$lib/components/UI/forms/buttons/UniButton.svelte";
   import { pushState } from "$app/navigation";
   import { onMount } from "svelte";
   import { m } from "$lib/paraglide/messages.js";
   import Title1 from "$lib/components/typography/Title1.svelte";
-  import NewButton from "$lib/components/UI/forms/buttons/NewButton.svelte";
 
   onMount(() => {
     if (updatedCards.length > 0) {
@@ -41,7 +41,7 @@
   }
 
   const role = page.params.role;
-  let { data } = $props();
+  let { data, form } = $props();
   let { deck, cards } = data;
   let updatedCards = $state([...cards]);
 
@@ -60,6 +60,8 @@
   function removeCard(index: number) {
     updatedCards = updatedCards.filter((_, i) => i !== index);
   }
+
+  let visibility = $state(deck.visibility);
 </script>
 
 <svelte:head>
@@ -112,32 +114,45 @@
     <Input
       labelName="Название колоды"
       name="title"
-      placeholder="Give your deck a title"
+      invalid={form?.title}
+      invalidDescription="Должно быть название"
+      placeholder="Чтобы не потерять"
       value={deck.title}
     />
     <Input
       name="description"
-      labelName="Описание"
-      placeholder="What's this deck about?"
+      labelName="Теги через ;"
+      placeholder="О чем эта дека?"
       value={deck.description}
     />
 
+    <Divider />
     {#if role === "t"}
+      {#if visibility === "assigned"}
+        <Input
+          name="assignee"
+          placeholder="Для кого колода"
+          labelName="Назначено"
+          invalid={form?.assignee}
+          invalidDescription="Для кого колода?"
+          item={deck}
+          type="assignee"
+        />
+      {/if}
       <Input
         name="visibility"
-        labelName="Видимость"
-        value={deck.visibility}
+        labelName="Кто видит"
+        bind:value={visibility}
         type="visibility"
-      />
-      <Input
-        name="assignee"
-        placeholder="Для кого колода"
-        labelName="Назначено"
-        item={deck}
-        type="assignee"
       />
     {/if}
   </VStack>
+
+  {#if form?.cards}
+    <Caption1 styling="text-rose-500">
+      У всех ли карточек заполнены обе стороны?
+    </Caption1>
+  {/if}
 
   {#if updatedCards.length === 0}
     <EmptySpace>

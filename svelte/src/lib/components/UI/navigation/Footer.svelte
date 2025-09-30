@@ -8,7 +8,7 @@
 
 <svelte:window bind:innerWidth={width} />
 <footer
-  class="mt-30 flex w-full flex-col items-center justify-center border-t border-stone-200 px-1 py-3 text-xs md:mt-12 md:px-6 md:text-base lg:px-12"
+  class="mt-30 flex w-full flex-col items-center justify-center border-t border-stone-200 px-1 py-3 text-xs md:mt-12 md:px-6 md:text-base lg:px-12 dark:border-stone-700"
 >
   {#if isMobile}
     <HStack styling="items-center">

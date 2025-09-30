@@ -109,7 +109,7 @@
     </div>
 
     <!-- Body -->
-    <div class="space-y-6 p-8">
+    <div class="gap-default p-8">
       <!-- Error ID -->
       {#if errorId}
         <div

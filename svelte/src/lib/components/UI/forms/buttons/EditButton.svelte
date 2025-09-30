@@ -9,6 +9,7 @@
 <UniButton
   variant="prominent"
   content={m.edit()}
+  dataCy="edit-button"
   type="submit"
   ariaLabel="Edit"
   Icon={Pencil}

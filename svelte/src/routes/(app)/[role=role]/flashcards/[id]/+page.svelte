@@ -111,7 +111,7 @@
       </VStack>
     </VStack>
     <VStack>
-      {#if deck.description}
+      {#if deck.description && deck.description?.trim() !== ""}
         <div class="flex flex-wrap gap-x-1 gap-y-2">
           {#each deck.description.split(";") as deckTag, index (index)}
             <Badge>{deckTag}</Badge>

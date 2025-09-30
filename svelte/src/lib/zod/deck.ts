@@ -3,10 +3,10 @@ import z from "zod";
 export const updateDeckBody = z.object({
   cards: z.array(
     z.object({
-      back: z.string(),
-      front: z.string(),
-      id: z.string().nullish(),
-      mediaUrl: z.string().nullish(),
+      front: z.string().min(1, "Le recto ne peut pas être vide").trim(),
+      back: z.string().min(1, "Le verso ne peut pas être vide").trim(),
+      id: z.string().nullable(),
+      mediaUrl: z.string().nullable(),
     }),
   ),
   deck: z.object({

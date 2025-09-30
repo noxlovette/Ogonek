@@ -13,12 +13,12 @@
     CancelButton,
     DeleteButton,
     SaveButton,
+    Toggler,
   } from "$lib/components";
-  import type { PageData } from "./$types";
   import { m } from "$lib/paraglide/messages";
   import VStack from "$lib/components/UI/layout/VStack.svelte";
 
-  let { data }: { data: PageData } = $props();
+  let { data, form } = $props();
   let { task } = data;
 
   let markdown = $state(task.markdown);
@@ -32,12 +32,14 @@
       dueDate = new Date(task.dueDate).toISOString().split("T")[0];
     }
   });
+
+  let assigned = $state(task.assignee ? true : false);
 </script>
 
 <form
   method="POST"
   action="?/update"
-  class="mb-4 space-y-6"
+  class="gap-default mb-4 flex flex-col"
   use:enhance={enhanceForm({
     messages: {
       redirect: m.changesSaved(),
@@ -60,29 +62,45 @@
 
   <input type="hidden" name="markdown" value={markdown} />
 
-  <div class="grid grid-cols-1 gap-5 md:grid-cols-3">
+  <div class="gap-default grid grid-cols-1 md:grid-cols-3">
     <Input
       name="title"
       labelName="Название"
       value={task.title}
+      invalid={form?.title}
+      invalidDescription="Название?"
       placeholder="Title"
     ></Input>
-    <Input
-      name="assignee"
-      labelName="Назначено"
-      type="assignee"
-      item={task}
-      placeholder="Для кого задание"
-    />
 
     <Input
       bind:value={dueDate}
       type="date"
       name="dueDate"
+      invalid={form?.date}
+      invalidDescription="Что-то не так со временем"
       labelName="Срок выполнения"
       placeholder="Due Date"
     ></Input>
+
+    {#if assigned}
+      <Input
+        name="assignee"
+        labelName="Назначено"
+        type="assignee"
+        item={task}
+        invalid={form?.assignee}
+        invalidDescription="Так для кого это?"
+        placeholder="Для кого задание"
+      />
+    {/if}
   </div>
+  <Toggler
+    bind:value={assigned}
+    name="assigned"
+    title={assigned
+      ? "Это задание будет привязано к ученику"
+      : "Это задание ни к кому не будет привязано"}
+  />
 </form>
 
 <div class="grid gap-4 md:grid-cols-3">

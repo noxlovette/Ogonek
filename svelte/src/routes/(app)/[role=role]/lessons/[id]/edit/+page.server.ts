@@ -1,4 +1,3 @@
-import { z } from "$lib";
 import logger from "$lib/logger";
 import { routes } from "$lib/routes";
 import { unsplash } from "$lib/server";
@@ -21,12 +20,31 @@ export const actions = {
       return fail(500);
     }
     const formData = await request.formData();
-    const data = Object.fromEntries(formData);
-    const body = z.updateLessonBody.safeParse(data).data;
+    const assignee = formData.get("assignee")?.toString();
+    const title = formData.get("title")?.toString();
+    const topic = formData.get("topic")?.toString();
 
+    if (assignee?.trim() == "") {
+      return fail(400, { assignee: true });
+    }
+
+    if (title?.trim() == "") {
+      return fail(400, { title: true });
+    }
+    if (topic?.trim() == "") {
+      return fail(400, { topic: true });
+    }
+
+    const data = {
+      title,
+      topic,
+      assignee: assignee && assignee.trim() !== "" ? assignee : null,
+      unassign: !formData.has("asssigned"),
+      markdown: formData.get("markdown")?.toString(),
+    };
     const response = await fetch(routes.lessons.lesson(id), {
       method: "PATCH",
-      body: JSON.stringify(body),
+      body: JSON.stringify(data),
     });
 
     if (!response.ok) {

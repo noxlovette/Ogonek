@@ -14,6 +14,7 @@
     SearchBar,
     UniButton,
     Photo,
+    Toggler,
   } from "$lib/components";
   import { enhanceForm } from "$lib/utils";
   import Input from "$lib/components/UI/forms/Input.svelte";
@@ -29,12 +30,14 @@
   let showPicker = $state(true);
 
   let q = "";
+
+  let assigned = $state(lesson.assignee ? true : false);
 </script>
 
 <form
   method="POST"
   action="?/update"
-  class="gap-4"
+  class="gap-default mb-4 flex flex-col"
   use:enhance={enhanceForm({
     messages: {
       redirect: m.changesSaved(),
@@ -57,27 +60,43 @@
   </Toolbar>
 
   <input type="hidden" name="markdown" value={markdown} />
-  <div class="grid grid-cols-1 gap-5 md:grid-cols-3">
+  <div class="gap-default grid grid-cols-1 md:grid-cols-3">
     <Input
       name="title"
       labelName="Название"
+      invalid={form?.title}
+      invalidDescription="Как назовем? Иосиф?"
       value={lesson.title}
       placeholder="Title"
     ></Input>
     <Input
       name="topic"
+      invalid={form?.topic}
+      invalidDescription="О чем говорили?"
       labelName="Тема"
       value={lesson.topic}
       placeholder="Topic"
     ></Input>
-    <Input
-      name="assignee"
-      labelName="Назначено"
-      item={lesson}
-      type="assignee"
-      placeholder="С кем было занятие"
-    />
+
+    {#if assigned}
+      <Input
+        name="assignee"
+        labelName="Назначено"
+        invalid={form?.assignee}
+        invalidDescription="С кем было занятие-то?"
+        item={lesson}
+        type="assignee"
+        placeholder="С кем было занятие"
+      />
+    {/if}
   </div>
+  <Toggler
+    bind:value={assigned}
+    name="assigned"
+    title={assigned
+      ? "Это занятие будет привязано к ученику"
+      : "Это занятие ни к кому не будет привязано"}
+  />
 </form>
 
 <form

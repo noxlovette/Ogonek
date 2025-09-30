@@ -6,6 +6,7 @@
 
 <UniButton
   content={m.save()}
+  dataCy="save-button"
   variant="prominent"
   type="submit"
   ariaLabel="Save"

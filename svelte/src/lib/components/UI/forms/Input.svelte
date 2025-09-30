@@ -194,7 +194,7 @@
   {:else if type === "visibility"}
     <select
       name="visibility"
-      {value}
+      bind:value
       class={baseStyle}
       {required}
       data-cy={dataCy}
@@ -286,7 +286,7 @@
     </select>
   {/if}
   {#if invalid && invalidDescription}
-    <Caption1 id="{name}-error">
+    <Caption1 styling="text-rose-600" id="{name}-error">
       {invalidDescription}
     </Caption1>
   {/if}
