@@ -18,13 +18,12 @@
   import { enhanceForm } from "$lib/utils";
   import { enhance } from "$app/forms";
   import { page } from "$app/state";
-  import { Plus, Import } from "lucide-svelte";
+  import { Import } from "lucide-svelte";
   import UniButton from "$lib/components/UI/forms/buttons/UniButton.svelte";
   import { pushState } from "$app/navigation";
   import { onMount } from "svelte";
   import { m } from "$lib/paraglide/messages.js";
   import Title1 from "$lib/components/typography/Title1.svelte";
-  import NewButton from "$lib/components/UI/forms/buttons/NewButton.svelte";
 
   onMount(() => {
     if (updatedCards.length > 0) {

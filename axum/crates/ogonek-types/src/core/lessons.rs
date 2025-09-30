@@ -11,7 +11,7 @@ pub struct LessonSmall {
     pub id: String,
     pub title: String,
     pub topic: String,
-    pub assignee_name: String,
+    pub assignee_name: Option<String>,
     pub seen: Option<bool>,
     #[serde(with = "datetime_serialization")]
     pub created_at: DateTime<Utc>,
@@ -25,7 +25,7 @@ pub struct LessonFull {
     pub title: String,
     pub topic: String,
     pub markdown: String,
-    pub assignee: String,
+    pub assignee: Option<String>,
     #[serde(skip_serializing)]
     pub photo_id: Option<String>,
     #[serde(with = "datetime_serialization")]
@@ -33,14 +33,14 @@ pub struct LessonFull {
 
     #[serde(with = "datetime_serialization")]
     pub updated_at: DateTime<Utc>,
-    pub assignee_name: String,
+    pub assignee_name: Option<String>,
 }
 /// Version to indulge swift OpenAPI Generator. ATTENTION: camelCase may break the iOS app! I fucked up the last build
 #[derive(Serialize, Debug, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct LessonWithPhoto {
-    pub assignee: String,
-    pub assignee_name: String,
+    pub assignee: Option<String>,
+    pub assignee_name: Option<String>,
     #[serde(with = "datetime_serialization")]
     pub created_at: DateTime<Utc>,
     pub id: String,
@@ -89,6 +89,7 @@ pub struct LessonUpdate {
     pub assignee: Option<String>,
     pub created_by: Option<String>,
     pub media_url: Option<String>,
+    pub unassign: Option<bool>,
 }
 
 // NOT IMPLEMENTED

@@ -65,7 +65,7 @@ pub async fn find_recent(db: &PgPool, user_id: &str) -> Result<Vec<LessonSmall>,
         LessonSmall,
         r#"
         SELECT l.id, l.title, l.topic, l.created_at,
-               u.name as assignee_name,
+               u.name as "assignee_name?",
                COALESCE(s.seen_at IS NOT NULL, TRUE) as seen
         FROM lessons l
         LEFT JOIN "user" u ON l.assignee = u.id
@@ -82,7 +82,7 @@ pub async fn find_recent(db: &PgPool, user_id: &str) -> Result<Vec<LessonSmall>,
     Ok(lessons)
 }
 
-/// Finds one lesson by its id, will return null if the user doesn't have access to the data
+/// Finds one lesson by its id, will return not found if the user doesn't have access to the data
 pub async fn find_by_id(
     db: &PgPool,
     lesson_id: &str,
@@ -100,7 +100,7 @@ pub async fn find_by_id(
             l.created_at,
             l.photo_id,
             l.updated_at,
-            u.name as assignee_name
+            u.name as "assignee_name?"
         FROM lessons l
         LEFT JOIN "user" u ON l.assignee = u.id
         LEFT JOIN photos p on l.photo_id = p.id

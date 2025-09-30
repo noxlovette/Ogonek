@@ -177,7 +177,7 @@ pub async fn read_recent(db: &PgPool, user_id: &str) -> Result<Vec<TaskSmall>, D
                 t.priority,
                 t.completed,
                 t.due_date,
-                u.name as assignee_name,
+                u.name as "assignee_name?",
                COALESCE(s.seen_at IS NOT NULL, TRUE) as seen
             FROM tasks t
             LEFT JOIN "user" u ON t.assignee = u.id

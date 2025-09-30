@@ -74,7 +74,11 @@ pub async fn update(
             title = COALESCE($1, title),
             topic = COALESCE($2, topic),
             markdown = COALESCE($3, markdown),
-            assignee = COALESCE($4, assignee)
+            assignee = CASE
+            WHEN $7 = true THEN NULL
+            ELSE 
+            COALESCE($4, assignee)
+            END
          WHERE id = $5 AND created_by = $6
 ",
         update.title,
@@ -82,7 +86,8 @@ pub async fn update(
         update.markdown,
         update.assignee,
         lesson_id,
-        user_id
+        user_id,
+        update.unassign
     )
     .execute(db)
     .await?;
@@ -109,7 +114,7 @@ pub async fn read_assignee(
     .fetch_optional(db) // in case lesson is not found
     .await?;
 
-    Ok(assignee)
+    Ok(assignee.flatten())
 }
 
 pub async fn count(db: &PgPool, user_id: &str) -> Result<i64, DbError> {
@@ -179,7 +184,7 @@ mod tests {
         // Verify the lesson was created with correct assignee
         let lesson = find_by_id(&db, &result.unwrap(), &assignee).await;
         assert!(lesson.is_ok());
-        assert_eq!(lesson.unwrap().assignee, assignee);
+        assert_eq!(lesson.unwrap().assignee, Some(assignee));
     }
 
     #[sqlx::test]
@@ -221,8 +226,8 @@ mod tests {
         assert!(result.is_ok());
 
         let lesson = result.unwrap();
-        assert_eq!(lesson.assignee, assignee);
-        assert_eq!(lesson.assignee_name, "Test Name");
+        assert_eq!(lesson.assignee, Some(assignee));
+        assert_eq!(lesson.assignee_name, Some("Test Name".to_string()));
     }
 
     #[sqlx::test]
@@ -390,6 +395,7 @@ mod tests {
             media_url: None,
             id: None,
             created_by: None,
+            unassign: None,
         };
 
         let result = update(&db, &creation_id, &user, &lesson_update).await;
@@ -424,6 +430,7 @@ mod tests {
             media_url: None,
             id: None,
             created_by: None,
+            unassign: None,
         };
 
         let result = update(&db, &creation_id, &other_user, &lesson_update).await;

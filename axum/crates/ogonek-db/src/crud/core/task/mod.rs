@@ -52,7 +52,6 @@ mod tests {
             title: "test task".to_string(),
             markdown: format!("# {}\nTest task content", "test"),
             due_date: Some(Utc::now()),
-            priority: Some(1),
             assignee: None,
         };
 
@@ -97,7 +96,7 @@ mod tests {
         let task = result.unwrap();
         assert_eq!(task.title, "test task");
         assert_eq!(task.created_by, creator_id);
-        assert_eq!(task.assignee, assignee_id);
+        assert_eq!(task.assignee, Some(assignee_id));
     }
 
     #[sqlx::test]
@@ -110,7 +109,7 @@ mod tests {
         assert!(result.is_ok());
 
         let task = result.unwrap();
-        assert_eq!(task.assignee, assignee_id);
+        assert_eq!(task.assignee, Some(assignee_id));
     }
 
     #[sqlx::test]
@@ -203,7 +202,7 @@ mod tests {
         let update_task = TaskUpdate {
             title: Some("Updated Task".to_string()),
             markdown: Some("# Updated\nThis task has been updated.".to_string()),
-            completed: Some(true),
+            unassign: Some(true),
             due_date: Some(Utc::now()),
             assignee: None,
         };
@@ -211,10 +210,8 @@ mod tests {
         let result = update(&db, &task_id, &user_id, &update_task).await;
         assert!(result.is_ok());
 
-        // Verify the update
         let updated_task = read_by_id(&db, &task_id, &user_id).await.unwrap();
         assert_eq!(updated_task.title, "Updated Task");
-        assert_eq!(updated_task.completed, true);
     }
 
     #[sqlx::test]
@@ -228,8 +225,8 @@ mod tests {
         let update_task = TaskUpdate {
             title: Some("Hacked Title".to_string()),
             markdown: None,
-            completed: Some(true),
             due_date: None,
+            unassign: Some(false),
             assignee: None,
         };
 
