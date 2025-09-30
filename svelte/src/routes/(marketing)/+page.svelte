@@ -74,7 +74,7 @@
   <Toolbar>
     <HStack>
       <LargeTitle>
-        {m.welcomeTo()}<span class="font-serif italic">Ogonek</span>
+        {m.welcomeTo()}<span class="font-serif italic">Ogonëk</span>
       </LargeTitle>
       <Divider />
       <Merger>
