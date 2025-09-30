@@ -64,11 +64,15 @@
     <Input
       name="title"
       labelName="Название"
+      invalid={form?.title}
+      invalidDescription="Как назовем? Иосиф?"
       value={lesson.title}
       placeholder="Title"
     ></Input>
     <Input
       name="topic"
+      invalid={form?.topic}
+      invalidDescription="О чем говорили?"
       labelName="Тема"
       value={lesson.topic}
       placeholder="Topic"

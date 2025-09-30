@@ -29,6 +29,11 @@ export const actions = {
     }
 
     const assignee = formData.get("assignee")?.toString();
+    const title = formData.get("title")?.toString();
+
+    if (title?.trim() == "") {
+      return fail(400, { title: true });
+    }
 
     if (assignee?.trim() == "") {
       return fail(400, { assignee: true });

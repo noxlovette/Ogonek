@@ -21,13 +21,23 @@ export const actions = {
     }
     const formData = await request.formData();
     const assignee = formData.get("assignee")?.toString();
+    const title = formData.get("title")?.toString();
+    const topic = formData.get("topic")?.toString();
 
     if (assignee?.trim() == "") {
       return fail(400, { assignee: true });
     }
+
+    if (title?.trim() == "") {
+      return fail(400, { title: true });
+    }
+    if (topic?.trim() == "") {
+      return fail(400, { topic: true });
+    }
+
     const data = {
-      title: formData.get("title")?.toString(),
-      topic: formData.get("topic")?.toString(),
+      title,
+      topic,
       assignee: assignee && assignee.trim() !== "" ? assignee : null,
       unassign: !formData.has("asssigned"),
       markdown: formData.get("markdown")?.toString(),

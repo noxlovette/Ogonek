@@ -13,6 +13,7 @@
     CancelButton,
     SaveButton,
     NewCard,
+    Caption1,
   } from "$lib/components";
 
   import { enhanceForm } from "$lib/utils";
@@ -40,7 +41,7 @@
   }
 
   const role = page.params.role;
-  let { data } = $props();
+  let { data, form } = $props();
   let { deck, cards } = data;
   let updatedCards = $state([...cards]);
 
@@ -113,13 +114,15 @@
     <Input
       labelName="Название колоды"
       name="title"
-      placeholder="Give your deck a title"
+      invalid={form?.title}
+      invalidDescription="Должно быть название"
+      placeholder="Чтобы не потерять"
       value={deck.title}
     />
     <Input
       name="description"
-      labelName="Описание"
-      placeholder="What's this deck about?"
+      labelName="Теги через ;"
+      placeholder="О чем эта дека?"
       value={deck.description}
     />
 
@@ -130,6 +133,8 @@
           name="assignee"
           placeholder="Для кого колода"
           labelName="Назначено"
+          invalid={form?.assignee}
+          invalidDescription="Для кого колода?"
           item={deck}
           type="assignee"
         />
@@ -142,6 +147,12 @@
       />
     {/if}
   </VStack>
+
+  {#if form?.cards}
+    <Caption1 styling="text-rose-500">
+      У всех ли карточек заполнены обе стороны?
+    </Caption1>
+  {/if}
 
   {#if updatedCards.length === 0}
     <EmptySpace>

@@ -67,6 +67,8 @@
       name="title"
       labelName="Название"
       value={task.title}
+      invalid={form?.title}
+      invalidDescription="Название?"
       placeholder="Title"
     ></Input>
 

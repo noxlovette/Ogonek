@@ -13,8 +13,15 @@ export const actions = {
     const title = formData.get("title") as string;
     const description = formData.get("description");
     const visibility = formData.get("visibility");
-    const assignee = formData.get("assignee") || "";
+    const assignee = formData.get("assignee")?.toString() || "";
 
+    if (visibility === "assigned" && assignee.trim() === "") {
+      return fail(400, { assignee: true });
+    }
+
+    if (title.trim() === "") {
+      return fail(400, { title: true });
+    }
     const deck: DeckUpdate = {
       title: title ?? null,
       description: description?.toString() || null,
@@ -40,7 +47,7 @@ export const actions = {
     if (validatedBody.error) {
       const error = validatedBody.error.message;
       logger.error({ error }, "error validating deck");
-      return fail(400);
+      return fail(400, { cards: true });
     }
 
     const response = await fetch(routes.decks.deck(id), {
