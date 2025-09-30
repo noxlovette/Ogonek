@@ -13,8 +13,8 @@
     CancelButton,
     DeleteButton,
     SaveButton,
+    Toggler,
   } from "$lib/components";
-  import type { PageData } from "./$types";
   import { m } from "$lib/paraglide/messages";
   import VStack from "$lib/components/UI/layout/VStack.svelte";
 
@@ -32,6 +32,8 @@
       dueDate = new Date(task.dueDate).toISOString().split("T")[0];
     }
   });
+
+  let assigned = $state(task.assignee ? true : false);
 </script>
 
 <form
@@ -67,23 +69,36 @@
       value={task.title}
       placeholder="Title"
     ></Input>
-    <Input
-      name="assignee"
-      labelName="Назначено"
-      type="assignee"
-      item={task}
-      placeholder="Для кого задание"
-    />
 
     <Input
       bind:value={dueDate}
       type="date"
       name="dueDate"
+      invalid={form?.date}
       invalidDescription="Что-то не так со временем"
       labelName="Срок выполнения"
       placeholder="Due Date"
     ></Input>
+
+    {#if assigned}
+      <Input
+        name="assignee"
+        labelName="Назначено"
+        type="assignee"
+        item={task}
+        invalid={form?.assignee}
+        invalidDescription="Так для кого это?"
+        placeholder="Для кого задание"
+      />
+    {/if}
   </div>
+  <Toggler
+    bind:value={assigned}
+    name="assigned"
+    title={assigned
+      ? "Это задание будет привязано к ученику"
+      : "Это задание ни к кому не будет привязано"}
+  />
 </form>
 
 <div class="grid gap-4 md:grid-cols-3">

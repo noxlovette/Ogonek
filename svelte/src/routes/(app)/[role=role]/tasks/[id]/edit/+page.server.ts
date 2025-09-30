@@ -18,16 +18,25 @@ export const actions = {
     const formData = await request.formData();
     const dateString = formData.get("dueDate")?.toString();
 
-    const dueDate =
-      dateString && dateString.trim() !== ""
-        ? new Date(dateString + "T23:59:59").toISOString()
-        : null;
+    let dueDate: string | null;
+    try {
+      dueDate =
+        dateString && dateString.trim() !== ""
+          ? new Date(dateString + "T23:59:59").toISOString()
+          : null;
+    } catch {
+      return fail(400, { date: true });
+    }
+
     const assignee = formData.get("assignee")?.toString();
 
+    if (assignee?.trim() == "") {
+      return fail(400, { assignee: true });
+    }
     const data = {
       title: formData.get("title")?.toString(),
       assignee: assignee && assignee.trim() !== "" ? assignee : null,
-      unassign: formData.has("unassign"),
+      unassign: !formData.has("asssigned"),
       dueDate,
       markdown: formData.get("markdown")?.toString(),
     };

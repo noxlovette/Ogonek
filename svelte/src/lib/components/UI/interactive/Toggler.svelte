@@ -60,7 +60,7 @@
 
     <!-- Knob avec de meilleures animations -->
     <span
-      class="absolute top-[2.2px] size-6 rounded-full bg-stone-50 transition-all duration-300 ease-out
+      class="bg-accent absolute top-[2.2px] size-6 rounded-full transition-all duration-300 ease-out dark:bg-stone-50
              {value ? 'left-[26px]' : 'left-[3px]'}"
       style="transition-timing-function: cubic-bezier(0.2, 0.9, 0.3, 1);"
     >
