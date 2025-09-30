@@ -72,9 +72,14 @@
   let inputRef = $state<HTMLInputElement>();
   $effect(() => {
     if (showCloze && !showAnswer && inputRef) {
-      setTimeout(() => {
-        inputRef?.focus();
-      }, 0);
+      // Nuclear option - keep forcing focus
+      const interval = setInterval(() => {
+        if (document.activeElement !== inputRef) {
+          inputRef.focus();
+        }
+      }, 50);
+
+      return () => clearInterval(interval);
     }
   });
 </script>

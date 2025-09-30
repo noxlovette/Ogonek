@@ -2,7 +2,7 @@ node_modules
 .idea/
 .vscode
 
-cypress/screenshots/
+svelte/cypress/screenshots
 
 # Build
 /dist
