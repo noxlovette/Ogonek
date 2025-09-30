@@ -17,7 +17,13 @@
   });
 </script>
 
-<SidebarItem href={$href} Icon={ListTodo} name={m.tasks()} badge={taskCount} />
+<SidebarItem
+  dataCy="sidebar-tasks"
+  href={$href}
+  Icon={ListTodo}
+  name={m.tasks()}
+  badge={taskCount}
+/>
 <MobileMenuElement
   href={$href}
   Icon={ListTodo}

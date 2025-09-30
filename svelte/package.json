@@ -1,13 +1,13 @@
 {
   "name": "ogonek",
-  "version": "1.12.0",
+  "version": "1.12.1",
   "private": true,
   "scripts": {
     "dev": "vite dev",
     "build": "vite build",
     "preview": "vite preview",
     "start": "node build/index.js",
-    "test": "vitest run",
+    "test": "vitest run && pnpx cypress run",
     "test:unit": "vitest",
     "test:unit:run": "vitest run",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
@@ -15,7 +15,8 @@
     "lint": "prettier --check . && eslint .",
     "format": "prettier --write .",
     "generate-types": "openapi-typescript ./openapi.json -o src/lib/types/api/gen/openapi.d.ts && node scripts/generate-routes.js && node scripts/generate-mock.js",
-    "generate-mock": "node scripts/generate-mock.js"
+    "generate-mock": "node scripts/generate-mock.js",
+    "cy:open": "pnpx cypress open"
   },
   "type": "module",
   "dependencies": {

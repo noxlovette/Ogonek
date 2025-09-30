@@ -25,13 +25,13 @@ const staticRoutes: SitemapUrl[] = [
     priority: 1.0,
   },
   {
-    loc: "auth/login",
+    loc: "login",
     lastmod: new Date().toISOString().split("T")[0],
     changefreq: "monthly",
     priority: 0.8,
   },
   {
-    loc: "auth/signup",
+    loc: "signup",
     lastmod: new Date().toISOString().split("T")[0],
     changefreq: "monthly",
     priority: 0.8,
@@ -43,13 +43,13 @@ const staticRoutes: SitemapUrl[] = [
     priority: 0.7,
   },
   {
-    loc: "paperwork/privacy",
+    loc: "privacy",
     lastmod: new Date().toISOString().split("T")[0],
     changefreq: "yearly",
     priority: 0.5,
   },
   {
-    loc: "paperwork/terms",
+    loc: "terms",
     lastmod: new Date().toISOString().split("T")[0],
     changefreq: "yearly",
     priority: 0.5,
@@ -57,7 +57,7 @@ const staticRoutes: SitemapUrl[] = [
 ];
 
 // Languages your app supports (based on your [[lang=lang]] structure)
-const languages = ["", "en"]; // Empty string for default, 'en' for explicit English
+const languages = ["ru", "en"]; // Empty string for default, 'en' for explicit English
 
 function generateSitemap(urls: SitemapUrl[]): string {
   const urlElements = urls

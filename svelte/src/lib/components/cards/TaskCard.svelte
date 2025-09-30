@@ -5,11 +5,9 @@
   import Badge from "./Badge.svelte";
   import { Headline } from "../typography";
   import { getUrgency } from "$lib/utils";
-  import Priority from "./Priority.svelte";
   import SeenBadge from "./SeenBadge.svelte";
   import { m } from "$lib/paraglide/messages";
   import { VStack } from "../UI";
-  import Divider from "../UI/toolbar/Divider.svelte";
 
   let { task } = $props();
   const formattedDate: string = formatDate(task.dueDate);
@@ -19,7 +17,7 @@
   const urgency = getUrgency(task);
 </script>
 
-<CardClickable {href}>
+<CardClickable dataCy="task-card" {href}>
   <Headline>
     {task.title}
   </Headline>

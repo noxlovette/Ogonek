@@ -26,6 +26,7 @@
     ariaLabel?: string;
     description?: string;
     iconOnly?: boolean;
+    dataCy?: string;
   }
 
   let {
@@ -42,6 +43,7 @@
     ariaLabel = undefined,
     description = content,
     iconOnly = true,
+    dataCy,
   }: Props = $props();
 
   const isLink = $derived(!!href);
@@ -99,6 +101,7 @@
     {href}
     class={allClasses}
     aria-disabled={disabled}
+    data-cy={dataCy}
     aria-label={ariaLabel}
     aria-describedby={description ? `${uniqueId}-desc` : undefined}
     role="button"
@@ -118,6 +121,7 @@
     {type}
     {formaction}
     {disabled}
+    data-cy={dataCy}
     id={uniqueId}
     aria-label={ariaLabel}
     aria-describedby={description ? `${uniqueId}-desc` : undefined}

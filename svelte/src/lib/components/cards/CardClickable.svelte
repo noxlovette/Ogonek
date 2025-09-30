@@ -6,13 +6,13 @@
     children,
     styling = "",
     ariaLabel = "",
-    dataCy = "task-card",
+    dataCy = "clickable-card",
   }: {
     href: string;
     styling?: string;
     ariaLabel?: string;
     children?: Snippet;
-    dataCy: string;
+    dataCy?: string;
   } = $props();
 </script>
 

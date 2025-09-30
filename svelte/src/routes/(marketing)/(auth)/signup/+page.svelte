@@ -73,6 +73,7 @@
       showLabel={false}
       placeholder="Name"
       value=""
+      dataCy="name-field"
       invalid={form?.name}
       invalidDescription={`3+ ${m.factual_caring_blackbird_ripple()}`}
     ></Input>
@@ -80,15 +81,17 @@
       name="username"
       showLabel={false}
       placeholder="Username"
+      dataCy="username-field"
       value=""
       invalid={form?.username}
       invalidDescription={`2+ ${m.factual_caring_blackbird_ripple()}`}
     ></Input>
 
-    <Input name="role" showLabel={false} type="role" />
+    <Input name="role" dataCy="role-field" showLabel={false} type="role" />
 
     <Input
       name="email"
+      dataCy="email-field"
       invalid={form?.email}
       invalidDescription={m.direct_big_ape_yell()}
       showLabel={false}

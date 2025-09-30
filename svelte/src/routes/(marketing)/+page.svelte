@@ -82,12 +82,14 @@
           content={m.logIn()}
           iconOnly={false}
           Icon={Flame}
+          dataCy="login-button"
           href="/login"
         ></UniButton>
         <UniButton
           iconOnly={false}
           Icon={FlameKindling}
           href="/signup"
+          dataCy="signup-button"
           variant="primary"
           content={m.signUp()}
         ></UniButton>
