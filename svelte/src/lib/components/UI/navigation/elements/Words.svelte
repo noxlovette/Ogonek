@@ -18,6 +18,7 @@
 </script>
 
 <SidebarItem
+  dataCy="sidebar-flashcards"
   href={$href}
   Icon={GraduationCap}
   name={m.flashcards()}

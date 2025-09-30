@@ -60,6 +60,7 @@
       name="username"
       invalid={form?.username}
       placeholder="Username"
+      dataCy="username-field"
       invalidDescription="2+ characters"
       value=""
     />
@@ -72,6 +73,7 @@
       placeholder="Password"
       invalidDescription="3+ characters"
       value=""
+      dataCy="password-field"
       type="password"
     />
   </Grid>
@@ -81,6 +83,7 @@
       Icon={DoorOpen}
       type="submit"
       variant="primary"
+      dataCy="login-button"
       content={m.logIn()}
       ariaLabel="Login"
       iconOnly={false}

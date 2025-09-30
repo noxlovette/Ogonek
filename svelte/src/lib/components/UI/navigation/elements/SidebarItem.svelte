@@ -11,6 +11,7 @@
     external = false,
     badge = 0,
     disabled = false,
+    dataCy = "",
   }: {
     Icon?: any;
     href: string;
@@ -18,6 +19,7 @@
     external?: boolean;
     badge?: number;
     disabled?: boolean;
+    dataCy?: string;
   } = $props();
 
   const target = $derived(external ? "_blank" : undefined);
@@ -43,6 +45,7 @@
       ${isActive ? " text-accent bg-stone-100/80 hover:bg-stone-200/50 dark:bg-stone-900/80 dark:hover:bg-stone-900/50" : "hover-default"}
     `}
   class:pointer-events-none={disabled}
+  data-cy={dataCy}
   role={disabled ? "button" : "link"}
   aria-disabled={disabled}
 >

@@ -21,7 +21,7 @@
   const title = lesson.topic;
 </script>
 
-<CardClickable {href}>
+<CardClickable dataCy="lesson-card" {href}>
   <Title3>
     {title}
   </Title3>

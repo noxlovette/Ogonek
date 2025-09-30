@@ -48,6 +48,7 @@
   <input type="hidden" value={file.s3Key} name="key" />
   <button
     type="submit"
+    data-cy="file-task-card"
     disabled={downloading}
     class="group ring-default bg-clickable relative flex w-full items-center justify-between gap-4 overflow-clip rounded-xl p-2 shadow-sm"
   >

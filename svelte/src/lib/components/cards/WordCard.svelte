@@ -23,6 +23,7 @@
 </script>
 
 <div
+  data-cy="word-card-front"
   class="perspective-1000 relative h-48 transform-gpu cursor-pointer"
   onclick={() => toggleCard(card.id)}
   onkeydown={(e) => e.key === "Enter" && toggleCard(card.id)}

@@ -6,16 +6,19 @@
     children,
     styling = "",
     ariaLabel = "",
+    dataCy = "clickable-card",
   }: {
     href: string;
     styling?: string;
     ariaLabel?: string;
     children?: Snippet;
+    dataCy?: string;
   } = $props();
 </script>
 
 <a
   {href}
+  data-cy={dataCy}
   aria-label={ariaLabel}
   class="group bg-clickable hover-default ring-default relative
      flex min-h-[100px] w-full flex-col

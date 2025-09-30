@@ -20,6 +20,7 @@
 
 <SidebarItem
   href={$href}
+  dataCy="sidebar-lessons"
   Icon={BookOpenCheck}
   name={m.lessons()}
   badge={lessonCount}

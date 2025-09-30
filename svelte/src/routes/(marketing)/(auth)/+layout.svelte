@@ -22,7 +22,10 @@
       >
       <Caption1>
         {isLogin ? m.petty_neat_emu_endure() : m.dark_candid_octopus_compose()}
-        <a href={isLogin ? "/signup" : "/login"} class="text-accent"
+        <a
+          data-cy={isLogin ? "signup-button" : "login-button"}
+          href={isLogin ? "/signup" : "/login"}
+          class="text-accent"
           >{isLogin ? m.nimble_north_worm_drop() : m.logIn()}</a
         >
       </Caption1>

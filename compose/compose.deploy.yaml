@@ -1,6 +1,6 @@
 services:
   svelte:
-    image: ghcr.io/noxlovette/svelte-ogonek:1.7.3
+    image: cr.yandex/crphgfk6iflm2vci0i1b/svelte-ogonek:1.12.0
     container_name: svelte-fl-prod
     env_file:
       - ./.env.svelte
@@ -48,7 +48,7 @@ services:
         limits:
           memory: 512M
   axum:
-    image: ghcr.io/noxlovette/axum-ogonek:1.7.4
+    image: cr.yandex/crphgfk6iflm2vci0i1b/axum-ogonek:1.12.0
     container_name: axum-fl-prod
     logging:
       driver: "json-file"
@@ -70,8 +70,8 @@ services:
         condition: service_healthy
     networks:
       - internal
-      - web 
-    dns:  
+      - web
+    dns:
       - 8.8.8.8
       - 1.1.1.1
     restart: unless-stopped
@@ -90,7 +90,7 @@ services:
     networks:
       - internal
     healthcheck:
-      test: [ "CMD", "pg_isready", "-U", "postgres" ]
+      test: ["CMD", "pg_isready", "-U", "postgres"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -109,4 +109,3 @@ networks:
   internal:
     name: internal-fl
     internal: true
-

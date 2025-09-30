@@ -19,6 +19,7 @@
     item,
     onchange,
     type = "text",
+    dataCy,
   }: {
     placeholder?: string;
     name: string;
@@ -32,6 +33,7 @@
     onchange?: ChangeEventHandler<HTMLInputElement>;
     required?: boolean;
     item?: Assignable | null;
+    dataCy?: string;
     type?:
       | "text"
       | "number"
@@ -65,6 +67,7 @@
       bind:value
       bind:this={ref}
       {disabled}
+      data-cy={dataCy}
       class={baseStyle}
       {placeholder}
       {required}
@@ -80,6 +83,7 @@
       rows="3"
       bind:value
       {disabled}
+      data-cy={dataCy}
       class={baseStyle + " resize-none"}
       {placeholder}
       {required}
@@ -100,6 +104,7 @@
       {required}
       aria-label={showLabel ? undefined : labelName}
       aria-invalid={invalid}
+      data-cy={dataCy}
       aria-describedby={invalid && invalidDescription
         ? `${name}-error`
         : undefined}
@@ -112,6 +117,7 @@
       bind:value
       {disabled}
       class={baseStyle}
+      data-cy={dataCy}
       {required}
       aria-label={showLabel ? undefined : labelName}
       aria-invalid={invalid}
@@ -127,6 +133,7 @@
       onclick={() => (showPassword = !showPassword)}
       aria-label={showPassword ? "Hide password" : "Show password"}
       tabindex="0"
+      data-cy={dataCy}
     >
       {#if showPassword}
         <Eye class="h-5 w-5" />
@@ -141,6 +148,7 @@
       {name}
       bind:value
       {disabled}
+      data-cy={dataCy}
       class={baseStyle}
       {required}
       aria-label={showLabel ? undefined : labelName}
@@ -152,6 +160,7 @@
   {:else if type === "date"}
     <input
       type="date"
+      data-cy={dataCy}
       {placeholder}
       {name}
       bind:value
@@ -170,6 +179,7 @@
       type="time"
       {placeholder}
       {name}
+      data-cy={dataCy}
       bind:value
       {disabled}
       class={baseStyle}
@@ -187,6 +197,7 @@
       {value}
       class={baseStyle}
       {required}
+      data-cy={dataCy}
       aria-label={showLabel ? undefined : labelName}
       aria-invalid={invalid}
       aria-describedby={invalid && invalidDescription
@@ -201,6 +212,7 @@
     <select
       id="assignee"
       name="assignee"
+      data-cy={dataCy}
       class={baseStyle}
       {required}
       aria-label={showLabel ? undefined : labelName}
@@ -224,6 +236,7 @@
   {:else if type === "attendee"}
     <select
       id="attendee"
+      data-cy={dataCy}
       {name}
       class={baseStyle}
       {required}
@@ -244,6 +257,7 @@
     <select
       {name}
       {required}
+      data-cy={dataCy}
       class={baseStyle}
       aria-label={showLabel ? undefined : labelName}
       aria-invalid={invalid}
@@ -260,6 +274,7 @@
       {name}
       {required}
       class={baseStyle}
+      data-cy={dataCy}
       aria-label={showLabel ? undefined : labelName}
       aria-invalid={invalid}
       aria-describedby={invalid && invalidDescription

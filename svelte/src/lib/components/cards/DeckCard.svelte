@@ -22,7 +22,7 @@
   const badgeText = deck.description ?? "Deck Description";
 </script>
 
-<CardClickable {href}>
+<CardClickable dataCy="deck-card" {href}>
   <div class="inline-flex justify-between">
     <Title3>{title}</Title3>
     {#if deck.isSubscribed}
