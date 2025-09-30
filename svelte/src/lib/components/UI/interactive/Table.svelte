@@ -64,6 +64,7 @@
                 onclick={(e) => handleRowClick(item, e)}
                 onkeydown={(e) => handleRowClick(item, e)}
                 tabindex="0"
+                data-cy="table-row-clickable"
                 role="button"
                 aria-label="View details for {item.name ||
                   item.title ||

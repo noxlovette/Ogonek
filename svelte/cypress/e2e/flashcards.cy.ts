@@ -7,6 +7,14 @@ describe("flashcard pages teacher", () => {
 
     cy.url().should("include", "/flashcards");
   });
+
+  it("teacher can add a new card", () => {
+    cy.visit("/t/flashcards/oPTQY_b27XKL7wUgvGbw_");
+    cy.dataCy("edit-button").click();
+    cy.dataCy("new-card").click();
+    cy.dataCy("save-button").click();
+    cy.url().should("match", /\/flashcards\/\w+/);
+  });
 });
 
 describe("flashcard pages student", () => {
