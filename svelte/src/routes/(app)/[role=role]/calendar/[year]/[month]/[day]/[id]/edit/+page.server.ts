@@ -6,6 +6,14 @@ import { parseFormData } from "$lib/utils";
 import { fail, redirect } from "@sveltejs/kit";
 import type { Actions } from "./$types";
 
+import type { PageServerLoad } from "./$types";
+
+export const load: PageServerLoad = async ({ params }) => {
+  if (params.role !== "t") {
+    redirect(301, "/unauthorised");
+  }
+};
+
 export const actions = {
   update: async ({ request, fetch, params }) => {
     const formData = await request.formData();

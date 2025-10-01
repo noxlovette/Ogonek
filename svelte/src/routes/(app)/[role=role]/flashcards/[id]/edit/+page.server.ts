@@ -3,7 +3,13 @@ import logger from "$lib/logger";
 import { routes } from "$lib/routes";
 import type { DeckUpdate } from "$lib/types";
 import { fail, redirect } from "@sveltejs/kit";
-import type { Actions } from "./$types";
+import type { Actions, PageServerLoad } from "./$types";
+
+export const load: PageServerLoad = async ({ params }) => {
+  if (params.role !== "t") {
+    redirect(301, "/unauthorised");
+  }
+};
 
 export const actions = {
   update: async ({ request, fetch, params }) => {

@@ -41,7 +41,7 @@ export const actions = {
     const data = {
       title: formData.get("title")?.toString(),
       assignee: assignee && assignee.trim() !== "" ? assignee : null,
-      unassign: !formData.has("asssigned"),
+      unassign: !formData.has("assigned"),
       dueDate,
       markdown: formData.get("markdown")?.toString(),
     };
