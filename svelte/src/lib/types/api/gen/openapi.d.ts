@@ -869,6 +869,7 @@ export interface components {
         DashboardData: {
             activity: components["schemas"]["ActivityLog"][];
             decks: components["schemas"]["DeckSmall"][];
+            events: components["schemas"]["EventSmall"][];
             learnData: components["schemas"]["SimpleStats"];
             lessons: components["schemas"]["LessonSmall"][];
             tasks: components["schemas"]["TaskSmall"][];

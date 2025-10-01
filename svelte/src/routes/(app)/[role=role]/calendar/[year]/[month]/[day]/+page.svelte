@@ -4,7 +4,7 @@
   import {
     Caption1,
     EmptySpace,
-    EventTimelineItem,
+    EventCard,
     HStack,
     NewCard,
     Title1,
@@ -28,7 +28,7 @@
   </Title1>
   <div class="flex flex-col gap-2">
     {#each sortedEvents as event}
-      <EventTimelineItem {event} />
+      <EventCard {event} />
     {:else}
       <EmptySpace>
         <Squirrel></Squirrel>

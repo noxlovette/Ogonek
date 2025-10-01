@@ -11,5 +11,6 @@ export const load: PageServerLoad = async ({ fetch }) => {
     tasks: dashboardData.tasks,
     learn: dashboardData.learnData,
     activity: dashboardData.activity,
+    events: dashboardData.events,
   };
 };

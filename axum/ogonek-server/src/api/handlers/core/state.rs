@@ -3,18 +3,18 @@ use crate::{
     api::{STATE_TAG, error::APIError},
 };
 use axum::extract::{Json, State};
+use chrono::{Datelike, TimeZone, Utc};
 use ogonek_db::{
     core::{
-        account,
-        account::{preferences, student, user},
-        flashcards,
-        flashcards::deck,
+        account::{self, preferences, student, user},
+        calendar::event,
+        flashcards::{self, deck},
         lesson, task,
     },
     tracking::{activity, seen},
 };
 use ogonek_types::{
-    AppContext, DashboardData, ModelType, NotificationBadges, PaginationParams,
+    ActivityLog, AppContext, DashboardData, ModelType, NotificationBadges, PaginationParams,
     TaskPaginationParams,
 };
 
@@ -69,15 +69,47 @@ pub async fn fetch_dashboard(
         },
     )
     .await?;
-    let activity = activity::get_activity(&state.db, &claims.sub).await?;
     let learn_data = flashcards::learn::get_simple_stats(&state.db, &claims.sub).await?;
+    // Get today's date
+    // Get today's date in UTC
+    let now_utc = Utc::now();
+    let today_utc = now_utc.date_naive();
 
+    // Start of today (00:00:00) in UTC
+    let start = Utc
+        .with_ymd_and_hms(
+            today_utc.year(),
+            today_utc.month(),
+            today_utc.day(),
+            0,
+            0,
+            0,
+        )
+        .unwrap();
+
+    // End of today (23:59:59) in UTC
+    let end = Utc
+        .with_ymd_and_hms(
+            today_utc.year(),
+            today_utc.month(),
+            today_utc.day(),
+            23,
+            59,
+            59,
+        )
+        .unwrap();
+
+    let events = event::read_all(&state.db, &claims.sub, start, end, claims.role.into()).await?;
+
+    // deprecated
+    let activity: Vec<ActivityLog> = Vec::new();
     Ok(Json(DashboardData {
         decks,
         lessons,
         tasks,
         activity,
         learn_data,
+        events,
     }))
 }
 

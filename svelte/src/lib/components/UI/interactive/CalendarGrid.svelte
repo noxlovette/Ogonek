@@ -72,6 +72,9 @@
   <HStack>
     <LargeTitle styling="capitalize">{monthName} {year}</LargeTitle>
     <Caption1>Московское время</Caption1>
+    <Caption1 styling="text-rose-400"
+      >Календарь находится на стадии тестирования. Возможны ошибки</Caption1
+    >
   </HStack>
   <Divider />
   <Merger>
