@@ -13,17 +13,15 @@
     MobileMenu,
     StudentFilter,
     Calendar,
-    Footnote,
+    Divider,
     HLine,
   } from "$lib/components";
   import { studentStore, setUser, setProfile } from "$lib/stores";
 
   import { page } from "$app/state";
   import { setContext } from "svelte";
-  import type { Student } from "$lib/types/index.js";
-  import Divider from "$lib/components/UI/toolbar/Divider.svelte";
+  import type { Student } from "$lib/types";
   import Loader from "$lib/components/UI/navigation/Loader.svelte";
-  import { env } from "$env/dynamic/public";
 
   let { data, children } = $props();
   const role = page.params.role;
@@ -55,7 +53,7 @@
       {:else}
         <Students />
       {/if}
-      {#if !env.PUBLIC_TURN_OFF_CALENDAR}
+      {#if role != "s"}
         <Calendar />
       {/if}
       <HLine></HLine>

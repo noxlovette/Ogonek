@@ -39,9 +39,11 @@ export const actions = {
       title,
       topic,
       assignee: assignee && assignee.trim() !== "" ? assignee : null,
-      unassign: !formData.has("asssigned"),
+      unassign: !formData.has("assigned"),
       markdown: formData.get("markdown")?.toString(),
     };
+
+    console.log(data);
     const response = await fetch(routes.lessons.lesson(id), {
       method: "PATCH",
       body: JSON.stringify(data),

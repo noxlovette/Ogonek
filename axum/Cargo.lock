@@ -2908,7 +2908,7 @@ dependencies = [
 
 [[package]]
 name = "ogonek_server"
-version = "1.12.1"
+version = "1.12.2"
 dependencies = [
  "anyhow",
  "argon2",
