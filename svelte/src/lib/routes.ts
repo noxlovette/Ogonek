@@ -34,11 +34,13 @@ export const routes = {
     update_attendee: (id: string) => `${API_BASE}/calendars/attendees/${id}`,
     events: (
     start: string,
-    end: string
+    end: string,
+    role?: string
   ) => {
       const params = new URLSearchParams();
       if (start) params.set("start", start);
       if (end) params.set("end", end);
+      if (role) params.set("role", role);
       const query = params.toString();
       return `${API_BASE}/calendars/events${query ? `?${query}` : ""}`;
     },

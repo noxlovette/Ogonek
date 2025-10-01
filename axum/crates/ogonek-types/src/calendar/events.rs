@@ -1,5 +1,5 @@
 use crate::{
-    DeleteScope, EditScope, EventAttendee, EventClass, EventStatus, EventTransp,
+    CalendarRole, DeleteScope, EditScope, EventAttendee, EventClass, EventStatus, EventTransp,
     datetime_serialization,
 };
 use chrono::{DateTime, Utc};
@@ -11,6 +11,7 @@ use validator::Validate;
 pub struct CalendarQuery {
     pub start: DateTime<Utc>,
     pub end: DateTime<Utc>,
+    pub role: Option<CalendarRole>,
 }
 
 #[derive(Validate, ToSchema, Serialize)]

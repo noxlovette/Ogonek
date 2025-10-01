@@ -9,7 +9,7 @@ use crate::helpers::{
     OCCURRENCE_SEPARATOR, RRule, extract_id_and_occurence, parse_date_flexible, parse_exdates,
 };
 use ogonek_types::{
-    EventClass, EventDB, EventDBFull, EventFull, EventSmall, EventStatus, EventTransp,
+    CalendarRole, EventClass, EventDB, EventDBFull, EventFull, EventSmall, EventStatus, EventTransp,
 };
 
 /// Reads a calendar event by id (supports virtual instances)
@@ -134,14 +134,60 @@ pub(super) async fn read_all_internal(
     Ok(events)
 }
 
+/// The impl for student roles
+pub async fn read_events_as_invitee(
+    pool: &PgPool,
+    user_id: &str,
+    start: DateTime<Utc>,
+    end: DateTime<Utc>,
+) -> Result<Vec<EventDB>, sqlx::Error> {
+    sqlx::query_as!(
+        EventDB,
+        r#"
+        SELECT 
+        e.id,
+        e.uid,
+        e.summary,
+        e.location,
+        e.dtstart_time,
+        e.dtend_time,
+        e.rdate,
+        e.status AS "status!: EventStatus",
+        e.exdate,
+        e.recurrence_id,
+        e.rrule
+        FROM calendar_events e
+        INNER JOIN event_attendees ea ON e.id = ea.event_id
+        WHERE ea.user_id = $1 
+
+        AND ea.status != 'DECLINED'
+          AND e.deleted_at IS NULL
+            AND (
+                (e.rrule IS NOT NULL AND e.recurrence_id IS NULL)
+            OR (e.dtstart_time BETWEEN $2 AND $3)
+            OR (e.recurrence_id IS NOT NULL) 
+            )
+        ORDER BY e.dtstart_time ASC
+        "#,
+        user_id,
+        start,
+        end
+    )
+    .fetch_all(pool)
+    .await
+}
 /// Public function that returns an array of events
 pub async fn read_all(
     db: &PgPool,
     user_id: &str,
     start: DateTime<Utc>,
     end: DateTime<Utc>,
+    role: CalendarRole,
 ) -> Result<Vec<EventSmall>, DbError> {
-    let events = read_all_internal(db, user_id, start, end).await?;
+    let events = match role {
+        CalendarRole::Teacher => read_all_internal(db, user_id, start, end).await?,
+        CalendarRole::Student => read_events_as_invitee(db, user_id, start, end).await?,
+    };
 
     let masters: Vec<_> = events
         .iter()

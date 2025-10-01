@@ -795,9 +795,12 @@ export interface components {
         CalendarQuery: {
             /** Format: date-time */
             end: string;
+            role?: null | components["schemas"]["CalendarRole"];
             /** Format: date-time */
             start: string;
         };
+        /** @enum {string} */
+        CalendarRole: "teacher" | "student";
         CalendarUpdate: {
             caldavUrl?: string | null;
             colour?: string | null;
@@ -1901,6 +1904,7 @@ export interface operations {
             query: {
                 start: string;
                 end: string;
+                role?: components["schemas"]["CalendarRole"];
             };
             header?: never;
             path?: never;
