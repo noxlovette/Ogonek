@@ -1,6 +1,8 @@
 use serde::{Deserialize, Serialize};
 use std::{fmt::Display, str::FromStr};
 use utoipa::ToSchema;
+
+use crate::CalendarRole;
 #[derive(Deserialize, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct UserUpdate {
@@ -31,7 +33,17 @@ pub enum UserRole {
     Admin,
     God,
 }
-
+impl From<UserRole> for CalendarRole {
+    fn from(user_role: UserRole) -> Self {
+        match user_role {
+            UserRole::Student => CalendarRole::Student,
+            UserRole::Teacher => CalendarRole::Teacher,
+            UserRole::Moderator => CalendarRole::Teacher,
+            UserRole::Admin => CalendarRole::Teacher,
+            UserRole::God => CalendarRole::Teacher,
+        }
+    }
+}
 impl UserRole {
     /// Roles that can be self-assigned during signup
     pub fn can_self_assign(&self) -> bool {

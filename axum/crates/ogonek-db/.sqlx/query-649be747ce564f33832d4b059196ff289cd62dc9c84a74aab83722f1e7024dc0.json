@@ -1,0 +1,95 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        SELECT \n        e.id,\n        e.uid,\n        e.summary,\n        e.location,\n        e.dtstart_time,\n        e.dtend_time,\n        e.rdate,\n        e.status AS \"status!: EventStatus\",\n        e.exdate,\n        e.recurrence_id,\n        e.rrule\n        FROM calendar_events e\n        INNER JOIN event_attendees ea ON e.id = ea.event_id\n        WHERE ea.user_id = $1 \n\n        AND ea.status != 'DECLINED'\n          AND e.deleted_at IS NULL\n            AND (\n                (e.rrule IS NOT NULL AND e.recurrence_id IS NULL)\n            OR (e.dtstart_time BETWEEN $2 AND $3)\n            OR (e.recurrence_id IS NOT NULL) \n            )\n        ORDER BY e.dtstart_time ASC\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 1,
+        "name": "uid",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 2,
+        "name": "summary",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 3,
+        "name": "location",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 4,
+        "name": "dtstart_time",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 5,
+        "name": "dtend_time",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 6,
+        "name": "rdate",
+        "type_info": "TextArray"
+      },
+      {
+        "ordinal": 7,
+        "name": "status!: EventStatus",
+        "type_info": {
+          "Custom": {
+            "name": "event_status",
+            "kind": {
+              "Enum": [
+                "tentative",
+                "confirmed",
+                "cancelled"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "ordinal": 8,
+        "name": "exdate",
+        "type_info": "TextArray"
+      },
+      {
+        "ordinal": 9,
+        "name": "recurrence_id",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 10,
+        "name": "rrule",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Timestamptz",
+        "Timestamptz"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      true,
+      false,
+      true,
+      true,
+      false,
+      true,
+      true,
+      true
+    ]
+  },
+  "hash": "649be747ce564f33832d4b059196ff289cd62dc9c84a74aab83722f1e7024dc0"
+}

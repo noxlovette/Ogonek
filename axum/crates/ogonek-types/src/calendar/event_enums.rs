@@ -2,6 +2,15 @@ use serde::{Deserialize, Serialize};
 use sqlx::prelude::Type;
 use std::fmt;
 use utoipa::ToSchema;
+
+#[derive(Deserialize, Debug, ToSchema, Default, PartialEq)]
+#[serde(rename_all = "lowercase")]
+pub enum CalendarRole {
+    #[default]
+    Teacher,
+    Student,
+}
+
 #[derive(Deserialize, ToSchema)]
 #[serde(rename_all = "kebab-case")]
 pub enum DeleteScope {

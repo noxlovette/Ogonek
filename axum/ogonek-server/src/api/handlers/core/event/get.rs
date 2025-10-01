@@ -9,7 +9,7 @@ use ogonek_db::core::calendar::{
 };
 
 use axum::extract::{Json, Path, Query, State};
-use ogonek_types::{CalendarQuery, EventSmall, EventWithAttendees};
+use ogonek_types::{CalendarQuery, CalendarRole, EventSmall, EventWithAttendees};
 
 /// Get a single event by UID
 #[utoipa::path(
@@ -45,7 +45,8 @@ pub async fn fetch_event(
     tag = CALENDAR_TAG,
     params(
         ("start" = String, Query),
-        ("end" = String, Query)
+        ("end" = String, Query),
+        ("role" = Option<CalendarRole>, Query)
     ),
     responses(
         (status = 200, description = "Events retrieved successfully", body = Vec<EventSmall>),
@@ -59,6 +60,13 @@ pub async fn list_events(
     State(state): State<AppState>,
     claims: Claims,
 ) -> Result<Json<Vec<EventSmall>>, APIError> {
-    let calendar_events = read_all(&state.db, &claims.sub, query.start, query.end).await?;
+    let calendar_events = read_all(
+        &state.db,
+        &claims.sub,
+        query.start,
+        query.end,
+        query.role.unwrap_or_default(),
+    )
+    .await?;
     Ok(Json(calendar_events))
 }

@@ -38,6 +38,6 @@ fi
 
 cd ../svelte
 
-run_cmd bun run generate-types
+run_cmd pnpm run generate-types
 
 echo -e "${GREEN}Types generated${NC}"
