@@ -11,7 +11,7 @@ use ogonek_db::{
         flashcards::{self, deck},
         lesson, task,
     },
-    tracking::{activity, seen},
+    tracking::seen,
 };
 use ogonek_types::{
     ActivityLog, AppContext, DashboardData, ModelType, NotificationBadges, PaginationParams,
