@@ -83,9 +83,7 @@
   class="flex min-h-[70vh] w-full flex-col items-center justify-center px-4 py-16"
   in:fade={{ duration: 300, delay: 150 }}
 >
-  <div
-    class="w-full max-w-lg rounded-xl bg-white shadow-lg ring-1 ring-stone-200/50 dark:bg-stone-900 dark:ring-stone-700/50"
-  >
+  <div class="ring-default bg-default w-full max-w-md rounded-2xl">
     <!-- Header -->
     <div
       class="flex flex-col items-center space-y-4 bg-gradient-to-br from-stone-50 to-stone-100 p-8 dark:from-stone-800 dark:to-stone-700"

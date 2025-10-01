@@ -266,7 +266,7 @@ pub async fn create_with_defaults(
         nanoid::nanoid!(),
         user_id,
         "Default Deck",
-        "Default Description",
+        "tag1;tag2",
         "private",
         user_id,
     )

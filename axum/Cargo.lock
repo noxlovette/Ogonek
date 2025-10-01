@@ -2860,7 +2860,7 @@ dependencies = [
 
 [[package]]
 name = "ogonek_db"
-version = "1.12.2"
+version = "1.12.3"
 dependencies = [
  "anyhow",
  "chrono",
@@ -2908,7 +2908,7 @@ dependencies = [
 
 [[package]]
 name = "ogonek_server"
-version = "1.12.2"
+version = "1.12.3"
 dependencies = [
  "anyhow",
  "argon2",

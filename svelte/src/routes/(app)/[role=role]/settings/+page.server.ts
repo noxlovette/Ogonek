@@ -1,38 +1,66 @@
+import logger from "$lib/logger";
 import { routes } from "$lib/routes";
-import { handleApiResponse, isSuccessResponse } from "$lib/server";
-import type { EmptyResponse } from "$lib/types";
 import { fail, redirect, type Actions } from "@sveltejs/kit";
 export const actions = {
   update: async ({ request, fetch, params }) => {
     const formData = await request.formData();
 
-    if (params.role === "t") {
-      const videoCallUrl = formData.get("videoCallUrl") as string;
+    const email = formData.get("email")?.toString();
 
-      if (videoCallUrl && !/^https?:\/\//.test(videoCallUrl)) {
-        return fail(400, { message: "Please enter a valid URL" });
+    const name = formData.get("name")?.toString();
+    const username = formData.get("username")?.toString();
+
+    if (!name) {
+      return fail(400, { name: true });
+    }
+
+    if (name.length < 3) {
+      return fail(400, { name: true });
+    }
+
+    // Validate name: only letters, spaces, hyphens, and apostrophes
+    if (!/^[a-zA-Z\s'-]+$/.test(name)) {
+      return fail(400, { name: true });
+    }
+
+    // Validate username: no spaces, only alphanumeric, underscores, and hyphens
+    if (username) {
+      if (username.length < 3) {
+        return fail(400, { username: true });
+      }
+      if (!/^[a-zA-Z0-9_-]+$/.test(username)) {
+        return fail(400, { username: true });
+      }
+    }
+    const url = formData.get("videoCallUrl")?.toString();
+    if (params.role === "t") {
+      if (!url) {
+        return fail(400, { url: true });
+      }
+      if (!/^https?:\/\//.test(url)) {
+        return fail(400, { url: true });
       }
     }
 
-    const validateEmail = (email: string) => {
+    const validateEmail = (email?: string) => {
       if (!email) return false;
       return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email);
     };
 
-    if (!validateEmail(formData.get("email") as string)) {
-      return fail(400, { message: "Invalid Email" });
+    if (!validateEmail(email)) {
+      return fail(400, { email: true });
     }
 
     const profileBody = {
-      videoCallUrl: formData.get("videoCallUrl"),
+      videoCallUrl: url,
       avatarUrl: formData.get("avatarUrl"),
       telegramId: formData.get("telegramId"),
     };
 
     const userBody = {
-      email: formData.get("email"),
+      email,
       username: formData.get("username"),
-      name: formData.get("name"),
+      name,
     };
 
     const [profileRes, userRes] = await Promise.all([
@@ -46,16 +74,17 @@ export const actions = {
       }),
     ]);
 
-    const profileResult = await handleApiResponse<EmptyResponse>(profileRes);
-    if (!isSuccessResponse(profileResult)) {
-      return fail(profileResult.status, { message: profileResult.message });
+    if (!profileRes.ok) {
+      const err = profileRes.text();
+      logger.error({ err });
+      return fail(500);
     }
 
-    const userResult = await handleApiResponse<EmptyResponse>(userRes);
-    if (!isSuccessResponse(userResult)) {
-      return fail(userResult.status, { message: userResult.message });
+    if (!userRes.ok) {
+      const err = userRes.text();
+      logger.error({ err });
+      return fail(500);
     }
-
     return {
       success: true,
       message: "Profile updated successfully",

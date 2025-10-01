@@ -66,11 +66,6 @@
 </script>
 
 <WorkArea>
-  <h1
-    class="text-center text-5xl leading-tight font-bold tracking-tighter md:text-left md:text-7xl xl:text-8xl 2xl:text-9xl"
-  >
-    Per igniculus ad astra
-  </h1>
   <Toolbar>
     <HStack>
       <LargeTitle>

@@ -8,8 +8,6 @@
     UniButton,
     Toolbar,
     SearchBar,
-    TableSkeleton,
-    LoadingCard,
     TaskCard,
     EmptySpace,
     VStack,
@@ -137,7 +135,7 @@
 
 {#if data.tasksPaginated.data.length < 1}
   <EmptySpace>
-    <Title1>{m.noTasks()}</Title1>
+    <Title1>{m.empty()}</Title1>
   </EmptySpace>
 {/if}
 {#if role === "s"}

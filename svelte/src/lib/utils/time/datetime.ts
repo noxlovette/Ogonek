@@ -1,3 +1,5 @@
+import { m } from "$lib/paraglide/messages";
+
 type DateFormatOptions = {
   year?: boolean;
   month?: "numeric" | "2-digit" | "long" | "short" | "narrow";
@@ -42,7 +44,7 @@ export const formatDate = (
   // Guard clause - si l'input est falsy, return fallback
   if (!dateInput) {
     console.warn("formatDate: dateInput is falsy, returning fallback");
-    return "Не понятно";
+    return m.even_tense_herring_support();
   }
 
   let date: Date;

@@ -11,6 +11,10 @@
     Title1,
     Title2,
     LanguageSelector,
+    Headline,
+    VStack,
+    Title3,
+    ThemeToggler,
   } from "$lib/components";
   import { enhance } from "$app/forms";
   import { page } from "$app/state";
@@ -19,22 +23,18 @@
   import { Check, LogOut, Bell, Ban, Pencil } from "lucide-svelte";
   import { m } from "$lib/paraglide/messages";
   import {
-    user,
     assigneeStore,
     notification,
     searchTerm,
     pageSize,
     currentPage,
     clearUser,
-    profile,
   } from "$lib/stores";
   import { goto } from "$app/navigation";
-  import Headline from "$lib/components/typography/Headline.svelte";
-  import VStack from "$lib/components/UI/layout/VStack.svelte";
-  import ThemeToggler from "$lib/components/UI/interactive/ThemeToggler.svelte";
-  import Title3 from "$lib/components/typography/Title3.svelte";
 
   let disabled = $state(true);
+
+  const { data, form } = $props();
 </script>
 
 <svelte:head>
@@ -52,6 +52,7 @@
         disabled = true;
       },
     },
+    shouldUpdate: true,
   })}
   class="flex flex-col gap-4"
   action="?/update"
@@ -102,16 +103,20 @@
           bind:disabled
           placeholder="Name"
           name="name"
+          invalid={form?.name}
+          invalidDescription="3+ знаков и никакой херни"
           labelName="Имя"
-          value={$user.name}
+          value={data.user.name}
         />
         <Input
           bind:disabled
           type="email"
           placeholder="Email"
           name="email"
+          invalid={form?.email}
+          invalidDescription="Это не похоже на почту"
           labelName="Электронная почта"
-          value={$user.email}
+          value={data.user.email}
         />
       </HStack>
 
@@ -124,14 +129,16 @@
           placeholder="Your Telegram ID"
           name="telegramId"
           labelName="Телеграм ID"
-          value={$profile.telegramId}
+          value={data.profile.telegramId}
         />
         <Input
           bind:disabled
           placeholder="The link for your lessons"
           name="videoCallUrl"
+          invalid={form?.url}
+          invalidDescription="Это не URL"
           labelName="Ссылка на видеозвонок"
-          value={$profile.videoCallUrl}
+          value={data.profile.videoCallUrl}
         />
       {/if}
     </HStack>
