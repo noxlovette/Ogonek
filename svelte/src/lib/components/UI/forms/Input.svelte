@@ -2,7 +2,7 @@
   import Caption1 from "$lib/components/typography/Caption1.svelte";
   import { m } from "$lib/paraglide/messages";
   import { assigneeStore, studentStore, user } from "$lib/stores";
-  import { Eye, EyeClosed } from "lucide-svelte";
+  import { Eye, EyeClosed } from "@lucide/svelte";
   import type { ChangeEventHandler } from "svelte/elements";
 
   let {

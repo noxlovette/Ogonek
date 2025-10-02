@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Trash2 } from "lucide-svelte";
+  import { Trash2 } from "@lucide/svelte";
   import { UniButton } from "..";
   import { m } from "$lib/paraglide/messages";
 </script>

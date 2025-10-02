@@ -1,6 +1,6 @@
 <script lang="ts">
   import { getLocaleFromCookie, getVideoCallService } from "$lib/utils";
-  import { MapPin, Share, Video } from "lucide-svelte";
+  import { MapPin, Share, Video } from "@lucide/svelte";
   import {
     BackButton,
     Body,

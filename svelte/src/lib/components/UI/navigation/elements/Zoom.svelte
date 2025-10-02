@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Video } from "lucide-svelte";
+  import { Video } from "@lucide/svelte";
   import SidebarItem from "./SidebarItem.svelte";
   import { getContext } from "svelte";
 

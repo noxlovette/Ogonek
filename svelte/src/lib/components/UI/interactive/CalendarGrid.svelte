@@ -4,7 +4,7 @@
   import type { EventSmall } from "$lib/types/api/calendar";
   import { getLocaleFromCookie } from "$lib/utils";
   import { generateMonthDays } from "$lib/utils/time/calendar";
-  import { Calendar1, ChevronLeft, ChevronRight } from "lucide-svelte";
+  import { Calendar1, ChevronLeft, ChevronRight } from "@lucide/svelte";
   import { HStack, Toolbar } from "..";
   import UniButton from "../forms/buttons/UniButton.svelte";
   import Divider from "../toolbar/Divider.svelte";

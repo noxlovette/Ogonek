@@ -20,7 +20,11 @@ export default defineConfig({
       strategy: ["cookie", "baseLocale"],
     }),
   ],
-  optimizeDeps: { exclude: ["fsevents"] },
+  optimizeDeps: {
+    exclude: ["fsevents"],
+    force: true,
+    include: ["@lucide/svelte"],
+  },
   build: {
     rollupOptions: { external: ["fsevents", "src/lib/routes/api/mock"] },
   },

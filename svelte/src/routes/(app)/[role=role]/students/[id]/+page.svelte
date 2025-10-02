@@ -14,7 +14,7 @@
   import Title2 from "$lib/components/typography/Title2.svelte";
   import EditButton from "$lib/components/UI/forms/buttons/EditButton.svelte";
   import type { PageData } from "./$types";
-  import { Pencil } from "lucide-svelte";
+  import { Pencil } from "@lucide/svelte";
   let { data }: { data: PageData } = $props();
 
   const { student, rendered, studentTasks, studentLessons, studentDecks } =
@@ -39,9 +39,7 @@
       <DeckCard {deck}></DeckCard>
     {/each}
     {#if studentDecks.length < 1}
-      <EmptySpace>
-        <Title3>No Decks</Title3>
-      </EmptySpace>
+      <EmptySpace>No Decks</EmptySpace>
     {/if}
   </GridCell>
 
@@ -51,9 +49,7 @@
       <LessonCard {lesson}></LessonCard>
     {/each}
     {#if studentLessons.length < 1}
-      <EmptySpace>
-        <Title3>No Lessons</Title3>
-      </EmptySpace>
+      <EmptySpace>No Lessons</EmptySpace>
     {/if}
   </GridCell>
 
@@ -63,9 +59,7 @@
       <TaskCard {task}></TaskCard>
     {/each}
     {#if studentTasks.length < 1}
-      <EmptySpace>
-        <Title3>No Tasks</Title3>
-      </EmptySpace>
+      <EmptySpace>No Tasks</EmptySpace>
     {/if}
   </GridCell>
 

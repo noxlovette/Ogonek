@@ -13,7 +13,7 @@
   } from "$lib/components";
   import { page } from "$app/state";
   import { enhance } from "$app/forms";
-  import { Check, Circle } from "lucide-svelte";
+  import { Check, Circle } from "@lucide/svelte";
   import { enhanceForm, formatDate } from "$lib/utils";
   import Multipart from "$lib/components/UI/interactive/Multipart.svelte";
   import Badge from "$lib/components/cards/Badge.svelte";
@@ -86,7 +86,7 @@
           })}
         >
           <UniButton
-            variant="prominent"
+            variant={role === "t" ? "primary" : "prominent"}
             type="submit"
             content={completed ? m.complete() : m.notCompleted()}
             Icon={completed ? Check : Circle}

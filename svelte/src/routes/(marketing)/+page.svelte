@@ -10,7 +10,7 @@
     WorkArea,
     MetaData,
   } from "$lib/components";
-  import { Flame, FlameKindling } from "lucide-svelte";
+  import { Flame, FlameKindling } from "@lucide/svelte";
   import { m } from "$lib/paraglide/messages";
   const seoData = {
     title: "Ogonek - Digital Classroom for Private Teachers & Tutors",
@@ -66,11 +66,6 @@
 </script>
 
 <WorkArea>
-  <h1
-    class="text-center text-5xl leading-tight font-bold tracking-tighter md:text-left md:text-7xl xl:text-8xl 2xl:text-9xl"
-  >
-    Per igniculus ad astra
-  </h1>
   <Toolbar>
     <HStack>
       <LargeTitle>

@@ -28,7 +28,6 @@
   } from "$lib/stores";
   import { goto } from "$app/navigation";
   import { m } from "$lib/paraglide/messages.js";
-  import LoadingCard from "$lib/components/cards/LoadingCard.svelte";
   import VStack from "$lib/components/UI/layout/VStack.svelte";
   import NewButton from "$lib/components/UI/forms/buttons/NewButton.svelte";
 
@@ -44,8 +43,8 @@
       {
         key: "assigneeName",
         label: m.assignee(),
-        formatter: (value: string | boolean | undefined | null) =>
-          value === $user.name ? m.notAssigned() : String(value),
+        formatter: (value: unknown): string =>
+          (value as string) || m.notAssigned(),
       },
       {
         key: "createdAt",

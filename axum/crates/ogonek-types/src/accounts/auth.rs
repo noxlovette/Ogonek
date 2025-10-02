@@ -6,8 +6,8 @@ use validator::Validate;
 #[derive(Deserialize, Validate, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct AuthPayload {
-    #[validate(length(min = 2))]
-    #[schema(min_length = 3, max_length = 50, example = "john_doe")]
+    #[validate(length(min = 2, max = 50))]
+    #[schema(min_length = 2, max_length = 50, example = "john_doe")]
     pub username: String,
 
     #[validate(length(min = 8, max = 32))]

@@ -2,6 +2,7 @@
   import {
     Caption1,
     Grid,
+    Header,
     HStack,
     LargeTitle,
     Title1,
@@ -20,7 +21,6 @@
 </script>
 
 <div class="gap-default mx-auto flex flex-col items-center justify-center">
-  <Title3 styling="font-serif text-center mb-12"><a href="/">Ogonëk</a></Title3>
   <LargeTitle styling="text-center"
     >{isLogin ? m.zany_few_goose_mop() : m.bad_even_seahorse_rise()}</LargeTitle
   >

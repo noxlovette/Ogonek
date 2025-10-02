@@ -15,7 +15,10 @@
   import { enhance } from "$app/forms";
   import Caption1 from "$lib/components/typography/Caption1.svelte";
 
-  const { form, data } = $props();
+  const { form } = $props();
+
+  const now = new Date();
+  const rounded = new Date(Math.round(now.getTime() / 3600000) * 3600000);
 </script>
 
 <svelte:head>
@@ -43,7 +46,7 @@
   </VStack>
 
   <HStack>
-    <DateTimePicker {form} dtstartTime={data.date.toISOString()} />
+    <DateTimePicker {form} dtstartTime={rounded.toISOString()} />
   </HStack>
   <SectionBg>
     <HStack>

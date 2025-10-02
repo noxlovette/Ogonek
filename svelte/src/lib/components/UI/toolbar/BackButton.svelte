@@ -1,6 +1,6 @@
 <script lang="ts">
   import { page } from "$app/state";
-  import { ChevronLeft } from "lucide-svelte";
+  import { ChevronLeft } from "@lucide/svelte";
   import { Merger } from ".";
   import UniButton from "../forms/buttons/UniButton.svelte";
   import VStack from "../layout/VStack.svelte";

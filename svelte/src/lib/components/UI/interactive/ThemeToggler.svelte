@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { Sun, Moon, Monitor } from "lucide-svelte";
+  import { Sun, Moon, Monitor } from "@lucide/svelte";
   import { notification } from "$lib/stores";
 
   let theme = $state("auto");

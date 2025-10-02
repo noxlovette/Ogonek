@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { UserRound } from "lucide-svelte";
+  import { UserRound } from "@lucide/svelte";
   import SidebarItem from "./SidebarItem.svelte";
   import { m } from "$lib/paraglide/messages";
 </script>

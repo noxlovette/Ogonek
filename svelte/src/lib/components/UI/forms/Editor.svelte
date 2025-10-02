@@ -2,7 +2,7 @@
   import Title2 from "$lib/components/typography/Title2.svelte";
 
   import { UniButton } from "./buttons";
-  import { ChartNoAxesGantt, Eye } from "lucide-svelte";
+  import { ChartNoAxesGantt, Eye } from "@lucide/svelte";
   import { Merger } from "../toolbar";
   import { VStack } from "..";
   import Divider from "../toolbar/Divider.svelte";

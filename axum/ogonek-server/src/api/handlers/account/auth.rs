@@ -142,11 +142,9 @@ pub async fn generate_invite_link(
     tracing::info!("Encoded token: {encoded}");
 
     if query.is_registered == "true" {
-        Ok(Json(format!("{frontend_url}/auth/bind?invite={encoded}",)))
+        Ok(Json(format!("{frontend_url}/bind?invite={encoded}",)))
     } else {
-        Ok(Json(
-            format!("{frontend_url}/auth/signup?invite={encoded}",),
-        ))
+        Ok(Json(format!("{frontend_url}/signup?invite={encoded}",)))
     }
 }
 

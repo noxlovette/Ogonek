@@ -40,18 +40,22 @@ pub async fn read_all(
         query_builder.push(")");
     }
 
-    if let Some(completed) = &params.completed {
-        query_builder.push(" AND t.completed = ");
-        query_builder.push_bind(completed);
+    // If completed=false (default), show only incomplete tasks
+    // If completed=true, show all tasks (both complete and incomplete mixed)
+    if let Some(completed) = &params.completed
+        && !completed
+    {
+        query_builder.push(" AND t.completed = false");
     }
+    // If completed=true, don't add any filter (show all)
 
     if let Some(assignee) = &params.assignee {
         query_builder.push(" AND t.assignee = ");
         query_builder.push_bind(assignee);
     }
 
-    // Add ordering - tasks typically ordered by due date
-    query_builder.push(" ORDER BY t.due_date ASC NULLS LAST");
+    // Add ordering - incomplete tasks first, then by due date
+    query_builder.push(" ORDER BY t.completed ASC, t.due_date ASC NULLS LAST");
 
     // Add limit and offset
     query_builder.push(" LIMIT ");

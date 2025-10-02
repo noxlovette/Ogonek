@@ -7,6 +7,8 @@
     StudentAdder,
     Divider,
     Merger,
+    EmptySpace,
+    Title1,
   } from "$lib/components";
   import type { Student, TableConfig } from "$lib/types";
   import { m } from "$lib/paraglide/messages";
@@ -34,6 +36,12 @@
     <StudentAdder />
   </Merger>
 </Toolbar>
+
+{#if data.students.length < 1}
+  <EmptySpace>
+    <Title1>{m.empty()}</Title1>
+  </EmptySpace>
+{/if}
 <Table config={studentConfig} {href} items={students} {students} />
 
 <svelte:head>

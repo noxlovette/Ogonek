@@ -1,14 +1,18 @@
 use serde::{Deserialize, Serialize};
 use std::{fmt::Display, str::FromStr};
 use utoipa::ToSchema;
+use validator::Validate;
 
 use crate::CalendarRole;
-#[derive(Deserialize, ToSchema)]
+#[derive(Deserialize, ToSchema, Validate)]
 #[serde(rename_all = "camelCase")]
 pub struct UserUpdate {
+    #[validate(length(min = 3))]
     pub name: Option<String>,
+    #[validate(length(min = 2, max = 50))]
     pub username: Option<String>,
     pub email: Option<String>,
+    #[validate(length(min = 8))]
     pub pass: Option<String>,
 }
 

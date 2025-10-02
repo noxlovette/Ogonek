@@ -14,7 +14,6 @@ use ogonek_db::init_db;
 use ogonek_server::services::hash_password;
 use sqlx::PgPool;
 
-#[tokio::main]
 pub async fn run() -> Result<()> {
     dotenv().ok();
 

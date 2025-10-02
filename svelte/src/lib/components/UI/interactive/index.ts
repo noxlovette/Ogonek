@@ -8,5 +8,6 @@ export { default as ProgressBar } from "./ProgressBar.svelte";
 export { default as SearchBar } from "./SearchBar.svelte";
 export { default as Table } from "./Table.svelte";
 export { default as TableSkeleton } from "./TableSkeleton.svelte";
+export { default as ThemeToggler } from "./ThemeToggler.svelte";
 export { default as TickMorph } from "./TickMorph.svelte";
 export { default as Toggler } from "./Toggler.svelte";

@@ -3,7 +3,7 @@
   import { enhance } from "$app/forms";
   import { clickOutside } from "$lib/actions";
   import { notification } from "$lib/stores";
-  import { X, Copy, Plus, Link } from "lucide-svelte";
+  import { X, Copy, Plus, Link } from "@lucide/svelte";
   import UniButton from "./buttons/UniButton.svelte";
   import { Caption1 } from "$lib/components/typography";
   import Headline from "$lib/components/typography/Headline.svelte";

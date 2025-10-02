@@ -1,7 +1,7 @@
 <script lang="ts">
   import { LargeTitle, UniButton } from "$lib/components";
   import { m } from "$lib/paraglide/messages";
-  import { Mail, Send } from "lucide-svelte";
+  import { Mail, Send } from "@lucide/svelte";
 
   const contactInfo = {
     email: "danila.volkov@noxlovette.com",

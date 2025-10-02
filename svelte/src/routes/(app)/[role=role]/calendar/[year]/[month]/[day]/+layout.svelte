@@ -1,7 +1,7 @@
 <script lang="ts">
   import { page } from "$app/state";
   import { Merger, UniButton } from "$lib/components";
-  import { X } from "lucide-svelte";
+  import { X } from "@lucide/svelte";
   import { fade } from "svelte/transition";
 
   const { children } = $props();

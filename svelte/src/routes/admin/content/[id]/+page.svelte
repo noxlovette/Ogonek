@@ -15,7 +15,7 @@
   import type { PageData } from "./$types";
   import Badge from "$lib/components/cards/Badge.svelte";
   import { page } from "$app/state";
-  import { ScanSearch } from "lucide-svelte";
+  import { ScanSearch } from "@lucide/svelte";
 
   let { data }: { data: PageData } = $props();
 </script>

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { X, Search } from "lucide-svelte";
+  import { X, Search } from "@lucide/svelte";
 
   let { q = $bindable(""), placeholder = "Search..." } = $props();
 </script>

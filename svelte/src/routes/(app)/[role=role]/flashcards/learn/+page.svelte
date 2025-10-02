@@ -2,7 +2,7 @@
   import { enhance } from "$app/forms";
   import { invalidate } from "$app/navigation";
   import { enhanceForm, qualityButtons } from "$lib/utils";
-  import { GraduationCap } from "lucide-svelte";
+  import { GraduationCap } from "@lucide/svelte";
   import {
     Toolbar,
     UniButton,
@@ -75,7 +75,9 @@
       // Nuclear option - keep forcing focus
       const interval = setInterval(() => {
         if (document.activeElement !== inputRef) {
-          inputRef.focus();
+          if (inputRef) {
+            inputRef.focus();
+          }
         }
       }, 50);
 

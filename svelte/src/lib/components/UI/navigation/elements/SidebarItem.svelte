@@ -1,6 +1,6 @@
 <script lang="ts">
   import { page } from "$app/state";
-  import { SquareArrowUpRight } from "lucide-svelte";
+  import { SquareArrowUpRight } from "@lucide/svelte";
   import { Headline } from "$lib/components/typography";
   import { NotificationBadge } from "../../content";
 

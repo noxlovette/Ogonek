@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { AudioLines } from "lucide-svelte";
+  import { AudioLines } from "@lucide/svelte";
   import SidebarItem from "./SidebarItem.svelte";
   import { m } from "$lib/paraglide/messages";
 </script>

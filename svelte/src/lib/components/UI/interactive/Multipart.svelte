@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onDestroy } from "svelte";
-  import { Upload, X } from "lucide-svelte";
+  import { Upload, X } from "@lucide/svelte";
   import logger from "$lib/logger";
   import { formatPercentage } from "$lib/utils";
   import Caption1 from "$lib/components/typography/Caption1.svelte";
@@ -395,7 +395,7 @@
             >{m.every_sunny_pelican_buzz()}</Caption1
           >
         {:else if fileState.status === "error"}
-          <Caption1 styling="text-emerald-600"
+          <Caption1 styling="text-rose-600"
             >{m.weird_level_sheep_imagine()}</Caption1
           >
         {/if}

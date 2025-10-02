@@ -1,6 +1,7 @@
 use super::{DeckSmall, LessonSmall, TaskSmall};
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
+use validator::Validate;
 /// Generic response that stores paginated data
 #[derive(Debug, Serialize, ToSchema)]
 pub struct PaginatedResponse<T> {
@@ -32,16 +33,20 @@ pub struct PaginatedDecks {
 }
 
 /// Pagination
-#[derive(Debug, Deserialize, ToSchema)]
+#[derive(Debug, Deserialize, ToSchema, Validate)]
 pub struct PaginationParams {
+    #[validate(range(min = 1))]
     pub page: Option<i64>,
+    #[validate(range(min = 1, max = 100))]
     pub per_page: Option<i64>,
     pub search: Option<String>,
     pub assignee: Option<String>,
 }
-#[derive(Debug, Deserialize, ToSchema)]
+#[derive(Debug, Deserialize, ToSchema, Validate)]
 pub struct TaskPaginationParams {
+    #[validate(range(min = 1))]
     pub page: Option<i64>,
+    #[validate(range(min = 1, max = 100))]
     pub per_page: Option<i64>,
     pub search: Option<String>,
     pub completed: Option<bool>,

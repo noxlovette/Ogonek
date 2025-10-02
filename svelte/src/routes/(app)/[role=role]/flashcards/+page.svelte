@@ -14,7 +14,7 @@
   import { enhanceForm } from "$lib/utils";
   import { page } from "$app/state";
   import type { TableConfig, DeckSmall } from "$lib/types/index.js";
-  import { GraduationCap } from "lucide-svelte";
+  import { GraduationCap } from "@lucide/svelte";
   import { m } from "$lib/paraglide/messages";
   import {
     searchTerm,
@@ -100,6 +100,7 @@
       {#if data.cards?.length}
         <UniButton
           variant="primary"
+          fill={false}
           content={m.helpful_slow_flea_catch()}
           Icon={GraduationCap}
           href="flashcards/learn"
