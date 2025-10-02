@@ -1,28 +1,50 @@
 <script lang="ts">
   import { sortBy, sortOrder } from "$lib/stores";
-  import type { SortBy, SortOrder } from "$lib/types";
+  import type { SortBy } from "$lib/types";
+  import {
+    ArrowDownAZ,
+    ArrowUpAZ,
+    CalendarArrowDown,
+    CalendarArrowUp,
+  } from "@lucide/svelte";
 
-  const sortFields: { value: SortBy; label: string }[] = [
-    { value: "created_at", label: "Created At" },
-    { value: "updated_at", label: "Updated At" },
-    { value: "title", label: "Title" },
-    { value: "due_date", label: "Due Date" },
+  const sortFields: { value: SortBy; label: string; isTime: boolean }[] = [
+    { value: "created_at", label: "Создание", isTime: true },
+    { value: "updated_at", label: "Обновление", isTime: true },
+    { value: "title", label: "Название", isTime: false },
+    { value: "due_date", label: "Срок", isTime: true },
   ];
 
-  const sortOrderFields: { value: SortOrder; label: string }[] = [
-    { value: "asc", label: "Восход" },
-    { value: "desc", label: "Нисход" },
-  ];
+  const isTimeSort = $derived(
+    sortFields.find((f) => f.value === $sortBy)?.isTime ?? false,
+  );
+
+  const baseClass =
+    "ring-default text-center hover-default rounded-full p-2 md:p-3 shadow-sm transition-all";
 </script>
 
-<select name="sort" bind:value={$sortBy}>
-  {#each sortFields as field}
-    <option value={field.value}>{field.label}</option>
-  {/each}
-</select>
+<div class="gap-default flex flex-wrap items-center">
+  <button
+    type="button"
+    onclick={() => ($sortOrder = $sortOrder === "asc" ? "desc" : "asc")}
+    class="{baseClass} flex items-center gap-2"
+  >
+    {#if isTimeSort}
+      {#if $sortOrder === "asc"}
+        <CalendarArrowUp class="size-5" />
+      {:else}
+        <CalendarArrowDown class="size-5" />
+      {/if}
+    {:else if $sortOrder === "asc"}
+      <ArrowUpAZ class="size-5" />
+    {:else}
+      <ArrowDownAZ class="size-5" />
+    {/if}
+  </button>
 
-<select name="order" bind:value={$sortOrder}>
-  {#each sortOrderFields as order}
-    <option value={order.value}>{order.label}</option>
-  {/each}
-</select>
+  <select name="sort" bind:value={$sortBy} class={baseClass}>
+    {#each sortFields as field}
+      <option value={field.value}>{field.label}</option>
+    {/each}
+  </select>
+</div>

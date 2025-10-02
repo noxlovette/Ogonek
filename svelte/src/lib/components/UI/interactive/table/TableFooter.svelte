@@ -6,4 +6,5 @@
   class="border-b border-stone-300/30 bg-stone-50 dark:border-stone-700 dark:bg-stone-900/30"
 >
   {@render children()}
+  тут следующая страница, the current page number, how many displaying
 </div>
