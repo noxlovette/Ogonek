@@ -58,6 +58,11 @@ pub const FILE_TAG: &str = "File";
         (name = STATE_TAG,description = "State API"),
         (name = CALENDAR_TAG,description = "Calendar API"),
     ),
+    components(schemas(
+        ogonek_types::DeckVisibility,
+        ogonek_types::SortField,
+        ogonek_types::SortOrder,
+    )),
     info(
         title = "Ogonek API",
         contact(

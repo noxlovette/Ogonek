@@ -66,7 +66,7 @@ class RouteGenerator {
       : path;
   }
 
-  determineOperation(path, segments, methods) {
+  determineOperation(path, segments) {
     if (segments.length === 1) {
       return "root";
     }
@@ -86,7 +86,7 @@ class RouteGenerator {
     return segments[segments.length - 1];
   }
 
-  getRouteName(operation, method, operationId, fullPath) {
+  getRouteName(operation, method, operationId) {
     // Use operationId mapping first if available
     if (operationId) {
       const mapped = this.operationIdToRouteName(operationId);
@@ -185,19 +185,12 @@ class RouteGenerator {
     }
 
     if (pathParams.length > 0 && queryParams.length === 0) {
-      const params = pathParams.map((p) => `${p}: string`).join(", ");
+      const paramsType = pathParams.map((p) => `${p}: string`).join("; ");
       const pathWithParams = this.replacePathParams(path);
-      return `(${params}) => \`\${API_BASE}${pathWithParams}\``;
+      return `(params: { ${paramsType} }) => \`\${API_BASE}${pathWithParams.replace(/\$\{(\w+)\}/g, "${params.$1}")}\``;
     }
 
     if (queryParams.length > 0) {
-      const pathParamDefs = pathParams.map((p) => `${p}: string`);
-      const queryParamDefs = queryParams.map((p) => {
-        const optional = p.required ? "" : "?";
-        return `${p.name}${optional}: string`;
-      });
-
-      const allParams = [...pathParamDefs, ...queryParamDefs].join(", ");
       const pathWithParams = this.replacePathParams(path);
 
       return this.generateQueryParamFunction(
@@ -226,25 +219,24 @@ class RouteGenerator {
       return `${p.name}${optional}: string`;
     });
 
-    const allParams = [...pathParamDefs, ...queryParamDefs].join(",\n    ");
+    const allParamDefs = [...pathParamDefs, ...queryParamDefs].join("; ");
+    const pathWithParamsPrefix = path.replace(/\$\{(\w+)\}/g, "${params.$1}");
 
     const queryParamLogic =
       queryParams.length > 0
         ? `
-      const params = new URLSearchParams();
+      const urlParams = new URLSearchParams();
 ${queryParams
   .map((p) => {
-    const condition = p.required ? `${p.name}` : `${p.name}`;
-    return `      if (${condition}) params.set("${p.name}", ${p.name});`;
+    const condition = p.required ? `params.${p.name}` : `params.${p.name}`;
+    return `      if (${condition}) urlParams.set("${p.name}", params.${p.name});`;
   })
   .join("\n")}
-      const query = params.toString();
-      return \`\${API_BASE}${path}\${query ? \`?\${query}\` : ""}\`;`
-        : `      return \`\${API_BASE}${path}\`;`;
+      const query = urlParams.toString();
+      return \`\${API_BASE}${pathWithParamsPrefix}\${query ? \`?\${query}\` : ""}\`;`
+        : `      return \`\${API_BASE}${pathWithParamsPrefix}\`;`;
 
-    return `(
-    ${allParams}
-  ) => {${queryParamLogic}
+    return `(params: { ${allParamDefs} }) => {${queryParamLogic}
     }`;
   }
 

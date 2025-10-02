@@ -13,7 +13,7 @@ export const load: PageServerLoad = async ({ fetch, url }) => {
     const assignee = url.searchParams.get("assignee") || "";
 
     const lessonsPaginated = (await fetch(
-      routes.lessons.all(page, per_page, search, assignee),
+      routes.lessons.all({ page, per_page, search, assignee }),
     ).then((res) => res.json())) as PaginatedResponse<LessonSmall>;
 
     return {

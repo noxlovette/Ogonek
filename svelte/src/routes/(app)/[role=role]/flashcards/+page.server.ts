@@ -14,7 +14,7 @@ export const load: PageServerLoad = async ({ fetch, url }) => {
     const assignee = url.searchParams.get("assignee") || "";
 
     const decksPaginated = (await fetch(
-      routes.decks.all(page, per_page, search, assignee),
+      routes.decks.all({ page, per_page, search, assignee }),
     ).then((res) => res.json())) as PaginatedResponse<DeckSmall>;
     return {
       decksPaginated,

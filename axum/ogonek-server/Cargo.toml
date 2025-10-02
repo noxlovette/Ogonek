@@ -1,6 +1,6 @@
 [package]
 name = "ogonek_server"
-version = "1.12.3"
+version = "1.12.4"
 edition = "2024"
 
 [dependencies]
@@ -40,4 +40,3 @@ rpassword = "7.4.0"
 argon2 = "0.5.3"
 jsonwebtoken = { version = "9.3.1", features = ["use_pem"] }
 atty = "0.2.14"
-serde_qs = { version = "0.15.0", features = ["axum"] }

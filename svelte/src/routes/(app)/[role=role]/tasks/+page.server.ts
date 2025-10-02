@@ -16,7 +16,7 @@ export const load: PageServerLoad = async ({ fetch, url, depends }) => {
     const assignee = url.searchParams.get("assignee") || "";
     const completed = url.searchParams.get("completed") || "false";
     const tasksPaginated = (await fetch(
-      routes.tasks.all(page, per_page, search, assignee, completed),
+      routes.tasks.all({ page, per_page, search, assignee, completed }),
     ).then((res) => res.json())) as PaginatedResponse<TaskSmall>;
     return {
       tasksPaginated,

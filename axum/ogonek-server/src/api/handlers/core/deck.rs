@@ -115,7 +115,7 @@ pub async fn fetch_deck(
         ("per_page" = Option<u32>, Query, description = "Items per page"),
         ("search" = Option<String>, Query, description = "Search term"),
         ("assignee" = Option<String>, Query, description = "Filter by assignee"),
-        ("assignee" = Option<DeckVisibility>, Query),
+        ("visibility" = Option<DeckVisibility>, Query),
         ("sort_by" = Option<SortField>, Query),
         ("sort_order" = Option<SortOrder>, Query)
     ),
