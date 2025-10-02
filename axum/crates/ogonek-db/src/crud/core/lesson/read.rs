@@ -1,16 +1,15 @@
 use crate::DbError;
-use ogonek_types::{LessonFull, LessonSmall, PDFData, PaginationParams};
+use ogonek_types::{LessonFull, LessonPaginationParams, LessonSmall, PDFData};
 use sqlx::PgPool;
-
 /// Finds a list of mini-lessons (no markdown) according to passed Pagination params
 pub async fn find_all(
     db: &PgPool,
     user_id: &str,
-    params: &PaginationParams,
+    params: &LessonPaginationParams, // <- Use specific params
 ) -> Result<Vec<LessonSmall>, DbError> {
     let mut query_builder = sqlx::QueryBuilder::new(
         r#"
-        SELECT l.id, l.title, l.topic, l.created_at,
+        SELECT l.id, l.title, l.topic, l.created_at, l.updated_at,
                u.name as assignee_name,
                COALESCE(s.seen_at IS NOT NULL, TRUE) as seen
         FROM lessons l
@@ -21,12 +20,14 @@ pub async fn find_all(
     query_builder.push_bind(user_id);
     query_builder.push(" AND s.model_type = ");
     query_builder.push_bind("lesson");
+
     query_builder.push(" WHERE (l.assignee = ");
     query_builder.push_bind(user_id);
     query_builder.push(" OR l.created_by = ");
     query_builder.push_bind(user_id);
     query_builder.push(")");
 
+    // Search filter
     if let Some(search) = &params.search {
         query_builder.push(" AND (l.title ILIKE ");
         query_builder.push_bind(format!("%{search}%"));
@@ -37,15 +38,25 @@ pub async fn find_all(
         query_builder.push(")");
     }
 
-    // search by assignee if provided
+    // Topic filter (lesson-specific)
+    if let Some(topic) = &params.topic {
+        query_builder.push(" AND l.topic ILIKE ");
+        query_builder.push_bind(format!("%{topic}%"));
+    }
+
+    // Assignee filter
     if let Some(assignee) = &params.assignee {
         query_builder.push(" AND l.assignee = ");
         query_builder.push_bind(assignee);
     }
 
-    // ordering
-    query_builder.push(" ORDER BY l.created_at DESC");
+    // Dynamic ordering
+    query_builder.push(" ORDER BY ");
+    query_builder.push(params.sort_by.to_lesson_column());
+    query_builder.push(" ");
+    query_builder.push(params.sort_order.to_sql());
 
+    // Pagination
     query_builder.push(" LIMIT ");
     query_builder.push_bind(params.limit());
     query_builder.push(" OFFSET ");
@@ -58,30 +69,6 @@ pub async fn find_all(
 
     Ok(lessons)
 }
-
-/// Returns three lessons in mini-format
-pub async fn find_recent(db: &PgPool, user_id: &str) -> Result<Vec<LessonSmall>, DbError> {
-    let lessons = sqlx::query_as!(
-        LessonSmall,
-        r#"
-        SELECT l.id, l.title, l.topic, l.created_at,
-               u.name as "assignee_name?",
-               COALESCE(s.seen_at IS NOT NULL, TRUE) as seen
-        FROM lessons l
-        LEFT JOIN "user" u ON l.assignee = u.id
-        LEFT JOIN seen_status s ON s.model_id = l.id AND s.user_id = $1
-        WHERE (assignee = $1 OR created_by = $1)
-        ORDER BY created_at DESC
-        LIMIT 3
-        "#,
-        user_id
-    )
-    .fetch_all(db)
-    .await?;
-
-    Ok(lessons)
-}
-
 /// Finds one lesson by its id, will return not found if the user doesn't have access to the data
 pub async fn find_by_id(
     db: &PgPool,

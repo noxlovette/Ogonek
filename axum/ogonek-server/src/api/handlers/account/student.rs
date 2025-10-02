@@ -6,8 +6,8 @@ use crate::{
 use axum::extract::{Json, Path, State};
 
 use axum::http::StatusCode;
-use ogonek_db::core::{account::student, flashcards::deck, lesson, task};
-use ogonek_types::{CompositeStudent, Student, UpdateStudentRequest};
+use ogonek_db::core::account::student;
+use ogonek_types::{Student, UpdateStudentRequest};
 #[utoipa::path(
     post,
     path = "/student/{id}",
@@ -83,7 +83,7 @@ pub async fn update_student(
     ),
     tag = USER_TAG,
     responses(
-        (status = 200, description = "Student details retrieved", body = CompositeStudent),
+        (status = 200, description = "Student details retrieved", body = Student),
         (status = 404, description = "Student not found"),
         (status = 401, description = "Unauthorized")
     )
@@ -92,18 +92,10 @@ pub async fn fetch_student(
     claims: Claims,
     State(state): State<AppState>,
     Path(id): Path<String>,
-) -> Result<Json<CompositeStudent>, APIError> {
+) -> Result<Json<Student>, APIError> {
     let student = student::find_by_id(&state.db, &id, &claims.sub).await?;
-    let decks = deck::find_recent(&state.db, &student.id).await?;
-    let lessons = lesson::find_recent(&state.db, &student.id).await?;
-    let tasks = task::read_recent(&state.db, &student.id).await?;
 
-    Ok(Json(CompositeStudent {
-        student,
-        decks,
-        lessons,
-        tasks,
-    }))
+    Ok(Json(student))
 }
 #[utoipa::path(
     get,

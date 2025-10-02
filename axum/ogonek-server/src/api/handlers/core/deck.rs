@@ -9,8 +9,8 @@ use ogonek_db::{
 };
 use ogonek_notifications::NotificationType;
 use ogonek_types::{
-    ActionType, DeckPublic, DeckSmall, DeckWithCards, DeckWithCardsUpdate, ModelType,
-    PaginatedDecks, PaginatedResponse, PaginationParams,
+    ActionType, DeckPaginationParams, DeckPublic, DeckSmall, DeckVisibility, DeckWithCards,
+    DeckWithCardsUpdate, ModelType, PaginatedDecks, PaginatedResponse, SortField, SortOrder,
 };
 
 use crate::api::DECK_TAG;
@@ -114,7 +114,10 @@ pub async fn fetch_deck(
         ("page" = Option<u32>, Query, description = "Page number"),
         ("per_page" = Option<u32>, Query, description = "Items per page"),
         ("search" = Option<String>, Query, description = "Search term"),
-        ("assignee" = Option<String>, Query, description = "Filter by assignee")
+        ("assignee" = Option<String>, Query, description = "Filter by assignee"),
+        ("assignee" = Option<DeckVisibility>, Query),
+        ("sort_by" = Option<SortField>, Query),
+        ("sort_order" = Option<SortOrder>, Query)
     ),
     responses(
         (status = 200, description = "User decks retrieved", body = PaginatedDecks),
@@ -123,27 +126,10 @@ pub async fn fetch_deck(
 )]
 pub async fn list_decks(
     State(state): State<AppState>,
-    Query(params): Query<PaginationParams>,
+    Query(params): Query<DeckPaginationParams>,
     claims: Claims,
 ) -> Result<Json<PaginatedResponse<DeckSmall>>, APIError> {
-    // DEBUG THE SHIT OUT OF THIS! 🔍
-    tracing::info!("🔥 DECK LIST PARAMS: {:?}", params);
-    tracing::info!(
-        "📊 PAGINATION DEBUG: page={:?}, per_page={:?}, limit={}, offset={}",
-        params.page,
-        params.per_page,
-        params.limit(),
-        params.offset()
-    );
-    tracing::info!(
-        "🔍 SEARCH: {:?}, ASSIGNEE: {:?}",
-        params.search,
-        params.assignee
-    );
-
     let decks = flashcards::deck::find_all(&state.db, &claims.sub, &params).await?;
-
-    tracing::info!("✅ FOUND {} DECKS", decks.len());
 
     Ok(Json(PaginatedResponse {
         data: decks,

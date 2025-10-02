@@ -12,9 +12,10 @@
     Headline,
     HStack,
     TickMorph,
+    Subheadline,
   } from "$lib/components";
   import { enhance } from "$app/forms";
-  import { enhanceForm } from "$lib/utils";
+  import { enhanceForm, formatDateOnly } from "$lib/utils";
   import { page } from "$app/state";
 
   import {
@@ -100,22 +101,38 @@
   </div>
 {:else}
   <Table>
-    <TableHead>Controls go here</TableHead>
+    <TableHead>
+      <TickMorph
+        noText={true}
+        bind:group={selected}
+        value={lessons.map((lesson) => lesson.id)}
+      />
+      {#if selected.length >= 1}
+        <Subheadline>
+          Выбрано {selected.length} из {lessons.length}
+        </Subheadline>
+      {/if}
+      <Divider />
+
+      Delete Filter by
+    </TableHead>
     <TableBody>
       {#each lessons as lesson (lesson.id)}
         <div class="bg-clickable flex items-center px-2">
           <TickMorph noText={true} bind:group={selected} value={lesson.id} />
           <TableRow href={`/${page.params.role}/lessons/${lesson.id}`}>
-            <VStack>
-              <HStack override="gap-1 items-start">
-                <Headline>
-                  {lesson.title}
-                </Headline>
-                <Caption1>
-                  {lesson.assigneeName}
-                </Caption1>
-              </HStack>
-            </VStack>
+            <HStack override="gap-1 items-start">
+              <Headline>
+                {lesson.title}
+              </Headline>
+              <Caption1>
+                {lesson.assigneeName}
+              </Caption1>
+            </HStack>
+            <Divider />
+            <Caption1>
+              {formatDateOnly(lesson.createdAt)}
+            </Caption1>
           </TableRow>
         </div>
       {/each}

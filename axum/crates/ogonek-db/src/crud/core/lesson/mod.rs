@@ -134,7 +134,7 @@ mod tests {
     use super::*;
     use crate::tests::create_test_user;
 
-    use ogonek_types::{LessonCreate, LessonUpdate, PaginationParams};
+    use ogonek_types::{LessonCreate, LessonUpdate};
     use sqlx::PgPool;
 
     #[sqlx::test]
@@ -246,132 +246,6 @@ mod tests {
 
         let result = find_by_id(&db, &creation_id, &other_user).await;
         assert!(result.is_err());
-    }
-
-    #[sqlx::test]
-    async fn test_find_all_basic(db: PgPool) {
-        let user = create_test_user(&db, "test", "test@ogonek.app").await;
-
-        // Create multiple lessons
-        for i in 1..=3 {
-            let lesson_create = LessonCreate {
-                title: format!("Lesson {}", i),
-                topic: format!("Topic {}", i),
-                markdown: format!("# Content {}", i),
-                assignee: None,
-            };
-            create(&db, &user, lesson_create).await.unwrap();
-        }
-
-        let params = PaginationParams {
-            page: Some(1),
-            per_page: Some(10),
-            search: None,
-            assignee: None,
-        };
-
-        let result = find_all(&db, &user, &params).await;
-        assert!(result.is_ok());
-
-        let lessons = result.unwrap();
-        assert_eq!(lessons.len(), 3);
-    }
-
-    #[sqlx::test]
-    async fn test_find_all_with_search(db: PgPool) {
-        let user = create_test_user(&db, "test", "test@ogonek.app").await;
-
-        let lesson_create1 = LessonCreate {
-            title: "Rust Programming".to_string(),
-            topic: "Programming".to_string(),
-            markdown: "# Rust Basics".to_string(),
-            assignee: None,
-        };
-
-        let lesson_create2 = LessonCreate {
-            title: "Python Basics".to_string(),
-            topic: "Programming".to_string(),
-            markdown: "# Python Introduction".to_string(),
-            assignee: None,
-        };
-
-        create(&db, &user, lesson_create1).await.unwrap();
-        create(&db, &user, lesson_create2).await.unwrap();
-
-        let params = PaginationParams {
-            page: Some(1),
-            per_page: Some(10),
-            search: Some("Rust".to_string()),
-            assignee: None,
-        };
-
-        let result = find_all(&db, &user, &params).await;
-        assert!(result.is_ok());
-
-        let lessons = result.unwrap();
-        assert_eq!(lessons.len(), 1);
-        assert!(lessons[0].title.contains("Rust"));
-    }
-
-    #[sqlx::test]
-    async fn test_find_all_with_assignee_filter(db: PgPool) {
-        let creator = create_test_user(&db, "creator", "creator@ogonek.app").await;
-        let assignee = create_test_user(&db, "assignee", "assignee@ogonek.app").await;
-
-        let lesson_create1 = LessonCreate {
-            title: "Self Assigned".to_string(),
-            topic: "Self Study".to_string(),
-            markdown: "# Self Content".to_string(),
-            assignee: None,
-        };
-
-        let lesson_create2 = LessonCreate {
-            title: "Other Assigned".to_string(),
-            topic: "Collaboration".to_string(),
-            markdown: "# Shared Content".to_string(),
-            assignee: Some(assignee.clone()),
-        };
-
-        create(&db, &creator, lesson_create1).await.unwrap();
-        create(&db, &creator, lesson_create2).await.unwrap();
-
-        let params = PaginationParams {
-            page: Some(1),
-            per_page: Some(10),
-            search: None,
-            assignee: Some(assignee.clone()),
-        };
-
-        let result = find_all(&db, &creator, &params).await;
-        assert!(result.is_ok());
-
-        let lessons = result.unwrap();
-        assert_eq!(lessons.len(), 1);
-    }
-
-    #[sqlx::test]
-    async fn test_find_recent(db: PgPool) {
-        let user = create_test_user(&db, "test", "test@ogonek.app").await;
-
-        // Create more than 6 lessons to test the limit
-        for i in 1..=8 {
-            let lesson_create = LessonCreate {
-                title: format!("Recent Lesson {}", i),
-                topic: "Recent Topic".to_string(),
-                markdown: format!(
-                    "# Recent Content {} with some longer text to test truncation",
-                    i
-                ),
-                assignee: None,
-            };
-            create(&db, &user, lesson_create).await.unwrap();
-        }
-
-        let result = find_recent(&db, &user).await;
-        assert!(result.is_ok());
-
-        let lessons = result.unwrap();
-        assert_eq!(lessons.len(), 3); // Should be limited to 6
     }
 
     #[sqlx::test]
@@ -515,65 +389,5 @@ mod tests {
 
         let final_count = count(&db, &user).await.unwrap();
         assert_eq!(final_count, 4); // 3 created + 1 assigned
-    }
-
-    #[sqlx::test]
-    async fn test_pagination_params(db: PgPool) {
-        let user = create_test_user(&db, "test", "test@ogonek.app").await;
-
-        // Create 15 lessons
-        for i in 1..=15 {
-            let lesson_create = LessonCreate {
-                title: format!("Pagination Lesson {}", i),
-                topic: "Pagination".to_string(),
-                markdown: format!("# Content {}", i),
-                assignee: None,
-            };
-            create(&db, &user, lesson_create).await.unwrap();
-        }
-
-        // Test first page
-        let params1 = PaginationParams {
-            page: Some(1),
-            per_page: Some(5),
-            search: None,
-            assignee: None,
-        };
-
-        let result1 = find_all(&db, &user, &params1).await.unwrap();
-        assert_eq!(result1.len(), 5);
-
-        // Test second page
-        let params2 = PaginationParams {
-            page: Some(2),
-            per_page: Some(5),
-            search: None,
-            assignee: None,
-        };
-
-        let result2 = find_all(&db, &user, &params2).await.unwrap();
-        assert_eq!(result2.len(), 5);
-
-        // Test third page
-        let params3 = PaginationParams {
-            page: Some(3),
-            per_page: Some(5),
-            search: None,
-            assignee: None,
-        };
-
-        let result3 = find_all(&db, &user, &params3).await.unwrap();
-        assert_eq!(result3.len(), 5);
-
-        // Test fourth page (should have no results)
-        let params4 = PaginationParams {
-            page: Some(4),
-            per_page: Some(5),
-            search: None,
-            assignee: None,
-        };
-
-        let result4 = find_all(&db, &user, &params4).await.unwrap();
-        assert_eq!(result4.len(), 0);
     }
 }

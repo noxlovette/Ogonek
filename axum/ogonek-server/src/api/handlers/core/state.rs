@@ -8,14 +8,14 @@ use ogonek_db::{
     core::{
         account::{self, preferences, student, user},
         calendar::event,
-        flashcards::{self, deck},
+        flashcards::{self},
         lesson, task,
     },
     tracking::seen,
 };
 use ogonek_types::{
-    ActivityLog, AppContext, DashboardData, ModelType, NotificationBadges, PaginationParams,
-    TaskPaginationParams,
+    AppContext, DashboardData, LessonPaginationParams, ModelType, NotificationBadges, SortField,
+    SortOrder, TaskPaginationParams,
 };
 
 /// This data populates the dashboard/home view
@@ -37,39 +37,32 @@ pub async fn fetch_dashboard(
         &state.db,
         &claims.sub,
         &TaskPaginationParams {
-            page: Some(1),
-            per_page: Some(3),
-            completed: Some(false),
+            page: 1,
+            per_page: 3,
             search: None,
+            sort_by: SortField::default(),
+            sort_order: SortOrder::default(),
             assignee: None,
+            completed: Some(false),
         },
     )
     .await?;
 
-    // Limit to three lessons
     let lessons = lesson::find_all(
         &state.db,
         &claims.sub,
-        &PaginationParams {
-            page: Some(1),
-            per_page: Some(3),
+        &LessonPaginationParams {
+            page: 1,
+            per_page: 3,
             search: None,
+            sort_by: SortField::default(),
+            sort_order: SortOrder::default(),
             assignee: None,
+            topic: None,
         },
     )
     .await?;
-    let decks = deck::find_all(
-        &state.db,
-        &claims.sub,
-        &PaginationParams {
-            page: Some(1),
-            per_page: Some(3),
-            search: None,
-            assignee: None,
-        },
-    )
-    .await?;
-    let learn_data = flashcards::learn::get_simple_stats(&state.db, &claims.sub).await?;
+
     // Get today's date
     // Get today's date in UTC
     let now_utc = Utc::now();
@@ -101,14 +94,9 @@ pub async fn fetch_dashboard(
 
     let events = event::read_all(&state.db, &claims.sub, start, end, claims.role.into()).await?;
 
-    // deprecated
-    let activity: Vec<ActivityLog> = Vec::new();
     Ok(Json(DashboardData {
-        decks,
-        lessons,
         tasks,
-        activity,
-        learn_data,
+        lessons,
         events,
     }))
 }

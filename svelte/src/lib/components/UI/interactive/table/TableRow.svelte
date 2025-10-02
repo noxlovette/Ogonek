@@ -22,7 +22,7 @@
 </script>
 
 <button
-  class="flex w-full justify-between px-2 py-2.5"
+  class="flex w-full items-center justify-between px-2 py-2.5"
   onclick={(e) => handleRowClick(e)}
   onkeydown={(e) => handleRowClick(e)}
   tabindex="0"

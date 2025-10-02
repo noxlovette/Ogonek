@@ -1,6 +1,6 @@
 use crate::DbError;
 
-use ogonek_types::{PDFData, TaskFull, TaskPaginationParams, TaskSmall};
+use ogonek_types::{PDFData, SortField, TaskFull, TaskPaginationParams, TaskSmall};
 use sqlx::PgPool;
 /// Mini-tasks
 pub async fn read_all(
@@ -15,6 +15,8 @@ pub async fn read_all(
                 t.priority,
                 t.completed,
                 t.due_date,
+                t.created_at,
+                t.updated_at,
                 u.name as assignee_name,
                 COALESCE(s.seen_at IS NOT NULL, TRUE) as seen
             FROM tasks t
@@ -22,16 +24,15 @@ pub async fn read_all(
             LEFT JOIN seen_status s ON s.model_id = t.id AND s.user_id = "#,
     );
     query_builder.push_bind(user_id);
-    query_builder.push(
-        r#"
-            WHERE (t.assignee = "#,
-    );
+
+    // Base WHERE clause - user must be assignee or creator
+    query_builder.push(" WHERE (t.assignee = ");
     query_builder.push_bind(user_id);
     query_builder.push(" OR t.created_by = ");
     query_builder.push_bind(user_id);
     query_builder.push(")");
 
-    // Add search filter if provided
+    // Search filter
     if let Some(search) = &params.search {
         query_builder.push(" AND (t.title ILIKE ");
         query_builder.push_bind(format!("%{search}%"));
@@ -40,37 +41,58 @@ pub async fn read_all(
         query_builder.push(")");
     }
 
-    // If completed=false (default), show only incomplete tasks
-    // If completed=true, show all tasks (both complete and incomplete mixed)
-    if let Some(completed) = &params.completed
-        && !completed
-    {
-        query_builder.push(" AND t.completed = false");
+    // Completed filter
+    if let Some(completed) = params.completed {
+        if !completed {
+            query_builder.push(" AND t.completed = false");
+        }
+        // If completed=true, show all (no filter needed)
     }
-    // If completed=true, don't add any filter (show all)
 
+    // Assignee filter
     if let Some(assignee) = &params.assignee {
         query_builder.push(" AND t.assignee = ");
         query_builder.push_bind(assignee);
     }
 
-    // Add ordering - incomplete tasks first, then by due date
-    query_builder.push(" ORDER BY t.completed ASC, t.due_date ASC NULLS LAST");
+    // HERE'S THE KEY CHANGE: Dynamic sorting
+    query_builder.push(" ORDER BY ");
 
-    // Add limit and offset
+    // Special case: Always prioritize incomplete tasks if not explicitly sorting by completion
+    match params.sort_by {
+        SortField::Title | SortField::CreatedAt | SortField::UpdatedAt => {
+            // Incomplete tasks first, THEN apply user's sort
+            query_builder.push("t.completed ASC, ");
+        }
+        SortField::DueDate => {
+            // For due date, incomplete tasks first is implicit via NULLS handling
+            query_builder.push("t.completed ASC, ");
+        }
+    }
+
+    // Apply user's sort preference
+    query_builder.push(params.sort_by.to_task_column());
+    query_builder.push(" ");
+    query_builder.push(params.sort_order.to_sql());
+
+    // Handle NULLs for due_date specifically
+    if matches!(params.sort_by, SortField::DueDate) {
+        query_builder.push(" NULLS LAST");
+    }
+
+    // Pagination
     query_builder.push(" LIMIT ");
     query_builder.push_bind(params.limit());
     query_builder.push(" OFFSET ");
     query_builder.push_bind(params.offset());
 
-    // Execute the query
     let tasks = query_builder
         .build_query_as::<TaskSmall>()
         .fetch_all(db)
         .await?;
+
     Ok(tasks)
 }
-
 /// Returns the full Task with all fields
 pub async fn read_by_id(db: &PgPool, id: &str, user_id: &str) -> Result<TaskFull, DbError> {
     let task = sqlx::query_as!(
@@ -169,32 +191,4 @@ pub async fn read_count(db: &PgPool, user_id: &str) -> Result<i64, DbError> {
     .await?;
 
     Ok(count.unwrap_or(0))
-}
-
-pub async fn read_recent(db: &PgPool, user_id: &str) -> Result<Vec<TaskSmall>, DbError> {
-    let tasks = sqlx::query_as!(
-        TaskSmall,
-        r#"
-        SELECT
-                t.id,
-                t.title,
-                t.priority,
-                t.completed,
-                t.due_date,
-                u.name as "assignee_name?",
-               COALESCE(s.seen_at IS NOT NULL, TRUE) as seen
-            FROM tasks t
-            LEFT JOIN "user" u ON t.assignee = u.id
-            LEFT JOIN seen_status s ON s.model_id = t.id AND s.user_id = $1
-        WHERE (assignee = $1 OR created_by = $1)
-        AND completed = false
-        ORDER BY created_at DESC
-        LIMIT 3
-        "#,
-        user_id
-    )
-    .fetch_all(db)
-    .await?;
-
-    Ok(tasks)
 }

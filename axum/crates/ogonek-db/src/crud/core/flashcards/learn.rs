@@ -1,7 +1,7 @@
 use crate::DbError;
 use sqlx::PgPool;
 
-use ogonek_types::{CardProgress, CardProgressWithFields, SimpleStats, UpdateCardProgress};
+use ogonek_types::{CardProgress, CardProgressWithFields, UpdateCardProgress};
 pub async fn fetch_due(db: &PgPool, user_id: &str) -> Result<Vec<CardProgressWithFields>, DbError> {
     let due = sqlx::query_as!(
         CardProgressWithFields,
@@ -41,60 +41,6 @@ pub async fn fetch_due_count(db: &PgPool, user_id: &str) -> Result<Option<i64>, 
     Ok(due)
 }
 
-pub async fn get_simple_stats(db: &PgPool, user_id: &str) -> Result<SimpleStats, DbError> {
-    // Cards studied today
-    let cards_today = sqlx::query_scalar!(
-        r#"
-        SELECT COUNT(*)::int
-        FROM card_progress
-        WHERE user_id = $1
-        AND last_reviewed::date = CURRENT_DATE
-        "#,
-        user_id
-    )
-    .fetch_one(db)
-    .await?
-    .unwrap_or(0);
-
-    // Current streak - count consecutive days with reviews
-    let streak = sqlx::query_scalar!(
-        r#"
-        WITH daily_reviews AS (
-            SELECT DISTINCT last_reviewed::date as review_date
-            FROM card_progress
-            WHERE user_id = $1
-            AND last_reviewed IS NOT NULL
-            ORDER BY review_date DESC
-        ),
-        consecutive_days AS (
-            SELECT
-                review_date,
-                ROW_NUMBER() OVER (ORDER BY review_date DESC) as rn,
-                review_date - (ROW_NUMBER() OVER (ORDER BY review_date DESC) * interval '1 day') as group_date
-            FROM daily_reviews
-            WHERE review_date >= CURRENT_DATE - interval '365 days'  -- reasonable limit
-        )
-        SELECT COUNT(*)::int
-        FROM consecutive_days
-        WHERE group_date = (
-            SELECT group_date
-            FROM consecutive_days
-            WHERE review_date = CURRENT_DATE
-            OR review_date = CURRENT_DATE - interval '1 day'
-            LIMIT 1
-        )
-        "#,
-        user_id
-    )
-    .fetch_one(db)
-    .await?
-    .unwrap_or(0);
-
-    Ok(SimpleStats {
-        cards_studied_today: cards_today,
-        current_streak: streak,
-    })
-}
 pub async fn find_by_id(
     db: &PgPool,
     progress_id: &str,

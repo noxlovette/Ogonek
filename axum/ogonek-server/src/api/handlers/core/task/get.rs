@@ -15,8 +15,8 @@ use ogonek_db::{
     tracking::seen,
 };
 use ogonek_types::{
-    ModelType, PaginatedResponse, PaginatedTasks, TaskPaginationParams, TaskSmall,
-    TaskWithFilesResponse,
+    ModelType, PaginatedResponse, PaginatedTasks, SortField, SortOrder, TaskPaginationParams,
+    TaskSmall, TaskWithFilesResponse,
 };
 
 /// Tasks belonging to a user (through assignment or direct ownership)
@@ -30,7 +30,8 @@ use ogonek_types::{
         ("search" = Option<String>, Query, description = "Search term"),
         ("assignee" = Option<String>, Query, description = "Filter by assignee"),
         ("completed" = Option<bool>, Query, description = "Filter by completion status"),
-        ("priority" = Option<i32>, Query, description = "Filter by priority")
+        ("sort_by" = Option<SortField>, Query),
+        ("sort_order" = Option<SortOrder>, Query)
     ),
     responses(
         (status = 200, description = "Tasks retrieved successfully", body = PaginatedTasks),

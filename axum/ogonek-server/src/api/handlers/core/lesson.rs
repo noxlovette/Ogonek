@@ -1,6 +1,7 @@
 use crate::{
     AppState, Claims,
     api::{LESSON_TAG, error::APIError},
+    services::QsQuery,
 };
 use axum::{
     extract::{Json, Path, Query, State},
@@ -13,8 +14,8 @@ use ogonek_db::{
 };
 use ogonek_notifications::NotificationType;
 use ogonek_types::{
-    ActionType, LessonSmall, LessonUpdate, LessonWithPhoto, ModelType, PaginatedLessons,
-    PaginatedResponse, PaginationParams, Photo, UpsertPhoto,
+    ActionType, LessonPaginationParams, LessonSmall, LessonUpdate, LessonWithPhoto, ModelType,
+    PaginatedLessons, PaginatedResponse, Photo, SortField, SortOrder, UpsertPhoto,
 };
 
 /// Fetches lesson by id
@@ -64,7 +65,10 @@ pub async fn fetch_lesson(
         ("page" = Option<u32>, Query, description = "Page number"),
         ("per_page" = Option<u32>, Query, description = "Items per page"),
         ("search" = Option<String>, Query, description = "Search term"),
-        ("assignee" = Option<String>, Query, description = "Filter by assignee")
+        ("assignee" = Option<String>, Query, description = "Filter by assignee"),
+        ("topic" = Option<String>, Query),
+        ("sort_by" = Option<SortField>, Query),
+        ("sort_order" = Option<SortOrder>, Query)
     ),
     tag = LESSON_TAG,responses(
         (status = 200, description = "Lessons retrieved successfully", body = PaginatedLessons),
@@ -73,7 +77,7 @@ pub async fn fetch_lesson(
 )]
 pub async fn list_lessons(
     State(state): State<AppState>,
-    Query(params): Query<PaginationParams>,
+    Query(params): Query<LessonPaginationParams>,
     claims: Claims,
 ) -> Result<Json<PaginatedResponse<LessonSmall>>, APIError> {
     let lessons = lesson::find_all(&state.db, &claims.sub, &params).await?;

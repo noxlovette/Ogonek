@@ -7,6 +7,6 @@
   let { children }: Props = $props();
 </script>
 
-<div class="ring-default bg-solid rounded-lg" aria-label="Data table">
+<div class="ring-default bg-solid rounded-lg shadow-lg" aria-label="Data table">
   {@render children()}
 </div>
