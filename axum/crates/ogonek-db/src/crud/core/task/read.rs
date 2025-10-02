@@ -42,12 +42,12 @@ pub async fn read_all(
 
     // If completed=false (default), show only incomplete tasks
     // If completed=true, show all tasks (both complete and incomplete mixed)
-    if let Some(completed) = &params.completed {
-        if !completed {
-            query_builder.push(" AND t.completed = false");
-        }
-        // If completed=true, don't add any filter (show all)
+    if let Some(completed) = &params.completed
+        && !completed
+    {
+        query_builder.push(" AND t.completed = false");
     }
+    // If completed=true, don't add any filter (show all)
 
     if let Some(assignee) = &params.assignee {
         query_builder.push(" AND t.assignee = ");
