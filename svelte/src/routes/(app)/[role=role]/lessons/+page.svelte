@@ -3,24 +3,21 @@
     LargeTitle,
     Table,
     LessonCard,
-    UniButton,
     Toolbar,
     EmptySpace,
-    Title3,
     SearchBar,
-    TableSkeleton,
     Divider,
     Merger,
     Title1,
+    Headline,
+    HStack,
+    TickMorph,
   } from "$lib/components";
   import { enhance } from "$app/forms";
   import { enhanceForm } from "$lib/utils";
   import { page } from "$app/state";
-  import type { TableConfig, LessonSmall } from "$lib/types/index.js";
-  import { formatDate } from "$lib/utils";
 
   import {
-    user,
     searchTerm,
     pageSize,
     currentPage,
@@ -30,30 +27,19 @@
   import { m } from "$lib/paraglide/messages.js";
   import VStack from "$lib/components/UI/layout/VStack.svelte";
   import NewButton from "$lib/components/UI/forms/buttons/NewButton.svelte";
+  import TableRow from "$lib/components/UI/interactive/table/TableRow.svelte";
+  import TableCell from "$lib/components/UI/interactive/table/TableCell.svelte";
+  import TableHead from "$lib/components/UI/interactive/table/TableHead.svelte";
+  import TableBody from "$lib/components/UI/interactive/table/TableBody.svelte";
+  import TableFooter from "$lib/components/UI/interactive/table/TableFooter.svelte";
+  import Caption1 from "$lib/components/typography/Caption1.svelte";
 
   let { data } = $props();
 
   let role = page.params.role;
   let href = role === "t" ? "/t/lessons" : `/s/lessons`;
 
-  const lessonConfig: TableConfig<LessonSmall> = {
-    columns: [
-      { key: "title", label: m.title() },
-      { key: "topic", label: m.topic() },
-      {
-        key: "assigneeName",
-        label: m.assignee(),
-        formatter: (value: unknown): string =>
-          (value as string) || m.notAssigned(),
-      },
-      {
-        key: "createdAt",
-        label: m.created(),
-        formatter: (value: string | boolean | undefined | null) =>
-          formatDate(String(value)),
-      },
-    ],
-  };
+  const lessons = $derived(data.lessonsPaginated.data);
 
   $effect(() => {
     const params = new URLSearchParams();
@@ -71,6 +57,9 @@
       keepFocus: true,
     });
   });
+
+  let selected: string[] = $state([]);
+  $inspect(selected);
 </script>
 
 <Toolbar>
@@ -98,19 +87,43 @@
   </VStack>
 </Toolbar>
 
-{#if data.lessonsPaginated.data.length < 1}
+{#if lessons.length < 1}
   <EmptySpace>
     <Title1>{m.noLessons()}</Title1>
   </EmptySpace>
 {/if}
 {#if role === "s"}
   <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
-    {#each data.lessonsPaginated.data as lesson (lesson.id)}
+    {#each lessons as lesson (lesson.id)}
       <LessonCard {lesson} />
     {/each}
   </div>
 {:else}
-  <Table items={data.lessonsPaginated.data} {href} config={lessonConfig} />
+  <Table>
+    <TableHead>Controls go here</TableHead>
+    <TableBody>
+      {#each lessons as lesson (lesson.id)}
+        <div class="bg-clickable flex items-center px-2">
+          <TickMorph noText={true} bind:group={selected} value={lesson.id} />
+          <TableRow href={`/${page.params.role}/lessons/${lesson.id}`}>
+            <VStack>
+              <HStack override="gap-1 items-start">
+                <Headline>
+                  {lesson.title}
+                </Headline>
+                <Caption1>
+                  {lesson.assigneeName}
+                </Caption1>
+              </HStack>
+            </VStack>
+          </TableRow>
+        </div>
+      {/each}
+    </TableBody>
+    <TableFooter>
+      <TableCell>Footer</TableCell>
+    </TableFooter>
+  </Table>
 {/if}
 
 <svelte:head>

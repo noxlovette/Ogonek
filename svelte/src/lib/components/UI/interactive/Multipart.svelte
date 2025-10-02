@@ -5,7 +5,7 @@
   import { formatPercentage } from "$lib/utils";
   import Caption1 from "$lib/components/typography/Caption1.svelte";
   import { m } from "$lib/paraglide/messages";
-  import ProgressBar from "./ProgressBar.svelte";
+  import ProgressBar from "../content/ProgressBar.svelte";
   import { UniButton } from "../forms";
   import { HStack, VStack } from "..";
   import Merger from "../toolbar/Merger.svelte";
