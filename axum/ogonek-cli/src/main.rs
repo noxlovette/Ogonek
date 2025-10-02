@@ -30,6 +30,6 @@ async fn main() -> Result<()> {
         Commands::CreateGod => create_god::run(),
         Commands::GenerateTypes => generate_types::run(),
         Commands::HashGenerator => hash_generator::run(),
-        Commands::SeedDb => seed_db::run(),
+        Commands::SeedDb => seed_db::run().await,
     }
 }
