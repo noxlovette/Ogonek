@@ -8,9 +8,13 @@ RUN corepack enable
 
 WORKDIR /app
 
+# Set environment variables for Vite in Docker
+ENV CI=true
+ENV VITE_CJS_IGNORE_WARNING=true
+
 COPY pnpm-lock.yaml package.json ./
 
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+RUN pnpm install --frozen-lockfile
 
 RUN pnpm add -g nodemon chokidar
 
