@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onDestroy } from "svelte";
-  import { Upload, X } from "lucide-svelte";
+  import { Upload, X } from "@lucide/svelte";
   import logger from "$lib/logger";
   import { formatPercentage } from "$lib/utils";
   import Caption1 from "$lib/components/typography/Caption1.svelte";

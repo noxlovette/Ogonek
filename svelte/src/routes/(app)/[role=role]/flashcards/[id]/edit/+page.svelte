@@ -19,7 +19,7 @@
   import { enhanceForm } from "$lib/utils";
   import { enhance } from "$app/forms";
   import { page } from "$app/state";
-  import { Import } from "lucide-svelte";
+  import { Import } from "@lucide/svelte";
   import UniButton from "$lib/components/UI/forms/buttons/UniButton.svelte";
   import { pushState } from "$app/navigation";
   import { onMount } from "svelte";
@@ -156,9 +156,7 @@
 
   {#if updatedCards.length === 0}
     <EmptySpace>
-      <Title1>
-        {m.noFlashcards()}
-      </Title1>
+      {m.noFlashcards()}
 
       <NewCard {addCard} />
     </EmptySpace>

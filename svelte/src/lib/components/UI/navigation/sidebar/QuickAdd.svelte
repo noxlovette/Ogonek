@@ -1,6 +1,6 @@
 <script lang="ts">
   import UniButton from "$lib/components/UI/forms/buttons/UniButton.svelte";
-  import { BookOpenCheck, GraduationCap, ListTodo } from "lucide-svelte";
+  import { BookOpenCheck, GraduationCap, ListTodo } from "@lucide/svelte";
   import { enhance } from "$app/forms";
   import { m } from "$lib/paraglide/messages";
   import HStack from "../../layout/HStack.svelte";

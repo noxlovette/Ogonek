@@ -5,7 +5,7 @@
   import CardClickable from "./CardClickable.svelte";
   import Badge from "./Badge.svelte";
   import { Title3 } from "../typography";
-  import { Circle, CircleCheckBig } from "lucide-svelte";
+  import { Circle, CircleCheckBig } from "@lucide/svelte";
   import SeenBadge from "./SeenBadge.svelte";
 
   interface Props {

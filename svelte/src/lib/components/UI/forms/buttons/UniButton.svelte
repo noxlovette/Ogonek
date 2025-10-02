@@ -1,10 +1,10 @@
 <script lang="ts">
   import { isLoading } from "$lib/stores";
-  import type { ComponentType } from "svelte";
   import type { MouseEventHandler } from "svelte/elements";
   import ConfirmDialogue from "../ConfirmDialogue.svelte";
   import { Footnote, Headline } from "../../../typography";
-  import { Trash2, X } from "lucide-svelte";
+  import { Trash2, X } from "@lucide/svelte";
+  import type { Icon as IconType } from "@lucide/svelte";
   import tippy from "tippy.js";
   import type { Attachment } from "svelte/attachments";
 
@@ -20,7 +20,8 @@
     formaction?: string | undefined;
     styling?: string;
     disable?: boolean;
-    Icon?: ComponentType | undefined;
+    Icon?: typeof IconType | undefined;
+    fill?: boolean;
     shouldConfirm?: boolean | undefined;
     onclick?: MouseEventHandler<HTMLButtonElement> | undefined;
     ariaLabel?: string;
@@ -38,6 +39,7 @@
     styling = "relative",
     disable = false,
     Icon = undefined,
+    fill = false,
     shouldConfirm = false,
     onclick = undefined,
     ariaLabel = undefined,
@@ -50,7 +52,6 @@
   let disabled = $derived($isLoading || disable);
   let showConfirmDialog = $state(false);
 
-  // Generate unique ID for aria-describedby
   const uniqueId = `btn-${Math.random().toString(36).substr(2, 9)}`;
 
   function handleClick(event: MouseEvent) {
@@ -107,7 +108,11 @@
     role="button"
   >
     {#if Icon}
-      <Icon class="size-5" />
+      <Icon
+        color={fill ? "#df7055" : "currentColor"}
+        fill={fill ? "#df7055" : "#00000000"}
+        class="size-5"
+      />
     {/if}
     {#if !iconOnly}
       <Headline>
@@ -129,7 +134,11 @@
     onclick={variant === "danger" ? handleClick : onclick}
   >
     {#if Icon}
-      <Icon class="size-5" />
+      <Icon
+        color={fill ? "#df7055" : "currentColor"}
+        fill={fill ? "#df7055" : "#00000000"}
+        class="size-5"
+      />
     {:else if variant == "danger" && !Icon}
       {#if !deleteClicked}
         <Trash2 />

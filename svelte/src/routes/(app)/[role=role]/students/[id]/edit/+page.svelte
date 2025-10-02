@@ -11,7 +11,7 @@
     DeleteButton,
   } from "$lib/components";
   import type { Student } from "$lib/types";
-  import { Ban, Check, Trash2 } from "lucide-svelte";
+  import { Ban, Check, Trash2 } from "@lucide/svelte";
   import type { PageData } from "./$types";
   import { enhanceForm } from "$lib/utils";
   import VStack from "$lib/components/UI/layout/VStack.svelte";

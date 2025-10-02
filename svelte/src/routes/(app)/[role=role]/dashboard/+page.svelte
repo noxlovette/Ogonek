@@ -2,18 +2,16 @@
   import {
     LargeTitle,
     DueTasksWidget,
-    ActivityFeedWidget,
     LearnWidget,
     Toolbar,
     Divider,
     Merger,
     UniButton,
-    EventCard,
   } from "$lib/components";
   import { getGreeting } from "$lib/utils";
   import { user } from "$lib/stores";
   import { m } from "$lib/paraglide/messages";
-  import { Settings } from "lucide-svelte";
+  import { Settings } from "@lucide/svelte";
   import CalendarFeed from "$lib/components/widgets/CalendarFeed.svelte";
 
   const greetingType = getGreeting();
@@ -37,7 +35,11 @@
   </div>
   <Divider />
   <Merger>
-    <UniButton content={m.settings()} href="settings" Icon={Settings}
+    <UniButton
+      fill={false}
+      content={m.settings()}
+      href="settings"
+      Icon={Settings}
     ></UniButton>
   </Merger>
 </Toolbar>

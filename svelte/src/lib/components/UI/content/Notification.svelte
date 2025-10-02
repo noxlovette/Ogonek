@@ -1,7 +1,7 @@
 <script lang="ts">
   import { notification, clearNotification } from "$lib/stores";
   import { fade } from "svelte/transition";
-  import { Check, AlertCircle, X, Ban } from "lucide-svelte";
+  import { Check, AlertCircle, X, Ban } from "@lucide/svelte";
   import { onDestroy } from "svelte";
 
   let timeout: ReturnType<typeof setTimeout> | null = null;

@@ -3,7 +3,7 @@
   import { user } from "$lib/stores";
   import { Body, Merger, Title1, UniButton } from "$lib/components";
   import { enhanceForm } from "$lib/utils";
-  import { Cable } from "lucide-svelte";
+  import { Cable } from "@lucide/svelte";
 
   let { data } = $props();
 

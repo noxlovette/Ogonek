@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Pencil } from "lucide-svelte";
+  import { Pencil } from "@lucide/svelte";
   import { UniButton } from "..";
   import { m } from "$lib/paraglide/messages";
 

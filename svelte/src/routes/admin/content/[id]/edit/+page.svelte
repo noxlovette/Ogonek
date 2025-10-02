@@ -13,7 +13,7 @@
     CancelButton,
     DeleteButton,
   } from "$lib/components";
-  import { MegaphoneOff, Megaphone } from "lucide-svelte";
+  import { MegaphoneOff, Megaphone } from "@lucide/svelte";
   import { enhance } from "$app/forms";
   import type { PageProps } from "./$types";
   import { enhanceForm } from "$lib/utils";

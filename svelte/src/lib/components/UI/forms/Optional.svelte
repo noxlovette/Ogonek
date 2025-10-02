@@ -1,7 +1,7 @@
 <script lang="ts">
   import { Callout } from "$lib/components/typography";
   import type { Snippet } from "svelte";
-  import { Plus } from "lucide-svelte";
+  import { Plus } from "@lucide/svelte";
 
   let {
     children,

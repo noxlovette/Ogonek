@@ -3,7 +3,7 @@
   import { enhanceForm } from "$lib/utils";
   import { enhance } from "$app/forms";
   import { m } from "$lib/paraglide/messages";
-  import { Lightbulb } from "lucide-svelte";
+  import { Lightbulb } from "@lucide/svelte";
   import UniButton from "../UI/forms/buttons/UniButton.svelte";
   import { page } from "$app/state";
   import type { TaskSmall } from "$lib/types";
@@ -15,11 +15,9 @@
 
 <HStack>
   <Title2>{m.any_lime_lemur_propel()}</Title2>
-  {#if tasks.length > 0}
+  {#each tasks as task (task.id)}
     <div class="grid w-full grid-cols-1 items-stretch gap-4">
-      {#each tasks as task (task.id)}
-        <TaskCard {task} />
-      {/each}
+      <TaskCard {task} />
     </div>
   {:else}
     <EmptySpace>
@@ -41,5 +39,5 @@
         ></UniButton>
       </form>
     </EmptySpace>
-  {/if}
+  {/each}
 </HStack>

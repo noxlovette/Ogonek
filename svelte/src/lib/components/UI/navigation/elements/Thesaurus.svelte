@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { BookCopy } from "lucide-svelte";
+  import { BookCopy } from "@lucide/svelte";
   import SidebarItem from "./SidebarItem.svelte";
   import { m } from "$lib/paraglide/messages";
 </script>

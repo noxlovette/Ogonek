@@ -10,7 +10,7 @@
     Title1,
   } from "$lib/components";
   import { formatDate } from "$lib/utils";
-  import { Squirrel } from "lucide-svelte";
+  import { Squirrel } from "@lucide/svelte";
   import type { PageProps } from "./$types";
   let { data }: PageProps = $props();
 
@@ -32,7 +32,7 @@
     {:else}
       <EmptySpace>
         <Squirrel></Squirrel>
-        <Caption1>Нет событий</Caption1>
+        Нет событий
       </EmptySpace>
     {/each}
     <NewCard

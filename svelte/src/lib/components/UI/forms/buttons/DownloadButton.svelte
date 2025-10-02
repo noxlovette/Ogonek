@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Download } from "lucide-svelte";
+  import { Download } from "@lucide/svelte";
   import UniButton from "./UniButton.svelte";
   import type { URLResponse } from "$lib/types";
   import Caption1 from "$lib/components/typography/Caption1.svelte";

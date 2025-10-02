@@ -10,7 +10,7 @@
     WorkArea,
     MetaData,
   } from "$lib/components";
-  import { Flame, FlameKindling } from "lucide-svelte";
+  import { Flame, FlameKindling } from "@lucide/svelte";
   import { m } from "$lib/paraglide/messages";
   const seoData = {
     title: "Ogonek - Digital Classroom for Private Teachers & Tutors",

@@ -2,7 +2,7 @@
   import { Caption1 } from "$lib/components/typography";
   import { notification } from "$lib/stores";
   import type { Card, DeckFull } from "$lib/types";
-  import { Upload, X } from "lucide-svelte";
+  import { Upload, X } from "@lucide/svelte";
   import ModalBackGround from "../forms/ModalBackGround.svelte";
   import { extractWordsFromRewordFile } from "$lib/utils";
   import Papa from "papaparse";

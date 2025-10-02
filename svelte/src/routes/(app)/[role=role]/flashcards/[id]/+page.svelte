@@ -16,7 +16,7 @@
   import { invalidate } from "$app/navigation";
 
   import { user } from "$lib/stores";
-  import { BookOpenCheck, Check, Circle, Copy } from "lucide-svelte";
+  import { Bookmark, BookOpenCheck, Check, Circle, Copy } from "@lucide/svelte";
   import { enhanceForm } from "$lib/utils";
   import Badge from "$lib/components/cards/Badge.svelte";
   import { page } from "$app/state";
@@ -58,6 +58,35 @@
             href="{deck.id}/test"
             Icon={BookOpenCheck}
           ></UniButton>
+
+          <form
+            method="POST"
+            action="?/subscribe"
+            use:enhance={enhanceForm({
+              messages: {
+                success: isSubscribed
+                  ? m.elegant_small_gadfly_quell()
+                  : m.stout_royal_macaw_fear(),
+              },
+              handlers: {
+                success: async () => {
+                  isSubscribed = !isSubscribed;
+                  invalidate("learn:subscribe");
+                },
+              },
+            })}
+          >
+            <input type="hidden" name="isSubscribed" value={isSubscribed} />
+            <UniButton
+              Icon={Bookmark}
+              fill={isSubscribed ? true : false}
+              type="submit"
+              variant={page.params.role === "t" ? "primary" : "prominent"}
+              content={isSubscribed
+                ? m.fluffy_elegant_coyote_assure()
+                : m.fit_least_baboon_imagine()}
+            ></UniButton>
+          </form>
         </Merger>
         <Merger>
           <form
@@ -78,35 +107,6 @@
           {#if $user.id === deck.createdBy}
             <EditButton href="{deck.id}/edit" />
           {/if}
-        </Merger>
-        <Merger>
-          <form
-            method="POST"
-            action="?/subscribe"
-            use:enhance={enhanceForm({
-              messages: {
-                success: isSubscribed
-                  ? m.elegant_small_gadfly_quell()
-                  : m.stout_royal_macaw_fear(),
-              },
-              handlers: {
-                success: async () => {
-                  isSubscribed = !isSubscribed;
-                  invalidate("learn:subscribe");
-                },
-              },
-            })}
-          >
-            <input type="hidden" name="isSubscribed" value={isSubscribed} />
-            <UniButton
-              Icon={isSubscribed === true ? Check : Circle}
-              type="submit"
-              variant="prominent"
-              content={isSubscribed
-                ? m.fluffy_elegant_coyote_assure()
-                : m.fit_least_baboon_imagine()}
-            ></UniButton>
-          </form>
         </Merger>
       </VStack>
     </VStack>
@@ -139,11 +139,6 @@
 
 {#if cards.length === 0}
   <EmptySpace>
-    <p class="text-lg text-stone-500 dark:text-stone-400">
-      {m.noFlashcards()}
-    </p>
-    <p class="mt-2 text-sm text-stone-400 dark:text-stone-500">
-      {m.deft_fuzzy_stingray_push()}
-    </p>
+    {m.noFlashcards()}
   </EmptySpace>
 {/if}

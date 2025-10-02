@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { ArrowLeft } from "lucide-svelte";
+  import { ArrowLeft } from "@lucide/svelte";
   import { m } from "$lib/paraglide/messages";
   import {
     Callout,

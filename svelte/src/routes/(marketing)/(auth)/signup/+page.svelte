@@ -8,7 +8,7 @@
     Merger,
     MetaData,
   } from "$lib/components";
-  import { DoorOpen } from "lucide-svelte";
+  import { DoorOpen } from "@lucide/svelte";
   import { enhanceForm } from "$lib/utils";
   import { m } from "$lib/paraglide/messages";
   import type { PageProps } from "./$types";

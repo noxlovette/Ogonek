@@ -11,7 +11,7 @@
     ListTodo,
     Trash2,
     WholeWord,
-  } from "lucide-svelte";
+  } from "@lucide/svelte";
   import { formatDateTime } from "$lib/utils";
 
   let { activity }: { activity: ActivityLog } = $props();

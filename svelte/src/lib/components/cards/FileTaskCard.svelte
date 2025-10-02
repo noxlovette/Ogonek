@@ -3,7 +3,14 @@
   import { user } from "$lib/stores";
   import { enhance } from "$app/forms";
   import type { FileSmall } from "$lib/types";
-  import { FileText, Image, FileAudio, File, X, FilePlay } from "lucide-svelte";
+  import {
+    FileText,
+    Image,
+    FileAudio,
+    File,
+    X,
+    FilePlay,
+  } from "@lucide/svelte";
   import Caption1 from "../typography/Caption1.svelte";
   import { Merger, UniButton, VStack } from "../UI";
   import Divider from "../UI/toolbar/Divider.svelte";

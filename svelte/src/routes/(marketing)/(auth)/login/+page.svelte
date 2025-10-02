@@ -11,7 +11,7 @@
   import message from "$lib/messages.js";
   import { m } from "$lib/paraglide/messages";
   import { enhanceForm } from "$lib/utils";
-  import { DoorOpen } from "lucide-svelte";
+  import { DoorOpen } from "@lucide/svelte";
 
   let { form } = $props();
 

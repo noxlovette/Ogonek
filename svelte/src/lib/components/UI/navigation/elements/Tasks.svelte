@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { ListTodo } from "lucide-svelte";
+  import { ListTodo } from "@lucide/svelte";
   import SidebarItem from "./SidebarItem.svelte";
   import { getContext } from "svelte";
   import { m } from "$lib/paraglide/messages";

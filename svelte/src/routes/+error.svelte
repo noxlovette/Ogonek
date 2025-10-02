@@ -11,7 +11,7 @@
     ShieldBan,
     FileSearch,
     Icon,
-  } from "lucide-svelte";
+  } from "@lucide/svelte";
   import { onMount } from "svelte";
 
   type ErrorCode = 404 | 403 | 500;

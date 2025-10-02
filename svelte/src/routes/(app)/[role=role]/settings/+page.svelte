@@ -20,7 +20,7 @@
   import { page } from "$app/state";
   import { enhanceForm } from "$lib/utils";
 
-  import { Check, LogOut, Bell, Ban, Pencil } from "lucide-svelte";
+  import { Check, LogOut, Bell, Ban, Pencil } from "@lucide/svelte";
   import { m } from "$lib/paraglide/messages";
   import {
     assigneeStore,

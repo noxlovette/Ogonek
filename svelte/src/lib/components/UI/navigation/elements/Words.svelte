@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { GraduationCap } from "lucide-svelte";
+  import { GraduationCap } from "@lucide/svelte";
   import SidebarItem from "./SidebarItem.svelte";
   import { getContext } from "svelte";
   import { m } from "$lib/paraglide/messages";

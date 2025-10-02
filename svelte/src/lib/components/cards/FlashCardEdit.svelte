@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Trash2, Image } from "lucide-svelte";
+  import { Trash2, Image } from "@lucide/svelte";
   import type { Card } from "$lib/types";
   import { Input } from "../UI";
 

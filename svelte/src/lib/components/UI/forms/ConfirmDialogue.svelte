@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Trash2 } from "lucide-svelte";
+  import { Trash2 } from "@lucide/svelte";
   import UniButton from "./buttons/UniButton.svelte";
   import VStack from "../layout/VStack.svelte";
   import { Merger } from "../toolbar";

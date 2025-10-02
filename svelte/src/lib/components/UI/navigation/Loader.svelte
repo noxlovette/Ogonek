@@ -1,6 +1,6 @@
 <script>
   import { isLoading } from "$lib/stores";
-  import { Loader } from "lucide-svelte";
+  import { Loader } from "@lucide/svelte";
 </script>
 
 {#if $isLoading}

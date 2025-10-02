@@ -1,6 +1,6 @@
 <script lang="ts">
   import { UniButton, Toolbar, Table, Divider, Merger } from "$lib/components";
-  import { Plus } from "lucide-svelte";
+  import { Plus } from "@lucide/svelte";
   import type { PageProps } from "./$types";
   import { enhanceForm, formatDate } from "$lib/utils";
   import type { TableConfig, Content } from "$lib/types";

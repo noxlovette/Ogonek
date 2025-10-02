@@ -25,7 +25,7 @@
     currentPage,
     assigneeStore,
   } from "$lib/stores";
-  import { Bell, Eye, EyeClosed } from "lucide-svelte";
+  import { Bell, Eye, EyeClosed } from "@lucide/svelte";
   import { formatDate } from "$lib/utils";
   import { m } from "$lib/paraglide/messages";
   import message from "$lib/messages.js";

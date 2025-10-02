@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Check } from "lucide-svelte";
+  import { Check } from "@lucide/svelte";
   import { VStack } from "../layout";
   import Caption1 from "$lib/components/typography/Caption1.svelte";
 
