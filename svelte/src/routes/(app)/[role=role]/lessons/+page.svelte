@@ -23,6 +23,8 @@
     pageSize,
     currentPage,
     assigneeStore,
+    sortBy,
+    sortOrder,
   } from "$lib/stores";
   import { goto } from "$app/navigation";
   import { m } from "$lib/paraglide/messages.js";
@@ -34,6 +36,7 @@
   import TableBody from "$lib/components/UI/interactive/table/TableBody.svelte";
   import TableFooter from "$lib/components/UI/interactive/table/TableFooter.svelte";
   import Caption1 from "$lib/components/typography/Caption1.svelte";
+  import SortDate from "$lib/components/UI/interactive/table/SortDate.svelte";
 
   let { data } = $props();
 
@@ -49,6 +52,8 @@
     if ($pageSize > 0) params.set("per_page", $pageSize.toString());
     if ($currentPage > 1) params.set("page", $currentPage.toString());
     if ($assigneeStore?.trim()) params.set("assignee", $assigneeStore);
+    if ($sortBy?.trim()) params.set("sort_by", $sortBy);
+    if ($sortOrder?.trim()) params.set("sort_order", $sortOrder);
 
     const queryString = params.toString();
     const newUrl = queryString ? `?${queryString}` : window.location.pathname;
@@ -114,7 +119,7 @@
       {/if}
       <Divider />
 
-      Delete Filter by
+      <SortDate />
     </TableHead>
     <TableBody>
       {#each lessons as lesson (lesson.id)}

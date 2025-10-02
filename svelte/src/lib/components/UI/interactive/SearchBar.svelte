@@ -1,7 +1,7 @@
 <script lang="ts">
   import { X, Search } from "@lucide/svelte";
 
-  let { q = $bindable(""), placeholder = "Search..." } = $props();
+  let { q = $bindable(), placeholder = "Search..." } = $props();
 </script>
 
 <div class="relative hidden flex-1 md:flex">

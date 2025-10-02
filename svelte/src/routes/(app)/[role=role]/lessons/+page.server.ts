@@ -7,13 +7,22 @@ import type { PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async ({ fetch, url }) => {
   try {
-    const page = url.searchParams.get("page") || "1";
-    const per_page = url.searchParams.get("per_page") || "50";
-    const search = url.searchParams.get("search") || "";
-    const assignee = url.searchParams.get("assignee") || "";
+    const page = url.searchParams.get("page") || undefined;
+    const per_page = url.searchParams.get("per_page") || undefined;
+    const search = url.searchParams.get("search") || undefined;
+    const assignee = url.searchParams.get("assignee") || undefined;
+    const sort_by = url.searchParams.get("sort_by") || undefined;
+    const sort_order = url.searchParams.get("sort_order") || undefined;
 
     const lessonsPaginated = (await fetch(
-      routes.lessons.all({ page, per_page, search, assignee }),
+      routes.lessons.all({
+        page,
+        per_page,
+        search,
+        assignee,
+        sort_by,
+        sort_order,
+      }),
     ).then((res) => res.json())) as PaginatedResponse<LessonSmall>;
 
     return {
