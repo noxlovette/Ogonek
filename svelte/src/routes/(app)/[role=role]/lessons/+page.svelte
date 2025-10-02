@@ -13,6 +13,15 @@
     HStack,
     TickMorph,
     Subheadline,
+    NewButton,
+    TableRow,
+    TableCell,
+    TableHead,
+    TableBody,
+    TableFooter,
+    SortDate,
+    Caption1,
+    VStack,
   } from "$lib/components";
   import { enhance } from "$app/forms";
   import { enhanceForm, formatDateOnly } from "$lib/utils";
@@ -28,15 +37,6 @@
   } from "$lib/stores";
   import { goto } from "$app/navigation";
   import { m } from "$lib/paraglide/messages.js";
-  import VStack from "$lib/components/UI/layout/VStack.svelte";
-  import NewButton from "$lib/components/UI/forms/buttons/NewButton.svelte";
-  import TableRow from "$lib/components/UI/interactive/table/TableRow.svelte";
-  import TableCell from "$lib/components/UI/interactive/table/TableCell.svelte";
-  import TableHead from "$lib/components/UI/interactive/table/TableHead.svelte";
-  import TableBody from "$lib/components/UI/interactive/table/TableBody.svelte";
-  import TableFooter from "$lib/components/UI/interactive/table/TableFooter.svelte";
-  import Caption1 from "$lib/components/typography/Caption1.svelte";
-  import SortDate from "$lib/components/UI/interactive/table/SortDate.svelte";
 
   let { data } = $props();
 

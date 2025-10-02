@@ -1,5 +1,4 @@
 <script lang="ts">
-  import type { TaskFull, TableConfig } from "$lib/types/index.js";
   import {
     LargeTitle,
     Divider,
@@ -12,6 +11,8 @@
     EmptySpace,
     VStack,
     Title1,
+    NewButton,
+    TableHead,
   } from "$lib/components";
 
   import { enhance } from "$app/forms";
@@ -24,35 +25,16 @@
     pageSize,
     currentPage,
     assigneeStore,
+    sortBy,
+    sortOrder,
   } from "$lib/stores";
   import { Bell, Eye, EyeClosed } from "@lucide/svelte";
-  import { formatDate } from "$lib/utils";
   import { m } from "$lib/paraglide/messages";
   import message from "$lib/messages.js";
-  import NewButton from "$lib/components/UI/forms/buttons/NewButton.svelte";
 
   const { data } = $props();
   const role = page.params.role;
 
-  const taskConfig: TableConfig<TaskFull> = {
-    columns: [
-      { key: "title", label: m.title() },
-      {
-        key: "assigneeName",
-        label: m.assignee(),
-        formatter: (value: unknown): string =>
-          (value as string) || m.notAssigned(),
-      },
-      {
-        key: "dueDate",
-        label: m.less_arable_starfish_belong(),
-        formatter: (value: unknown): string =>
-          value ? formatDate(value as string) : m.arable_flat_emu_strive(),
-      },
-    ],
-  };
-
-  let href = `/${role}/tasks`;
   $effect(() => {
     const params = new URLSearchParams();
 
@@ -61,7 +43,8 @@
     if ($currentPage > 1) params.set("page", $currentPage.toString());
     if ($assigneeStore?.trim()) params.set("assignee", $assigneeStore);
     if ($completedStore) params.set("completed", String($completedStore));
-
+    if ($sortBy?.trim()) params.set("sort_by", $sortBy);
+    if ($sortOrder?.trim()) params.set("sort_order", $sortOrder);
     const queryString = params.toString();
     const newUrl = queryString ? `?${queryString}` : window.location.pathname;
 
@@ -72,7 +55,7 @@
   });
 
   function toggleCompletedTasks() {
-    completedStore.toggle();
+    completedStore.set(!$completedStore);
   }
 </script>
 
@@ -145,5 +128,7 @@
     {/each}
   </div>
 {:else}
-  <Table items={data.tasksPaginated.data} {href} config={taskConfig} />
+  <Table>
+    <TableHead>Hello</TableHead>
+  </Table>
 {/if}

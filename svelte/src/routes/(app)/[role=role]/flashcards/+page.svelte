@@ -9,11 +9,14 @@
     Divider,
     Merger,
     VStack,
+    EmptySpace,
+    Title1,
+    NewButton,
+    TableHead,
   } from "$lib/components";
   import { enhance } from "$app/forms";
   import { enhanceForm } from "$lib/utils";
   import { page } from "$app/state";
-  import type { TableConfig, DeckSmall } from "$lib/types/index.js";
   import { GraduationCap } from "@lucide/svelte";
   import { m } from "$lib/paraglide/messages";
   import {
@@ -21,15 +24,13 @@
     pageSize,
     currentPage,
     assigneeStore,
+    sortBy,
+    sortOrder,
   } from "$lib/stores";
   import { goto } from "$app/navigation";
-  import EmptySpace from "$lib/components/typography/EmptySpace.svelte";
-  import Title1 from "$lib/components/typography/Title1.svelte";
   import message from "$lib/messages.js";
-  import NewButton from "$lib/components/UI/forms/buttons/NewButton.svelte";
 
   let { data } = $props();
-  const { students } = data;
 
   const role = page.params.role;
 
@@ -40,6 +41,8 @@
     if ($pageSize > 0) params.set("per_page", $pageSize.toString());
     if ($searchTerm?.trim()) params.set("search", $searchTerm);
     if ($assigneeStore?.trim()) params.set("assignee", $assigneeStore);
+    if ($sortBy?.trim()) params.set("sort_by", $sortBy);
+    if ($sortOrder?.trim()) params.set("sort_order", $sortOrder);
 
     const queryString = params.toString();
     const newUrl = queryString ? `?${queryString}` : window.location.pathname;
@@ -49,31 +52,6 @@
       keepFocus: true,
     });
   });
-
-  const deckConfig: TableConfig<DeckSmall> = {
-    columns: [
-      { key: "title", label: m.title() },
-      {
-        key: "description",
-        label: m.equal_key_gazelle_attend(),
-        formatter: (value: string | boolean | undefined | null | number) =>
-          value
-            ? String(value).substring(0, 50) +
-              (String(value).length > 50 ? "..." : "")
-            : m.simple_east_crocodile_spark(),
-      },
-      {
-        key: "assigneeName",
-        label: m.assignee(),
-      },
-      {
-        key: "isSubscribed",
-        label: m.stout_royal_macaw_fear(),
-        formatter: (value: string | boolean | undefined | null | number) =>
-          value === true ? "◉" : "○",
-      },
-    ],
-  };
 </script>
 
 <svelte:head>
@@ -119,12 +97,9 @@
       {/each}
     </div>
   {:else}
-    <Table
-      config={deckConfig}
-      href="flashcards"
-      {students}
-      items={data.decksPaginated.data}
-    />
+    <Table>
+      <TableHead>Hello</TableHead>
+    </Table>
   {/if}
 {:else}
   <EmptySpace>

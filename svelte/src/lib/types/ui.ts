@@ -11,15 +11,6 @@ export interface BaseTableItem {
   id: string;
 }
 
-export interface TableConfig<T extends BaseTableItem> {
-  columns: {
-    key: keyof T;
-    label: string;
-    searchable?: boolean;
-    formatter?: (value: T[keyof T]) => string;
-  }[];
-}
-
 export interface Word {
   word: string;
   results: WordResult[];
