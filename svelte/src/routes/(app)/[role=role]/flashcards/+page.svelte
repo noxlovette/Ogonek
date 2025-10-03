@@ -142,7 +142,7 @@
         {#each decks as deck (deck.id)}
           <div class="bg-clickable flex items-center px-2">
             <TickMorph noText={true} bind:group={selected} value={deck.id} />
-            <TableRow href={`/${sveltePage.params.role}/decks/${deck.id}`}>
+            <TableRow href={`/${sveltePage.params.role}/flashcards/${deck.id}`}>
               <HStack override="gap-1 items-start">
                 <Headline>
                   {deck.title}
@@ -152,9 +152,6 @@
                 </Caption1>
               </HStack>
               <Divider />
-              <Badge>
-                {deck.cardCount} карточек
-              </Badge>
               <Badge urgency={deck.isSubscribed ? "green" : "normal"}>
                 {deck.isSubscribed ? "Подписаны" : "Не подписаны"}
               </Badge>
