@@ -24,11 +24,12 @@
     Caption1,
     TableFooter,
     Paginator,
+    Badge,
   } from "$lib/components";
   import { enhance } from "$app/forms";
   import { enhanceForm } from "$lib/utils";
   import { page as sveltePage } from "$app/state";
-  import { Bookmark, GraduationCap } from "@lucide/svelte";
+  import { GraduationCap } from "@lucide/svelte";
   import { m } from "$lib/paraglide/messages";
   import {
     searchTerm,
@@ -44,7 +45,7 @@
   let { data } = $props();
 
   const role = sveltePage.params.role;
-  const { page, totalPages, count, perPage } = data.decksPaginated;
+  const { page, totalPages, count, perPage } = $derived(data.decksPaginated);
   const decks = $derived(data.decksPaginated.data);
   let selected: string[] = $state([]);
   $effect(() => {
@@ -110,8 +111,10 @@
       {/each}
     </div>
   {:else}
-    <Table>
-      <input type="hidden" bind:value={selected} name="toDelete" />
+    <Table bind:selected>
+      {#each selected as id}
+        <input type="hidden" name="toDelete" value={id} />
+      {/each}
       <TableHead>
         <TickMorph
           noText={true}
@@ -149,16 +152,12 @@
                 </Caption1>
               </HStack>
               <Divider />
-              <Caption1>
+              <Badge>
                 {deck.cardCount} карточек
-              </Caption1>
-              <Caption1>
-                {#if deck.isSubscribed}
-                  <Bookmark color="#df7055" fill="#df7055" />
-                {:else}
-                  <Bookmark />
-                {/if}
-              </Caption1>
+              </Badge>
+              <Badge urgency={deck.isSubscribed ? "green" : "normal"}>
+                {deck.isSubscribed ? "Подписаны" : "Не подписаны"}
+              </Badge>
             </TableRow>
           </div>
         {/each}

@@ -231,31 +231,33 @@ async fn create_lessons(db: &PgPool, user_ids: &[String]) -> Result<()> {
     ];
 
     for (created_by, assignee) in assignments {
-        let lesson_id = nanoid::nanoid!();
-        let title: String = Sentence(3..6).fake();
-        let topic: String = Sentence(2..4).fake();
-        let markdown = format!(
-            "# {}\n\n{}\n\n## Key Points\n\n{}\n\n## Examples\n\n```\n{}\n```",
-            topic,
-            Paragraph(3..5).fake::<String>(),
-            Paragraph(2..3).fake::<String>(),
-            Paragraph(1..2).fake::<String>()
-        );
+        for _ in 0..20 {
+            let lesson_id = nanoid::nanoid!();
+            let title: String = Sentence(3..6).fake();
+            let topic: String = Sentence(2..4).fake();
+            let markdown = format!(
+                "# {}\n\n{}\n\n## Key Points\n\n{}\n\n## Examples\n\n```\n{}\n```",
+                topic,
+                Paragraph(3..5).fake::<String>(),
+                Paragraph(2..3).fake::<String>(),
+                Paragraph(1..2).fake::<String>()
+            );
 
-        sqlx::query!(
-            r#"
-            INSERT INTO lessons (id, title, topic, markdown, created_by, assignee)
-            VALUES ($1, $2, $3, $4, $5, $6)
-            "#,
-            lesson_id,
-            title,
-            topic,
-            markdown,
-            created_by,
-            assignee
-        )
-        .execute(db)
-        .await?;
+            sqlx::query!(
+                r#"
+                INSERT INTO lessons (id, title, topic, markdown, created_by, assignee)
+                VALUES ($1, $2, $3, $4, $5, $6)
+                "#,
+                lesson_id,
+                title,
+                topic,
+                markdown,
+                created_by,
+                assignee
+            )
+            .execute(db)
+            .await?;
+        }
     }
 
     Ok(())
@@ -280,39 +282,41 @@ async fn create_tasks(db: &PgPool, user_ids: &[String]) -> Result<()> {
     ];
 
     for (created_by, assignee) in assignments {
-        let task_id = nanoid::nanoid!();
-        let title: String = Sentence(3..6).fake();
-        let markdown = format!(
-            "# {}\n\n{}\n\n## Requirements\n\n{}\n\n## Guidelines\n\n{}",
-            Sentence(2..4).fake::<String>(),
-            Paragraph(2..4).fake::<String>(),
-            Paragraph(2..3).fake::<String>(),
-            Paragraph(1..2).fake::<String>()
-        );
-        let completed: bool = (0..10).fake::<i32>() < 3; // 30% chance of being completed
-        let due_date = if (0..10).fake::<i32>() < 7 {
-            // 70% chance of having a due date
-            Some(now + chrono::Duration::days((1..30).fake::<i64>()))
-        } else {
-            None
-        };
+        for _ in 0..20 {
+            let task_id = nanoid::nanoid!();
+            let title: String = Sentence(3..6).fake();
+            let markdown = format!(
+                "# {}\n\n{}\n\n## Requirements\n\n{}\n\n## Guidelines\n\n{}",
+                Sentence(2..4).fake::<String>(),
+                Paragraph(2..4).fake::<String>(),
+                Paragraph(2..3).fake::<String>(),
+                Paragraph(1..2).fake::<String>()
+            );
+            let completed: bool = (0..10).fake::<i32>() < 3; // 30% chance of being completed
+            let due_date = if (0..10).fake::<i32>() < 7 {
+                // 70% chance of having a due date
+                Some(now + chrono::Duration::days((1..30).fake::<i64>()))
+            } else {
+                None
+            };
 
-        sqlx::query!(
-            r#"
-            INSERT INTO tasks (id, title, markdown, created_by, assignee, completed, due_date, created_at, updated_at)
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $8)
-            "#,
-            task_id,
-            title,
-            markdown,
-            created_by,
-            assignee,
-            completed,
-            due_date,
-            now
-        )
-        .execute(db)
-        .await?;
+            sqlx::query!(
+                r#"
+                INSERT INTO tasks (id, title, markdown, created_by, assignee, completed, due_date, created_at, updated_at)
+                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $8)
+                "#,
+                task_id,
+                title,
+                markdown,
+                created_by,
+                assignee,
+                completed,
+                due_date,
+                now
+            )
+            .execute(db)
+            .await?;
+        }
     }
 
     Ok(())
@@ -335,23 +339,25 @@ async fn create_decks(db: &PgPool, user_ids: &[String]) -> Result<()> {
     ];
 
     for (created_by, assignee) in assignments {
-        let deck_id = nanoid::nanoid!();
-        let title: String = Sentence(2..5).fake();
-        let description: String = Sentence(5..10).fake();
+        for _ in 0..20 {
+            let deck_id = nanoid::nanoid!();
+            let title: String = Sentence(2..5).fake();
+            let description: String = Sentence(5..10).fake();
 
-        sqlx::query!(
-            r#"
-            INSERT INTO decks (id, title, description, created_by, assignee)
-            VALUES ($1, $2, $3, $4, $5)
-            "#,
-            deck_id,
-            title,
-            description,
-            created_by,
-            assignee
-        )
-        .execute(db)
-        .await?;
+            sqlx::query!(
+                r#"
+                INSERT INTO decks (id, title, description, created_by, assignee)
+                VALUES ($1, $2, $3, $4, $5)
+                "#,
+                deck_id,
+                title,
+                description,
+                created_by,
+                assignee
+            )
+            .execute(db)
+            .await?;
+        }
     }
 
     Ok(())

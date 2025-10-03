@@ -48,4 +48,21 @@ export const actions: Actions = {
     const id = newResult.data;
     return redirect(301, `flashcards/${id}/edit`);
   },
+  delete: async ({ fetch, request }) => {
+    const formData = await request.formData();
+
+    const ids = formData.getAll("toDelete") as string[];
+    if (ids.length > 0) {
+      const response = await fetch(routes.decks.delete_deck_many(), {
+        method: "DELETE",
+        body: JSON.stringify(ids),
+      });
+
+      if (!response.ok) {
+        const err = await response.text();
+        logger.error({ err });
+        return fail(500, { delete: true });
+      }
+    }
+  },
 };

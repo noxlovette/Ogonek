@@ -5,7 +5,7 @@ import type { LayoutServerLoad } from "./$types";
 
 export const load: LayoutServerLoad = async ({ params, fetch }) => {
   const { id } = params;
-  const response = await fetch(routes.users.student(id));
+  const response = await fetch(routes.users.student({ id }));
   const data: CompositeStudent = await response.json();
   const { student, tasks, lessons, decks } = data;
   const rendered = await parseMarkdown(student.markdown || "");

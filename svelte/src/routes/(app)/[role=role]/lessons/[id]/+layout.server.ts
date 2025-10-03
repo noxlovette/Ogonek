@@ -7,7 +7,7 @@ import type { LayoutServerLoad } from "./$types";
 
 export const load: LayoutServerLoad = async ({ params, fetch, depends }) => {
   depends("edit:photo");
-  const response = await fetch(routes.lessons.lesson(params.id));
+  const response = await fetch(routes.lessons.lesson({ id: params.id }));
   if (!response.ok) {
     throw redirect(303, `/${params.role}/lessons/`);
   }

@@ -67,4 +67,21 @@ export const actions: Actions = {
       return fail(500);
     }
   },
+  delete: async ({ fetch, request }) => {
+    const formData = await request.formData();
+
+    const ids = formData.getAll("toDelete") as string[];
+    if (ids.length > 0) {
+      const response = await fetch(routes.tasks.delete_task_many(), {
+        method: "DELETE",
+        body: JSON.stringify(ids),
+      });
+
+      if (!response.ok) {
+        const err = await response.text();
+        logger.error({ err });
+        return fail(500, { delete: true });
+      }
+    }
+  },
 };

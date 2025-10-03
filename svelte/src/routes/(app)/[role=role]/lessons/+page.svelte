@@ -23,6 +23,7 @@
     Caption1,
     VStack,
     DeleteButton,
+    Badge,
   } from "$lib/components";
   import { enhance } from "$app/forms";
   import { enhanceForm, formatDateOnly } from "$lib/utils";
@@ -41,7 +42,7 @@
 
   let { data } = $props();
 
-  const { page, totalPages, count, perPage } = data.lessonsPaginated;
+  const { page, totalPages, count, perPage } = $derived(data.lessonsPaginated);
   let role = sveltePage.params.role;
 
   const lessons = $derived(data.lessonsPaginated.data);
@@ -105,8 +106,10 @@
     {/each}
   </div>
 {:else}
-  <Table>
-    <input type="hidden" bind:value={selected} name="toDelete" />
+  <Table bind:selected>
+    {#each selected as id}
+      <input type="hidden" name="toDelete" value={id} />
+    {/each}
     <TableHead>
       <TickMorph
         noText={true}
@@ -144,9 +147,9 @@
               </Caption1>
             </HStack>
             <Divider />
-            <Caption1>
+            <Badge>
               {formatDateOnly(lesson.createdAt)}
-            </Caption1>
+            </Badge>
           </TableRow>
         </div>
       {/each}

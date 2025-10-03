@@ -38,7 +38,7 @@
       default:
         return {
           color:
-            "bg-secondary/12 ring-secondary/60 dark:ring-secondary dark:bg-secondary/12 text-secondary-dark",
+            "bg-stone-400/12 ring-stone-600/40 dark:ring-stone-100/12 dark:bg-stone-100/12",
         };
     }
   }

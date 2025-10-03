@@ -286,7 +286,7 @@
     </select>
   {/if}
   {#if invalid && invalidDescription}
-    <Caption1 styling="text-red-600" id="{name}-error">
+    <Caption1 override="text-red-600" id="{name}-error">
       {invalidDescription}
     </Caption1>
   {/if}

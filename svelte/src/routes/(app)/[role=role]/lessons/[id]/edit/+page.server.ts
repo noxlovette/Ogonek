@@ -44,7 +44,7 @@ export const actions = {
     };
 
     console.log(data);
-    const response = await fetch(routes.lessons.lesson(id), {
+    const response = await fetch(routes.lessons.lesson({ id }), {
       method: "PATCH",
       body: JSON.stringify(data),
     });
@@ -62,7 +62,7 @@ export const actions = {
     if (!id) {
       return fail(500);
     }
-    const response = await fetch(routes.lessons.lesson(id), {
+    const response = await fetch(routes.lessons.lesson({ id }), {
       method: "DELETE",
     });
 
@@ -121,7 +121,7 @@ export const actions = {
           name: response.user.name,
         },
       };
-      const axumResponse = await fetch(routes.lessons.upsert_photo(id), {
+      const axumResponse = await fetch(routes.lessons.upsert_photo({ id }), {
         method: "POST",
         body: JSON.stringify(rawBody),
       });
@@ -144,7 +144,7 @@ export const actions = {
     if (!id) {
       return fail(500);
     }
-    const response = await fetch(routes.lessons.upsert_photo(id), {
+    const response = await fetch(routes.lessons.upsert_photo({ id }), {
       method: "DELETE",
     });
 

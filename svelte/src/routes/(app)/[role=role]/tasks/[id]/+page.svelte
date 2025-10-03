@@ -34,7 +34,7 @@
     formattedDate = formatDateOnly(data.task.dueDate);
   }
 
-  const urgency = getUrgency(data.task);
+  const urgency = getUrgency(data.task.dueDate);
 </script>
 
 <svelte:head>
@@ -92,14 +92,14 @@
         </form>
       </Merger>
     </VStack>
-    <VStack>
+    <VStack override="gap-2">
       <VStack>
         <Badge {urgency}>{formattedDate}</Badge>
       </VStack>
       {#if role === "t"}
-        <Caption1>
+        <Badge>
           {data.task.assigneeName}
-        </Caption1>
+        </Badge>
       {/if}
     </VStack>
   </HStack>

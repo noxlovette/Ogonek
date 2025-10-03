@@ -16,19 +16,21 @@
     Показано {(page - 1) * perPage + 1}–{Math.min(page * perPage, count)} из {count}
   </Caption1>
 
-  <Merger>
-    <UniButton
-      content="Предыдущая"
-      Icon={ChevronLeft}
-      disable={isFirstPage}
-      onclick={() => currentPage.decrease()}
-    />
+  {#if count > perPage}
+    <Merger>
+      <UniButton
+        content="Предыдущая"
+        Icon={ChevronLeft}
+        disable={isFirstPage}
+        onclick={() => currentPage.decrease()}
+      />
 
-    <UniButton
-      content="Следующая"
-      Icon={ChevronRight}
-      disable={isLastPage}
-      onclick={() => currentPage.increase()}
-    />
-  </Merger>
+      <UniButton
+        content="Следующая"
+        Icon={ChevronRight}
+        disable={isLastPage}
+        onclick={() => currentPage.increase()}
+      />
+    </Merger>
+  {/if}
 </div>

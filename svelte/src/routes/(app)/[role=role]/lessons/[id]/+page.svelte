@@ -42,17 +42,16 @@
         </Merger>
       {/if}
     </VStack>
-    <VStack>
+    <VStack override="gap-2">
+      <Badge>{formattedDate}</Badge>
       {#if role === "t"}
+        <Badge>
+          {data.lesson.assigneeName}
+        </Badge>
         <Title3>
           {data.lesson.topic}
         </Title3>
-
-        <Caption1>
-          {data.lesson.assigneeName}
-        </Caption1>
       {/if}
-      <Badge>{formattedDate}</Badge>
     </VStack>
   </HStack>
 </Toolbar>
