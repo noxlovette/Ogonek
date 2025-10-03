@@ -1089,25 +1089,37 @@ export interface components {
             unseenTasks: number;
         };
         PaginatedDecks: {
+            /** Format: int64 */
+            count: number;
             data: components["schemas"]["DeckSmall"][];
             /** Format: int64 */
             page: number;
             /** Format: int64 */
-            per_page: number;
+            perPage: number;
+            /** Format: int64 */
+            totalPages: number;
         };
         PaginatedLessons: {
+            /** Format: int64 */
+            count: number;
             data: components["schemas"]["LessonSmall"][];
             /** Format: int64 */
             page: number;
             /** Format: int64 */
-            per_page: number;
+            perPage: number;
+            /** Format: int64 */
+            totalPages: number;
         };
         PaginatedTasks: {
+            /** Format: int64 */
+            count: number;
             data: components["schemas"]["TaskSmall"][];
             /** Format: int64 */
             page: number;
             /** Format: int64 */
-            per_page: number;
+            perPage: number;
+            /** Format: int64 */
+            totalPages: number;
         };
         PartUploadUrl: {
             /** Format: int32 */

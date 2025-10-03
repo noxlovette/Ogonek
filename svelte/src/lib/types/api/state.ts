@@ -9,4 +9,6 @@ export interface PaginatedResponse<T> {
   data: T[];
   page: number;
   perPage: number;
+  totalPages: number;
+  count: number;
 }

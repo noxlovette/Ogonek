@@ -35,9 +35,12 @@ pub struct DeckPaginationParams {
 }
 
 #[derive(Serialize, ToSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct PaginatedDecks {
     pub data: Vec<DeckSmall>,
     pub page: i64,
+    pub count: i64,
+    pub total_pages: i64,
     pub per_page: i64,
 }
 

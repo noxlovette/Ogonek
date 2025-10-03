@@ -4,6 +4,7 @@
     Table,
     LessonCard,
     Toolbar,
+    Paginator,
     EmptySpace,
     SearchBar,
     Divider,
@@ -15,17 +16,17 @@
     Subheadline,
     NewButton,
     TableRow,
-    TableCell,
     TableHead,
     TableBody,
     TableFooter,
     SortDate,
     Caption1,
     VStack,
+    UniButton,
   } from "$lib/components";
   import { enhance } from "$app/forms";
   import { enhanceForm, formatDateOnly } from "$lib/utils";
-  import { page } from "$app/state";
+  import { page as sveltePage } from "$app/state";
 
   import {
     searchTerm,
@@ -37,11 +38,12 @@
   } from "$lib/stores";
   import { goto } from "$app/navigation";
   import { m } from "$lib/paraglide/messages.js";
+  import { ChevronLeft, ChevronRight } from "@lucide/svelte";
 
   let { data } = $props();
 
-  let role = page.params.role;
-  let href = role === "t" ? "/t/lessons" : `/s/lessons`;
+  const { page, totalPages, count, perPage } = data.lessonsPaginated;
+  let role = sveltePage.params.role;
 
   const lessons = $derived(data.lessonsPaginated.data);
 
@@ -65,7 +67,6 @@
   });
 
   let selected: string[] = $state([]);
-  $inspect(selected);
 </script>
 
 <Toolbar>
@@ -125,7 +126,7 @@
       {#each lessons as lesson (lesson.id)}
         <div class="bg-clickable flex items-center px-2">
           <TickMorph noText={true} bind:group={selected} value={lesson.id} />
-          <TableRow href={`/${page.params.role}/lessons/${lesson.id}`}>
+          <TableRow href={`/${sveltePage.params.role}/lessons/${lesson.id}`}>
             <HStack override="gap-1 items-start">
               <Headline>
                 {lesson.title}
@@ -143,7 +144,7 @@
       {/each}
     </TableBody>
     <TableFooter>
-      <TableCell>Footer</TableCell>
+      <Paginator {page} {count} {perPage} {totalPages}></Paginator>
     </TableFooter>
   </Table>
 {/if}

@@ -32,9 +32,12 @@ pub struct LessonPaginationParams {
 }
 
 #[derive(Debug, Serialize, ToSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct PaginatedLessons {
     pub data: Vec<LessonSmall>,
     pub page: i64,
+    pub count: i64,
+    pub total_pages: i64,
     pub per_page: i64,
 }
 

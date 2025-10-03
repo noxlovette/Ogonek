@@ -79,12 +79,14 @@ pub async fn list_lessons(
     Query(params): Query<LessonPaginationParams>,
     claims: Claims,
 ) -> Result<Json<PaginatedResponse<LessonSmall>>, APIError> {
-    let lessons = lesson::find_all(&state.db, &claims.sub, &params).await?;
-
+    let (lessons, count) = lesson::find_all(&state.db, &claims.sub, &params).await?;
+    let total_pages = (count as f64 / params.limit() as f64).ceil() as i64;
     Ok(Json(PaginatedResponse {
         data: lessons,
         page: params.page(),
+        total_pages,
         per_page: params.limit(),
+        count,
     }))
 }
 

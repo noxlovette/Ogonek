@@ -7,7 +7,7 @@ pub async fn read_all(
     db: &PgPool,
     user_id: &str,
     params: &TaskPaginationParams,
-) -> Result<Vec<TaskSmall>, DbError> {
+) -> Result<(Vec<TaskSmall>, i64), DbError> {
     let mut query_builder = sqlx::QueryBuilder::new(
         r#"SELECT
                 t.id,
@@ -90,8 +90,32 @@ pub async fn read_all(
         .build_query_as::<TaskSmall>()
         .fetch_all(db)
         .await?;
+    // Build count query with same filters
+    let mut count_query =
+        sqlx::QueryBuilder::new(r#"SELECT COUNT(*) FROM tasks l WHERE (l.assignee = "#);
+    count_query.push_bind(user_id);
+    count_query.push(" OR l.created_by = ");
+    count_query.push_bind(user_id);
+    count_query.push(")");
 
-    Ok(tasks)
+    if let Some(search) = &params.search {
+        count_query.push(" AND (l.title ILIKE ");
+        count_query.push_bind(format!("%{search}%"));
+        count_query.push(" OR l.topic ILIKE ");
+        count_query.push_bind(format!("%{search}%"));
+        count_query.push(" OR l.markdown ILIKE ");
+        count_query.push_bind(format!("%{search}%"));
+        count_query.push(")");
+    }
+
+    if let Some(assignee) = &params.assignee {
+        count_query.push(" AND l.assignee = ");
+        count_query.push_bind(assignee);
+    }
+
+    let total: (i64,) = count_query.build_query_as().fetch_one(db).await?;
+
+    Ok((tasks, total.0))
 }
 /// Returns the full Task with all fields
 pub async fn read_by_id(db: &PgPool, id: &str, user_id: &str) -> Result<TaskFull, DbError> {

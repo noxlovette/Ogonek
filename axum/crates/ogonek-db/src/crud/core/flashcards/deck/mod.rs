@@ -1,419 +1,21 @@
-use super::card::{self, batch_upsert, delete_cards};
-use crate::DbError;
-
-use ogonek_types::{
-    CardUpsert, DeckCreate, DeckFull, DeckPaginationParams, DeckPublic, DeckSmall, DeckWithCards,
-    DeckWithCardsUpdate,
-};
-use sqlx::PgPool;
-/// Builds a query based on page number, size, assignee ID
-pub async fn find_all(
-    db: impl sqlx::Executor<'_, Database = sqlx::Postgres>,
-    user_id: &str,
-    params: &DeckPaginationParams,
-) -> Result<Vec<DeckSmall>, DbError> {
-    let mut query_builder = sqlx::QueryBuilder::new(
-        r#"SELECT
-            d.id,
-            d.title,
-            d.description,
-            d.visibility,
-            d.created_at,
-            d.updated_at,
-            u.name as assignee_name,
-            COALESCE(s.seen_at IS NOT NULL, TRUE) as seen,
-            EXISTS (
-                SELECT 1 FROM deck_subscriptions ds
-                WHERE ds.deck_id = d.id AND ds.user_id = "#,
-    );
-    query_builder.push_bind(user_id);
-    query_builder.push(
-        r#") AS is_subscribed,
-        d.card_count  
-        FROM decks d
-        LEFT JOIN "user" u ON d.assignee = u.id
-        LEFT JOIN seen_status s ON s.model_id = d.id AND s.user_id = "#,
-    );
-    query_builder.push_bind(user_id);
-    query_builder.push(" AND s.model_type = ");
-    query_builder.push_bind("deck");
-
-    // Base WHERE clause - user must be creator or assignee
-    query_builder.push(" WHERE (d.created_by = ");
-    query_builder.push_bind(user_id);
-    query_builder.push(" OR d.assignee = ");
-    query_builder.push_bind(user_id);
-    query_builder.push(")");
-
-    // Search filter
-    if let Some(search) = &params.search {
-        query_builder.push(" AND (d.title ILIKE ");
-        query_builder.push_bind(format!("%{search}%"));
-        query_builder.push(" OR d.description ILIKE ");
-        query_builder.push_bind(format!("%{search}%"));
-        query_builder.push(")");
-    }
-
-    // Assignee filter
-    if let Some(assignee) = &params.assignee {
-        query_builder.push(" AND d.assignee = ");
-        query_builder.push_bind(assignee);
-    }
-
-    // Visibility filter (deck-specific)
-    if let Some(visibility) = &params.visibility {
-        query_builder.push(" AND d.visibility = ");
-        query_builder.push_bind(visibility);
-    }
-
-    // Subscribed only filter (deck-specific)
-    if let Some(true) = params.subscribed_only {
-        query_builder.push(" AND EXISTS (");
-        query_builder.push("SELECT 1 FROM deck_subscriptions ds ");
-        query_builder.push("WHERE ds.deck_id = d.id AND ds.user_id = ");
-        query_builder.push_bind(user_id);
-        query_builder.push(")");
-    }
-
-    // Dynamic ordering
-    query_builder.push(" ORDER BY ");
-    query_builder.push(params.sort_by.to_deck_column());
-    query_builder.push(" ");
-    query_builder.push(params.sort_order.to_sql());
-
-    // Pagination
-    query_builder.push(" LIMIT ");
-    query_builder.push_bind(params.limit());
-    query_builder.push(" OFFSET ");
-    query_builder.push_bind(params.offset());
-
-    let decks = query_builder
-        .build_query_as::<DeckSmall>()
-        .fetch_all(db)
-        .await?;
-
-    Ok(decks)
-}
-pub async fn get_deck_with_cards(
-    db: &PgPool,
-    deck_id: &str,
-    user_id: &str,
-) -> Result<DeckWithCards, DbError> {
-    let mut tx = db.begin().await?;
-
-    let deck = get_deck(&mut *tx, deck_id, user_id).await?;
-    let cards = card::find_all(&mut *tx, deck_id).await?;
-
-    Ok(DeckWithCards { deck, cards })
-}
-
-/// Find a deck by id with card count and subscription status included
-pub async fn get_deck(
-    db: impl sqlx::Executor<'_, Database = sqlx::Postgres>,
-    deck_id: &str,
-    user_id: &str,
-) -> Result<DeckFull, DbError> {
-    let deck = sqlx::query_as!(
-        DeckFull,
-        r#"
-        SELECT
-            d.id,
-            d.title,
-            d.description,
-            d.visibility,
-            d.assignee,
-            d.created_by,
-            d.created_at,
-            EXISTS (
-                SELECT 1 FROM deck_subscriptions
-                WHERE deck_id = d.id AND user_id = $2
-            ) AS "is_subscribed!",
-            (
-                SELECT COUNT(*)::bigint FROM cards
-                WHERE deck_id = d.id
-            ) AS "card_count!"
-        FROM decks d
-        WHERE d.id = $1 AND (
-            d.created_by = $2
-            OR d.assignee = $2
-            OR d.visibility = 'public'
-            OR EXISTS (
-                SELECT 1 FROM deck_subscriptions
-                WHERE deck_id = $1 AND user_id = $2
-            )
-        )
-        "#,
-        deck_id,
-        user_id
-    )
-    .fetch_one(db)
-    .await?;
-    Ok(deck)
-}
-
-pub async fn find_all_public(
-    db: impl sqlx::Executor<'_, Database = sqlx::Postgres>,
-) -> Result<Vec<DeckPublic>, DbError> {
-    let decks = sqlx::query_as!(
-        DeckPublic,
-        r#"
- SELECT id, title, description
- FROM decks
- WHERE visibility = 'public'
- "#
-    )
-    .fetch_all(db)
-    .await?;
-
-    Ok(decks)
-}
-
-/// Returns three decks
-pub async fn find_recent(
-    db: impl sqlx::Executor<'_, Database = sqlx::Postgres>,
-    user_id: &str,
-) -> Result<Vec<DeckSmall>, DbError> {
-    tracing::info!("Fetching recent tasks for {user_id}");
-    let decks = sqlx::query_as!(
-        DeckSmall,
-        r#"
-        SELECT
-        d.id,
-        d.title,
-        d.description,
-        d.visibility,
-        COALESCE(u.name, NULL) AS assignee_name,
-        COALESCE(s.seen_at IS NOT NULL, TRUE) as seen,
-        EXISTS (
-            SELECT 1 FROM deck_subscriptions s
-            WHERE s.deck_id = d.id AND user_id = $1
-        ) AS "is_subscribed!",
-         (
-    SELECT COUNT(*)::bigint FROM cards
-    WHERE deck_id = d.id
-) AS "card_count!"
-    FROM decks d
-    LEFT JOIN "user" u on d.assignee = u.id
-    LEFT JOIN seen_status s ON s.model_id = d.id AND s.user_id = $1
-    WHERE (
-        d.created_by = $1
-        OR d.assignee = $1
-    )
-    ORDER BY created_at DESC
-    LIMIT 3
-    "#,
-        user_id,
-    )
-    .fetch_all(db)
-    .await?;
-
-    Ok(decks)
-}
-
-/// Creates a new deck using fed data
-pub async fn create(
-    db: impl sqlx::Executor<'_, Database = sqlx::Postgres>,
-    user_id: &str,
-    create: DeckCreate,
-) -> Result<String, DbError> {
-    let visibility = if create.assignee.is_some() {
-        create.visibility.unwrap_or("assigned".to_string())
-    } else {
-        create.visibility.unwrap_or("private".to_string())
-    };
-    let id = sqlx::query_scalar!(
-        r#"
-        INSERT INTO decks (id, created_by, title, description, visibility, assignee)
-        VALUES ($1, $2, $3, $4, $5, $6)
-        RETURNING id
-        "#,
-        nanoid::nanoid!(),
-        user_id,
-        create.title,
-        create.description,
-        visibility,
-        create.assignee
-    )
-    .fetch_one(db)
-    .await?;
-
-    Ok(id)
-}
-
-/// Creates a copy of a deck
-pub async fn duplicate(db: &PgPool, user_id: &str, deck_id: &str) -> Result<String, DbError> {
-    let mut tx = db.begin().await?;
-
-    let deck_to_copy = get_deck(db, deck_id, user_id).await?;
-    let create_payload = DeckCreate {
-        title: format!("{} (Copy)", deck_to_copy.title),
-        description: deck_to_copy.description,
-        visibility: Some("private".to_string()),
-        assignee: None,
-    };
-
-    let cards = card::find_all(&mut *tx, deck_id).await?;
-
-    let new_id = create(&mut *tx, user_id, create_payload).await?;
-    let new_cards: Vec<CardUpsert> = cards
-        .into_iter()
-        .map(|card| CardUpsert {
-            id: None,
-            front: card.front,
-            back: card.back,
-            media_url: card.media_url,
-        })
-        .collect();
-
-    batch_upsert(&mut *tx, &new_id, new_cards).await?;
-
-    tx.commit().await?;
-
-    Ok(new_id)
-}
-
-/// Creates a new deck with user defaults
-pub async fn create_with_defaults(
-    db: impl sqlx::Executor<'_, Database = sqlx::Postgres>,
-    user_id: &str,
-) -> Result<String, DbError> {
-    let id = sqlx::query_scalar!(
-        r#"
-        INSERT INTO decks (id, created_by, title, description, visibility, assignee)
-        VALUES ($1, $2, $3, $4, $5, $6)
-        RETURNING id
-        "#,
-        nanoid::nanoid!(),
-        user_id,
-        "Default Deck",
-        "tag1;tag2",
-        "private",
-        user_id,
-    )
-    .fetch_one(db)
-    .await?;
-
-    Ok(id)
-}
-
-/// Deletes a deck
-pub async fn delete(
-    db: impl sqlx::Executor<'_, Database = sqlx::Postgres>,
-    deck_id: &str,
-    user_id: &str,
-) -> Result<(), DbError> {
-    sqlx::query!(
-        r#"
-        DELETE FROM decks
-        WHERE id = $1 AND created_by = $2
-        "#,
-        deck_id,
-        user_id
-    )
-    .execute(db)
-    .await?;
-
-    Ok(())
-}
-
-/// Finds the assignee for the deck
-pub async fn read_assignee(
-    db: impl sqlx::Executor<'_, Database = sqlx::Postgres>,
-    lesson_id: &str,
-    user_id: &str,
-) -> Result<Option<String>, DbError> {
-    let assignee = sqlx::query_scalar!(
-        r#"
-        SELECT assignee
-        FROM decks
-        WHERE id = $1
-        AND (assignee = $2 OR created_by = $2)
-        "#,
-        lesson_id,
-        user_id
-    )
-    .fetch_one(db) // in case lesson is not found
-    .await?;
-
-    Ok(assignee)
-}
-
-/// Updates a deck
-pub async fn update(
-    db: &PgPool,
-    deck_id: &str,
-    user_id: &str,
-    update: DeckWithCardsUpdate,
-) -> Result<(), DbError> {
-    let mut tx = db.begin().await?;
-
-    update_deck_solo(&mut *tx, deck_id, user_id, &update).await?;
-    delete_cards(
-        &mut *tx,
-        deck_id,
-        &update
-            .cards
-            .iter()
-            .filter_map(|i| i.id.clone())
-            .collect::<Vec<String>>(),
-    )
-    .await?;
-    batch_upsert(&mut *tx, deck_id, update.cards).await?;
-
-    tx.commit().await?;
-
-    Ok(())
-}
-
-async fn update_deck_solo(
-    executor: impl sqlx::Executor<'_, Database = sqlx::Postgres>,
-    deck_id: &str,
-    user_id: &str,
-    update: &DeckWithCardsUpdate,
-) -> Result<(), DbError> {
-    sqlx::query!(
-        "UPDATE decks
-         SET
-            title = COALESCE($1, title),
-            description = COALESCE($2, description),
-            visibility = COALESCE($3, visibility),
-            assignee = COALESCE($4, assignee)
-         WHERE id = $5 AND created_by = $6",
-        update.deck.title,
-        update.deck.description,
-        update.deck.visibility,
-        update.deck.assignee,
-        deck_id,
-        user_id
-    )
-    .execute(executor)
-    .await?;
-
-    Ok(())
-}
-
-/// Count the overall number of decks
-pub async fn count(
-    db: impl sqlx::Executor<'_, Database = sqlx::Postgres>,
-    user_id: &str,
-) -> Result<i64, DbError> {
-    let count = sqlx::query_scalar!(
-        "SELECT COUNT(*) FROM decks WHERE
-            (created_by = $1 OR assignee = $1)
-            ",
-        user_id
-    )
-    .fetch_one(db)
-    .await?;
-
-    Ok(count.unwrap_or(0))
-}
+mod create;
+mod read;
+pub use create::*;
+pub use read::*;
+mod delete;
+pub use delete::*;
+mod update;
+pub use update::*;
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::tests::create_test_user;
-    use ogonek_types::{CardUpsert, DeckUpdate};
+    use crate::{
+        DbError,
+        core::flashcards::card::{self, batch_upsert},
+        tests::create_test_user,
+    };
+    use ogonek_types::{CardUpsert, DeckCreate, DeckUpdate, DeckWithCardsUpdate};
     use sqlx::PgPool;
 
     // Helper function to create a test deck
@@ -559,7 +161,7 @@ mod tests {
         assert!(result.is_ok());
 
         let deck_id = result.unwrap();
-        let deck = get_deck(&db, &deck_id, &user_id).await.unwrap();
+        let deck = read_deck(&db, &deck_id, &user_id).await.unwrap();
         assert_eq!(deck.visibility, "assigned");
         assert_eq!(deck.assignee, Some(assignee_id));
     }
@@ -579,7 +181,7 @@ mod tests {
         assert!(result.is_ok());
 
         let deck_id = result.unwrap();
-        let deck = get_deck(&db, &deck_id, &user_id).await.unwrap();
+        let deck = read_deck(&db, &deck_id, &user_id).await.unwrap();
         assert_eq!(deck.visibility, "private");
         assert_eq!(deck.assignee, None);
     }
@@ -594,7 +196,7 @@ mod tests {
         let new_deck_id = result.unwrap();
 
         // Verify the duplicated deck has correct metadata
-        let new_deck = get_deck(&db, &new_deck_id, &user_id).await.unwrap();
+        let new_deck = read_deck(&db, &new_deck_id, &user_id).await.unwrap();
         assert_eq!(new_deck.title, "My Study Deck (Copy)");
         assert_eq!(new_deck.visibility, "private");
         assert_eq!(new_deck.assignee, None);
@@ -626,7 +228,7 @@ mod tests {
         let new_deck_id = result.unwrap();
 
         // Should create deck even with no cards
-        let new_deck = get_deck(&db, &new_deck_id, &user_id).await.unwrap();
+        let new_deck = read_deck(&db, &new_deck_id, &user_id).await.unwrap();
         assert_eq!(new_deck.title, "Empty Deck (Copy)");
 
         // Verify no cards in duplicated deck
@@ -661,7 +263,7 @@ mod tests {
         let result = duplicate(&db, &other_user_id, &deck_id).await;
 
         assert!(result.is_err());
-        // This should fail because get_deck checks ownership
+        // This should fail because read_deck checks ownership
     }
 
     #[sqlx::test]
@@ -742,19 +344,19 @@ mod tests {
             let result = duplicate(&db, &user_id, &deck_id).await;
 
             assert!(result.is_ok());
-            let copied_deck = get_deck(&db, &result.unwrap(), &user_id).await.unwrap();
+            let copied_deck = read_deck(&db, &result.unwrap(), &user_id).await.unwrap();
             assert_eq!(copied_deck.title, expected_copy_name);
         }
     }
 
     #[sqlx::test]
-    async fn test_get_deck_success_as_creator(db: PgPool) {
+    async fn test_read_deck_success_as_creator(db: PgPool) {
         let user_id = create_test_user(&db, "creator", "creator@example.com").await;
         let deck_id = create_test_deck(&db, &user_id, "Test Deck", None, None, None)
             .await
             .unwrap();
 
-        let result = get_deck(&db, &deck_id, &user_id).await;
+        let result = read_deck(&db, &deck_id, &user_id).await;
         assert!(result.is_ok());
 
         let deck = result.unwrap();
@@ -764,7 +366,7 @@ mod tests {
     }
 
     #[sqlx::test]
-    async fn test_get_deck_success_as_assignee(db: PgPool) {
+    async fn test_read_deck_success_as_assignee(db: PgPool) {
         let creator_id = create_test_user(&db, "creator", "creator@example.com").await;
         let assignee_id = create_test_user(&db, "assignee", "assignee@example.com").await;
 
@@ -779,7 +381,7 @@ mod tests {
         .await
         .unwrap();
 
-        let result = get_deck(&db, &deck_id, &assignee_id).await;
+        let result = read_deck(&db, &deck_id, &assignee_id).await;
         assert!(result.is_ok());
 
         let deck = result.unwrap();
@@ -788,7 +390,7 @@ mod tests {
     }
 
     #[sqlx::test]
-    async fn test_get_deck_success_public_deck(db: PgPool) {
+    async fn test_read_deck_success_public_deck(db: PgPool) {
         let creator_id = create_test_user(&db, "creator", "creator@example.com").await;
         let other_user_id = create_test_user(&db, "other", "other@example.com").await;
 
@@ -803,7 +405,7 @@ mod tests {
         .await
         .unwrap();
 
-        let result = get_deck(&db, &deck_id, &other_user_id).await;
+        let result = read_deck(&db, &deck_id, &other_user_id).await;
         assert!(result.is_ok());
 
         let deck = result.unwrap();
@@ -812,7 +414,7 @@ mod tests {
     }
 
     #[sqlx::test]
-    async fn test_get_deck_fails_private_deck_unauthorized(db: PgPool) {
+    async fn test_read_deck_fails_private_deck_unauthorized(db: PgPool) {
         let creator_id = create_test_user(&db, "creator", "creator@example.com").await;
         let other_user_id = create_test_user(&db, "other", "other@example.com").await;
 
@@ -827,7 +429,7 @@ mod tests {
         .await
         .unwrap();
 
-        let result = get_deck(&db, &deck_id, &other_user_id).await;
+        let result = read_deck(&db, &deck_id, &other_user_id).await;
         assert!(result.is_err());
     }
 
@@ -867,7 +469,7 @@ mod tests {
         .await
         .unwrap();
 
-        let result = find_all_public(&db).await;
+        let result = read_all_public(&db).await;
         assert!(result.is_ok());
 
         let decks = result.unwrap();
@@ -889,7 +491,7 @@ mod tests {
         assert!(result.is_ok());
 
         // Verify deck is deleted
-        let find_result = get_deck(&db, &deck_id, &user_id).await;
+        let find_result = read_deck(&db, &deck_id, &user_id).await;
         assert!(find_result.is_err());
     }
 
@@ -906,7 +508,7 @@ mod tests {
         assert!(result.is_ok()); // Delete doesn't fail, but doesn't delete anything
 
         // Verify deck still exists
-        let find_result = get_deck(&db, &deck_id, &creator_id).await;
+        let find_result = read_deck(&db, &deck_id, &creator_id).await;
         assert!(find_result.is_ok());
     }
 
@@ -937,7 +539,7 @@ mod tests {
         let result = update(&db, &deck_id, &user_id, update_deck).await;
         assert!(result.is_ok());
 
-        let updated_deck = get_deck(&db, &deck_id, &user_id).await.unwrap();
+        let updated_deck = read_deck(&db, &deck_id, &user_id).await.unwrap();
         assert_eq!(updated_deck.title, "Updated Name");
         assert_eq!(
             updated_deck.description,

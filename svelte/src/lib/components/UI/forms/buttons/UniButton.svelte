@@ -46,6 +46,7 @@
     description = content,
     iconOnly = true,
     dataCy,
+    ...rest
   }: Props = $props();
 
   const isLink = $derived(!!href);
@@ -65,7 +66,7 @@
   const baseClasses = `
   flex items-center transition-all duration-150 justify-center flex-1 p-2 md:p-3
   rounded-full font-medium focus-visible:outline-none
-  disabled:opacity-50 disabled:pointer-events-none z-40 gap-2
+  disabled:opacity-20 disabled:pointer-events-none z-40 gap-2
 `;
 
   const variantClasses = {
@@ -105,6 +106,7 @@
     data-cy={dataCy}
     aria-label={ariaLabel}
     aria-describedby={description ? `${uniqueId}-desc` : undefined}
+    {...rest}
     role="button"
   >
     {#if Icon}
@@ -132,6 +134,7 @@
     aria-describedby={description ? `${uniqueId}-desc` : undefined}
     class={allClasses}
     onclick={variant === "danger" ? handleClick : onclick}
+    {...rest}
   >
     {#if Icon}
       <Icon

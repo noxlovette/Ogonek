@@ -33,9 +33,12 @@ pub struct TaskPaginationParams {
 
 // Explicit structs for OpenAPI
 #[derive(Debug, Serialize, ToSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct PaginatedTasks {
     pub data: Vec<TaskSmall>,
     pub page: i64,
+    pub count: i64,
+    pub total_pages: i64,
     pub per_page: i64,
 }
 

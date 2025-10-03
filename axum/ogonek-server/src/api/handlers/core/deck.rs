@@ -98,7 +98,7 @@ pub async fn fetch_deck(
     Path(id): Path<String>,
 ) -> Result<Json<DeckWithCards>, APIError> {
     let deck_with_cards =
-        flashcards::deck::get_deck_with_cards(&state.db, &id, &claims.sub).await?;
+        flashcards::deck::read_deck_with_cards(&state.db, &id, &claims.sub).await?;
 
     mark_as_seen(&state.db, &claims.sub, &id, ModelType::Deck).await?;
 
@@ -129,11 +129,14 @@ pub async fn list_decks(
     Query(params): Query<DeckPaginationParams>,
     claims: Claims,
 ) -> Result<Json<PaginatedResponse<DeckSmall>>, APIError> {
-    let decks = flashcards::deck::find_all(&state.db, &claims.sub, &params).await?;
+    let (decks, count) = flashcards::deck::read_all(&state.db, &claims.sub, &params).await?;
 
+    let total_pages = (count as f64 / params.limit() as f64).ceil() as i64;
     Ok(Json(PaginatedResponse {
         data: decks,
         page: params.page(),
+        total_pages,
+        count,
         per_page: params.limit(),
     }))
 }
@@ -151,7 +154,7 @@ pub async fn list_decks(
 pub async fn list_decks_public(
     State(state): State<AppState>,
 ) -> Result<Json<Vec<DeckPublic>>, APIError> {
-    let decks = flashcards::deck::find_all_public(&state.db).await?;
+    let decks = flashcards::deck::read_all_public(&state.db).await?;
 
     Ok(Json(decks))
 }
@@ -210,7 +213,7 @@ pub async fn update_deck(
             )
             .await?;
 
-            let deck = flashcards::deck::get_deck(&state.db, &id, &claims.sub).await?;
+            let deck = flashcards::deck::read_deck(&state.db, &id, &claims.sub).await?;
 
             let _ = state
                 .notification_service

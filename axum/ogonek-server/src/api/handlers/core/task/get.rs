@@ -43,12 +43,18 @@ pub async fn list_tasks(
     claims: Claims,
     Query(params): Query<TaskPaginationParams>,
 ) -> Result<Json<PaginatedResponse<TaskSmall>>, APIError> {
-    let tasks = task::read_all(&state.db, &claims.sub, &params).await?;
+    let (tasks, count) = task::read_all(&state.db, &claims.sub, &params).await?;
+
+    let page = params.page();
+    let per_page = params.limit();
+    let total_pages = (count as f64 / per_page as f64).ceil() as i64;
 
     Ok(Json(PaginatedResponse {
         data: tasks,
-        page: params.page(),
-        per_page: params.limit(),
+        total_pages,
+        page,
+        count,
+        per_page,
     }))
 }
 

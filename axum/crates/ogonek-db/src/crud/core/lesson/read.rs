@@ -5,8 +5,8 @@ use sqlx::PgPool;
 pub async fn find_all(
     db: &PgPool,
     user_id: &str,
-    params: &LessonPaginationParams, // <- Use specific params
-) -> Result<Vec<LessonSmall>, DbError> {
+    params: &LessonPaginationParams,
+) -> Result<(Vec<LessonSmall>, i64), DbError> {
     let mut query_builder = sqlx::QueryBuilder::new(
         r#"
         SELECT l.id, l.title, l.topic, l.created_at, l.updated_at,
@@ -67,7 +67,37 @@ pub async fn find_all(
         .fetch_all(db)
         .await?;
 
-    Ok(lessons)
+    // Build count query with same filters
+    let mut count_query =
+        sqlx::QueryBuilder::new(r#"SELECT COUNT(*) FROM lessons l WHERE (l.assignee = "#);
+    count_query.push_bind(user_id);
+    count_query.push(" OR l.created_by = ");
+    count_query.push_bind(user_id);
+    count_query.push(")");
+
+    if let Some(search) = &params.search {
+        count_query.push(" AND (l.title ILIKE ");
+        count_query.push_bind(format!("%{search}%"));
+        count_query.push(" OR l.topic ILIKE ");
+        count_query.push_bind(format!("%{search}%"));
+        count_query.push(" OR l.markdown ILIKE ");
+        count_query.push_bind(format!("%{search}%"));
+        count_query.push(")");
+    }
+
+    if let Some(topic) = &params.topic {
+        count_query.push(" AND l.topic ILIKE ");
+        count_query.push_bind(format!("%{topic}%"));
+    }
+
+    if let Some(assignee) = &params.assignee {
+        count_query.push(" AND l.assignee = ");
+        count_query.push_bind(assignee);
+    }
+
+    let total: (i64,) = count_query.build_query_as().fetch_one(db).await?;
+
+    Ok((lessons, total.0))
 }
 /// Finds one lesson by its id, will return not found if the user doesn't have access to the data
 pub async fn find_by_id(
