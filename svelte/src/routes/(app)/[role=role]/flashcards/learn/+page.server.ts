@@ -12,12 +12,15 @@ export const actions: Actions = {
       return fail(422, { message: "No Id Provided" });
     }
 
-    const response = await fetch(routes.learn.update_card_progress(cardId), {
-      method: "PUT",
-      body: JSON.stringify({
-        quality: Number(formData.get("quality")),
-      }),
-    });
+    const response = await fetch(
+      routes.learn.update_card_progress({ id: cardId }),
+      {
+        method: "PUT",
+        body: JSON.stringify({
+          quality: Number(formData.get("quality")),
+        }),
+      },
+    );
 
     if (!response.ok) {
       logger.error(

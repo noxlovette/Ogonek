@@ -15,7 +15,12 @@ import type { Actions } from "./$types";
 export const actions = {
   default: async ({ request, url, fetch }) => {
     const formData = await request.formData();
+    const passtoConfirm = formData.get("pass")?.toString();
+    const confirmPassword = formData.get("confirmPassword")?.toString();
 
+    if (passtoConfirm !== confirmPassword) {
+      return fail(400, { confirmPassword: true });
+    }
     const validation = validateForm(formData, z.signupBody);
     if (!validation.success) {
       const fieldErrors: Record<string, boolean> = {};

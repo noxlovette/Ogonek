@@ -42,10 +42,11 @@ pub async fn read_all(
     }
 
     // Completed filter
-    if let Some(completed) = params.completed {
-        if !completed {
-            query_builder.push(" AND t.completed = false");
-        }
+    if let Some(completed) = params.completed
+        && !completed
+    {
+        query_builder.push(" AND t.completed = false");
+
         // If completed=true, show all (no filter needed)
     }
 
@@ -106,10 +107,10 @@ pub async fn read_all(
         count_query.push(")");
     }
 
-    if let Some(completed) = params.completed {
-        if !completed {
-            count_query.push(" AND t.completed = false");
-        }
+    if let Some(completed) = params.completed
+        && !completed
+    {
+        count_query.push(" AND t.completed = false");
     }
 
     if let Some(assignee) = &params.assignee {

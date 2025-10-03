@@ -62,6 +62,7 @@ impl SortField {
             Self::DueDate => "l.created_at",
         }
     }
+
     pub fn to_deck_column(&self) -> &'static str {
         match self {
             Self::CreatedAt => "d.created_at",
@@ -72,9 +73,9 @@ impl SortField {
     }
 }
 
-pub(self) fn default_page() -> u32 {
+pub fn default_page() -> u32 {
     1
 }
-pub(self) fn default_per_page() -> u32 {
+pub fn default_per_page() -> u32 {
     20
 }

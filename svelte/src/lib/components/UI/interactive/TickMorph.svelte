@@ -12,7 +12,7 @@
     disabled = false,
     size = 24,
   }: {
-    value: boolean | string | string[];
+    value?: boolean | string | string[];
     name?: string;
     title?: string;
     group?: string[];
@@ -53,7 +53,7 @@
       }
     } else if (typeof value === "boolean") {
       value = !value;
-    } else if (typeof value !== "string") {
+    } else if (typeof value !== "string" && value) {
       group = value;
     }
   }

@@ -8,7 +8,6 @@
     VStack,
     Divider,
     Merger,
-    Caption1,
     EditButton,
     Photo,
     Badge,

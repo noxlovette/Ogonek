@@ -19,7 +19,9 @@ export const load = (async ({ fetch, params }) => {
   }
 
   const span = createMonthSpan(Number(params.year), Number(params.month));
-  const response = await fetch(routes.calendars.events(span.start, span.end));
+  const response = await fetch(
+    routes.calendars.events({ start: span.start, end: span.end }),
+  );
 
   if (!response.ok) {
     const text = await response.text();

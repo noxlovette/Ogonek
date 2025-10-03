@@ -1,5 +1,4 @@
 export { default as EmptySpace } from "./EmptySpace.svelte";
-export { default as GridCell } from "./GridCell.svelte";
 export { default as Headline } from "./Headline.svelte";
 export { default as KBD } from "./KBD.svelte";
 export { default as LargeTitle } from "./LargeTitle.svelte";

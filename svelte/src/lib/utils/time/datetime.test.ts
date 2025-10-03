@@ -31,22 +31,22 @@ describe("formatDate", () => {
 
   it("should return fallback for null input", () => {
     const result = formatDate(null as any);
-    expect(result).toBe("Не понятно");
+    expect(result).toBe("someday");
   });
 
   it("should return fallback for undefined input", () => {
     const result = formatDate(undefined as any);
-    expect(result).toBe("Не понятно");
+    expect(result).toBe("someday");
   });
 
   it("should return fallback for empty string", () => {
     const result = formatDate("");
-    expect(result).toBe("Не понятно");
+    expect(result).toBe("someday");
   });
 
   it("should return fallback for invalid date string", () => {
     const result = formatDate("invalid-date");
-    expect(result).toBe("Не понятно");
+    expect(result).toBe("someday");
   });
 
   it("should return 'Сегодня' for today in Russian locale", () => {

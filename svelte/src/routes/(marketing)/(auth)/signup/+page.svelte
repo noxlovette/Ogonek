@@ -112,6 +112,8 @@
     <Input
       name="confirmPassword"
       placeholder="Again"
+      invalid={form?.confirmPassword}
+      invalidDescription="Пароли не совпадают"
       showLabel={false}
       type="password"
       bind:value={confirmPassword}

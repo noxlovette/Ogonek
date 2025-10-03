@@ -10,14 +10,11 @@
     CancelButton,
     DeleteButton,
   } from "$lib/components";
-  import type { Student } from "$lib/types";
-  import { Ban, Check, Trash2 } from "@lucide/svelte";
-  import type { PageData } from "./$types";
   import { enhanceForm } from "$lib/utils";
   import VStack from "$lib/components/UI/layout/VStack.svelte";
 
-  let { data }: { data: PageData } = $props();
-  let { student }: { student: Student } = data;
+  let { data } = $props();
+  let { student } = data;
   let markdown = $state(student.markdown || "");
 </script>
 

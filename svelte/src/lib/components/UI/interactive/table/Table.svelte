@@ -4,7 +4,7 @@
   import type { Snippet } from "svelte";
   interface Props {
     children: Snippet;
-    selected: string[];
+    selected?: string[];
   }
 
   let { children, selected = $bindable() }: Props = $props();

@@ -15,7 +15,7 @@ export const load = (async ({ fetch, params }) => {
   const { start, end } = createDaySpan(year, month, day);
   const date = new Date(year, month - 1, day);
   const dayEvents: EventSmall[] = await fetch(
-    routes.calendars.events(start, end),
+    routes.calendars.events({ start, end }),
   ).then((res) => res.json());
   return {
     dayEvents,
