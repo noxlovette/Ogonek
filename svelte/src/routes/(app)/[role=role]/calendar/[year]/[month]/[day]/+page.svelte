@@ -9,7 +9,7 @@
     NewCard,
     Title1,
   } from "$lib/components";
-  import { formatDate } from "$lib/utils";
+  import { formatDateOnly } from "$lib/utils";
   import { Squirrel } from "@lucide/svelte";
   import type { PageProps } from "./$types";
   let { data }: PageProps = $props();
@@ -24,7 +24,7 @@
 
 <HStack>
   <Title1>
-    {formatDate(data.date)}
+    {formatDateOnly(data.date)}
   </Title1>
   <div class="flex flex-col gap-2">
     {#each sortedEvents as event}

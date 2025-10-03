@@ -57,10 +57,21 @@ export const actions: Actions = {
 
     return redirect(301, `/t/lessons/${id}/edit`);
   },
-  delete: async ({ fetch, params }) => {
-    const { id } = params;
-    if (id) {
-      const response = await fetch(routes.lessons.delete({ id }));
+  delete: async ({ fetch, request }) => {
+    const formData = await request.formData();
+
+    const ids = formData.getAll("toDelete") as string[];
+    if (ids.length > 0) {
+      const response = await fetch(routes.lessons.delete_lesson_many(), {
+        method: "DELETE",
+        body: JSON.stringify(ids),
+      });
+
+      if (!response.ok) {
+        const err = await response.text();
+        logger.error({ err });
+        return fail(500, { delete: true });
+      }
     }
   },
 };

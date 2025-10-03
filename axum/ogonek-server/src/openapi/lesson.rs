@@ -10,7 +10,8 @@ use utoipa::OpenApi;
         lesson::update_lesson,
         lesson::delete_lesson,
         lesson::upsert_photo,
-        lesson::delete_photo
+        lesson::delete_photo,
+        lesson::delete_lesson_many,
     ),
     components(schemas(
         ogonek_types::LessonFull,

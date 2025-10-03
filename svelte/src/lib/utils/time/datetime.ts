@@ -21,7 +21,7 @@ export const getLocaleFromCookie = (): string => {
   const value = `; ${document.cookie}`;
   const parts = value.split(`; PARAGLIDE_LOCALE=`);
   if (parts.length === 2) {
-    const langCode = parts.pop()!.split(";").shift() || "en";
+    const langCode = parts.pop()!.split(";").shift() || "ru";
     // Convert language codes to proper locale identifiers
     const localeMap: Record<string, string> = {
       en: "en-UK",
@@ -31,17 +31,16 @@ export const getLocaleFromCookie = (): string => {
     };
     return localeMap[langCode] || `${langCode}-${langCode.toUpperCase()}`;
   }
-  return "en-UK";
+  return "ru-RU";
 };
 export const formatDate = (
-  dateInput: string | Date,
+  dateInput?: string | Date | null,
   options: DateFormatOptions = {
     month: "short",
     day: true,
   },
   locale?: string,
 ): string => {
-  // Guard clause - si l'input est falsy, return fallback
   if (!dateInput) {
     console.warn("formatDate: dateInput is falsy, returning fallback");
     return m.even_tense_herring_support();
@@ -125,14 +124,14 @@ export const formatDate = (
 };
 
 export const formatDateOnly = (
-  dateInput: string | Date,
+  dateInput?: string | Date | null,
   locale?: string,
 ): string => {
   return formatDate(dateInput, { month: "short", day: true }, locale);
 };
 
 export const formatDateTime = (
-  dateInput: string | Date,
+  dateInput?: string | Date | null,
   locale?: string,
 ): string => {
   return formatDate(

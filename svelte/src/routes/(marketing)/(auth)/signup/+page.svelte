@@ -118,7 +118,7 @@
     ></Input>
 
     {#if !passwordMatch}
-      <p class="mt-1 text-sm text-rose-600">
+      <p class="mt-1 text-sm text-red-600">
         {m.extra_grand_angelfish_transform()}
       </p>
     {/if}

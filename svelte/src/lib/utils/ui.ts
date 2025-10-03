@@ -52,7 +52,7 @@ export const qualityButtons = [
     quality: 0,
     label: m.such_loose_blackbird_offer(),
     color:
-      "ring-rose-600 dark:ring-rose-500/50 hover:bg-rose-700/10 dark:hover:rose-900/20 ring",
+      "ring-red-600 dark:ring-red-500/50 hover:bg-red-700/10 dark:hover:rose-900/20 ring",
     key: 1,
   },
 

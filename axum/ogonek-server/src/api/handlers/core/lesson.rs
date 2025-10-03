@@ -158,6 +158,26 @@ pub async fn delete_lesson(
     Ok(StatusCode::NO_CONTENT)
 }
 
+/// Deletes many lessons
+#[utoipa::path(
+    delete,
+    path = "/many",
+    tag = LESSON_TAG,
+    request_body = Vec<String>,
+    responses(
+        (status = 204, description = "Lessons deleted successfully"),
+        (status = 401, description = "Unauthorized")
+    )
+)]
+pub async fn delete_lesson_many(
+    State(state): State<AppState>,
+    claims: Claims,
+    Json(payload): Json<Vec<String>>,
+) -> Result<StatusCode, APIError> {
+    lesson::delete_many(&state.db, payload, &claims.sub).await?;
+
+    Ok(StatusCode::NO_CONTENT)
+}
 /// Updates lesson
 #[utoipa::path(
     patch,

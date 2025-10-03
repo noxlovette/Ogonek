@@ -13,12 +13,23 @@
     Title1,
     NewButton,
     TableHead,
+    Caption1,
+    TableRow,
+    TableBody,
+    TableFooter,
+    Paginator,
+    DeleteButton,
+    SortDate,
+    Subheadline,
+    TickMorph,
+    HStack,
+    Headline,
   } from "$lib/components";
 
   import { enhance } from "$app/forms";
-  import { page } from "$app/state";
+  import { page as sveltePage } from "$app/state";
   import { goto } from "$app/navigation";
-  import { enhanceForm } from "$lib/utils";
+  import { enhanceForm, formatDateOnly } from "$lib/utils";
   import {
     completedStore,
     searchTerm,
@@ -33,7 +44,7 @@
   import message from "$lib/messages.js";
 
   const { data } = $props();
-  const role = page.params.role;
+  const role = sveltePage.params.role;
 
   $effect(() => {
     const params = new URLSearchParams();
@@ -57,6 +68,9 @@
   function toggleCompletedTasks() {
     completedStore.set(!$completedStore);
   }
+  const { page, totalPages, count, perPage } = data.tasksPaginated;
+  const tasks = $derived(data.tasksPaginated.data);
+  let selected: string[] = $state([]);
 </script>
 
 <svelte:head>
@@ -129,6 +143,53 @@
   </div>
 {:else}
   <Table>
-    <TableHead>Hello</TableHead>
+    <input type="hidden" bind:value={selected} name="toDelete" />
+    <TableHead>
+      <TickMorph
+        noText={true}
+        bind:group={selected}
+        value={tasks.map((task) => task.id)}
+      />
+      {#if selected.length >= 1}
+        <Subheadline>
+          Выбрано {selected.length} из {tasks.length}
+        </Subheadline>
+      {:else}
+        <Subheadline>Выбрать все</Subheadline>
+      {/if}
+      <Divider />
+
+      {#if selected.length == 0}
+        <SortDate />
+      {:else}
+        <Merger>
+          <DeleteButton />
+        </Merger>
+      {/if}
+    </TableHead>
+    <TableBody>
+      {#each tasks as task (task.id)}
+        <div class="bg-clickable flex items-center px-2">
+          <TickMorph noText={true} bind:group={selected} value={task.id} />
+          <TableRow href={`/${sveltePage.params.role}/tasks/${task.id}`}>
+            <HStack override="gap-1 items-start">
+              <Headline>
+                {task.title}
+              </Headline>
+              <Caption1>
+                {task.assigneeName}
+              </Caption1>
+            </HStack>
+            <Divider />
+            <Caption1>
+              {formatDateOnly(task.dueDate)}
+            </Caption1>
+          </TableRow>
+        </div>
+      {/each}
+    </TableBody>
+    <TableFooter>
+      <Paginator {page} {count} {perPage} {totalPages}></Paginator>
+    </TableFooter>
   </Table>
 {/if}

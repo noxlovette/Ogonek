@@ -1,7 +1,7 @@
 <script lang="ts">
   import { Toolbar, Table, Divider, Merger } from "$lib/components";
   import type { PageProps } from "./$types";
-  import { enhanceForm, formatDate } from "$lib/utils";
+  import { enhanceForm } from "$lib/utils";
   import LargeTitle from "$lib/components/typography/LargeTitle.svelte";
   import { enhance } from "$app/forms";
   import NewButton from "$lib/components/UI/forms/buttons/NewButton.svelte";

@@ -14,7 +14,7 @@
   import { page } from "$app/state";
   import { enhance } from "$app/forms";
   import { Check, Circle } from "@lucide/svelte";
-  import { enhanceForm, formatDate } from "$lib/utils";
+  import { enhanceForm, formatDateOnly } from "$lib/utils";
   import Multipart from "$lib/components/UI/interactive/Multipart.svelte";
   import Badge from "$lib/components/cards/Badge.svelte";
   import { getUrgency } from "$lib/utils";
@@ -31,12 +31,10 @@
   let formattedDate = $state(m.arable_flat_emu_strive());
 
   if (data.task.dueDate) {
-    formattedDate = formatDate(data.task.dueDate);
+    formattedDate = formatDateOnly(data.task.dueDate);
   }
 
   const urgency = getUrgency(data.task);
-
-  $inspect(form);
 </script>
 
 <svelte:head>

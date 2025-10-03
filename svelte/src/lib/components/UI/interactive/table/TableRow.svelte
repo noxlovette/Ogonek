@@ -19,12 +19,11 @@
     }
     goto(href);
   }
-
-  $inspect(href);
 </script>
 
 <button
   class="flex w-full items-center justify-between px-2 py-2.5"
+  type="button"
   onclick={(e) => handleRowClick(e)}
   onkeydown={(e) => handleRowClick(e)}
   tabindex="0"

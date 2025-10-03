@@ -103,6 +103,7 @@ export const routes = {
       return `${API_BASE}/lessons${query ? `?${query}` : ""}`;
     },
     new: () => `${API_BASE}/lessons`,
+    delete_lesson_many: () => `${API_BASE}/lessons/many`,
     lesson: (params: { id: string }) => `${API_BASE}/lessons/${params.id}`,
     delete: (params: { id: string }) => `${API_BASE}/lessons/${params.id}`,
     update: (params: { id: string }) => `${API_BASE}/lessons/${params.id}`,

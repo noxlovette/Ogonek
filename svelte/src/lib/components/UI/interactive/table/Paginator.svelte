@@ -11,9 +11,7 @@
   const isLastPage = $derived(page >= totalPages);
 </script>
 
-<div
-  class="flex items-center justify-between border-t border-stone-200 px-4 py-3"
->
+<div class="flex items-end justify-between px-4 py-3">
   <Caption1>
     Показано {(page - 1) * perPage + 1}–{Math.min(page * perPage, count)} из {count}
   </Caption1>

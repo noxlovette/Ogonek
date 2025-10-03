@@ -22,7 +22,6 @@
     SortDate,
     Caption1,
     VStack,
-    UniButton,
     DeleteButton,
   } from "$lib/components";
   import { enhance } from "$app/forms";
@@ -39,7 +38,6 @@
   } from "$lib/stores";
   import { goto } from "$app/navigation";
   import { m } from "$lib/paraglide/messages.js";
-  import { Trash2 } from "@lucide/svelte";
 
   let { data } = $props();
 
@@ -108,6 +106,7 @@
   </div>
 {:else}
   <Table>
+    <input type="hidden" bind:value={selected} name="toDelete" />
     <TableHead>
       <TickMorph
         noText={true}

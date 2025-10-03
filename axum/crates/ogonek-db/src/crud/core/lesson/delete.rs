@@ -17,13 +17,14 @@ pub async fn delete(db: &PgPool, lesson_id: &str, user_id: &str) -> Result<(), D
     Ok(())
 }
 
-pub async fn delete_many(pool: &PgPool, ids: Vec<String>) -> Result<u64, sqlx::Error> {
+pub async fn delete_many(pool: &PgPool, ids: Vec<String>, user_id: &str) -> Result<u64, DbError> {
     let result = sqlx::query!(
         r#"
         DELETE FROM lessons
-        WHERE id = ANY($1)
+        WHERE id = ANY($1) AND created_by = $2
         "#,
-        &ids
+        &ids,
+        user_id
     )
     .execute(pool)
     .await?;

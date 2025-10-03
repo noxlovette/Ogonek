@@ -14,7 +14,7 @@
     Badge,
   } from "$lib/components";
 
-  import { formatDate } from "$lib/utils";
+  import { formatDateOnly } from "$lib/utils";
   import type { PageData } from "./$types";
   import { page } from "$app/state";
 
@@ -22,7 +22,7 @@
 
   let { data }: { data: PageData } = $props();
 
-  let formattedDate = formatDate(data.lesson.createdAt);
+  let formattedDate = formatDateOnly(data.lesson.createdAt);
 </script>
 
 <Toolbar>

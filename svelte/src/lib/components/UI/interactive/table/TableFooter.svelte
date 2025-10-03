@@ -3,7 +3,7 @@
 </script>
 
 <div
-  class="border-b border-stone-300/30 bg-stone-50 dark:border-stone-700 dark:bg-stone-900/30"
+  class="bg-solid items-end rounded-b-2xl border-t-2 border-stone-100 dark:border-stone-800"
 >
   {@render children()}
 </div>

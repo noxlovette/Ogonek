@@ -4,7 +4,7 @@ use crate::{
 };
 use axum::{
     Router,
-    routing::{get, patch, post, put},
+    routing::{delete, get, patch, post, put},
 };
 
 pub fn lesson_routes() -> Router<AppState> {
@@ -20,6 +20,7 @@ pub fn lesson_routes() -> Router<AppState> {
             "/{id}/photo",
             post(core::upsert_photo).delete(core::delete_photo),
         )
+        .route("/many", delete(core::delete_lesson_many))
 }
 
 pub fn task_routes() -> Router<AppState> {

@@ -47,7 +47,7 @@
         class="size-5 text-amber-600 dark:text-amber-400"
       />
     {:else if activity.action.startsWith("deleted")}
-      <Trash2 strokeWidth="1" class="size-5 text-rose-600 dark:text-rose-400" />
+      <Trash2 strokeWidth="1" class="size-5 text-red-600 dark:text-red-400" />
     {/if}
   {:else if activity.modelType.startsWith("task")}
     {#if activity.action.startsWith("new")}
@@ -58,10 +58,7 @@
         class="size-5 text-amber-600 dark:text-amber-400"
       />
     {:else if activity.action.startsWith("deleted")}
-      <Trash2
-        strokeWidth="1"
-        class=" size-5 text-rose-600 dark:text-rose-400"
-      />
+      <Trash2 strokeWidth="1" class=" size-5 text-red-600 dark:text-red-400" />
     {:else if activity.action.startsWith("completed")}
       <CheckCircle2 strokeWidth="1" class="size-5 text-emerald-400" />
     {/if}
@@ -74,7 +71,7 @@
         class="size-5 text-amber-600 dark:text-amber-400"
       ></WholeWord>
     {:else if activity.action.startsWith("deleted")}
-      <Trash2 strokeWidth="1" class="size-5 text-rose-600 dark:text-rose-400"
+      <Trash2 strokeWidth="1" class="size-5 text-red-600 dark:text-red-400"
       ></Trash2>
     {:else if activity.action.startsWith("subscribed")}
       <Bell strokeWidth="1" class="size-5 text-emerald-400" />

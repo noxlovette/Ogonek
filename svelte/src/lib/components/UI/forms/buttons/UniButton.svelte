@@ -72,7 +72,7 @@
   const variantClasses = {
     primary: "hover-default",
     danger:
-      "text-rose-600 dark:text-rose-50 hover:bg-rose-100 dark:hover:bg-rose-800",
+      "text-red-600 dark:text-red-50 hover:bg-red-100 dark:hover:bg-red-800",
     prominent: "hover:bg-accent/60 bg-accent dark:bg-accent/90 text-white",
   };
 
@@ -97,71 +97,71 @@
   }
 </script>
 
-{#if isLink}
-  <a
-    {@attach tooltip(description)}
-    {href}
-    class={allClasses}
-    aria-disabled={disabled}
-    data-cy={dataCy}
-    aria-label={ariaLabel}
-    aria-describedby={description ? `${uniqueId}-desc` : undefined}
-    {...rest}
-    role="button"
-  >
-    {#if Icon}
-      <Icon
-        color={fill ? "#df7055" : "currentColor"}
-        fill={fill ? "#df7055" : "#00000000"}
-        class="size-5"
-      />
-    {/if}
-    {#if !iconOnly}
-      <Headline>
-        {content}
-      </Headline>
-    {/if}
-  </a>
-{:else}
-  <button
-    {@attach tooltip(description)}
-    {type}
-    {formaction}
-    {disabled}
-    data-cy={dataCy}
-    id={uniqueId}
-    aria-label={ariaLabel}
-    aria-describedby={description ? `${uniqueId}-desc` : undefined}
-    class={allClasses}
-    onclick={variant === "danger" ? handleClick : onclick}
-    {...rest}
-  >
-    {#if Icon}
-      <Icon
-        color={fill ? "#df7055" : "currentColor"}
-        fill={fill ? "#df7055" : "#00000000"}
-        class="size-5"
-      />
-    {:else if variant == "danger" && !Icon}
-      {#if !deleteClicked}
-        <Trash2 />
+<div class="relative">
+  {#if isLink}
+    <a
+      {@attach tooltip(description)}
+      {href}
+      class={allClasses}
+      aria-disabled={disabled}
+      data-cy={dataCy}
+      aria-label={ariaLabel}
+      aria-describedby={description ? `${uniqueId}-desc` : undefined}
+      {...rest}
+      role="button"
+    >
+      {#if Icon}
+        <Icon
+          color={fill ? "#df7055" : "currentColor"}
+          fill={fill ? "#df7055" : "#00000000"}
+          class="size-5"
+        />
+      {/if}
+      {#if !iconOnly}
+        <Headline>
+          {content}
+        </Headline>
+      {/if}
+    </a>
+  {:else}
+    <button
+      {@attach tooltip(description)}
+      {type}
+      {formaction}
+      {disabled}
+      data-cy={dataCy}
+      id={uniqueId}
+      aria-label={ariaLabel}
+      aria-describedby={description ? `${uniqueId}-desc` : undefined}
+      class={allClasses}
+      onclick={variant === "danger" ? handleClick : onclick}
+      {...rest}
+    >
+      {#if !shouldConfirm}
+        <Icon
+          color={fill ? "#df7055" : "currentColor"}
+          fill={fill ? "#df7055" : "#00000000"}
+          class="size-5"
+        />
+      {:else if !deleteClicked}
+        <Icon />
       {:else}
         <X />
       {/if}
-    {/if}
 
-    {#if !iconOnly}
-      <Footnote>
-        {content}
-      </Footnote>
-    {/if}
-  </button>
-{/if}
-{#if description}
-  <div id="{uniqueId}-desc" class="sr-only">
-    {description}
-  </div>
-{/if}
-{#if showConfirmDialog}
-  <ConfirmDialogue {formaction} bind:showConfirmDialog />
-{/if}
+      {#if !iconOnly}
+        <Footnote>
+          {content}
+        </Footnote>
+      {/if}
+    </button>
+  {/if}
+  {#if description}
+    <div id="{uniqueId}-desc" class="sr-only">
+      {description}
+    </div>
+  {/if}
+  {#if showConfirmDialog}
+    <ConfirmDialogue {formaction} bind:showConfirmDialog />
+  {/if}
+</div>
