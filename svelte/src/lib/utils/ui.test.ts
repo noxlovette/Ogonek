@@ -140,7 +140,7 @@ describe("getUrgency", () => {
     vi.setSystemTime(new Date("2025-01-15T12:00:00Z"));
 
     const task = createTask("2025-01-14T12:00:00Z");
-    expect(getUrgency(task)).toBe("overdue");
+    expect(getUrgency(task.dueDate)).toBe("overdue");
 
     vi.useRealTimers();
   });
@@ -150,7 +150,7 @@ describe("getUrgency", () => {
     vi.setSystemTime(new Date("2025-01-15T12:00:00Z"));
 
     const task = createTask("2025-01-16T12:00:00Z");
-    expect(getUrgency(task)).toBe("urgent");
+    expect(getUrgency(task.dueDate)).toBe("urgent");
 
     vi.useRealTimers();
   });
@@ -162,8 +162,8 @@ describe("getUrgency", () => {
     const task2Days = createTask("2025-01-17T12:00:00Z");
     const task3Days = createTask("2025-01-18T12:00:00Z");
 
-    expect(getUrgency(task2Days)).toBe("soon");
-    expect(getUrgency(task3Days)).toBe("soon");
+    expect(getUrgency(task2Days.dueDate)).toBe("soon");
+    expect(getUrgency(task3Days.dueDate)).toBe("soon");
 
     vi.useRealTimers();
   });
@@ -173,7 +173,7 @@ describe("getUrgency", () => {
     vi.setSystemTime(new Date("2025-01-15T12:00:00Z"));
 
     const task = createTask("2025-01-20T12:00:00Z");
-    expect(getUrgency(task)).toBe("normal");
+    expect(getUrgency(task.dueDate)).toBe("normal");
 
     vi.useRealTimers();
   });
@@ -183,7 +183,7 @@ describe("getUrgency", () => {
     vi.setSystemTime(new Date("2025-01-15T12:00:00Z"));
 
     const task = createTask("");
-    expect(getUrgency(task)).toBe("normal");
+    expect(getUrgency(task.dueDate)).toBe("normal");
 
     vi.useRealTimers();
   });
@@ -193,7 +193,7 @@ describe("getUrgency", () => {
     vi.setSystemTime(new Date("2025-01-15T12:00:00Z"));
 
     const task = createTask("invalid-date");
-    expect(getUrgency(task)).toBe("normal");
+    expect(getUrgency(task.dueDate)).toBe("normal");
 
     vi.useRealTimers();
   });

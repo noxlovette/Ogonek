@@ -1,12 +1,12 @@
 export { default as Notification } from "../content/Notification.svelte";
+export { default as ProgressBar } from "../content/ProgressBar.svelte";
 export { default as Editor } from "../forms/Editor.svelte";
 export { default as CSV } from "./CSV.svelte";
 export { default as LanguageSelector } from "./LanguageSelector.svelte";
 export { default as Multipart } from "./Multipart.svelte";
 export { default as PhotoPicker } from "./PhotoPicker.svelte";
-export { default as ProgressBar } from "./ProgressBar.svelte";
 export { default as SearchBar } from "./SearchBar.svelte";
-export { default as Table } from "./Table.svelte";
+export * from "./table";
 export { default as TableSkeleton } from "./TableSkeleton.svelte";
 export { default as ThemeToggler } from "./ThemeToggler.svelte";
 export { default as TickMorph } from "./TickMorph.svelte";

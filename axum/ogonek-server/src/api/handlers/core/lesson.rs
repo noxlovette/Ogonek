@@ -13,8 +13,8 @@ use ogonek_db::{
 };
 use ogonek_notifications::NotificationType;
 use ogonek_types::{
-    ActionType, LessonSmall, LessonUpdate, LessonWithPhoto, ModelType, PaginatedLessons,
-    PaginatedResponse, PaginationParams, Photo, UpsertPhoto,
+    ActionType, LessonPaginationParams, LessonSmall, LessonUpdate, LessonWithPhoto, ModelType,
+    PaginatedLessons, PaginatedResponse, Photo, SortField, SortOrder, UpsertPhoto,
 };
 
 /// Fetches lesson by id
@@ -35,13 +35,13 @@ pub async fn fetch_lesson(
     Path(id): Path<String>,
     claims: Claims,
 ) -> Result<Json<LessonWithPhoto>, APIError> {
-    let lesson = lesson::find_by_id(&state.db, &id, &claims.sub).await?;
+    let lesson = lesson::read_by_id(&state.db, &id, &claims.sub).await?;
     tracking::seen::mark_as_seen(&state.db, &claims.sub, &id, ModelType::Lesson).await?;
 
     let mut photo: Option<Photo> = None;
 
     if let Some(photo_id) = &lesson.photo_id {
-        photo = photo::find_by_id(&state.db, photo_id).await?;
+        photo = photo::read_by_id(&state.db, photo_id).await?;
     }
 
     Ok(Json(LessonWithPhoto {
@@ -64,7 +64,10 @@ pub async fn fetch_lesson(
         ("page" = Option<u32>, Query, description = "Page number"),
         ("per_page" = Option<u32>, Query, description = "Items per page"),
         ("search" = Option<String>, Query, description = "Search term"),
-        ("assignee" = Option<String>, Query, description = "Filter by assignee")
+        ("assignee" = Option<String>, Query, description = "Filter by assignee"),
+        ("topic" = Option<String>, Query),
+        ("sort_by" = Option<SortField>, Query),
+        ("sort_order" = Option<SortOrder>, Query)
     ),
     tag = LESSON_TAG,responses(
         (status = 200, description = "Lessons retrieved successfully", body = PaginatedLessons),
@@ -73,15 +76,17 @@ pub async fn fetch_lesson(
 )]
 pub async fn list_lessons(
     State(state): State<AppState>,
-    Query(params): Query<PaginationParams>,
+    Query(params): Query<LessonPaginationParams>,
     claims: Claims,
 ) -> Result<Json<PaginatedResponse<LessonSmall>>, APIError> {
-    let lessons = lesson::find_all(&state.db, &claims.sub, &params).await?;
-
+    let (lessons, count) = lesson::read_all(&state.db, &claims.sub, &params).await?;
+    let total_pages = (count as f64 / params.limit() as f64).ceil() as i64;
     Ok(Json(PaginatedResponse {
         data: lessons,
         page: params.page(),
+        total_pages,
         per_page: params.limit(),
+        count,
     }))
 }
 
@@ -153,6 +158,26 @@ pub async fn delete_lesson(
     Ok(StatusCode::NO_CONTENT)
 }
 
+/// Deletes many lessons
+#[utoipa::path(
+    delete,
+    path = "/many",
+    tag = LESSON_TAG,
+    request_body = Vec<String>,
+    responses(
+        (status = 204, description = "Lessons deleted successfully"),
+        (status = 401, description = "Unauthorized")
+    )
+)]
+pub async fn delete_lesson_many(
+    State(state): State<AppState>,
+    claims: Claims,
+    Json(payload): Json<Vec<String>>,
+) -> Result<StatusCode, APIError> {
+    lesson::delete_many(&state.db, payload, &claims.sub).await?;
+
+    Ok(StatusCode::NO_CONTENT)
+}
 /// Updates lesson
 #[utoipa::path(
     patch,
@@ -213,7 +238,7 @@ pub async fn update_lesson(
             )
             .await?;
 
-            let lesson = lesson::find_by_id(&state.db, &id, &claims.sub).await?;
+            let lesson = lesson::read_by_id(&state.db, &id, &claims.sub).await?;
             let _ = state
                 .notification_service
                 .notify_student(

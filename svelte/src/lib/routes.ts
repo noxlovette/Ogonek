@@ -9,18 +9,22 @@ export const routes = {
   admin: {
     content: () => `${API_BASE}/admin/content`,
     new_content: () => `${API_BASE}/admin/content`,
-    delete_content: (id: string) => `${API_BASE}/admin/content/${id}`,
-    update_content: (id: string) => `${API_BASE}/admin/content/${id}`,
-    publish_content: (id: string) => `${API_BASE}/admin/content/${id}/publish`,
-    unpublish_content: (id: string) =>
-      `${API_BASE}/admin/content/${id}/publish`,
+    delete_content: (params: { id: string }) =>
+      `${API_BASE}/admin/content/${params.id}`,
+    update_content: (params: { id: string }) =>
+      `${API_BASE}/admin/content/${params.id}`,
+    publish_content: (params: { id: string }) =>
+      `${API_BASE}/admin/content/${params.id}/publish`,
+    unpublish_content: (params: { id: string }) =>
+      `${API_BASE}/admin/content/${params.id}/publish`,
   },
   auth: {
     bind_student_to_teacher: () => `${API_BASE}/auth/bind`,
-    generate_invite_link: (isRegistered: string) => {
-      const params = new URLSearchParams();
-      if (isRegistered) params.set("isRegistered", isRegistered);
-      const query = params.toString();
+    generate_invite_link: (params: { isRegistered: string }) => {
+      const urlParams = new URLSearchParams();
+      if (params.isRegistered)
+        urlParams.set("isRegistered", params.isRegistered);
+      const query = urlParams.toString();
       return `${API_BASE}/auth/invite${query ? `?${query}` : ""}`;
     },
     refresh: () => `${API_BASE}/auth/refresh`,
@@ -29,91 +33,119 @@ export const routes = {
   },
   calendars: {
     calendar: () => `${API_BASE}/calendars`,
-    delete_attendee: (id: string) => `${API_BASE}/calendars/attendees/${id}`,
-    update_attendee: (id: string) => `${API_BASE}/calendars/attendees/${id}`,
-    events: (start: string, end: string, role?: string) => {
-      const params = new URLSearchParams();
-      if (start) params.set("start", start);
-      if (end) params.set("end", end);
-      if (role) params.set("role", role);
-      const query = params.toString();
+    delete_attendee: (params: { id: string }) =>
+      `${API_BASE}/calendars/attendees/${params.id}`,
+    update_attendee: (params: { id: string }) =>
+      `${API_BASE}/calendars/attendees/${params.id}`,
+    events: (params: { start: string; end: string; role?: string }) => {
+      const urlParams = new URLSearchParams();
+      if (params.start) urlParams.set("start", params.start);
+      if (params.end) urlParams.set("end", params.end);
+      if (params.role) urlParams.set("role", params.role);
+      const query = urlParams.toString();
       return `${API_BASE}/calendars/events${query ? `?${query}` : ""}`;
     },
     new_event: () => `${API_BASE}/calendars/events`,
-    event: (id: string) => `${API_BASE}/calendars/events/${id}`,
-    delete_event: (id: string) => `${API_BASE}/calendars/events/${id}`,
-    update_event: (id: string) => `${API_BASE}/calendars/events/${id}`,
-    delete_calendar: (id: string) => `${API_BASE}/calendars/${id}`,
-    update_calendar: (id: string) => `${API_BASE}/calendars/${id}`,
+    event: (params: { id: string }) =>
+      `${API_BASE}/calendars/events/${params.id}`,
+    delete_event: (params: { id: string }) =>
+      `${API_BASE}/calendars/events/${params.id}`,
+    update_event: (params: { id: string }) =>
+      `${API_BASE}/calendars/events/${params.id}`,
+    delete_calendar: (params: { id: string }) =>
+      `${API_BASE}/calendars/${params.id}`,
+    update_calendar: (params: { id: string }) =>
+      `${API_BASE}/calendars/${params.id}`,
   },
   content: {
-    content_public: (slug: string) => `${API_BASE}/content/${slug}`,
+    content_public: (params: { slug: string }) =>
+      `${API_BASE}/content/${params.slug}`,
   },
   decks: {
-    all: (
-      page?: string,
-      per_page?: string,
-      search?: string,
-      assignee?: string,
-    ) => {
-      const params = new URLSearchParams();
-      if (page) params.set("page", page);
-      if (per_page) params.set("per_page", per_page);
-      if (search) params.set("search", search);
-      if (assignee) params.set("assignee", assignee);
-      const query = params.toString();
+    all: (params: {
+      page?: string;
+      per_page?: string;
+      search?: string;
+      assignee?: string;
+      visibility?: string;
+      sort_by?: string;
+      sort_order?: string;
+    }) => {
+      const urlParams = new URLSearchParams();
+      if (params.page) urlParams.set("page", params.page);
+      if (params.per_page) urlParams.set("per_page", params.per_page);
+      if (params.search) urlParams.set("search", params.search);
+      if (params.assignee) urlParams.set("assignee", params.assignee);
+      if (params.visibility) urlParams.set("visibility", params.visibility);
+      if (params.sort_by) urlParams.set("sort_by", params.sort_by);
+      if (params.sort_order) urlParams.set("sort_order", params.sort_order);
+      const query = urlParams.toString();
       return `${API_BASE}/decks${query ? `?${query}` : ""}`;
     },
     new: () => `${API_BASE}/decks`,
+    delete_deck_many: () => `${API_BASE}/decks/many`,
     decks_public: () => `${API_BASE}/decks/public`,
-    deck: (id: string) => `${API_BASE}/decks/${id}`,
-    delete: (id: string) => `${API_BASE}/decks/${id}`,
-    update: (id: string) => `${API_BASE}/decks/${id}`,
-    duplicate: (id: string) => `${API_BASE}/decks/${id}/duplicate`,
+    deck: (params: { id: string }) => `${API_BASE}/decks/${params.id}`,
+    delete: (params: { id: string }) => `${API_BASE}/decks/${params.id}`,
+    update: (params: { id: string }) => `${API_BASE}/decks/${params.id}`,
+    duplicate: (params: { id: string }) =>
+      `${API_BASE}/decks/${params.id}/duplicate`,
   },
   files: {
     abort_multipart_upload: () => `${API_BASE}/files/abort`,
     complete_multipart_upload: () => `${API_BASE}/files/complete`,
     init_multipart_upload: () => `${API_BASE}/files/init`,
-    pdf: (id: string, pdfType: string) => {
-      const params = new URLSearchParams();
-      if (pdfType) params.set("pdfType", pdfType);
-      const query = params.toString();
-      return `${API_BASE}/files/pdf/${id}${query ? `?${query}` : ""}`;
+    pdf: (params: { id: string; pdfType: string }) => {
+      const urlParams = new URLSearchParams();
+      if (params.pdfType) urlParams.set("pdfType", params.pdfType);
+      const query = urlParams.toString();
+      return `${API_BASE}/files/pdf/${params.id}${query ? `?${query}` : ""}`;
     },
-    presigned_urls_batch: (task_id: string) =>
-      `${API_BASE}/files/presigned/batch/${task_id}`,
-    presigned_url: (encoded_key: string) =>
-      `${API_BASE}/files/presigned/${encoded_key}`,
-    delete_file: (id: string) => `${API_BASE}/files/${id}`,
+    presigned_urls_batch: (params: { task_id: string }) =>
+      `${API_BASE}/files/presigned/batch/${params.task_id}`,
+    presigned_url: (params: { encoded_key: string }) =>
+      `${API_BASE}/files/presigned/${params.encoded_key}`,
+    delete_file: (params: { id: string }) => `${API_BASE}/files/${params.id}`,
   },
   learn: {
     due_cards: () => `${API_BASE}/learn`,
-    subscribe_to: (id: string) => `${API_BASE}/learn/subscribe/${id}`,
-    unsubscribe_from: (id: string) => `${API_BASE}/learn/subscribe/${id}`,
-    update_card_progress: (id: string) => `${API_BASE}/learn/${id}`,
-    reset_deck_progress: (id: string) => `${API_BASE}/learn/${id}`,
+    subscribe_to: (params: { id: string }) =>
+      `${API_BASE}/learn/subscribe/${params.id}`,
+    unsubscribe_from: (params: { id: string }) =>
+      `${API_BASE}/learn/subscribe/${params.id}`,
+    update_card_progress: (params: { id: string }) =>
+      `${API_BASE}/learn/${params.id}`,
+    reset_deck_progress: (params: { id: string }) =>
+      `${API_BASE}/learn/${params.id}`,
   },
   lessons: {
-    all: (
-      page?: string,
-      per_page?: string,
-      search?: string,
-      assignee?: string,
-    ) => {
-      const params = new URLSearchParams();
-      if (page) params.set("page", page);
-      if (per_page) params.set("per_page", per_page);
-      if (search) params.set("search", search);
-      if (assignee) params.set("assignee", assignee);
-      const query = params.toString();
+    all: (params: {
+      page?: string;
+      per_page?: string;
+      search?: string;
+      assignee?: string;
+      topic?: string;
+      sort_by?: string;
+      sort_order?: string;
+    }) => {
+      const urlParams = new URLSearchParams();
+      if (params.page) urlParams.set("page", params.page);
+      if (params.per_page) urlParams.set("per_page", params.per_page);
+      if (params.search) urlParams.set("search", params.search);
+      if (params.assignee) urlParams.set("assignee", params.assignee);
+      if (params.topic) urlParams.set("topic", params.topic);
+      if (params.sort_by) urlParams.set("sort_by", params.sort_by);
+      if (params.sort_order) urlParams.set("sort_order", params.sort_order);
+      const query = urlParams.toString();
       return `${API_BASE}/lessons${query ? `?${query}` : ""}`;
     },
     new: () => `${API_BASE}/lessons`,
-    lesson: (id: string) => `${API_BASE}/lessons/${id}`,
-    delete: (id: string) => `${API_BASE}/lessons/${id}`,
-    update: (id: string) => `${API_BASE}/lessons/${id}`,
-    upsert_photo: (id: string) => `${API_BASE}/lessons/${id}/photo`,
+    delete_lesson_many: () => `${API_BASE}/lessons/many`,
+    lesson: (params: { id: string }) => `${API_BASE}/lessons/${params.id}`,
+    delete: (params: { id: string }) => `${API_BASE}/lessons/${params.id}`,
+    update: (params: { id: string }) => `${API_BASE}/lessons/${params.id}`,
+    upsert_photo: (params: { id: string }) =>
+      `${API_BASE}/lessons/${params.id}/photo`,
   },
   notifications: {
     register_device_token: () => `${API_BASE}/notifications/register`,
@@ -125,47 +157,54 @@ export const routes = {
     dashboard: () => `${API_BASE}/state/dashboard`,
   },
   tasks: {
-    all: (
-      page?: string,
-      per_page?: string,
-      search?: string,
-      assignee?: string,
-      completed?: string,
-      priority?: string,
-    ) => {
-      const params = new URLSearchParams();
-      if (page) params.set("page", page);
-      if (per_page) params.set("per_page", per_page);
-      if (search) params.set("search", search);
-      if (assignee) params.set("assignee", assignee);
-      if (completed) params.set("completed", completed);
-      if (priority) params.set("priority", priority);
-      const query = params.toString();
+    all: (params: {
+      page?: string;
+      per_page?: string;
+      search?: string;
+      assignee?: string;
+      completed?: string;
+      sort_by?: string;
+      sort_order?: string;
+    }) => {
+      const urlParams = new URLSearchParams();
+      if (params.page) urlParams.set("page", params.page);
+      if (params.per_page) urlParams.set("per_page", params.per_page);
+      if (params.search) urlParams.set("search", params.search);
+      if (params.assignee) urlParams.set("assignee", params.assignee);
+      if (params.completed) urlParams.set("completed", params.completed);
+      if (params.sort_by) urlParams.set("sort_by", params.sort_by);
+      if (params.sort_order) urlParams.set("sort_order", params.sort_order);
+      const query = urlParams.toString();
       return `${API_BASE}/tasks${query ? `?${query}` : ""}`;
     },
     new: () => `${API_BASE}/tasks`,
-    task: (id: string) => `${API_BASE}/tasks/${id}`,
-    toggle: (id: string) => `${API_BASE}/tasks/${id}`,
-    delete: (id: string) => `${API_BASE}/tasks/${id}`,
-    update: (id: string) => `${API_BASE}/tasks/${id}`,
+    delete_task_many: () => `${API_BASE}/tasks/many`,
+    task: (params: { id: string }) => `${API_BASE}/tasks/${params.id}`,
+    toggle: (params: { id: string }) => `${API_BASE}/tasks/${params.id}`,
+    delete: (params: { id: string }) => `${API_BASE}/tasks/${params.id}`,
+    update: (params: { id: string }) => `${API_BASE}/tasks/${params.id}`,
   },
   users: {
     me: () => `${API_BASE}/users`,
     delete_user: () => `${API_BASE}/users`,
     update_user: () => `${API_BASE}/users`,
-    inviter: (invite?: string) => {
-      const params = new URLSearchParams();
-      if (invite) params.set("invite", invite);
-      const query = params.toString();
+    inviter: (params: { invite?: string }) => {
+      const urlParams = new URLSearchParams();
+      if (params.invite) urlParams.set("invite", params.invite);
+      const query = urlParams.toString();
       return `${API_BASE}/users/inviter${query ? `?${query}` : ""}`;
     },
     profile: () => `${API_BASE}/users/profile`,
     upsert_profile: () => `${API_BASE}/users/profile`,
     students: () => `${API_BASE}/users/student`,
-    student: (id: string) => `${API_BASE}/users/student/${id}`,
-    upsert_student: (id: string) => `${API_BASE}/users/student/${id}`,
-    remove_student: (id: string) => `${API_BASE}/users/student/${id}`,
-    update_student: (id: string) => `${API_BASE}/users/student/${id}`,
+    student: (params: { id: string }) =>
+      `${API_BASE}/users/student/${params.id}`,
+    upsert_student: (params: { id: string }) =>
+      `${API_BASE}/users/student/${params.id}`,
+    remove_student: (params: { id: string }) =>
+      `${API_BASE}/users/student/${params.id}`,
+    update_student: (params: { id: string }) =>
+      `${API_BASE}/users/student/${params.id}`,
   },
 } as const;
 

@@ -3,7 +3,7 @@ use crate::DbError;
 use ogonek_types::{Photo, UpsertPhoto};
 use serde_json::json;
 /// Returns the lesson's photo
-pub async fn find_by_id(
+pub async fn read_by_id(
     db: impl sqlx::Executor<'_, Database = sqlx::Postgres>,
     photo_id: &str,
 ) -> Result<Option<Photo>, DbError> {

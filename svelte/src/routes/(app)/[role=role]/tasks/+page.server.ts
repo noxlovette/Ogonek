@@ -10,13 +10,24 @@ export const load: PageServerLoad = async ({ fetch, url, depends }) => {
   depends("tasks:completed");
 
   try {
-    const page = url.searchParams.get("page") || "1";
-    const per_page = url.searchParams.get("per_page") || "50";
-    const search = url.searchParams.get("search") || "";
-    const assignee = url.searchParams.get("assignee") || "";
-    const completed = url.searchParams.get("completed") || "false";
+    const page = url.searchParams.get("page") || undefined;
+    const per_page = url.searchParams.get("per_page") || undefined;
+    const search = url.searchParams.get("search") || undefined;
+    const assignee = url.searchParams.get("assignee") || undefined;
+    const completed = url.searchParams.get("completed") || undefined;
+
+    const sort_by = url.searchParams.get("sort_by") || undefined;
+    const sort_order = url.searchParams.get("sort_order") || undefined;
     const tasksPaginated = (await fetch(
-      routes.tasks.all(page, per_page, search, assignee, completed),
+      routes.tasks.all({
+        page,
+        per_page,
+        search,
+        assignee,
+        completed,
+        sort_by,
+        sort_order,
+      }),
     ).then((res) => res.json())) as PaginatedResponse<TaskSmall>;
     return {
       tasksPaginated,
@@ -54,6 +65,23 @@ export const actions: Actions = {
 
     if (!response.ok) {
       return fail(500);
+    }
+  },
+  delete: async ({ fetch, request }) => {
+    const formData = await request.formData();
+
+    const ids = formData.getAll("toDelete") as string[];
+    if (ids.length > 0) {
+      const response = await fetch(routes.tasks.delete_task_many(), {
+        method: "DELETE",
+        body: JSON.stringify(ids),
+      });
+
+      if (!response.ok) {
+        const err = await response.text();
+        logger.error({ err });
+        return fail(500, { delete: true });
+      }
     }
   },
 };

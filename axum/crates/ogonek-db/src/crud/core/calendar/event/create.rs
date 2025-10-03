@@ -3,13 +3,11 @@ use sqlx::PgPool;
 
 use crate::{
     DbError,
-    crud::core::{
-        account::{
-            profile::get_call_url,
-            user::{get_email, get_name},
-        },
-        calendar::{cal::read_calendar_id, event_attendee},
+    core::account::{
+        profile::read_call_url,
+        user::{read_email, read_name},
     },
+    crud::core::calendar::{cal::read_calendar_id, event_attendee},
 };
 
 use ogonek_types::{EventAttendeeCreate, EventCreate, EventDBFull, EventUpdate};
@@ -19,9 +17,9 @@ pub async fn create(db: &PgPool, user_id: &str, create: EventCreate) -> Result<(
     let mut tx = db.begin().await?;
     let calendar_id = read_calendar_id(&mut *tx, user_id).await?;
 
-    let attendee_name = get_name(&mut *tx, &create.attendee).await?;
+    let attendee_name = read_name(&mut *tx, &create.attendee).await?;
 
-    let video_call_url = get_call_url(&mut *tx, user_id).await?;
+    let video_call_url = read_call_url(&mut *tx, user_id).await?;
 
     let id = sqlx::query_scalar!(
         r#"
@@ -44,7 +42,7 @@ pub async fn create(db: &PgPool, user_id: &str, create: EventCreate) -> Result<(
     .fetch_one(&mut *tx)
     .await?;
 
-    let attendee_email = get_email(&mut *tx, &create.attendee).await?;
+    let attendee_email = read_email(&mut *tx, &create.attendee).await?;
 
     let attendee_payload = EventAttendeeCreate {
         email: attendee_email,

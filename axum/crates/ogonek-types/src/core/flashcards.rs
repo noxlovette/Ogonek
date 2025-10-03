@@ -3,14 +3,14 @@ use serde::{Deserialize, Serialize};
 use sqlx::prelude::FromRow;
 
 use crate::datetime_serialization;
-
-#[derive(Serialize, ToSchema)]
-#[serde(rename_all = "camelCase")]
-pub struct SimpleStats {
-    pub cards_studied_today: i32,
-    pub current_streak: i32,
+#[derive(Debug, Deserialize, Serialize, ToSchema, sqlx::Type)]
+#[serde(rename_all = "lowercase")]
+#[sqlx(type_name = "deck_visibility", rename_all = "lowercase")]
+pub enum DeckVisibility {
+    Public,
+    Private,
+    Shared,
 }
-
 #[derive(Serialize, Deserialize, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct Card {
@@ -53,7 +53,7 @@ pub struct DeckFull {
     pub assignee: Option<String>,
     pub is_subscribed: Option<bool>,
     pub created_by: String,
-    pub card_count: i64,
+    pub card_count: i32,
 
     #[serde(with = "datetime_serialization")]
     pub created_at: DateTime<Utc>,
@@ -68,7 +68,7 @@ pub struct DeckSmall {
     pub is_subscribed: Option<bool>,
     pub seen: Option<bool>,
     pub visibility: String,
-    pub card_count: i64,
+    pub card_count: i32,
     pub description: Option<String>,
 }
 

@@ -3,7 +3,7 @@ use ogonek_types::{Content, ContentPublic, ContentStatus, UpdateContent};
 use sqlx::PgPool;
 
 /// For public endpoints that renders content
-pub async fn find_by_slug(db: &PgPool, slug: &str) -> Result<ContentPublic, DbError> {
+pub async fn read_by_slug(db: &PgPool, slug: &str) -> Result<ContentPublic, DbError> {
     let content = sqlx::query_as!(
         ContentPublic,
         r#"
@@ -20,7 +20,7 @@ pub async fn find_by_slug(db: &PgPool, slug: &str) -> Result<ContentPublic, DbEr
 }
 
 /// For admin interfaces
-pub async fn find_by_id(db: &PgPool, id: &str) -> Result<Content, DbError> {
+pub async fn read_by_id(db: &PgPool, id: &str) -> Result<Content, DbError> {
     let content = sqlx::query_as!(
         Content,
         r#"
@@ -135,7 +135,7 @@ pub async fn delete(db: &PgPool, content_id: &str) -> Result<(), DbError> {
 }
 
 /// For admin interfaces
-pub async fn find_all(db: &PgPool) -> Result<Vec<Content>, DbError> {
+pub async fn read_all(db: &PgPool) -> Result<Vec<Content>, DbError> {
     let content = sqlx::query_as!(
         Content,
         r#"

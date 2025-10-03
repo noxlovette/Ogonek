@@ -30,7 +30,7 @@ export const actions = {
       return fail(400, { dtend: true });
     }
 
-    const response = await fetch(routes.calendars.event(id), {
+    const response = await fetch(routes.calendars.event({ id }), {
       body: JSON.stringify(data),
       method: "PATCH",
     });
@@ -49,7 +49,7 @@ export const actions = {
     const formData = await request.formData();
     const scope = formData.get("scope") ?? ("this-only" as DeleteScope);
 
-    const response = await fetch(routes.calendars.event(id), {
+    const response = await fetch(routes.calendars.event({ id }), {
       method: "DELETE",
       body: JSON.stringify({ scope }),
     });

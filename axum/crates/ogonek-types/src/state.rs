@@ -1,7 +1,4 @@
-use crate::{
-    ActivityLog, DeckSmall, EventSmall, LessonSmall, Profile, SimpleStats, Student, TaskSmall,
-    User, UserPreferences,
-};
+use crate::{EventSmall, LessonSmall, Profile, Student, TaskSmall, User, UserPreferences};
 use serde::Serialize;
 use utoipa::ToSchema;
 
@@ -19,12 +16,8 @@ pub struct AppContext {
 #[serde(rename_all = "camelCase")]
 pub struct DashboardData {
     pub tasks: Vec<TaskSmall>,
-    pub lessons: Vec<LessonSmall>,
-    pub decks: Vec<DeckSmall>,
-    pub learn_data: SimpleStats,
     pub events: Vec<EventSmall>,
-    // deprecated
-    pub activity: Vec<ActivityLog>,
+    pub lessons: Vec<LessonSmall>,
 }
 
 #[derive(Serialize, ToSchema)]

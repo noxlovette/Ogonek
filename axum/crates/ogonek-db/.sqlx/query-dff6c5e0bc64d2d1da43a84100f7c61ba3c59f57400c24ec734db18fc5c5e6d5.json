@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        DELETE FROM decks\n        WHERE id = ANY($1) AND created_by = $2\n        ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "TextArray",
+        "Text"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "dff6c5e0bc64d2d1da43a84100f7c61ba3c59f57400c24ec734db18fc5c5e6d5"
+}

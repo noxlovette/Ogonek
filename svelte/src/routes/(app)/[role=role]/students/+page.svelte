@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { PageData } from "./$types";
+  import { page as sveltePage } from "$app/state";
   import {
     Table,
     LargeTitle,
@@ -9,24 +10,16 @@
     Merger,
     EmptySpace,
     Title1,
+    TableBody,
+    TableRow,
+    Headline,
   } from "$lib/components";
-  import type { Student, TableConfig } from "$lib/types";
+  import type { Student } from "$lib/types";
   import { m } from "$lib/paraglide/messages";
 
   let { data }: { data: PageData } = $props();
 
   const { students } = data;
-
-  const studentConfig: TableConfig<Student> = {
-    columns: [
-      { key: "name", label: "Name" },
-      { key: "username", label: "Username" },
-      { key: "email", label: "Email" },
-      { key: "markdown", label: "Markdown" },
-    ],
-  };
-
-  let href = "/t/students";
 </script>
 
 <Toolbar>
@@ -42,8 +35,17 @@
     <Title1>{m.empty()}</Title1>
   </EmptySpace>
 {/if}
-<Table config={studentConfig} {href} items={students} {students} />
-
+<Table>
+  <TableBody>
+    {#each students as student (student.id)}
+      <TableRow href={`/${sveltePage.params.role}/students/${student.id}`}>
+        <Headline>
+          {student.name}
+        </Headline>
+      </TableRow>
+    {/each}
+  </TableBody>
+</Table>
 <svelte:head>
   <title>{m.mellow_stout_fireant_assure()}</title>
 </svelte:head>

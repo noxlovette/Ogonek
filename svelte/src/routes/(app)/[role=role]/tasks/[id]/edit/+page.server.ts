@@ -46,7 +46,7 @@ export const actions = {
       markdown: formData.get("markdown")?.toString(),
     };
 
-    const response = await fetch(routes.tasks.task(id || ""), {
+    const response = await fetch(routes.tasks.task({ id }), {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
@@ -63,7 +63,7 @@ export const actions = {
     if (!id) {
       return fail(400);
     }
-    const response = await fetch(routes.tasks.task(id), {
+    const response = await fetch(routes.tasks.task({ id }), {
       method: "DELETE",
     });
 
@@ -84,7 +84,7 @@ export const actions = {
     const formData = await request.formData();
     const id = formData.get("fileId") as string;
 
-    const response = await fetch(routes.files.delete_file(id), {
+    const response = await fetch(routes.files.delete_file({ id }), {
       method: "DELETE",
     });
 

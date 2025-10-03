@@ -1,28 +1,12 @@
 <script lang="ts">
-  import { UniButton, Toolbar, Table, Divider, Merger } from "$lib/components";
-  import { Plus } from "@lucide/svelte";
+  import { Toolbar, Table, Divider, Merger } from "$lib/components";
   import type { PageProps } from "./$types";
-  import { enhanceForm, formatDate } from "$lib/utils";
-  import type { TableConfig, Content } from "$lib/types";
+  import { enhanceForm } from "$lib/utils";
   import LargeTitle from "$lib/components/typography/LargeTitle.svelte";
   import { enhance } from "$app/forms";
   import NewButton from "$lib/components/UI/forms/buttons/NewButton.svelte";
 
   let { data }: PageProps = $props();
-
-  const contentConfig: TableConfig<Content> = {
-    columns: [
-      { key: "title", label: "Title" },
-      { key: "slug", label: "Slug" },
-      { key: "status", label: "Status" },
-      {
-        key: "updatedAt",
-        label: "Updated",
-        formatter: (value: string | number | undefined | null) =>
-          formatDate(String(value)),
-      },
-    ],
-  };
 </script>
 
 <Toolbar>
@@ -44,5 +28,4 @@
     </form>
   </Merger>
 </Toolbar>
-
-<Table config={contentConfig} items={data.content} href="content" />
+<Table>Coming soon</Table>

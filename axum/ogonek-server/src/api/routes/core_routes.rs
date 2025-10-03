@@ -4,7 +4,7 @@ use crate::{
 };
 use axum::{
     Router,
-    routing::{get, patch, post, put},
+    routing::{delete, get, patch, post, put},
 };
 
 pub fn lesson_routes() -> Router<AppState> {
@@ -20,6 +20,7 @@ pub fn lesson_routes() -> Router<AppState> {
             "/{id}/photo",
             post(core::upsert_photo).delete(core::delete_photo),
         )
+        .route("/many", delete(core::delete_lesson_many))
 }
 
 pub fn task_routes() -> Router<AppState> {
@@ -32,6 +33,7 @@ pub fn task_routes() -> Router<AppState> {
                 .delete(core::delete_task)
                 .put(core::toggle_task),
         )
+        .route("/many", delete(core::delete_task_many))
 }
 use crate::api::core::{deck, learn};
 
@@ -47,6 +49,7 @@ pub fn deck_routes() -> Router<AppState> {
         )
         .route("/{id}/duplicate", post(deck::duplicate_deck))
         .route("/public", get(deck::list_decks_public))
+        .route("/many", delete(core::delete_deck_many))
 }
 pub fn learn_routes() -> Router<AppState> {
     Router::new()

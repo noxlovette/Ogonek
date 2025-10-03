@@ -3,57 +3,49 @@
     LargeTitle,
     Table,
     LessonCard,
-    UniButton,
     Toolbar,
+    Paginator,
     EmptySpace,
-    Title3,
     SearchBar,
-    TableSkeleton,
     Divider,
     Merger,
     Title1,
+    Headline,
+    HStack,
+    TickMorph,
+    Subheadline,
+    NewButton,
+    TableRow,
+    TableHead,
+    TableBody,
+    TableFooter,
+    SortDate,
+    Caption1,
+    VStack,
+    DeleteButton,
+    Badge,
   } from "$lib/components";
   import { enhance } from "$app/forms";
-  import { enhanceForm } from "$lib/utils";
-  import { page } from "$app/state";
-  import type { TableConfig, LessonSmall } from "$lib/types/index.js";
-  import { formatDate } from "$lib/utils";
+  import { enhanceForm, formatDateOnly } from "$lib/utils";
+  import { page as sveltePage } from "$app/state";
 
   import {
-    user,
     searchTerm,
     pageSize,
     currentPage,
     assigneeStore,
+    sortBy,
+    sortOrder,
   } from "$lib/stores";
   import { goto } from "$app/navigation";
   import { m } from "$lib/paraglide/messages.js";
-  import VStack from "$lib/components/UI/layout/VStack.svelte";
-  import NewButton from "$lib/components/UI/forms/buttons/NewButton.svelte";
 
   let { data } = $props();
 
-  let role = page.params.role;
-  let href = role === "t" ? "/t/lessons" : `/s/lessons`;
+  const { page, totalPages, count, perPage } = $derived(data.lessonsPaginated);
+  let role = sveltePage.params.role;
 
-  const lessonConfig: TableConfig<LessonSmall> = {
-    columns: [
-      { key: "title", label: m.title() },
-      { key: "topic", label: m.topic() },
-      {
-        key: "assigneeName",
-        label: m.assignee(),
-        formatter: (value: unknown): string =>
-          (value as string) || m.notAssigned(),
-      },
-      {
-        key: "createdAt",
-        label: m.created(),
-        formatter: (value: string | boolean | undefined | null) =>
-          formatDate(String(value)),
-      },
-    ],
-  };
+  const lessons = $derived(data.lessonsPaginated.data);
 
   $effect(() => {
     const params = new URLSearchParams();
@@ -62,6 +54,8 @@
     if ($pageSize > 0) params.set("per_page", $pageSize.toString());
     if ($currentPage > 1) params.set("page", $currentPage.toString());
     if ($assigneeStore?.trim()) params.set("assignee", $assigneeStore);
+    if ($sortBy?.trim()) params.set("sort_by", $sortBy);
+    if ($sortOrder?.trim()) params.set("sort_order", $sortOrder);
 
     const queryString = params.toString();
     const newUrl = queryString ? `?${queryString}` : window.location.pathname;
@@ -71,6 +65,8 @@
       keepFocus: true,
     });
   });
+
+  let selected: string[] = $state([]);
 </script>
 
 <Toolbar>
@@ -98,19 +94,70 @@
   </VStack>
 </Toolbar>
 
-{#if data.lessonsPaginated.data.length < 1}
+{#if lessons.length < 1}
   <EmptySpace>
     <Title1>{m.noLessons()}</Title1>
   </EmptySpace>
 {/if}
 {#if role === "s"}
   <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
-    {#each data.lessonsPaginated.data as lesson (lesson.id)}
+    {#each lessons as lesson (lesson.id)}
       <LessonCard {lesson} />
     {/each}
   </div>
 {:else}
-  <Table items={data.lessonsPaginated.data} {href} config={lessonConfig} />
+  <Table bind:selected>
+    {#each selected as id}
+      <input type="hidden" name="toDelete" value={id} />
+    {/each}
+    <TableHead>
+      <TickMorph
+        noText={true}
+        bind:group={selected}
+        value={lessons.map((lesson) => lesson.id)}
+      />
+      {#if selected.length >= 1}
+        <Subheadline>
+          Выбрано {selected.length} из {lessons.length}
+        </Subheadline>
+      {:else}
+        <Subheadline>Выбрать все</Subheadline>
+      {/if}
+      <Divider />
+
+      {#if selected.length == 0}
+        <SortDate />
+      {:else}
+        <Merger>
+          <DeleteButton />
+        </Merger>
+      {/if}
+    </TableHead>
+    <TableBody>
+      {#each lessons as lesson (lesson.id)}
+        <div class="bg-clickable flex items-center px-2">
+          <TickMorph noText={true} bind:group={selected} value={lesson.id} />
+          <TableRow href={`/${sveltePage.params.role}/lessons/${lesson.id}`}>
+            <HStack override="gap-1 items-start">
+              <Headline>
+                {lesson.title}
+              </Headline>
+              <Caption1>
+                {lesson.assigneeName}
+              </Caption1>
+            </HStack>
+            <Divider />
+            <Badge>
+              {formatDateOnly(lesson.createdAt)}
+            </Badge>
+          </TableRow>
+        </div>
+      {/each}
+    </TableBody>
+    <TableFooter>
+      <Paginator {page} {count} {perPage} {totalPages}></Paginator>
+    </TableFooter>
+  </Table>
 {/if}
 
 <svelte:head>

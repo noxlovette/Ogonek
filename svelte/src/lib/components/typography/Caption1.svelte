@@ -2,10 +2,11 @@
   let {
     id = "caption",
     children,
-    styling = "text-stone-500 dark:text-stone-400",
+    override = "text-stone-500 dark:text-stone-400",
+    styling = "",
   } = $props();
 </script>
 
-<p {id} class="text-xs font-medium {styling}">
+<p {id} class="min-w-max text-xs font-medium {styling} {override}">
   {@render children?.()}
 </p>

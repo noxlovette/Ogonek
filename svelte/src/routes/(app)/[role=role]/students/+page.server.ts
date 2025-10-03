@@ -12,10 +12,10 @@ export const load: PageServerLoad = async ({ params }) => {
 export const actions: Actions = {
   default: async ({ fetch, request }) => {
     const formData = await request.formData();
-    const invite = formData.has("isRegistered") || false;
+    const isRegistered = (formData.has("isRegistered") || false).toString();
     logger.info({ formData });
     const response = await fetch(
-      routes.auth.generate_invite_link(invite.toString()),
+      routes.auth.generate_invite_link({ isRegistered }),
       {
         method: "POST",
       },

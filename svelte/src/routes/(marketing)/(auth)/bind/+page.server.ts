@@ -12,7 +12,7 @@ import type { Actions, PageServerLoad } from "./$types";
 export const load: PageServerLoad = async ({ fetch, url }) => {
   const invite = url.searchParams.get("invite");
   if (invite) {
-    const inviter = await fetch(routes.users.inviter(invite)).then(
+    const inviter = await fetch(routes.users.inviter({ invite })).then(
       (res) => res.json() as Promise<User>,
     );
 

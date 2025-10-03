@@ -9,7 +9,7 @@ export const actions: Actions = {
     const formData = await request.formData();
     const data = Object.fromEntries(formData);
 
-    const response = await fetch(routes.admin.update_content(id), {
+    const response = await fetch(routes.admin.update_content({ id }), {
       method: "PATCH",
       body: JSON.stringify(data),
     });
@@ -26,7 +26,7 @@ export const actions: Actions = {
   delete: async ({ params, fetch }) => {
     const { id } = params;
 
-    const response = await fetch(routes.admin.delete_content(id), {
+    const response = await fetch(routes.admin.delete_content({ id }), {
       method: "DELETE",
     });
 
@@ -39,7 +39,7 @@ export const actions: Actions = {
   publish: async ({ params, fetch }) => {
     const { id } = params;
 
-    const response = await fetch(routes.admin.publish_content(id), {
+    const response = await fetch(routes.admin.publish_content({ id }), {
       method: "PUT",
     });
 
@@ -52,7 +52,7 @@ export const actions: Actions = {
   unpublish: async ({ params, fetch }) => {
     const { id } = params;
 
-    const response = await fetch(routes.admin.unpublish_content(id), {
+    const response = await fetch(routes.admin.unpublish_content({ id }), {
       method: "DELETE",
     });
 

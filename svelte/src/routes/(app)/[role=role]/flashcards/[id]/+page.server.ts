@@ -12,7 +12,7 @@ export const actions = {
     const formData = await request.formData();
 
     const isSubscribed = formData.get("isSubscribed") === "true";
-    const response = await fetch(routes.learn.subscribe_to(id), {
+    const response = await fetch(routes.learn.subscribe_to({ id }), {
       method: isSubscribed ? "DELETE" : "POST",
     });
 
@@ -34,7 +34,7 @@ export const actions = {
   duplicate: async ({ params, fetch }) => {
     const { id } = params;
 
-    const response = await fetch(routes.decks.duplicate(id), {
+    const response = await fetch(routes.decks.duplicate({ id }), {
       method: "POST",
     });
 

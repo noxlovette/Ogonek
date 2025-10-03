@@ -1,5 +1,4 @@
 <script lang="ts">
-  import type { TaskFull, TableConfig } from "$lib/types/index.js";
   import {
     LargeTitle,
     Divider,
@@ -12,47 +11,42 @@
     EmptySpace,
     VStack,
     Title1,
+    NewButton,
+    TableHead,
+    Caption1,
+    TableRow,
+    TableBody,
+    TableFooter,
+    Paginator,
+    DeleteButton,
+    SortDate,
+    Subheadline,
+    TickMorph,
+    HStack,
+    Headline,
+    Badge,
   } from "$lib/components";
 
   import { enhance } from "$app/forms";
-  import { page } from "$app/state";
+  import { page as sveltePage } from "$app/state";
   import { goto } from "$app/navigation";
-  import { enhanceForm } from "$lib/utils";
+  import { enhanceForm, formatDateOnly, getUrgency } from "$lib/utils";
   import {
     completedStore,
     searchTerm,
     pageSize,
     currentPage,
     assigneeStore,
+    sortBy,
+    sortOrder,
   } from "$lib/stores";
   import { Bell, Eye, EyeClosed } from "@lucide/svelte";
-  import { formatDate } from "$lib/utils";
   import { m } from "$lib/paraglide/messages";
   import message from "$lib/messages.js";
-  import NewButton from "$lib/components/UI/forms/buttons/NewButton.svelte";
 
   const { data } = $props();
-  const role = page.params.role;
+  const role = sveltePage.params.role;
 
-  const taskConfig: TableConfig<TaskFull> = {
-    columns: [
-      { key: "title", label: m.title() },
-      {
-        key: "assigneeName",
-        label: m.assignee(),
-        formatter: (value: unknown): string =>
-          (value as string) || m.notAssigned(),
-      },
-      {
-        key: "dueDate",
-        label: m.less_arable_starfish_belong(),
-        formatter: (value: unknown): string =>
-          value ? formatDate(value as string) : m.arable_flat_emu_strive(),
-      },
-    ],
-  };
-
-  let href = `/${role}/tasks`;
   $effect(() => {
     const params = new URLSearchParams();
 
@@ -61,7 +55,8 @@
     if ($currentPage > 1) params.set("page", $currentPage.toString());
     if ($assigneeStore?.trim()) params.set("assignee", $assigneeStore);
     if ($completedStore) params.set("completed", String($completedStore));
-
+    if ($sortBy?.trim()) params.set("sort_by", $sortBy);
+    if ($sortOrder?.trim()) params.set("sort_order", $sortOrder);
     const queryString = params.toString();
     const newUrl = queryString ? `?${queryString}` : window.location.pathname;
 
@@ -72,8 +67,11 @@
   });
 
   function toggleCompletedTasks() {
-    completedStore.toggle();
+    completedStore.set(!$completedStore);
   }
+  const { page, totalPages, count, perPage } = $derived(data.tasksPaginated);
+  const tasks = $derived(data.tasksPaginated.data);
+  let selected: string[] = $state([]);
 </script>
 
 <svelte:head>
@@ -145,5 +143,56 @@
     {/each}
   </div>
 {:else}
-  <Table items={data.tasksPaginated.data} {href} config={taskConfig} />
+  <Table bind:selected>
+    {#each selected as id}
+      <input type="hidden" name="toDelete" value={id} />
+    {/each}
+    <TableHead>
+      <TickMorph
+        noText={true}
+        bind:group={selected}
+        value={tasks.map((task) => task.id)}
+      />
+      {#if selected.length >= 1}
+        <Subheadline>
+          Выбрано {selected.length} из {tasks.length}
+        </Subheadline>
+      {:else}
+        <Subheadline>Выбрать все</Subheadline>
+      {/if}
+      <Divider />
+
+      {#if selected.length == 0}
+        <SortDate />
+      {:else}
+        <Merger>
+          <DeleteButton />
+        </Merger>
+      {/if}
+    </TableHead>
+    <TableBody>
+      {#each tasks as task (task.id)}
+        <div class="bg-clickable flex items-center px-2">
+          <TickMorph noText={true} bind:group={selected} value={task.id} />
+          <TableRow href={`/${sveltePage.params.role}/tasks/${task.id}`}>
+            <HStack override="gap-1 items-start">
+              <Headline>
+                {task.title}
+              </Headline>
+              <Caption1>
+                {task.assigneeName}
+              </Caption1>
+            </HStack>
+            <Divider />
+            <Badge urgency={getUrgency(task.dueDate)}>
+              {formatDateOnly(task.dueDate)}
+            </Badge>
+          </TableRow>
+        </div>
+      {/each}
+    </TableBody>
+    <TableFooter>
+      <Paginator {page} {count} {perPage} {totalPages}></Paginator>
+    </TableFooter>
+  </Table>
 {/if}

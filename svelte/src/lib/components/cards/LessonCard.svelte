@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { LessonSmall } from "$lib/types";
-  import { formatDate } from "$lib/utils";
+  import { formatRelativeTime } from "$lib/utils";
   import CardClickable from "./CardClickable.svelte";
   import { page } from "$app/state";
   import Badge from "./Badge.svelte";
@@ -11,7 +11,7 @@
   }
   let { lesson }: Props = $props();
 
-  const formattedDate = formatDate(lesson.createdAt);
+  const formattedDate = formatRelativeTime(lesson.createdAt);
   const role = page.params.role;
 
   const href =

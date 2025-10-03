@@ -1,6 +1,6 @@
 [package]
 name = "ogonek_types"
-version = "1.12.2"
+version = "1.12.3"
 edition = "2024"
 
 [dependencies]

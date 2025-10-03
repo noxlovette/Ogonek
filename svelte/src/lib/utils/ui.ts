@@ -1,5 +1,5 @@
 import { m } from "$lib/paraglide/messages";
-import type { TaskFull, Urgency } from "$lib/types";
+import type { Urgency } from "$lib/types";
 
 // File Renders
 export function formatFileSize(bytes: number): string {
@@ -32,9 +32,9 @@ export function formatPercentage(value: number): number {
 /* 
 Used in Badge renders
 */
-export function getUrgency(task: TaskFull): Urgency {
+export function getUrgency(dueDate?: string | null): Urgency {
   const now = new Date();
-  const due = new Date(task.dueDate || "");
+  const due = new Date(dueDate || "");
   const diffDays = Math.ceil(
     (due.getTime() - now.getTime()) / (1000 * 60 * 60 * 24),
   );
@@ -52,7 +52,7 @@ export const qualityButtons = [
     quality: 0,
     label: m.such_loose_blackbird_offer(),
     color:
-      "ring-rose-600 dark:ring-rose-500/50 hover:bg-rose-700/10 dark:hover:rose-900/20 ring",
+      "ring-red-600 dark:ring-red-500/50 hover:bg-red-700/10 dark:hover:rose-900/20 ring",
     key: 1,
   },
 

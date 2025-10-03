@@ -145,7 +145,7 @@
         </Title3>
 
         <button
-          class="flex h-full flex-col items-center justify-center gap-2 rounded-lg bg-rose-500/20 p-2 font-medium transition"
+          class="flex h-full flex-col items-center justify-center gap-2 rounded-lg bg-red-500/20 p-2 font-medium transition"
           data-key={1}
           type="button"
           onclick={() => markAnswer(false)}

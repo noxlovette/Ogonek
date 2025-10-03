@@ -36,7 +36,7 @@ pub async fn request_hw(
     State(state): State<AppState>,
     claims: Claims,
 ) -> Result<StatusCode, APIError> {
-    let user = user::find_by_id(&state.db, &claims.sub).await?;
+    let user = user::read_by_id(&state.db, &claims.sub).await?;
 
     state
         .notification_service

@@ -266,6 +266,23 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/v1/decks/many": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    /** Deletes many decks */
+    delete: operations["delete_deck_many"];
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/v1/decks/public": {
     parameters: {
       query?: never;
@@ -508,6 +525,23 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/v1/lessons/many": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    /** Deletes many lessons */
+    delete: operations["delete_lesson_many"];
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/v1/lessons/{id}": {
     parameters: {
       query?: never;
@@ -644,6 +678,23 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/v1/tasks/many": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    /** Deletes many tasks */
+    delete: operations["delete_task_many"];
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/v1/tasks/{id}": {
     parameters: {
       query?: never;
@@ -759,13 +810,6 @@ export interface components {
       s3Key: string;
       uploadId: string;
     };
-    ActivityLog: {
-      action: string;
-      /** Format: date-time */
-      createdAt?: string | null;
-      modelId: string;
-      modelType: string;
-    };
     AppContext: {
       callUrl?: string | null;
       preferences: components["schemas"]["UserPreferences"];
@@ -838,12 +882,6 @@ export interface components {
       /** Format: int32 */
       partNumber: number;
     };
-    CompositeStudent: {
-      decks: components["schemas"]["DeckSmall"][];
-      lessons: components["schemas"]["LessonSmall"][];
-      student: components["schemas"]["Student"];
-      tasks: components["schemas"]["TaskSmall"][];
-    };
     Content: {
       id: string;
       markdown: string;
@@ -867,16 +905,13 @@ export interface components {
     /** @enum {string} */
     ContentStatus: "draft" | "published";
     DashboardData: {
-      activity: components["schemas"]["ActivityLog"][];
-      decks: components["schemas"]["DeckSmall"][];
       events: components["schemas"]["EventSmall"][];
-      learnData: components["schemas"]["SimpleStats"];
       lessons: components["schemas"]["LessonSmall"][];
       tasks: components["schemas"]["TaskSmall"][];
     };
     DeckFull: {
       assignee?: string | null;
-      /** Format: int64 */
+      /** Format: int32 */
       cardCount: number;
       /** Format: date-time */
       createdAt: string;
@@ -894,7 +929,7 @@ export interface components {
     };
     DeckSmall: {
       assigneeName?: string | null;
-      /** Format: int64 */
+      /** Format: int32 */
       cardCount: number;
       description?: string | null;
       id: string;
@@ -909,6 +944,8 @@ export interface components {
       title?: string | null;
       visibility?: string | null;
     };
+    /** @enum {string} */
+    DeckVisibility: "public" | "private" | "shared";
     DeckWithCards: {
       cards: components["schemas"]["Card"][];
       deck: components["schemas"]["DeckFull"];
@@ -1112,34 +1149,37 @@ export interface components {
       unseenTasks: number;
     };
     PaginatedDecks: {
+      /** Format: int64 */
+      count: number;
       data: components["schemas"]["DeckSmall"][];
       /** Format: int64 */
       page: number;
       /** Format: int64 */
-      per_page: number;
+      perPage: number;
+      /** Format: int64 */
+      totalPages: number;
     };
     PaginatedLessons: {
+      /** Format: int64 */
+      count: number;
       data: components["schemas"]["LessonSmall"][];
       /** Format: int64 */
       page: number;
       /** Format: int64 */
-      per_page: number;
+      perPage: number;
+      /** Format: int64 */
+      totalPages: number;
     };
     PaginatedTasks: {
+      /** Format: int64 */
+      count: number;
       data: components["schemas"]["TaskSmall"][];
       /** Format: int64 */
       page: number;
       /** Format: int64 */
-      per_page: number;
-    };
-    /** @description Pagination */
-    PaginationParams: {
-      assignee?: string | null;
+      perPage: number;
       /** Format: int64 */
-      page?: number | null;
-      /** Format: int64 */
-      per_page?: number | null;
-      search?: string | null;
+      totalPages: number;
     };
     PartUploadUrl: {
       /** Format: int32 */
@@ -1199,12 +1239,10 @@ export interface components {
       /** @example john_doe */
       username: string;
     };
-    SimpleStats: {
-      /** Format: int32 */
-      cardsStudiedToday: number;
-      /** Format: int32 */
-      currentStreak: number;
-    };
+    /** @enum {string} */
+    SortField: "created_at" | "updated_at" | "title" | "due_date";
+    /** @enum {string} */
+    SortOrder: "asc" | "desc";
     Student: {
       email: string;
       id: string;
@@ -2225,6 +2263,9 @@ export interface operations {
         search?: string;
         /** @description Filter by assignee */
         assignee?: string;
+        visibility?: components["schemas"]["DeckVisibility"];
+        sort_by?: components["schemas"]["SortField"];
+        sort_order?: components["schemas"]["SortOrder"];
       };
       header?: never;
       path?: never;
@@ -2270,6 +2311,35 @@ export interface operations {
       };
       /** @description Bad request */
       400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+    };
+  };
+  delete_deck_many: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": string[];
+      };
+    };
+    responses: {
+      /** @description decks deleted successfully */
+      204: {
         headers: {
           [name: string]: unknown;
         };
@@ -2893,6 +2963,9 @@ export interface operations {
         search?: string;
         /** @description Filter by assignee */
         assignee?: string;
+        topic?: string;
+        sort_by?: components["schemas"]["SortField"];
+        sort_order?: components["schemas"]["SortOrder"];
       };
       header?: never;
       path?: never;
@@ -2938,6 +3011,35 @@ export interface operations {
       };
       /** @description Bad request */
       400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+    };
+  };
+  delete_lesson_many: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": string[];
+      };
+    };
+    responses: {
+      /** @description Lessons deleted successfully */
+      204: {
         headers: {
           [name: string]: unknown;
         };
@@ -3250,8 +3352,8 @@ export interface operations {
         assignee?: string;
         /** @description Filter by completion status */
         completed?: boolean;
-        /** @description Filter by priority */
-        priority?: number;
+        sort_by?: components["schemas"]["SortField"];
+        sort_order?: components["schemas"]["SortOrder"];
       };
       header?: never;
       path?: never;
@@ -3297,6 +3399,35 @@ export interface operations {
       };
       /** @description Bad request */
       400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+    };
+  };
+  delete_task_many: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": string[];
+      };
+    };
+    responses: {
+      /** @description tasks deleted successfully */
+      204: {
         headers: {
           [name: string]: unknown;
         };
@@ -3692,7 +3823,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["CompositeStudent"];
+          "application/json": components["schemas"]["Student"];
         };
       };
       /** @description Unauthorized */

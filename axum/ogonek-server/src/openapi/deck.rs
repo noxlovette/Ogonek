@@ -11,6 +11,7 @@ use utoipa::OpenApi;
         deck::update_deck,
         deck::delete_deck,
         deck::duplicate_deck,
+        deck::delete_deck_many,
     ),
     components(schemas(
         ogonek_types::DeckSmall,

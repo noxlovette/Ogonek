@@ -2,15 +2,13 @@ use chrono::{DateTime, Duration, Utc};
 use sqlx::PgPool;
 
 use crate::{
-    crud::core::{
-        account::user::{get_email, get_name},
-        calendar::{
-            event::{
-                create::{create_exception, create_master},
-                read::read_one_internal,
-            },
-            event_attendee,
+    core::account::user::{read_email, read_name},
+    crud::core::calendar::{
+        event::{
+            create::{create_exception, create_master},
+            read::read_one_internal,
         },
+        event_attendee,
     },
     error::DbError,
     helpers::{extract_id_and_occurence, remove_until_from_rrule},
@@ -108,8 +106,8 @@ async fn update_attendee(
             }
 
             // Create new attendee
-            let attendee_email = get_email(&mut **tx, new_attendee_id).await?;
-            let attendee_name = get_name(&mut **tx, new_attendee_id).await?;
+            let attendee_email = read_email(&mut **tx, new_attendee_id).await?;
+            let attendee_name = read_name(&mut **tx, new_attendee_id).await?;
             let attendee_payload = EventAttendeeCreate {
                 email: attendee_email,
                 name: Some(attendee_name.clone()),

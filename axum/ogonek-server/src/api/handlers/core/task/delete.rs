@@ -3,13 +3,14 @@ use crate::{
     api::{TASK_TAG, error::APIError},
 };
 use axum::{
+    Json,
     extract::{Path, State},
     http::StatusCode,
 };
 use ogonek_db::{
     core::{
         file::fetch_files_task,
-        task::{delete, read_assignee},
+        task::{self, delete, read_assignee},
     },
     tracking::{delete_seen, log_activity},
 };
@@ -63,5 +64,26 @@ pub async fn delete_task(
         )
         .await?;
     }
+    Ok(StatusCode::NO_CONTENT)
+}
+
+/// Deletes many tasks
+#[utoipa::path(
+    delete,
+    path = "/many",
+    tag = TASK_TAG,
+    request_body = Vec<String>,
+    responses(
+        (status = 204, description = "tasks deleted successfully"),
+        (status = 401, description = "Unauthorized")
+    )
+)]
+pub async fn delete_task_many(
+    State(state): State<AppState>,
+    claims: Claims,
+    Json(payload): Json<Vec<String>>,
+) -> Result<StatusCode, APIError> {
+    task::delete_many(&state.db, payload, &claims.sub).await?;
+
     Ok(StatusCode::NO_CONTENT)
 }

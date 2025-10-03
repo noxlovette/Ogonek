@@ -8,13 +8,12 @@
     VStack,
     Divider,
     Merger,
-    Caption1,
     EditButton,
     Photo,
     Badge,
   } from "$lib/components";
 
-  import { formatDate } from "$lib/utils";
+  import { formatDateOnly } from "$lib/utils";
   import type { PageData } from "./$types";
   import { page } from "$app/state";
 
@@ -22,7 +21,7 @@
 
   let { data }: { data: PageData } = $props();
 
-  let formattedDate = formatDate(data.lesson.createdAt);
+  let formattedDate = formatDateOnly(data.lesson.createdAt);
 </script>
 
 <Toolbar>
@@ -42,17 +41,16 @@
         </Merger>
       {/if}
     </VStack>
-    <VStack>
+    <VStack override="gap-2">
+      <Badge>{formattedDate}</Badge>
       {#if role === "t"}
+        <Badge>
+          {data.lesson.assigneeName}
+        </Badge>
         <Title3>
           {data.lesson.topic}
         </Title3>
-
-        <Caption1>
-          {data.lesson.assigneeName}
-        </Caption1>
       {/if}
-      <Badge>{formattedDate}</Badge>
     </VStack>
   </HStack>
 </Toolbar>

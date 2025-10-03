@@ -20,7 +20,7 @@
   }
 
   .ring-error {
-    @apply border border-rose-500;
+    @apply border border-red-500;
   }
 
   .bg-default {

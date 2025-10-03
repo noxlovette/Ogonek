@@ -2,7 +2,10 @@ use crate::DbError;
 use ogonek_types::{User, UserRole, UserUpdate};
 use sqlx::PgPool;
 
-pub async fn find_by_id(db: &PgPool, user_id: &str) -> Result<User, DbError> {
+pub async fn read_by_id(
+    db: impl sqlx::Executor<'_, Database = sqlx::Postgres>,
+    user_id: &str,
+) -> Result<User, DbError> {
     let user = sqlx::query_as!(
         User,
         r#"
@@ -71,7 +74,7 @@ pub async fn update(db: &PgPool, user_id: &str, update: &UserUpdate) -> Result<(
     Ok(())
 }
 
-pub async fn get_email(
+pub async fn read_email(
     db: impl sqlx::Executor<'_, Database = sqlx::Postgres>,
     user_id: &str,
 ) -> Result<String, DbError> {
@@ -89,7 +92,7 @@ pub async fn get_email(
     Ok(email)
 }
 
-pub async fn get_name(
+pub async fn read_name(
     db: impl sqlx::Executor<'_, Database = sqlx::Postgres>,
     user_id: &str,
 ) -> Result<String, DbError> {
@@ -116,12 +119,12 @@ mod tests {
     use sqlx::PgPool;
 
     #[sqlx::test]
-    async fn test_find_by_id_success(db: PgPool) {
+    async fn test_read_by_id_success(db: PgPool) {
         // Arrange
         let user_id = create_test_user(&db, "testuser", "test@example.com").await;
 
         // Act
-        let result = find_by_id(&db, &user_id).await;
+        let result = read_by_id(&db, &user_id).await;
 
         // Assert
         assert!(result.is_ok());
@@ -136,21 +139,21 @@ mod tests {
     }
 
     #[sqlx::test]
-    async fn test_find_by_id_not_found(db: PgPool) {
+    async fn test_read_by_id_not_found(db: PgPool) {
         // Arrange
         let non_existent_id = nanoid::nanoid!();
 
         // Act
-        let result = find_by_id(&db, &non_existent_id).await;
+        let result = read_by_id(&db, &non_existent_id).await;
 
         // Assert
         assert!(result.is_err());
     }
 
     #[sqlx::test]
-    async fn test_find_by_id_invalid_uuid_format(db: PgPool) {
+    async fn test_read_by_id_invalid_uuid_format(db: PgPool) {
         // Act
-        let result = find_by_id(&db, "invalid-uuid").await;
+        let result = read_by_id(&db, "invalid-uuid").await;
 
         // Assert
         assert!(result.is_err());
@@ -162,7 +165,7 @@ mod tests {
         let user_id = create_test_user(&db, "deleteuser", "delete@example.com").await;
 
         // Verify user exists first
-        let user_exists = find_by_id(&db, &user_id).await;
+        let user_exists = read_by_id(&db, &user_id).await;
         assert!(user_exists.is_ok());
 
         // Act
@@ -172,7 +175,7 @@ mod tests {
         assert!(result.is_ok());
 
         // Verify user is actually deleted
-        let user_gone = find_by_id(&db, &user_id).await;
+        let user_gone = read_by_id(&db, &user_id).await;
         assert!(user_gone.is_err());
     }
 
@@ -207,7 +210,7 @@ mod tests {
         assert!(result.is_ok());
 
         // Verify the update
-        let updated_user = find_by_id(&db, &user_id).await.unwrap();
+        let updated_user = read_by_id(&db, &user_id).await.unwrap();
         assert_eq!(updated_user.name, "Updated Name");
         assert_eq!(updated_user.username, "updateuser"); // Should remain unchanged
         assert_eq!(updated_user.email, "update@example.com"); // Should remain unchanged
@@ -234,7 +237,7 @@ mod tests {
         assert!(result.is_ok());
 
         // Verify the update
-        let updated_user = find_by_id(&db, &user_id).await.unwrap();
+        let updated_user = read_by_id(&db, &user_id).await.unwrap();
         assert_eq!(updated_user.name, "New Name");
         assert_eq!(updated_user.username, "newusername");
         assert_eq!(updated_user.email, "new@example.com");
@@ -248,7 +251,7 @@ mod tests {
     async fn test_update_no_changes(db: PgPool) {
         // Arrange
         let user_id = create_test_user(&db, "nochange", "nochange@example.com").await;
-        let original_user = find_by_id(&db, &user_id).await.unwrap();
+        let original_user = read_by_id(&db, &user_id).await.unwrap();
 
         let upd = UserUpdate {
             name: None,
@@ -264,7 +267,7 @@ mod tests {
         assert!(result.is_ok());
 
         // Verify nothing changed
-        let unchanged_user = find_by_id(&db, &user_id).await.unwrap();
+        let unchanged_user = read_by_id(&db, &user_id).await.unwrap();
         assert_eq!(unchanged_user.name, original_user.name);
         assert_eq!(unchanged_user.username, original_user.username);
         assert_eq!(unchanged_user.email, original_user.email);

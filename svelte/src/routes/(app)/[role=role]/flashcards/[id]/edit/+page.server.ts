@@ -56,7 +56,7 @@ export const actions = {
       return fail(400, { cards: true });
     }
 
-    const response = await fetch(routes.decks.deck(id), {
+    const response = await fetch(routes.decks.deck({ id }), {
       method: "PATCH",
       body: JSON.stringify(validatedBody.data),
     });
@@ -75,7 +75,7 @@ export const actions = {
   delete: async ({ params, fetch }) => {
     const { id } = params;
 
-    const response = await fetch(routes.decks.deck(id), {
+    const response = await fetch(routes.decks.deck({ id }), {
       method: "DELETE",
     });
 

@@ -30,6 +30,6 @@ fn profile_routes() -> Router<AppState> {
 pub fn preferences_routes() -> Router<AppState> {
     Router::new().route(
         "/",
-        get(preferences::get_preferences).patch(preferences::update_preferences),
+        get(preferences::fetch_preferences).patch(preferences::update_preferences),
     )
 }

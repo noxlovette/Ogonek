@@ -14,7 +14,7 @@ mod tests {
 
     use crate::{crud::core::file::add_files, tests::create_test_user};
     use chrono::Utc;
-    use ogonek_types::{TaskCreate, TaskPaginationParams, TaskUpdate};
+    use ogonek_types::{TaskCreate, TaskUpdate};
     use sqlx::PgPool;
 
     // Helper function to create test files
@@ -120,77 +120,6 @@ mod tests {
         let task_id = create_test_task(&db, &creator_id, &assignee_id).await;
         let result = read_by_id(&db, &task_id, &other_user_id).await;
         assert!(result.is_err());
-    }
-
-    #[sqlx::test]
-    async fn test_read_all_basic(db: PgPool) {
-        let user_id = create_test_user(&db, "user", "user@test.com").await;
-
-        // Create multiple tasks
-        for _i in 1..=3 {
-            create_test_task(&db, &user_id, &user_id).await;
-        }
-
-        let params = TaskPaginationParams {
-            page: Some(1),
-            per_page: Some(10),
-            search: None,
-            completed: None,
-            assignee: None,
-        };
-
-        let result = read_all(&db, &user_id, &params).await;
-        assert!(result.is_ok());
-
-        let tasks = result.unwrap();
-        assert_eq!(tasks.len(), 3);
-    }
-
-    #[sqlx::test]
-    async fn test_read_all_with_search(db: PgPool) {
-        let user_id = create_test_user(&db, "user", "user@test.com").await;
-
-        create_test_task(&db, &user_id, &user_id).await;
-        create_test_task(&db, &user_id, &user_id).await;
-
-        let params = TaskPaginationParams {
-            page: Some(1),
-            per_page: Some(10),
-            search: Some("test".to_string()),
-            completed: None,
-            assignee: None,
-        };
-
-        let result = read_all(&db, &user_id, &params).await;
-        assert!(result.is_ok());
-
-        let tasks = result.unwrap();
-        assert_eq!(tasks.len(), 2);
-        assert!(tasks[0].title.contains("test"));
-    }
-
-    #[sqlx::test]
-    async fn test_read_all_with_assignee_filter(db: PgPool) {
-        let creator_id = create_test_user(&db, "creator", "creator@test.com").await;
-        let assignee1_id = create_test_user(&db, "assignee1", "assignee1@test.com").await;
-        let assignee2_id = create_test_user(&db, "assignee2", "assignee2@test.com").await;
-
-        create_test_task(&db, &creator_id, &assignee1_id).await;
-        create_test_task(&db, &creator_id, &assignee2_id).await;
-
-        let params = TaskPaginationParams {
-            page: Some(1),
-            per_page: Some(10),
-            search: None,
-            completed: None,
-            assignee: Some(assignee1_id.clone()),
-        };
-
-        let result = read_all(&db, &creator_id, &params).await;
-        assert!(result.is_ok());
-
-        let tasks = result.unwrap();
-        assert_eq!(tasks.len(), 1);
     }
 
     #[sqlx::test]

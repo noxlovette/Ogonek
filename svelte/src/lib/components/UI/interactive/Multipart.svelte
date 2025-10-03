@@ -5,7 +5,7 @@
   import { formatPercentage } from "$lib/utils";
   import Caption1 from "$lib/components/typography/Caption1.svelte";
   import { m } from "$lib/paraglide/messages";
-  import ProgressBar from "./ProgressBar.svelte";
+  import ProgressBar from "../content/ProgressBar.svelte";
   import { UniButton } from "../forms";
   import { HStack, VStack } from "..";
   import Merger from "../toolbar/Merger.svelte";
@@ -335,8 +335,6 @@
     // Use your existing file handling function
     handleFileSelect(mockEvent);
   }
-
-  $inspect(fileUploads);
 </script>
 
 <HStack>
@@ -395,7 +393,7 @@
             >{m.every_sunny_pelican_buzz()}</Caption1
           >
         {:else if fileState.status === "error"}
-          <Caption1 styling="text-rose-600"
+          <Caption1 styling="text-red-600"
             >{m.weird_level_sheep_imagine()}</Caption1
           >
         {/if}

@@ -9,11 +9,26 @@
     Divider,
     Merger,
     VStack,
+    EmptySpace,
+    Title1,
+    NewButton,
+    TableHead,
+    TickMorph,
+    Subheadline,
+    SortDate,
+    DeleteButton,
+    TableBody,
+    TableRow,
+    HStack,
+    Headline,
+    Caption1,
+    TableFooter,
+    Paginator,
+    Badge,
   } from "$lib/components";
   import { enhance } from "$app/forms";
   import { enhanceForm } from "$lib/utils";
-  import { page } from "$app/state";
-  import type { TableConfig, DeckSmall } from "$lib/types/index.js";
+  import { page as sveltePage } from "$app/state";
   import { GraduationCap } from "@lucide/svelte";
   import { m } from "$lib/paraglide/messages";
   import {
@@ -21,18 +36,18 @@
     pageSize,
     currentPage,
     assigneeStore,
+    sortBy,
+    sortOrder,
   } from "$lib/stores";
   import { goto } from "$app/navigation";
-  import EmptySpace from "$lib/components/typography/EmptySpace.svelte";
-  import Title1 from "$lib/components/typography/Title1.svelte";
   import message from "$lib/messages.js";
-  import NewButton from "$lib/components/UI/forms/buttons/NewButton.svelte";
 
   let { data } = $props();
-  const { students } = data;
 
-  const role = page.params.role;
-
+  const role = sveltePage.params.role;
+  const { page, totalPages, count, perPage } = $derived(data.decksPaginated);
+  const decks = $derived(data.decksPaginated.data);
+  let selected: string[] = $state([]);
   $effect(() => {
     const params = new URLSearchParams();
 
@@ -40,6 +55,8 @@
     if ($pageSize > 0) params.set("per_page", $pageSize.toString());
     if ($searchTerm?.trim()) params.set("search", $searchTerm);
     if ($assigneeStore?.trim()) params.set("assignee", $assigneeStore);
+    if ($sortBy?.trim()) params.set("sort_by", $sortBy);
+    if ($sortOrder?.trim()) params.set("sort_order", $sortOrder);
 
     const queryString = params.toString();
     const newUrl = queryString ? `?${queryString}` : window.location.pathname;
@@ -49,31 +66,6 @@
       keepFocus: true,
     });
   });
-
-  const deckConfig: TableConfig<DeckSmall> = {
-    columns: [
-      { key: "title", label: m.title() },
-      {
-        key: "description",
-        label: m.equal_key_gazelle_attend(),
-        formatter: (value: string | boolean | undefined | null | number) =>
-          value
-            ? String(value).substring(0, 50) +
-              (String(value).length > 50 ? "..." : "")
-            : m.simple_east_crocodile_spark(),
-      },
-      {
-        key: "assigneeName",
-        label: m.assignee(),
-      },
-      {
-        key: "isSubscribed",
-        label: m.stout_royal_macaw_fear(),
-        formatter: (value: string | boolean | undefined | null | number) =>
-          value === true ? "◉" : "○",
-      },
-    ],
-  };
 </script>
 
 <svelte:head>
@@ -119,12 +111,61 @@
       {/each}
     </div>
   {:else}
-    <Table
-      config={deckConfig}
-      href="flashcards"
-      {students}
-      items={data.decksPaginated.data}
-    />
+    <Table bind:selected>
+      {#each selected as id}
+        <input type="hidden" name="toDelete" value={id} />
+      {/each}
+      <TableHead>
+        <TickMorph
+          noText={true}
+          bind:group={selected}
+          value={decks.map((deck) => deck.id)}
+        />
+        {#if selected.length >= 1}
+          <Subheadline>
+            Выбрано {selected.length} из {decks.length}
+          </Subheadline>
+        {:else}
+          <Subheadline>Выбрать все</Subheadline>
+        {/if}
+        <Divider />
+
+        {#if selected.length == 0}
+          <SortDate />
+        {:else}
+          <Merger>
+            <DeleteButton />
+          </Merger>
+        {/if}
+      </TableHead>
+      <TableBody>
+        {#each decks as deck (deck.id)}
+          <div class="bg-clickable flex items-center px-2">
+            <TickMorph noText={true} bind:group={selected} value={deck.id} />
+            <TableRow href={`/${sveltePage.params.role}/decks/${deck.id}`}>
+              <HStack override="gap-1 items-start">
+                <Headline>
+                  {deck.title}
+                </Headline>
+                <Caption1>
+                  {deck.assigneeName}
+                </Caption1>
+              </HStack>
+              <Divider />
+              <Badge>
+                {deck.cardCount} карточек
+              </Badge>
+              <Badge urgency={deck.isSubscribed ? "green" : "normal"}>
+                {deck.isSubscribed ? "Подписаны" : "Не подписаны"}
+              </Badge>
+            </TableRow>
+          </div>
+        {/each}
+      </TableBody>
+      <TableFooter>
+        <Paginator {page} {count} {perPage} {totalPages}></Paginator>
+      </TableFooter>
+    </Table>
   {/if}
 {:else}
   <EmptySpace>

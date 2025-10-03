@@ -15,8 +15,7 @@
       case "overdue":
         return {
           text: m.sweet_alive_bear_pop(),
-          color:
-            "bg-rose-600/12 text-rose-700 dark:text-rose-500 ring-rose-600  ",
+          color: "bg-red-600/12 text-red-700 dark:text-red-500 ring-red-600  ",
         };
       case "urgent":
         return {
@@ -39,7 +38,7 @@
       default:
         return {
           color:
-            "bg-secondary/12 ring-secondary/60 dark:ring-secondary dark:bg-secondary/12 text-secondary-dark",
+            "bg-stone-400/12 ring-stone-600/40 dark:ring-stone-100/12 dark:bg-stone-100/12",
         };
     }
   }

@@ -14,7 +14,7 @@
   import { page } from "$app/state";
   import { enhance } from "$app/forms";
   import { Check, Circle } from "@lucide/svelte";
-  import { enhanceForm, formatDate } from "$lib/utils";
+  import { enhanceForm, formatDateOnly } from "$lib/utils";
   import Multipart from "$lib/components/UI/interactive/Multipart.svelte";
   import Badge from "$lib/components/cards/Badge.svelte";
   import { getUrgency } from "$lib/utils";
@@ -31,12 +31,10 @@
   let formattedDate = $state(m.arable_flat_emu_strive());
 
   if (data.task.dueDate) {
-    formattedDate = formatDate(data.task.dueDate);
+    formattedDate = formatDateOnly(data.task.dueDate);
   }
 
-  const urgency = getUrgency(data.task);
-
-  $inspect(form);
+  const urgency = getUrgency(data.task.dueDate);
 </script>
 
 <svelte:head>
@@ -94,14 +92,14 @@
         </form>
       </Merger>
     </VStack>
-    <VStack>
+    <VStack override="gap-2">
       <VStack>
         <Badge {urgency}>{formattedDate}</Badge>
       </VStack>
       {#if role === "t"}
-        <Caption1>
+        <Badge>
           {data.task.assigneeName}
-        </Caption1>
+        </Badge>
       {/if}
     </VStack>
   </HStack>

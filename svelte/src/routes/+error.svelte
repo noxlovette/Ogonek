@@ -42,13 +42,13 @@
       title: "Доступ запрещён",
       message: "У вас недостаточно прав для просмотра содержимого.",
       icon: ShieldBan,
-      color: "text-rose-600 dark:text-rose-400",
+      color: "text-red-600 dark:text-red-400",
     },
     500: {
       title: "Внутренняя ошибка сервера",
       message: "Произошла непредвиденная ошибка. Инженеры уведомлены.",
       icon: ServerCrash,
-      color: "text-rose-600 dark:text-rose-400",
+      color: "text-red-600 dark:text-red-400",
     },
     default: {
       title: `Ошибка ${page.status}`,

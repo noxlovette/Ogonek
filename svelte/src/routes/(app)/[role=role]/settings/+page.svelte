@@ -176,10 +176,10 @@
               handlers: {
                 redirect: async (result) => {
                   clearUser();
-                  assigneeStore.reset();
-                  pageSize.reset();
+                  assigneeStore.set("");
+                  pageSize.set(20);
                   currentPage.reset();
-                  searchTerm.reset();
+                  searchTerm.set("");
                   notification.set({ message: "Bye!", type: "success" });
                   goto(result.location);
                 },

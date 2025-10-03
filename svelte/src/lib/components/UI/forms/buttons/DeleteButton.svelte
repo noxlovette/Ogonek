@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Trash2 } from "@lucide/svelte";
+  import { Shredder, Trash2 } from "@lucide/svelte";
   import { UniButton } from "..";
   import { m } from "$lib/paraglide/messages";
 </script>
@@ -8,7 +8,7 @@
   variant="danger"
   formaction="?/delete"
   content={m.delete()}
-  Icon={Trash2}
   ariaLabel="Delete"
+  Icon={Shredder}
   shouldConfirm={true}
 />

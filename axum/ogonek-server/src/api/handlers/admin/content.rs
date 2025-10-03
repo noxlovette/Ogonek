@@ -28,7 +28,7 @@ pub async fn fetch_content(
     State(state): State<AppState>,
     Path(id): Path<String>,
 ) -> Result<Json<Content>, APIError> {
-    let content = content::find_by_id(&state.db, &id).await?;
+    let content = content::read_by_id(&state.db, &id).await?;
 
     Ok(Json(content))
 }
@@ -44,7 +44,7 @@ pub async fn fetch_content(
     )
 )]
 pub async fn list_content(State(state): State<AppState>) -> Result<Json<Vec<Content>>, APIError> {
-    let content = content::find_all(&state.db).await?;
+    let content = content::read_all(&state.db).await?;
 
     Ok(Json(content))
 }
@@ -66,7 +66,7 @@ pub async fn create_content(
     metadata: RequestMetadata,
 ) -> Result<Json<String>, APIError> {
     let id = content::create(&state.db, &claims.sub).await?;
-    let email = user::get_email(&state.db, &claims.sub).await?;
+    let email = user::read_email(&state.db, &claims.sub).await?;
     let audit = AuditBuilder::new("content.operation", "CREATE", &claims, email)
         .resource_id(id.clone())
         .with_metadata(&metadata)
@@ -98,7 +98,7 @@ pub async fn delete_content(
 ) -> Result<StatusCode, APIError> {
     content::delete(&state.db, &id).await?;
 
-    let email = user::get_email(&state.db, &claims.sub).await?;
+    let email = user::read_email(&state.db, &claims.sub).await?;
     let audit = AuditBuilder::new("content.operation", "DELETE", &claims, email)
         .resource_id(id.clone())
         .with_metadata(&metadata)
@@ -132,7 +132,7 @@ pub async fn update_content(
     Json(payload): Json<UpdateContent>,
 ) -> Result<StatusCode, APIError> {
     content::update(&state.db, &id, &claims.sub, &payload).await?;
-    let email = user::get_email(&state.db, &claims.sub).await?;
+    let email = user::read_email(&state.db, &claims.sub).await?;
     let audit = AuditBuilder::new("content.operation", "UPDATE", &claims, email)
         .resource_id(id.clone())
         .with_metadata(&metadata)

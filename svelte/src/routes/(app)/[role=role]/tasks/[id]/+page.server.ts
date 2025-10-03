@@ -13,7 +13,7 @@ export const actions = {
     if (!id) {
       return fail(500);
     }
-    const response = await fetch(routes.tasks.task(id), {
+    const response = await fetch(routes.tasks.task({ id }), {
       method: "PUT",
     });
 
@@ -38,7 +38,9 @@ export const actions = {
 
     const encodedKey = btoa(key);
 
-    const response = await fetch(routes.files.presigned_url(encodedKey));
+    const response = await fetch(
+      routes.files.presigned_url({ encoded_key: encodedKey }),
+    );
 
     if (!response.ok) {
       return fail(response.status, {
@@ -55,10 +57,15 @@ export const actions = {
       return fail(400);
     }
 
-    const files = fetch(routes.files.presigned_urls_batch(params.id), {
+    const files = fetch(
+      routes.files.presigned_urls_batch({ task_id: params.id }),
+      {
+        method: "POST",
+      },
+    );
+    const pdf = fetch(routes.files.pdf({ id: params.id, pdfType: "task" }), {
       method: "POST",
     });
-    const pdf = fetch(routes.files.pdf(params.id, "task"), { method: "POST" });
     const [response1, response2] = await Promise.all([files, pdf]);
 
     const { urls } =
@@ -77,7 +84,7 @@ export const actions = {
     }
     logger.info("Deleting file");
 
-    const response = await fetch(routes.files.delete_file(id), {
+    const response = await fetch(routes.files.delete_file({ id }), {
       method: "DELETE",
     });
     const deleteResult = await handleApiResponse<EmptyResponse>(response);

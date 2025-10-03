@@ -9,8 +9,8 @@ use ogonek_db::{
 };
 use ogonek_notifications::NotificationType;
 use ogonek_types::{
-    ActionType, DeckPublic, DeckSmall, DeckWithCards, DeckWithCardsUpdate, ModelType,
-    PaginatedDecks, PaginatedResponse, PaginationParams,
+    ActionType, DeckPaginationParams, DeckPublic, DeckSmall, DeckVisibility, DeckWithCards,
+    DeckWithCardsUpdate, ModelType, PaginatedDecks, PaginatedResponse, SortField, SortOrder,
 };
 
 use crate::api::DECK_TAG;
@@ -98,7 +98,7 @@ pub async fn fetch_deck(
     Path(id): Path<String>,
 ) -> Result<Json<DeckWithCards>, APIError> {
     let deck_with_cards =
-        flashcards::deck::get_deck_with_cards(&state.db, &id, &claims.sub).await?;
+        flashcards::deck::read_deck_with_cards(&state.db, &id, &claims.sub).await?;
 
     mark_as_seen(&state.db, &claims.sub, &id, ModelType::Deck).await?;
 
@@ -114,7 +114,10 @@ pub async fn fetch_deck(
         ("page" = Option<u32>, Query, description = "Page number"),
         ("per_page" = Option<u32>, Query, description = "Items per page"),
         ("search" = Option<String>, Query, description = "Search term"),
-        ("assignee" = Option<String>, Query, description = "Filter by assignee")
+        ("assignee" = Option<String>, Query, description = "Filter by assignee"),
+        ("visibility" = Option<DeckVisibility>, Query),
+        ("sort_by" = Option<SortField>, Query),
+        ("sort_order" = Option<SortOrder>, Query)
     ),
     responses(
         (status = 200, description = "User decks retrieved", body = PaginatedDecks),
@@ -123,31 +126,17 @@ pub async fn fetch_deck(
 )]
 pub async fn list_decks(
     State(state): State<AppState>,
-    Query(params): Query<PaginationParams>,
+    Query(params): Query<DeckPaginationParams>,
     claims: Claims,
 ) -> Result<Json<PaginatedResponse<DeckSmall>>, APIError> {
-    // DEBUG THE SHIT OUT OF THIS! 🔍
-    tracing::info!("🔥 DECK LIST PARAMS: {:?}", params);
-    tracing::info!(
-        "📊 PAGINATION DEBUG: page={:?}, per_page={:?}, limit={}, offset={}",
-        params.page,
-        params.per_page,
-        params.limit(),
-        params.offset()
-    );
-    tracing::info!(
-        "🔍 SEARCH: {:?}, ASSIGNEE: {:?}",
-        params.search,
-        params.assignee
-    );
+    let (decks, count) = flashcards::deck::read_all(&state.db, &claims.sub, &params).await?;
 
-    let decks = flashcards::deck::find_all(&state.db, &claims.sub, &params).await?;
-
-    tracing::info!("✅ FOUND {} DECKS", decks.len());
-
+    let total_pages = (count as f64 / params.limit() as f64).ceil() as i64;
     Ok(Json(PaginatedResponse {
         data: decks,
         page: params.page(),
+        total_pages,
+        count,
         per_page: params.limit(),
     }))
 }
@@ -165,7 +154,7 @@ pub async fn list_decks(
 pub async fn list_decks_public(
     State(state): State<AppState>,
 ) -> Result<Json<Vec<DeckPublic>>, APIError> {
-    let decks = flashcards::deck::find_all_public(&state.db).await?;
+    let decks = flashcards::deck::read_all_public(&state.db).await?;
 
     Ok(Json(decks))
 }
@@ -224,7 +213,7 @@ pub async fn update_deck(
             )
             .await?;
 
-            let deck = flashcards::deck::get_deck(&state.db, &id, &claims.sub).await?;
+            let deck = flashcards::deck::read_deck(&state.db, &id, &claims.sub).await?;
 
             let _ = state
                 .notification_service
@@ -291,6 +280,27 @@ pub async fn delete_deck(
         target_id.as_deref(),
     )
     .await?;
+
+    Ok(StatusCode::NO_CONTENT)
+}
+
+/// Deletes many decks
+#[utoipa::path(
+    delete,
+    path = "/many",
+    tag = DECK_TAG,
+    request_body = Vec<String>,
+    responses(
+        (status = 204, description = "decks deleted successfully"),
+        (status = 401, description = "Unauthorized")
+    )
+)]
+pub async fn delete_deck_many(
+    State(state): State<AppState>,
+    claims: Claims,
+    Json(payload): Json<Vec<String>>,
+) -> Result<StatusCode, APIError> {
+    deck::delete_many(&state.db, payload, &claims.sub).await?;
 
     Ok(StatusCode::NO_CONTENT)
 }

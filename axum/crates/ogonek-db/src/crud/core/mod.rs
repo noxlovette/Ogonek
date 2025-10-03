@@ -3,4 +3,5 @@ pub mod calendar;
 pub mod file;
 pub mod flashcards;
 pub mod lesson;
+pub mod state;
 pub mod task;

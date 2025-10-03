@@ -149,7 +149,7 @@
   </VStack>
 
   {#if form?.cards}
-    <Caption1 styling="text-rose-500">
+    <Caption1 styling="text-red-500">
       У всех ли карточек заполнены обе стороны?
     </Caption1>
   {/if}

@@ -2,7 +2,7 @@ use crate::DbError;
 use sqlx::PgPool;
 
 use ogonek_types::{UserPreferences, UserPreferencesUpdate};
-pub async fn find_by_user_id(
+pub async fn read_by_user_id(
     db: &PgPool,
     user_id: &str,
 ) -> Result<Option<UserPreferences>, DbError> {
@@ -48,8 +48,8 @@ pub async fn upsert(
     Ok(())
 }
 
-pub async fn get_or_create_defaults(
-    db: &PgPool,
+pub async fn read_or_create_defaults(
+    db: impl sqlx::Executor<'_, Database = sqlx::Postgres>,
     user_id: &str,
 ) -> Result<UserPreferences, DbError> {
     let prefs = sqlx::query_as!(
@@ -91,7 +91,7 @@ mod additional_tests {
         assert!(result.is_ok());
 
         // Verify no record was created
-        let prefs = find_by_user_id(&db, nonexistent_user_id).await.unwrap();
+        let prefs = read_by_user_id(&db, nonexistent_user_id).await.unwrap();
         assert!(prefs.is_none());
     }
 
@@ -108,15 +108,15 @@ mod additional_tests {
         let result = upsert(&db, "", &update).await;
         assert!(result.is_ok());
 
-        let prefs = find_by_user_id(&db, "").await.unwrap();
+        let prefs = read_by_user_id(&db, "").await.unwrap();
         assert!(prefs.is_none());
     }
 
     #[sqlx::test]
-    async fn test_get_or_create_defaults_new_user(db: PgPool) {
+    async fn test_read_or_create_defaults_new_user(db: PgPool) {
         let user_id = create_test_user(&db, "newdefaultuser", "newdefault@example.com").await;
 
-        let prefs = get_or_create_defaults(&db, &user_id).await.unwrap();
+        let prefs = read_or_create_defaults(&db, &user_id).await.unwrap();
 
         // Verify default values
         assert_eq!(prefs.user_id, user_id);
@@ -128,7 +128,7 @@ mod additional_tests {
     }
 
     #[sqlx::test]
-    async fn test_get_or_create_defaults_existing_user(db: PgPool) {
+    async fn test_read_or_create_defaults_existing_user(db: PgPool) {
         let user_id =
             create_test_user(&db, "existingdefaultuser", "existingdefault@example.com").await;
 
@@ -158,8 +158,8 @@ mod additional_tests {
         .await
         .unwrap();
 
-        // get_or_create_defaults should return existing values, not defaults
-        let prefs = get_or_create_defaults(&db, &user_id).await.unwrap();
+        // read_or_create_defaults should return existing values, not defaults
+        let prefs = read_or_create_defaults(&db, &user_id).await.unwrap();
 
         assert_eq!(prefs.user_id, user_id);
         assert_eq!(prefs.auto_subscribe, false);
@@ -174,7 +174,7 @@ mod additional_tests {
         let user_id = create_test_user(&db, "partialupdateuser", "partialupdate@example.com").await;
 
         // Create initial preferences
-        get_or_create_defaults(&db, &user_id).await.unwrap();
+        read_or_create_defaults(&db, &user_id).await.unwrap();
 
         // Update only theme
         let theme_update = UserPreferencesUpdate {
@@ -187,7 +187,7 @@ mod additional_tests {
 
         upsert(&db, &user_id, &theme_update).await.unwrap();
 
-        let prefs = find_by_user_id(&db, &user_id).await.unwrap().unwrap();
+        let prefs = read_by_user_id(&db, &user_id).await.unwrap().unwrap();
         // Only theme should change, others should remain defaults
         assert_eq!(prefs.auto_subscribe, true);
         assert_eq!(prefs.email_notifications, true);
@@ -201,7 +201,7 @@ mod additional_tests {
         let user_id = create_test_user(&db, "sequentialuser", "sequential@example.com").await;
 
         // Create initial preferences
-        get_or_create_defaults(&db, &user_id).await.unwrap();
+        read_or_create_defaults(&db, &user_id).await.unwrap();
 
         // First update: change auto_subscribe
         let update1 = UserPreferencesUpdate {
@@ -233,7 +233,7 @@ mod additional_tests {
         };
         upsert(&db, &user_id, &update3).await.unwrap();
 
-        let final_prefs = find_by_user_id(&db, &user_id).await.unwrap().unwrap();
+        let final_prefs = read_by_user_id(&db, &user_id).await.unwrap().unwrap();
 
         // Verify all changes accumulated correctly
         assert_eq!(final_prefs.auto_subscribe, false); // From update1
@@ -244,12 +244,12 @@ mod additional_tests {
     }
 
     #[sqlx::test]
-    async fn test_find_by_user_id_with_special_characters(db: PgPool) {
+    async fn test_read_by_user_id_with_special_characters(db: PgPool) {
         let user_id = create_test_user(&db, "special@user", "special@example.com").await;
 
-        get_or_create_defaults(&db, &user_id).await.unwrap();
+        read_or_create_defaults(&db, &user_id).await.unwrap();
 
-        let result = find_by_user_id(&db, &user_id).await.unwrap();
+        let result = read_by_user_id(&db, &user_id).await.unwrap();
         assert!(result.is_some());
         assert_eq!(result.unwrap().user_id, user_id);
     }
@@ -259,7 +259,7 @@ mod additional_tests {
         let user_id = create_test_user(&db, "extremeuser", "extreme@example.com").await;
 
         // Create initial preferences
-        get_or_create_defaults(&db, &user_id).await.unwrap();
+        read_or_create_defaults(&db, &user_id).await.unwrap();
 
         // Test with very long strings (within reasonable limits)
         let long_theme = "a".repeat(50); // Assuming theme has reasonable length limit
@@ -278,7 +278,7 @@ mod additional_tests {
         // This might fail if database has constraints, which is good to test
         match result {
             Ok(_) => {
-                let prefs = find_by_user_id(&db, &user_id).await.unwrap().unwrap();
+                let prefs = read_by_user_id(&db, &user_id).await.unwrap().unwrap();
                 assert_eq!(prefs.theme, long_theme);
                 assert_eq!(prefs.language, long_language);
             }
@@ -290,9 +290,9 @@ mod additional_tests {
     }
 
     #[sqlx::test]
-    async fn test_get_or_create_defaults_empty_user_id(db: PgPool) {
+    async fn test_read_or_create_defaults_empty_user_id(db: PgPool) {
         // This should probably fail or handle empty user_id gracefully
-        let result = get_or_create_defaults(&db, "").await;
+        let result = read_or_create_defaults(&db, "").await;
 
         // Depending on your database constraints, this might succeed or fail
         // If user_id has a NOT NULL constraint, it should fail
@@ -300,7 +300,7 @@ mod additional_tests {
         match result {
             Ok(prefs) => {
                 assert_eq!(prefs.user_id, "");
-                let found = find_by_user_id(&db, "").await.unwrap();
+                let found = read_by_user_id(&db, "").await.unwrap();
                 assert!(found.is_some());
             }
             Err(_) => {

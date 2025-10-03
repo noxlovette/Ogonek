@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { formatDate } from "$lib/utils";
+  import { formatDateOnly } from "$lib/utils";
   import CardClickable from "./CardClickable.svelte";
   import { user } from "$lib/stores";
   import Badge from "./Badge.svelte";
@@ -10,11 +10,11 @@
   import { VStack } from "../UI";
 
   let { task } = $props();
-  const formattedDate: string = formatDate(task.dueDate);
+  const formattedDate: string = formatDateOnly(task.dueDate);
   const href: string =
     $user.role === "teacher" ? `/t/tasks/${task.id}` : `/s/tasks/${task.id}`;
   const badgeText: string = `${m.less_arable_starfish_belong()} ${formattedDate}`;
-  const urgency = getUrgency(task);
+  const urgency = getUrgency(task.dueDate);
 </script>
 
 <CardClickable dataCy="task-card" {href}>

@@ -30,7 +30,7 @@ pub async fn fetch_inviter(
     query: Query<InviterQuery>,
 ) -> Result<Json<User>, APIError> {
     let teacher_id = decode_invite_token(query.invite.clone()).await?;
-    let inviter = user::find_by_id(&state.db, &teacher_id).await?;
+    let inviter = user::read_by_id(&state.db, &teacher_id).await?;
 
     Ok(Json(inviter))
 }
@@ -49,7 +49,7 @@ pub async fn fetch_me(
     State(state): State<AppState>,
     claims: Claims,
 ) -> Result<Json<User>, APIError> {
-    let user = user::find_by_id(&state.db, &claims.sub).await?;
+    let user = user::read_by_id(&state.db, &claims.sub).await?;
 
     Ok(Json(user))
 }
