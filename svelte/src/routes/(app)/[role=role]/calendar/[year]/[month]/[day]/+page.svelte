@@ -2,7 +2,6 @@
   import { goto } from "$app/navigation";
   import { page } from "$app/state";
   import {
-    Caption1,
     EmptySpace,
     EventCard,
     HStack,
@@ -10,7 +9,6 @@
     Title1,
   } from "$lib/components";
   import { formatDateOnly } from "$lib/utils";
-  import { Squirrel } from "@lucide/svelte";
   import type { PageProps } from "./$types";
   let { data }: PageProps = $props();
 
@@ -30,10 +28,7 @@
     {#each sortedEvents as event}
       <EventCard {event} />
     {:else}
-      <EmptySpace>
-        <Squirrel></Squirrel>
-        Нет событий
-      </EmptySpace>
+      <EmptySpace>Нет событий</EmptySpace>
     {/each}
     <NewCard
       addCard={async () => {

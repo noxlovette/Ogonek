@@ -148,7 +148,7 @@
   </VStack>
 
   {#if form?.cards}
-    <Caption1 styling="text-red-500">
+    <Caption1 override="text-red-500">
       У всех ли карточек заполнены обе стороны?
     </Caption1>
   {/if}
@@ -157,8 +157,6 @@
     <div
       class="flex min-h-40 w-full flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-stone-300/30 p-4 text-center dark:border-stone-700"
     >
-      {m.noFlashcards()}
-
       <NewCard {addCard} />
     </div>
   {:else}
