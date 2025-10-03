@@ -24,7 +24,6 @@
   import { pushState } from "$app/navigation";
   import { onMount } from "svelte";
   import { m } from "$lib/paraglide/messages.js";
-  import Title1 from "$lib/components/typography/Title1.svelte";
 
   onMount(() => {
     if (updatedCards.length > 0) {
@@ -155,11 +154,13 @@
   {/if}
 
   {#if updatedCards.length === 0}
-    <EmptySpace>
+    <div
+      class="flex min-h-40 w-full flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-stone-300/30 p-4 text-center dark:border-stone-700"
+    >
       {m.noFlashcards()}
 
       <NewCard {addCard} />
-    </EmptySpace>
+    </div>
   {:else}
     <div class="grid auto-rows-fr items-stretch gap-4 md:grid-cols-2">
       {#each updatedCards as card, index (index)}
