@@ -27,7 +27,7 @@
   <button
     type="button"
     onclick={() => ($sortOrder = $sortOrder === "asc" ? "desc" : "asc")}
-    class="{baseClass} flex items-center gap-2"
+    class="{baseClass} flex items-center"
   >
     {#if isTimeSort}
       {#if $sortOrder === "asc"}

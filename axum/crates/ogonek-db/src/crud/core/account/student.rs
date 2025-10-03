@@ -18,7 +18,10 @@ pub async fn upsert(db: &PgPool, user_id: &str, student_id: &str) -> Result<(), 
     Ok(())
 }
 
-pub async fn find_all(db: &PgPool, user_id: &str) -> Result<Vec<Student>, DbError> {
+pub async fn read_all(
+    db: impl sqlx::Executor<'_, Database = sqlx::Postgres>,
+    user_id: &str,
+) -> Result<Vec<Student>, DbError> {
     let students = sqlx::query_as!(
         Student,
         r#"
@@ -36,7 +39,7 @@ pub async fn find_all(db: &PgPool, user_id: &str) -> Result<Vec<Student>, DbErro
     Ok(students)
 }
 
-pub async fn find_by_id(db: &PgPool, student_id: &str, user_id: &str) -> Result<Student, DbError> {
+pub async fn read_by_id(db: &PgPool, student_id: &str, user_id: &str) -> Result<Student, DbError> {
     let mut tx = db.begin().await?;
 
     let student = sqlx::query_as!(
@@ -99,7 +102,7 @@ pub async fn update(
     Ok(())
 }
 
-pub async fn get_telegram_id(
+pub async fn read_telegram_id(
     db: &PgPool,
     user_id: &str,
     student_id: &str,
@@ -179,7 +182,7 @@ mod tests {
     }
 
     #[sqlx::test]
-    async fn test_find_all_active_students(db: PgPool) {
+    async fn test_read_all_active_students(db: PgPool) {
         let teacher_id = create_test_user(&db, "teacher", "teacher@ogonek.app").await;
         let student1_id = create_test_user(&db, "student1", "student1@ogonek.app").await;
         let student2_id = create_test_user(&db, "student2", "student2@ogonek.app").await;
@@ -204,8 +207,8 @@ mod tests {
         .await
         .unwrap();
 
-        // Test find_all should only return active students
-        let result = find_all(&db, &teacher_id).await;
+        // Test read_all should only return active students
+        let result = read_all(&db, &teacher_id).await;
         assert!(result.is_ok());
 
         let students = result.unwrap();
@@ -220,9 +223,9 @@ mod tests {
     }
 
     #[sqlx::test]
-    async fn test_find_all_empty_result(db: PgPool) {
+    async fn test_read_all_empty_result(db: PgPool) {
         let teacher_id = create_test_user(&db, "teacher", "teacher@ogonek.app").await;
-        let result = find_all(&db, &teacher_id).await;
+        let result = read_all(&db, &teacher_id).await;
         assert!(result.is_ok());
 
         let students = result.unwrap();

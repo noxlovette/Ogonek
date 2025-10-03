@@ -1,6 +1,6 @@
 use ogonek_db::{
     core::account::{profile, student},
-    notifications::get_device_tokens,
+    notifications::read_device_tokens,
 };
 
 pub use crate::messages::NotificationType;
@@ -49,7 +49,7 @@ impl NotificationService {
             .await?;
 
         if let Ok(Some(telegram_id)) =
-            student::get_telegram_id(&self.db, teacher_id, student_id).await
+            student::read_telegram_id(&self.db, teacher_id, student_id).await
         {
             self.telegram_provider
                 .send_notification(&telegram_id, &notification_type)
@@ -69,12 +69,12 @@ impl NotificationService {
             student_id, notification_type
         );
 
-        if let Ok(Some(teacher_id)) = profile::get_teacher_user_id(&self.db, student_id).await {
+        if let Ok(Some(teacher_id)) = profile::read_teacher_user_id(&self.db, student_id).await {
             self.send_apns_notifications(&teacher_id, &notification_type)
                 .await?;
         }
 
-        if let Ok(Some(telegram_id)) = profile::get_teacher_telegram_id(&self.db, student_id).await
+        if let Ok(Some(telegram_id)) = profile::read_teacher_telegram_id(&self.db, student_id).await
         {
             self.telegram_provider
                 .send_notification(&telegram_id, &notification_type)
@@ -89,7 +89,7 @@ impl NotificationService {
         recipient_id: &str,
         notification_type: &NotificationType,
     ) -> Result<(), NotificationError> {
-        if let Ok(device_tokens) = get_device_tokens(&self.db, recipient_id).await {
+        if let Ok(device_tokens) = read_device_tokens(&self.db, recipient_id).await {
             for token in device_tokens {
                 let payload = notification_type.to_apns_payload();
                 if let Err(e) = self.apns_provider.send_notification(&token, payload).await {

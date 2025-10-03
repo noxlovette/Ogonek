@@ -3,7 +3,7 @@
 </script>
 
 <div
-  class="bg-default flex items-center gap-2 border-b-4 border-stone-100 px-2 py-2.5 dark:border-stone-800"
+  class="bg-default flex h-20 items-center gap-2 border-b-4 border-stone-100 px-2 py-2.5 dark:border-stone-800"
 >
   {@render children()}
 </div>

@@ -1,7 +1,7 @@
 use crate::DbError;
 
 use ogonek_types::{Profile, ProfileUpdate};
-pub async fn find_by_id(
+pub async fn read_by_id(
     db: impl sqlx::Executor<'_, Database = sqlx::Postgres>,
     user_id: &str,
 ) -> Result<Profile, DbError> {
@@ -19,7 +19,7 @@ pub async fn find_by_id(
     Ok(profile)
 }
 
-pub async fn get_call_url_for_student(
+pub async fn read_call_url_for_student(
     db: impl sqlx::Executor<'_, Database = sqlx::Postgres>,
     user_id: &str,
 ) -> Result<Option<String>, DbError> {
@@ -77,7 +77,7 @@ pub async fn upsert(
     Ok(())
 }
 
-pub async fn get_telegram_id(
+pub async fn read_telegram_id(
     db: impl sqlx::Executor<'_, Database = sqlx::Postgres>,
     user_id: &str,
 ) -> Result<Option<String>, DbError> {
@@ -95,7 +95,7 @@ pub async fn get_telegram_id(
     Ok(telegram_id)
 }
 
-pub async fn get_teacher_telegram_id(
+pub async fn read_teacher_telegram_id(
     db: impl sqlx::Executor<'_, Database = sqlx::Postgres>,
     user_id: &str,
 ) -> Result<Option<String>, DbError> {
@@ -116,7 +116,7 @@ pub async fn get_teacher_telegram_id(
     Ok(td)
 }
 
-pub async fn get_teacher_user_id(
+pub async fn read_teacher_user_id(
     db: impl sqlx::Executor<'_, Database = sqlx::Postgres>,
     student_id: &str,
 ) -> Result<Option<String>, DbError> {
@@ -135,7 +135,7 @@ pub async fn get_teacher_user_id(
     Ok(id)
 }
 
-pub async fn get_call_url(
+pub async fn read_call_url(
     db: impl sqlx::Executor<'_, Database = sqlx::Postgres>,
     user_id: &str,
 ) -> Result<Option<String>, DbError> {

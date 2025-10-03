@@ -9,11 +9,11 @@ use ogonek_db::core::account::preferences;
 
 use ogonek_types::{UserPreferencesResponse, UserPreferencesUpdate};
 
-pub async fn get_preferences(
+pub async fn fetch_preferences(
     State(state): State<AppState>,
     claims: Claims,
 ) -> Result<Json<UserPreferencesResponse>, APIError> {
-    let prefs = preferences::get_or_create_defaults(&state.db, &claims.sub).await?;
+    let prefs = preferences::read_or_create_defaults(&state.db, &claims.sub).await?;
 
     let response = UserPreferencesResponse {
         auto_subscribe: prefs.auto_subscribe,

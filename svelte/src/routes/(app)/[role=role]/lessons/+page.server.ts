@@ -57,4 +57,10 @@ export const actions: Actions = {
 
     return redirect(301, `/t/lessons/${id}/edit`);
   },
+  delete: async ({ fetch, params }) => {
+    const { id } = params;
+    if (id) {
+      const response = await fetch(routes.lessons.delete({ id }));
+    }
+  },
 };

@@ -2,7 +2,7 @@ use crate::DbError;
 use ogonek_types::{LessonFull, LessonPaginationParams, LessonSmall, PDFData};
 use sqlx::PgPool;
 /// Finds a list of mini-lessons (no markdown) according to passed Pagination params
-pub async fn find_all(
+pub async fn read_all(
     db: &PgPool,
     user_id: &str,
     params: &LessonPaginationParams,
@@ -100,7 +100,7 @@ pub async fn find_all(
     Ok((lessons, total.0))
 }
 /// Finds one lesson by its id, will return not found if the user doesn't have access to the data
-pub async fn find_by_id(
+pub async fn read_by_id(
     db: &PgPool,
     lesson_id: &str,
     user_id: &str,
@@ -150,4 +150,39 @@ pub async fn read_for_pdf(db: &PgPool, task_id: &str, user_id: &str) -> Result<P
     .await?;
 
     Ok(data)
+}
+
+/// Finds assignee for the lesson by its id, will return null if the user doesn't have access to the data
+pub async fn read_assignee(
+    db: &PgPool,
+    lesson_id: &str,
+    user_id: &str,
+) -> Result<Option<String>, DbError> {
+    let assignee = sqlx::query_scalar!(
+        r#"
+        SELECT assignee
+        FROM lessons
+        WHERE id = $1
+        AND (assignee = $2 OR created_by = $2)
+        "#,
+        lesson_id,
+        user_id
+    )
+    .fetch_optional(db) // in case lesson is not found
+    .await?;
+
+    Ok(assignee.flatten())
+}
+
+pub async fn count(db: &PgPool, user_id: &str) -> Result<i64, DbError> {
+    let count = sqlx::query_scalar!(
+        "SELECT COUNT(*) FROM lessons WHERE
+            (created_by = $1 OR assignee = $1)
+            ",
+        user_id
+    )
+    .fetch_one(db)
+    .await?;
+
+    Ok(count.unwrap_or(0))
 }

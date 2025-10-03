@@ -19,6 +19,8 @@
     }
     goto(href);
   }
+
+  $inspect(href);
 </script>
 
 <button

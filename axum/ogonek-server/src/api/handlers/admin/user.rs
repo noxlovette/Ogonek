@@ -33,15 +33,15 @@ pub async fn create_user(
         return Err(APIError::InvalidCredentials);
     }
 
-    let email = user::get_email(&state.db, &claims.sub).await?;
-    let target_role = UserRole::from(payload.role.clone());
+    let email = user::read_email(&state.db, &claims.sub).await?;
+    let tarread_role = UserRole::from(payload.role.clone());
 
-    if !target_role.can_be_assigned_by(&claims.role) {
+    if !tarread_role.can_be_assigned_by(&claims.role) {
         tracing::warn!(
             "User {} (role: {}) attempted to create user with role: {}",
             claims.sub,
             claims.role,
-            target_role
+            tarread_role
         );
 
         let failed_audit = AuditBuilder::user_operation("CREATE", &claims, email)
@@ -52,8 +52,8 @@ pub async fn create_user(
             .payload(serde_json::json!({
                 "attempted_role": payload.role,
                 "reason": "insufficient_privileges",
-                "target_username": payload.username,
-                "target_email": payload.email
+                "tarread_username": payload.username,
+                "tarread_email": payload.email
             }))
             .tag("authorization")
             .build();

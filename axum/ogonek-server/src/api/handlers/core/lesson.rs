@@ -35,13 +35,13 @@ pub async fn fetch_lesson(
     Path(id): Path<String>,
     claims: Claims,
 ) -> Result<Json<LessonWithPhoto>, APIError> {
-    let lesson = lesson::find_by_id(&state.db, &id, &claims.sub).await?;
+    let lesson = lesson::read_by_id(&state.db, &id, &claims.sub).await?;
     tracking::seen::mark_as_seen(&state.db, &claims.sub, &id, ModelType::Lesson).await?;
 
     let mut photo: Option<Photo> = None;
 
     if let Some(photo_id) = &lesson.photo_id {
-        photo = photo::find_by_id(&state.db, photo_id).await?;
+        photo = photo::read_by_id(&state.db, photo_id).await?;
     }
 
     Ok(Json(LessonWithPhoto {
@@ -79,7 +79,7 @@ pub async fn list_lessons(
     Query(params): Query<LessonPaginationParams>,
     claims: Claims,
 ) -> Result<Json<PaginatedResponse<LessonSmall>>, APIError> {
-    let (lessons, count) = lesson::find_all(&state.db, &claims.sub, &params).await?;
+    let (lessons, count) = lesson::read_all(&state.db, &claims.sub, &params).await?;
     let total_pages = (count as f64 / params.limit() as f64).ceil() as i64;
     Ok(Json(PaginatedResponse {
         data: lessons,
@@ -218,7 +218,7 @@ pub async fn update_lesson(
             )
             .await?;
 
-            let lesson = lesson::find_by_id(&state.db, &id, &claims.sub).await?;
+            let lesson = lesson::read_by_id(&state.db, &id, &claims.sub).await?;
             let _ = state
                 .notification_service
                 .notify_student(

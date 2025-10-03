@@ -1,134 +1,12 @@
-use crate::DbError;
-use ogonek_types::{LessonCreate, LessonUpdate};
-use sqlx::PgPool;
-
+mod create;
+mod delete;
 mod read;
+mod update;
+pub use create::*;
+pub use delete::*;
 pub use read::*;
-pub async fn create(db: &PgPool, user_id: &str, create: LessonCreate) -> Result<String, DbError> {
-    let mut assignee = user_id;
+pub use update::*;
 
-    if create.assignee.is_some() {
-        assignee = create.assignee.as_ref().unwrap();
-    }
-
-    let id = sqlx::query_scalar!(
-        "INSERT INTO lessons (id, title, topic, markdown, created_by, assignee)
-         VALUES ($1, $2, $3, $4, $5, $6)
-         RETURNING id",
-        nanoid::nanoid!(),
-        create.title,
-        create.topic,
-        create.markdown,
-        user_id,
-        assignee
-    )
-    .fetch_one(db)
-    .await?;
-
-    Ok(id)
-}
-
-/// Takes user preferences to define defaults (well, it currently doesn't but you get the point)
-pub async fn create_with_defaults(db: &PgPool, user_id: &str) -> Result<String, DbError> {
-    let id = sqlx::query_scalar!(
-        "INSERT INTO lessons (id, title, topic, markdown, created_by, assignee)
-         VALUES ($1, $2, $3, $4, $5, $6)
-         RETURNING id",
-        nanoid::nanoid!(),
-        "Default Title",
-        "Default Topic",
-        "# Default Lesson",
-        user_id,
-        user_id
-    )
-    .fetch_one(db)
-    .await?;
-
-    Ok(id)
-}
-
-pub async fn delete(db: &PgPool, lesson_id: &str, user_id: &str) -> Result<(), DbError> {
-    sqlx::query!(
-        r#"
-        DELETE FROM lessons
-        WHERE id = $1 AND created_by = $2
-        "#,
-        lesson_id,
-        user_id
-    )
-    .execute(db)
-    .await?;
-
-    Ok(())
-}
-
-pub async fn update(
-    db: &PgPool,
-    lesson_id: &str,
-    user_id: &str,
-    update: &LessonUpdate,
-) -> Result<(), DbError> {
-    sqlx::query!(
-        "UPDATE lessons
-         SET
-            title = COALESCE($1, title),
-            topic = COALESCE($2, topic),
-            markdown = COALESCE($3, markdown),
-            assignee = CASE
-            WHEN $7 = true THEN NULL
-            ELSE 
-            COALESCE($4, assignee)
-            END
-         WHERE id = $5 AND created_by = $6
-",
-        update.title,
-        update.topic,
-        update.markdown,
-        update.assignee,
-        lesson_id,
-        user_id,
-        update.unassign
-    )
-    .execute(db)
-    .await?;
-
-    Ok(())
-}
-
-/// Finds assignee for the lesson by its id, will return null if the user doesn't have access to the data
-pub async fn read_assignee(
-    db: &PgPool,
-    lesson_id: &str,
-    user_id: &str,
-) -> Result<Option<String>, DbError> {
-    let assignee = sqlx::query_scalar!(
-        r#"
-        SELECT assignee
-        FROM lessons
-        WHERE id = $1
-        AND (assignee = $2 OR created_by = $2)
-        "#,
-        lesson_id,
-        user_id
-    )
-    .fetch_optional(db) // in case lesson is not found
-    .await?;
-
-    Ok(assignee.flatten())
-}
-
-pub async fn count(db: &PgPool, user_id: &str) -> Result<i64, DbError> {
-    let count = sqlx::query_scalar!(
-        "SELECT COUNT(*) FROM lessons WHERE
-            (created_by = $1 OR assignee = $1)
-            ",
-        user_id
-    )
-    .fetch_one(db)
-    .await?;
-
-    Ok(count.unwrap_or(0))
-}
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -182,13 +60,13 @@ mod tests {
         assert!(result.is_ok());
 
         // Verify the lesson was created with correct assignee
-        let lesson = find_by_id(&db, &result.unwrap(), &assignee).await;
+        let lesson = read_by_id(&db, &result.unwrap(), &assignee).await;
         assert!(lesson.is_ok());
         assert_eq!(lesson.unwrap().assignee, Some(assignee));
     }
 
     #[sqlx::test]
-    async fn test_find_by_id_as_creator(db: PgPool) {
+    async fn test_read_by_id_as_creator(db: PgPool) {
         let user = create_test_user(&db, "test", "test@ogonek.app").await;
 
         let lesson_create = LessonCreate {
@@ -200,7 +78,7 @@ mod tests {
 
         let creation_id = create(&db, &user, lesson_create).await.unwrap();
 
-        let result = find_by_id(&db, &creation_id, &user).await;
+        let result = read_by_id(&db, &creation_id, &user).await;
         assert!(result.is_ok());
 
         let lesson = result.unwrap();
@@ -209,7 +87,7 @@ mod tests {
     }
 
     #[sqlx::test]
-    async fn test_find_by_id_as_assignee(db: PgPool) {
+    async fn test_read_by_id_as_assignee(db: PgPool) {
         let creator = create_test_user(&db, "creator", "creator@ogonek.app").await;
         let assignee = create_test_user(&db, "assignee", "assignee@ogonek.app").await;
 
@@ -222,7 +100,7 @@ mod tests {
 
         let creation_id = create(&db, &creator, lesson_create).await.unwrap();
 
-        let result = find_by_id(&db, &creation_id, &assignee).await;
+        let result = read_by_id(&db, &creation_id, &assignee).await;
         assert!(result.is_ok());
 
         let lesson = result.unwrap();
@@ -231,7 +109,7 @@ mod tests {
     }
 
     #[sqlx::test]
-    async fn test_find_by_id_unauthorized(db: PgPool) {
+    async fn test_read_by_id_unauthorized(db: PgPool) {
         let creator = create_test_user(&db, "creator", "creator@ogonek.app").await;
         let other_user = create_test_user(&db, "other", "other@ogonek.app").await;
 
@@ -244,7 +122,7 @@ mod tests {
 
         let creation_id = create(&db, &creator, lesson_create).await.unwrap();
 
-        let result = find_by_id(&db, &creation_id, &other_user).await;
+        let result = read_by_id(&db, &creation_id, &other_user).await;
         assert!(result.is_err());
     }
 
@@ -276,7 +154,7 @@ mod tests {
         assert!(result.is_ok());
 
         // Verify the update
-        let updated_lesson = find_by_id(&db, &creation_id, &user).await.unwrap();
+        let updated_lesson = read_by_id(&db, &creation_id, &user).await.unwrap();
         assert_eq!(updated_lesson.title, "Updated Title");
         assert_eq!(updated_lesson.topic, "Updated Topic");
         assert_eq!(updated_lesson.markdown, "# Original Content"); // Should remain unchanged
@@ -311,7 +189,7 @@ mod tests {
         assert!(result.is_ok()); // Query succeeds but affects 0 rows
 
         // Verify no changes were made
-        let lesson = find_by_id(&db, &creation_id, &creator).await.unwrap();
+        let lesson = read_by_id(&db, &creation_id, &creator).await.unwrap();
         assert_eq!(lesson.title, "Private Lesson");
     }
 
@@ -332,8 +210,8 @@ mod tests {
         assert!(delete_result.is_ok());
 
         // Verify lesson is deleted
-        let find_result = find_by_id(&db, &creation_id, &user).await;
-        assert!(find_result.is_err());
+        let read_result = read_by_id(&db, &creation_id, &user).await;
+        assert!(read_result.is_err());
     }
 
     #[sqlx::test]
@@ -354,8 +232,8 @@ mod tests {
         assert!(delete_result.is_ok()); // Query succeeds but affects 0 rows
 
         // Verify lesson still exists
-        let find_result = find_by_id(&db, &creation_id, &creator).await;
-        assert!(find_result.is_ok());
+        let read_result = read_by_id(&db, &creation_id, &creator).await;
+        assert!(read_result.is_ok());
     }
 
     #[sqlx::test]

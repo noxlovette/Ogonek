@@ -23,7 +23,7 @@ pub async fn fetch_content_public(
     State(state): State<AppState>,
     Path(slug): Path<String>,
 ) -> Result<Json<ContentPublic>, APIError> {
-    let content = content::find_by_slug(&state.db, &slug).await?;
+    let content = content::read_by_slug(&state.db, &slug).await?;
 
     Ok(Json(content))
 }

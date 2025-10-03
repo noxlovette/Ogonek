@@ -47,7 +47,7 @@ pub async fn fetch_profile(
     State(state): State<AppState>,
     claims: Claims,
 ) -> Result<Json<Profile>, APIError> {
-    let profile = profile::find_by_id(&state.db, &claims.sub).await?;
+    let profile = profile::read_by_id(&state.db, &claims.sub).await?;
 
     Ok(Json(profile))
 }

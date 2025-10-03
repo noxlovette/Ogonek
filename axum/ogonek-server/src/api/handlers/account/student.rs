@@ -93,7 +93,7 @@ pub async fn fetch_student(
     State(state): State<AppState>,
     Path(id): Path<String>,
 ) -> Result<Json<Student>, APIError> {
-    let student = student::find_by_id(&state.db, &id, &claims.sub).await?;
+    let student = student::read_by_id(&state.db, &id, &claims.sub).await?;
 
     Ok(Json(student))
 }
@@ -110,7 +110,7 @@ pub async fn list_students(
     claims: Claims,
     State(state): State<AppState>,
 ) -> Result<Json<Vec<Student>>, APIError> {
-    let students = student::find_all(&state.db, &claims.sub).await?;
+    let students = student::read_all(&state.db, &claims.sub).await?;
 
     Ok(Json(students))
 }

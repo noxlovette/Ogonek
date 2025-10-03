@@ -23,6 +23,7 @@
     Caption1,
     VStack,
     UniButton,
+    DeleteButton,
   } from "$lib/components";
   import { enhance } from "$app/forms";
   import { enhanceForm, formatDateOnly } from "$lib/utils";
@@ -38,7 +39,7 @@
   } from "$lib/stores";
   import { goto } from "$app/navigation";
   import { m } from "$lib/paraglide/messages.js";
-  import { ChevronLeft, ChevronRight } from "@lucide/svelte";
+  import { Trash2 } from "@lucide/svelte";
 
   let { data } = $props();
 
@@ -117,10 +118,18 @@
         <Subheadline>
           Выбрано {selected.length} из {lessons.length}
         </Subheadline>
+      {:else}
+        <Subheadline>Выбрать все</Subheadline>
       {/if}
       <Divider />
 
-      <SortDate />
+      {#if selected.length == 0}
+        <SortDate />
+      {:else}
+        <Merger>
+          <DeleteButton />
+        </Merger>
+      {/if}
     </TableHead>
     <TableBody>
       {#each lessons as lesson (lesson.id)}

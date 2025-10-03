@@ -6,10 +6,11 @@ use axum::extract::{Json, State};
 use chrono::{Datelike, TimeZone, Utc};
 use ogonek_db::{
     core::{
-        account::{self, preferences, student, user},
         calendar::event,
         flashcards::{self},
-        lesson, task,
+        lesson,
+        state::read_context,
+        task,
     },
     tracking::seen,
 };
@@ -48,7 +49,7 @@ pub async fn fetch_dashboard(
     )
     .await?;
 
-    let (lessons, _) = lesson::find_all(
+    let (lessons, _) = lesson::read_all(
         &state.db,
         &claims.sub,
         &LessonPaginationParams {
@@ -140,17 +141,7 @@ pub async fn fetch_context(
     State(state): State<AppState>,
     claims: Claims,
 ) -> Result<Json<AppContext>, APIError> {
-    let preferences = preferences::get_or_create_defaults(&state.db, &claims.sub).await?;
-    let user = user::find_by_id(&state.db, &claims.sub).await?;
-    let students = student::find_all(&state.db, &claims.sub).await?;
-    let profile = account::profile::find_by_id(&state.db, &claims.sub).await?;
-    let call_url = account::profile::get_call_url_for_student(&state.db, &claims.sub).await?;
+    let context = read_context(&state.db, &claims.sub).await?;
 
-    Ok(Json(AppContext {
-        user,
-        profile,
-        students,
-        preferences,
-        call_url,
-    }))
+    Ok(Json(context))
 }
