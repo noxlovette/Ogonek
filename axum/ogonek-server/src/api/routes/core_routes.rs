@@ -33,6 +33,7 @@ pub fn task_routes() -> Router<AppState> {
                 .delete(core::delete_task)
                 .put(core::toggle_task),
         )
+        .route("/many", delete(core::delete_task_many))
 }
 use crate::api::core::{deck, learn};
 
@@ -48,6 +49,7 @@ pub fn deck_routes() -> Router<AppState> {
         )
         .route("/{id}/duplicate", post(deck::duplicate_deck))
         .route("/public", get(deck::list_decks_public))
+        .route("/many", delete(core::delete_deck_many))
 }
 pub fn learn_routes() -> Router<AppState> {
     Router::new()

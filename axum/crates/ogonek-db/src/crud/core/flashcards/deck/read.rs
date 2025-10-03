@@ -89,25 +89,36 @@ pub async fn read_all(
         .await?;
     // Build count query with same filters
     let mut count_query =
-        sqlx::QueryBuilder::new(r#"SELECT COUNT(*) FROM decks l WHERE (l.assignee = "#);
+        sqlx::QueryBuilder::new(r#"SELECT COUNT(*) FROM decks d WHERE (d.assignee = "#);
     count_query.push_bind(user_id);
-    count_query.push(" OR l.created_by = ");
+    count_query.push(" OR d.created_by = ");
     count_query.push_bind(user_id);
     count_query.push(")");
 
     if let Some(search) = &params.search {
-        count_query.push(" AND (l.title ILIKE ");
+        count_query.push(" AND (d.title ILIKE ");
         count_query.push_bind(format!("%{search}%"));
-        count_query.push(" OR l.topic ILIKE ");
-        count_query.push_bind(format!("%{search}%"));
-        count_query.push(" OR l.markdown ILIKE ");
+        count_query.push(" OR d.description ILIKE ");
         count_query.push_bind(format!("%{search}%"));
         count_query.push(")");
     }
 
     if let Some(assignee) = &params.assignee {
-        count_query.push(" AND l.assignee = ");
+        count_query.push(" AND d.assignee = ");
         count_query.push_bind(assignee);
+    }
+
+    if let Some(visibility) = &params.visibility {
+        count_query.push(" AND d.visibility = ");
+        count_query.push_bind(visibility);
+    }
+
+    if let Some(true) = params.subscribed_only {
+        count_query.push(" AND EXISTS (");
+        count_query.push("SELECT 1 FROM deck_subscriptions ds ");
+        count_query.push("WHERE ds.deck_id = d.id AND ds.user_id = ");
+        count_query.push_bind(user_id);
+        count_query.push(")");
     }
 
     let total: (i64,) = count_query.build_query_as().fetch_one(db).await?;
@@ -144,14 +155,11 @@ pub async fn read_deck(
             d.assignee,
             d.created_by,
             d.created_at,
+            d.card_count,
             EXISTS (
                 SELECT 1 FROM deck_subscriptions
                 WHERE deck_id = d.id AND user_id = $2
-            ) AS "is_subscribed!",
-            (
-                SELECT COUNT(*)::bigint FROM cards
-                WHERE deck_id = d.id
-            ) AS "card_count!"
+            ) AS "is_subscribed!"
         FROM decks d
         WHERE d.id = $1 AND (
             d.created_by = $2

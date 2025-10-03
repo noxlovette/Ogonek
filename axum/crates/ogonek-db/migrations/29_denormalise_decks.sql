@@ -1,5 +1,5 @@
 -- Add migration script here
-ALTER TABLE decks ADD COLUMN card_count INTEGER DEFAULT 0;
+ALTER TABLE decks ADD COLUMN card_count INTEGER NOT NULL DEFAULT 0;
 
 -- Update trigger to maintain it
 CREATE OR REPLACE FUNCTION update_deck_card_count()

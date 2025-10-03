@@ -92,24 +92,28 @@ pub async fn read_all(
         .await?;
     // Build count query with same filters
     let mut count_query =
-        sqlx::QueryBuilder::new(r#"SELECT COUNT(*) FROM tasks l WHERE (l.assignee = "#);
+        sqlx::QueryBuilder::new(r#"SELECT COUNT(*) FROM tasks t WHERE (t.assignee = "#);
     count_query.push_bind(user_id);
-    count_query.push(" OR l.created_by = ");
+    count_query.push(" OR t.created_by = ");
     count_query.push_bind(user_id);
     count_query.push(")");
 
     if let Some(search) = &params.search {
-        count_query.push(" AND (l.title ILIKE ");
+        count_query.push(" AND (t.title ILIKE ");
         count_query.push_bind(format!("%{search}%"));
-        count_query.push(" OR l.topic ILIKE ");
-        count_query.push_bind(format!("%{search}%"));
-        count_query.push(" OR l.markdown ILIKE ");
+        count_query.push(" OR t.markdown ILIKE ");
         count_query.push_bind(format!("%{search}%"));
         count_query.push(")");
     }
 
+    if let Some(completed) = params.completed {
+        if !completed {
+            count_query.push(" AND t.completed = false");
+        }
+    }
+
     if let Some(assignee) = &params.assignee {
-        count_query.push(" AND l.assignee = ");
+        count_query.push(" AND t.assignee = ");
         count_query.push_bind(assignee);
     }
 

@@ -65,6 +65,7 @@
 
   const baseClasses = `
   flex items-center transition-all duration-150 justify-center flex-1 p-2 md:p-3
+  w-full
   rounded-full font-medium focus-visible:outline-none
   disabled:opacity-20 disabled:pointer-events-none z-40 gap-2 
 `;
@@ -97,7 +98,7 @@
   }
 </script>
 
-<div class="relative">
+<div class="relative w-full">
   {#if isLink}
     <a
       {@attach tooltip(description)}

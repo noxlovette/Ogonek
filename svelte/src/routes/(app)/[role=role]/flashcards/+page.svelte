@@ -13,11 +13,22 @@
     Title1,
     NewButton,
     TableHead,
+    TickMorph,
+    Subheadline,
+    SortDate,
+    DeleteButton,
+    TableBody,
+    TableRow,
+    HStack,
+    Headline,
+    Caption1,
+    TableFooter,
+    Paginator,
   } from "$lib/components";
   import { enhance } from "$app/forms";
   import { enhanceForm } from "$lib/utils";
-  import { page } from "$app/state";
-  import { GraduationCap } from "@lucide/svelte";
+  import { page as sveltePage } from "$app/state";
+  import { Bookmark, GraduationCap } from "@lucide/svelte";
   import { m } from "$lib/paraglide/messages";
   import {
     searchTerm,
@@ -32,8 +43,10 @@
 
   let { data } = $props();
 
-  const role = page.params.role;
-
+  const role = sveltePage.params.role;
+  const { page, totalPages, count, perPage } = data.decksPaginated;
+  const decks = $derived(data.decksPaginated.data);
+  let selected: string[] = $state([]);
   $effect(() => {
     const params = new URLSearchParams();
 
@@ -98,7 +111,61 @@
     </div>
   {:else}
     <Table>
-      <TableHead>Hello</TableHead>
+      <input type="hidden" bind:value={selected} name="toDelete" />
+      <TableHead>
+        <TickMorph
+          noText={true}
+          bind:group={selected}
+          value={decks.map((deck) => deck.id)}
+        />
+        {#if selected.length >= 1}
+          <Subheadline>
+            Выбрано {selected.length} из {decks.length}
+          </Subheadline>
+        {:else}
+          <Subheadline>Выбрать все</Subheadline>
+        {/if}
+        <Divider />
+
+        {#if selected.length == 0}
+          <SortDate />
+        {:else}
+          <Merger>
+            <DeleteButton />
+          </Merger>
+        {/if}
+      </TableHead>
+      <TableBody>
+        {#each decks as deck (deck.id)}
+          <div class="bg-clickable flex items-center px-2">
+            <TickMorph noText={true} bind:group={selected} value={deck.id} />
+            <TableRow href={`/${sveltePage.params.role}/decks/${deck.id}`}>
+              <HStack override="gap-1 items-start">
+                <Headline>
+                  {deck.title}
+                </Headline>
+                <Caption1>
+                  {deck.assigneeName}
+                </Caption1>
+              </HStack>
+              <Divider />
+              <Caption1>
+                {deck.cardCount} карточек
+              </Caption1>
+              <Caption1>
+                {#if deck.isSubscribed}
+                  <Bookmark color="#df7055" fill="#df7055" />
+                {:else}
+                  <Bookmark />
+                {/if}
+              </Caption1>
+            </TableRow>
+          </div>
+        {/each}
+      </TableBody>
+      <TableFooter>
+        <Paginator {page} {count} {perPage} {totalPages}></Paginator>
+      </TableFooter>
     </Table>
   {/if}
 {:else}

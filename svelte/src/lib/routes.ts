@@ -62,6 +62,7 @@ export const routes = {
       return `${API_BASE}/decks${query ? `?${query}` : ""}`;
     },
     new: () => `${API_BASE}/decks`,
+    delete_deck_many: () => `${API_BASE}/decks/many`,
     decks_public: () => `${API_BASE}/decks/public`,
     deck: (params: { id: string }) => `${API_BASE}/decks/${params.id}`,
     delete: (params: { id: string }) => `${API_BASE}/decks/${params.id}`,
@@ -132,6 +133,7 @@ export const routes = {
       return `${API_BASE}/tasks${query ? `?${query}` : ""}`;
     },
     new: () => `${API_BASE}/tasks`,
+    delete_task_many: () => `${API_BASE}/tasks/many`,
     task: (params: { id: string }) => `${API_BASE}/tasks/${params.id}`,
     toggle: (params: { id: string }) => `${API_BASE}/tasks/${params.id}`,
     delete: (params: { id: string }) => `${API_BASE}/tasks/${params.id}`,

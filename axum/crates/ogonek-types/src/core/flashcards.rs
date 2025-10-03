@@ -53,7 +53,7 @@ pub struct DeckFull {
     pub assignee: Option<String>,
     pub is_subscribed: Option<bool>,
     pub created_by: String,
-    pub card_count: i64,
+    pub card_count: i32,
 
     #[serde(with = "datetime_serialization")]
     pub created_at: DateTime<Utc>,
@@ -68,7 +68,7 @@ pub struct DeckSmall {
     pub is_subscribed: Option<bool>,
     pub seen: Option<bool>,
     pub visibility: String,
-    pub card_count: i64,
+    pub card_count: i32,
     pub description: Option<String>,
 }
 

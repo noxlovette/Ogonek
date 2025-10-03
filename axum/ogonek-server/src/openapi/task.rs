@@ -10,6 +10,7 @@ use utoipa::OpenApi;
         task::toggle_task,
         task::update_task,
         task::delete_task,
+        task::delete_task_many,
     ),
     components(schemas(TaskSmall, TaskFull, TaskUpdate, TaskWithFilesResponse,))
 )]

@@ -283,3 +283,24 @@ pub async fn delete_deck(
 
     Ok(StatusCode::NO_CONTENT)
 }
+
+/// Deletes many decks
+#[utoipa::path(
+    delete,
+    path = "/many",
+    tag = DECK_TAG,
+    request_body = Vec<String>,
+    responses(
+        (status = 204, description = "decks deleted successfully"),
+        (status = 401, description = "Unauthorized")
+    )
+)]
+pub async fn delete_deck_many(
+    State(state): State<AppState>,
+    claims: Claims,
+    Json(payload): Json<Vec<String>>,
+) -> Result<StatusCode, APIError> {
+    deck::delete_many(&state.db, payload, &claims.sub).await?;
+
+    Ok(StatusCode::NO_CONTENT)
+}

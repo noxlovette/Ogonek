@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        DELETE FROM tasks \n        WHERE id = ANY($1) AND created_by = $2\n        ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "TextArray",
+        "Text"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "4a9e7e175136175de1b2a7d06c68d084d67b58c7300ef03480593e609b0bad42"
+}

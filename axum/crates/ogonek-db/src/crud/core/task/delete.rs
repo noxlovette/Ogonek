@@ -53,3 +53,18 @@ pub async fn delete_system(db: &PgPool, id: &str, file_ids: Vec<String>) -> Resu
 
     Ok(())
 }
+
+pub async fn delete_many(pool: &PgPool, ids: Vec<String>, user_id: &str) -> Result<u64, DbError> {
+    let result = sqlx::query!(
+        r#"
+        DELETE FROM tasks 
+        WHERE id = ANY($1) AND created_by = $2
+        "#,
+        &ids,
+        user_id
+    )
+    .execute(pool)
+    .await?;
+
+    Ok(result.rows_affected())
+}

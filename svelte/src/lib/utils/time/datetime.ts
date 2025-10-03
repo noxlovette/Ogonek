@@ -51,14 +51,13 @@ export const formatDate = (
   try {
     date = typeof dateInput === "string" ? new Date(dateInput) : dateInput;
 
-    // Check si la date est valide (NaN check)
     if (isNaN(date.getTime())) {
       console.warn(`formatDate: Invalid date created from input: ${dateInput}`);
-      return "Не понятно";
+      return m.even_tense_herring_support();
     }
   } catch (error) {
     console.error("formatDate: Error creating date:", error);
-    return "Не понятно";
+    return m.even_tense_herring_support();
   }
 
   const now = new Date();

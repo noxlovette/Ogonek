@@ -1,3 +1,5 @@
+use sqlx::PgPool;
+
 use crate::DbError;
 
 /// Deletes a deck
@@ -18,4 +20,19 @@ pub async fn delete(
     .await?;
 
     Ok(())
+}
+
+pub async fn delete_many(pool: &PgPool, ids: Vec<String>, user_id: &str) -> Result<u64, DbError> {
+    let result = sqlx::query!(
+        r#"
+        DELETE FROM decks
+        WHERE id = ANY($1) AND created_by = $2
+        "#,
+        &ids,
+        user_id
+    )
+    .execute(pool)
+    .await?;
+
+    Ok(result.rows_affected())
 }
