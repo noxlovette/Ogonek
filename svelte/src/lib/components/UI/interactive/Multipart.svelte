@@ -389,11 +389,11 @@
             progress={formatPercentage(fileState.progress.percentComplete)}
           />
         {:else if fileState.status === "complete"}
-          <Caption1 styling="text-emerald-600"
+          <Caption1 override="text-emerald-600"
             >{m.every_sunny_pelican_buzz()}</Caption1
           >
         {:else if fileState.status === "error"}
-          <Caption1 styling="text-red-600"
+          <Caption1 override="text-red-600"
             >{m.weird_level_sheep_imagine()}</Caption1
           >
         {/if}

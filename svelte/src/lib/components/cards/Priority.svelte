@@ -47,7 +47,7 @@
 
 <div class="flex items-center gap-1">
   <span class={`h-2.5 w-2.5 rounded-full ${priorityConfig.color}`}></span>
-  <Caption1 styling={priorityConfig.textColor}>
+  <Caption1 override={priorityConfig.textColor}>
     {priorityLabel}
   </Caption1>
 </div>

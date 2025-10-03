@@ -27,18 +27,18 @@
         return {
           text: m.blue_day_tuna_pinch(),
           color:
-            "bg-yellow-600/12  text-yellow-700 dark:text-yellow-500 ring-yellow-600",
+            "bg-yellow-600/12 text-yellow-700 dark:text-yellow-500 ring-yellow-600",
         };
       case "green":
         return {
           color:
-            "bg-emerald-600/12 ring-emerald-600 text-emerald-700 dark:text-emerald-500",
+            "bg-emerald-500/12 ring-emerald-500 text-emerald-600 dark:text-emerald-500",
         };
       case "normal":
       default:
         return {
           color:
-            "bg-stone-400/12 ring-stone-600/40 dark:ring-stone-100/12 dark:bg-stone-100/12",
+            "bg-stone-400/12 ring-stone-600/40 dark:ring-stone-100/12 text-stone-700 dark:text-stone-300 dark:bg-stone-100/12",
         };
     }
   }
@@ -54,7 +54,7 @@
       ${badgeConfig.color} ${styling}
     `}
   >
-    <Caption1 styling="">
+    <Caption1 override="">
       {#if badgeConfig.text}
         {badgeConfig.text}
       {:else}

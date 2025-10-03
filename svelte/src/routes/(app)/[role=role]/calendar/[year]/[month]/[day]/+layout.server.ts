@@ -9,7 +9,7 @@ export const load = (async ({ fetch, params }) => {
     (item) => Number(item),
   );
 
-  if (isNaN(day) || day < 1 || year > 31) {
+  if (isNaN(day) || day < 1 || day > 31) {
     throw error(404);
   }
   const { start, end } = createDaySpan(year, month, day);
