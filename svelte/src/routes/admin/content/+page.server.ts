@@ -1,6 +1,5 @@
 import logger from "$lib/logger";
 import { routes } from "$lib/routes";
-import { handleApiResponse, isSuccessResponse } from "$lib/server";
 import { fail, redirect } from "@sveltejs/kit";
 import type { Actions, PageServerLoad } from "./$types";
 
@@ -24,15 +23,7 @@ export const actions: Actions = {
       logger.error({ errorData }, "ERROR SVELTE SIDE CONTENT CREATION");
       return fail(500);
     }
-
-    const newResult = await handleApiResponse<string>(response);
-
-    if (!isSuccessResponse(newResult)) {
-      logger.error({ newResult }, "ERROR AXUM SIDE CONTENT CREATION");
-      return fail(newResult.status, { message: newResult.message });
-    }
-
-    const id = newResult.data;
+    const { id } = await response.json();
 
     return redirect(301, `/admin/content/${id}/edit`);
   },

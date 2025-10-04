@@ -1,7 +1,6 @@
 import logger from "$lib/logger";
 import { routes } from "$lib/routes";
-import { handleApiResponse, isSuccessResponse } from "$lib/server";
-import type { EmptyResponse, URLResponse } from "$lib/types";
+import type { URLResponse } from "$lib/types";
 import type { components } from "$lib/types/api/gen/openapi";
 import type { Actions } from "@sveltejs/kit";
 import { fail } from "@sveltejs/kit";
@@ -17,10 +16,8 @@ export const actions = {
       method: "PUT",
     });
 
-    const editResult = await handleApiResponse<EmptyResponse>(response);
-
-    if (!isSuccessResponse(editResult)) {
-      logger.error({ editResult, id }, "completing task failed");
+    if (!response.ok) {
+      logger.error({ id }, "error making task as completed");
       return fail(500);
     }
 
@@ -87,11 +84,10 @@ export const actions = {
     const response = await fetch(routes.files.delete_file({ id }), {
       method: "DELETE",
     });
-    const deleteResult = await handleApiResponse<EmptyResponse>(response);
 
-    if (!isSuccessResponse(deleteResult)) {
-      logger.error("File deletion failed");
-      return fail(deleteResult.status, { message: deleteResult.message });
+    if (!response.ok) {
+      logger.error({ id }, "error deleting file");
+      return fail(500);
     }
 
     logger.info("File deleted successfully");

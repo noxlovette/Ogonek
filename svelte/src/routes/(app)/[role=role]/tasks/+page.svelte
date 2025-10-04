@@ -68,6 +68,7 @@
 
   function toggleCompletedTasks() {
     completedStore.set(!$completedStore);
+    currentPage.set(1);
   }
   const { page, totalPages, count, perPage } = $derived(data.tasksPaginated);
   const tasks = $derived(data.tasksPaginated.data);

@@ -1,6 +1,5 @@
 import logger from "$lib/logger";
 import { routes } from "$lib/routes";
-import { handleApiResponse, isSuccessResponse } from "$lib/server";
 import type { LessonSmall, PaginatedResponse } from "$lib/types";
 import { error, fail, redirect, type Actions } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
@@ -45,15 +44,12 @@ export const actions: Actions = {
       logger.error({ errorData }, "ERROR SVELTE SIDE LESSON CREATION");
       return fail(500);
     }
-
-    const newResult = await handleApiResponse<string>(response);
-
-    if (!isSuccessResponse(newResult)) {
-      logger.error({ newResult }, "ERROR AXUM SIDE LESSON CREATION");
-      return fail(newResult.status, { message: newResult.message });
+    if (!response.ok) {
+      const errorData = await response.text();
+      logger.error({ errorData }, "ERROR SVELTE SIDE CONTENT CREATION");
+      return fail(500);
     }
-
-    const id = newResult.data;
+    const { id } = await response.json();
 
     return redirect(301, `/t/lessons/${id}/edit`);
   },

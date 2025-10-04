@@ -1,6 +1,6 @@
 [package]
 name = "ogonek_server"
-version = "1.12.4"
+version = "1.12.5"
 edition = "2024"
 
 [dependencies]
@@ -35,7 +35,6 @@ sentry-tower = {version = "0.38.1", features = ["axum", "axum-matched-path", "ht
 tokio = { version = "1.47", features = ["full"] }
 
 base64 = "0.22.1"
-serde_yaml = "0.9.34"
 rpassword = "7.4.0"
 argon2 = "0.5.3"
 jsonwebtoken = { version = "9.3.1", features = ["use_pem"] }

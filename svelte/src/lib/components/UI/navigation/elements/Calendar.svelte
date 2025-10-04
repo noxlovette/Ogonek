@@ -3,6 +3,7 @@
   import SidebarItem from "./SidebarItem.svelte";
   import { page } from "$app/state";
   import { writable } from "svelte/store";
+  import { m } from "$lib/paraglide/messages";
 
   const now = new Date();
   const month = now.getMonth() + 1;
@@ -19,4 +20,4 @@
   });
 </script>
 
-<SidebarItem href={$href} name="Календарь" Icon={Calendar} />
+<SidebarItem href={$href} name={m.brief_fresh_carp_believe()} Icon={Calendar} />

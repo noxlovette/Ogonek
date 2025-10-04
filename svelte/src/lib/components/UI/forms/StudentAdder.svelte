@@ -7,7 +7,6 @@
   import UniButton from "./buttons/UniButton.svelte";
   import { Caption1 } from "$lib/components/typography";
   import Headline from "$lib/components/typography/Headline.svelte";
-  import Toggler from "../interactive/Toggler.svelte";
   import { m } from "$lib/paraglide/messages";
   import { TickMorph } from "../interactive";
 
@@ -73,7 +72,7 @@
         })}
       >
         <Caption1>{m.moving_slow_mantis_shine()}</Caption1>
-        <TickMorph name="isRegistered" title={m.yes()} />
+        <TickMorph value={false} name="isRegistered" title={m.yes()} />
         <UniButton
           type="submit"
           iconOnly={false}

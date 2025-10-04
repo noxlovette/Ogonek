@@ -1,7 +1,6 @@
 import logger from "$lib/logger";
 
 import { routes } from "$lib/routes";
-import { handleApiResponse, isSuccessResponse } from "$lib/server";
 import type { PaginatedResponse, TaskSmall } from "$lib/types";
 import { error, fail, redirect, type Actions } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
@@ -43,20 +42,15 @@ export const actions: Actions = {
     const response = await fetch(routes.tasks.new(), {
       method: "POST",
     });
-
-    const newResult = await handleApiResponse<string>(response);
-
-    if (!isSuccessResponse(newResult)) {
-      logger.info("Task creation failed axum-side");
-      return fail(newResult.status, { message: newResult.message });
+    if (!response.ok) {
+      const errorData = await response.text();
+      logger.error({ errorData }, "ERROR SVELTE SIDE CONTENT CREATION");
+      return fail(500);
     }
+    const { id } = await response.json();
 
-    const id = newResult.data;
-
-    if (response.ok) {
-      logger.info("Task creation completed");
-      return redirect(301, `/t/tasks/${id}/edit`);
-    }
+    logger.info("Task creation completed");
+    return redirect(301, `/t/tasks/${id}/edit`);
   },
   requestHW: async ({ fetch }) => {
     const response = await fetch(routes.notifications.request_hw(), {

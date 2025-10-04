@@ -2,12 +2,9 @@ import { dev } from "$app/environment";
 import { env } from "$env/dynamic/public";
 import { z } from "$lib";
 import logger from "$lib/logger";
+import { m } from "$lib/paraglide/messages";
 import { routes } from "$lib/routes";
-import {
-  captchaVerify,
-  handleApiResponse,
-  isSuccessResponse,
-} from "$lib/server";
+import { captchaVerify } from "$lib/server";
 import { validateForm } from "$lib/utils";
 import { fail, redirect } from "@sveltejs/kit";
 import type { Actions } from "./$types";
@@ -66,7 +63,7 @@ export const actions = {
           username: false,
           email: false,
           pass: false,
-          message: "Verification service unavailable",
+          message: m.careful_misty_kestrel_renew(),
         });
       }
 
@@ -77,7 +74,7 @@ export const actions = {
           username: false,
           email: false,
           pass: false,
-          message: "Captcha verification failed",
+          message: m.careful_misty_kestrel_renew(),
         });
       }
     }
@@ -86,11 +83,11 @@ export const actions = {
       body: JSON.stringify({ username, pass, email, role, name }),
     });
 
-    const result = await handleApiResponse<string>(response);
-    if (!isSuccessResponse(result)) {
-      if (result.status === 409) {
+    if (!response.ok) {
+      const err = await response.text();
+      if (response.status === 409) {
         return fail(409, {
-          message: "Username or email already exists",
+          message: m.even_fair_barbel_spur(),
           username: true,
           email: true,
           pass: false,
@@ -98,7 +95,7 @@ export const actions = {
           captcha: false,
         });
       }
-      if (result.status === 422) {
+      if (response.status === 422) {
         return fail(422, {
           message: "Invalid registration data",
           username: false,
@@ -108,9 +105,8 @@ export const actions = {
           captcha: false,
         });
       }
-      logger.error({ result }, "Signup failed");
+      logger.error({ err }, "Signup failed");
       return fail(400, {
-        message: result.message,
         username: false,
         email: false,
         pass: false,
@@ -120,20 +116,23 @@ export const actions = {
     }
 
     if (inviteToken && typeof inviteToken === "string") {
-      const studentId = result.data;
+      const studentId = await response.json();
 
-      const inviteResponse = await fetch("/axum/auth/bind", {
-        method: "POST",
-        body: JSON.stringify({ inviteToken, studentId }),
-      });
+      const inviteResponse = await fetch(
+        routes.auth.bind_student_to_teacher(),
+        {
+          method: "POST",
+          body: JSON.stringify({ inviteToken, studentId }),
+        },
+      );
 
-      const inviteResult = await handleApiResponse(inviteResponse);
-      if (!isSuccessResponse(inviteResult)) {
+      if (!inviteResponse.ok) {
+        const err = await inviteResponse.text();
         logger.warn(
           {
             inviteToken: inviteToken.slice(0, 8) + "...",
             studentId,
-            error: inviteResult,
+            err,
           },
           "Invite binding failed - account created but not linked",
         );

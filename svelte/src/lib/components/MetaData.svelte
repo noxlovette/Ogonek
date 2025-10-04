@@ -5,7 +5,6 @@
     description?: string;
     title?: string;
     keywords?: string;
-    robots?: string;
     ogTitle?: string;
     ogUrl?: string;
     ogImage?: string;
@@ -20,7 +19,6 @@
     description = "Ogonek. The digital classroom for private teachers.",
     title = "Ogonek",
     keywords = "education, teach, English, classroom management, teaching, learning, private tutoring, flashcards, lesson planning",
-    robots = "index, follow",
     ogTitle = "Ogonek",
     ogUrl = "https://ogonek.app",
     ogImage = "https://ogonek.app/images/og.png",
@@ -93,7 +91,6 @@
   />
   <meta name="description" content={description} />
   <meta name="keywords" content={keywords} />
-  <meta name="robots" content={robots} />
   <meta property="og:locale" content="en_GB" />
 
   <!-- Canonical URL -->

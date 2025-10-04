@@ -29,7 +29,9 @@
         content="Следующая"
         Icon={ChevronRight}
         disable={isLastPage}
-        onclick={() => currentPage.increase()}
+        onclick={() => {
+          currentPage.increase();
+        }}
       />
     </Merger>
   {/if}

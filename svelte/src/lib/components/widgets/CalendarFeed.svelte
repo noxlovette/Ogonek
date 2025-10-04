@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { m } from "$lib/paraglide/messages";
   import type { EventSmall } from "$lib/types/api/calendar";
   import EventCard from "../cards/EventCard.svelte";
   import { EmptySpace, Title2 } from "../typography";
@@ -8,10 +9,10 @@
 </script>
 
 <HStack>
-  <Title2>События Сегодня</Title2>
+  <Title2>{m.smug_bright_thrush_praise()}</Title2>
   {#each events as event}
     <EventCard deactivate={true} {event} />
   {:else}
-    <EmptySpace>На сегодня ничего нет</EmptySpace>
+    <EmptySpace>{m.pink_still_crab_view()}</EmptySpace>
   {/each}
 </HStack>
