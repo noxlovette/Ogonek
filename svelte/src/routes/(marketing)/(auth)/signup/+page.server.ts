@@ -2,6 +2,7 @@ import { dev } from "$app/environment";
 import { env } from "$env/dynamic/public";
 import { z } from "$lib";
 import logger from "$lib/logger";
+import { m } from "$lib/paraglide/messages";
 import { routes } from "$lib/routes";
 import { captchaVerify } from "$lib/server";
 import { validateForm } from "$lib/utils";
@@ -62,7 +63,7 @@ export const actions = {
           username: false,
           email: false,
           pass: false,
-          message: "Verification service unavailable",
+          message: m.careful_misty_kestrel_renew(),
         });
       }
 
@@ -73,7 +74,7 @@ export const actions = {
           username: false,
           email: false,
           pass: false,
-          message: "Captcha verification failed",
+          message: m.careful_misty_kestrel_renew(),
         });
       }
     }
@@ -86,7 +87,7 @@ export const actions = {
       const err = await response.text();
       if (response.status === 409) {
         return fail(409, {
-          message: "Username or email already exists",
+          message: m.even_fair_barbel_spur(),
           username: true,
           email: true,
           pass: false,
