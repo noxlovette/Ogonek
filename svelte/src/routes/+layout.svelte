@@ -73,4 +73,6 @@
   {#if env.PUBLIC_YANDEX_VERIFICATION}
     <meta name="yandex-verification" content={env.PUBLIC_YANDEX_VERIFICATION} />
   {/if}
+
+  <meta name="robots" content="noindex, nofollow" />
 </svelte:head>

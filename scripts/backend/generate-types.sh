@@ -30,10 +30,10 @@ echo -e "${YELLOW}📋 Generating OpenAPI spec...${NC}"
 run_cmd cargo run --bin ogonek_cli generate-types 
 
 # Copy OpenAPI spec to Swift project
-if [ -f openapi.yaml ]; then
+if [ -f openapi.json ]; then
     cp openapi.json ../svelte/ || echo -e "${YELLOW} Could not copy spec to svelte folder${NC}"
 
-    cp openapi.yaml ~/Development/ogonek-swift/ || echo -e "${YELLOW}⚠️  Could not copy OpenAPI spec to Swift project${NC}"
+    cp openapi.json ~/Development/ogonek-swift/ || echo -e "${YELLOW}⚠️  Could not copy OpenAPI spec to Swift project${NC}"
 fi
 
 cd ../svelte

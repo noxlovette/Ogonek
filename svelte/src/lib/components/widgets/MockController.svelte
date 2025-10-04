@@ -12,6 +12,7 @@
     { code: "de", name: "DE", flag: "🇩🇪" },
     { code: "ru", name: "RU", flag: "🇷🇺" },
     { code: "fr", name: "FR", flag: "🇫🇷" },
+    { code: "bo", name: "BO", flag: "🎩" },
   ];
 
   function getCookie(name: string): string | null {
