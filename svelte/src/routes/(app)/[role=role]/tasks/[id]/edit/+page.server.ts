@@ -1,7 +1,5 @@
 import logger from "$lib/logger";
 import { routes } from "$lib/routes";
-import { handleApiResponse, isSuccessResponse } from "$lib/server";
-import type { EmptyResponse } from "$lib/types";
 import type { Actions } from "@sveltejs/kit";
 import { fail, redirect } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
@@ -88,11 +86,9 @@ export const actions = {
       method: "DELETE",
     });
 
-    const deleteResult = await handleApiResponse<EmptyResponse>(response);
-
-    if (!isSuccessResponse(deleteResult)) {
-      logger.error({ deleteResult }, "Error deleting file");
-      return fail(deleteResult.status, { message: deleteResult.message });
+    if (!response.ok) {
+      logger.error({ id }, "error deleting file");
+      return fail(500);
     }
 
     return {

@@ -1,6 +1,5 @@
 import logger from "$lib/logger";
 import { routes } from "$lib/routes";
-import { handleApiResponse, isSuccessResponse } from "$lib/server";
 import type { DeckSmall, PaginatedResponse } from "$lib/types";
 import { error, fail, redirect, type Actions } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
@@ -38,14 +37,12 @@ export const actions: Actions = {
     const response = await fetch(routes.decks.new(), {
       method: "POST",
     });
-
-    const newResult = await handleApiResponse<string>(response);
-    if (!isSuccessResponse(newResult)) {
-      logger.error({ newResult }, "Deck creation failed");
-      return fail(newResult.status, { message: newResult.message });
+    if (!response.ok) {
+      const errorData = await response.text();
+      logger.error({ errorData }, "ERROR SVELTE SIDE CONTENT CREATION");
+      return fail(500);
     }
-
-    const id = newResult.data;
+    const { id } = await response.json();
     return redirect(301, `flashcards/${id}/edit`);
   },
   delete: async ({ fetch, request }) => {

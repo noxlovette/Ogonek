@@ -42,12 +42,14 @@ pub async fn read_all(
     }
 
     // Completed filter
-    if let Some(completed) = params.completed
-        && !completed
-    {
-        query_builder.push(" AND t.completed = false");
-
-        // If completed=true, show all (no filter needed)
+    match params.completed {
+        Some(false) | None => {
+            // Show only incomplete tasks
+            query_builder.push(" AND t.completed = false");
+        }
+        Some(true) => {
+            // Show both completed and incomplete tasks (no filter)
+        }
     }
 
     // Assignee filter
@@ -107,10 +109,13 @@ pub async fn read_all(
         count_query.push(")");
     }
 
-    if let Some(completed) = params.completed
-        && !completed
-    {
-        count_query.push(" AND t.completed = false");
+    match params.completed {
+        Some(false) | None => {
+            count_query.push(" AND t.completed = false");
+        }
+        Some(true) => {
+            // Show both completed and incomplete tasks (no filter)
+        }
     }
 
     if let Some(assignee) = &params.assignee {
