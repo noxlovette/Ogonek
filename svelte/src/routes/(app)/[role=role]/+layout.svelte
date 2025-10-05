@@ -15,6 +15,7 @@
     Calendar,
     Divider,
     HLine,
+    Caption1,
   } from "$lib/components";
   import { studentStore, setUser, setProfile } from "$lib/stores";
 
@@ -40,7 +41,7 @@
 </script>
 
 <div class="flex flex-row gap-4 p-2 md:gap-6 md:p-5 lg:gap-8 lg:p-6">
-  <div class="hidden w-max flex-col md:block">
+  <div class="gap-default hidden w-max flex-col md:flex">
     <Sidebar
       ><Dashboard />
       <HLine />
@@ -56,7 +57,8 @@
       {#if role != "s"}
         <Calendar />
       {/if}
-      <HLine></HLine>
+    </Sidebar>
+    <Sidebar>
       {#if role == "s"}
         <UsefulLinks />
       {:else}

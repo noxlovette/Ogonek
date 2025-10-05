@@ -47,7 +47,8 @@ export const actions: Actions = {
       logger.error({ errorData }, "ERROR SVELTE SIDE CONTENT CREATION");
       return fail(500);
     }
-    const { id } = await response.json();
+    const id = await response.json();
+    console.log(id);
 
     logger.info("Task creation completed");
     return redirect(301, `/t/tasks/${id}/edit`);
