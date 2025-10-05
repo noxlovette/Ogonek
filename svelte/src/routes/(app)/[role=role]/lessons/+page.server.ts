@@ -44,12 +44,8 @@ export const actions: Actions = {
       logger.error({ errorData }, "ERROR SVELTE SIDE LESSON CREATION");
       return fail(500);
     }
-    if (!response.ok) {
-      const errorData = await response.text();
-      logger.error({ errorData }, "ERROR SVELTE SIDE CONTENT CREATION");
-      return fail(500);
-    }
-    const { id } = await response.json();
+
+    const id = await response.json();
 
     return redirect(301, `/t/lessons/${id}/edit`);
   },

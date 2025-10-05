@@ -33,7 +33,7 @@
     }
   });
 
-  let assigned = $state(task.assignee ? true : false);
+  let assigned = $state(task.assignee ? true : false || true);
 </script>
 
 <form

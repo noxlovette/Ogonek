@@ -2,6 +2,7 @@
   import { Trash2, Image } from "@lucide/svelte";
   import type { Card } from "$lib/types";
   import { Input } from "../UI";
+  import { m } from "$lib/paraglide/messages";
 
   let {
     index,
@@ -31,21 +32,21 @@
     <div>
       <Input
         type="textarea"
-        labelName="Незнакомая информация"
+        labelName={m.steep_keen_barbel_agree()}
         name={`cards[${index}][front]`}
         bind:value={card.front}
-        placeholder="Незнакомая информация"
+        placeholder={m.sweet_plane_walrus_yell()}
       />
     </div>
 
     <!-- Back -->
     <div>
       <Input
-        labelName="Объяснение"
+        labelName={m.frail_born_warbler_tend()}
         type="textarea"
         name={`cards[${index}][back]`}
         bind:value={card.back}
-        placeholder="Объяснение"
+        placeholder={m.awful_witty_mayfly_delight()}
       />
     </div>
   </div>
