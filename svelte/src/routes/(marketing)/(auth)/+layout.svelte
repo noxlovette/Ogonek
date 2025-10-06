@@ -1,15 +1,5 @@
 <script lang="ts">
-  import {
-    Caption1,
-    Grid,
-    Header,
-    HStack,
-    LargeTitle,
-    Title1,
-    Title3,
-    Toolbar,
-  } from "$lib/components";
-  import { m } from "$lib/paraglide/messages";
+  import { Caption1, LargeTitle } from "$lib/components";
 
   import { page } from "$app/state";
 
@@ -22,14 +12,14 @@
 
 <div class="gap-default mx-auto flex flex-col items-center justify-center">
   <LargeTitle styling="text-center"
-    >{isLogin ? m.zany_few_goose_mop() : m.bad_even_seahorse_rise()}</LargeTitle
+    >{isLogin ? "Мы вас ждали" : "Добро пожаловать"}</LargeTitle
   >
   <Caption1>
-    {isLogin ? m.petty_neat_emu_endure() : m.dark_candid_octopus_compose()}
+    {isLogin ? "Нет аккаунта? Давайте делать" : "Есть аккаунт? Вам сюда"}
     <a
       data-cy={isLogin ? "signup-button" : "login-button"}
       href={isLogin ? "/signup" : "/login"}
-      class="text-accent">{isLogin ? m.nimble_north_worm_drop() : m.logIn()}</a
+      class="text-accent">{isLogin ? "Регистрация" : "Авторизация"}</a
     >
   </Caption1>
 

@@ -5,9 +5,10 @@
     Title3,
     Toolbar,
     Divider,
+    Title2,
+    EditButton,
   } from "$lib/components";
-  import Title2 from "$lib/components/typography/Title2.svelte";
-  import EditButton from "$lib/components/UI/forms/buttons/EditButton.svelte";
+  import texts from "$lib/texts.js";
   let { data } = $props();
 
   const { student, rendered } = data;
@@ -24,13 +25,13 @@
   <Divider />
   <EditButton href="/t/students/{student.id}/edit" />
 </Toolbar>
-<Title2>Notes</Title2>
+<Title2>Заметки</Title2>
 {#if student.markdown}
   <div class="">
     {@html rendered}
   </div>
 {:else}
   <EmptySpace>
-    <Title3>No Notes</Title3>
+    {texts.table.empty}
   </EmptySpace>
 {/if}

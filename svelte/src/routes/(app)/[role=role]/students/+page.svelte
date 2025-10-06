@@ -9,13 +9,11 @@
     Divider,
     Merger,
     EmptySpace,
-    Title1,
     TableBody,
     TableRow,
     Headline,
   } from "$lib/components";
-  import type { Student } from "$lib/types";
-  import { m } from "$lib/paraglide/messages";
+  import texts from "$lib/texts";
 
   let { data }: { data: PageData } = $props();
 
@@ -23,7 +21,7 @@
 </script>
 
 <Toolbar>
-  <LargeTitle>{m.mellow_stout_fireant_assure()}</LargeTitle>
+  <LargeTitle>Ученики</LargeTitle>
   <Divider />
   <Merger>
     <StudentAdder />
@@ -32,7 +30,7 @@
 
 {#if data.students.length < 1}
   <EmptySpace>
-    <Title1>{m.empty()}</Title1>
+    {texts.table.empty}
   </EmptySpace>
 {/if}
 <Table>
@@ -47,5 +45,5 @@
   </TableBody>
 </Table>
 <svelte:head>
-  <title>{m.mellow_stout_fireant_assure()}</title>
+  <title>Ученики</title>
 </svelte:head>

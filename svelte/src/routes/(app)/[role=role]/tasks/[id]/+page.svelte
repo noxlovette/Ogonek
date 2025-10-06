@@ -18,9 +18,9 @@
   import Multipart from "$lib/components/UI/interactive/Multipart.svelte";
   import Badge from "$lib/components/cards/Badge.svelte";
   import { getUrgency } from "$lib/utils";
-  import { m } from "$lib/paraglide/messages.js";
   import VStack from "$lib/components/UI/layout/VStack.svelte";
   import DownloadButton from "$lib/components/UI/forms/buttons/DownloadButton.svelte";
+  import texts from "$lib/texts.js";
 
   let { data, form } = $props();
   const { files, rendered } = $derived(data);
@@ -28,7 +28,7 @@
   let role = $derived(page.params.role);
   let completed = $state(data.task.completed);
 
-  let formattedDate = $state(m.arable_flat_emu_strive());
+  let formattedDate = $state();
 
   if (data.task.dueDate) {
     formattedDate = formatDateOnly(data.task.dueDate);
@@ -73,8 +73,9 @@
           action="?/complete"
           use:enhance={enhanceForm({
             messages: {
-              success: completed ? m.notCompleted() : m.markedAsCompleted(),
-              defaultError: m.failedToSaveChanges(),
+              success: completed
+                ? texts.tasks.notCompleted
+                : texts.tasks.completed,
             },
             handlers: {
               success: async () => {
@@ -86,7 +87,7 @@
           <UniButton
             variant={role === "t" ? "primary" : "prominent"}
             type="submit"
-            content={completed ? m.complete() : m.notCompleted()}
+            content={completed ? texts.crud.complete : texts.crud.uncomplete}
             Icon={completed ? Check : Circle}
           ></UniButton>
         </form>
@@ -112,17 +113,17 @@
   <div class="flex gap-4 md:flex-col">
     {#if files.length > 0}
       <div class="gap-default flex w-full flex-col">
-        <Caption1>{m.stock_wise_cowfish_roam()}</Caption1>
+        <Caption1>Хуй</Caption1>
         {#each files as file (file.id)}
           <FileTaskCard {file} />
         {/each}
       </div>
     {:else}
-      <EmptySpace>{m.sleek_empty_zebra_harbor()}</EmptySpace>
+      <EmptySpace>{texts.table.empty}</EmptySpace>
     {/if}
     {#if page.params.role === "s"}
       <div class="gap-default flex w-full flex-col">
-        <Caption1>{m.bright_helpful_firefox_stir()}</Caption1>
+        <Caption1>Вы можете загрузить здесь ДЗ</Caption1>
         <Multipart taskId={data.task.id} />
       </div>
     {/if}

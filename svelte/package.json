@@ -1,6 +1,6 @@
 {
   "name": "ogonek",
-  "version": "1.12.11",
+  "version": "1.13.0",
   "private": true,
   "scripts": {
     "dev": "vite dev",
@@ -46,7 +46,6 @@
     "@eslint/compat": "^1.4.0",
     "@eslint/js": "^9.36.0",
     "@faker-js/faker": "^10.0.0",
-    "@inlang/paraglide-js": "^2.4.0",
     "@sveltejs/kit": "^2.43.5",
     "@sveltejs/vite-plugin-svelte": "^6.2.1",
     "@tailwindcss/postcss": "^4.1.13",

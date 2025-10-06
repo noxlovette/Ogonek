@@ -1,13 +1,13 @@
 <script lang="ts">
-  import { Shredder, Trash2 } from "@lucide/svelte";
+  import { Shredder } from "@lucide/svelte";
   import { UniButton } from "..";
-  import { m } from "$lib/paraglide/messages";
+  import texts from "$lib/texts";
 </script>
 
 <UniButton
   variant="danger"
   formaction="?/delete"
-  content={m.delete()}
+  content={texts.crud.delete}
   ariaLabel="Delete"
   Icon={Shredder}
   shouldConfirm={true}

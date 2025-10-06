@@ -2,7 +2,6 @@
   import type { Snippet } from "svelte";
   import { Caption1 } from "../typography";
   import type { Urgency } from "$lib/types";
-  import { m } from "$lib/paraglide/messages";
 
   const {
     urgency = "normal",
@@ -14,18 +13,18 @@
     switch (urgency) {
       case "overdue":
         return {
-          text: m.sweet_alive_bear_pop(),
+          text: "Просрочено",
           color: "bg-red-600/12 text-red-700 dark:text-red-500 ring-red-600  ",
         };
       case "urgent":
         return {
-          text: m.caring_super_meerkat_tend(),
+          text: "Срочно",
           color:
             "bg-amber-600/12 dark:text-amber-500 text-amber-700 ring-amber-600",
         };
       case "soon":
         return {
-          text: m.blue_day_tuna_pinch(),
+          text: "Пора бы",
           color:
             "bg-yellow-600/12 text-yellow-700 dark:text-yellow-500 ring-yellow-600",
         };

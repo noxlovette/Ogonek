@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { m } from "$lib/paraglide/messages";
   import type { Card } from "$lib/types";
   import { Callout, Caption1 } from "../typography";
 
@@ -57,9 +56,7 @@
       {/if}
 
       <div class="absolute right-3 bottom-2">
-        <Caption1>
-          {m.noble_dry_skunk_reside()}
-        </Caption1>
+        <Caption1>Клик перевернет</Caption1>
       </div>
     </div>
   </div>

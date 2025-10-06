@@ -2,7 +2,6 @@
   import { ListTodo } from "@lucide/svelte";
   import SidebarItem from "./SidebarItem.svelte";
   import { getContext } from "svelte";
-  import { m } from "$lib/paraglide/messages";
   import MobileMenuElement from "../mobileMenu/MobileMenuElement.svelte";
   import { page } from "$app/state";
   import { writable } from "svelte/store";
@@ -21,12 +20,12 @@
   dataCy="sidebar-tasks"
   href={$href}
   Icon={ListTodo}
-  name={m.tasks()}
+  name="Задания"
   badge={taskCount}
 />
 <MobileMenuElement
   href={$href}
   Icon={ListTodo}
-  name={m.tasks()}
+  name="Задания"
   badge={taskCount}
 />

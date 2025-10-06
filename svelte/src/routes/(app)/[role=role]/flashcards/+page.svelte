@@ -30,7 +30,6 @@
   import { enhanceForm } from "$lib/utils";
   import { page as sveltePage } from "$app/state";
   import { GraduationCap } from "@lucide/svelte";
-  import { m } from "$lib/paraglide/messages";
   import {
     searchTerm,
     pageSize,
@@ -40,7 +39,8 @@
     sortOrder,
   } from "$lib/stores";
   import { goto } from "$app/navigation";
-  import message from "$lib/messages.js";
+  import { texts } from "$lib/texts";
+  import { text } from "stream/consumers";
 
   let { data } = $props();
 
@@ -69,11 +69,11 @@
 </script>
 
 <svelte:head>
-  <title>{m.flashcards()}</title>
+  <title>{texts.flashcards.title}</title>
 </svelte:head>
 
 <Toolbar>
-  <LargeTitle>{m.flashcards()}</LargeTitle>
+  <LargeTitle>{texts.flashcards.title}</LargeTitle>
   <Divider />
   <VStack>
     <Merger>
@@ -82,7 +82,7 @@
         method="post"
         use:enhance={enhanceForm({
           messages: {
-            redirect: message.crud.created,
+            redirect: texts.crud.created,
           },
           navigate: true,
         })}
@@ -93,7 +93,7 @@
         <UniButton
           variant="primary"
           fill={false}
-          content={m.helpful_slow_flea_catch()}
+          content={texts.flashcards.study}
           Icon={GraduationCap}
           href="flashcards/learn"
         ></UniButton>
@@ -126,7 +126,7 @@
             Выбрано {selected.length} из {decks.length}
           </Subheadline>
         {:else}
-          <Subheadline>Выбрать все</Subheadline>
+          <Subheadline>{texts.table.selectAll}</Subheadline>
         {/if}
         <Divider />
 
@@ -153,7 +153,9 @@
               </HStack>
               <Divider />
               <Badge urgency={deck.isSubscribed ? "green" : "normal"}>
-                {deck.isSubscribed ? "Подписаны" : "Не подписаны"}
+                {deck.isSubscribed
+                  ? texts.flashcards.subscribed
+                  : texts.flashcards.unsubscribed}
               </Badge>
             </TableRow>
           </div>
@@ -166,6 +168,6 @@
   {/if}
 {:else}
   <EmptySpace>
-    <Title1>{m.noDecks()}</Title1>
+    <Title1>{texts.table.empty}</Title1>
   </EmptySpace>
 {/if}

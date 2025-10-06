@@ -5,5 +5,5 @@
 {@render children()}
 
 <svelte:head>
-  <title>Lesson • {data.lesson.topic}</title>
+  <title>Занятие • {data.lesson.topic}</title>
 </svelte:head>

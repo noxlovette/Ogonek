@@ -4,7 +4,6 @@
   import logger from "$lib/logger";
   import { formatPercentage } from "$lib/utils";
   import Caption1 from "$lib/components/typography/Caption1.svelte";
-  import { m } from "$lib/paraglide/messages";
   import ProgressBar from "../content/ProgressBar.svelte";
   import { UniButton } from "../forms";
   import { HStack, VStack } from "..";
@@ -389,13 +388,9 @@
             progress={formatPercentage(fileState.progress.percentComplete)}
           />
         {:else if fileState.status === "complete"}
-          <Caption1 override="text-emerald-600"
-            >{m.every_sunny_pelican_buzz()}</Caption1
-          >
+          <Caption1 override="text-emerald-600">Успех</Caption1>
         {:else if fileState.status === "error"}
-          <Caption1 override="text-red-600"
-            >{m.weird_level_sheep_imagine()}</Caption1
-          >
+          <Caption1 override="text-red-600">Облом</Caption1>
         {/if}
       </div>
     {/each}

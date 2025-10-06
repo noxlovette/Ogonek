@@ -20,7 +20,7 @@
   import { enhanceForm } from "$lib/utils";
   import Badge from "$lib/components/cards/Badge.svelte";
   import { page } from "$app/state";
-  import { m } from "$lib/paraglide/messages";
+  import texts from "$lib/texts.js";
 
   let { data } = $props();
 
@@ -31,7 +31,7 @@
 
   const assigneeName = $derived(
     data.students.find((student) => student.id === data.deck.assignee)?.name ||
-      m.notAssigned(),
+      "Нет привязки",
   );
 
   const toggleCard = (cardId: string) => {
@@ -54,7 +54,7 @@
       <VStack>
         <Merger>
           <UniButton
-            content={m.knotty_ideal_marten_zip()}
+            content="Режим тренировки"
             href="{deck.id}/test"
             Icon={BookOpenCheck}
           ></UniButton>
@@ -64,9 +64,7 @@
             action="?/subscribe"
             use:enhance={enhanceForm({
               messages: {
-                success: isSubscribed
-                  ? m.elegant_small_gadfly_quell()
-                  : m.stout_royal_macaw_fear(),
+                success: isSubscribed ? "Вы отписались" : "Вы подписались",
               },
               handlers: {
                 success: async () => {
@@ -82,9 +80,7 @@
               fill={isSubscribed ? true : false}
               type="submit"
               variant={page.params.role === "t" ? "primary" : "prominent"}
-              content={isSubscribed
-                ? m.fluffy_elegant_coyote_assure()
-                : m.fit_least_baboon_imagine()}
+              content={isSubscribed ? "Отписаться" : "Подписаться"}
             ></UniButton>
           </form>
         </Merger>
@@ -94,14 +90,11 @@
             action="?/duplicate"
             use:enhance={enhanceForm({
               messages: {
-                success: "Deck Duplicated",
+                success: "Дубликат создан",
               },
             })}
           >
-            <UniButton
-              Icon={Copy}
-              content={m.less_calm_blackbird_play()}
-              type="submit"
+            <UniButton Icon={Copy} content="Создать дубликат" type="submit"
             ></UniButton>
           </form>
           {#if $user.id === deck.createdBy}
@@ -120,7 +113,6 @@
       {/if}
       <Badge>
         {cards.length}
-        {m.some_happy_cat({ count: cards.length })}
       </Badge>
       {#if page.params.role == "t"}
         <Caption1>
@@ -139,6 +131,6 @@
 
 {#if cards.length === 0}
   <EmptySpace>
-    {m.noFlashcards()}
+    {texts.table.empty}
   </EmptySpace>
 {/if}

@@ -101,15 +101,15 @@
 
 {#if isTestComplete}
   <HStack>
-    <Title3>Score</Title3>
+    <Title3>Итоги</Title3>
     <Body>
       {correctCount}/{cards.length}
     </Body>
     <Callout>
-      {accuracy}% correct
+      {accuracy}% верно
     </Callout>
     <Divider></Divider>
-    <Title3>Time</Title3>
+    <Title3>Время</Title3>
     <Callout>
       {Math.floor(timeElapsed / 60)}:{(timeElapsed % 60)
         .toString()
@@ -135,8 +135,8 @@
         class="ring-default bg-default flex w-full flex-col items-center justify-center space-y-2 rounded-lg p-2 hover:bg-stone-100 dark:hover:bg-stone-900"
         onclick={() => (showAnswer = !showAnswer)}
       >
-        <p>Flip</p>
-        <KBD>Space</KBD>
+        <p>Первернуть</p>
+        <KBD>Пробел</KBD>
       </button>
     {:else}
       <HStack>
@@ -150,7 +150,7 @@
           type="button"
           onclick={() => markAnswer(false)}
         >
-          <Callout>Wrong</Callout>
+          <Callout>Неверно</Callout>
           <KBD>1</KBD>
         </button>
         <button
@@ -159,7 +159,7 @@
           type="button"
           onclick={() => markAnswer(true)}
         >
-          <Callout>Correct</Callout>
+          <Callout>Верно</Callout>
           <KBD>2</KBD>
         </button>
       </HStack>

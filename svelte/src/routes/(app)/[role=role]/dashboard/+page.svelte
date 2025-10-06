@@ -9,18 +9,16 @@
     UniButton,
   } from "$lib/components";
   import { getGreeting } from "$lib/utils";
-  import { user } from "$lib/stores";
-  import { m } from "$lib/paraglide/messages";
   import { Settings } from "@lucide/svelte";
   import CalendarFeed from "$lib/components/widgets/CalendarFeed.svelte";
 
   const greetingType = getGreeting();
 
   const greetings = {
-    morning: m["dashboard.morningGreeting"]({ name: $user.name! }),
-    afternoon: m["dashboard.afternoonGreeting"]({ name: $user.name! }),
-    evening: m["dashboard.eveningGreeting"]({ name: $user.name! }),
-    night: m["dashboard.nightGreeting"]({ name: $user.name! }),
+    morning: "Доброго утра",
+    afternoon: "Доброго дня",
+    evening: "Вечер добрый",
+    night: "Чего не спим",
   };
 
   let { data } = $props();
@@ -28,18 +26,14 @@
 
 <Toolbar>
   <div class="md:hidden">
-    <LargeTitle>{m.dashboardName()}</LargeTitle>
+    <LargeTitle>Главная</LargeTitle>
   </div>
   <div class="hidden md:block">
-    <LargeTitle>{greetings[greetingType]}</LargeTitle>
+    <LargeTitle>{greetings[greetingType]}, {data.user.name}</LargeTitle>
   </div>
   <Divider />
   <Merger>
-    <UniButton
-      fill={false}
-      content={m.settings()}
-      href="settings"
-      Icon={Settings}
+    <UniButton fill={false} content="Настройки" href="settings" Icon={Settings}
     ></UniButton>
   </Merger>
 </Toolbar>
@@ -50,5 +44,5 @@
   <CalendarFeed events={data.events} />
 </div>
 <svelte:head>
-  <title>{m.dashboardName()}</title>
+  <title>Главная | Ogonek</title>
 </svelte:head>

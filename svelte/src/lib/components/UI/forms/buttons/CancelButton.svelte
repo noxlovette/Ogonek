@@ -1,8 +1,8 @@
 <script lang="ts">
   import { Ban } from "@lucide/svelte";
   import { UniButton } from "..";
-  import { m } from "$lib/paraglide/messages";
+  import texts from "$lib/texts";
 </script>
 
-<UniButton content={m.cancel()} ariaLabel="Cancel" Icon={Ban} href="."
+<UniButton content={texts.crud.cancel} ariaLabel="Cancel" Icon={Ban} href="."
 ></UniButton>

@@ -2,7 +2,6 @@
   import { BookOpenCheck } from "@lucide/svelte";
   import SidebarItem from "./SidebarItem.svelte";
   import { getContext } from "svelte";
-  import { m } from "$lib/paraglide/messages";
   import MobileMenuElement from "../mobileMenu/MobileMenuElement.svelte";
   import { writable } from "svelte/store";
   import { page } from "$app/state";
@@ -22,13 +21,13 @@
   href={$href}
   dataCy="sidebar-lessons"
   Icon={BookOpenCheck}
-  name={m.lessons()}
+  name="Занятия"
   badge={lessonCount}
 />
 
 <MobileMenuElement
   href={$href}
   Icon={BookOpenCheck}
-  name={m.lessons()}
+  name="Занятия"
   badge={lessonCount}
 />

@@ -38,7 +38,7 @@
     sortOrder,
   } from "$lib/stores";
   import { goto } from "$app/navigation";
-  import { m } from "$lib/paraglide/messages.js";
+  import texts from "$lib/texts.js";
 
   let { data } = $props();
 
@@ -70,7 +70,7 @@
 </script>
 
 <Toolbar>
-  <LargeTitle>{m.lessons()}</LargeTitle>
+  <LargeTitle>"Занятия"</LargeTitle>
   <Divider />
 
   <VStack>
@@ -81,7 +81,7 @@
           method="post"
           use:enhance={enhanceForm({
             messages: {
-              redirect: m.created(),
+              redirect: texts.crud.created,
             },
             navigate: true,
           })}
@@ -96,7 +96,7 @@
 
 {#if lessons.length < 1}
   <EmptySpace>
-    <Title1>{m.noLessons()}</Title1>
+    <Title1>Тут ничего нет</Title1>
   </EmptySpace>
 {/if}
 {#if role === "s"}
@@ -161,5 +161,5 @@
 {/if}
 
 <svelte:head>
-  <title>{m.lessons()}</title>
+  <title>"Занятия"</title>
 </svelte:head>

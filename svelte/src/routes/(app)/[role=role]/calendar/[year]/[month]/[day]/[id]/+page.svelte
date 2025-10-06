@@ -20,7 +20,6 @@
     RRule,
   } from "$lib/components";
   import { page } from "$app/state";
-  import { m } from "$lib/paraglide/messages.js";
 
   const { data } = $props();
   const event = data.event;
@@ -106,7 +105,7 @@
         <Merger>
           {#if videoCallService}
             <UniButton
-              content={m.mealy_zesty_pony_grow()}
+              content="Присоединиться к звонку"
               href={event.location}
               Icon={Video}
             ></UniButton>

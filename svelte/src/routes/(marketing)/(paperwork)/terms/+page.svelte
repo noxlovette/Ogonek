@@ -5,7 +5,7 @@
 </script>
 
 <svelte:head>
-  <title>Terms | Ogonek</title>
+  <title>Пользовательское соглашение | Ogonek</title>
 </svelte:head>
 
 <Toolbar>

@@ -7,28 +7,27 @@
   import UniButton from "./buttons/UniButton.svelte";
   import { Caption1 } from "$lib/components/typography";
   import Headline from "$lib/components/typography/Headline.svelte";
-  import { m } from "$lib/paraglide/messages";
   import { TickMorph } from "../interactive";
 
-  let showPopover = false;
-  let generatedLink = "";
-  let linkInput: HTMLInputElement;
+  let showPopover = $state(false);
+  let generatedLink = $state("");
 
   async function copyLink() {
     try {
       await navigator.clipboard.writeText(generatedLink);
       notification.set({
-        message: "Link copied!",
+        message: "Ссылка скопирована!",
         type: "success",
       });
     } catch {
-      linkInput?.select();
       notification.set({
-        message: "Please copy manually",
+        message: "Скопируйте вручную, пожалуйста",
         type: "info",
       });
     }
   }
+
+  let hasAccount = $state(false);
 </script>
 
 <div class="relative flex size-full">
@@ -36,9 +35,8 @@
     type="button"
     onclick={() => (showPopover = !showPopover)}
     variant="primary"
-    iconOnly={false}
     Icon={Plus}
-    content={m.tangy_bad_goat_fade()}
+    content="Добавить ученика"
   ></UniButton>
   {#if showPopover}
     <div
@@ -46,7 +44,7 @@
       use:clickOutside={() => (showPopover = false)}
     >
       <div class="flex items-center justify-between">
-        <Headline>{m.tangy_bad_goat_fade()}</Headline>
+        <Headline>Новый ученик</Headline>
         <button
           class="text-stone-400 hover:text-stone-700"
           type="button"
@@ -59,26 +57,30 @@
         method="POST"
         class="space-y-2"
         use:enhance={enhanceForm({
-          messages: { failure: "Failed to generate link" },
           handlers: {
             success: async (result) => {
               generatedLink = String(result.data?.link);
               notification.set({
-                message: "Link generated!",
+                message: "Есть ссылка!",
                 type: "success",
               });
             },
           },
         })}
       >
-        <Caption1>{m.moving_slow_mantis_shine()}</Caption1>
-        <TickMorph value={false} name="isRegistered" title={m.yes()} />
+        <TickMorph
+          value={false}
+          name="isRegistered"
+          title={hasAccount
+            ? "У получателя есть аккаунт"
+            : "У получателя нет аккаунта"}
+        />
         <UniButton
           type="submit"
           iconOnly={false}
           variant="primary"
           Icon={Link}
-          content={m.sour_trite_peacock_zip()}
+          content="Создать ссылку"
         ></UniButton>
       </form>
 
@@ -87,7 +89,6 @@
           <Caption1>Invite Link:</Caption1>
           <div class="flex items-center gap-1">
             <input
-              bind:this={linkInput}
               readonly
               value={generatedLink}
               class="flex-1 rounded border border-stone-300 bg-stone-50 p-2 font-mono text-xs text-stone-700 dark:border-stone-600 dark:bg-stone-800 dark:text-stone-300"

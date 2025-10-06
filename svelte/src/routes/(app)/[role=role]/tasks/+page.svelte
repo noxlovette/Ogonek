@@ -41,8 +41,7 @@
     sortOrder,
   } from "$lib/stores";
   import { Bell, Eye, EyeClosed } from "@lucide/svelte";
-  import { m } from "$lib/paraglide/messages";
-  import message from "$lib/messages.js";
+  import message, { texts } from "$lib/texts.js";
 
   const { data } = $props();
   const role = sveltePage.params.role;
@@ -75,12 +74,8 @@
   let selected: string[] = $state([]);
 </script>
 
-<svelte:head>
-  <title>{m.tasks()}</title>
-</svelte:head>
-
 <Toolbar>
-  <LargeTitle>{m.tasks()}</LargeTitle>
+  <LargeTitle>{texts.tasks.title}</LargeTitle>
   <Divider />
   <VStack>
     <Merger>
@@ -103,12 +98,12 @@
           method="post"
           use:enhance={enhanceForm({
             messages: {
-              success: message.tasks.teacherNotified,
+              success: texts.notifications.homeworkRequested,
             },
           })}
         >
           <UniButton
-            content={m.tense_mealy_kitten_aid()}
+            content={texts.crud.save}
             Icon={Bell}
             type="submit"
             variant="primary"
@@ -121,8 +116,8 @@
       <UniButton
         type="button"
         content={$completedStore === true
-          ? m.steep_zany_tern_zip()
-          : m.direct_slow_bobcat_shine()}
+          ? texts.crud.uncomplete
+          : texts.crud.complete}
         onclick={toggleCompletedTasks}
         variant="primary"
         Icon={$completedStore === true ? EyeClosed : Eye}
@@ -134,7 +129,7 @@
 
 {#if data.tasksPaginated.data.length < 1}
   <EmptySpace>
-    <Title1>{m.empty()}</Title1>
+    {texts.table.empty}
   </EmptySpace>
 {/if}
 {#if role === "s"}
@@ -159,7 +154,7 @@
           Выбрано {selected.length} из {tasks.length}
         </Subheadline>
       {:else}
-        <Subheadline>Выбрать все</Subheadline>
+        <Subheadline>{texts.table.selectAll}</Subheadline>
       {/if}
       <Divider />
 
@@ -197,3 +192,7 @@
     </TableFooter>
   </Table>
 {/if}
+
+<svelte:head>
+  <title>{texts.tasks.title}</title>
+</svelte:head>

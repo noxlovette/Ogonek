@@ -5,5 +5,5 @@
 {@render children?.()}
 
 <svelte:head>
-  <title>Task</title>
+  <title>Задание</title>
 </svelte:head>

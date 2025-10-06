@@ -1,14 +1,14 @@
 <script lang="ts">
   import { Pencil } from "@lucide/svelte";
   import { UniButton } from "..";
-  import { m } from "$lib/paraglide/messages";
+  import texts from "$lib/texts";
 
   const { href } = $props();
 </script>
 
 <UniButton
   variant="prominent"
-  content={m.edit()}
+  content={texts.crud.edit}
   dataCy="edit-button"
   type="submit"
   ariaLabel="Edit"

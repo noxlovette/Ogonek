@@ -2,7 +2,6 @@ import { dev, version } from "$app/environment";
 import { env } from "$env/dynamic/private";
 import { env as envPublic } from "$env/dynamic/public";
 import logger from "$lib/logger";
-import { paraglideMiddleware } from "$lib/paraglide/server";
 import { ValidateAccess, setTokenCookie } from "$lib/server";
 import redis from "$lib/server/redisClient";
 import { type Claims, type RefreshResponse, type User } from "$lib/types";
@@ -39,19 +38,6 @@ function isProtectedPath(path: string): boolean {
 export const init: ServerInit = async () => {
   logger.info("App Booted");
 };
-
-const paraglideHandle: Handle = ({ event, resolve }) =>
-  paraglideMiddleware(
-    event.request,
-    ({ request: localizedRequest, locale }) => {
-      event.request = localizedRequest;
-      return resolve(event, {
-        transformPageChunk: ({ html }) => {
-          return html.replace("%lang%", locale);
-        },
-      });
-    },
-  );
 
 export const authenticationHandle: Handle = async ({ event, resolve }) => {
   // skip authentication if in dev mode
@@ -268,7 +254,6 @@ export const handleError: HandleServerError = async ({
 };
 
 export const handle: Handle = sequence(
-  paraglideHandle,
   authenticationHandle,
   Sentry.sentryHandle(),
 );

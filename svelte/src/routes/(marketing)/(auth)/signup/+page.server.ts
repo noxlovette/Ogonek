@@ -2,7 +2,6 @@ import { dev } from "$app/environment";
 import { env } from "$env/dynamic/public";
 import { z } from "$lib";
 import logger from "$lib/logger";
-import { m } from "$lib/paraglide/messages";
 import { routes } from "$lib/routes";
 import { captchaVerify } from "$lib/server";
 import { validateForm } from "$lib/utils";
@@ -31,7 +30,7 @@ export const actions = {
       console.log(validation);
       return fail(400, {
         ...fieldErrors,
-        message: "Validation failed",
+        message: "Валидация провалилась",
       });
     }
 
@@ -48,7 +47,7 @@ export const actions = {
           username: false,
           email: false,
           pass: false,
-          message: "Please complete the CAPTCHA verification",
+          message: "Тыкните капчу",
         });
       }
 
@@ -63,7 +62,7 @@ export const actions = {
           username: false,
           email: false,
           pass: false,
-          message: m.careful_misty_kestrel_renew(),
+          message: "Нажмите на CAPTCHA",
         });
       }
 
@@ -74,7 +73,7 @@ export const actions = {
           username: false,
           email: false,
           pass: false,
-          message: m.careful_misty_kestrel_renew(),
+          message: "CAPTCHA считает, что вы бот",
         });
       }
     }
@@ -87,7 +86,7 @@ export const actions = {
       const err = await response.text();
       if (response.status === 409) {
         return fail(409, {
-          message: m.even_fair_barbel_spur(),
+          message: "Почта либо логин уже существуют",
           username: true,
           email: true,
           pass: false,
@@ -97,7 +96,7 @@ export const actions = {
       }
       if (response.status === 422) {
         return fail(422, {
-          message: "Invalid registration data",
+          message: "Что-то не так",
           username: false,
           email: false,
           pass: false,

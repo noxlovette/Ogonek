@@ -1,12 +1,12 @@
 <script lang="ts">
   import { DeckCard, EmptySpace, LargeTitle, Toolbar } from "$lib/components";
-  import { m } from "$lib/paraglide/messages";
+  import texts from "$lib/texts.js";
 
   let { data } = $props();
 </script>
 
 <Toolbar>
-  <LargeTitle>Public Decks</LargeTitle>
+  <LargeTitle>Деки для всех</LargeTitle>
 </Toolbar>
 {#if data.decks.length > 0}
   <grid class="grid gap-4 md:grid-cols-3">
@@ -15,5 +15,5 @@
     {/each}
   </grid>
 {:else}
-  <EmptySpace>{m.noFlashcards()}</EmptySpace>
+  <EmptySpace>{texts.table.empty}</EmptySpace>
 {/if}
