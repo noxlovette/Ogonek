@@ -12,6 +12,7 @@
   } from "$lib/components";
   import { enhanceForm } from "$lib/utils";
   import VStack from "$lib/components/UI/layout/VStack.svelte";
+  import texts from "$lib/texts.js";
 
   let { data } = $props();
   let { student } = data;
@@ -24,9 +25,7 @@
   class="mb-4 space-y-4"
   use:enhance={enhanceForm({
     messages: {
-      redirect: "Changes Saved",
-      error: "Error",
-      failure: "Something's off",
+      redirect: texts.crud.updated,
     },
   })}
 >

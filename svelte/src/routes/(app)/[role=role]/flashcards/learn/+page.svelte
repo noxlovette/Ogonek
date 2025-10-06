@@ -17,7 +17,7 @@
     Subheadline,
     Body,
   } from "$lib/components";
-  import { m } from "$lib/paraglide/messages";
+  import Merger from "$lib/components/UI/toolbar/Merger.svelte";
 
   let { data } = $props();
 
@@ -26,7 +26,9 @@
 
   let isComplete = $state(data.cards.length === 0);
   let showAnswer = $state(false);
-  let showCloze = $derived(currentCard.front.split(/\s+/).length < 4);
+  let showCloze = $derived(
+    currentCard ? currentCard.front.split(/\s+/).length < 4 : false,
+  );
   let userInput = $state("");
 
   const nextCard = async () => {
@@ -112,22 +114,22 @@
 {#if isComplete || data.cards.length === 0}
   <div class="p-8">
     <div class="gap-default flex flex-col items-center py-10 text-center">
-      <Body>
-        {m.quiet_lost_whale_exhale()}
-      </Body>
+      <Body>Карточек тут больше нет. Приходите завтра...</Body>
 
-      <UniButton
-        href="."
-        Icon={GraduationCap}
-        content={m.decks()}
-        variant="primary"
-        iconOnly={false}
-      ></UniButton>
+      <Merger>
+        <UniButton
+          href="."
+          Icon={GraduationCap}
+          content="На страницу карточек"
+          variant="primary"
+          iconOnly={false}
+        ></UniButton>
+      </Merger>
     </div>
   </div>
 {:else if currentCard}
   <Toolbar>
-    <LargeTitle>{m.just_candid_dingo_affirm()}</LargeTitle>
+    <LargeTitle>Режим учёбы</LargeTitle>
     <Divider />
     <Title3>
       {data.cards.indexOf(currentCard) + 1} / {data.cards.length}
@@ -145,25 +147,25 @@
     >
       <!-- Front side -->
       <div class="flex-grow">
-        <Caption1>{showCloze ? "" : m.cardFront()}</Caption1>
+        <Caption1>{showCloze ? "" : "Лицо"}</Caption1>
 
         {#if showCloze}
           {#if !showAnswer}
             <Input
               dataCy="answer-input"
               bind:ref={inputRef}
-              name={m.icy_moving_buzzard_swim()}
-              placeholder={m.vexed_born_butterfly_dream()}
+              name="Лицо"
+              placeholder="Apple (n)"
               bind:value={userInput}
             />
           {:else}
             <div class="space-y-2">
-              <Caption1>{m.cardFrontClozeUserInput()}</Caption1>
+              <Caption1>Ваш вариант</Caption1>
               <div class="rounded-lg bg-stone-100 p-3 dark:bg-stone-800">
                 <Subheadline>{userInput}</Subheadline>
               </div>
 
-              <Caption1>{m.cardFrontClozeCorrect()}</Caption1>
+              <Caption1>Оборот</Caption1>
               <div class="rounded-lg bg-emerald-100 p-3 dark:bg-emerald-900">
                 <Title3>{currentCard.front}</Title3>
               </div>
@@ -178,7 +180,7 @@
       <!-- Back side -->
       {#if showCloze}
         <div class="flex-grow">
-          <Caption1>{m.loose_ornate_grebe_coax()}</Caption1>
+          <Caption1>Оборот</Caption1>
           <p>
             {currentCard.back}
           </p>
@@ -194,7 +196,7 @@
         </div>
       {:else if showAnswer}
         <div class="flex-grow">
-          <Caption1>{m.cardBack()}</Caption1>
+          <Caption1>Оборот</Caption1>
           <Title3>
             {currentCard.back}
           </Title3>

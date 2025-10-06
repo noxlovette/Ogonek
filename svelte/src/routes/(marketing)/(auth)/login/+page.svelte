@@ -8,8 +8,7 @@
     Merger,
     MetaData,
   } from "$lib/components";
-  import message from "$lib/messages.js";
-  import { m } from "$lib/paraglide/messages";
+  import message from "$lib/texts.js";
   import { enhanceForm } from "$lib/utils";
   import { DoorOpen } from "@lucide/svelte";
 
@@ -59,7 +58,7 @@
       showLabel={false}
       name="username"
       invalid={form?.username}
-      placeholder="Username"
+      placeholder="Ник"
       dataCy="username-field"
       invalidDescription="2+ characters"
       value=""
@@ -70,7 +69,7 @@
       name="pass"
       showLabel={false}
       invalid={form?.pass}
-      placeholder="Password"
+      placeholder="Пароль"
       invalidDescription="3+ characters"
       value=""
       dataCy="password-field"
@@ -84,7 +83,7 @@
       type="submit"
       variant="primary"
       dataCy="login-button"
-      content={m.logIn()}
+      content="Авторизоваться"
       ariaLabel="Login"
       iconOnly={false}
     ></UniButton>

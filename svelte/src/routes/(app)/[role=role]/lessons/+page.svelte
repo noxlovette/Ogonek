@@ -38,7 +38,7 @@
     sortOrder,
   } from "$lib/stores";
   import { goto } from "$app/navigation";
-  import { m } from "$lib/paraglide/messages.js";
+  import texts from "$lib/texts.js";
 
   let { data } = $props();
 
@@ -70,7 +70,7 @@
 </script>
 
 <Toolbar>
-  <LargeTitle>{m.lessons()}</LargeTitle>
+  <LargeTitle>Занятия</LargeTitle>
   <Divider />
 
   <VStack>
@@ -81,7 +81,7 @@
           method="post"
           use:enhance={enhanceForm({
             messages: {
-              redirect: m.created(),
+              redirect: texts.crud.created,
             },
             navigate: true,
           })}
@@ -94,72 +94,70 @@
   </VStack>
 </Toolbar>
 
-{#if lessons.length < 1}
-  <EmptySpace>
-    <Title1>{m.noLessons()}</Title1>
-  </EmptySpace>
-{/if}
-{#if role === "s"}
-  <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
-    {#each lessons as lesson (lesson.id)}
-      <LessonCard {lesson} />
-    {/each}
-  </div>
-{:else}
-  <Table bind:selected>
-    {#each selected as id}
-      <input type="hidden" name="toDelete" value={id} />
-    {/each}
-    <TableHead>
-      <TickMorph
-        noText={true}
-        bind:group={selected}
-        value={lessons.map((lesson) => lesson.id)}
-      />
-      {#if selected.length >= 1}
-        <Subheadline>
-          Выбрано {selected.length} из {lessons.length}
-        </Subheadline>
-      {:else}
-        <Subheadline>Выбрать все</Subheadline>
-      {/if}
-      <Divider />
-
-      {#if selected.length == 0}
-        <SortDate />
-      {:else}
-        <Merger>
-          <DeleteButton />
-        </Merger>
-      {/if}
-    </TableHead>
-    <TableBody>
+{#if lessons.length}
+  {#if role === "s"}
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
       {#each lessons as lesson (lesson.id)}
-        <div class="bg-clickable flex items-center px-2">
-          <TickMorph noText={true} bind:group={selected} value={lesson.id} />
-          <TableRow href={`/${sveltePage.params.role}/lessons/${lesson.id}`}>
-            <HStack override="gap-1 items-start">
-              <Headline>
-                {lesson.title}
-              </Headline>
-              <Caption1>
-                {lesson.assigneeName}
-              </Caption1>
-            </HStack>
-            <Divider />
-            <Badge>
-              {formatDateOnly(lesson.createdAt)}
-            </Badge>
-          </TableRow>
-        </div>
+        <LessonCard {lesson} />
       {/each}
-    </TableBody>
-    <TableFooter>
-      <Paginator {page} {count} {perPage} {totalPages}></Paginator>
-    </TableFooter>
-  </Table>
-{/if}
+    </div>
+  {:else}
+    <Table bind:selected>
+      {#each selected as id}
+        <input type="hidden" name="toDelete" value={id} />
+      {/each}
+      <TableHead>
+        <TickMorph
+          noText={true}
+          bind:group={selected}
+          value={lessons.map((lesson) => lesson.id)}
+        />
+        {#if selected.length >= 1}
+          <Subheadline>
+            Выбрано {selected.length} из {lessons.length}
+          </Subheadline>
+        {:else}
+          <Subheadline>Выбрать все</Subheadline>
+        {/if}
+        <Divider />
 
+        {#if selected.length == 0}
+          <SortDate />
+        {:else}
+          <Merger>
+            <DeleteButton />
+          </Merger>
+        {/if}
+      </TableHead>
+      <TableBody>
+        {#each lessons as lesson (lesson.id)}
+          <div class="bg-clickable flex items-center px-2">
+            <TickMorph noText={true} bind:group={selected} value={lesson.id} />
+            <TableRow href={`/${sveltePage.params.role}/lessons/${lesson.id}`}>
+              <HStack override="gap-1 items-start">
+                <Headline>
+                  {lesson.title}
+                </Headline>
+                <Caption1>
+                  {lesson.assigneeName}
+                </Caption1>
+              </HStack>
+              <Divider />
+              <Badge>
+                {formatDateOnly(lesson.createdAt)}
+              </Badge>
+            </TableRow>
+          </div>
+        {/each}
+      </TableBody>
+      <TableFooter>
+        <Paginator {page} {count} {perPage} {totalPages}></Paginator>
+      </TableFooter>
+    </Table>
+  {/if}
+{:else}
+  <EmptySpace>{texts.table.empty}</EmptySpace>
+{/if}
 <svelte:head>
-  <title>{m.lessons()}</title>
+  <title>Занятия</title>
 </svelte:head>

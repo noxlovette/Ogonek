@@ -1,8 +1,7 @@
 <script lang="ts">
   import UniButton from "$lib/components/UI/forms/buttons/UniButton.svelte";
-  import { BookOpenCheck, GraduationCap, ListTodo } from "@lucide/svelte";
+  import { BookOpenCheck, ListTodo } from "@lucide/svelte";
   import { enhance } from "$app/forms";
-  import { m } from "$lib/paraglide/messages";
   import HStack from "../../layout/HStack.svelte";
   import { page } from "$app/state";
 
@@ -16,7 +15,7 @@
       type="submit"
       variant="primary"
       iconOnly={false}
-      content={m.brave_vexed_capybara_aid()}
+      content="Добавить задание"
     ></UniButton>
   </form>
   <form action="/{role}/lessons?/new" method="POST" class="" use:enhance>
@@ -24,7 +23,7 @@
       Icon={BookOpenCheck}
       type="submit"
       variant="primary"
-      content={m.game_green_ape_fond()}
+      content="Добавить занятие"
       iconOnly={false}
     ></UniButton>
   </form>

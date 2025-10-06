@@ -1,5 +1,3 @@
-import { m } from "$lib/paraglide/messages";
-
 type DateFormatOptions = {
   year?: boolean;
   month?: "numeric" | "2-digit" | "long" | "short" | "narrow";
@@ -16,7 +14,7 @@ type DateFormatOptions = {
  * Gets the locale from the PARAGLIDE_LOCALE cookie.
  */
 export const getLocaleFromCookie = (): string => {
-  if (typeof document === "undefined") return "en";
+  if (typeof document === "undefined") return "ru";
 
   const value = `; ${document.cookie}`;
   const parts = value.split(`; PARAGLIDE_LOCALE=`);
@@ -43,7 +41,7 @@ export const formatDate = (
 ): string => {
   if (!dateInput) {
     console.warn("formatDate: dateInput is falsy, returning fallback");
-    return m.even_tense_herring_support();
+    return "непонятно";
   }
 
   let date: Date;
@@ -53,11 +51,11 @@ export const formatDate = (
 
     if (isNaN(date.getTime())) {
       console.warn(`formatDate: Invalid date created from input: ${dateInput}`);
-      return m.even_tense_herring_support();
+      return "непонятно";
     }
   } catch (error) {
     console.error("formatDate: Error creating date:", error);
-    return m.even_tense_herring_support();
+    return "непонятно";
   }
 
   const now = new Date();
@@ -140,6 +138,28 @@ export const formatDateTime = (
   );
 };
 
+/**
+ * Returns the correct Russian plural form for a number.
+ * Russian has 3 forms: singular (1), few (2-4), many (5+, 0)
+ */
+const getRussianPlural = (
+  n: number,
+  one: string,
+  few: string,
+  many: string,
+): string => {
+  const mod10 = n % 10;
+  const mod100 = n % 100;
+
+  if (mod10 === 1 && mod100 !== 11) {
+    return one;
+  } else if (mod10 >= 2 && mod10 <= 4 && (mod100 < 10 || mod100 >= 20)) {
+    return few;
+  } else {
+    return many;
+  }
+};
+
 export const formatRelativeTime = (dateInput: string | Date): string => {
   const date = typeof dateInput === "string" ? new Date(dateInput) : dateInput;
   const now = new Date();
@@ -154,24 +174,30 @@ export const formatRelativeTime = (dateInput: string | Date): string => {
   const year = day * 365;
 
   if (diffInSeconds < minute) {
-    return "just now";
+    return "только что";
   } else if (diffInSeconds < hour) {
     const minutes = Math.floor(diffInSeconds / minute);
-    return `${minutes} minute${minutes > 1 ? "s" : ""} ago`;
+    const form = getRussianPlural(minutes, "минуту", "минуты", "минут");
+    return `${minutes} ${form} назад`;
   } else if (diffInSeconds < day) {
     const hours = Math.floor(diffInSeconds / hour);
-    return `${hours} hour${hours > 1 ? "s" : ""} ago`;
+    const form = getRussianPlural(hours, "час", "часа", "часов");
+    return `${hours} ${form} назад`;
   } else if (diffInSeconds < week) {
     const days = Math.floor(diffInSeconds / day);
-    return `${days} day${days > 1 ? "s" : ""} ago`;
+    const form = getRussianPlural(days, "день", "дня", "дней");
+    return `${days} ${form} назад`;
   } else if (diffInSeconds < month) {
     const weeks = Math.floor(diffInSeconds / week);
-    return `${weeks} week${weeks > 1 ? "s" : ""} ago`;
+    const form = getRussianPlural(weeks, "неделю", "недели", "недель");
+    return `${weeks} ${form} назад`;
   } else if (diffInSeconds < year) {
     const months = Math.floor(diffInSeconds / month);
-    return `${months} month${months > 1 ? "s" : ""} ago`;
+    const form = getRussianPlural(months, "месяц", "месяца", "месяцев");
+    return `${months} ${form} назад`;
   } else {
     const years = Math.floor(diffInSeconds / year);
-    return `${years} year${years > 1 ? "s" : ""} ago`;
+    const form = getRussianPlural(years, "год", "года", "лет");
+    return `${years} ${form} назад`;
   }
 };

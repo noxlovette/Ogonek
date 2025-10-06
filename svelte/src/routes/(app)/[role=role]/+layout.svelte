@@ -15,7 +15,6 @@
     Calendar,
     Divider,
     HLine,
-    Caption1,
   } from "$lib/components";
   import { studentStore, setUser, setProfile } from "$lib/stores";
 
@@ -77,5 +76,5 @@
 <MobileMenu elements={elementsMobile} />
 
 <svelte:head>
-  <title>Ogonek | Main</title>
+  <title>Ogonek</title>
 </svelte:head>

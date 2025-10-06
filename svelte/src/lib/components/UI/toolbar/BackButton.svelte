@@ -5,7 +5,6 @@
   import UniButton from "../forms/buttons/UniButton.svelte";
   import VStack from "../layout/VStack.svelte";
   import Divider from "./Divider.svelte";
-  import { m } from "$lib/paraglide/messages";
 
   const { override = false } = $props();
 
@@ -39,11 +38,7 @@
 {#if showBack && !override}
   <VStack>
     <Merger>
-      <UniButton
-        content={m.new_nice_parakeet_arise()}
-        ariaLabel="Back"
-        {href}
-        Icon={ChevronLeft}
+      <UniButton content="Назад" ariaLabel="Back" {href} Icon={ChevronLeft}
       ></UniButton>
     </Merger>
     <Divider></Divider>

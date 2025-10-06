@@ -5,7 +5,7 @@
 </script>
 
 <svelte:head>
-  <title>Privacy | Ogonek</title>
+  <title>Политика конфиденциальности | Ogonek</title>
 </svelte:head>
 <Toolbar>
   <LargeTitle>Политика конфиденциальности</LargeTitle>

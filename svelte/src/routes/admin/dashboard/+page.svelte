@@ -6,6 +6,6 @@
 </script>
 
 <Toolbar>
-  <LargeTitle>Admin Dashboard</LargeTitle>
+  <LargeTitle>Админка</LargeTitle>
 </Toolbar>
-You are {data.context.user.role}
+Вы {data.context.user.role}

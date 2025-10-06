@@ -6,14 +6,13 @@
   import { Headline } from "../typography";
   import { getUrgency } from "$lib/utils";
   import SeenBadge from "./SeenBadge.svelte";
-  import { m } from "$lib/paraglide/messages";
   import { VStack } from "../UI";
 
   let { task } = $props();
   const formattedDate: string = formatDateOnly(task.dueDate);
   const href: string =
     $user.role === "teacher" ? `/t/tasks/${task.id}` : `/s/tasks/${task.id}`;
-  const badgeText: string = `${m.less_arable_starfish_belong()} ${formattedDate}`;
+  const badgeText: string = `Дедлайн ${formattedDate}`;
   const urgency = getUrgency(task.dueDate);
 </script>
 

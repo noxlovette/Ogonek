@@ -1,25 +1,22 @@
 <script lang="ts">
   import { LargeTitle, UniButton } from "$lib/components";
-  import { m } from "$lib/paraglide/messages";
   import { Mail, Send } from "@lucide/svelte";
 
   const contactInfo = {
-    email: "danila.volkov@noxlovette.com",
+    email: "contact@ogonek.app",
     telegram: "@noxlovette",
   };
 </script>
 
 <div class="mx-auto flex max-w-md flex-col items-center justify-center gap-4">
-  <LargeTitle>
-    {m.mean_stock_dove_beam()}
-  </LargeTitle>
+  <LargeTitle>Связаться с нами</LargeTitle>
 
   <div class="grid gap-4 md:grid-cols-2">
     <UniButton
       type="button"
       variant="primary"
       Icon={Mail}
-      content="Email"
+      content="Почта"
       href={`mailto:${contactInfo.email}`}
     ></UniButton>
 
@@ -31,8 +28,4 @@
       href="https://t.me/noxlovette"
     ></UniButton>
   </div>
-
-  <p class="text-center text-stone-600 dark:text-stone-400">
-    {m.same_brief_stingray_assure()}
-  </p>
 </div>

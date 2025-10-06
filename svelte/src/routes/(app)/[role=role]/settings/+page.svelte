@@ -7,13 +7,10 @@
     Divider,
     Merger,
     HStack,
-    Caption1,
     Title1,
     Title2,
-    LanguageSelector,
     Headline,
     VStack,
-    Title3,
     ThemeToggler,
   } from "$lib/components";
   import { enhance } from "$app/forms";
@@ -21,7 +18,6 @@
   import { enhanceForm } from "$lib/utils";
 
   import { Check, LogOut, Bell, Ban, Pencil } from "@lucide/svelte";
-  import { m } from "$lib/paraglide/messages";
   import {
     assigneeStore,
     notification,
@@ -31,6 +27,7 @@
     clearUser,
   } from "$lib/stores";
   import { goto } from "$app/navigation";
+  import texts from "$lib/texts.js";
 
   let disabled = $state(true);
 
@@ -38,14 +35,14 @@
 </script>
 
 <svelte:head>
-  <title>{m.settings()}</title>
+  <title>Настройки</title>
 </svelte:head>
 
 <form
   method="POST"
   use:enhance={enhanceForm({
     messages: {
-      success: m.changesSaved(),
+      success: texts.crud.updated,
     },
     handlers: {
       success: async () => {
@@ -58,7 +55,7 @@
   action="?/update"
 >
   <Toolbar>
-    <LargeTitle>{m.settings()}</LargeTitle>
+    <LargeTitle>Настройки</LargeTitle>
 
     <Divider />
     <VStack>
@@ -72,7 +69,7 @@
               disabled = !disabled;
             }}
             type="button"
-            content={disabled ? m.edit() : m.editing()}
+            content={texts.crud.edit}
           ></UniButton>
         {:else}
           <UniButton
@@ -80,14 +77,14 @@
               disabled = !disabled;
             }}
             Icon={Ban}
-            content={m.cancel()}
+            content={texts.crud.cancel}
           ></UniButton>
           <UniButton
             Icon={Check}
             type="submit"
             variant="prominent"
             disable={disabled}
-            content={m.save()}
+            content={texts.crud.save}
             formaction="?/update"
           ></UniButton>
         {/if}
@@ -96,12 +93,12 @@
   </Toolbar>
   <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
     <HStack>
-      <Title1>{m.noble_formal_zebra_sprout()}</Title1>
+      <Title1>Настройки аккаунта</Title1>
 
       <HStack>
         <Input
           bind:disabled
-          placeholder="Name"
+          placeholder="Как вас зовут?"
           name="name"
           invalid={form?.name}
           invalidDescription="3+ знаков и никакой херни"
@@ -123,7 +120,7 @@
       <!-- Teacher Settings -->
       {#if page.params.role === "t"}
         <Divider />
-        <Title2>{m.bad_fluffy_lionfish_expand()}</Title2>
+        <Title2>Настройки преподавателя</Title2>
         <Input
           bind:disabled
           placeholder="Your Telegram ID"
@@ -145,23 +142,20 @@
 
     <HStack>
       <HStack>
-        <Title1>{m.settings()}</Title1>
+        <Title1>Настройки</Title1>
         <VStack>
-          <Headline>
-            {m.stale_quick_mantis_stab()}
-          </Headline>
+          <Headline>Телеграм</Headline>
           <Divider></Divider>
-          <UniButton
-            variant="primary"
-            href="https://t.me/fz_notif_bot"
-            Icon={Bell}
-            iconOnly={false}
-            content={m.suave_teary_emu_expand()}
-          ></UniButton>
+          <Merger>
+            <UniButton
+              variant="primary"
+              href="https://t.me/fz_notif_bot"
+              Icon={Bell}
+              iconOnly={false}
+              content="Включить уведомления"
+            ></UniButton>
+          </Merger>
         </VStack>
-        <Caption1>
-          {m.broad_clear_snake_peel()}
-        </Caption1>
       </HStack>
       <!-- Logout Section -->
       <HStack>
@@ -186,26 +180,18 @@
               },
             })}
           >
-            <UniButton
-              variant="danger"
-              type="submit"
-              Icon={LogOut}
-              iconOnly={false}
-              content={m.seemly_any_ostrich_believe()}
-            ></UniButton>
+            <Merger>
+              <UniButton
+                variant="danger"
+                type="submit"
+                Icon={LogOut}
+                iconOnly={false}
+                content="Уйти"
+              ></UniButton>
+            </Merger>
           </form>
         </VStack>
-        <Caption1>
-          {m.odd_tough_shell_dust()}
-        </Caption1>
       </HStack>
-    </HStack>
-
-    <HStack>
-      <VStack>
-        <Title3>{m.safe_lazy_cheetah_dial()}</Title3>
-      </VStack>
-      <LanguageSelector />
     </HStack>
   </div>
 </form>

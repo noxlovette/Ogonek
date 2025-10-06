@@ -41,8 +41,7 @@
     sortOrder,
   } from "$lib/stores";
   import { Bell, Eye, EyeClosed } from "@lucide/svelte";
-  import { m } from "$lib/paraglide/messages";
-  import message from "$lib/messages.js";
+  import message, { texts } from "$lib/texts.js";
 
   const { data } = $props();
   const role = sveltePage.params.role;
@@ -75,12 +74,8 @@
   let selected: string[] = $state([]);
 </script>
 
-<svelte:head>
-  <title>{m.tasks()}</title>
-</svelte:head>
-
 <Toolbar>
-  <LargeTitle>{m.tasks()}</LargeTitle>
+  <LargeTitle>{texts.tasks.title}</LargeTitle>
   <Divider />
   <VStack>
     <Merger>
@@ -103,12 +98,12 @@
           method="post"
           use:enhance={enhanceForm({
             messages: {
-              success: message.tasks.teacherNotified,
+              success: texts.notifications.homeworkRequested,
             },
           })}
         >
           <UniButton
-            content={m.tense_mealy_kitten_aid()}
+            content={texts.crud.save}
             Icon={Bell}
             type="submit"
             variant="primary"
@@ -121,8 +116,8 @@
       <UniButton
         type="button"
         content={$completedStore === true
-          ? m.steep_zany_tern_zip()
-          : m.direct_slow_bobcat_shine()}
+          ? texts.crud.uncomplete
+          : texts.crud.complete}
         onclick={toggleCompletedTasks}
         variant="primary"
         Icon={$completedStore === true ? EyeClosed : Eye}
@@ -132,68 +127,73 @@
   </VStack>
 </Toolbar>
 
-{#if data.tasksPaginated.data.length < 1}
+{#if tasks.length}
+  {#if role === "s"}
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+      {#each data.tasksPaginated.data as task (task.id)}
+        <TaskCard {task} />
+      {/each}
+    </div>
+  {:else}
+    <Table bind:selected>
+      {#each selected as id}
+        <input type="hidden" name="toDelete" value={id} />
+      {/each}
+      <TableHead>
+        <TickMorph
+          noText={true}
+          bind:group={selected}
+          value={tasks.map((task) => task.id)}
+        />
+        {#if selected.length >= 1}
+          <Subheadline>
+            Выбрано {selected.length} из {tasks.length}
+          </Subheadline>
+        {:else}
+          <Subheadline>{texts.table.selectAll}</Subheadline>
+        {/if}
+        <Divider />
+
+        {#if selected.length == 0}
+          <SortDate />
+        {:else}
+          <Merger>
+            <DeleteButton />
+          </Merger>
+        {/if}
+      </TableHead>
+      <TableBody>
+        {#each tasks as task (task.id)}
+          <div class="bg-clickable flex items-center px-2">
+            <TickMorph noText={true} bind:group={selected} value={task.id} />
+            <TableRow href={`/${sveltePage.params.role}/tasks/${task.id}`}>
+              <HStack override="gap-1 items-start">
+                <Headline>
+                  {task.title}
+                </Headline>
+                <Caption1>
+                  {task.assigneeName}
+                </Caption1>
+              </HStack>
+              <Divider />
+              <Badge urgency={getUrgency(task.dueDate)}>
+                {formatDateOnly(task.dueDate)}
+              </Badge>
+            </TableRow>
+          </div>
+        {/each}
+      </TableBody>
+      <TableFooter>
+        <Paginator {page} {count} {perPage} {totalPages}></Paginator>
+      </TableFooter>
+    </Table>
+  {/if}
+{:else}
   <EmptySpace>
-    <Title1>{m.empty()}</Title1>
+    {texts.table.empty}
   </EmptySpace>
 {/if}
-{#if role === "s"}
-  <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
-    {#each data.tasksPaginated.data as task (task.id)}
-      <TaskCard {task} />
-    {/each}
-  </div>
-{:else}
-  <Table bind:selected>
-    {#each selected as id}
-      <input type="hidden" name="toDelete" value={id} />
-    {/each}
-    <TableHead>
-      <TickMorph
-        noText={true}
-        bind:group={selected}
-        value={tasks.map((task) => task.id)}
-      />
-      {#if selected.length >= 1}
-        <Subheadline>
-          Выбрано {selected.length} из {tasks.length}
-        </Subheadline>
-      {:else}
-        <Subheadline>Выбрать все</Subheadline>
-      {/if}
-      <Divider />
 
-      {#if selected.length == 0}
-        <SortDate />
-      {:else}
-        <Merger>
-          <DeleteButton />
-        </Merger>
-      {/if}
-    </TableHead>
-    <TableBody>
-      {#each tasks as task (task.id)}
-        <div class="bg-clickable flex items-center px-2">
-          <TickMorph noText={true} bind:group={selected} value={task.id} />
-          <TableRow href={`/${sveltePage.params.role}/tasks/${task.id}`}>
-            <HStack override="gap-1 items-start">
-              <Headline>
-                {task.title}
-              </Headline>
-              <Caption1>
-                {task.assigneeName}
-              </Caption1>
-            </HStack>
-            <Divider />
-            <Badge urgency={getUrgency(task.dueDate)}>
-              {formatDateOnly(task.dueDate)}
-            </Badge>
-          </TableRow>
-        </div>
-      {/each}
-    </TableBody>
-    <TableFooter>
-      <Paginator {page} {count} {perPage} {totalPages}></Paginator>
-    </TableFooter>
-  </Table>
-{/if}
+<svelte:head>
+  <title>{texts.tasks.title}</title>
+</svelte:head>

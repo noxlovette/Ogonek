@@ -1,6 +1,5 @@
 <script lang="ts">
   import Caption1 from "$lib/components/typography/Caption1.svelte";
-  import { m } from "$lib/paraglide/messages";
   import { assigneeStore, studentStore, user } from "$lib/stores";
   import { Eye, EyeClosed } from "@lucide/svelte";
   import type { ChangeEventHandler } from "svelte/elements";
@@ -204,9 +203,9 @@
         ? `${name}-error`
         : undefined}
     >
-      <option value="private">{m.private()}</option>
-      <option value="public">{m.public()}</option>
-      <option value="assigned">{m.assigned()}</option>
+      <option value="private">Для меня</option>
+      <option value="assigned">Для кого-то</option>
+      <option value="public">Для всех</option>
     </select>
   {:else if type === "assignee" && item}
     <select
@@ -265,9 +264,9 @@
         ? `${name}-error`
         : undefined}
     >
-      <option value="">{m.cool_seemly_raven_walk()}</option>
-      <option value="teacher">Teacher</option>
-      <option value="student">Student</option>
+      <option value="">Выберите роль</option>
+      <option value="teacher">Учитель</option>
+      <option value="student">Ученик</option>
     </select>
   {:else if type === "scope"}
     <select

@@ -23,7 +23,7 @@
   import UniButton from "$lib/components/UI/forms/buttons/UniButton.svelte";
   import { pushState } from "$app/navigation";
   import { onMount } from "svelte";
-  import { m } from "$lib/paraglide/messages.js";
+  import texts from "$lib/texts.js";
 
   onMount(() => {
     if (updatedCards.length > 0) {
@@ -64,7 +64,7 @@
 </script>
 
 <svelte:head>
-  <title>{m.edit()} • {deck.title}</title>
+  <title>{texts.crud.editing} • {deck.title}</title>
 </svelte:head>
 <form
   method="POST"
@@ -72,7 +72,7 @@
   action="?/update"
   use:enhance={enhanceForm({
     messages: {
-      redirect: m.changesSaved(),
+      redirect: texts.crud.updated,
     },
   })}
 >
@@ -83,7 +83,7 @@
     <VStack>
       <Merger>
         <UniButton
-          content={m.legal_suave_poodle_edit()}
+          content="Импортировать"
           type="button"
           onclick={showImportModal}
           Icon={Import}
@@ -94,7 +94,7 @@
           method="POST"
           use:enhance={enhanceForm({
             messages: {
-              redirect: m.tiny_happy_rat_bless(),
+              redirect: texts.crud.delete,
             },
           })}
         >

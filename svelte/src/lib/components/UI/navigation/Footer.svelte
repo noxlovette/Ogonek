@@ -1,6 +1,5 @@
 <script>
   import { Footnote, Headline } from "$lib/components/typography";
-  import { m } from "$lib/paraglide/messages";
   import { HStack, VStack } from "../layout";
   let width = $state(0);
   const isMobile = $derived(width < 768);
@@ -13,34 +12,38 @@
   {#if isMobile}
     <HStack styling="items-center">
       <Footnote>
-        <a href="/contact" class="hover:text-accent">{m.contact()}</a>
+        <a href="/contact" class="hover:text-accent">Контакт</a>
       </Footnote>
 
       <Footnote>
-        <a href="/terms" class="hover:text-accent">{m.terms()}</a>
+        <a href="/terms" class="hover:text-accent"
+          >Пользовательское соглашение</a
+        >
       </Footnote>
       <Footnote>
-        <a href="/privacy-policy" class="hover:text-accent">{m.privacy()}</a>
+        <a href="/privacy-policy" class="hover:text-accent"
+          >Политика конфиденциальности</a
+        >
       </Footnote>
-      <Footnote styling="mt-10">
-        © 2024-2025 {m.danilaVolkov()}
-      </Footnote>
+      <Footnote styling="mt-10">© 2024-2025 Данила Волков</Footnote>
     </HStack>
   {:else}
     <VStack>
       <Footnote>
-        <a href="/contact" class="hover:text-accent">{m.contact()}</a>
+        <a href="/contact" class="hover:text-accent">Контакт</a>
       </Footnote>
 
       <Footnote>
-        <a href="/terms" class="hover:text-accent">{m.terms()}</a>
+        <a href="/terms" class="hover:text-accent"
+          >Пользовательское соглашение</a
+        >
       </Footnote>
       <Footnote>
-        <a href="/privacy-policy" class="hover:text-accent">{m.privacy()}</a>
+        <a href="/privacy-policy" class="hover:text-accent"
+          >Политика конфиденциальности</a
+        >
       </Footnote>
-      <Footnote styling="ml-10">
-        © 2024-2025 {m.danilaVolkov()}
-      </Footnote>
+      <Footnote styling="ml-10">© 2024-2025 Данила Волков</Footnote>
     </VStack>
   {/if}
 </footer>

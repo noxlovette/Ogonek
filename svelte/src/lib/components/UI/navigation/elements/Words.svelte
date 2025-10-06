@@ -2,10 +2,10 @@
   import { GraduationCap } from "@lucide/svelte";
   import SidebarItem from "./SidebarItem.svelte";
   import { getContext } from "svelte";
-  import { m } from "$lib/paraglide/messages";
   import MobileMenuElement from "../mobileMenu/MobileMenuElement.svelte";
   import { writable } from "svelte/store";
   import { page } from "$app/state";
+  import texts from "$lib/texts";
 
   const href = writable<string>(`/${page.params.role}/flashcards`);
   $effect(() => {
@@ -21,12 +21,12 @@
   dataCy="sidebar-flashcards"
   href={$href}
   Icon={GraduationCap}
-  name={m.flashcards()}
+  name={texts.flashcards.title}
   badge={deckCount}
 />
 <MobileMenuElement
   href={$href}
   Icon={GraduationCap}
-  name={m.flashcards()}
+  name={texts.flashcards.title}
   badge={deckCount}
 />

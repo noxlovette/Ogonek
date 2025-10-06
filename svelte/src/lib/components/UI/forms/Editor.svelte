@@ -6,9 +6,9 @@
   import { Merger } from "../toolbar";
   import { VStack } from "..";
   import Divider from "../toolbar/Divider.svelte";
-  import { m } from "$lib/paraglide/messages";
   import HStack from "../layout/HStack.svelte";
   import { parseMarkdown } from "$lib/utils/markdown";
+  import texts from "$lib/texts";
   let {
     markdownContent = $bindable(
       "# Start writing\n\nYour **markdown** goes here...",
@@ -261,7 +261,7 @@
       <UniButton
         variant={preview ? "primary" : "prominent"}
         Icon={ChartNoAxesGantt}
-        content={m.edit()}
+        content={texts.crud.edit}
         onclick={() => (preview = false)}
       ></UniButton>
       <UniButton

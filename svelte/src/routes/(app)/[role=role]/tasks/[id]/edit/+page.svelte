@@ -15,8 +15,8 @@
     SaveButton,
     Toggler,
   } from "$lib/components";
-  import { m } from "$lib/paraglide/messages";
   import VStack from "$lib/components/UI/layout/VStack.svelte";
+  import texts from "$lib/texts.js";
 
   let { data, form } = $props();
   let { task } = data;
@@ -42,12 +42,12 @@
   class="gap-default mb-4 flex flex-col"
   use:enhance={enhanceForm({
     messages: {
-      redirect: m.changesSaved(),
+      redirect: texts.crud.updated,
     },
   })}
 >
   <Toolbar>
-    <LargeTitle>{m.editing()}</LargeTitle>
+    <LargeTitle>{texts.crud.editing}</LargeTitle>
     <Divider />
     <VStack>
       <Merger>

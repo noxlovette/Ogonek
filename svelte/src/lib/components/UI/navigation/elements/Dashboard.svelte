@@ -2,7 +2,6 @@
   import { House } from "@lucide/svelte";
   import SidebarItem from "./SidebarItem.svelte";
   import { user } from "$lib/stores";
-  import { m } from "$lib/paraglide/messages";
   import MobileMenuElement from "../mobileMenu/MobileMenuElement.svelte";
   import type { UserRole } from "$lib/types";
 
@@ -19,5 +18,5 @@
   let href = getHref($user.role);
 </script>
 
-<SidebarItem {href} name={m.dashboardName()} Icon={House} />
-<MobileMenuElement {href} name={m.dashboardName()} Icon={House} />
+<SidebarItem {href} name="Главная" Icon={House} />
+<MobileMenuElement {href} name="Главная" Icon={House} />

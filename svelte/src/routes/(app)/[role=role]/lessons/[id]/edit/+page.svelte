@@ -15,20 +15,19 @@
     UniButton,
     Photo,
     Toggler,
+    Input,
+    Title2,
   } from "$lib/components";
   import { enhanceForm } from "$lib/utils";
-  import Input from "$lib/components/UI/forms/Input.svelte";
-  import { m } from "$lib/paraglide/messages";
-  import Title2 from "$lib/components/typography/Title2.svelte";
   import { Eye, EyeClosed, ImageOff } from "@lucide/svelte";
   import { invalidate } from "$app/navigation";
+  import texts from "$lib/texts.js";
   let { data, form } = $props();
   let { lesson } = data;
 
   let markdown = $state(lesson.markdown);
 
   let showPicker = $state(true);
-
   let q = "";
 
   let assigned = $state(lesson.assignee ? true : false);
@@ -40,13 +39,12 @@
   class="gap-default mb-4 flex flex-col"
   use:enhance={enhanceForm({
     messages: {
-      redirect: m.changesSaved(),
-      defaultError: m.failedToSaveChanges(),
+      redirect: texts.crud.updated,
     },
   })}
 >
   <Toolbar>
-    <LargeTitle>{m.editing()}</LargeTitle>
+    <LargeTitle>{texts.crud.editing}</LargeTitle>
     <Divider />
     <VStack>
       <Merger>

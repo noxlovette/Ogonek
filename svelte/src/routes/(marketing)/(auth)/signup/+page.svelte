@@ -10,9 +10,8 @@
   } from "$lib/components";
   import { DoorOpen } from "@lucide/svelte";
   import { enhanceForm } from "$lib/utils";
-  import { m } from "$lib/paraglide/messages";
   import type { PageProps } from "./$types";
-  import message from "$lib/messages";
+  import message from "$lib/texts";
   import { goto } from "$app/navigation";
 
   let password = $state("");
@@ -71,20 +70,20 @@
     <Input
       name="name"
       showLabel={false}
-      placeholder="Name"
+      placeholder="Как вас называть?"
       value=""
       dataCy="name-field"
       invalid={form?.name}
-      invalidDescription={`3+ ${m.factual_caring_blackbird_ripple()}`}
+      invalidDescription="3+ символов"
     ></Input>
     <Input
       name="username"
       showLabel={false}
-      placeholder="Username"
+      placeholder="Ваш ник"
       dataCy="username-field"
       value=""
       invalid={form?.username}
-      invalidDescription={`2+ ${m.factual_caring_blackbird_ripple()}`}
+      invalidDescription="2+ символов"
     ></Input>
 
     <Input name="role" dataCy="role-field" showLabel={false} type="role" />
@@ -93,9 +92,9 @@
       name="email"
       dataCy="email-field"
       invalid={form?.email}
-      invalidDescription={m.direct_big_ape_yell()}
+      invalidDescription="Это не почта"
       showLabel={false}
-      placeholder="Email"
+      placeholder="Почта"
       type="email"
       value=""
     ></Input>
@@ -103,32 +102,26 @@
     <Input
       name="pass"
       invalid={form?.pass}
-      invalidDescription={`8+ ${m.factual_caring_blackbird_ripple()}`}
-      placeholder="Password"
+      invalidDescription="8+ символов"
+      placeholder="Пароль"
       showLabel={false}
       type="password"
       bind:value={password}
     ></Input>
     <Input
       name="confirmPassword"
-      placeholder="Again"
+      placeholder="И еще раз"
       invalid={form?.confirmPassword}
       invalidDescription="Пароли не совпадают"
       showLabel={false}
       type="password"
       bind:value={confirmPassword}
     ></Input>
-
-    {#if !passwordMatch}
-      <p class="mt-1 text-sm text-red-600">
-        {m.extra_grand_angelfish_transform()}
-      </p>
-    {/if}
   </Grid>
   <Captcha />
   <Merger>
     <UniButton
-      content={m.signUp()}
+      content="Регистрация"
       Icon={DoorOpen}
       type="submit"
       variant="primary"
