@@ -9,7 +9,10 @@
     Divider,
     WorkArea,
     MetaData,
+    HLine,
   } from "$lib/components";
+  import Title1 from "$lib/components/typography/Title1.svelte";
+  import Grid from "$lib/components/UI/layout/2Grid.svelte";
   import { Flame, FlameKindling } from "@lucide/svelte";
   const seoData = {
     title: "Ogonek - Digital Classroom for Private Teachers & Tutors",
@@ -64,29 +67,53 @@
   };
 </script>
 
-<WorkArea>
-  <Toolbar>
-    <HStack>
-      <Merger>
-        <UniButton
-          content="Авторизация"
-          iconOnly={false}
-          Icon={Flame}
-          dataCy="login-button"
-          href="/login"
-        ></UniButton>
-        <UniButton
-          iconOnly={false}
-          Icon={FlameKindling}
-          href="/signup"
-          dataCy="signup-button"
-          variant="primary"
-          content="Регистрация"
-        ></UniButton>
-      </Merger>
-    </HStack>
-  </Toolbar>
-</WorkArea>
+<HStack styling="items-center text-center">
+  <LargeTitle>Преподавание — ваше призвание</LargeTitle>
+  <Title1>Организация — наше</Title1>
+
+  <HLine></HLine>
+
+  <Grid>
+    <IntroCard title="Карточки">
+      Создавайте и находите колоды с нужными словами и фразами, назначайте их
+      ученикам и отслеживайте прогресс. Больше никаких скучных списков новой
+      лексики.</IntroCard
+    >
+    <IntroCard title="Занятия">
+      Структурируйте материалы, отслеживайте прогресс и давайте обратную связь
+      по каждому занятию. Конспекты, презентации, успехи – все в одном месте.
+    </IntroCard>
+
+    <IntroCard title="Задания">
+      Назначайте, храните и проверяйте домашнюю работу для всех учеников в
+      едином организованном пространстве.
+    </IntroCard>
+
+    <IntroCard title="Календарь"
+      >Ваше расписание - под полным контролем. Назначайте занятия,
+      согласовывайте переносы в пару кликов и автоматически уведомляйте
+      учеников. Забудьте о пробелах в расписании и пропущенных занятиях.</IntroCard
+    >
+  </Grid>
+  <HLine></HLine>
+  <Merger>
+    <UniButton
+      content="Авторизация"
+      iconOnly={false}
+      Icon={Flame}
+      dataCy="login-button"
+      href="/login"
+    ></UniButton>
+    <UniButton
+      iconOnly={false}
+      Icon={FlameKindling}
+      href="/signup"
+      dataCy="signup-button"
+      variant="primary"
+      content="Регистрация"
+    ></UniButton>
+  </Merger>
+</HStack>
 
 <MetaData {...seoData} />
 <svelte:head>
