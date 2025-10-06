@@ -15,11 +15,11 @@
     >{isLogin ? "Мы вас ждали" : "Добро пожаловать"}</LargeTitle
   >
   <Caption1>
-    {isLogin ? "Нет аккаунта? Давайте делать" : "Есть аккаунт? Вам сюда"}
+    {isLogin ? "Нет аккаунта?" : "Есть аккаунт?"}
     <a
       data-cy={isLogin ? "signup-button" : "login-button"}
       href={isLogin ? "/signup" : "/login"}
-      class="text-accent">{isLogin ? "Регистрация" : "Авторизация"}</a
+      class="text-accent">{isLogin ? "Давайте делать" : "Вам сюда"}</a
     >
   </Caption1>
 

@@ -26,7 +26,9 @@
 
   let isComplete = $state(data.cards.length === 0);
   let showAnswer = $state(false);
-  let showCloze = $derived(currentCard.front.split(/\s+/).length < 4);
+  let showCloze = $derived(
+    currentCard ? currentCard.front.split(/\s+/).length < 4 : false,
+  );
   let userInput = $state("");
 
   const nextCard = async () => {
@@ -112,7 +114,7 @@
 {#if isComplete || data.cards.length === 0}
   <div class="p-8">
     <div class="gap-default flex flex-col items-center py-10 text-center">
-      <Body>Карточек тут больше нет. Приходите завтра</Body>
+      <Body>Карточек тут больше нет. Приходите завтра...</Body>
 
       <Merger>
         <UniButton

@@ -40,7 +40,6 @@
   } from "$lib/stores";
   import { goto } from "$app/navigation";
   import { texts } from "$lib/texts";
-  import { text } from "stream/consumers";
 
   let { data } = $props();
 
@@ -168,6 +167,6 @@
   {/if}
 {:else}
   <EmptySpace>
-    <Title1>{texts.table.empty}</Title1>
+    {texts.table.empty}
   </EmptySpace>
 {/if}

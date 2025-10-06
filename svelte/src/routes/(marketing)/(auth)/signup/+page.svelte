@@ -70,7 +70,7 @@
     <Input
       name="name"
       showLabel={false}
-      placeholder="Name"
+      placeholder="Как вас называть?"
       value=""
       dataCy="name-field"
       invalid={form?.name}
@@ -79,7 +79,7 @@
     <Input
       name="username"
       showLabel={false}
-      placeholder="Username"
+      placeholder="Ваш ник"
       dataCy="username-field"
       value=""
       invalid={form?.username}
@@ -94,7 +94,7 @@
       invalid={form?.email}
       invalidDescription="Это не почта"
       showLabel={false}
-      placeholder="Email"
+      placeholder="Почта"
       type="email"
       value=""
     ></Input>
@@ -110,7 +110,7 @@
     ></Input>
     <Input
       name="confirmPassword"
-      placeholder="Again"
+      placeholder="И еще раз"
       invalid={form?.confirmPassword}
       invalidDescription="Пароли не совпадают"
       showLabel={false}
