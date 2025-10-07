@@ -49,7 +49,7 @@ async fn update_deck_solo(
          WHERE id = $5 AND created_by = $6",
         update.deck.title,
         update.deck.description,
-        update.deck.visibility,
+        update.deck.visibility.as_ref().map(|v| v.to_string()),
         update.deck.assignee,
         deck_id,
         user_id

@@ -2,6 +2,8 @@ use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
 
+use crate::Visibility;
+
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct File {
@@ -15,10 +17,9 @@ pub struct File {
     pub parent_id: Option<String>,
     pub owner_id: String,
     pub upload_status: Option<String>,
-    pub visibility: String,
+    pub visibility: Visibility,
 
     pub created_at: DateTime<Utc>,
-
     pub updated_at: DateTime<Utc>,
 }
 

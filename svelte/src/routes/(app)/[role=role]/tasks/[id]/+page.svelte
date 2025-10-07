@@ -113,7 +113,7 @@
   <div class="flex gap-4 md:flex-col">
     {#if files.length > 0}
       <div class="gap-default flex w-full flex-col">
-        <Caption1>Хуй</Caption1>
+        <Caption1>Прикрепленные файлы</Caption1>
         {#each files as file (file.id)}
           <FileTaskCard {file} />
         {/each}

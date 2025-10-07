@@ -1,4 +1,4 @@
-use ogonek_types::{CardUpsert, DeckCreate};
+use ogonek_types::{CardUpsert, DeckCreate, Visibility};
 use sqlx::PgPool;
 
 use crate::{
@@ -13,9 +13,9 @@ pub async fn create(
     create: DeckCreate,
 ) -> Result<String, DbError> {
     let visibility = if create.assignee.is_some() {
-        create.visibility.unwrap_or("assigned".to_string())
+        Visibility::Shared
     } else {
-        create.visibility.unwrap_or("private".to_string())
+        Visibility::default()
     };
     let id = sqlx::query_scalar!(
         r#"
@@ -27,7 +27,7 @@ pub async fn create(
         user_id,
         create.title,
         create.description,
-        visibility,
+        visibility.to_string(),
         create.assignee
     )
     .fetch_one(db)
@@ -44,7 +44,7 @@ pub async fn duplicate(db: &PgPool, user_id: &str, deck_id: &str) -> Result<Stri
     let create_payload = DeckCreate {
         title: format!("{} (Copy)", deck_to_copy.title),
         description: deck_to_copy.description,
-        visibility: Some("private".to_string()),
+        visibility: Some(ogonek_types::Visibility::Private),
         assignee: None,
     };
 

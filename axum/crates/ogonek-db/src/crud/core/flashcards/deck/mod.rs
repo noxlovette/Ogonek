@@ -15,7 +15,7 @@ mod tests {
         core::flashcards::card::{self, batch_upsert},
         tests::create_test_user,
     };
-    use ogonek_types::{CardUpsert, DeckCreate, DeckUpdate, DeckWithCardsUpdate};
+    use ogonek_types::{CardUpsert, DeckCreate, DeckUpdate, DeckWithCardsUpdate, Visibility};
     use sqlx::PgPool;
 
     // Helper function to create a test deck
@@ -24,7 +24,7 @@ mod tests {
         user_id: &str,
         title: &str,
         description: Option<String>,
-        visibility: Option<String>,
+        visibility: Option<Visibility>,
         assignee: Option<String>,
     ) -> Result<String, DbError> {
         let deck_create = DeckCreate {
@@ -75,7 +75,7 @@ mod tests {
         let deck_create = DeckCreate {
             title: title.to_string(),
             description: Some("Test deck with cards".to_string()),
-            visibility: Some("private".to_string()),
+            visibility: Some(Visibility::Private),
             assignee: None,
         };
 
@@ -123,7 +123,7 @@ mod tests {
         let deck_create = DeckCreate {
             title: "Test Deck".to_string(),
             description: Some("A test deck".to_string()),
-            visibility: Some("private".to_string()),
+            visibility: Some(Visibility::Private),
             assignee: None,
         };
 
@@ -153,7 +153,7 @@ mod tests {
         let deck_create = DeckCreate {
             title: "Assigned Deck".to_string(),
             description: None,
-            visibility: None, // Should default to "assigned"
+            visibility: None, // Should default to "shared"
             assignee: Some(assignee_id.clone()),
         };
 
@@ -162,7 +162,7 @@ mod tests {
 
         let deck_id = result.unwrap();
         let deck = read_deck(&db, &deck_id, &user_id).await.unwrap();
-        assert_eq!(deck.visibility, "assigned");
+        assert_eq!(deck.visibility, Visibility::Shared);
         assert_eq!(deck.assignee, Some(assignee_id));
     }
 
@@ -173,7 +173,7 @@ mod tests {
         let deck_create = DeckCreate {
             title: "Private Deck".to_string(),
             description: None,
-            visibility: None, // Should default to "private"
+            visibility: None, // Should default to Visibility::Private
             assignee: None,
         };
 
@@ -182,7 +182,7 @@ mod tests {
 
         let deck_id = result.unwrap();
         let deck = read_deck(&db, &deck_id, &user_id).await.unwrap();
-        assert_eq!(deck.visibility, "private");
+        assert_eq!(deck.visibility, Visibility::Private);
         assert_eq!(deck.assignee, None);
     }
     #[sqlx::test]
@@ -198,7 +198,7 @@ mod tests {
         // Verify the duplicated deck has correct metadata
         let new_deck = read_deck(&db, &new_deck_id, &user_id).await.unwrap();
         assert_eq!(new_deck.title, "My Study Deck (Copy)");
-        assert_eq!(new_deck.visibility, "private");
+        assert_eq!(new_deck.visibility, Visibility::Private);
         assert_eq!(new_deck.assignee, None);
 
         // Verify cards were duplicated correctly
@@ -274,7 +274,7 @@ mod tests {
         let deck_create = DeckCreate {
             title: "Rich Content Deck".to_string(),
             description: Some("Deck with various card types".to_string()),
-            visibility: Some("private".to_string()),
+            visibility: Some(Visibility::Private),
             assignee: None,
         };
 
@@ -375,7 +375,7 @@ mod tests {
             &creator_id,
             "Assigned Deck",
             None,
-            Some("assigned".to_string()),
+            Some(Visibility::Shared),
             Some(assignee_id.clone()),
         )
         .await
@@ -399,7 +399,7 @@ mod tests {
             &creator_id,
             "Public Deck",
             None,
-            Some("public".to_string()),
+            Some(Visibility::Public),
             None,
         )
         .await
@@ -410,7 +410,7 @@ mod tests {
 
         let deck = result.unwrap();
         assert_eq!(deck.id, deck_id);
-        assert_eq!(deck.visibility, "public");
+        assert_eq!(deck.visibility, Visibility::Public);
     }
 
     #[sqlx::test]
@@ -423,7 +423,7 @@ mod tests {
             &creator_id,
             "Private Deck",
             None,
-            Some("private".to_string()),
+            Some(Visibility::Private),
             None,
         )
         .await
@@ -443,7 +443,7 @@ mod tests {
             &user1_id,
             "Public Deck 1",
             Some("First public deck".to_string()),
-            Some("public".to_string()),
+            Some(Visibility::Public),
             None,
         )
         .await
@@ -453,7 +453,7 @@ mod tests {
             &user2_id,
             "Public Deck 2",
             Some("Second public deck".to_string()),
-            Some("public".to_string()),
+            Some(Visibility::Public),
             None,
         )
         .await
@@ -463,7 +463,7 @@ mod tests {
             &user1_id,
             "Private Deck",
             None,
-            Some("private".to_string()),
+            Some(Visibility::Private),
             None,
         )
         .await
@@ -530,7 +530,7 @@ mod tests {
             deck: DeckUpdate {
                 title: Some("Updated Name".to_string()),
                 description: Some("Updated description".to_string()),
-                visibility: Some("public".to_string()),
+                visibility: Some(Visibility::Public),
                 assignee: None,
             },
             cards: vec![], // No cards to update
@@ -545,7 +545,7 @@ mod tests {
             updated_deck.description,
             Some("Updated description".to_string())
         );
-        assert_eq!(updated_deck.visibility, "public");
+        assert_eq!(updated_deck.visibility, Visibility::Public);
     }
 
     #[sqlx::test]

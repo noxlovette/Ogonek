@@ -131,7 +131,7 @@ mod tests {
         let update_task = TaskUpdate {
             title: Some("Updated Task".to_string()),
             markdown: Some("# Updated\nThis task has been updated.".to_string()),
-            unassign: Some(true),
+            visibility: None,
             due_date: Some(Utc::now()),
             assignee: None,
         };
@@ -155,7 +155,7 @@ mod tests {
             title: Some("Hacked Title".to_string()),
             markdown: None,
             due_date: None,
-            unassign: Some(false),
+            visibility: None,
             assignee: None,
         };
 

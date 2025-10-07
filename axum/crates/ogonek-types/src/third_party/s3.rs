@@ -2,6 +2,8 @@ use sqlx::types::chrono::{DateTime, Utc};
 
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
+
+use crate::Visibility;
 #[derive(Serialize, ToSchema)]
 pub struct MultipartInitResultS3 {
     pub upload_id: String,
@@ -19,7 +21,7 @@ pub struct FileMetadata {
     pub is_folder: bool,
     pub parent_id: Option<String>,
     pub owner_id: String,
-    pub visibility: String,
+    pub visibility: Visibility,
     pub created_at: DateTime<Utc>,
     pub updated_at: DateTime<Utc>,
 }

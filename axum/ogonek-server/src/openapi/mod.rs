@@ -59,7 +59,7 @@ pub const FILE_TAG: &str = "File";
         (name = CALENDAR_TAG,description = "Calendar API"),
     ),
     components(schemas(
-        ogonek_types::DeckVisibility,
+        ogonek_types::Visibility,
         ogonek_types::SortField,
         ogonek_types::SortOrder,
     )),

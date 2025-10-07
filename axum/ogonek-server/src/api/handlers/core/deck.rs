@@ -9,8 +9,8 @@ use ogonek_db::{
 };
 use ogonek_notifications::NotificationType;
 use ogonek_types::{
-    ActionType, DeckPaginationParams, DeckPublic, DeckSmall, DeckVisibility, DeckWithCards,
-    DeckWithCardsUpdate, ModelType, PaginatedDecks, PaginatedResponse, SortField, SortOrder,
+    ActionType, DeckPaginationParams, DeckPublic, DeckSmall, DeckWithCards, DeckWithCardsUpdate,
+    ModelType, PaginatedDecks, PaginatedResponse, SortField, SortOrder, Visibility,
 };
 
 use crate::api::DECK_TAG;
@@ -115,7 +115,7 @@ pub async fn fetch_deck(
         ("per_page" = Option<u32>, Query, description = "Items per page"),
         ("search" = Option<String>, Query, description = "Search term"),
         ("assignee" = Option<String>, Query, description = "Filter by assignee"),
-        ("visibility" = Option<DeckVisibility>, Query),
+        ("visibility" = Option<Visibility>, Query),
         ("sort_by" = Option<SortField>, Query),
         ("sort_order" = Option<SortOrder>, Query)
     ),

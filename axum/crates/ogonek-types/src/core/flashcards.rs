@@ -2,15 +2,8 @@ use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use sqlx::prelude::FromRow;
 
-use crate::datetime_serialization;
-#[derive(Debug, Deserialize, Serialize, ToSchema, sqlx::Type)]
-#[serde(rename_all = "lowercase")]
-#[sqlx(type_name = "deck_visibility", rename_all = "lowercase")]
-pub enum DeckVisibility {
-    Public,
-    Private,
-    Shared,
-}
+use crate::{Visibility, datetime_serialization};
+
 #[derive(Serialize, Deserialize, ToSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct Card {
@@ -49,7 +42,7 @@ pub struct DeckFull {
     pub id: String,
     pub title: String,
     pub description: Option<String>,
-    pub visibility: String,
+    pub visibility: Visibility,
     pub assignee: Option<String>,
     pub is_subscribed: Option<bool>,
     pub created_by: String,
@@ -67,7 +60,7 @@ pub struct DeckSmall {
     pub assignee_name: Option<String>,
     pub is_subscribed: Option<bool>,
     pub seen: Option<bool>,
-    pub visibility: String,
+    pub visibility: Visibility,
     pub card_count: i32,
     pub description: Option<String>,
 }
@@ -84,7 +77,7 @@ pub struct DeckPublic {
 pub struct DeckCreate {
     pub title: String,
     pub description: Option<String>,
-    pub visibility: Option<String>,
+    pub visibility: Option<Visibility>,
     pub assignee: Option<String>,
 }
 
@@ -93,7 +86,7 @@ pub struct DeckCreate {
 pub struct DeckUpdate {
     pub title: Option<String>,
     pub description: Option<String>,
-    pub visibility: Option<String>,
+    pub visibility: Option<Visibility>,
     pub assignee: Option<String>,
 }
 
