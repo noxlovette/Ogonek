@@ -45,14 +45,19 @@ async fn update_deck_solo(
             title = COALESCE($1, title),
             description = COALESCE($2, description),
             visibility = COALESCE($3, visibility),
-            assignee = COALESCE($4, assignee)
+            assignee = CASE
+            WHEN $7 = true THEN NULL
+            ELSE
+            COALESCE($4, assignee)
+            END
          WHERE id = $5 AND created_by = $6",
         update.deck.title,
         update.deck.description,
         update.deck.visibility.as_ref().map(|v| v.to_string()),
         update.deck.assignee,
         deck_id,
-        user_id
+        user_id,
+        update.deck.unassign
     )
     .execute(executor)
     .await?;

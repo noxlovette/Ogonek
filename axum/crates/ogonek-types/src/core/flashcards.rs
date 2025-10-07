@@ -88,6 +88,7 @@ pub struct DeckUpdate {
     pub description: Option<String>,
     pub visibility: Option<Visibility>,
     pub assignee: Option<String>,
+    pub unassign: Option<bool>,
 }
 
 use utoipa::ToSchema;

@@ -48,7 +48,11 @@ pub async fn update(
             title = COALESCE($3, title),
             markdown = COALESCE($4, markdown),
             due_date = COALESCE($5, due_date),
-            assignee = COALESCE($6, assignee),
+            assignee = CASE
+            WHEN $8 = true THEN NULL
+            ELSE 
+            COALESCE($6, assignee)
+            END,
             visibility = COALESCE($7, visibility)
          WHERE id = $1 AND (assignee = $2 OR created_by = $2)",
         id,
@@ -57,7 +61,8 @@ pub async fn update(
         update.markdown,
         update.due_date,
         update.assignee,
-        update.visibility.as_ref().map(|v| v.to_string())
+        update.visibility.as_ref().map(|v| v.to_string()),
+        update.unassign
     )
     .execute(db)
     .await?;

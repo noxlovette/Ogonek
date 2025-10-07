@@ -60,6 +60,7 @@ pub struct TaskUpdate {
     pub due_date: Option<DateTime<Utc>>,
     pub assignee: Option<String>,
     pub visibility: Option<Visibility>,
+    pub unassign: Option<bool>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
