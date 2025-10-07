@@ -145,7 +145,7 @@
           class="size-5"
         />
       {:else if !deleteClicked}
-        <Icon />
+        <Icon class="size-5" />
       {:else}
         <X />
       {/if}

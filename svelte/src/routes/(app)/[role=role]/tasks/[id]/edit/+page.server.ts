@@ -36,6 +36,7 @@ export const actions = {
     if (assignee?.trim() == "") {
       return fail(400, { assignee: true });
     }
+
     const data = {
       title: formData.get("title")?.toString(),
       assignee: assignee && assignee.trim() !== "" ? assignee : null,
@@ -49,6 +50,7 @@ export const actions = {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
     });
+
     if (!response.ok) {
       const errorData = await response.text();
       logger.error({ errorData, id }, "Error updating task");

@@ -21,9 +21,11 @@ export const actions = {
     const visibility = formData.get("visibility");
     const assignee = formData.get("assignee")?.toString() || "";
 
-    if (visibility === "assigned" && assignee.trim() === "") {
+    if (visibility === "shared" && assignee.trim() === "") {
       return fail(400, { assignee: true });
     }
+
+    console.log(formData);
 
     if (title.trim() === "") {
       return fail(400, { title: true });
@@ -50,6 +52,7 @@ export const actions = {
 
     const validatedBody = z.updateDeckBody.safeParse(body);
 
+    console.log(body);
     if (validatedBody.error) {
       const error = validatedBody.error.message;
       logger.error({ error }, "error validating deck");

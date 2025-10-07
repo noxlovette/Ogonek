@@ -14,6 +14,8 @@
     SaveButton,
     NewCard,
     Caption1,
+    Popover,
+    VLine,
   } from "$lib/components";
 
   import { enhanceForm } from "$lib/utils";
@@ -100,7 +102,6 @@
         >
           <DeleteButton />
         </form>
-
         <CancelButton />
       </Merger>
       <Merger>
@@ -127,23 +128,26 @@
 
     <Divider />
     {#if role === "t"}
-      {#if visibility === "assigned"}
+      <Popover>
         <Input
-          name="assignee"
-          placeholder="Для кого колода"
-          labelName="Назначено"
-          invalid={form?.assignee}
-          invalidDescription="Для кого колода?"
-          item={deck}
-          type="assignee"
+          name="visibility"
+          labelName="Кто видит"
+          bind:value={visibility}
+          type="visibility"
         />
-      {/if}
-      <Input
-        name="visibility"
-        labelName="Кто видит"
-        bind:value={visibility}
-        type="visibility"
-      />
+
+        {#if visibility === "shared"}
+          <Input
+            name="assignee"
+            placeholder="Для кого колода"
+            labelName="Назначено"
+            invalid={form?.assignee}
+            invalidDescription="Для кого колода?"
+            item={deck}
+            type="assignee"
+          />
+        {/if}
+      </Popover>
     {/if}
   </VStack>
 

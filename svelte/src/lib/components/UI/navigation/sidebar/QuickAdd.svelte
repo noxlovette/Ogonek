@@ -1,30 +1,33 @@
 <script lang="ts">
   import UniButton from "$lib/components/UI/forms/buttons/UniButton.svelte";
-  import { BookOpenCheck, ListTodo } from "@lucide/svelte";
+  import { BookOpenCheck, ListTodo, Plus } from "@lucide/svelte";
   import { enhance } from "$app/forms";
   import HStack from "../../layout/HStack.svelte";
   import { page } from "$app/state";
+  import { Merger } from "../../toolbar";
 
   const role = page.params.role;
 </script>
 
-<HStack styling="gap-2">
-  <form action="/{role}/tasks?/new" method="POST" class="" use:enhance>
+<form action="/{role}/tasks?/new" method="POST" class="" use:enhance>
+  <Merger>
     <UniButton
-      Icon={ListTodo}
+      Icon={Plus}
       type="submit"
       variant="primary"
       iconOnly={false}
-      content="Добавить задание"
+      content="Задание"
     ></UniButton>
-  </form>
-  <form action="/{role}/lessons?/new" method="POST" class="" use:enhance>
+  </Merger>
+</form>
+<form action="/{role}/lessons?/new" method="POST" class="" use:enhance>
+  <Merger>
     <UniButton
-      Icon={BookOpenCheck}
+      Icon={Plus}
       type="submit"
       variant="primary"
-      content="Добавить занятие"
+      content="Занятие"
       iconOnly={false}
     ></UniButton>
-  </form>
-</HStack>
+  </Merger>
+</form>

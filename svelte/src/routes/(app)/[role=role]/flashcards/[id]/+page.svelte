@@ -16,7 +16,7 @@
   import { invalidate } from "$app/navigation";
 
   import { user } from "$lib/stores";
-  import { Bookmark, BookOpenCheck, Check, Circle, Copy } from "@lucide/svelte";
+  import { Bookmark, BookOpenCheck, Copy } from "@lucide/svelte";
   import { enhanceForm } from "$lib/utils";
   import Badge from "$lib/components/cards/Badge.svelte";
   import { page } from "$app/state";
@@ -44,7 +44,7 @@
 </script>
 
 <svelte:head>
-  <title>{deck.title} | Flashcards</title>
+  <title>{deck.title} | Карточки</title>
 </svelte:head>
 <Toolbar>
   <HStack>

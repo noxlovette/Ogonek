@@ -23,32 +23,32 @@
   import texts from "$lib/texts.js";
 
   let { data, form } = $props();
-  const { files, rendered } = $derived(data);
+  const { files, rendered, task } = $derived(data);
 
   let role = $derived(page.params.role);
-  let completed = $state(data.task.completed);
+  let completed = $state(task.completed);
 
   let formattedDate = $state();
 
-  if (data.task.dueDate) {
-    formattedDate = formatDateOnly(data.task.dueDate);
+  if (task.dueDate) {
+    formattedDate = formatDateOnly(task.dueDate);
   }
 
-  const urgency = getUrgency(data.task.dueDate);
+  const urgency = getUrgency(task.dueDate);
 </script>
 
 <svelte:head>
-  <title>Task • {data.task.title}</title>
+  <title>Task • {task.title}</title>
 </svelte:head>
 
 <Toolbar>
   <HStack>
     <VStack>
-      <LargeTitle>{data.task.title}</LargeTitle>
+      <LargeTitle>{task.title}</LargeTitle>
       <Divider />
       <Merger>
         {#if role === "t"}
-          <EditButton href="/t/tasks/{data.task.id}/edit" />
+          <EditButton href="/t/tasks/{task.id}/edit" />
         {/if}
       </Merger>
       <Merger>
@@ -97,9 +97,9 @@
       <VStack>
         <Badge {urgency}>{formattedDate}</Badge>
       </VStack>
-      {#if role === "t"}
+      {#if role === "t" && task.assignee}
         <Badge>
-          {data.task.assigneeName}
+          {task.assigneeName}
         </Badge>
       {/if}
     </VStack>
@@ -124,7 +124,7 @@
     {#if page.params.role === "s"}
       <div class="gap-default flex w-full flex-col">
         <Caption1>Вы можете загрузить здесь ДЗ</Caption1>
-        <Multipart taskId={data.task.id} />
+        <Multipart taskId={task.id} />
       </div>
     {/if}
   </div>

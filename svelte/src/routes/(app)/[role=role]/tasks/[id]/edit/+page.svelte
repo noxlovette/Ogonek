@@ -14,8 +14,8 @@
     DeleteButton,
     SaveButton,
     Toggler,
+    VStack,
   } from "$lib/components";
-  import VStack from "$lib/components/UI/layout/VStack.svelte";
   import texts from "$lib/texts.js";
 
   let { data, form } = $props();

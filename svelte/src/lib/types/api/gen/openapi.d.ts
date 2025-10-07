@@ -920,7 +920,7 @@ export interface components {
             id: string;
             isSubscribed?: boolean | null;
             title: string;
-            visibility: string;
+            visibility: components["schemas"]["Visibility"];
         };
         DeckPublic: {
             description?: string | null;
@@ -936,16 +936,15 @@ export interface components {
             isSubscribed?: boolean | null;
             seen?: boolean | null;
             title: string;
-            visibility: string;
+            visibility: components["schemas"]["Visibility"];
         };
         DeckUpdate: {
             assignee?: string | null;
             description?: string | null;
             title?: string | null;
-            visibility?: string | null;
+            unassign?: boolean | null;
+            visibility?: null | components["schemas"]["Visibility"];
         };
-        /** @enum {string} */
-        DeckVisibility: "public" | "private" | "shared";
         DeckWithCards: {
             cards: components["schemas"]["Card"][];
             deck: components["schemas"]["DeckFull"];
@@ -1258,6 +1257,7 @@ export interface components {
             title: string;
             /** Format: date-time */
             updatedAt: string;
+            visibility: components["schemas"]["Visibility"];
         };
         TaskSmall: {
             assigneeName?: string | null;
@@ -1269,6 +1269,7 @@ export interface components {
             priority: number;
             seen?: boolean | null;
             title: string;
+            visibility: components["schemas"]["Visibility"];
         };
         TaskUpdate: {
             assignee?: string | null;
@@ -1277,6 +1278,7 @@ export interface components {
             markdown?: string | null;
             title?: string | null;
             unassign?: boolean | null;
+            visibility?: null | components["schemas"]["Visibility"];
         };
         TaskWithFilesResponse: {
             files: components["schemas"]["FileSmall"][];
@@ -1352,6 +1354,8 @@ export interface components {
             pass?: string | null;
             username?: string | null;
         };
+        /** @enum {string} */
+        Visibility: "public" | "private" | "shared";
     };
     responses: never;
     parameters: never;
@@ -2254,7 +2258,7 @@ export interface operations {
                 search?: string;
                 /** @description Filter by assignee */
                 assignee?: string;
-                visibility?: components["schemas"]["DeckVisibility"];
+                visibility?: components["schemas"]["Visibility"];
                 sort_by?: components["schemas"]["SortField"];
                 sort_order?: components["schemas"]["SortOrder"];
             };

@@ -20,8 +20,9 @@
   let role = $derived(page.params.role);
 
   let { data }: { data: PageData } = $props();
+  const lesson = $derived(data.lesson);
 
-  let formattedDate = formatDateOnly(data.lesson.createdAt);
+  let formattedDate = formatDateOnly(lesson.createdAt);
 </script>
 
 <Toolbar>
@@ -29,26 +30,28 @@
     <VStack>
       <LargeTitle>
         {#if role === "t"}
-          {data.lesson.title}
+          {lesson.title}
         {:else}
-          {data.lesson.topic}
+          {lesson.topic}
         {/if}
       </LargeTitle>
       <Divider />
       {#if role === "t"}
         <Merger>
-          <EditButton href="/t/lessons/{data.lesson.id}/edit" />
+          <EditButton href="/t/lessons/{lesson.id}/edit" />
         </Merger>
       {/if}
     </VStack>
     <VStack override="gap-2">
       <Badge>{formattedDate}</Badge>
       {#if role === "t"}
-        <Badge>
-          {data.lesson.assigneeName}
-        </Badge>
+        {#if lesson.assignee}
+          <Badge>
+            {lesson.assigneeName}
+          </Badge>
+        {/if}
         <Title3>
-          {data.lesson.topic}
+          {lesson.topic}
         </Title3>
       {/if}
     </VStack>
@@ -56,7 +59,7 @@
 </Toolbar>
 <div class="md:grid md:grid-cols-4">
   <article class="markdown md:col-span-3">
-    <Photo photo={data.lesson.photo} />
+    <Photo photo={lesson.photo} />
 
     {@html data.rendered}
   </article>
