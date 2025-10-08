@@ -93,7 +93,7 @@
 
   <!-- Selected Photo Actions -->
   {#if selectedPhoto}
-    <div class="ring-default bg-default flex w-full gap-4 rounded-2xl p-4">
+    <div class="ring-default bg-default flex w-full gap-4 rounded-2xl p-3.5">
       <!-- Thumbnail -->
       <div class="flex-shrink-0">
         <img

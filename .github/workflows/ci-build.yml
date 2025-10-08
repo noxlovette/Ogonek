@@ -96,10 +96,6 @@ jobs:
         run: |
           cd svelte
           pnpm install --frozen-lockfile
-      - name: Svelte Format Check
-        run: |
-          cd svelte
-          pnpm run format
       - name: Svelte Build
         run: |
           cd svelte

@@ -1,4 +1,4 @@
-use crate::{DeckSmall, DeckVisibility, SortField, SortOrder};
+use crate::{DeckSmall, SortField, SortOrder, Visibility};
 
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
@@ -28,7 +28,7 @@ pub struct DeckPaginationParams {
     pub assignee: Option<String>,
 
     #[serde(default)]
-    pub visibility: Option<DeckVisibility>,
+    pub visibility: Option<Visibility>,
 
     #[serde(default)]
     pub subscribed_only: Option<bool>,

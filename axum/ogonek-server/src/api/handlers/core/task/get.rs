@@ -10,13 +10,13 @@ use crate::{
 use ogonek_db::{
     core::{
         file::fetch_files_task,
-        task::{self, read_by_id},
+        task::{self, read_by_id, read_public_one},
     },
     tracking::seen,
 };
 use ogonek_types::{
     ModelType, PaginatedResponse, PaginatedTasks, SortField, SortOrder, TaskPaginationParams,
-    TaskSmall, TaskWithFilesResponse,
+    TaskPublicWithFiles, TaskSmall, TaskWithFilesResponse,
 };
 
 /// Tasks belonging to a user (through assignment or direct ownership)
@@ -81,4 +81,27 @@ pub async fn fetch_task(
     seen::mark_as_seen(&state.db, &claims.sub, &id, ModelType::Task).await?;
 
     Ok(Json(TaskWithFilesResponse { task, files }))
+}
+
+/// Public Task. Handled in the content router
+#[utoipa::path(
+    get,
+    path = "/task/{id}", tag = TASK_TAG,
+    params(
+        ("id" = String, Path, description = "Task ID")
+    ),
+    responses(
+        (status = 200, description = "Task with files retrieved", body = TaskPublicWithFiles),
+        (status = 404, description = "Task not found"),
+        (status = 401, description = "Unauthorized")
+    )
+)]
+pub async fn fetch_task_public(
+    State(state): State<AppState>,
+    Path(id): Path<String>,
+) -> Result<Json<TaskPublicWithFiles>, APIError> {
+    let task = read_public_one(&state.db, &id).await?;
+    let files = fetch_files_task(&state.db, &id).await?;
+
+    Ok(Json(TaskPublicWithFiles { task, files }))
 }

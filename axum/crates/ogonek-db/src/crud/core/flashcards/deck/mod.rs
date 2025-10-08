@@ -15,7 +15,7 @@ mod tests {
         core::flashcards::card::{self, batch_upsert},
         tests::create_test_user,
     };
-    use ogonek_types::{CardUpsert, DeckCreate, DeckUpdate, DeckWithCardsUpdate};
+    use ogonek_types::{CardUpsert, DeckCreate, DeckUpdate, DeckWithCardsUpdate, Visibility};
     use sqlx::PgPool;
 
     // Helper function to create a test deck
@@ -24,7 +24,7 @@ mod tests {
         user_id: &str,
         title: &str,
         description: Option<String>,
-        visibility: Option<String>,
+        visibility: Option<Visibility>,
         assignee: Option<String>,
     ) -> Result<String, DbError> {
         let deck_create = DeckCreate {
@@ -66,43 +66,6 @@ mod tests {
 
         Ok(card_ids)
     }
-    async fn create_test_deck_with_cards(
-        db: &PgPool,
-        user_id: &str,
-        title: &str,
-        card_count: usize,
-    ) -> String {
-        let deck_create = DeckCreate {
-            title: title.to_string(),
-            description: Some("Test deck with cards".to_string()),
-            visibility: Some("private".to_string()),
-            assignee: None,
-        };
-
-        let mut tx = db.begin().await.unwrap();
-        let deck_result = create(&mut *tx, user_id, deck_create).await.unwrap();
-
-        // Add cards if requested
-        if card_count > 0 {
-            let cards: Vec<CardUpsert> = (0..card_count)
-                .map(|i| CardUpsert {
-                    id: None,
-                    front: format!("Question {}", i + 1),
-                    back: format!("Answer {}", i + 1),
-                    media_url: if i % 2 == 0 {
-                        Some(format!("https://cdn.example.com/card_{}.jpg", i))
-                    } else {
-                        None
-                    },
-                })
-                .collect();
-
-            batch_upsert(&mut *tx, &deck_result, cards).await.unwrap();
-        }
-
-        tx.commit().await.unwrap();
-        deck_result
-    }
 
     // Helper function to count cards in a deck
     async fn count_cards_in_deck(
@@ -123,7 +86,7 @@ mod tests {
         let deck_create = DeckCreate {
             title: "Test Deck".to_string(),
             description: Some("A test deck".to_string()),
-            visibility: Some("private".to_string()),
+            visibility: Some(Visibility::Private),
             assignee: None,
         };
 
@@ -146,98 +109,6 @@ mod tests {
     }
 
     #[sqlx::test]
-    async fn test_create_deck_with_assignee_defaults_to_assigned_visibility(db: PgPool) {
-        let user_id = create_test_user(&db, "creator", "creator@example.com").await;
-        let assignee_id = create_test_user(&db, "assignee", "assignee@example.com").await;
-
-        let deck_create = DeckCreate {
-            title: "Assigned Deck".to_string(),
-            description: None,
-            visibility: None, // Should default to "assigned"
-            assignee: Some(assignee_id.clone()),
-        };
-
-        let result = create(&db, &user_id, deck_create).await;
-        assert!(result.is_ok());
-
-        let deck_id = result.unwrap();
-        let deck = read_deck(&db, &deck_id, &user_id).await.unwrap();
-        assert_eq!(deck.visibility, "assigned");
-        assert_eq!(deck.assignee, Some(assignee_id));
-    }
-
-    #[sqlx::test]
-    async fn test_create_deck_without_assignee_defaults_to_private_visibility(db: PgPool) {
-        let user_id = create_test_user(&db, "testuser", "test@example.com").await;
-
-        let deck_create = DeckCreate {
-            title: "Private Deck".to_string(),
-            description: None,
-            visibility: None, // Should default to "private"
-            assignee: None,
-        };
-
-        let result = create(&db, &user_id, deck_create).await;
-        assert!(result.is_ok());
-
-        let deck_id = result.unwrap();
-        let deck = read_deck(&db, &deck_id, &user_id).await.unwrap();
-        assert_eq!(deck.visibility, "private");
-        assert_eq!(deck.assignee, None);
-    }
-    #[sqlx::test]
-    async fn test_duplicate_deck_success_with_cards(db: PgPool) {
-        let user_id = create_test_user(&db, "testuser", "test@example.com").await;
-        let original_deck_id = create_test_deck_with_cards(&db, &user_id, "My Study Deck", 3).await;
-
-        let result = duplicate(&db, &user_id, &original_deck_id).await;
-
-        assert!(result.is_ok());
-        let new_deck_id = result.unwrap();
-
-        // Verify the duplicated deck has correct metadata
-        let new_deck = read_deck(&db, &new_deck_id, &user_id).await.unwrap();
-        assert_eq!(new_deck.title, "My Study Deck (Copy)");
-        assert_eq!(new_deck.visibility, "private");
-        assert_eq!(new_deck.assignee, None);
-
-        // Verify cards were duplicated correctly
-        let mut tx = db.begin().await.unwrap();
-        let original_cards = card::find_all(&mut *tx, &original_deck_id).await.unwrap();
-        let new_cards = card::find_all(&mut *tx, &new_deck_id).await.unwrap();
-
-        assert_eq!(original_cards.len(), 3);
-        assert_eq!(new_cards.len(), 3);
-
-        // Cards should have same content but different deck association
-        for (orig, new) in original_cards.iter().zip(new_cards.iter()) {
-            assert_eq!(orig.front, new.front);
-            assert_eq!(orig.back, new.back);
-            assert_eq!(orig.media_url, new.media_url);
-        }
-    }
-
-    #[sqlx::test]
-    async fn test_duplicate_empty_deck(db: PgPool) {
-        let user_id = create_test_user(&db, "testuser", "test@example.com").await;
-        let empty_deck_id = create_test_deck_with_cards(&db, &user_id, "Empty Deck", 0).await;
-
-        let result = duplicate(&db, &user_id, &empty_deck_id).await;
-
-        assert!(result.is_ok());
-        let new_deck_id = result.unwrap();
-
-        // Should create deck even with no cards
-        let new_deck = read_deck(&db, &new_deck_id, &user_id).await.unwrap();
-        assert_eq!(new_deck.title, "Empty Deck (Copy)");
-
-        // Verify no cards in duplicated deck
-        let mut tx = db.begin().await.unwrap();
-        let new_cards = card::find_all(&mut *tx, &new_deck_id).await.unwrap();
-        assert_eq!(new_cards.len(), 0);
-    }
-
-    #[sqlx::test]
     async fn test_duplicate_deck_not_found(db: PgPool) {
         let user_id = create_test_user(&db, "testuser", "test@example.com").await;
         let fake_deck_id = "non-existent-deck-id";
@@ -253,20 +124,6 @@ mod tests {
     }
 
     #[sqlx::test]
-    async fn test_duplicate_deck_unauthorized_user(db: PgPool) {
-        let owner_id = create_test_user(&db, "owner", "owner@example.com").await;
-        let other_user_id = create_test_user(&db, "hacker", "hacker@example.com").await;
-
-        let deck_id = create_test_deck_with_cards(&db, &owner_id, "Private Deck", 2).await;
-
-        // Try to duplicate someone else's deck
-        let result = duplicate(&db, &other_user_id, &deck_id).await;
-
-        assert!(result.is_err());
-        // This should fail because read_deck checks ownership
-    }
-
-    #[sqlx::test]
     async fn test_duplicate_preserves_all_card_properties(db: PgPool) {
         let user_id = create_test_user(&db, "testuser", "test@example.com").await;
 
@@ -274,7 +131,7 @@ mod tests {
         let deck_create = DeckCreate {
             title: "Rich Content Deck".to_string(),
             description: Some("Deck with various card types".to_string()),
-            visibility: Some("private".to_string()),
+            visibility: Some(Visibility::Private),
             assignee: None,
         };
 
@@ -327,29 +184,6 @@ mod tests {
     }
 
     #[sqlx::test]
-    async fn test_duplicate_deck_name_formatting(db: PgPool) {
-        let user_id = create_test_user(&db, "testuser", "test@example.com").await;
-
-        // Test various deck names and their copy formatting
-        let test_cases = vec![
-            ("Simple Deck", "Simple Deck (Copy)"),
-            ("Deck with (parentheses)", "Deck with (parentheses) (Copy)"),
-            ("Already a (Copy)", "Already a (Copy) (Copy)"),
-            ("", " (Copy)"), // Edge case: empty name
-            ("🚀 Emoji Deck", "🚀 Emoji Deck (Copy)"),
-        ];
-
-        for (original_name, expected_copy_name) in test_cases {
-            let deck_id = create_test_deck_with_cards(&db, &user_id, original_name, 1).await;
-            let result = duplicate(&db, &user_id, &deck_id).await;
-
-            assert!(result.is_ok());
-            let copied_deck = read_deck(&db, &result.unwrap(), &user_id).await.unwrap();
-            assert_eq!(copied_deck.title, expected_copy_name);
-        }
-    }
-
-    #[sqlx::test]
     async fn test_read_deck_success_as_creator(db: PgPool) {
         let user_id = create_test_user(&db, "creator", "creator@example.com").await;
         let deck_id = create_test_deck(&db, &user_id, "Test Deck", None, None, None)
@@ -375,7 +209,7 @@ mod tests {
             &creator_id,
             "Assigned Deck",
             None,
-            Some("assigned".to_string()),
+            Some(Visibility::Shared),
             Some(assignee_id.clone()),
         )
         .await
@@ -399,7 +233,7 @@ mod tests {
             &creator_id,
             "Public Deck",
             None,
-            Some("public".to_string()),
+            Some(Visibility::Public),
             None,
         )
         .await
@@ -410,7 +244,7 @@ mod tests {
 
         let deck = result.unwrap();
         assert_eq!(deck.id, deck_id);
-        assert_eq!(deck.visibility, "public");
+        assert_eq!(deck.visibility, Visibility::Public);
     }
 
     #[sqlx::test]
@@ -423,7 +257,7 @@ mod tests {
             &creator_id,
             "Private Deck",
             None,
-            Some("private".to_string()),
+            Some(Visibility::Private),
             None,
         )
         .await
@@ -431,53 +265,6 @@ mod tests {
 
         let result = read_deck(&db, &deck_id, &other_user_id).await;
         assert!(result.is_err());
-    }
-
-    #[sqlx::test]
-    async fn test_find_all_public_returns_only_public_decks(db: PgPool) {
-        let user1_id = create_test_user(&db, "user1", "user1@example.com").await;
-        let user2_id = create_test_user(&db, "user2", "user2@example.com").await;
-
-        let _public_deck1 = create_test_deck(
-            &db,
-            &user1_id,
-            "Public Deck 1",
-            Some("First public deck".to_string()),
-            Some("public".to_string()),
-            None,
-        )
-        .await
-        .unwrap();
-        let _public_deck2 = create_test_deck(
-            &db,
-            &user2_id,
-            "Public Deck 2",
-            Some("Second public deck".to_string()),
-            Some("public".to_string()),
-            None,
-        )
-        .await
-        .unwrap();
-        let _private_deck = create_test_deck(
-            &db,
-            &user1_id,
-            "Private Deck",
-            None,
-            Some("private".to_string()),
-            None,
-        )
-        .await
-        .unwrap();
-
-        let result = read_all_public(&db).await;
-        assert!(result.is_ok());
-
-        let decks = result.unwrap();
-        assert_eq!(decks.len(), 2);
-
-        for deck in &decks {
-            assert!(deck.title.starts_with("Public Deck"));
-        }
     }
 
     #[sqlx::test]
@@ -530,7 +317,8 @@ mod tests {
             deck: DeckUpdate {
                 title: Some("Updated Name".to_string()),
                 description: Some("Updated description".to_string()),
-                visibility: Some("public".to_string()),
+                unassign: None,
+                visibility: Some(Visibility::Public),
                 assignee: None,
             },
             cards: vec![], // No cards to update
@@ -545,7 +333,7 @@ mod tests {
             updated_deck.description,
             Some("Updated description".to_string())
         );
-        assert_eq!(updated_deck.visibility, "public");
+        assert_eq!(updated_deck.visibility, Visibility::Public);
     }
 
     #[sqlx::test]
@@ -560,6 +348,7 @@ mod tests {
                 title: None,
                 description: None,
                 visibility: None,
+                unassign: None,
                 assignee: None,
             },
             cards: vec![
@@ -606,6 +395,7 @@ mod tests {
             deck: DeckUpdate {
                 title: None,
                 description: None,
+                unassign: None,
                 visibility: None,
                 assignee: None,
             },

@@ -12,6 +12,7 @@ export const updateDeckBody = z.object({
   deck: z.object({
     assignee: z.string().nullish(),
     description: z.string().nullish(),
+    unassign: z.boolean().nullish(),
     title: z.string().nullish(),
     visibility: z.string().nullish(),
   }),

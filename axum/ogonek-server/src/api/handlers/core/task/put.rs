@@ -7,7 +7,7 @@ use axum::{
     http::StatusCode,
 };
 use ogonek_db::{
-    core::task::{self, read_assignee, toggle},
+    core::task::{self, read_assignee, toggle, toggle_public},
     tracking::log_activity,
 };
 use ogonek_notifications::NotificationType;
@@ -60,6 +60,29 @@ pub async fn toggle_task(
             )
             .await?;
     }
+
+    Ok(StatusCode::NO_CONTENT)
+}
+
+/// Toggles completed/not completed on a task
+#[utoipa::path(
+    put,
+    path = "/task/{id}",
+    tag = TASK_TAG,
+    params(
+        ("id" = String, Path, description = "Task ID")
+    ),
+    responses(
+        (status = 200, description = "toggled"),
+        (status = 404, description = "Task not found"),
+        (status = 401, description = "Unauthorized")
+    )
+)]
+pub async fn toggle_task_public(
+    State(state): State<AppState>,
+    Path(id): Path<String>,
+) -> Result<StatusCode, APIError> {
+    let _ = toggle_public(&state.db, &id).await?;
 
     Ok(StatusCode::NO_CONTENT)
 }

@@ -1,6 +1,6 @@
 use crate::DbError;
 
-use ogonek_types::{PDFData, SortField, TaskFull, TaskPaginationParams, TaskSmall};
+use ogonek_types::{PDFData, SortField, TaskFull, TaskPaginationParams, TaskPublic, TaskSmall};
 use sqlx::PgPool;
 /// Mini-tasks
 pub async fn read_all(
@@ -14,6 +14,7 @@ pub async fn read_all(
                 t.title,
                 t.priority,
                 t.completed,
+                t.visibility,
                 t.due_date,
                 t.created_at,
                 t.updated_at,
@@ -139,6 +140,7 @@ pub async fn read_by_id(db: &PgPool, id: &str, user_id: &str) -> Result<TaskFull
                 t.priority,
                 t.completed,
                 t.due_date,
+                t.visibility,
                 t.assignee,
                 t.created_by,
                 t.created_at,
@@ -225,4 +227,26 @@ pub async fn read_count(db: &PgPool, user_id: &str) -> Result<i64, DbError> {
     .await?;
 
     Ok(count.unwrap_or(0))
+}
+/// Returns a task if it is public
+pub async fn read_public_one(db: &PgPool, id: &str) -> Result<TaskPublic, DbError> {
+    let task = sqlx::query_as!(
+        TaskPublic,
+        r#"
+            SELECT
+                id,
+                title,
+                markdown,
+                completed,
+                due_date
+            FROM tasks
+            WHERE id = $1
+            AND visibility = 'public'
+            "#,
+        id,
+    )
+    .fetch_one(db)
+    .await?;
+
+    Ok(task)
 }

@@ -8,7 +8,6 @@
     Divider,
     VStack,
     Merger,
-    EmptySpace,
     DeleteButton,
     CancelButton,
     SaveButton,
@@ -61,6 +60,7 @@
   }
 
   let visibility = $state(deck.visibility);
+  let assigned = $derived(visibility === "shared");
 </script>
 
 <svelte:head>
@@ -76,8 +76,14 @@
     },
   })}
 >
+  <input
+    type="checkbox"
+    name="assigned"
+    checked={assigned}
+    style="display: none;"
+  />
   <Toolbar>
-    <LargeTitle>{deck.title}</LargeTitle>
+    <LargeTitle>Редактируем</LargeTitle>
     <Divider />
 
     <VStack>
@@ -100,7 +106,6 @@
         >
           <DeleteButton />
         </form>
-
         <CancelButton />
       </Merger>
       <Merger>
@@ -127,7 +132,14 @@
 
     <Divider />
     {#if role === "t"}
-      {#if visibility === "assigned"}
+      <Input
+        name="visibility"
+        labelName="Кто видит"
+        bind:value={visibility}
+        type="visibility"
+      />
+
+      {#if visibility === "shared"}
         <Input
           name="assignee"
           placeholder="Для кого колода"
@@ -138,12 +150,6 @@
           type="assignee"
         />
       {/if}
-      <Input
-        name="visibility"
-        labelName="Кто видит"
-        bind:value={visibility}
-        type="visibility"
-      />
     {/if}
   </VStack>
 
@@ -155,7 +161,7 @@
 
   {#if updatedCards.length === 0}
     <div
-      class="flex min-h-40 w-full flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-stone-300/30 p-4 text-center dark:border-stone-700"
+      class="flex min-h-40 w-full flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-stone-300/30 p-3.5 text-center dark:border-stone-700"
     >
       <NewCard {addCard} />
     </div>

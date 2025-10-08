@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "\n            SELECT\n                t.id,\n                t.title,\n                t.markdown,\n                t.priority,\n                t.completed,\n                t.due_date,\n                t.assignee,\n                t.created_by,\n                t.created_at,\n                t.updated_at,\n                u.name as \"assignee_name?\"\n            FROM tasks t\n            LEFT JOIN \"user\" u ON t.assignee = u.id\n            WHERE t.id = $1\n            AND (t.assignee = $2 OR t.created_by = $2)\n            ",
+  "query": "\n            SELECT\n                t.id,\n                t.title,\n                t.markdown,\n                t.priority,\n                t.completed,\n                t.due_date,\n                t.visibility,\n                t.assignee,\n                t.created_by,\n                t.created_at,\n                t.updated_at,\n                u.name as \"assignee_name?\"\n            FROM tasks t\n            LEFT JOIN \"user\" u ON t.assignee = u.id\n            WHERE t.id = $1\n            AND (t.assignee = $2 OR t.created_by = $2)\n            ",
   "describe": {
     "columns": [
       {
@@ -35,26 +35,31 @@
       },
       {
         "ordinal": 6,
-        "name": "assignee",
+        "name": "visibility",
         "type_info": "Varchar"
       },
       {
         "ordinal": 7,
-        "name": "created_by",
+        "name": "assignee",
         "type_info": "Varchar"
       },
       {
         "ordinal": 8,
+        "name": "created_by",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 9,
         "name": "created_at",
         "type_info": "Timestamptz"
       },
       {
-        "ordinal": 9,
+        "ordinal": 10,
         "name": "updated_at",
         "type_info": "Timestamptz"
       },
       {
-        "ordinal": 10,
+        "ordinal": 11,
         "name": "assignee_name?",
         "type_info": "Varchar"
       }
@@ -72,6 +77,7 @@
       false,
       false,
       true,
+      false,
       true,
       false,
       false,
@@ -79,5 +85,5 @@
       false
     ]
   },
-  "hash": "3cb9ba2206c5598c1238f5c45a1a8f073a7035d0dc7a1fff49caf24c566ab12a"
+  "hash": "9ecf1eac43fd0e208b489ed88a13f463b13564ba625923f72b13aebf6f4fc05f"
 }

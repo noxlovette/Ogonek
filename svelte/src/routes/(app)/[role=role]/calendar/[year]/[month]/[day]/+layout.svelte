@@ -23,7 +23,7 @@
 
   <!-- Content -->
   <div
-    class="scrollbar-thin scrollbar-track-stone-100 scrollbar-thumb-stone-300 dark:scrollbar-track-stone-800 dark:scrollbar-thumb-stone-600 overflow-y-auto p-4"
+    class="scrollbar-thin scrollbar-track-stone-100 scrollbar-thumb-stone-300 dark:scrollbar-track-stone-800 dark:scrollbar-thumb-stone-600 overflow-y-auto p-3.5"
   >
     {@render children()}
   </div>

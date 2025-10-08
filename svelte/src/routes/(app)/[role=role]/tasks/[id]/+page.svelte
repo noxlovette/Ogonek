@@ -13,7 +13,7 @@
   } from "$lib/components";
   import { page } from "$app/state";
   import { enhance } from "$app/forms";
-  import { Check, Circle } from "@lucide/svelte";
+  import { Check, Circle, Share } from "@lucide/svelte";
   import { enhanceForm, formatDateOnly } from "$lib/utils";
   import Multipart from "$lib/components/UI/interactive/Multipart.svelte";
   import Badge from "$lib/components/cards/Badge.svelte";
@@ -21,34 +21,35 @@
   import VStack from "$lib/components/UI/layout/VStack.svelte";
   import DownloadButton from "$lib/components/UI/forms/buttons/DownloadButton.svelte";
   import texts from "$lib/texts.js";
+  import { notification } from "$lib/stores/notification.js";
 
   let { data, form } = $props();
-  const { files, rendered } = $derived(data);
+  const { files, rendered, task } = $derived(data);
 
   let role = $derived(page.params.role);
-  let completed = $state(data.task.completed);
+  let completed = $state(task.completed);
 
-  let formattedDate = $state();
+  let formattedDate = $state("Без даты");
 
-  if (data.task.dueDate) {
-    formattedDate = formatDateOnly(data.task.dueDate);
+  if (task.dueDate) {
+    formattedDate = formatDateOnly(task.dueDate);
   }
 
-  const urgency = getUrgency(data.task.dueDate);
+  const urgency = getUrgency(task.dueDate);
 </script>
 
 <svelte:head>
-  <title>Task • {data.task.title}</title>
+  <title>Task • {task.title}</title>
 </svelte:head>
 
 <Toolbar>
   <HStack>
     <VStack>
-      <LargeTitle>{data.task.title}</LargeTitle>
+      <LargeTitle>{task.title}</LargeTitle>
       <Divider />
       <Merger>
         {#if role === "t"}
-          <EditButton href="/t/tasks/{data.task.id}/edit" />
+          <EditButton href="/t/tasks/{task.id}/edit" />
         {/if}
       </Merger>
       <Merger>
@@ -65,6 +66,19 @@
         >
           <DownloadButton urls={form?.urls}></DownloadButton>
         </form>
+        {#if role === "t" && task.visibility == "public"}
+          <UniButton
+            Icon={Share}
+            onclick={async () => {
+              await navigator.clipboard.writeText(
+                `${window.location.origin}/share/task/${page.params.id}`,
+              );
+
+              notification.set({ message: "Есть ссылка", type: "success" });
+            }}
+            content="Поделиться занятием"
+          />
+        {/if}
       </Merger>
       <Merger>
         <form
@@ -87,7 +101,7 @@
           <UniButton
             variant={role === "t" ? "primary" : "prominent"}
             type="submit"
-            content={completed ? texts.crud.complete : texts.crud.uncomplete}
+            content={completed ? texts.crud.uncomplete : texts.crud.complete}
             Icon={completed ? Check : Circle}
           ></UniButton>
         </form>
@@ -95,11 +109,15 @@
     </VStack>
     <VStack override="gap-2">
       <VStack>
-        <Badge {urgency}>{formattedDate}</Badge>
+        {#if !task.completed}
+          <Badge {urgency}>{formattedDate}</Badge>
+        {:else}
+          <Badge urgency="green">Выполнено</Badge>
+        {/if}
       </VStack>
       {#if role === "t"}
         <Badge>
-          {data.task.assigneeName}
+          {task.assigneeName ? task.assigneeName : task.visibility}
         </Badge>
       {/if}
     </VStack>
@@ -113,7 +131,7 @@
   <div class="flex gap-4 md:flex-col">
     {#if files.length > 0}
       <div class="gap-default flex w-full flex-col">
-        <Caption1>Хуй</Caption1>
+        <Caption1>Прикрепленные файлы</Caption1>
         {#each files as file (file.id)}
           <FileTaskCard {file} />
         {/each}
@@ -124,7 +142,7 @@
     {#if page.params.role === "s"}
       <div class="gap-default flex w-full flex-col">
         <Caption1>Вы можете загрузить здесь ДЗ</Caption1>
-        <Multipart taskId={data.task.id} />
+        <Multipart taskId={task.id} />
       </div>
     {/if}
   </div>

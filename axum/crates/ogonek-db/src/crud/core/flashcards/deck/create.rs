@@ -7,16 +7,11 @@ use crate::{
 };
 
 /// Creates a new deck using fed data
-pub async fn create(
+pub(crate) async fn create(
     db: impl sqlx::Executor<'_, Database = sqlx::Postgres>,
     user_id: &str,
     create: DeckCreate,
 ) -> Result<String, DbError> {
-    let visibility = if create.assignee.is_some() {
-        create.visibility.unwrap_or("assigned".to_string())
-    } else {
-        create.visibility.unwrap_or("private".to_string())
-    };
     let id = sqlx::query_scalar!(
         r#"
         INSERT INTO decks (id, created_by, title, description, visibility, assignee)
@@ -27,7 +22,7 @@ pub async fn create(
         user_id,
         create.title,
         create.description,
-        visibility,
+        create.visibility.unwrap_or_default().to_string(),
         create.assignee
     )
     .fetch_one(db)
@@ -44,7 +39,7 @@ pub async fn duplicate(db: &PgPool, user_id: &str, deck_id: &str) -> Result<Stri
     let create_payload = DeckCreate {
         title: format!("{} (Copy)", deck_to_copy.title),
         description: deck_to_copy.description,
-        visibility: Some("private".to_string()),
+        visibility: Some(ogonek_types::Visibility::Private),
         assignee: None,
     };
 
@@ -75,16 +70,15 @@ pub async fn create_with_defaults(
 ) -> Result<String, DbError> {
     let id = sqlx::query_scalar!(
         r#"
-        INSERT INTO decks (id, created_by, title, description, visibility, assignee)
-        VALUES ($1, $2, $3, $4, $5, $6)
+        INSERT INTO decks (id, created_by, title, description, visibility )
+        VALUES ($1, $2, $3, $4, $5 )
         RETURNING id
         "#,
         nanoid::nanoid!(),
         user_id,
         "Default Deck",
         "tag1;tag2",
-        "private",
-        user_id,
+        "private"
     )
     .fetch_one(db)
     .await?;

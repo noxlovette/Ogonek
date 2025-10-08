@@ -1,0 +1,22 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        SELECT completed\n        FROM tasks\n        WHERE id = $1\n        AND visibility = 'public'\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "completed",
+        "type_info": "Bool"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "c188d9cf9f13bd65c9a1cf88724882fcd36caaa47257356fe506005e48a69f5d"
+}

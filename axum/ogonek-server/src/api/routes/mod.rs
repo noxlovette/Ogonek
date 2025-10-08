@@ -1,17 +1,17 @@
 pub mod admin_routes;
 pub mod auth_routes;
-pub mod content_routes;
 pub mod core_routes;
 pub mod file_routes;
 pub mod notification_routes;
+pub mod public_routes;
 pub mod user_routes;
 pub use admin_routes::*;
 pub use auth_routes::*;
 use axum::http::{Method, StatusCode};
-pub use content_routes::*;
 pub use core_routes::*;
 pub use file_routes::file_routes;
 pub use notification_routes::notification_routes;
+pub use public_routes::*;
 use tower_http::{
     cors::CorsLayer,
     request_id::{MakeRequestUuid, PropagateRequestIdLayer, SetRequestIdLayer},
@@ -39,19 +39,23 @@ fn api_routes() -> Router<AppState> {
         .nest("/learn", learn_routes())
         .nest("/notifications", notification_routes())
         .nest("/state", state_routes())
-        .nest("/content", content_routes())
         .nest("/calendars", calendar_routes())
         .nest("/admin", admin_routes())
 }
 
 fn public_routes() -> Router<AppState> {
-    Router::new().route("/health", get(health_check))
+    Router::new().nest("/public", content_routes())
+}
+
+fn router() -> Router<AppState> {
+    Router::new().merge(api_routes()).merge(public_routes())
 }
 
 pub fn root(state: AppState, cors: String) -> Result<Router, anyhow::Error> {
     let router = Router::new()
-        .nest("/api/v1", api_routes())
+        .nest("/api/v1", router())
         .merge(public_routes())
+        .route("/health", get(health_check))
         .fallback(handler_404)
         .with_state(state)
         .layer(SetRequestIdLayer::new(

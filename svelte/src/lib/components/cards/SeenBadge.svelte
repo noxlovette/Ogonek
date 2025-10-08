@@ -1,5 +1,5 @@
 <script lang="ts">
-  let { seen = true } = $props();
+  let { seen = true }: { seen?: boolean | null } = $props();
 </script>
 
 {#if !seen}

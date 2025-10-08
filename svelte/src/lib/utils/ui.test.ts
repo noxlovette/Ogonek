@@ -132,6 +132,7 @@ describe("getUrgency", () => {
       completed: false,
       createdBy: "user1",
       markdown: "",
+      visibility: "shared",
       priority: 1,
     }) as TaskFull;
 

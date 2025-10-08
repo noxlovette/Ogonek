@@ -1,5 +1,3 @@
-import type { AvailableLanguageTag } from "$lib/paraglide/runtime";
-import type { ParaglideLocals } from "@inlang/paraglide-js";
 import type { JWTPayload } from "jose";
 
 declare global {
@@ -17,7 +15,6 @@ declare global {
         name?: string;
         role: string;
       };
-      paraglide: ParaglideLocals<AvailableLanguageTag>;
     }
 
     //interface PageData {}

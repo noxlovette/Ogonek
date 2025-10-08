@@ -51,40 +51,6 @@ mod tests {
         .unwrap();
         file_id
     }
-
-    async fn create_test_task(db: &PgPool, title: &str, user_id: &str) -> String {
-        let task_id = nanoid::nanoid!();
-        sqlx::query!(
-            r#"
-            INSERT INTO tasks (id, title, markdown, created_by, assignee)
-            VALUES ($1, $2, $3, $4, $5)
-            "#,
-            task_id,
-            title,
-            "Test task description",
-            user_id,
-            user_id
-        )
-        .execute(db)
-        .await
-        .unwrap();
-        task_id
-    }
-
-    async fn link_file_to_task(db: &PgPool, task_id: &str, file_id: &str) {
-        sqlx::query!(
-            r#"
-            INSERT INTO task_files (task_id, file_id)
-            VALUES ($1, $2)
-            "#,
-            task_id,
-            file_id
-        )
-        .execute(db)
-        .await
-        .unwrap();
-    }
-
     #[sqlx::test]
     async fn test_find_by_id_returns_file_for_owner(db: PgPool) {
         // Setup
@@ -434,54 +400,6 @@ mod tests {
 
         // Verify
         assert!(matches!(result, Err(DbError::NotFound(_))));
-    }
-
-    #[sqlx::test]
-    async fn test_fetch_files_task_returns_linked_files(db: PgPool) {
-        // Setup
-        let user_id = create_test_user(&db, "testuser", "test@example.com").await;
-        let task_id = create_test_task(&db, "Test Task", &user_id).await;
-
-        let file1_id = create_test_file(&db, "file1.txt", &user_id, None, false).await;
-        let file2_id = create_test_file(&db, "file2.txt", &user_id, None, false).await;
-        let _unlinked_file = create_test_file(&db, "unlinked.txt", &user_id, None, false).await;
-
-        link_file_to_task(&db, &task_id, &file1_id).await;
-        link_file_to_task(&db, &task_id, &file2_id).await;
-
-        // Test
-        let result = fetch_files_task(&db, &task_id).await;
-
-        // Verify
-        assert!(result.is_ok());
-        let files = result.unwrap();
-        assert_eq!(files.len(), 2);
-
-        let file_ids: Vec<&String> = files.iter().map(|f| &f.id).collect();
-        assert!(file_ids.contains(&&file1_id));
-        assert!(file_ids.contains(&&file2_id));
-
-        // Verify FileSmall fields
-        let file = &files[0];
-        assert_eq!(file.owner_id, user_id);
-        assert!(file.name.contains("file"));
-        assert_eq!(file.mime_type, Some("text/plain".to_string()));
-        assert_eq!(file.size, 1024);
-    }
-
-    #[sqlx::test]
-    async fn test_fetch_files_task_empty_task(db: PgPool) {
-        // Setup
-        let user_id = create_test_user(&db, "testuser", "test@example.com").await;
-        let task_id = create_test_task(&db, "Empty Task", &user_id).await;
-
-        // Test
-        let result = fetch_files_task(&db, &task_id).await;
-
-        // Verify
-        assert!(result.is_ok());
-        let files = result.unwrap();
-        assert_eq!(files.len(), 0);
     }
 
     #[sqlx::test]

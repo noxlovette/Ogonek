@@ -12,6 +12,7 @@ use fake::{
 };
 use ogonek_db::init_db;
 use ogonek_server::services::hash_password;
+use ogonek_types::Visibility;
 use sqlx::PgPool;
 
 pub async fn run() -> Result<()> {
@@ -302,8 +303,8 @@ async fn create_tasks(db: &PgPool, user_ids: &[String]) -> Result<()> {
 
             sqlx::query!(
                 r#"
-                INSERT INTO tasks (id, title, markdown, created_by, assignee, completed, due_date, created_at, updated_at)
-                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $8)
+                INSERT INTO tasks (id, title, markdown, created_by, assignee, completed, due_date, created_at, updated_at, visibility)
+                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $8, $9)
                 "#,
                 task_id,
                 title,
@@ -312,7 +313,8 @@ async fn create_tasks(db: &PgPool, user_ids: &[String]) -> Result<()> {
                 assignee,
                 completed,
                 due_date,
-                now
+                now,
+                Visibility::Shared.to_string()
             )
             .execute(db)
             .await?;
@@ -346,14 +348,15 @@ async fn create_decks(db: &PgPool, user_ids: &[String]) -> Result<()> {
 
             sqlx::query!(
                 r#"
-                INSERT INTO decks (id, title, description, created_by, assignee)
-                VALUES ($1, $2, $3, $4, $5)
+                INSERT INTO decks (id, title, description, created_by, assignee, visibility)
+                VALUES ($1, $2, $3, $4, $5, $6)
                 "#,
                 deck_id,
                 title,
                 description,
                 created_by,
-                assignee
+                assignee,
+                Visibility::Shared.to_string()
             )
             .execute(db)
             .await?;

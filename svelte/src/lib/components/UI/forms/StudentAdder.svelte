@@ -40,7 +40,7 @@
   ></UniButton>
   {#if showPopover}
     <div
-      class="ring-default absolute right-0 z-50 mt-2 w-64 space-y-2 rounded-2xl bg-white p-4 shadow-lg dark:bg-stone-900"
+      class="ring-default bg-solid absolute right-0 z-50 mt-2 w-64 space-y-2 rounded-2xl p-2.5 shadow-lg"
       use:clickOutside={() => (showPopover = false)}
     >
       <div class="flex items-center justify-between">

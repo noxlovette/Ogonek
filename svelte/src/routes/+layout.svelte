@@ -40,7 +40,7 @@
   >
     <div
       id="main"
-      class="mb-20 flex w-full max-w-7xl flex-1 flex-col p-4 sm:p-6 md:mb-0 md:p-6 lg:p-10"
+      class="mb-20 flex w-full max-w-7xl flex-1 flex-col p-3.5 sm:p-6 md:mb-0 md:p-6 lg:p-10"
     >
       {@render children?.()}
     </div>

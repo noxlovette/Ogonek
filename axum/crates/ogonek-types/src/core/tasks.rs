@@ -1,5 +1,5 @@
 use super::files::FileSmall;
-use crate::datetime_serialization;
+use crate::{Visibility, datetime_serialization};
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use sqlx::prelude::FromRow;
@@ -22,6 +22,7 @@ pub struct TaskFull {
     #[serde(with = "datetime_serialization::option")]
     pub due_date: Option<DateTime<Utc>>,
     pub created_by: String,
+    pub visibility: Visibility,
     pub assignee: Option<String>,
     pub assignee_name: Option<String>,
 }
@@ -33,6 +34,7 @@ pub struct TaskSmall {
     pub title: String,
     pub priority: i16,
     pub completed: bool,
+    pub visibility: Visibility,
     pub assignee_name: Option<String>,
     pub seen: Option<bool>,
     #[serde(with = "datetime_serialization::option")]
@@ -47,6 +49,7 @@ pub struct TaskCreate {
     #[serde(with = "datetime_serialization::option")]
     pub due_date: Option<DateTime<Utc>>,
     pub assignee: Option<String>,
+    pub visibility: Option<Visibility>,
 }
 
 #[derive(Deserialize, Debug, ToSchema)]
@@ -57,6 +60,7 @@ pub struct TaskUpdate {
     #[serde(default, with = "datetime_serialization::option")]
     pub due_date: Option<DateTime<Utc>>,
     pub assignee: Option<String>,
+    pub visibility: Option<Visibility>,
     pub unassign: Option<bool>,
 }
 
@@ -68,5 +72,24 @@ pub struct TaskFileBind {
 #[derive(ToSchema, Serialize, Debug)]
 pub struct TaskWithFilesResponse {
     pub task: TaskFull,
+    pub files: Vec<FileSmall>,
+}
+
+#[derive(Serialize, ToSchema, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct TaskPublic {
+    pub id: String,
+    pub title: String,
+    pub markdown: String,
+    pub completed: bool,
+    #[serde(with = "datetime_serialization::option")]
+    pub due_date: Option<DateTime<Utc>>,
+}
+
+#[derive(Serialize, ToSchema, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct TaskPublicWithFiles {
+    #[serde(flatten)]
+    pub task: TaskPublic,
     pub files: Vec<FileSmall>,
 }
