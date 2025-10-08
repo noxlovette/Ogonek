@@ -1,5 +1,4 @@
-use crate::api::content::*;
-use crate::api::core::task;
+use crate::api::{content::*, core::task};
 
 use utoipa::OpenApi;
 

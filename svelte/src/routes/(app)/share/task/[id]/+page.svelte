@@ -22,25 +22,25 @@
   let { data, form } = $props();
   const { files, rendered, task } = $derived(data);
 
-  let completed = $state(task.completed);
+  let completed = $state(task?.completed);
 
   let formattedDate = $state();
 
-  if (task.dueDate) {
-    formattedDate = formatDateOnly(task.dueDate);
+  if (task?.dueDate) {
+    formattedDate = formatDateOnly(task?.dueDate);
   }
 
-  const urgency = getUrgency(task.dueDate);
+  const urgency = getUrgency(task?.dueDate);
 </script>
 
 <svelte:head>
-  <title>Task • {task.title}</title>
+  <title>Task • {task?.title}</title>
 </svelte:head>
 
 <Toolbar override={true}>
   <HStack>
     <VStack>
-      <LargeTitle>{task.title}</LargeTitle>
+      <LargeTitle>{task?.title}</LargeTitle>
       <Divider />
       <Merger>
         <form

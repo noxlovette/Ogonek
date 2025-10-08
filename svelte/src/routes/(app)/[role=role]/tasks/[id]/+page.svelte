@@ -29,7 +29,7 @@
   let role = $derived(page.params.role);
   let completed = $state(task.completed);
 
-  let formattedDate = $state();
+  let formattedDate = $state("Без даты");
 
   if (task.dueDate) {
     formattedDate = formatDateOnly(task.dueDate);

@@ -15,7 +15,6 @@
     "verbatimModuleSyntax": true
   },
   "exclude": [
-    "src/lib/paraglide/*",
     "src/lib/server/mock/*",
     "src/routes/api/mock/*",
     "**/node_modules",

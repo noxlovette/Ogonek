@@ -25,12 +25,6 @@ export default [
     },
   },
   {
-    ignores: [
-      "build/",
-      ".svelte-kit/",
-      "dist/",
-      "src/lib/paraglide",
-      "src/routes/api/mock",
-    ],
+    ignores: ["build/", ".svelte-kit/", "dist/", "src/routes/api/mock"],
   },
 ];

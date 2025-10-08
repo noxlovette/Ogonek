@@ -15,8 +15,8 @@ use ogonek_db::{
     tracking::seen,
 };
 use ogonek_types::{
-    FileSmall, ModelType, PaginatedResponse, PaginatedTasks, SortField, SortOrder,
-    TaskPaginationParams, TaskPublic, TaskPublicWithFiles, TaskSmall, TaskWithFilesResponse,
+    ModelType, PaginatedResponse, PaginatedTasks, SortField, SortOrder, TaskPaginationParams,
+    TaskPublicWithFiles, TaskSmall, TaskWithFilesResponse,
 };
 
 /// Tasks belonging to a user (through assignment or direct ownership)
