@@ -10,7 +10,6 @@
     TaskCard,
     EmptySpace,
     VStack,
-    Title1,
     NewButton,
     TableHead,
     Caption1,
@@ -176,9 +175,14 @@
                 </Caption1>
               </HStack>
               <Divider />
-              <Badge urgency={getUrgency(task.dueDate)}>
-                {formatDateOnly(task.dueDate)}
-              </Badge>
+
+              {#if !task?.completed}
+                <Badge urgency={getUrgency(task.dueDate)}>
+                  {formatDateOnly(task.dueDate)}
+                </Badge>
+              {:else}
+                <Badge urgency="green">Выполнено</Badge>
+              {/if}
             </TableRow>
           </div>
         {/each}

@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n       UPDATE tasks\n       SET\n        completed = $2\n         WHERE id = $1 \n        AND visibility = 'public'\n       ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Bool"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "76ffdbe958ea2d738476000ee9a656bb47e705295b1bf7fd8794e6e8da4e4046"
+}

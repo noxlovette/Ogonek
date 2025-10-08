@@ -109,7 +109,11 @@
     </VStack>
     <VStack override="gap-2">
       <VStack>
-        <Badge {urgency}>{formattedDate}</Badge>
+        {#if !task.completed}
+          <Badge {urgency}>{formattedDate}</Badge>
+        {:else}
+          <Badge urgency="green">Выполнено</Badge>
+        {/if}
       </VStack>
       {#if role === "t"}
         <Badge>

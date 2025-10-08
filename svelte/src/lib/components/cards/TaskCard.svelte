@@ -7,8 +7,9 @@
   import { getUrgency } from "$lib/utils";
   import SeenBadge from "./SeenBadge.svelte";
   import { VStack } from "../UI";
+  import type { TaskSmall } from "$lib/types";
 
-  let { task } = $props();
+  let { task }: { task: TaskSmall } = $props();
   const formattedDate: string = formatDateOnly(task.dueDate);
   const href: string =
     $user.role === "teacher" ? `/t/tasks/${task.id}` : `/s/tasks/${task.id}`;
@@ -21,7 +22,11 @@
     {task.title}
   </Headline>
   <VStack>
-    <Badge {urgency}>{badgeText}</Badge>
+    {#if !task.completed}
+      <Badge {urgency}>{badgeText}</Badge>
+    {:else}
+      <Badge urgency="green">Выполнено</Badge>
+    {/if}
   </VStack>
   <SeenBadge seen={task.seen} />
 </CardClickable>

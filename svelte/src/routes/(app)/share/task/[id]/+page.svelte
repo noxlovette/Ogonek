@@ -9,13 +9,10 @@
     Caption1,
     Merger,
     Divider,
-    EditButton,
   } from "$lib/components";
-  import { page } from "$app/state";
   import { enhance } from "$app/forms";
   import { Check, Circle } from "@lucide/svelte";
   import { enhanceForm, formatDateOnly } from "$lib/utils";
-  import Multipart from "$lib/components/UI/interactive/Multipart.svelte";
   import Badge from "$lib/components/cards/Badge.svelte";
   import { getUrgency } from "$lib/utils";
   import VStack from "$lib/components/UI/layout/VStack.svelte";
@@ -89,7 +86,11 @@
     </VStack>
     <VStack override="gap-2">
       <VStack>
-        <Badge {urgency}>{formattedDate}</Badge>
+        {#if !task?.completed}
+          <Badge {urgency}>{formattedDate}</Badge>
+        {:else}
+          <Badge urgency="green">Выполнено</Badge>
+        {/if}
       </VStack>
     </VStack>
   </HStack>
