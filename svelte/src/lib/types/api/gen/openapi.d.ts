@@ -231,23 +231,6 @@ export interface paths {
         patch: operations["update_calendar"];
         trace?: never;
     };
-    "/api/v1/content/{slug}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Fetches content by slug (public endpoint) */
-        get: operations["fetch_content_public"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/v1/decks": {
         parameters: {
             query?: never;
@@ -604,6 +587,40 @@ export interface paths {
         get?: never;
         put?: never;
         post: operations["request_hw"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/public/task/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Public Task. Handled in the content router */
+        get: operations["fetch_task_public"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/public/{slug}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Fetches content by slug (public endpoint) */
+        get: operations["fetch_content_public"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -1258,6 +1275,17 @@ export interface components {
             /** Format: date-time */
             updatedAt: string;
             visibility: components["schemas"]["Visibility"];
+        };
+        TaskPublic: {
+            completed: boolean;
+            /** Format: date-time */
+            dueDate?: string | null;
+            id: string;
+            markdown: string;
+            title: string;
+        };
+        TaskPublicWithFiles: components["schemas"]["TaskPublic"] & {
+            files: components["schemas"]["FileSmall"][];
         };
         TaskSmall: {
             assigneeName?: string | null;
@@ -2202,43 +2230,6 @@ export interface operations {
                 content?: never;
             };
             /** @description Calendar not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    fetch_content_public: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Content Slug */
-                slug: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Content retrieved successfully */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ContentPublic"];
-                };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Content not found */
             404: {
                 headers: {
                     [name: string]: unknown;
@@ -3246,6 +3237,80 @@ export interface operations {
             };
             /** @description Unauthorized */
             401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    fetch_task_public: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Task ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Task with files retrieved */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TaskPublicWithFiles"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Task not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    fetch_content_public: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Content Slug */
+                slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Content retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ContentPublic"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Content not found */
+            404: {
                 headers: {
                     [name: string]: unknown;
                 };

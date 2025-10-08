@@ -41,9 +41,12 @@ export const actions = {
       title: formData.get("title")?.toString(),
       assignee: assignee && assignee.trim() !== "" ? assignee : null,
       unassign: !formData.has("assigned"),
+      visibility: formData.get("visibility"),
       dueDate,
       markdown: formData.get("markdown")?.toString(),
     };
+
+    console.log(data);
 
     const response = await fetch(routes.tasks.task({ id }), {
       method: "PATCH",

@@ -13,6 +13,7 @@
     Icon,
   } from "@lucide/svelte";
   import { onMount } from "svelte";
+  import { Body, Callout, Merger, Title1 } from "$lib/components";
 
   type ErrorCode = 404 | 403 | 500;
   type ErrorConfig = {
@@ -79,16 +80,9 @@
   });
 </script>
 
-<div
-  class="flex min-h-[70vh] w-full flex-col items-center justify-center px-4 py-16"
-  in:fade={{ duration: 300, delay: 150 }}
->
-  <div class="ring-default bg-default w-full max-w-md rounded-2xl">
-    <!-- Header -->
-    <div
-      class="flex flex-col items-center space-y-4 bg-gradient-to-br from-stone-50 to-stone-100 p-8 dark:from-stone-800 dark:to-stone-700"
-      in:fly={{ y: -20, duration: 400, delay: 200, easing: backOut }}
-    >
+<div class="mx-auto my-auto flex items-center justify-center text-center">
+  <div class="gap-default w-full max-w-md rounded-2xl">
+    <div class="bg-solid flex flex-col items-center space-y-4 p-3.5">
       <div class="rounded-full bg-white/80 p-6 shadow-sm dark:bg-stone-800/80">
         <svelte:component
           this={currentError.icon}
@@ -96,23 +90,18 @@
           stroke-width="1.5"
         />
       </div>
-      <div class="text-center">
-        <h1 class="text-3xl font-bold text-stone-900 dark:text-stone-100">
-          {currentError.title}
-        </h1>
-        <p class="mt-2 text-lg text-stone-600 dark:text-stone-400">
-          {currentError.message}
-        </p>
-      </div>
+      <Title1>
+        {currentError.title}
+      </Title1>
+      <Callout>
+        {currentError.message}
+      </Callout>
     </div>
 
-    <!-- Body -->
-    <div class="gap-default p-8">
-      <!-- Error ID -->
+    <div class="gap-default flex flex-col p-3.5">
       {#if errorId}
         <div
-          class="rounded-lg border border-stone-200 bg-stone-50 p-4 dark:border-stone-700 dark:bg-stone-800"
-          in:fly={{ y: 20, duration: 400, delay: 300 }}
+          class="rounded-lg border border-stone-200 bg-stone-50 p-3.5 dark:border-stone-700 dark:bg-stone-800"
         >
           <p
             class="mb-1 text-sm font-medium text-stone-700 dark:text-stone-300"
@@ -120,30 +109,23 @@
             ID ошибки:
           </p>
           <code
-            class="rounded border bg-white px-2 py-1 font-mono text-sm dark:bg-stone-900"
+            class="rounded border bg-white px-2 py-1 font-mono text-sm select-text dark:bg-stone-900"
           >
             {errorId}
           </code>
         </div>
       {/if}
 
-      <!-- Dev fact -->
       {#if selectedFact}
-        <div
-          class="border-accent/20 from-accent/5 to-accent/10 dark:from-accent/5 dark:to-accent/10 rounded-lg border bg-gradient-to-r p-4"
-          in:fly={{ y: 20, duration: 400, delay: 400 }}
-        >
-          <p class="text-sm leading-relaxed text-stone-700 dark:text-stone-300">
+        <div class="border-accent bg-accent/12 rounded-lg border p-3.5">
+          <Body>
             {selectedFact}
-          </p>
+          </Body>
         </div>
       {/if}
 
       <!-- Actions -->
-      <div
-        class="flex flex-col gap-3 pt-2"
-        in:fly={{ y: 20, duration: 400, delay: 500 }}
-      >
+      <Merger>
         <UniButton
           type="button"
           variant="primary"
@@ -160,16 +142,7 @@
           Icon={Send}
           href="https://t.me/noxlovette"
         ></UniButton>
-      </div>
-
-      <!-- Footer -->
-      <div
-        class="border-t border-stone-200 pt-4 text-center dark:border-stone-700"
-      >
-        <p class="text-xs text-stone-500 dark:text-stone-500">
-          При повторении ошибки укажите её ID в обращении.
-        </p>
-      </div>
+      </Merger>
     </div>
   </div>
 </div>

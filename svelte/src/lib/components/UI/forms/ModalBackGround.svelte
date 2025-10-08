@@ -9,7 +9,7 @@
     : 'bg-black/30'} backdrop-blur-sm"
 >
   <div
-    class="ring-default w-full max-w-md rounded-2xl bg-stone-100/50 p-4 dark:bg-stone-800/50"
+    class="ring-default w-full max-w-md rounded-2xl bg-stone-100/50 p-3.5 dark:bg-stone-800/50"
   >
     {@render children?.()}
   </div>

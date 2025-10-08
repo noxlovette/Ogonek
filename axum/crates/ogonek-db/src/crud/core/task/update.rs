@@ -33,6 +33,36 @@ pub async fn toggle(db: &PgPool, task_id: &str, user_id: &str) -> Result<bool, D
 
     Ok(!completed)
 }
+/// Finds the assignee for the task
+pub async fn toggle_public(db: &PgPool, task_id: &str) -> Result<bool, DbError> {
+    let completed = sqlx::query_scalar!(
+        r#"
+        SELECT completed
+        FROM tasks
+        WHERE id = $1
+        AND visibility = 'public'
+        "#,
+        task_id,
+    )
+    .fetch_one(db)
+    .await?;
+
+    sqlx::query!(
+        r#"
+       UPDATE tasks
+       SET
+        completed = $2
+         WHERE id = $1 
+        AND visibility = 'public'
+       "#,
+        task_id,
+        !completed
+    )
+    .execute(db)
+    .await?;
+
+    Ok(!completed)
+}
 
 /// Updates the task and inserts associated files
 pub async fn update(

@@ -73,3 +73,22 @@ pub struct TaskWithFilesResponse {
     pub task: TaskFull,
     pub files: Vec<FileSmall>,
 }
+
+#[derive(Serialize, ToSchema, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct TaskPublic {
+    pub id: String,
+    pub title: String,
+    pub markdown: String,
+    pub completed: bool,
+    #[serde(with = "datetime_serialization::option")]
+    pub due_date: Option<DateTime<Utc>>,
+}
+
+#[derive(Serialize, ToSchema, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct TaskPublicWithFiles {
+    #[serde(flatten)]
+    pub task: TaskPublic,
+    pub files: Vec<FileSmall>,
+}

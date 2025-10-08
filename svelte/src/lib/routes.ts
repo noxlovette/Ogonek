@@ -45,9 +45,6 @@ export const routes = {
     delete_calendar: (params: { id: string }) => `${API_BASE}/calendars/${params.id}`,
     update_calendar: (params: { id: string }) => `${API_BASE}/calendars/${params.id}`,
   },
-  content: {
-    content_public: (params: { slug: string }) => `${API_BASE}/content/${params.slug}`,
-  },
   decks: {
     all: (params: { page?: string; per_page?: string; search?: string; assignee?: string; visibility?: string; sort_by?: string; sort_order?: string }) => {
       const urlParams = new URLSearchParams();
@@ -113,6 +110,10 @@ export const routes = {
   notifications: {
     register_device_token: () => `${API_BASE}/notifications/register`,
     request_hw: () => `${API_BASE}/notifications/request`,
+  },
+  public: {
+    task_public: (params: { id: string }) => `${API_BASE}/public/task/${params.id}`,
+    content_public: (params: { slug: string }) => `${API_BASE}/public/${params.slug}`,
   },
   state: {
     badges: () => `${API_BASE}/state/badges`,

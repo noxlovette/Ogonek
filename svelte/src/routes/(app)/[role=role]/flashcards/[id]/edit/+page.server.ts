@@ -25,8 +25,6 @@ export const actions = {
       return fail(400, { assignee: true });
     }
 
-    console.log(formData);
-
     if (title.trim() === "") {
       return fail(400, { title: true });
     }
@@ -52,7 +50,6 @@ export const actions = {
 
     const validatedBody = z.updateDeckBody.safeParse(body);
 
-    console.log(body);
     if (validatedBody.error) {
       const error = validatedBody.error.message;
       logger.error({ error }, "error validating deck");

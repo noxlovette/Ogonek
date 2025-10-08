@@ -5,3 +5,5 @@ export type TaskSmall = components["schemas"]["TaskSmall"];
 export type TaskWithFiles = components["schemas"]["TaskWithFilesResponse"];
 
 export type TaskUpdateBody = components["schemas"]["TaskUpdate"];
+
+export type TaskPublicWithFiles = components["schemas"]["TaskPublicWithFiles"];

@@ -3,12 +3,12 @@ use utoipa::OpenApi;
 pub mod admin;
 pub mod auth;
 pub mod calendar;
-pub mod content;
 pub mod deck;
 pub mod files;
 pub mod learn;
 pub mod lesson;
 pub mod notifications;
+pub mod public;
 pub mod state;
 pub mod task;
 pub mod user;
@@ -38,7 +38,7 @@ pub const FILE_TAG: &str = "File";
         (path = "/api/v1/files", api = files::FilesApi),
         (path = "/api/v1/notifications", api = notifications::NotificationApi),
         (path = "/api/v1/state", api = state::StateApi),
-        (path = "/api/v1/content", api = content::ContentApi),
+        (path = "/api/v1/public", api = public::ContentApi),
         (path = "/api/v1/calendars", api = calendar::CalendarApi),
         (path = "/api/v1/admin", api = admin::AdminApi)
 

@@ -362,7 +362,7 @@
       ></textarea>
     </div>
   {:else}
-    <div class="markdown ring-default bg-default rounded-2xl p-4">
+    <div class="markdown ring-default bg-default rounded-2xl p-3.5">
       {@html htmlContent}
     </div>
   {/if}

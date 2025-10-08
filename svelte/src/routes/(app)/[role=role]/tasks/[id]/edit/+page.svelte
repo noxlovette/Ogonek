@@ -15,6 +15,7 @@
     SaveButton,
     Toggler,
     VStack,
+    Popover,
   } from "$lib/components";
   import texts from "$lib/texts.js";
 
@@ -22,7 +23,7 @@
   let { task } = data;
 
   let markdown = $state(task.markdown);
-
+  let visibility = $state(task.visibility);
   let dueDate = $state(
     task.dueDate ? new Date(task.dueDate).toISOString().split("T")[0] : "",
   );
@@ -33,7 +34,7 @@
     }
   });
 
-  let assigned = $state(task.assignee ? true : false || true);
+  let assigned = $derived(visibility === "shared");
 </script>
 
 <form
@@ -61,8 +62,14 @@
   </Toolbar>
 
   <input type="hidden" name="markdown" value={markdown} />
+  <input
+    type="checkbox"
+    name="assigned"
+    checked={assigned}
+    style="display: none;"
+  />
 
-  <div class="gap-default grid grid-cols-1 md:grid-cols-3">
+  <VStack>
     <Input
       name="title"
       labelName="Название"
@@ -82,25 +89,28 @@
       placeholder="Due Date"
     ></Input>
 
-    {#if assigned}
+    <Divider />
+    <Popover>
       <Input
-        name="assignee"
-        labelName="Назначено"
-        type="assignee"
-        item={task}
-        invalid={form?.assignee}
-        invalidDescription="Так для кого это?"
-        placeholder="Для кого задание"
+        name="visibility"
+        labelName="Кто видит"
+        bind:value={visibility}
+        type="visibility"
       />
-    {/if}
-  </div>
-  <Toggler
-    bind:value={assigned}
-    name="assigned"
-    title={assigned
-      ? "Это задание будет привязано к ученику"
-      : "Это задание ни к кому не будет привязано"}
-  />
+
+      {#if visibility === "shared"}
+        <Input
+          name="assignee"
+          placeholder="Для кого задание"
+          labelName="Назначено"
+          invalid={form?.assignee}
+          invalidDescription="Для кого задание?"
+          item={task}
+          type="assignee"
+        />
+      {/if}
+    </Popover>
+  </VStack>
 </form>
 
 <div class="grid gap-4 md:grid-cols-3">

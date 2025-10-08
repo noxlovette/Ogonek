@@ -116,8 +116,8 @@
       <UniButton
         type="button"
         content={$completedStore === true
-          ? texts.crud.uncomplete
-          : texts.crud.complete}
+          ? texts.crud.complete
+          : texts.crud.uncomplete}
         onclick={toggleCompletedTasks}
         variant="primary"
         Icon={$completedStore === true ? EyeClosed : Eye}
@@ -172,7 +172,7 @@
                   {task.title}
                 </Headline>
                 <Caption1>
-                  {task.assigneeName}
+                  {task.assigneeName ? task.assigneeName : task.visibility}
                 </Caption1>
               </HStack>
               <Divider />
