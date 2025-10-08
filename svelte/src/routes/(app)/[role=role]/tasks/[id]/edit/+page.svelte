@@ -13,9 +13,7 @@
     CancelButton,
     DeleteButton,
     SaveButton,
-    Toggler,
     VStack,
-    Popover,
   } from "$lib/components";
   import texts from "$lib/texts.js";
 
@@ -90,26 +88,24 @@
     ></Input>
 
     <Divider />
-    <Popover>
-      <Input
-        name="visibility"
-        labelName="Кто видит"
-        bind:value={visibility}
-        type="visibility"
-      />
+    <Input
+      name="visibility"
+      labelName="Кто видит"
+      bind:value={visibility}
+      type="visibility"
+    />
 
-      {#if visibility === "shared"}
-        <Input
-          name="assignee"
-          placeholder="Для кого задание"
-          labelName="Назначено"
-          invalid={form?.assignee}
-          invalidDescription="Для кого задание?"
-          item={task}
-          type="assignee"
-        />
-      {/if}
-    </Popover>
+    {#if visibility === "shared"}
+      <Input
+        name="assignee"
+        placeholder="Для кого задание"
+        labelName="Назначено"
+        invalid={form?.assignee}
+        invalidDescription="Для кого задание?"
+        item={task}
+        type="assignee"
+      />
+    {/if}
   </VStack>
 </form>
 

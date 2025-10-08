@@ -14,7 +14,7 @@ mod tests {
 
     use crate::{crud::core::file::add_files, tests::create_test_user};
     use chrono::Utc;
-    use ogonek_types::{TaskCreate, TaskUpdate};
+    use ogonek_types::{TaskCreate, TaskUpdate, Visibility};
     use sqlx::PgPool;
 
     // Helper function to create test files
@@ -52,6 +52,7 @@ mod tests {
             title: "test task".to_string(),
             markdown: format!("# {}\nTest task content", "test"),
             due_date: Some(Utc::now()),
+            visibility: Some(Visibility::Shared),
             assignee: None,
         };
 
@@ -132,6 +133,7 @@ mod tests {
             title: Some("Updated Task".to_string()),
             markdown: Some("# Updated\nThis task has been updated.".to_string()),
             visibility: None,
+            unassign: None,
             due_date: Some(Utc::now()),
             assignee: None,
         };
@@ -156,6 +158,7 @@ mod tests {
             markdown: None,
             due_date: None,
             visibility: None,
+            unassign: None,
             assignee: None,
         };
 

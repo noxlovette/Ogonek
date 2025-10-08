@@ -8,14 +8,11 @@
     Divider,
     VStack,
     Merger,
-    EmptySpace,
     DeleteButton,
     CancelButton,
     SaveButton,
     NewCard,
     Caption1,
-    Popover,
-    VLine,
   } from "$lib/components";
 
   import { enhanceForm } from "$lib/utils";
@@ -63,6 +60,7 @@
   }
 
   let visibility = $state(deck.visibility);
+  let assigned = $derived(visibility === "shared");
 </script>
 
 <svelte:head>
@@ -78,8 +76,14 @@
     },
   })}
 >
+  <input
+    type="checkbox"
+    name="assigned"
+    checked={assigned}
+    style="display: none;"
+  />
   <Toolbar>
-    <LargeTitle>{deck.title}</LargeTitle>
+    <LargeTitle>Редактируем</LargeTitle>
     <Divider />
 
     <VStack>
@@ -128,26 +132,24 @@
 
     <Divider />
     {#if role === "t"}
-      <Popover>
-        <Input
-          name="visibility"
-          labelName="Кто видит"
-          bind:value={visibility}
-          type="visibility"
-        />
+      <Input
+        name="visibility"
+        labelName="Кто видит"
+        bind:value={visibility}
+        type="visibility"
+      />
 
-        {#if visibility === "shared"}
-          <Input
-            name="assignee"
-            placeholder="Для кого колода"
-            labelName="Назначено"
-            invalid={form?.assignee}
-            invalidDescription="Для кого колода?"
-            item={deck}
-            type="assignee"
-          />
-        {/if}
-      </Popover>
+      {#if visibility === "shared"}
+        <Input
+          name="assignee"
+          placeholder="Для кого колода"
+          labelName="Назначено"
+          invalid={form?.assignee}
+          invalidDescription="Для кого колода?"
+          item={deck}
+          type="assignee"
+        />
+      {/if}
     {/if}
   </VStack>
 

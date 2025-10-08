@@ -9,8 +9,8 @@ pub async fn create(
     assignee: &str,
 ) -> Result<String, DbError> {
     let id = sqlx::query_scalar!(
-        "INSERT INTO tasks (id, title, markdown, due_date, assignee, created_by)
-         VALUES ($1, $2, $3, $4, $5, $6)
+        "INSERT INTO tasks (id, title, markdown, due_date, assignee, created_by, visibility)
+         VALUES ($1, $2, $3, $4, $5, $6, $7)
          RETURNING id
          ",
         nanoid::nanoid!(),
@@ -19,13 +19,15 @@ pub async fn create(
         task.due_date,
         assignee,
         user_id,
+        task.visibility.unwrap_or_default().to_string()
     )
     .fetch_one(db)
     .await?;
 
     Ok(id)
 }
-/// Creates a task based on user preferences, faster – no JSON
+
+/// Creates a task based on user preferences
 pub async fn create_with_defaults(db: &PgPool, user_id: &str) -> Result<String, DbError> {
     let id = sqlx::query_scalar!(
         "INSERT INTO tasks (id, title, markdown,  created_by)

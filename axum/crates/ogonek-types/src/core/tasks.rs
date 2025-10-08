@@ -49,6 +49,7 @@ pub struct TaskCreate {
     #[serde(with = "datetime_serialization::option")]
     pub due_date: Option<DateTime<Utc>>,
     pub assignee: Option<String>,
+    pub visibility: Option<Visibility>,
 }
 
 #[derive(Deserialize, Debug, ToSchema)]

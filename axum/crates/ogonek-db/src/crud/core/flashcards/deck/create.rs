@@ -1,4 +1,4 @@
-use ogonek_types::{CardUpsert, DeckCreate, Visibility};
+use ogonek_types::{CardUpsert, DeckCreate};
 use sqlx::PgPool;
 
 use crate::{
@@ -7,16 +7,11 @@ use crate::{
 };
 
 /// Creates a new deck using fed data
-pub async fn create(
+pub(crate) async fn create(
     db: impl sqlx::Executor<'_, Database = sqlx::Postgres>,
     user_id: &str,
     create: DeckCreate,
 ) -> Result<String, DbError> {
-    let visibility = if create.assignee.is_some() {
-        Visibility::Shared
-    } else {
-        Visibility::default()
-    };
     let id = sqlx::query_scalar!(
         r#"
         INSERT INTO decks (id, created_by, title, description, visibility, assignee)
@@ -27,7 +22,7 @@ pub async fn create(
         user_id,
         create.title,
         create.description,
-        visibility.to_string(),
+        create.visibility.unwrap_or_default().to_string(),
         create.assignee
     )
     .fetch_one(db)
@@ -75,16 +70,15 @@ pub async fn create_with_defaults(
 ) -> Result<String, DbError> {
     let id = sqlx::query_scalar!(
         r#"
-        INSERT INTO decks (id, created_by, title, description, visibility, assignee)
-        VALUES ($1, $2, $3, $4, $5, $6)
+        INSERT INTO decks (id, created_by, title, description, visibility )
+        VALUES ($1, $2, $3, $4, $5 )
         RETURNING id
         "#,
         nanoid::nanoid!(),
         user_id,
         "Default Deck",
         "tag1;tag2",
-        "private",
-        user_id,
+        "private"
     )
     .fetch_one(db)
     .await?;

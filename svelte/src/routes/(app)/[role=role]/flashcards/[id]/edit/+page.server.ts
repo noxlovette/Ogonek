@@ -31,6 +31,7 @@ export const actions = {
     const deck: DeckUpdate = {
       title: title ?? null,
       description: description?.toString() || null,
+      unassign: !formData.has("assigned"),
       visibility: visibility?.toString() || null,
       assignee: assignee.toString() || null,
     };
@@ -55,6 +56,8 @@ export const actions = {
       logger.error({ error }, "error validating deck");
       return fail(400, { cards: true });
     }
+
+    console.log(validatedBody);
 
     const response = await fetch(routes.decks.deck({ id }), {
       method: "PATCH",

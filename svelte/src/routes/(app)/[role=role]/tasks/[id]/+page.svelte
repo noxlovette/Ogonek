@@ -66,7 +66,7 @@
         >
           <DownloadButton urls={form?.urls}></DownloadButton>
         </form>
-        {#if role === "t"}
+        {#if role === "t" && task.visibility == "public"}
           <UniButton
             Icon={Share}
             onclick={async () => {

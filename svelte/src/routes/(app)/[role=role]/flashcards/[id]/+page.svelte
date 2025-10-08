@@ -31,7 +31,7 @@
 
   const assigneeName = $derived(
     data.students.find((student) => student.id === data.deck.assignee)?.name ||
-      "Нет привязки",
+      deck.visibility,
   );
 
   const toggleCard = (cardId: string) => {
@@ -115,9 +115,9 @@
         {cards.length}
       </Badge>
       {#if page.params.role == "t"}
-        <Caption1>
+        <Badge>
           {assigneeName}
-        </Caption1>
+        </Badge>
       {/if}
     </VStack>
   </HStack>

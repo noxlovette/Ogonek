@@ -47,7 +47,7 @@ export const actions = {
       logger.error({ errorData }, "ERROR SVELTE SIDE CONTENT CREATION");
       return fail(500);
     }
-    const { id: new_id } = await response.json();
+    const new_id = await response.json();
 
     return redirect(301, `../flashcards/${new_id}/edit`);
   },
