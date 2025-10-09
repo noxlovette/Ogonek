@@ -1,6 +1,6 @@
 [package]
 name = "ogonek_db"
-version = "1.13.0"
+version = "1.14.0"
 edition = "2024"
 
 [dependencies]
@@ -22,6 +22,7 @@ sqlx = { workspace = true, features = [
     "uuid",
     "migrate",
     ] }
+redis = { version = "1.0.0-rc.1", features = ["tokio-comp"] }
 
 [package.metadata.sqlx]
 migrations = "./migrations"

@@ -1,8 +1,10 @@
 mod crud;
 mod error;
+mod redis;
 mod tests;
 pub use crud::*;
 pub use error::DbError;
+pub use redis::*;
 
 mod helpers;
 use anyhow::Context;

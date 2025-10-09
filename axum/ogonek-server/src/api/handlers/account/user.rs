@@ -51,6 +51,8 @@ pub async fn fetch_me(
 ) -> Result<Json<User>, APIError> {
     let user = user::read_by_id(&state.db, &claims.sub).await?;
 
+    state.redis.test().await.ok();
+
     Ok(Json(user))
 }
 
