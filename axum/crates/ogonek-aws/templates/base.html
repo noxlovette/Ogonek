@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}Ogonëk{% endblock %}</title>
+  </head>
+  <body
+    style="
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI',
+        'Helvetica Neue', Arial, sans-serif;
+      background-color: #ffffff;
+    "
+  >
+    <table role="presentation" style="width: 100%; border-collapse: collapse">
+      <tr>
+        <td style="padding: 40px 20px">
+          <table
+            role="presentation"
+            style="
+              max-width: 600px;
+              margin: 0 auto;
+              background-color: #ffffff;
+              border-radius: 8px;
+              overflow: hidden;
+            "
+          >
+            <!-- Header -->
+            <tr>
+              <td
+                style="
+                  text-align: center;
+                  padding: 32px 40px;
+                  border-bottom: 1px solid #e7e5e4;
+                "
+              >
+                <!-- Using Georgia as Lora fallback - closest serif match -->
+                <h1
+                  style="
+                    margin: 0;
+                    font-family: Georgia, 'Times New Roman', serif;
+                    font-size: 24px;
+                    font-weight: 400;
+                  "
+                >
+                  Ogonëk
+                </h1>
+              </td>
+            </tr>
+
+            <!-- Content -->
+            <tr>
+              <td style="padding: 40px; text-align: center">
+                {% block content %} {% endblock %}
+              </td>
+            </tr>
+
+            <!-- Footer -->
+            <tr>
+              <td
+                style="
+                  padding: 32px 40px;
+                  border-top: 1px solid #e7e5e4;
+                  text-align: center;
+                "
+              >
+                <p
+                  style="
+                    margin: 0;
+                    font-size: 14px;
+                    color: #57534e;
+                    line-height: 1.6;
+                    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI',
+                      'Helvetica Neue', Arial, sans-serif;
+                  "
+                >
+                  © 2025 ИП Данила Волков.<br />
+                  Все права защищены, как секс в дырявой резине.
+                </p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

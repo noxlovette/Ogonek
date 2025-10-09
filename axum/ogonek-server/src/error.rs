@@ -166,7 +166,7 @@ impl From<PasswordHashError> for AppError {
     }
 }
 
-use ogonek_aws::S3Error;
+use ogonek_aws::{S3Error, SESError};
 // Convert from S3Error
 impl From<S3Error> for AppError {
     fn from(err: S3Error) -> Self {
@@ -181,6 +181,11 @@ impl From<S3Error> for AppError {
     }
 }
 
+impl From<SESError> for AppError {
+    fn from(err: SESError) -> Self {
+        Self::Internal(err.to_string())
+    }
+}
 // Convert from validator errors
 impl From<validator::ValidationErrors> for AppError {
     fn from(errs: validator::ValidationErrors) -> Self {

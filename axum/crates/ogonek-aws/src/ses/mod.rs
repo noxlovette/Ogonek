@@ -1,9 +1,12 @@
 use aws_config::{BehaviorVersion, Region};
 use aws_credential_types::Credentials;
-use aws_sdk_sesv2::{Client as SesClient, types::*};
+use aws_sdk_sesv2::Client as SesClient;
 
+mod emails;
 mod error;
+mod tera;
 pub use error::SESError;
+
 #[derive(Debug, Clone)]
 pub struct SESProvider {
     client: SesClient,
@@ -47,30 +50,5 @@ impl SESProvider {
         let client = SesClient::new(&ses_config);
 
         Ok(Self { client, from_email })
-    }
-
-    pub async fn send_email(&self, to: &str, subject: &str, body: &str) -> Result<(), SESError> {
-        self.client
-            .send_email()
-            .from_email_address(&self.from_email)
-            .destination(Destination::builder().to_addresses(to).build())
-            .content(
-                EmailContent::builder()
-                    .simple(
-                        Message::builder()
-                            .subject(Content::builder().data(subject).build()?)
-                            .body(
-                                Body::builder()
-                                    .text(Content::builder().data(body).build()?)
-                                    .build(),
-                            )
-                            .build(),
-                    )
-                    .build(),
-            )
-            .send()
-            .await?;
-
-        Ok(())
     }
 }

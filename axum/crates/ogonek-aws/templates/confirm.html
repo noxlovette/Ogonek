@@ -1,0 +1,59 @@
+{% extends "base.html" %} {% block title %}Добро пожаловать в Ogonëk{% endblock
+%} {% block content %}
+<h2
+  style="
+    margin: 0 0 16px;
+    font-size: 28px;
+    font-weight: 700;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue',
+      Arial, sans-serif;
+  "
+>
+  Добро пожаловать, {{ name }}!
+</h2>
+<p
+  style="
+    margin: 0 0 24px;
+    font-size: 16px;
+    line-height: 1.5;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue',
+      Arial, sans-serif;
+  "
+>
+  Спасибо, что выбрали {% if role == "teacher" %}преподавать{% else %}учиться{%
+  endif %} с нами.
+</p>
+<table role="presentation" style="width: 100%">
+  <tr>
+    <td style="text-align: center; padding: 24px 0">
+      <a
+        href="{{ app_url }}"
+        style="
+          display: inline-block;
+          padding: 12px 32px;
+          background-color: #df7055;
+          color: #ffffff;
+          text-decoration: none;
+          border-radius: 8px;
+          font-weight: 600;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI',
+            'Helvetica Neue', Arial, sans-serif;
+        "
+      >
+        Подтвердить почту
+      </a>
+    </td>
+  </tr>
+</table>
+<p
+  style="
+    margin: 24px 0 0;
+    font-size: 14px;
+    color: #57534e;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue',
+      Arial, sans-serif;
+  "
+>
+  Если вы не создавали аккаунта, ну что сказать. Вам пиздец.
+</p>
+{% endblock %}

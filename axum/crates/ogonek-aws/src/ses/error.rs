@@ -21,6 +21,9 @@ pub enum SESError {
 
     #[error("Already exists: {0}")]
     AlreadyExists(String),
+
+    #[error("Template not found")]
+    TemplateNotFound,
 }
 
 // Generic handler for all SES SDK errors
@@ -87,5 +90,12 @@ impl From<aws_sdk_s3::error::BuildError> for SESError {
     fn from(err: aws_sdk_s3::error::BuildError) -> Self {
         tracing::error!("AWS SES client build error: {:?}", err);
         Self::Internal("Failed build the AWS SES client".into())
+    }
+}
+
+impl From<tera::Error> for SESError {
+    fn from(err: tera::Error) -> Self {
+        tracing::error!("{}", err.to_string());
+        Self::TemplateNotFound
     }
 }
