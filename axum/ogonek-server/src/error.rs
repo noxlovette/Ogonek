@@ -166,7 +166,7 @@ impl From<PasswordHashError> for AppError {
     }
 }
 
-use ogonek_s3::S3Error;
+use ogonek_aws::S3Error;
 // Convert from S3Error
 impl From<S3Error> for AppError {
     fn from(err: S3Error) -> Self {

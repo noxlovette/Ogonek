@@ -2,9 +2,9 @@ mod error;
 mod get;
 mod multipart;
 mod post;
-pub use error::*;
 
 use anyhow::Context;
+pub use error::S3Error;
 
 use aws_config::{BehaviorVersion, Region};
 use aws_credential_types::Credentials;
@@ -28,8 +28,7 @@ impl S3Provider {
 
         tracing::debug!("S3 Configuration: Region={}, Endpoint={}", region, endpoint);
 
-        let credentials =
-            Credentials::new(access_key, secret_key, None, None, "scaleway-credentials");
+        let credentials = Credentials::new(access_key, secret_key, None, None, "s3-credentials");
 
         let s3_config = aws_config::defaults(BehaviorVersion::latest())
             .region(Region::new(region))

@@ -1,6 +1,6 @@
 [package]
-name = "ogonek_s3"
-version = "1.0.0"
+name = "ogonek_aws"
+version = "1.1.0"
 edition = "2024"
 
 [dependencies]
@@ -13,3 +13,5 @@ anyhow.workspace = true
 tracing.workspace = true
 axum.workspace = true
 thiserror.workspace = true
+aws-sdk-ses = "1.89.0"
+aws-sdk-sesv2 = "1.100.0"

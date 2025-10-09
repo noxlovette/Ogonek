@@ -1,12 +1,12 @@
 [package]
 name = "ogonek_server"
-version = "1.13.0"
+version = "1.14.0"
 edition = "2024"
 
 [dependencies]
 # Internal crates
 ogonek_db = { path = "../crates/ogonek-db" }
-ogonek_s3 = { path = "../crates/ogonek-s3" }
+ogonek_aws = { path = "../crates/ogonek-aws" }
 ogonek_types = { path = "../crates/ogonek-types" }
 ogonek_notifications = { path = "../crates/ogonek-notifications" }
 

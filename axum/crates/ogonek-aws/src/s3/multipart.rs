@@ -1,4 +1,4 @@
-use crate::{S3Provider, error::S3Error};
+use crate::{S3Error, S3Provider};
 use aws_sdk_s3::presigning::PresigningConfig;
 use ogonek_types::{CompletedPart, MultipartInitResultS3, PartUploadUrl};
 use std::error::Error;
