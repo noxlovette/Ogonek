@@ -9,6 +9,8 @@ use utoipa::OpenApi;
         account::refresh,
         account::bind_student_to_teacher,
         account::generate_invite_link,
+        account::resend_verification,
+        account::confirm_email
     ),
     components(schemas(
         ogonek_types::SignUpPayload,
@@ -19,6 +21,7 @@ use utoipa::OpenApi;
         ogonek_types::BindPayload,
         ogonek_types::InviteQuery,
         ogonek_types::InviterQuery,
+        ogonek_types::EmailVerificationQuery,
     ))
 )]
 pub struct AuthApi;

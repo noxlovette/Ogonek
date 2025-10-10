@@ -1,4 +1,4 @@
-use axum::extract::Query;
+use axum::extract::{Query, State};
 use ogonek_db::core::account::{self, user::read_email};
 use ogonek_types::EmailVerificationQuery;
 use reqwest::StatusCode;
@@ -7,7 +7,7 @@ use crate::{AppError, AppState, Claims, api::AUTH_TAG, services::generate_secure
 
 /// Generates the invite link for the teacher
 #[utoipa::path(
-    get,
+    post,
     path = "/resend",
     tag = AUTH_TAG,
     responses(
@@ -17,7 +17,7 @@ use crate::{AppError, AppState, Claims, api::AUTH_TAG, services::generate_secure
     )
 )]
 pub async fn resend_verification(
-    mut state: AppState,
+    State(mut state): State<AppState>,
     claims: Claims,
 ) -> Result<StatusCode, AppError> {
     let token = generate_secure_token();
@@ -35,10 +35,10 @@ pub async fn resend_verification(
     }
 }
 
-/// Generates the invite link for the teacher
+/// Confirms email verification using a token
 #[utoipa::path(
-    get,
-    path = "/confirm-email",
+    post,
+    path = "/confirm_email",
     tag = AUTH_TAG,
     params(
         ("token" = String, Query, description = "The confirmation token")
@@ -50,7 +50,7 @@ pub async fn resend_verification(
     )
 )]
 pub async fn confirm_email(
-    mut state: AppState,
+    State(mut state): State<AppState>,
     query: Query<EmailVerificationQuery>,
 ) -> Result<StatusCode, AppError> {
     let email = state.redis.verify_and_consume_token(&query.token).await?;
