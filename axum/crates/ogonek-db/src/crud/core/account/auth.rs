@@ -81,6 +81,21 @@ pub async fn fetch_by_id(db: &PgPool, user_id: &str) -> Result<User, DbError> {
     Ok(user)
 }
 
+pub async fn verify_email(db: &PgPool, email: &str) -> Result<(), DbError> {
+    sqlx::query!(
+        r#"
+        UPDATE "user" 
+        SET verified = true
+        WHERE email = $1
+        "#,
+        email
+    )
+    .execute(db)
+    .await?;
+
+    Ok(())
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

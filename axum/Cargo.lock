@@ -3095,6 +3095,7 @@ dependencies = [
  "ogonek_db",
  "ogonek_notifications",
  "ogonek_types",
+ "rand 0.9.2",
  "reqwest",
  "rpassword",
  "sentry",

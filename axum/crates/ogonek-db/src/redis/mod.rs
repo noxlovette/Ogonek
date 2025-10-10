@@ -1,4 +1,7 @@
 use redis::{AsyncCommands, aio::MultiplexedConnection};
+
+pub use error::RedisError;
+mod email;
 mod error;
 
 #[derive(Clone, Debug)]

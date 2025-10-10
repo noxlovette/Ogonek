@@ -40,14 +40,20 @@ impl SESProvider {
         to: &str,
         name: &str,
         role: &str,
+        token: &str,
     ) -> Result<(), SESError> {
         // Just grab the static reference when you need it
         let tera = &TEMPLATES; // or Tera::instance()
 
+        let address = std::env::var("FRONTEND_URL").unwrap_or("http://ogonek.app".to_string());
+
         let mut ctx = tera::Context::new();
         ctx.insert("name", name);
         ctx.insert("role", role);
-        ctx.insert("app_url", "https://ogonek.app");
+        ctx.insert(
+            "app_url",
+            format!("{}/confirm-email/?token={}", address, token).as_str(),
+        );
 
         let html = tera.render("confirm.html", &ctx)?;
 

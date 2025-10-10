@@ -39,3 +39,4 @@ rpassword = "7.4.0"
 argon2 = "0.5.3"
 jsonwebtoken = { version = "9.3.1", features = ["use_pem"] }
 atty = "0.2.14"
+rand = "0.9.2"

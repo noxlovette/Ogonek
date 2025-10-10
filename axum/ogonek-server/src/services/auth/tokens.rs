@@ -1,6 +1,7 @@
 use crate::services::{Claims, KEYS};
 
 use crate::services::AuthError;
+use base64::prelude::BASE64_URL_SAFE_NO_PAD;
 use base64::{Engine as _, engine::general_purpose::URL_SAFE};
 use jsonwebtoken::{Algorithm, Header, Validation, decode, encode};
 use ogonek_types::{InviteToken, TokenWithExpiry, UserRole};
@@ -66,6 +67,14 @@ pub async fn encode_invite_token(id: String) -> Result<String, AuthError> {
 
     let encoded = URL_SAFE.encode(json.as_bytes());
     Ok(encoded)
+}
+
+use rand::{Rng, rng};
+
+pub fn generate_secure_token() -> String {
+    let mut bytes = [0u8; 32];
+    rng().fill(&mut bytes);
+    BASE64_URL_SAFE_NO_PAD.encode(bytes)
 }
 
 #[cfg(test)]

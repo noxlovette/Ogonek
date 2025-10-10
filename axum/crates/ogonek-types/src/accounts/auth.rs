@@ -114,3 +114,9 @@ pub struct InviteQuery {
 pub struct InviterQuery {
     pub invite: String,
 }
+
+#[derive(Deserialize, ToSchema)]
+#[serde(rename_all = "camelCase")]
+pub struct EmailVerificationQuery {
+    pub token: String,
+}

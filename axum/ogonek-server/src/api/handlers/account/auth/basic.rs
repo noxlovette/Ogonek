@@ -2,21 +2,21 @@ use crate::{
     api::{AUTH_TAG, error::APIError},
     app::AppState,
     services::{
-        AuthError, Claims, decode_invite_token, decode_token, encode_invite_token, generate_token,
-        hash_password, verify_password,
+        AuthError, decode_token, generate_secure_token, generate_token, hash_password,
+        verify_password,
     },
 };
 
 use axum::{
-    extract::{Json, Query, State},
+    extract::{Json, State},
     http::StatusCode,
 };
 use ogonek_db::core::account::auth;
 use ogonek_types::{
-    AuthPayload, BindPayload, InviteQuery, RefreshTokenPayload, RefreshTokenResponse,
-    SignUpPayload, TokenPair, UserRole,
+    AuthPayload, RefreshTokenPayload, RefreshTokenResponse, SignUpPayload, TokenPair, UserRole,
 };
 use validator::Validate;
+
 #[utoipa::path(
     post,
     path = "/signup",
@@ -29,20 +29,20 @@ use validator::Validate;
     )
 )]
 pub async fn signup(
-    State(state): State<AppState>,
+    State(mut state): State<AppState>,
     Json(payload): Json<SignUpPayload>,
 ) -> Result<(StatusCode, Json<String>), APIError> {
     if payload.username.is_empty() || payload.pass.is_empty() {
-        return Err(APIError::InvalidCredentials);
+        return Err(APIError::AuthError(AuthError::InvalidCredentials));
     }
     let role = UserRole::from(payload.role.clone());
     if !role.can_self_assign() {
-        return Err(APIError::AccessDenied);
+        return Err(APIError::AuthError(AuthError::AccessDenied));
     }
 
     payload.validate().map_err(|e| {
         eprintln!("{e:?}");
-        APIError::InvalidCredentials
+        APIError::AuthError(AuthError::InvalidCredentials)
     })?;
 
     let hashed_password = hash_password(&payload.pass)?;
@@ -52,8 +52,25 @@ pub async fn signup(
     };
     let id = auth::signup(&state.db, &created).await?;
 
+    let token = generate_secure_token();
+    state
+        .redis
+        .set_verification_token(&created.email, &token, None)
+        .await?;
+
+    tokio::spawn(async move {
+        if let Err(e) = state
+            .ses
+            .send_confirm_email(&created.email, &created.name, &created.role, &token)
+            .await
+        {
+            tracing::error!("Error sending verification token: {e}")
+        }
+    });
+
     Ok((StatusCode::CREATED, Json(id)))
 }
+
 #[utoipa::path(
     post,
     path = "/signin",
@@ -69,17 +86,17 @@ pub async fn signin(
     Json(payload): Json<AuthPayload>,
 ) -> Result<Json<TokenPair>, APIError> {
     if payload.username.is_empty() || payload.pass.is_empty() {
-        return Err(APIError::InvalidCredentials);
+        return Err(APIError::AuthError(AuthError::InvalidCredentials));
     }
     payload.validate().map_err(|e| {
         eprintln!("{e:?}");
-        APIError::InvalidCredentials
+        APIError::AuthError(AuthError::InvalidCredentials)
     })?;
 
     let user = auth::authorise(&state.db, &payload).await?;
 
     if !verify_password(&user.pass, &payload.pass)? {
-        return Err(APIError::AuthenticationFailed);
+        return Err(APIError::AuthError(AuthError::AuthenticationFailed));
     }
 
     let access_token = generate_token(&user.id, &user.role, 60 * 15)?;
@@ -112,63 +129,4 @@ pub async fn refresh(
     Ok(Json(RefreshTokenResponse {
         access_token: new_access_token,
     }))
-}
-
-/// Generates the invite link for the teacher
-#[utoipa::path(
-    get,
-    path = "/invite",
-    params(
-        ("isRegistered" = InviteQuery, Query, description = "Invite token")
-    ),
-    tag = AUTH_TAG,
-    responses(
-        (status = 200, description = "Invite link generated", body = String),
-        (status = 401, description = "Unauthorized"),
-        (status = 400, description = "Invalid invite token")
-    )
-)]
-pub async fn generate_invite_link(
-    claims: Claims,
-    query: Query<InviteQuery>,
-) -> Result<Json<String>, AuthError> {
-    let frontend_url = std::env::var("FRONTEND_URL")
-        .unwrap_or_else(|_| "http://localhost:5173".to_string())
-        .trim_end_matches('/')
-        .to_string();
-
-    let encoded = encode_invite_token(claims.sub).await?;
-
-    tracing::info!("Encoded token: {encoded}");
-
-    if query.is_registered == "true" {
-        Ok(Json(format!("{frontend_url}/bind?invite={encoded}",)))
-    } else {
-        Ok(Json(format!("{frontend_url}/signup?invite={encoded}",)))
-    }
-}
-
-/// Binds the student to the teacher
-#[utoipa::path(
-    post,
-    path = "/bind",
-    request_body = BindPayload,
-    tag = AUTH_TAG,
-    responses(
-        (status = 204, description = "Student bound to teacher successfully"),
-        (status = 400, description = "Invalid bind data"),
-        (status = 401, description = "Invalid invite token")
-    )
-)]
-pub async fn bind_student_to_teacher(
-    State(state): State<AppState>,
-    Json(payload): Json<BindPayload>,
-) -> Result<StatusCode, AuthError> {
-    let teacher_id = decode_invite_token(payload.invite_token).await?;
-
-    let _ = auth::bind(&state.db, &teacher_id, &payload.student_id)
-        .await
-        .map_err(|_| AuthError::InvalidToken);
-
-    Ok(StatusCode::NO_CONTENT)
 }
