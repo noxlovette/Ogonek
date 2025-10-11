@@ -12,7 +12,9 @@ use crate::{
     services::{AuthError, decode_invite_token, encode_invite_token},
 };
 
-/// Binds the student to the teacher
+/// Binds a student to a teacher using an invite token
+///
+/// Creates a relationship between student and teacher accounts.
 #[utoipa::path(
     post,
     path = "/bind",
@@ -37,7 +39,9 @@ pub async fn bind_student_to_teacher(
     Ok(StatusCode::NO_CONTENT)
 }
 
-/// Generates the invite link for the teacher
+/// Generates an invite link for teacher-student binding
+///
+/// Creates a secure invite URL that can be used for student registration or binding.
 #[utoipa::path(
     get,
     path = "/invite",

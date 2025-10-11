@@ -12,7 +12,9 @@ use reqwest::StatusCode;
 
 use crate::{AppError as APIError, AppState, Claims, api::DECK_TAG};
 
-/// Updates a deck
+/// Updates a deck and its cards with assignment tracking
+///
+/// Modifies deck properties and handles assignee changes with notifications and activity logging.
 #[utoipa::path(
     patch,
     path = "/{id}",

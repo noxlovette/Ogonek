@@ -8,7 +8,9 @@ use reqwest::StatusCode;
 
 use crate::{AppError, AppState, Claims, api::AUTH_TAG, services::generate_secure_token};
 
-/// Generates the invite link for the teacher
+/// Resends email verification token to the authenticated user
+///
+/// Generates a new verification token and sends it to the user's email address.
 #[utoipa::path(
     post,
     path = "/resend_email",
@@ -33,6 +35,7 @@ pub async fn resend_verification(
                 .set_verification_token(&user.email, &token, None)
                 .await?;
 
+            #[cfg(debug_assertions)]
             tokio::spawn(async move {
                 if let Err(e) = state
                     .ses
@@ -48,7 +51,9 @@ pub async fn resend_verification(
     }
 }
 
-/// Confirms email verification using a token
+/// Confirms email verification using a verification token
+///
+/// Validates and consumes the verification token to mark the user's email as verified.
 #[utoipa::path(
     post,
     path = "/confirm_email",

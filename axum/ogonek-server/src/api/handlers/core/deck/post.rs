@@ -10,7 +10,9 @@ use ogonek_types::{ActionType, ModelType};
 
 use crate::{AppError as APIError, AppState, Claims, api::DECK_TAG};
 
-/// Creates a new Deck using user defaults
+/// Creates a new flashcard deck with default settings
+///
+/// Generates a new deck using the user's default configuration and logs the creation.
 #[utoipa::path(
     post,
     tag = DECK_TAG,
@@ -40,7 +42,9 @@ pub async fn create_deck(
     Ok(Json(id))
 }
 
-/// Duplicates a deck, returns new id
+/// Duplicates an existing deck with all its content
+///
+/// Creates a copy of the specified deck and returns the new deck's ID.
 #[utoipa::path(
     post,
     tag = DECK_TAG,

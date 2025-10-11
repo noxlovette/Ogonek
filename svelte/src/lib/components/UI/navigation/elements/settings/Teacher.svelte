@@ -9,6 +9,8 @@
   const name = "Преподаватель";
 </script>
 
-<SidebarItem {href} {name} Icon={Coffee} />
+{#if page.params.role === "t"}
+  <SidebarItem {href} {name} Icon={Coffee} />
 
-<MobileMenuElement {href} {name} Icon={Coffee} />
+  <MobileMenuElement {href} {name} Icon={Coffee} />
+{/if}

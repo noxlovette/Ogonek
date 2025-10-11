@@ -10,7 +10,10 @@ use axum::{
 
 use ogonek_db::core::account::user;
 use ogonek_types::{InviterQuery, User, users::UserUpdate};
-/// Gets the inviter's credentials
+
+/// Retrieves teacher information from an invite token
+///
+/// Decodes an invite token and returns the teacher's details who created the invite.
 #[utoipa::path(
     get,
     path = "/inviter",
@@ -35,7 +38,9 @@ pub async fn fetch_inviter(
     Ok(Json(inviter))
 }
 
-/// Fetches self for the user
+/// Retrieves the authenticated user's profile information
+///
+/// Returns the current user's details based on their JWT claims.
 #[utoipa::path(
     get,
    tag = USER_TAG,
@@ -56,7 +61,9 @@ pub async fn fetch_me(
     Ok(Json(user))
 }
 
-/// Deletes user by their claims
+/// Deletes the authenticated user's account
+///
+/// Permanently removes the user account based on their JWT claims.
 #[utoipa::path(
     delete,
     tag = USER_TAG,
@@ -74,7 +81,9 @@ pub async fn delete_user(
 
     Ok(StatusCode::NO_CONTENT)
 }
-/// Updates the user by their claims
+/// Updates the authenticated user's profile information
+///
+/// Modifies user details including password (which gets hashed) based on their JWT claims.
 #[utoipa::path(
     patch,
     tag = USER_TAG,

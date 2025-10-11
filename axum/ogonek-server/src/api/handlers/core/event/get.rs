@@ -11,7 +11,9 @@ use ogonek_db::core::calendar::{
 use axum::extract::{Json, Path, Query, State};
 use ogonek_types::{CalendarQuery, CalendarRole, EventSmall, EventWithAttendees};
 
-/// Get a single event by UID
+/// Retrieves a single event by its unique identifier
+///
+/// Returns the event details along with attendee information.
 #[utoipa::path(
     get,
     path = "/events/{id}",
@@ -38,7 +40,9 @@ pub async fn fetch_event(
 
     Ok(Json(EventWithAttendees { event, attendees }))
 }
-/// Get events for a specific month
+/// Lists events within a specified date range
+///
+/// Retrieves all events for the user within the given start and end dates, optionally filtered by role.
 #[utoipa::path(
     get,
     path = "/events",

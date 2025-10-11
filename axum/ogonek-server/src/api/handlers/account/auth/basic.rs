@@ -17,6 +17,10 @@ use ogonek_types::{
 };
 use validator::Validate;
 
+/// Registers a new user account with email verification
+///
+/// Creates a new user account, hashes the password, and sends an email
+/// verification token to the provided email address.
 #[utoipa::path(
     post,
     path = "/signup",
@@ -58,6 +62,7 @@ pub async fn signup(
         .set_verification_token(&created.email, &token, None)
         .await?;
 
+    #[cfg(debug_assertions)]
     tokio::spawn(async move {
         if let Err(e) = state
             .ses
@@ -71,6 +76,9 @@ pub async fn signup(
     Ok((StatusCode::CREATED, Json(id)))
 }
 
+/// Authenticates a user and returns access/refresh tokens
+///
+/// Validates credentials and returns JWT tokens for authenticated access.
 #[utoipa::path(
     post,
     path = "/signin",
@@ -105,7 +113,9 @@ pub async fn signin(
     Ok(Json(TokenPair::new(access_token, refresh_token)))
 }
 
-/// Receives the refresh token as json, gets it, then decodes, finds the user id, and generates a new access token
+/// Refreshes an access token using a valid refresh token
+///
+/// Decodes the refresh token and generates a new access token for the user.
 #[utoipa::path(
     post,
     path = "/refresh",

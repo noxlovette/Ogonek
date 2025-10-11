@@ -1,9 +1,12 @@
 use axum::extract::State;
 use reqwest::StatusCode;
+use ogonek_db::core::account::user::read_email;
 
 use crate::{AppError, AppState, Claims, api::AUTH_TAG, services::generate_secure_token};
 
-/// Launches the reset password procedure
+/// Initiates the password reset process for the authenticated user
+///
+/// Generates a secure token and stores it for password reset verification.
 #[utoipa::path(
     post,
     path = "/reset_password",

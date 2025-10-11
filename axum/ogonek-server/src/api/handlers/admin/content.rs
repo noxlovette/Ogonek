@@ -10,7 +10,9 @@ use axum::{
 use ogonek_db::{content, core::account::user, tracking::audit};
 use ogonek_types::{Content, UpdateContent};
 
-/// Fetches content by id (admin interface)
+/// Retrieves content by ID for admin interface
+///
+/// Returns content details for administrative access.
 #[utoipa::path(
     get,
     path = "/{id}",
@@ -32,7 +34,9 @@ pub async fn fetch_content(
 
     Ok(Json(content))
 }
-/// All content from the website
+/// Lists all content for admin management
+///
+/// Returns all website content for administrative purposes.
 #[utoipa::path(
     get,
     path = "",
@@ -49,7 +53,9 @@ pub async fn list_content(State(state): State<AppState>) -> Result<Json<Vec<Cont
     Ok(Json(content))
 }
 
-/// Creates new content
+/// Creates new content with audit logging
+///
+/// Creates a new content entry and logs the creation for audit purposes.
 #[utoipa::path(
     post,
     path = "",
@@ -76,7 +82,9 @@ pub async fn create_content(
     audit::create(&state.db, &audit).await?;
     Ok(Json(id))
 }
-/// Deletes content
+/// Deletes content with audit logging
+///
+/// Removes content and creates an audit log entry for the deletion.
 #[utoipa::path(
     delete,
     path = "/{id}",
@@ -109,7 +117,9 @@ pub async fn delete_content(
     Ok(StatusCode::NO_CONTENT)
 }
 
-/// Updates content
+/// Updates content with audit logging
+///
+/// Modifies content properties and logs the update operation.
 #[utoipa::path(
     patch,
     path = "/{id}",
@@ -143,7 +153,9 @@ pub async fn update_content(
     Ok(StatusCode::NO_CONTENT)
 }
 
-/// Updates content
+/// Publishes content
+///
+/// Marks content as published and available to users.
 #[utoipa::path(
     put,
     path = "/{id}/publish",
@@ -167,7 +179,9 @@ pub async fn publish_content(
     Ok(StatusCode::NO_CONTENT)
 }
 
-/// Updates content
+/// Unpublishes content
+///
+/// Marks content as unpublished and removes it from public access.
 #[utoipa::path(
     delete,
     path = "/{id}/publish",

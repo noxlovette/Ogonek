@@ -9,7 +9,9 @@ use axum::{
 use ogonek_db::core::calendar::event::update;
 use ogonek_types::{EventUpdate, EventUpdateRequest};
 
-/// Update an event
+/// Updates an existing calendar event
+///
+/// Modifies event properties based on the provided update payload.
 #[utoipa::path(
     patch,
     path = "/events/{id}",

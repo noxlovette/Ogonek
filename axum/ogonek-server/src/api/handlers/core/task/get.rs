@@ -19,7 +19,9 @@ use ogonek_types::{
     TaskPublicWithFiles, TaskSmall, TaskWithFilesResponse,
 };
 
-/// Tasks belonging to a user (through assignment or direct ownership)
+/// Retrieves a paginated list of tasks for the authenticated user
+///
+/// Returns tasks belonging to the user through assignment or ownership with pagination support.
 #[utoipa::path(
     get,
     path = "",
@@ -58,7 +60,9 @@ pub async fn list_tasks(
     }))
 }
 
-/// One Task
+/// Retrieves a single task by ID with associated files
+///
+/// Returns task details with files and marks the task as seen by the user.
 #[utoipa::path(
     get,
     path = "/{id}", tag = TASK_TAG,
@@ -83,7 +87,9 @@ pub async fn fetch_task(
     Ok(Json(TaskWithFilesResponse { task, files }))
 }
 
-/// Public Task. Handled in the content router
+/// Retrieves a public task with files (no authentication required)
+///
+/// Returns task details with files for public access.
 #[utoipa::path(
     get,
     path = "/task/{id}", tag = TASK_TAG,

@@ -6,7 +6,9 @@ use axum::{Json, extract::State};
 use ogonek_db::{core::task::create_with_defaults, tracking::log_activity};
 use ogonek_types::{ActionType, ModelType};
 
-/// Creates a new task
+/// Creates a new task with default values for the authenticated user
+///
+/// Generates a task with default settings and logs the creation activity.
 #[utoipa::path(
     post,
     path = "",

@@ -8,7 +8,9 @@ use ogonek_db::core::{lesson, task};
 use crate::{AppState, Claims, api::error::APIError, openapi::FILE_TAG, services::generate_pdf};
 use ogonek_types::{PDFQuery, PDFType};
 
-/// Generate the PDF for the requested resource
+/// Generates or retrieves a PDF for the specified resource
+///
+/// Creates a PDF for tasks or lessons, caches it in S3, and returns a presigned URL.
 #[utoipa::path(
     post,
     path = "/pdf/{id}", tag = FILE_TAG,
@@ -75,7 +77,9 @@ pub async fn get_pdf(
     })))
 }
 
-// Helper function pour nettoyer le nom de fichier
+/// Sanitizes a filename by replacing invalid characters
+///
+/// Converts special characters to underscores for safe file naming.
 fn sanitize_filename(title: &str) -> String {
     title
         .chars()

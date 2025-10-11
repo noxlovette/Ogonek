@@ -10,7 +10,9 @@ use axum::{
 use ogonek_db::core::calendar::event::delete;
 use ogonek_types::EventDelete;
 
-/// Delete an event
+/// Deletes a calendar event
+///
+/// Removes an event based on the provided deletion parameters.
 #[utoipa::path(
     delete,
     path = "/events/{id}",
