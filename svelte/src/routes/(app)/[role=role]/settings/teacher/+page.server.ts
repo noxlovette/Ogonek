@@ -1,6 +1,6 @@
 import logger from "$lib/logger";
 import { routes } from "$lib/routes";
-import { fail, redirect, type Actions } from "@sveltejs/kit";
+import { fail, type Actions } from "@sveltejs/kit";
 export const actions = {
   update: async ({ request, fetch, params }) => {
     const formData = await request.formData();
@@ -89,10 +89,5 @@ export const actions = {
       success: true,
       message: "Profile updated successfully",
     };
-  },
-  logout: async (event) => {
-    event.cookies.delete("accessToken", { path: "/" });
-    event.cookies.delete("refreshToken", { path: "/" });
-    throw redirect(301, "/");
   },
 } satisfies Actions;

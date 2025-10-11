@@ -1,12 +1,11 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
   import { goto } from "$app/navigation";
+  import { page } from "$app/state";
   import {
     Divider,
     LargeTitle,
-    Lessons,
     Merger,
-    Sidebar,
     Toolbar,
     UniButton,
   } from "$lib/components";
@@ -28,7 +27,7 @@
   <LargeTitle>Настройки</LargeTitle>
   <Divider />
   <form
-    action="?/logout"
+    action={"/" + page.params.role + "/settings" + "?/logout"}
     method="POST"
     class="flex flex-col"
     use:enhance={enhanceForm({
