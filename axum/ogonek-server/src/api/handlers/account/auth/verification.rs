@@ -8,7 +8,7 @@ use crate::{AppError, AppState, Claims, api::AUTH_TAG, services::generate_secure
 /// Generates the invite link for the teacher
 #[utoipa::path(
     post,
-    path = "/resend",
+    path = "/resend_email",
     tag = AUTH_TAG,
     responses(
         (status = 202, description = "Confirmation link resent"),

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { Calendar } from "@lucide/svelte";
-  import SidebarItem from "./SidebarItem.svelte";
+  import SidebarItem from "../SidebarItem.svelte";
   import { page } from "$app/state";
   import { writable } from "svelte/store";
 

@@ -11,7 +11,7 @@ use axum::{
     extract::{Json, State},
     http::StatusCode,
 };
-use ogonek_db::core::account::auth;
+use ogonek_db::core::account::{auth, user};
 use ogonek_types::{
     AuthPayload, RefreshTokenPayload, RefreshTokenResponse, SignUpPayload, TokenPair, UserRole,
 };
@@ -93,7 +93,7 @@ pub async fn signin(
         APIError::AuthError(AuthError::InvalidCredentials)
     })?;
 
-    let user = auth::authorise(&state.db, &payload).await?;
+    let user = auth::read_by_username(&state.db, &payload.username).await?;
 
     if !verify_password(&user.pass, &payload.pass)? {
         return Err(APIError::AuthError(AuthError::AuthenticationFailed));
@@ -123,7 +123,7 @@ pub async fn refresh(
     // Decode the refresh token to get user claims
     let refresh_claims = decode_token(&request.refresh_token)?;
 
-    let user = auth::fetch_by_id(&state.db, &refresh_claims.sub).await?;
+    let user = user::read_by_id(&state.db, &refresh_claims.sub).await?;
     let new_access_token = generate_token(&user.id, &user.role, 60 * 15)?;
 
     Ok(Json(RefreshTokenResponse {

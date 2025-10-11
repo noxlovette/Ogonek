@@ -33,7 +33,11 @@
   </div>
   <Divider />
   <Merger>
-    <UniButton fill={false} content="Настройки" href="settings" Icon={Settings}
+    <UniButton
+      fill={false}
+      content="Настройки"
+      href="settings/account"
+      Icon={Settings}
     ></UniButton>
   </Merger>
 </Toolbar>

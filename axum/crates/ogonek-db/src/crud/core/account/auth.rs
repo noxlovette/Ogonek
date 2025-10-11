@@ -1,6 +1,6 @@
 use crate::DbError;
 use nanoid::nanoid;
-use ogonek_types::{AuthPayload, SignUpPayload, User};
+use ogonek_types::{SignUpPayload, UserForClaims};
 use sqlx::PgPool;
 
 pub async fn signup(db: &PgPool, create: &SignUpPayload) -> Result<String, DbError> {
@@ -34,15 +34,15 @@ pub async fn signup(db: &PgPool, create: &SignUpPayload) -> Result<String, DbErr
     Ok(id)
 }
 
-pub async fn authorise(db: &PgPool, user: &AuthPayload) -> Result<User, DbError> {
+pub async fn read_by_username(db: &PgPool, username: &str) -> Result<UserForClaims, DbError> {
     let user = sqlx::query_as!(
-        User,
+        UserForClaims,
         r#"
-        SELECT username, email, role, id, name, pass
+        SELECT id, role, pass
         FROM "user"
         WHERE username = $1
         "#,
-        user.username
+        username
     )
     .fetch_one(db)
     .await?;
@@ -64,21 +64,6 @@ pub async fn bind(db: &PgPool, teacher_id: &str, student_id: &str) -> Result<(),
     .await?;
 
     Ok(())
-}
-pub async fn fetch_by_id(db: &PgPool, user_id: &str) -> Result<User, DbError> {
-    let user = sqlx::query_as!(
-        User,
-        r#"
-        SELECT username, email, role, id, name, pass
-        FROM "user"
-        WHERE id = $1
-        "#,
-        user_id
-    )
-    .fetch_one(db)
-    .await?;
-
-    Ok(user)
 }
 
 pub async fn verify_email(db: &PgPool, email: &str) -> Result<(), DbError> {
@@ -206,14 +191,11 @@ mod tests {
             pass: "plainpassword456".to_string(), /* Note: this would normally be checked against the hash */
         };
 
-        let result = authorise(&pool, &auth_payload).await;
+        let result = read_by_username(&pool, &auth_payload.username).await;
         assert!(result.is_ok());
 
         let user = result.unwrap();
-        assert_eq!(user.username, "janedoe");
-        assert_eq!(user.email, "jane@example.com");
         assert_eq!(user.role, UserRole::Teacher);
-        assert_eq!(user.name, "Jane Doe");
         assert_eq!(user.id, creation_result);
 
         Ok(())
@@ -226,7 +208,7 @@ mod tests {
             pass: "password".to_string(),
         };
 
-        let result = authorise(&pool, &auth_payload).await;
+        let result = read_by_username(&pool, &auth_payload.username).await;
         assert!(result.is_err());
 
         Ok(())
@@ -312,41 +294,6 @@ mod tests {
         .await?;
 
         assert_eq!(count, Some(1));
-
-        Ok(())
-    }
-
-    #[sqlx::test]
-    async fn test_fetch_by_id_success(pool: PgPool) -> sqlx::Result<()> {
-        // Create a user
-        let signup_data = SignUpPayload {
-            name: "Alice Cooper".to_string(),
-            username: "alice".to_string(),
-            email: "alice@example.com".to_string(),
-            role: "admin".to_string(),
-            pass: "hashedpass789".to_string(),
-        };
-
-        let creation_result = signup(&pool, &signup_data).await.unwrap();
-
-        // Test fetch by ID
-        let result = fetch_by_id(&pool, &creation_result).await;
-        assert!(result.is_ok());
-
-        let user = result.unwrap();
-        assert_eq!(user.id, creation_result);
-        assert_eq!(user.username, "alice");
-        assert_eq!(user.email, "alice@example.com");
-        assert_eq!(user.role, UserRole::Admin);
-        assert_eq!(user.name, "Alice Cooper");
-
-        Ok(())
-    }
-
-    #[sqlx::test]
-    async fn test_fetch_by_id_not_found(pool: PgPool) -> sqlx::Result<()> {
-        let result = fetch_by_id(&pool, "nonexistent-id").await;
-        assert!(result.is_err());
 
         Ok(())
     }

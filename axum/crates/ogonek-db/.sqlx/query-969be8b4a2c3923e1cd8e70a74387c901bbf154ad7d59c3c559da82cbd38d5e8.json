@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "\n        SELECT username, email, role, id, name, pass\n        FROM \"user\"\n        WHERE id = $1\n        ",
+  "query": "\n        SELECT username, email, role as \"role!: UserRole\", id, name, verified\n        FROM \"user\"\n        WHERE id = $1\n        ",
   "describe": {
     "columns": [
       {
@@ -15,7 +15,7 @@
       },
       {
         "ordinal": 2,
-        "name": "role",
+        "name": "role!: UserRole",
         "type_info": "Varchar"
       },
       {
@@ -30,8 +30,8 @@
       },
       {
         "ordinal": 5,
-        "name": "pass",
-        "type_info": "Varchar"
+        "name": "verified",
+        "type_info": "Bool"
       }
     ],
     "parameters": {
@@ -48,5 +48,5 @@
       false
     ]
   },
-  "hash": "40f081fc95f665359bc03b923ae95dbbc58d87018db9950fdd3bc1091a3c75a0"
+  "hash": "969be8b4a2c3923e1cd8e70a74387c901bbf154ad7d59c3c559da82cbd38d5e8"
 }

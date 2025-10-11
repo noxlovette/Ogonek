@@ -55,8 +55,6 @@
   action="?/update"
 >
   <Toolbar>
-    <LargeTitle>Настройки</LargeTitle>
-
     <Divider />
     <VStack>
       <ThemeToggler />
@@ -111,6 +109,7 @@
           placeholder="Email"
           name="email"
           invalid={form?.email}
+          verified={data.user.verified}
           invalidDescription="Это не похоже на почту"
           labelName="Электронная почта"
           value={data.user.email}

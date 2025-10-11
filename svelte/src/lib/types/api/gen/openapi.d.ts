@@ -127,7 +127,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/auth/resend": {
+    "/api/v1/auth/resend_email": {
         parameters: {
             query?: never;
             header?: never;
@@ -1403,6 +1403,7 @@ export interface components {
             name: string;
             role: components["schemas"]["UserRole"];
             username: string;
+            verified: boolean;
         };
         UserPreferences: {
             autoSubscribe: boolean;

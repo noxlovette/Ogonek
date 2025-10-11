@@ -29,7 +29,7 @@ export const routes = {
       return `${API_BASE}/auth/invite${query ? `?${query}` : ""}`;
     },
     refresh: () => `${API_BASE}/auth/refresh`,
-    resend_verification: () => `${API_BASE}/auth/resend`,
+    resend_verification: () => `${API_BASE}/auth/resend_email`,
     signin: () => `${API_BASE}/auth/signin`,
     signup: () => `${API_BASE}/auth/signup`,
   },

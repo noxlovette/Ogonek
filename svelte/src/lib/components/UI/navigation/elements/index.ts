@@ -1,13 +1,10 @@
 export { default as Content } from "./Content.svelte";
 export { default as Dashboard } from "./Dashboard.svelte";
-export { default as Dictionary } from "./Dictionary.svelte";
-export { default as Forvo } from "./Forvo.svelte";
 export { default as Lessons } from "./Lessons.svelte";
 export { default as Settings } from "./Settings.svelte";
-export { default as Students } from "./Students.svelte";
 export { default as Todo } from "./Tasks.svelte";
-export { default as Thesaurus } from "./Thesaurus.svelte";
 export { default as Words } from "./Words.svelte";
-export { default as Zoom } from "./Zoom.svelte";
 
-export { default as Calendar } from "./Calendar.svelte";
+export * from "./settings";
+export * from "./students";
+export * from "./teachers";

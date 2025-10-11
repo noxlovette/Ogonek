@@ -1,6 +1,6 @@
 <script lang="ts">
   import { BookCopy } from "@lucide/svelte";
-  import SidebarItem from "./SidebarItem.svelte";
+  import SidebarItem from "../SidebarItem.svelte";
 </script>
 
 <SidebarItem
