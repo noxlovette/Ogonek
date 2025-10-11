@@ -2,9 +2,7 @@
   import { assigneeStore } from "$lib/stores";
   import type { Student } from "$lib/types";
 
-  import { getContext } from "svelte";
-
-  const students: Student[] = getContext("students");
+  const { students }: { students: Student[] } = $props();
 </script>
 
 <select

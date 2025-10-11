@@ -7,6 +7,6 @@
   } = $props();
 </script>
 
-<p {id} class="min-w-max text-xs font-medium {styling} {override}">
+<p {id} class="max-w-max text-xs font-medium {styling} {override}">
   {@render children?.()}
 </p>

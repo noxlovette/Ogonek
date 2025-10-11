@@ -1,5 +1,8 @@
 use axum::extract::{Query, State};
-use ogonek_db::core::account::{self, user::read_email};
+use ogonek_db::core::account::{
+    self,
+    user::{read_by_id, read_email},
+};
 use ogonek_types::EmailVerificationQuery;
 use reqwest::StatusCode;
 
@@ -21,14 +24,24 @@ pub async fn resend_verification(
     claims: Claims,
 ) -> Result<StatusCode, AppError> {
     let token = generate_secure_token();
-    let email = read_email(&state.db, &claims.sub).await.ok();
+    let user = read_by_id(&state.db, &claims.sub).await.ok();
 
-    match email {
-        Some(email) => {
+    match user {
+        Some(user) => {
             state
                 .redis
-                .set_verification_token(&email, &token, None)
+                .set_verification_token(&user.email, &token, None)
                 .await?;
+
+            tokio::spawn(async move {
+                if let Err(e) = state
+                    .ses
+                    .send_confirm_email(&user.email, &user.name, &user.role.to_string(), &token)
+                    .await
+                {
+                    tracing::error!("Error sending verification token: {e}")
+                }
+            });
             Ok(StatusCode::ACCEPTED)
         }
         None => Ok(StatusCode::NOT_FOUND),

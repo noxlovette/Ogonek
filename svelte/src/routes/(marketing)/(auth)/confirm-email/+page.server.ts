@@ -1,6 +1,6 @@
 import logger from "$lib/logger";
 import { routes } from "$lib/routes";
-import { error, fail } from "@sveltejs/kit";
+import { fail } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 
 export const load = (async ({ fetch, url }) => {
@@ -16,8 +16,10 @@ export const load = (async ({ fetch, url }) => {
 
   if (!response.ok) {
     const err = await response.text();
-    logger.error(err);
-    return error(500);
+    logger.error({ err, status: response.status });
+    return {
+      success: false,
+    };
   }
   return {
     success: true,

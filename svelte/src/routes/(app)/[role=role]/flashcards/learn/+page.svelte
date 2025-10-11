@@ -71,21 +71,6 @@
       ((data.cards.indexOf(currentCard) + 1) / data.cards.length) * 100,
     ),
   );
-  let inputRef = $state<HTMLInputElement>();
-  $effect(() => {
-    if (showCloze && !showAnswer && inputRef) {
-      // Nuclear option - keep forcing focus
-      const interval = setInterval(() => {
-        if (document.activeElement !== inputRef) {
-          if (inputRef) {
-            inputRef.focus();
-          }
-        }
-      }, 50);
-
-      return () => clearInterval(interval);
-    }
-  });
 </script>
 
 {#snippet qualityButton(quality: {
@@ -153,7 +138,6 @@
           {#if !showAnswer}
             <Input
               dataCy="answer-input"
-              bind:ref={inputRef}
               name="Лицо"
               placeholder="Apple (n)"
               bind:value={userInput}

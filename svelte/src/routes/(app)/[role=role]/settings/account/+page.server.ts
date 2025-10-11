@@ -9,11 +9,10 @@ export const actions = {
     const formData = await request.formData();
 
     const email = formData.get("email")?.toString();
-
     const name = formData.get("name")?.toString();
     const username = formData.get("username")?.toString();
 
-    if (!name) {
+    if (name?.trim() == "" || !name) {
       return fail(400, { name: true });
     }
 
@@ -27,21 +26,14 @@ export const actions = {
     }
 
     // Validate username: no spaces, only alphanumeric, underscores, and hyphens
-    if (username) {
+    if (!username || username.trim() == "") {
+      return fail(400, { username: true });
+    } else {
       if (username.length < 3) {
         return fail(400, { username: true });
       }
       if (!/^[a-zA-Z0-9_-]+$/.test(username)) {
         return fail(400, { username: true });
-      }
-    }
-    const url = formData.get("videoCallUrl")?.toString();
-    if (params.role === "t") {
-      if (!url) {
-        return fail(400, { url: true });
-      }
-      if (!/^https?:\/\//.test(url)) {
-        return fail(400, { url: true });
       }
     }
 
@@ -54,43 +46,38 @@ export const actions = {
       return fail(400, { email: true });
     }
 
-    const profileBody = {
-      videoCallUrl: url,
-      avatarUrl: formData.get("avatarUrl"),
-      telegramId: formData.get("telegramId"),
-    };
-
-    const userBody = {
+    const body = {
       email,
       username: formData.get("username"),
       name,
     };
 
-    const [profileRes, userRes] = await Promise.all([
-      fetch(routes.users.profile(), {
-        method: "PATCH",
-        body: JSON.stringify(profileBody),
-      }),
-      fetch(routes.users.me(), {
-        method: "PATCH",
-        body: JSON.stringify(userBody),
-      }),
-    ]);
+    const response = await fetch(routes.users.me(), {
+      method: "PATCH",
+      body: JSON.stringify(body),
+    });
 
-    if (!profileRes.ok) {
-      const err = profileRes.text();
+    if (!response.ok) {
+      const err = response.text();
       logger.error({ err });
-      return fail(500);
-    }
-
-    if (!userRes.ok) {
-      const err = userRes.text();
-      logger.error({ err });
-      return fail(500);
+      if (response.status === 409) return fail(500, { conflict: true });
     }
     return {
       success: true,
-      message: "Profile updated successfully",
+    };
+  },
+  resendEmailVerification: async ({ fetch }) => {
+    const response = await fetch(routes.auth.resend_verification(), {
+      method: "POST",
+    });
+
+    if (!response.ok) {
+      const err = await response.text();
+      return fail(400, { verification: true });
+    }
+
+    return {
+      success: true,
     };
   },
 } satisfies Actions;

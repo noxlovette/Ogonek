@@ -90,7 +90,7 @@
       bind:value
       {disabled}
       data-cy={dataCy}
-      class={baseStyle + " resize-none"}
+      class={baseStyle + "resize-none"}
       {placeholder}
       {required}
       aria-label={showLabel ? undefined : labelName}
@@ -164,7 +164,7 @@
         : undefined}
     />
     {#if verified}
-      <BadgeCheck class="absolute top-8 right-2 text-lime-500" />
+      <BadgeCheck class="absolute top-8 right-2 text-emerald-500" />
     {:else}
       <BadgeQuestionMark class="absolute top-8 right-2 text-red-500" />
     {/if}

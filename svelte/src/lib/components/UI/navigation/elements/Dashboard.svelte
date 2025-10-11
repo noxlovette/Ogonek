@@ -21,4 +21,8 @@
 </script>
 
 <SidebarItem {href} name="Главная" Icon={isSettings ? ArrowLeft : House} />
-<MobileMenuElement {href} name="Главная" Icon={House} />
+<MobileMenuElement
+  {href}
+  name="Главная"
+  Icon={isSettings ? ArrowLeft : House}
+/>

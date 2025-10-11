@@ -6,8 +6,10 @@
     Divider,
     LargeTitle,
     Merger,
+    SaveButton,
     Toolbar,
     UniButton,
+    VStack,
   } from "$lib/components";
   import {
     assigneeStore,
@@ -44,10 +46,16 @@
       },
     })}
   >
-    <Merger>
-      <UniButton variant="danger" type="submit" Icon={LogOut} content="Уйти"
-      ></UniButton>
-    </Merger>
+    <VStack>
+      <Merger>
+        <UniButton variant="danger" type="submit" Icon={LogOut} content="Уйти"
+        ></UniButton>
+      </Merger>
+    </VStack>
   </form></Toolbar
 >
 {@render children?.()}
+
+<svelte:head>
+  <title>Настройки</title>
+</svelte:head>
