@@ -1,7 +1,6 @@
 use crate::ses::tera::TEMPLATES;
 
-use super::SESError;
-use super::SESProvider;
+use super::{SESError, SESProvider};
 use aws_sdk_sesv2::types::*;
 
 impl SESProvider {

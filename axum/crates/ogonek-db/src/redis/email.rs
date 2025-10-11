@@ -35,6 +35,7 @@ impl RedisClient {
 
         Ok(email)
     }
+
     // Check if verification token exists (doesn't consume it)
     pub async fn token_exists(&mut self, token: &str) -> Result<bool, RedisError> {
         let key = format!("email_verify:{}", token);

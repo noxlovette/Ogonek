@@ -60,7 +60,7 @@ mod tests {
             )
             .execute(db)
             .await
-            .map_err(|e| DbError::Database(e))?;
+            .map_err(DbError::Database)?;
             card_ids.push(card_id);
         }
 
@@ -75,7 +75,7 @@ mod tests {
         let count = sqlx::query_scalar!("SELECT COUNT(*) FROM cards WHERE deck_id = $1", deck_id)
             .fetch_one(db)
             .await
-            .map_err(|e| DbError::Database(e))?;
+            .map_err(DbError::Database)?;
         Ok(count.unwrap_or(0))
     }
 

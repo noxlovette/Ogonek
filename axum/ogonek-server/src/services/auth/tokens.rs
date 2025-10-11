@@ -1,8 +1,7 @@
 use crate::services::{Claims, KEYS};
 
 use crate::services::AuthError;
-use base64::prelude::BASE64_URL_SAFE_NO_PAD;
-use base64::{Engine as _, engine::general_purpose::URL_SAFE};
+use base64::{Engine as _, engine::general_purpose::URL_SAFE, prelude::BASE64_URL_SAFE_NO_PAD};
 use jsonwebtoken::{Algorithm, Header, Validation, decode, encode};
 use ogonek_types::{InviteToken, TokenWithExpiry, UserRole};
 use std::time::{SystemTime, UNIX_EPOCH};
@@ -79,6 +78,8 @@ pub fn generate_secure_token() -> String {
 
 #[cfg(test)]
 mod tests {
+    use core::panic;
+
     use super::*;
     #[test]
     fn test_generate_token_success() {
@@ -90,7 +91,7 @@ mod tests {
 
         assert!(result.is_ok());
         let token = result.unwrap();
-        assert!(token.token.len() > 0);
+        assert!(!token.token.is_empty());
         assert!(token.expires_at > 0);
 
         // Verify the token expires in the future
@@ -115,7 +116,7 @@ mod tests {
             assert!(result.is_ok(), "Failed for role: {}", role);
 
             let token = result.unwrap();
-            assert!(token.token.len() > 0);
+            assert!(!token.token.is_empty());
             assert!(token.expires_at > 0);
         }
     }
@@ -268,11 +269,11 @@ mod tests {
         for teacher_id in test_cases {
             let encoded = encode_invite_token(teacher_id.clone())
                 .await
-                .expect(&format!("Encoding failed for: {teacher_id}"));
+                .unwrap_or_else(|_| panic!("Encoding failed for {teacher_id}"));
 
             let decoded = decode_invite_token(encoded)
                 .await
-                .expect(&format!("Decoding failed for: {teacher_id}"));
+                .unwrap_or_else(|_| panic!("Decoding failed for: {teacher_id}"));
 
             assert_eq!(decoded, teacher_id);
         }

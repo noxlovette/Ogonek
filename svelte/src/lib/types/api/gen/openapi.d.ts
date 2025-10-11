@@ -11,10 +11,16 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** All content from the website */
+        /**
+         * Lists all content for admin management
+         * @description Returns all website content for administrative purposes.
+         */
         get: operations["list_content"];
         put?: never;
-        /** Creates new content */
+        /**
+         * Creates new content with audit logging
+         * @description Creates a new content entry and logs the creation for audit purposes.
+         */
         post: operations["create_content"];
         delete?: never;
         options?: never;
@@ -29,15 +35,24 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Fetches content by id (admin interface) */
+        /**
+         * Retrieves content by ID for admin interface
+         * @description Returns content details for administrative access.
+         */
         get: operations["fetch_content"];
         put?: never;
         post?: never;
-        /** Deletes content */
+        /**
+         * Deletes content with audit logging
+         * @description Removes content and creates an audit log entry for the deletion.
+         */
         delete: operations["delete_content"];
         options?: never;
         head?: never;
-        /** Updates content */
+        /**
+         * Updates content with audit logging
+         * @description Modifies content properties and logs the update operation.
+         */
         patch: operations["update_content"];
         trace?: never;
     };
@@ -49,10 +64,16 @@ export interface paths {
             cookie?: never;
         };
         get?: never;
-        /** Updates content */
+        /**
+         * Publishes content
+         * @description Marks content as published and available to users.
+         */
         put: operations["publish_content"];
         post?: never;
-        /** Updates content */
+        /**
+         * Unpublishes content
+         * @description Marks content as unpublished and removes it from public access.
+         */
         delete: operations["unpublish_content"];
         options?: never;
         head?: never;
@@ -68,7 +89,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Binds the student to the teacher */
+        /**
+         * Binds a student to a teacher using an invite token
+         * @description Creates a relationship between student and teacher accounts.
+         */
         post: operations["bind_student_to_teacher"];
         delete?: never;
         options?: never;
@@ -85,7 +109,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Confirms email verification using a token */
+        /**
+         * Confirms email verification using a verification token
+         * @description Validates and consumes the verification token to mark the user's email as verified.
+         */
         post: operations["confirm_email"];
         delete?: never;
         options?: never;
@@ -100,7 +127,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Generates the invite link for the teacher */
+        /**
+         * Generates an invite link for teacher-student binding
+         * @description Creates a secure invite URL that can be used for student registration or binding.
+         */
         get: operations["generate_invite_link"];
         put?: never;
         post?: never;
@@ -119,7 +149,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Receives the refresh token as json, gets it, then decodes, finds the user id, and generates a new access token */
+        /**
+         * Refreshes an access token using a valid refresh token
+         * @description Decodes the refresh token and generates a new access token for the user.
+         */
         post: operations["refresh"];
         delete?: never;
         options?: never;
@@ -136,7 +169,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Generates the invite link for the teacher */
+        /**
+         * Resends email verification token to the authenticated user
+         * @description Generates a new verification token and sends it to the user's email address.
+         */
         post: operations["resend_verification"];
         delete?: never;
         options?: never;
@@ -153,6 +189,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
+        /**
+         * Authenticates a user and returns access/refresh tokens
+         * @description Validates credentials and returns JWT tokens for authenticated access.
+         */
         post: operations["signin"];
         delete?: never;
         options?: never;
@@ -169,6 +209,11 @@ export interface paths {
         };
         get?: never;
         put?: never;
+        /**
+         * Registers a new user account with email verification
+         * @description Creates a new user account, hashes the password, and sends an email
+         *     verification token to the provided email address.
+         */
         post: operations["signup"];
         delete?: never;
         options?: never;
@@ -183,7 +228,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Get the user's calendar */
+        /**
+         * Retrieves or creates the user's calendar
+         * @description Returns the user's calendar, creating it if it doesn't exist.
+         */
         get: operations["fetch_calendar"];
         put?: never;
         post?: never;
@@ -217,10 +265,16 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Get events for a specific month */
+        /**
+         * Lists events within a specified date range
+         * @description Retrieves all events for the user within the given start and end dates, optionally filtered by role.
+         */
         get: operations["list_events"];
         put?: never;
-        /** Create a new event */
+        /**
+         * Creates a new calendar event for the authenticated user
+         * @description Creates an event with automatic end time if not provided (defaults to 1 hour duration).
+         */
         post: operations["create_event"];
         delete?: never;
         options?: never;
@@ -235,15 +289,24 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Get a single event by UID */
+        /**
+         * Retrieves a single event by its unique identifier
+         * @description Returns the event details along with attendee information.
+         */
         get: operations["fetch_event"];
         put?: never;
         post?: never;
-        /** Delete an event */
+        /**
+         * Deletes a calendar event
+         * @description Removes an event based on the provided deletion parameters.
+         */
         delete: operations["delete_event"];
         options?: never;
         head?: never;
-        /** Update an event */
+        /**
+         * Updates an existing calendar event
+         * @description Modifies event properties based on the provided update payload.
+         */
         patch: operations["update_event"];
         trace?: never;
     };
@@ -257,11 +320,17 @@ export interface paths {
         get?: never;
         put?: never;
         post?: never;
-        /** Delete a calendar */
+        /**
+         * Deletes a specific calendar owned by the user
+         * @description Removes the calendar if the user has ownership permissions.
+         */
         delete: operations["delete_calendar"];
         options?: never;
         head?: never;
-        /** Update a calendar */
+        /**
+         * Updates a specific calendar owned by the user
+         * @description Modifies calendar properties if the user has ownership permissions.
+         */
         patch: operations["update_calendar"];
         trace?: never;
     };
@@ -272,10 +341,16 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Decks the user has access to */
+        /**
+         * Retrieves a paginated list of decks accessible to the user
+         * @description Returns decks the user owns or has been assigned with pagination and filtering support.
+         */
         get: operations["list_decks"];
         put?: never;
-        /** Creates a new Deck using user defaults */
+        /**
+         * Creates a new flashcard deck with default settings
+         * @description Generates a new deck using the user's default configuration and logs the creation.
+         */
         post: operations["create_deck"];
         delete?: never;
         options?: never;
@@ -293,7 +368,10 @@ export interface paths {
         get?: never;
         put?: never;
         post?: never;
-        /** Deletes many decks */
+        /**
+         * Deletes multiple decks in bulk
+         * @description Removes multiple decks specified by their IDs for the authenticated user.
+         */
         delete: operations["delete_deck_many"];
         options?: never;
         head?: never;
@@ -307,7 +385,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Only public decks */
+        /**
+         * Retrieves all publicly available decks
+         * @description Returns a list of all decks marked as public visibility.
+         */
         get: operations["list_decks_public"];
         put?: never;
         post?: never;
@@ -324,15 +405,24 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** One deck */
+        /**
+         * Retrieves a single deck with all its cards
+         * @description Returns deck details including all associated flashcards and marks it as seen.
+         */
         get: operations["fetch_deck"];
         put?: never;
         post?: never;
-        /** Deletes a deck */
+        /**
+         * Deletes a single deck and associated data
+         * @description Removes the deck and cleans up tracking data for assignees.
+         */
         delete: operations["delete_deck"];
         options?: never;
         head?: never;
-        /** Updates a deck */
+        /**
+         * Updates a deck and its cards with assignment tracking
+         * @description Modifies deck properties and handles assignee changes with notifications and activity logging.
+         */
         patch: operations["update_deck"];
         trace?: never;
     };
@@ -345,7 +435,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Duplicates a deck, returns new id */
+        /**
+         * Duplicates an existing deck with all its content
+         * @description Creates a copy of the specified deck and returns the new deck's ID.
+         */
         post: operations["duplicate_deck"];
         delete?: never;
         options?: never;
@@ -413,7 +506,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Generate the PDF for the requested resource */
+        /**
+         * Generates or retrieves a PDF for the specified resource
+         * @description Creates a PDF for tasks or lessons, caches it in S3, and returns a presigned URL.
+         */
         post: operations["get_pdf"];
         delete?: never;
         options?: never;
@@ -430,7 +526,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Fetches all the files associated with a task and returns their presigned URLs */
+        /**
+         * Generates presigned URLs for all files associated with a task
+         * @description Returns batch presigned URLs for all files linked to the specified task.
+         */
         post: operations["fetch_presigned_urls_batch"];
         delete?: never;
         options?: never;
@@ -445,6 +544,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Generates a presigned URL for file access
+         * @description Creates a temporary URL for accessing a file stored in S3 using base64 encoded key.
+         */
         get: operations["fetch_presigned_url"];
         put?: never;
         post?: never;
@@ -464,7 +567,10 @@ export interface paths {
         get?: never;
         put?: never;
         post?: never;
-        /** Deletes file */
+        /**
+         * Deletes a file from database and S3 storage
+         * @description Removes the file metadata and actual file from S3 bucket.
+         */
         delete: operations["delete_file"];
         options?: never;
         head?: never;
@@ -634,7 +740,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Public Task. Handled in the content router */
+        /**
+         * Retrieves a public task with files (no authentication required)
+         * @description Returns task details with files for public access.
+         */
         get: operations["fetch_task_public"];
         put?: never;
         post?: never;
@@ -718,10 +827,16 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Tasks belonging to a user (through assignment or direct ownership) */
+        /**
+         * Retrieves a paginated list of tasks for the authenticated user
+         * @description Returns tasks belonging to the user through assignment or ownership with pagination support.
+         */
         get: operations["list_tasks"];
         put?: never;
-        /** Creates a new task */
+        /**
+         * Creates a new task with default values for the authenticated user
+         * @description Generates a task with default settings and logs the creation activity.
+         */
         post: operations["create_task"];
         delete?: never;
         options?: never;
@@ -739,7 +854,10 @@ export interface paths {
         get?: never;
         put?: never;
         post?: never;
-        /** Deletes many tasks */
+        /**
+         * Deletes multiple tasks in bulk
+         * @description Removes multiple tasks specified by their IDs for the authenticated user.
+         */
         delete: operations["delete_task_many"];
         options?: never;
         head?: never;
@@ -753,16 +871,25 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** One Task */
+        /**
+         * Retrieves a single task by ID with associated files
+         * @description Returns task details with files and marks the task as seen by the user.
+         */
         get: operations["fetch_task"];
         /** Toggles completed/not completed on a task */
         put: operations["toggle_task"];
         post?: never;
-        /** Deletes a task */
+        /**
+         * Deletes a single task and associated files
+         * @description Removes the task, associated files from database and S3, and handles cleanup of tracking data.
+         */
         delete: operations["delete_task"];
         options?: never;
         head?: never;
-        /** Updates the task */
+        /**
+         * Updates an existing task with assignment and notification logic
+         * @description Modifies task properties and handles assignee changes with proper notification and tracking.
+         */
         patch: operations["update_task"];
         trace?: never;
     };
@@ -773,15 +900,24 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Fetches self for the user */
+        /**
+         * Retrieves the authenticated user's profile information
+         * @description Returns the current user's details based on their JWT claims.
+         */
         get: operations["fetch_me"];
         put?: never;
         post?: never;
-        /** Deletes user by their claims */
+        /**
+         * Deletes the authenticated user's account
+         * @description Permanently removes the user account based on their JWT claims.
+         */
         delete: operations["delete_user"];
         options?: never;
         head?: never;
-        /** Updates the user by their claims */
+        /**
+         * Updates the authenticated user's profile information
+         * @description Modifies user details including password (which gets hashed) based on their JWT claims.
+         */
         patch: operations["update_user"];
         trace?: never;
     };
@@ -792,7 +928,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Gets the inviter's credentials */
+        /**
+         * Retrieves teacher information from an invite token
+         * @description Decodes an invite token and returns the teacher's details who created the invite.
+         */
         get: operations["fetch_inviter"];
         put?: never;
         post?: never;

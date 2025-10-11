@@ -1,8 +1,5 @@
 use axum::extract::{Query, State};
-use ogonek_db::core::account::{
-    self,
-    user::{read_by_id, read_email},
-};
+use ogonek_db::core::account::{self, user::read_by_id};
 use ogonek_types::EmailVerificationQuery;
 use reqwest::StatusCode;
 
