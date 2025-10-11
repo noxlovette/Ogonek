@@ -16,13 +16,21 @@
     Headline,
     Subheadline,
     Body,
+    Merger,
   } from "$lib/components";
-  import Merger from "$lib/components/UI/toolbar/Merger.svelte";
+  import Title1 from "$lib/components/typography/Title1.svelte";
 
   let { data } = $props();
 
   let currentIndex = $state(0);
-  let currentCard = $derived(data.cards[currentIndex]);
+  let isReloading = $state(false);
+  let currentCard = $derived.by(() => {
+    if (isReloading) return null;
+    if (currentIndex >= data.cards.length) {
+      return data.cards[0] || null;
+    }
+    return data.cards[currentIndex] || null;
+  });
 
   let isComplete = $state(data.cards.length === 0);
   let showAnswer = $state(false);
@@ -33,14 +41,22 @@
 
   const nextCard = async () => {
     userInput = "";
+    showAnswer = false;
+
     if (currentIndex < data.cards.length - 1) {
       currentIndex++;
-      showAnswer = false;
-    } else if ((currentIndex = data.cards.length) && data.cards.length > 1) {
-      invalidate("learn:complete");
+    } else if (data.cards.length > 1) {
+      // We're at the last card, reset and reload
+      isReloading = true;
       currentIndex = 0;
-      showAnswer = false;
+      await invalidate("learn:complete");
+      isReloading = false;
+      // After reload, check if we have cards
+      if (data.cards.length === 0) {
+        isComplete = true;
+      }
     } else {
+      // Only one card or no cards
       isComplete = true;
     }
   };
@@ -67,10 +83,26 @@
   }
 
   const progress = $derived(
-    Math.round(
-      ((data.cards.indexOf(currentCard) + 1) / data.cards.length) * 100,
-    ),
+    currentCard && data.cards.length > 0
+      ? Math.round(((currentIndex + 1) / data.cards.length) * 100)
+      : 0,
   );
+
+  let inputRef = $state<HTMLInputElement>();
+  $effect(() => {
+    if (showCloze && !showAnswer && inputRef) {
+      // Nuclear option - keep forcing focus
+      const interval = setInterval(() => {
+        if (document.activeElement !== inputRef) {
+          if (inputRef) {
+            inputRef.focus();
+          }
+        }
+      }, 50);
+
+      return () => clearInterval(interval);
+    }
+  });
 </script>
 
 {#snippet qualityButton(quality: {
@@ -96,18 +128,17 @@
 {/snippet}
 
 <svelte:window on:keydown={handleKeyPress} />
-{#if isComplete || data.cards.length === 0}
+{#if isComplete || !data.cards.length}
   <div class="p-8">
     <div class="gap-default flex flex-col items-center py-10 text-center">
-      <Body>Карточек тут больше нет. Приходите завтра...</Body>
+      <Title1>Карточек тут больше нет. Приходите завтра...</Title1>
 
       <Merger>
         <UniButton
           href="."
           Icon={GraduationCap}
-          content="На страницу карточек"
+          content="К декам"
           variant="primary"
-          iconOnly={false}
         ></UniButton>
       </Merger>
     </div>
@@ -138,6 +169,7 @@
           {#if !showAnswer}
             <Input
               dataCy="answer-input"
+              bind:ref={inputRef}
               name="Лицо"
               placeholder="Apple (n)"
               bind:value={userInput}
