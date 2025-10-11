@@ -44,20 +44,14 @@
     showAnswer = false;
 
     if (currentIndex < data.cards.length - 1) {
+      // Move to next card in current batch
       currentIndex++;
-    } else if (data.cards.length > 1) {
-      // We're at the last card, reset and reload
-      isReloading = true;
-      currentIndex = 0;
-      await invalidate("learn:complete");
-      isReloading = false;
-      // After reload, check if we have cards
-      if (data.cards.length === 0) {
-        isComplete = true;
-      }
     } else {
-      // Only one card or no cards
-      isComplete = true;
+      // We're on the last card - reload data to get new cards
+      isReloading = true;
+      await invalidate("learn:complete");
+      currentIndex = 0;
+      isReloading = false;
     }
   };
 
@@ -91,7 +85,6 @@
   let inputRef = $state<HTMLInputElement>();
   $effect(() => {
     if (showCloze && !showAnswer && inputRef) {
-      // Nuclear option - keep forcing focus
       const interval = setInterval(() => {
         if (document.activeElement !== inputRef) {
           if (inputRef) {
