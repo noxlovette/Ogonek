@@ -1,7 +1,12 @@
 <script lang="ts">
   import Caption1 from "$lib/components/typography/Caption1.svelte";
   import { assigneeStore, studentStore, user } from "$lib/stores";
-  import { Eye, EyeClosed } from "@lucide/svelte";
+  import {
+    BadgeCheck,
+    BadgeQuestionMark,
+    Eye,
+    EyeClosed,
+  } from "@lucide/svelte";
   import type { ChangeEventHandler } from "svelte/elements";
 
   let {
@@ -19,6 +24,7 @@
     onchange,
     type = "text",
     dataCy,
+    verified = false,
   }: {
     placeholder?: string;
     name: string;
@@ -33,6 +39,7 @@
     required?: boolean;
     item?: Assignable | null;
     dataCy?: string;
+    verified?: boolean;
     type?:
       | "text"
       | "number"
@@ -83,7 +90,7 @@
       bind:value
       {disabled}
       data-cy={dataCy}
-      class={baseStyle + " resize-none"}
+      class={baseStyle + "resize-none"}
       {placeholder}
       {required}
       aria-label={showLabel ? undefined : labelName}
@@ -156,6 +163,11 @@
         ? `${name}-error`
         : undefined}
     />
+    {#if verified}
+      <BadgeCheck class="absolute top-8 right-2 text-emerald-500" />
+    {:else}
+      <BadgeQuestionMark class="absolute top-8 right-2 text-red-500" />
+    {/if}
   {:else if type === "date"}
     <input
       type="date"

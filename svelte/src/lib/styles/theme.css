@@ -31,13 +31,17 @@
     @apply bg-white dark:bg-stone-950;
   }
 
+  .bg-material {
+    @apply bg-stone-100/80 dark:bg-stone-900/80;
+  }
+
   .bg-clickable {
     @apply bg-stone-100/20 hover:bg-stone-100/80 active:bg-stone-100 dark:bg-stone-900/30 dark:hover:bg-stone-900 active:dark:bg-stone-800;
     @apply transition-colors duration-150;
   }
 
   .input-default {
-    @apply focus:border-accent focus:ring-accent w-full rounded-2xl bg-white px-3.5 py-2.5 placeholder-stone-400 shadow-sm focus:shadow-md focus:ring-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60 dark:bg-stone-950;
+    @apply focus:border-accent focus:ring-accent w-full rounded-2xl px-3.5 py-2.5 placeholder-stone-400 focus:ring-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60;
   }
 
   .gap-default {

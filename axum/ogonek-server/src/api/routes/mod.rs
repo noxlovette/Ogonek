@@ -1,10 +1,12 @@
-pub mod admin_routes;
-pub mod auth_routes;
-pub mod core_routes;
-pub mod file_routes;
-pub mod notification_routes;
-pub mod public_routes;
-pub mod user_routes;
+mod admin_routes;
+mod auth_routes;
+mod core_routes;
+mod debug_routes;
+mod file_routes;
+mod notification_routes;
+mod public_routes;
+mod user_routes;
+
 pub use admin_routes::*;
 pub use auth_routes::*;
 use axum::http::{Method, StatusCode};
@@ -12,6 +14,7 @@ pub use core_routes::*;
 pub use file_routes::file_routes;
 pub use notification_routes::notification_routes;
 pub use public_routes::*;
+
 use tower_http::{
     cors::CorsLayer,
     request_id::{MakeRequestUuid, PropagateRequestIdLayer, SetRequestIdLayer},
@@ -26,7 +29,7 @@ use axum::{
     routing::get,
 };
 
-use crate::{AppState, services::REQUEST_ID_HEADER};
+use crate::{AppState, api::routes::debug_routes::debug_routes, services::REQUEST_ID_HEADER};
 
 fn api_routes() -> Router<AppState> {
     Router::new()
@@ -41,6 +44,7 @@ fn api_routes() -> Router<AppState> {
         .nest("/state", state_routes())
         .nest("/calendars", calendar_routes())
         .nest("/admin", admin_routes())
+        .nest("/debug", debug_routes())
 }
 
 fn public_routes() -> Router<AppState> {

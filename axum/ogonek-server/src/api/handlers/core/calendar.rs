@@ -9,7 +9,9 @@ use axum::{
 use ogonek_db::core::calendar::cal::{delete, get_or_create, update};
 use ogonek_types::{CalendarFull, CalendarUpdate};
 
-/// Get the user's calendar
+/// Retrieves or creates the user's calendar
+///
+/// Returns the user's calendar, creating it if it doesn't exist.
 #[utoipa::path(
     get,
     path = "",
@@ -28,7 +30,9 @@ pub async fn fetch_calendar(
     Ok(Json(calendar))
 }
 
-/// Delete a calendar
+/// Deletes a specific calendar owned by the user
+///
+/// Removes the calendar if the user has ownership permissions.
 #[utoipa::path(
     delete,
     path = "/{id}",
@@ -51,7 +55,9 @@ pub async fn delete_calendar(
     Ok(StatusCode::NO_CONTENT)
 }
 
-/// Update a calendar
+/// Updates a specific calendar owned by the user
+///
+/// Modifies calendar properties if the user has ownership permissions.
 #[utoipa::path(
     patch,
     path = "/{id}",

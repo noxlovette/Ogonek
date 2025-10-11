@@ -3,7 +3,7 @@
 </script>
 
 <p
-  class="text-base leading-relaxed text-stone-800 dark:text-stone-400 {styling}"
+  class="text-base leading-relaxed text-stone-800 dark:text-stone-200 {styling}"
 >
   {@render children?.()}
 </p>

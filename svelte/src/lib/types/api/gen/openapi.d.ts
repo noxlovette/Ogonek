@@ -4,4013 +4,4248 @@
  */
 
 export interface paths {
-  "/api/v1/admin/content": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/admin/content": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Lists all content for admin management
+         * @description Returns all website content for administrative purposes.
+         */
+        get: operations["list_content"];
+        put?: never;
+        /**
+         * Creates new content with audit logging
+         * @description Creates a new content entry and logs the creation for audit purposes.
+         */
+        post: operations["create_content"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** All content from the website */
-    get: operations["list_content"];
-    put?: never;
-    /** Creates new content */
-    post: operations["create_content"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/admin/content/{id}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/admin/content/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Retrieves content by ID for admin interface
+         * @description Returns content details for administrative access.
+         */
+        get: operations["fetch_content"];
+        put?: never;
+        post?: never;
+        /**
+         * Deletes content with audit logging
+         * @description Removes content and creates an audit log entry for the deletion.
+         */
+        delete: operations["delete_content"];
+        options?: never;
+        head?: never;
+        /**
+         * Updates content with audit logging
+         * @description Modifies content properties and logs the update operation.
+         */
+        patch: operations["update_content"];
+        trace?: never;
     };
-    /** Fetches content by id (admin interface) */
-    get: operations["fetch_content"];
-    put?: never;
-    post?: never;
-    /** Deletes content */
-    delete: operations["delete_content"];
-    options?: never;
-    head?: never;
-    /** Updates content */
-    patch: operations["update_content"];
-    trace?: never;
-  };
-  "/api/v1/admin/content/{id}/publish": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/admin/content/{id}/publish": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Publishes content
+         * @description Marks content as published and available to users.
+         */
+        put: operations["publish_content"];
+        post?: never;
+        /**
+         * Unpublishes content
+         * @description Marks content as unpublished and removes it from public access.
+         */
+        delete: operations["unpublish_content"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    /** Updates content */
-    put: operations["publish_content"];
-    post?: never;
-    /** Updates content */
-    delete: operations["unpublish_content"];
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/auth/bind": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/auth/bind": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Binds a student to a teacher using an invite token
+         * @description Creates a relationship between student and teacher accounts.
+         */
+        post: operations["bind_student_to_teacher"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    /** Binds the student to the teacher */
-    post: operations["bind_student_to_teacher"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/auth/invite": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/auth/confirm_email": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Confirms email verification using a verification token
+         * @description Validates and consumes the verification token to mark the user's email as verified.
+         */
+        post: operations["confirm_email"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** Generates the invite link for the teacher */
-    get: operations["generate_invite_link"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/auth/refresh": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/auth/invite": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Generates an invite link for teacher-student binding
+         * @description Creates a secure invite URL that can be used for student registration or binding.
+         */
+        get: operations["generate_invite_link"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    /** Receives the refresh token as json, gets it, then decodes, finds the user id, and generates a new access token */
-    post: operations["refresh"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/auth/signin": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/auth/refresh": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Refreshes an access token using a valid refresh token
+         * @description Decodes the refresh token and generates a new access token for the user.
+         */
+        post: operations["refresh"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    post: operations["signin"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/auth/signup": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/auth/resend_email": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Resends email verification token to the authenticated user
+         * @description Generates a new verification token and sends it to the user's email address.
+         */
+        post: operations["resend_verification"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    post: operations["signup"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/calendars": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/auth/signin": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Authenticates a user and returns access/refresh tokens
+         * @description Validates credentials and returns JWT tokens for authenticated access.
+         */
+        post: operations["signin"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** Get the user's calendar */
-    get: operations["fetch_calendar"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/calendars/attendees/{id}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/auth/signup": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Registers a new user account with email verification
+         * @description Creates a new user account, hashes the password, and sends an email
+         *     verification token to the provided email address.
+         */
+        post: operations["signup"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    post?: never;
-    delete: operations["delete_attendee"];
-    options?: never;
-    head?: never;
-    /** Update an event attendee */
-    patch: operations["update_attendee"];
-    trace?: never;
-  };
-  "/api/v1/calendars/events": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/calendars": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Retrieves or creates the user's calendar
+         * @description Returns the user's calendar, creating it if it doesn't exist.
+         */
+        get: operations["fetch_calendar"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** Get events for a specific month */
-    get: operations["list_events"];
-    put?: never;
-    /** Create a new event */
-    post: operations["create_event"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/calendars/events/{id}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/calendars/attendees/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: operations["delete_attendee"];
+        options?: never;
+        head?: never;
+        /** Update an event attendee */
+        patch: operations["update_attendee"];
+        trace?: never;
     };
-    /** Get a single event by UID */
-    get: operations["fetch_event"];
-    put?: never;
-    post?: never;
-    /** Delete an event */
-    delete: operations["delete_event"];
-    options?: never;
-    head?: never;
-    /** Update an event */
-    patch: operations["update_event"];
-    trace?: never;
-  };
-  "/api/v1/calendars/{id}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/calendars/events": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Lists events within a specified date range
+         * @description Retrieves all events for the user within the given start and end dates, optionally filtered by role.
+         */
+        get: operations["list_events"];
+        put?: never;
+        /**
+         * Creates a new calendar event for the authenticated user
+         * @description Creates an event with automatic end time if not provided (defaults to 1 hour duration).
+         */
+        post: operations["create_event"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    post?: never;
-    /** Delete a calendar */
-    delete: operations["delete_calendar"];
-    options?: never;
-    head?: never;
-    /** Update a calendar */
-    patch: operations["update_calendar"];
-    trace?: never;
-  };
-  "/api/v1/decks": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/calendars/events/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Retrieves a single event by its unique identifier
+         * @description Returns the event details along with attendee information.
+         */
+        get: operations["fetch_event"];
+        put?: never;
+        post?: never;
+        /**
+         * Deletes a calendar event
+         * @description Removes an event based on the provided deletion parameters.
+         */
+        delete: operations["delete_event"];
+        options?: never;
+        head?: never;
+        /**
+         * Updates an existing calendar event
+         * @description Modifies event properties based on the provided update payload.
+         */
+        patch: operations["update_event"];
+        trace?: never;
     };
-    /** Decks the user has access to */
-    get: operations["list_decks"];
-    put?: never;
-    /** Creates a new Deck using user defaults */
-    post: operations["create_deck"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/decks/many": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/calendars/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * Deletes a specific calendar owned by the user
+         * @description Removes the calendar if the user has ownership permissions.
+         */
+        delete: operations["delete_calendar"];
+        options?: never;
+        head?: never;
+        /**
+         * Updates a specific calendar owned by the user
+         * @description Modifies calendar properties if the user has ownership permissions.
+         */
+        patch: operations["update_calendar"];
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    post?: never;
-    /** Deletes many decks */
-    delete: operations["delete_deck_many"];
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/decks/public": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/decks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Retrieves a paginated list of decks accessible to the user
+         * @description Returns decks the user owns or has been assigned with pagination and filtering support.
+         */
+        get: operations["list_decks"];
+        put?: never;
+        /**
+         * Creates a new flashcard deck with default settings
+         * @description Generates a new deck using the user's default configuration and logs the creation.
+         */
+        post: operations["create_deck"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** Only public decks */
-    get: operations["list_decks_public"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/decks/{id}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/decks/many": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * Deletes multiple decks in bulk
+         * @description Removes multiple decks specified by their IDs for the authenticated user.
+         */
+        delete: operations["delete_deck_many"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** One deck */
-    get: operations["fetch_deck"];
-    put?: never;
-    post?: never;
-    /** Deletes a deck */
-    delete: operations["delete_deck"];
-    options?: never;
-    head?: never;
-    /** Updates a deck */
-    patch: operations["update_deck"];
-    trace?: never;
-  };
-  "/api/v1/decks/{id}/duplicate": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/decks/public": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Retrieves all publicly available decks
+         * @description Returns a list of all decks marked as public visibility.
+         */
+        get: operations["list_decks_public"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    /** Duplicates a deck, returns new id */
-    post: operations["duplicate_deck"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/files/abort": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/decks/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Retrieves a single deck with all its cards
+         * @description Returns deck details including all associated flashcards and marks it as seen.
+         */
+        get: operations["fetch_deck"];
+        put?: never;
+        post?: never;
+        /**
+         * Deletes a single deck and associated data
+         * @description Removes the deck and cleans up tracking data for assignees.
+         */
+        delete: operations["delete_deck"];
+        options?: never;
+        head?: never;
+        /**
+         * Updates a deck and its cards with assignment tracking
+         * @description Modifies deck properties and handles assignee changes with notifications and activity logging.
+         */
+        patch: operations["update_deck"];
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    /** Cancel multipart upload */
-    post: operations["abort_multipart_upload"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/files/complete": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/decks/{id}/duplicate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Duplicates an existing deck with all its content
+         * @description Creates a copy of the specified deck and returns the new deck's ID.
+         */
+        post: operations["duplicate_deck"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    /** Complete a part of the upload */
-    post: operations["complete_multipart_upload"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/files/init": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/files/abort": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Cancel multipart upload */
+        post: operations["abort_multipart_upload"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    /** Multipart upload init endpoint */
-    post: operations["init_multipart_upload"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/files/pdf/{id}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/files/complete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Complete a part of the upload */
+        post: operations["complete_multipart_upload"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    /** Generate the PDF for the requested resource */
-    post: operations["get_pdf"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/files/presigned/batch/{task_id}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/files/init": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Multipart upload init endpoint */
+        post: operations["init_multipart_upload"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    /** Fetches all the files associated with a task and returns their presigned URLs */
-    post: operations["fetch_presigned_urls_batch"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/files/presigned/{encoded_key}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/files/pdf/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Generates or retrieves a PDF for the specified resource
+         * @description Creates a PDF for tasks or lessons, caches it in S3, and returns a presigned URL.
+         */
+        post: operations["get_pdf"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get: operations["fetch_presigned_url"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/files/{id}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/files/presigned/batch/{task_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Generates presigned URLs for all files associated with a task
+         * @description Returns batch presigned URLs for all files linked to the specified task.
+         */
+        post: operations["fetch_presigned_urls_batch"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    post?: never;
-    /** Deletes file */
-    delete: operations["delete_file"];
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/learn": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/files/presigned/{encoded_key}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Generates a presigned URL for file access
+         * @description Creates a temporary URL for accessing a file stored in S3 using base64 encoded key.
+         */
+        get: operations["fetch_presigned_url"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** Returns the list of all cards due for review */
-    get: operations["fetch_due_cards"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/learn/subscribe/{id}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/files/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * Deletes a file from database and S3 storage
+         * @description Removes the file metadata and actual file from S3 bucket.
+         */
+        delete: operations["delete_file"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    /** Subscribes the user to the deck */
-    post: operations["subscribe_to_deck"];
-    /** Unsubscribes the user from the deck */
-    delete: operations["unsubscribe_from_deck"];
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/learn/{id}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/learn": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Returns the list of all cards due for review */
+        get: operations["fetch_due_cards"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    /** Updates the learn progress on a card */
-    put: operations["update_card_progress"];
-    post?: never;
-    /** Resets the progress for a particular deck */
-    delete: operations["reset_deck_progress"];
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/lessons": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/learn/subscribe/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Subscribes the user to the deck */
+        post: operations["subscribe_to_deck"];
+        /** Unsubscribes the user from the deck */
+        delete: operations["unsubscribe_from_deck"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** Lessons belonging to a user */
-    get: operations["list_lessons"];
-    put?: never;
-    /** Creates a lesson with user defaults specified elsewhere */
-    post: operations["create_lesson"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/lessons/many": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/learn/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Updates the learn progress on a card */
+        put: operations["update_card_progress"];
+        post?: never;
+        /** Resets the progress for a particular deck */
+        delete: operations["reset_deck_progress"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    post?: never;
-    /** Deletes many lessons */
-    delete: operations["delete_lesson_many"];
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/lessons/{id}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/lessons": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Lessons belonging to a user */
+        get: operations["list_lessons"];
+        put?: never;
+        /** Creates a lesson with user defaults specified elsewhere */
+        post: operations["create_lesson"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** Fetches lesson by id */
-    get: operations["fetch_lesson"];
-    put?: never;
-    post?: never;
-    /** Deletes lesson */
-    delete: operations["delete_lesson"];
-    options?: never;
-    head?: never;
-    /** Updates lesson */
-    patch: operations["update_lesson"];
-    trace?: never;
-  };
-  "/api/v1/lessons/{id}/photo": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/lessons/many": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Deletes many lessons */
+        delete: operations["delete_lesson_many"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    /** Adds a photo to the lesson */
-    patch: operations["upsert_photo"];
-    trace?: never;
-  };
-  "/api/v1/notifications/register": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/lessons/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Fetches lesson by id */
+        get: operations["fetch_lesson"];
+        put?: never;
+        post?: never;
+        /** Deletes lesson */
+        delete: operations["delete_lesson"];
+        options?: never;
+        head?: never;
+        /** Updates lesson */
+        patch: operations["update_lesson"];
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    post: operations["register_device_token"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/notifications/request": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/lessons/{id}/photo": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Adds a photo to the lesson */
+        patch: operations["upsert_photo"];
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    post: operations["request_hw"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/public/task/{id}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/notifications/register": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["register_device_token"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** Public Task. Handled in the content router */
-    get: operations["fetch_task_public"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/public/{slug}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/notifications/request": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["request_hw"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** Fetches content by slug (public endpoint) */
-    get: operations["fetch_content_public"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/state/badges": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/public/task/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Retrieves a public task with files (no authentication required)
+         * @description Returns task details with files for public access.
+         */
+        get: operations["fetch_task_public"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** This data gives info about notification badges */
-    get: operations["fetch_badges"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/state/context": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/public/{slug}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Fetches content by slug (public endpoint) */
+        get: operations["fetch_content_public"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get: operations["fetch_context"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/state/dashboard": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/state/badges": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** This data gives info about notification badges */
+        get: operations["fetch_badges"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** This data populates the dashboard/home view */
-    get: operations["fetch_dashboard"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/tasks": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/state/context": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["fetch_context"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** Tasks belonging to a user (through assignment or direct ownership) */
-    get: operations["list_tasks"];
-    put?: never;
-    /** Creates a new task */
-    post: operations["create_task"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/tasks/many": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/state/dashboard": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** This data populates the dashboard/home view */
+        get: operations["fetch_dashboard"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    post?: never;
-    /** Deletes many tasks */
-    delete: operations["delete_task_many"];
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/tasks/{id}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/tasks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Retrieves a paginated list of tasks for the authenticated user
+         * @description Returns tasks belonging to the user through assignment or ownership with pagination support.
+         */
+        get: operations["list_tasks"];
+        put?: never;
+        /**
+         * Creates a new task with default values for the authenticated user
+         * @description Generates a task with default settings and logs the creation activity.
+         */
+        post: operations["create_task"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** One Task */
-    get: operations["fetch_task"];
-    /** Toggles completed/not completed on a task */
-    put: operations["toggle_task"];
-    post?: never;
-    /** Deletes a task */
-    delete: operations["delete_task"];
-    options?: never;
-    head?: never;
-    /** Updates the task */
-    patch: operations["update_task"];
-    trace?: never;
-  };
-  "/api/v1/users": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/tasks/many": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * Deletes multiple tasks in bulk
+         * @description Removes multiple tasks specified by their IDs for the authenticated user.
+         */
+        delete: operations["delete_task_many"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** Fetches self for the user */
-    get: operations["fetch_me"];
-    put?: never;
-    post?: never;
-    /** Deletes user by their claims */
-    delete: operations["delete_user"];
-    options?: never;
-    head?: never;
-    /** Updates the user by their claims */
-    patch: operations["update_user"];
-    trace?: never;
-  };
-  "/api/v1/users/inviter": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/tasks/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Retrieves a single task by ID with associated files
+         * @description Returns task details with files and marks the task as seen by the user.
+         */
+        get: operations["fetch_task"];
+        /** Toggles completed/not completed on a task */
+        put: operations["toggle_task"];
+        post?: never;
+        /**
+         * Deletes a single task and associated files
+         * @description Removes the task, associated files from database and S3, and handles cleanup of tracking data.
+         */
+        delete: operations["delete_task"];
+        options?: never;
+        head?: never;
+        /**
+         * Updates an existing task with assignment and notification logic
+         * @description Modifies task properties and handles assignee changes with proper notification and tracking.
+         */
+        patch: operations["update_task"];
+        trace?: never;
     };
-    /** Gets the inviter's credentials */
-    get: operations["fetch_inviter"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/users/profile": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/users": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Retrieves the authenticated user's profile information
+         * @description Returns the current user's details based on their JWT claims.
+         */
+        get: operations["fetch_me"];
+        put?: never;
+        post?: never;
+        /**
+         * Deletes the authenticated user's account
+         * @description Permanently removes the user account based on their JWT claims.
+         */
+        delete: operations["delete_user"];
+        options?: never;
+        head?: never;
+        /**
+         * Updates the authenticated user's profile information
+         * @description Modifies user details including password (which gets hashed) based on their JWT claims.
+         */
+        patch: operations["update_user"];
+        trace?: never;
     };
-    /** Fetch the profile */
-    get: operations["fetch_profile"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    /** Update the profile, or create a new one if already there */
-    patch: operations["upsert_profile"];
-    trace?: never;
-  };
-  "/api/v1/users/student": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/users/inviter": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Retrieves teacher information from an invite token
+         * @description Decodes an invite token and returns the teacher's details who created the invite.
+         */
+        get: operations["fetch_inviter"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get: operations["list_students"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/v1/users/student/{id}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/users/profile": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Fetch the profile */
+        get: operations["fetch_profile"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update the profile, or create a new one if already there */
+        patch: operations["upsert_profile"];
+        trace?: never;
     };
-    get: operations["fetch_student"];
-    put?: never;
-    post: operations["upsert_student"];
-    delete: operations["remove_student"];
-    options?: never;
-    head?: never;
-    patch: operations["update_student"];
-    trace?: never;
-  };
+    "/api/v1/users/student": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["list_students"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/users/student/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["fetch_student"];
+        put?: never;
+        post: operations["upsert_student"];
+        delete: operations["remove_student"];
+        options?: never;
+        head?: never;
+        patch: operations["update_student"];
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
-  schemas: {
-    AbortMultipartRequest: {
-      fileId: string;
-      s3Key: string;
-      uploadId: string;
-    };
-    AppContext: {
-      callUrl?: string | null;
-      preferences: components["schemas"]["UserPreferences"];
-      profile: components["schemas"]["Profile"];
-      students: components["schemas"]["Student"][];
-      user: components["schemas"]["User"];
-    };
-    AuthPayload: {
-      /** @example MyPassword123 */
-      pass: string;
-      /** @example john_doe */
-      username: string;
-    };
-    BatchPresignedUrlResponse: {
-      urls: components["schemas"]["PresignedFileUrl"][];
-    };
-    BindPayload: {
-      inviteToken: string;
-      studentId: string;
-    };
-    CalendarFull: {
-      colour: string;
-      description?: string | null;
-      id: string;
-      name: string;
-    };
-    CalendarQuery: {
-      /** Format: date-time */
-      end: string;
-      role?: null | components["schemas"]["CalendarRole"];
-      /** Format: date-time */
-      start: string;
-    };
-    /** @enum {string} */
-    CalendarRole: "teacher" | "student";
-    CalendarUpdate: {
-      caldavUrl?: string | null;
-      colour?: string | null;
-      description?: string | null;
-      name?: string | null;
-      syncToken?: string | null;
-      timezone?: string | null;
-    };
-    Card: {
-      back: string;
-      front: string;
-      id: string;
-      mediaUrl?: string | null;
-    };
-    CardProgressWithFields: {
-      back: string;
-      front: string;
-      id: string;
-      mediaUrl?: string | null;
-    };
-    CardUpsert: {
-      back: string;
-      front: string;
-      id?: string | null;
-      mediaUrl?: string | null;
-    };
-    CompleteMultipartRequest: {
-      fileId: string;
-      parts: components["schemas"]["CompletedPart"][];
-      s3Key: string;
-      uploadId: string;
-    };
-    CompletedPart: {
-      etag: string;
-      /** Format: int32 */
-      partNumber: number;
-    };
-    Content: {
-      id: string;
-      markdown: string;
-      metaDescription?: string | null;
-      /** Format: date-time */
-      publishedAt?: string | null;
-      slug: string;
-      status: components["schemas"]["ContentStatus"];
-      title: string;
-      /** Format: date-time */
-      updatedAt: string;
-      updatedBy: string;
-      /** Format: int32 */
-      version: number;
-    };
-    ContentPublic: {
-      markdown: string;
-      metaDescription?: string | null;
-      title: string;
-    };
-    /** @enum {string} */
-    ContentStatus: "draft" | "published";
-    DashboardData: {
-      events: components["schemas"]["EventSmall"][];
-      lessons: components["schemas"]["LessonSmall"][];
-      tasks: components["schemas"]["TaskSmall"][];
-    };
-    DeckFull: {
-      assignee?: string | null;
-      /** Format: int32 */
-      cardCount: number;
-      /** Format: date-time */
-      createdAt: string;
-      createdBy: string;
-      description?: string | null;
-      id: string;
-      isSubscribed?: boolean | null;
-      title: string;
-      visibility: components["schemas"]["Visibility"];
-    };
-    DeckPublic: {
-      description?: string | null;
-      id: string;
-      title: string;
-    };
-    DeckSmall: {
-      assigneeName?: string | null;
-      /** Format: int32 */
-      cardCount: number;
-      description?: string | null;
-      id: string;
-      isSubscribed?: boolean | null;
-      seen?: boolean | null;
-      title: string;
-      visibility: components["schemas"]["Visibility"];
-    };
-    DeckUpdate: {
-      assignee?: string | null;
-      description?: string | null;
-      title?: string | null;
-      unassign?: boolean | null;
-      visibility?: null | components["schemas"]["Visibility"];
-    };
-    DeckWithCards: {
-      cards: components["schemas"]["Card"][];
-      deck: components["schemas"]["DeckFull"];
-    };
-    DeckWithCardsUpdate: {
-      cards: components["schemas"]["CardUpsert"][];
-      deck: components["schemas"]["DeckUpdate"];
-    };
-    /** @enum {string} */
-    DeleteScope: "this-only" | "this-and-future";
-    DeviceTokenPayload: {
-      platform: string;
-      token: string;
-    };
-    /** @enum {string} */
-    EditScope: "this-only" | "this-and-future";
-    EventAttendee: {
-      email: string;
-      id: string;
-      name?: string | null;
-      role: components["schemas"]["EventAttendeeRole"];
-      status: components["schemas"]["EventAttendeeStatus"];
-      userId: string;
-    };
-    /** @enum {string} */
-    EventAttendeeRole:
-      | "req-participant"
-      | "chair"
-      | "opt-participant"
-      | "non-participant";
-    /** @enum {string} */
-    EventAttendeeStatus:
-      | "needs-action"
-      | "accepted"
-      | "declined"
-      | "tentative"
-      | "delegated";
-    EventAttendeeUpdate: {
-      email?: string | null;
-      name?: string | null;
-      role?: null | components["schemas"]["EventAttendeeRole"];
-      rsvp?: boolean | null;
-      status?: null | components["schemas"]["EventAttendeeStatus"];
-    };
-    EventCreate: {
-      attendee: string;
-      /** Format: date-time */
-      dtendTime?: string | null;
-      /** Format: date-time */
-      dtstartTime: string;
-    };
-    /** @description Internal Struct used to query the DB */
-    EventDB: {
-      /** Format: date-time */
-      dtendTime?: string | null;
-      /** Format: date-time */
-      dtstartTime: string;
-      exdate?: string[] | null;
-      id: string;
-      location?: string | null;
-      rdate?: string[] | null;
-      /** Format: date-time */
-      recurrenceId?: string | null;
-      rrule?: string | null;
-      status: components["schemas"]["EventStatus"];
-      title: string;
-      uid: string;
-    };
-    EventDBFull: {
-      categories?: string[] | null;
-      description?: string | null;
-      /** Format: date-time */
-      dtendTime?: string | null;
-      dtendTz?: string | null;
-      /** Format: date-time */
-      dtstartTime: string;
-      dtstartTz?: string | null;
-      id: string;
-      location?: string | null;
-      rrule?: string | null;
-      status: components["schemas"]["EventStatus"];
-      title: string;
-      uid: string;
-    };
-    EventFull: components["schemas"]["EventDBFull"] & {
-      isException: boolean;
-      isRecurring: boolean;
-    };
-    EventSmall: components["schemas"]["EventDB"] & {
-      isException: boolean;
-      isRecurring: boolean;
-    };
-    /** @enum {string} */
-    EventStatus: "tentative" | "confirmed" | "cancelled";
-    EventUpdate: {
-      attendee?: string | null;
-      description?: string | null;
-      /** Format: date-time */
-      dtendTime?: string | null;
-      dtendTz?: string | null;
-      /** Format: date-time */
-      dtstartTime?: string | null;
-      dtstartTz?: string | null;
-      location?: string | null;
-      rrule?: string | null;
-    };
-    EventWithAttendees: components["schemas"]["EventFull"] & {
-      attendees: components["schemas"]["EventAttendee"][];
-    };
-    FileSmall: {
-      id: string;
-      mimeType?: string | null;
-      name: string;
-      ownerId: string;
-      s3Key?: string | null;
-      /** Format: int64 */
-      size: number;
-    };
-    InitUploadRequest: {
-      contentType: string;
-      fileName: string;
-      /** Format: int64 */
-      fileSize: number;
-      parentId?: string | null;
-      taskId?: string | null;
-      /** Format: int32 */
-      totalParts: number;
-    };
-    InviteQuery: {
-      isRegistered: string;
-    };
-    InviteToken: {
-      /** Format: date-time */
-      created_at: string;
-      teacher_id: string;
-    };
-    InviterQuery: {
-      invite: string;
-    };
-    /** @description Grown-up lesson */
-    LessonFull: {
-      assignee?: string | null;
-      assigneeName?: string | null;
-      /** Format: date-time */
-      createdAt: string;
-      id: string;
-      markdown: string;
-      title: string;
-      topic: string;
-      /** Format: date-time */
-      updatedAt: string;
-    };
-    /** @description Mini-lesson */
-    LessonSmall: {
-      assigneeName?: string | null;
-      /** Format: date-time */
-      createdAt: string;
-      id: string;
-      seen?: boolean | null;
-      title: string;
-      topic: string;
-    };
-    LessonUpdate: {
-      assignee?: string | null;
-      createdBy?: string | null;
-      id?: string | null;
-      markdown?: string | null;
-      mediaUrl?: string | null;
-      title?: string | null;
-      topic?: string | null;
-      unassign?: boolean | null;
-    };
-    /** @description Version to indulge swift OpenAPI Generator. ATTENTION: camelCase may break the iOS app! I fucked up the last build */
-    LessonWithPhoto: {
-      assignee?: string | null;
-      assigneeName?: string | null;
-      /** Format: date-time */
-      createdAt: string;
-      id: string;
-      markdown: string;
-      photo?: null | components["schemas"]["Photo"];
-      title: string;
-      topic: string;
-      /** Format: date-time */
-      updatedAt: string;
-    };
-    MultipartUploadInit: {
-      fileId: string;
-      parts: components["schemas"]["PartUploadUrl"][];
-      s3Key: string;
-      uploadId: string;
-    };
-    NotificationBadges: {
-      /** Format: int64 */
-      dueCards?: number | null;
-      /** Format: int64 */
-      unseenDecks: number;
-      /** Format: int64 */
-      unseenLessons: number;
-      /** Format: int64 */
-      unseenTasks: number;
-    };
-    PaginatedDecks: {
-      /** Format: int64 */
-      count: number;
-      data: components["schemas"]["DeckSmall"][];
-      /** Format: int64 */
-      page: number;
-      /** Format: int64 */
-      perPage: number;
-      /** Format: int64 */
-      totalPages: number;
-    };
-    PaginatedLessons: {
-      /** Format: int64 */
-      count: number;
-      data: components["schemas"]["LessonSmall"][];
-      /** Format: int64 */
-      page: number;
-      /** Format: int64 */
-      perPage: number;
-      /** Format: int64 */
-      totalPages: number;
-    };
-    PaginatedTasks: {
-      /** Format: int64 */
-      count: number;
-      data: components["schemas"]["TaskSmall"][];
-      /** Format: int64 */
-      page: number;
-      /** Format: int64 */
-      perPage: number;
-      /** Format: int64 */
-      totalPages: number;
-    };
-    PartUploadUrl: {
-      /** Format: int32 */
-      partNumber: number;
-      url: string;
-    };
-    Photo: {
-      altDescription?: string | null;
-      id: string;
-      photographerName: string;
-      photographerUsername: string;
-      unsplashId: string;
-      urls: unknown;
-    };
-    PresignedFileUrl: {
-      fileId: string;
-      url: string;
-    };
-    PresignedUrlResponse: {
-      url: string;
-    };
-    /** @description The default profile struct */
-    Profile: {
-      avatarUrl?: string | null;
-      telegramId?: string | null;
-      userId: string;
-      videoCallUrl?: string | null;
-    };
-    /** @description The profile that gets decoded */
-    ProfileUpdate: {
-      avatarUrl?: string | null;
-      telegramId?: string | null;
-      videoCallUrl?: string | null;
-    };
-    RefreshTokenPayload: {
-      refreshToken: string;
-    };
-    RefreshTokenResponse: {
-      accessToken: components["schemas"]["TokenWithExpiry"];
-    };
-    ReviewPayload: {
-      /** Format: int32 */
-      quality: number;
-    };
-    SignUpPayload: {
-      /**
-       * Format: email
-       * @example john@example.com
-       */
-      email: string;
-      /** @example John Doe */
-      name: string;
-      /** @example MyPassword123 */
-      pass: string;
-      /** @example student */
-      role: string;
-      /** @example john_doe */
-      username: string;
-    };
-    /** @enum {string} */
-    SortField: "created_at" | "updated_at" | "title" | "due_date";
-    /** @enum {string} */
-    SortOrder: "asc" | "desc";
-    Student: {
-      email: string;
-      id: string;
-      markdown?: string | null;
-      name: string;
-      studentTelegramId?: string | null;
-      username: string;
-    };
-    TaskFull: {
-      assignee?: string | null;
-      assigneeName?: string | null;
-      completed: boolean;
-      /** Format: date-time */
-      createdAt: string;
-      createdBy: string;
-      /** Format: date-time */
-      dueDate?: string | null;
-      id: string;
-      markdown: string;
-      /** Format: int32 */
-      priority: number;
-      title: string;
-      /** Format: date-time */
-      updatedAt: string;
-      visibility: components["schemas"]["Visibility"];
-    };
-    TaskPublic: {
-      completed: boolean;
-      /** Format: date-time */
-      dueDate?: string | null;
-      id: string;
-      markdown: string;
-      title: string;
-    };
-    TaskPublicWithFiles: components["schemas"]["TaskPublic"] & {
-      files: components["schemas"]["FileSmall"][];
-    };
-    TaskSmall: {
-      assigneeName?: string | null;
-      completed: boolean;
-      /** Format: date-time */
-      dueDate?: string | null;
-      id: string;
-      /** Format: int32 */
-      priority: number;
-      seen?: boolean | null;
-      title: string;
-      visibility: components["schemas"]["Visibility"];
-    };
-    TaskUpdate: {
-      assignee?: string | null;
-      /** Format: date-time */
-      dueDate?: string | null;
-      markdown?: string | null;
-      title?: string | null;
-      unassign?: boolean | null;
-      visibility?: null | components["schemas"]["Visibility"];
-    };
-    TaskWithFilesResponse: {
-      files: components["schemas"]["FileSmall"][];
-      task: components["schemas"]["TaskFull"];
-    };
-    TokenPair: {
-      accessToken: components["schemas"]["TokenWithExpiry"];
-      refreshToken: components["schemas"]["TokenWithExpiry"];
-    };
-    TokenWithExpiry: {
-      /** Format: int64 */
-      expiresAt: number;
-      token: string;
-    };
-    URLs: {
-      full: string;
-      raw: string;
-      regular: string;
-      small: string;
-      thumb: string;
-    };
-    UnsplashUser: {
-      name: string;
-      username: string;
-    };
-    UpdateCardProgress: {
-      /** Format: date-time */
-      due_date: string;
-      /** Format: double */
-      ease_factor: number;
-      /** Format: int32 */
-      interval: number;
-      /** Format: date-time */
-      last_reviewed: string;
-      /** Format: int32 */
-      review_count: number;
-    };
-    UpdateContent: {
-      markdown?: string | null;
-      metaDescription?: string | null;
-      slug?: string | null;
-      title?: string | null;
-    };
-    UpdateStudentRequest: {
-      markdown?: string | null;
-      studentTelegramId?: string | null;
-    };
-    UpsertPhoto: {
-      altDescription?: string | null;
-      unsplashId: string;
-      urls: components["schemas"]["URLs"];
-      user: components["schemas"]["UnsplashUser"];
-    };
-    User: {
-      email: string;
-      id: string;
-      name: string;
-      role: components["schemas"]["UserRole"];
-      username: string;
-    };
-    UserPreferences: {
-      autoSubscribe: boolean;
-      emailNotifications: boolean;
-      language: string;
-      pushNotifications: boolean;
-      theme: string;
-    };
-    /** @enum {string} */
-    UserRole: "student" | "teacher" | "moderator" | "admin" | "god";
-    UserUpdate: {
-      email?: string | null;
-      name?: string | null;
-      pass?: string | null;
-      username?: string | null;
-    };
-    /** @enum {string} */
-    Visibility: "public" | "private" | "shared";
-  };
-  responses: never;
-  parameters: never;
-  requestBodies: never;
-  headers: never;
-  pathItems: never;
+    schemas: {
+        AbortMultipartRequest: {
+            fileId: string;
+            s3Key: string;
+            uploadId: string;
+        };
+        AppContext: {
+            callUrl?: string | null;
+            preferences: components["schemas"]["UserPreferences"];
+            profile: components["schemas"]["Profile"];
+            students: components["schemas"]["Student"][];
+            user: components["schemas"]["User"];
+        };
+        AuthPayload: {
+            /** @example MyPassword123 */
+            pass: string;
+            /** @example john_doe */
+            username: string;
+        };
+        BatchPresignedUrlResponse: {
+            urls: components["schemas"]["PresignedFileUrl"][];
+        };
+        BindPayload: {
+            inviteToken: string;
+            studentId: string;
+        };
+        CalendarFull: {
+            colour: string;
+            description?: string | null;
+            id: string;
+            name: string;
+        };
+        CalendarQuery: {
+            /** Format: date-time */
+            end: string;
+            role?: null | components["schemas"]["CalendarRole"];
+            /** Format: date-time */
+            start: string;
+        };
+        /** @enum {string} */
+        CalendarRole: "teacher" | "student";
+        CalendarUpdate: {
+            caldavUrl?: string | null;
+            colour?: string | null;
+            description?: string | null;
+            name?: string | null;
+            syncToken?: string | null;
+            timezone?: string | null;
+        };
+        Card: {
+            back: string;
+            front: string;
+            id: string;
+            mediaUrl?: string | null;
+        };
+        CardProgressWithFields: {
+            back: string;
+            front: string;
+            id: string;
+            mediaUrl?: string | null;
+        };
+        CardUpsert: {
+            back: string;
+            front: string;
+            id?: string | null;
+            mediaUrl?: string | null;
+        };
+        CompleteMultipartRequest: {
+            fileId: string;
+            parts: components["schemas"]["CompletedPart"][];
+            s3Key: string;
+            uploadId: string;
+        };
+        CompletedPart: {
+            etag: string;
+            /** Format: int32 */
+            partNumber: number;
+        };
+        Content: {
+            id: string;
+            markdown: string;
+            metaDescription?: string | null;
+            /** Format: date-time */
+            publishedAt?: string | null;
+            slug: string;
+            status: components["schemas"]["ContentStatus"];
+            title: string;
+            /** Format: date-time */
+            updatedAt: string;
+            updatedBy: string;
+            /** Format: int32 */
+            version: number;
+        };
+        ContentPublic: {
+            markdown: string;
+            metaDescription?: string | null;
+            title: string;
+        };
+        /** @enum {string} */
+        ContentStatus: "draft" | "published";
+        DashboardData: {
+            events: components["schemas"]["EventSmall"][];
+            lessons: components["schemas"]["LessonSmall"][];
+            tasks: components["schemas"]["TaskSmall"][];
+        };
+        DeckFull: {
+            assignee?: string | null;
+            /** Format: int32 */
+            cardCount: number;
+            /** Format: date-time */
+            createdAt: string;
+            createdBy: string;
+            description?: string | null;
+            id: string;
+            isSubscribed?: boolean | null;
+            title: string;
+            visibility: components["schemas"]["Visibility"];
+        };
+        DeckPublic: {
+            description?: string | null;
+            id: string;
+            title: string;
+        };
+        DeckSmall: {
+            assigneeName?: string | null;
+            /** Format: int32 */
+            cardCount: number;
+            description?: string | null;
+            id: string;
+            isSubscribed?: boolean | null;
+            seen?: boolean | null;
+            title: string;
+            visibility: components["schemas"]["Visibility"];
+        };
+        DeckUpdate: {
+            assignee?: string | null;
+            description?: string | null;
+            title?: string | null;
+            unassign?: boolean | null;
+            visibility?: null | components["schemas"]["Visibility"];
+        };
+        DeckWithCards: {
+            cards: components["schemas"]["Card"][];
+            deck: components["schemas"]["DeckFull"];
+        };
+        DeckWithCardsUpdate: {
+            cards: components["schemas"]["CardUpsert"][];
+            deck: components["schemas"]["DeckUpdate"];
+        };
+        /** @enum {string} */
+        DeleteScope: "this-only" | "this-and-future";
+        DeviceTokenPayload: {
+            platform: string;
+            token: string;
+        };
+        /** @enum {string} */
+        EditScope: "this-only" | "this-and-future";
+        EmailVerificationQuery: {
+            token: string;
+        };
+        EventAttendee: {
+            email: string;
+            id: string;
+            name?: string | null;
+            role: components["schemas"]["EventAttendeeRole"];
+            status: components["schemas"]["EventAttendeeStatus"];
+            userId: string;
+        };
+        /** @enum {string} */
+        EventAttendeeRole: "req-participant" | "chair" | "opt-participant" | "non-participant";
+        /** @enum {string} */
+        EventAttendeeStatus: "needs-action" | "accepted" | "declined" | "tentative" | "delegated";
+        EventAttendeeUpdate: {
+            email?: string | null;
+            name?: string | null;
+            role?: null | components["schemas"]["EventAttendeeRole"];
+            rsvp?: boolean | null;
+            status?: null | components["schemas"]["EventAttendeeStatus"];
+        };
+        EventCreate: {
+            attendee: string;
+            /** Format: date-time */
+            dtendTime?: string | null;
+            /** Format: date-time */
+            dtstartTime: string;
+        };
+        /** @description Internal Struct used to query the DB */
+        EventDB: {
+            /** Format: date-time */
+            dtendTime?: string | null;
+            /** Format: date-time */
+            dtstartTime: string;
+            exdate?: string[] | null;
+            id: string;
+            location?: string | null;
+            rdate?: string[] | null;
+            /** Format: date-time */
+            recurrenceId?: string | null;
+            rrule?: string | null;
+            status: components["schemas"]["EventStatus"];
+            title: string;
+            uid: string;
+        };
+        EventDBFull: {
+            categories?: string[] | null;
+            description?: string | null;
+            /** Format: date-time */
+            dtendTime?: string | null;
+            dtendTz?: string | null;
+            /** Format: date-time */
+            dtstartTime: string;
+            dtstartTz?: string | null;
+            id: string;
+            location?: string | null;
+            rrule?: string | null;
+            status: components["schemas"]["EventStatus"];
+            title: string;
+            uid: string;
+        };
+        EventFull: components["schemas"]["EventDBFull"] & {
+            isException: boolean;
+            isRecurring: boolean;
+        };
+        EventSmall: components["schemas"]["EventDB"] & {
+            isException: boolean;
+            isRecurring: boolean;
+        };
+        /** @enum {string} */
+        EventStatus: "tentative" | "confirmed" | "cancelled";
+        EventUpdate: {
+            attendee?: string | null;
+            description?: string | null;
+            /** Format: date-time */
+            dtendTime?: string | null;
+            dtendTz?: string | null;
+            /** Format: date-time */
+            dtstartTime?: string | null;
+            dtstartTz?: string | null;
+            location?: string | null;
+            rrule?: string | null;
+        };
+        EventWithAttendees: components["schemas"]["EventFull"] & {
+            attendees: components["schemas"]["EventAttendee"][];
+        };
+        FileSmall: {
+            id: string;
+            mimeType?: string | null;
+            name: string;
+            ownerId: string;
+            s3Key?: string | null;
+            /** Format: int64 */
+            size: number;
+        };
+        InitUploadRequest: {
+            contentType: string;
+            fileName: string;
+            /** Format: int64 */
+            fileSize: number;
+            parentId?: string | null;
+            taskId?: string | null;
+            /** Format: int32 */
+            totalParts: number;
+        };
+        InviteQuery: {
+            isRegistered: string;
+        };
+        InviteToken: {
+            /** Format: date-time */
+            created_at: string;
+            teacher_id: string;
+        };
+        InviterQuery: {
+            invite: string;
+        };
+        /** @description Grown-up lesson */
+        LessonFull: {
+            assignee?: string | null;
+            assigneeName?: string | null;
+            /** Format: date-time */
+            createdAt: string;
+            id: string;
+            markdown: string;
+            title: string;
+            topic: string;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        /** @description Mini-lesson */
+        LessonSmall: {
+            assigneeName?: string | null;
+            /** Format: date-time */
+            createdAt: string;
+            id: string;
+            seen?: boolean | null;
+            title: string;
+            topic: string;
+        };
+        LessonUpdate: {
+            assignee?: string | null;
+            createdBy?: string | null;
+            id?: string | null;
+            markdown?: string | null;
+            mediaUrl?: string | null;
+            title?: string | null;
+            topic?: string | null;
+            unassign?: boolean | null;
+        };
+        /** @description Version to indulge swift OpenAPI Generator. ATTENTION: camelCase may break the iOS app! I fucked up the last build */
+        LessonWithPhoto: {
+            assignee?: string | null;
+            assigneeName?: string | null;
+            /** Format: date-time */
+            createdAt: string;
+            id: string;
+            markdown: string;
+            photo?: null | components["schemas"]["Photo"];
+            title: string;
+            topic: string;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        MultipartUploadInit: {
+            fileId: string;
+            parts: components["schemas"]["PartUploadUrl"][];
+            s3Key: string;
+            uploadId: string;
+        };
+        NotificationBadges: {
+            /** Format: int64 */
+            dueCards?: number | null;
+            /** Format: int64 */
+            unseenDecks: number;
+            /** Format: int64 */
+            unseenLessons: number;
+            /** Format: int64 */
+            unseenTasks: number;
+        };
+        PaginatedDecks: {
+            /** Format: int64 */
+            count: number;
+            data: components["schemas"]["DeckSmall"][];
+            /** Format: int64 */
+            page: number;
+            /** Format: int64 */
+            perPage: number;
+            /** Format: int64 */
+            totalPages: number;
+        };
+        PaginatedLessons: {
+            /** Format: int64 */
+            count: number;
+            data: components["schemas"]["LessonSmall"][];
+            /** Format: int64 */
+            page: number;
+            /** Format: int64 */
+            perPage: number;
+            /** Format: int64 */
+            totalPages: number;
+        };
+        PaginatedTasks: {
+            /** Format: int64 */
+            count: number;
+            data: components["schemas"]["TaskSmall"][];
+            /** Format: int64 */
+            page: number;
+            /** Format: int64 */
+            perPage: number;
+            /** Format: int64 */
+            totalPages: number;
+        };
+        PartUploadUrl: {
+            /** Format: int32 */
+            partNumber: number;
+            url: string;
+        };
+        Photo: {
+            altDescription?: string | null;
+            id: string;
+            photographerName: string;
+            photographerUsername: string;
+            unsplashId: string;
+            urls: unknown;
+        };
+        PresignedFileUrl: {
+            fileId: string;
+            url: string;
+        };
+        PresignedUrlResponse: {
+            url: string;
+        };
+        /** @description The default profile struct */
+        Profile: {
+            avatarUrl?: string | null;
+            telegramId?: string | null;
+            userId: string;
+            videoCallUrl?: string | null;
+        };
+        /** @description The profile that gets decoded */
+        ProfileUpdate: {
+            avatarUrl?: string | null;
+            telegramId?: string | null;
+            videoCallUrl?: string | null;
+        };
+        RefreshTokenPayload: {
+            refreshToken: string;
+        };
+        RefreshTokenResponse: {
+            accessToken: components["schemas"]["TokenWithExpiry"];
+        };
+        ReviewPayload: {
+            /** Format: int32 */
+            quality: number;
+        };
+        SignUpPayload: {
+            /**
+             * Format: email
+             * @example john@example.com
+             */
+            email: string;
+            /** @example John Doe */
+            name: string;
+            /** @example MyPassword123 */
+            pass: string;
+            /** @example student */
+            role: string;
+            /** @example john_doe */
+            username: string;
+        };
+        /** @enum {string} */
+        SortField: "created_at" | "updated_at" | "title" | "due_date";
+        /** @enum {string} */
+        SortOrder: "asc" | "desc";
+        Student: {
+            email: string;
+            id: string;
+            markdown?: string | null;
+            name: string;
+            studentTelegramId?: string | null;
+            username: string;
+        };
+        TaskFull: {
+            assignee?: string | null;
+            assigneeName?: string | null;
+            completed: boolean;
+            /** Format: date-time */
+            createdAt: string;
+            createdBy: string;
+            /** Format: date-time */
+            dueDate?: string | null;
+            id: string;
+            markdown: string;
+            /** Format: int32 */
+            priority: number;
+            title: string;
+            /** Format: date-time */
+            updatedAt: string;
+            visibility: components["schemas"]["Visibility"];
+        };
+        TaskPublic: {
+            completed: boolean;
+            /** Format: date-time */
+            dueDate?: string | null;
+            id: string;
+            markdown: string;
+            title: string;
+        };
+        TaskPublicWithFiles: components["schemas"]["TaskPublic"] & {
+            files: components["schemas"]["FileSmall"][];
+        };
+        TaskSmall: {
+            assigneeName?: string | null;
+            completed: boolean;
+            /** Format: date-time */
+            dueDate?: string | null;
+            id: string;
+            /** Format: int32 */
+            priority: number;
+            seen?: boolean | null;
+            title: string;
+            visibility: components["schemas"]["Visibility"];
+        };
+        TaskUpdate: {
+            assignee?: string | null;
+            /** Format: date-time */
+            dueDate?: string | null;
+            markdown?: string | null;
+            title?: string | null;
+            unassign?: boolean | null;
+            visibility?: null | components["schemas"]["Visibility"];
+        };
+        TaskWithFilesResponse: {
+            files: components["schemas"]["FileSmall"][];
+            task: components["schemas"]["TaskFull"];
+        };
+        TokenPair: {
+            accessToken: components["schemas"]["TokenWithExpiry"];
+            refreshToken: components["schemas"]["TokenWithExpiry"];
+        };
+        TokenWithExpiry: {
+            /** Format: int64 */
+            expiresAt: number;
+            token: string;
+        };
+        URLs: {
+            full: string;
+            raw: string;
+            regular: string;
+            small: string;
+            thumb: string;
+        };
+        UnsplashUser: {
+            name: string;
+            username: string;
+        };
+        UpdateCardProgress: {
+            /** Format: date-time */
+            due_date: string;
+            /** Format: double */
+            ease_factor: number;
+            /** Format: int32 */
+            interval: number;
+            /** Format: date-time */
+            last_reviewed: string;
+            /** Format: int32 */
+            review_count: number;
+        };
+        UpdateContent: {
+            markdown?: string | null;
+            metaDescription?: string | null;
+            slug?: string | null;
+            title?: string | null;
+        };
+        UpdateStudentRequest: {
+            markdown?: string | null;
+            studentTelegramId?: string | null;
+        };
+        UpsertPhoto: {
+            altDescription?: string | null;
+            unsplashId: string;
+            urls: components["schemas"]["URLs"];
+            user: components["schemas"]["UnsplashUser"];
+        };
+        User: {
+            email: string;
+            id: string;
+            name: string;
+            role: components["schemas"]["UserRole"];
+            username: string;
+            verified: boolean;
+        };
+        UserPreferences: {
+            autoSubscribe: boolean;
+            emailNotifications: boolean;
+            language: string;
+            pushNotifications: boolean;
+            theme: string;
+        };
+        /** @enum {string} */
+        UserRole: "student" | "teacher" | "moderator" | "admin" | "god";
+        UserUpdate: {
+            email?: string | null;
+            name?: string | null;
+            pass?: string | null;
+            username?: string | null;
+        };
+        /** @enum {string} */
+        Visibility: "public" | "private" | "shared";
+    };
+    responses: never;
+    parameters: never;
+    requestBodies: never;
+    headers: never;
+    pathItems: never;
 }
 export type $defs = Record<string, never>;
 export interface operations {
-  list_content: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Content retrieved successfully */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["Content"][];
-        };
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Forbidden */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  create_content: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Content created successfully */
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "text/plain": string;
-        };
-      };
-      /** @description Bad request */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Forbidden */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  fetch_content: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        /** @description Content ID */
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Content retrieved successfully */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["Content"];
-        };
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Forbidden */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Content not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  delete_content: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        /** @description Content ID */
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Content deleted successfully */
-      204: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Forbidden */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Content not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  update_content: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        /** @description content ID */
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["UpdateContent"];
-      };
-    };
-    responses: {
-      /** @description content updated successfully */
-      204: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Forbidden */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description content not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  publish_content: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        /** @description content ID */
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description content published successfully */
-      204: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Forbidden */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description content not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  unpublish_content: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        /** @description content ID */
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description content published successfully */
-      204: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Forbidden */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description content not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  bind_student_to_teacher: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["BindPayload"];
-      };
-    };
-    responses: {
-      /** @description Student bound to teacher successfully */
-      204: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Invalid bind data */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Invalid invite token */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  generate_invite_link: {
-    parameters: {
-      query: {
-        /** @description Invite token */
-        isRegistered: components["schemas"]["InviteQuery"];
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Invite link generated */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "text/plain": string;
-        };
-      };
-      /** @description Invalid invite token */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  refresh: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["RefreshTokenPayload"];
-      };
-    };
-    responses: {
-      /** @description Token refreshed */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["RefreshTokenResponse"];
-        };
-      };
-      /** @description Invalid refresh token */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  signin: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["AuthPayload"];
-      };
-    };
-    responses: {
-      /** @description Authentication successful */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["TokenPair"];
-        };
-      };
-      /** @description Invalid credentials */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  signup: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["SignUpPayload"];
-      };
-    };
-    responses: {
-      /** @description User registered successfully */
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Invalid registration data */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Forbidden */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description User already exists */
-      409: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  fetch_calendar: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Calendar retrieved successfully */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["CalendarFull"];
-        };
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Calendar not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  delete_attendee: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        /** @description Attendee ID */
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Attendee deleted successfully */
-      204: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Attendee not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  update_attendee: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        /** @description Attendee ID */
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["EventAttendeeUpdate"];
-      };
-    };
-    responses: {
-      /** @description Attendee updated successfully */
-      204: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Attendee not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  list_events: {
-    parameters: {
-      query: {
-        start: string;
-        end: string;
-        role?: components["schemas"]["CalendarRole"];
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Events retrieved successfully */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["EventSmall"][];
-        };
-      };
-      /** @description Invalid year or month */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Calendar not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  create_event: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["EventCreate"];
-      };
-    };
-    responses: {
-      /** @description Event created successfully */
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "text/plain": string;
-        };
-      };
-      /** @description Bad request */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  fetch_event: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        /** @description Event UID */
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Event retrieved successfully */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["EventWithAttendees"];
-        };
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Event not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  delete_event: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        /** @description Event UID */
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Event deleted successfully */
-      204: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Event not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  update_event: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        /** @description Event UID */
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["EventUpdate"];
-      };
-    };
-    responses: {
-      /** @description Event updated successfully */
-      204: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Event not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  delete_calendar: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        /** @description Calendar ID */
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Calendar deleted successfully */
-      204: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Calendar not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  update_calendar: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        /** @description Calendar ID */
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["CalendarUpdate"];
-      };
-    };
-    responses: {
-      /** @description Calendar updated successfully */
-      204: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Calendar not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  list_decks: {
-    parameters: {
-      query?: {
-        /** @description Page number */
-        page?: number;
-        /** @description Items per page */
-        per_page?: number;
-        /** @description Search term */
-        search?: string;
-        /** @description Filter by assignee */
-        assignee?: string;
-        visibility?: components["schemas"]["Visibility"];
-        sort_by?: components["schemas"]["SortField"];
-        sort_order?: components["schemas"]["SortOrder"];
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description User decks retrieved */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["PaginatedDecks"];
-        };
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  create_deck: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Deck created successfully */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "text/plain": string;
-        };
-      };
-      /** @description Bad request */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  delete_deck_many: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": string[];
-      };
-    };
-    responses: {
-      /** @description decks deleted successfully */
-      204: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  list_decks_public: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Public decks retrieved */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["DeckPublic"][];
-        };
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  fetch_deck: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        /** @description Deck ID */
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Deck retrieved */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["DeckWithCards"];
-        };
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Deck not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  delete_deck: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        /** @description Deck ID */
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Deck deleted successfully */
-      204: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Deck not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  update_deck: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        /** @description Deck ID */
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["DeckWithCardsUpdate"];
-      };
-    };
-    responses: {
-      /** @description Deck updated successfully */
-      204: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Deck not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  duplicate_deck: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        /** @description Deck ID */
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Deck duplicated successfully */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "text/plain": string;
-        };
-      };
-      /** @description Bad request */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  abort_multipart_upload: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["AbortMultipartRequest"];
-      };
-    };
-    responses: {
-      /** @description Upload aborted successfully */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Bad request */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description File not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  complete_multipart_upload: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["CompleteMultipartRequest"];
-      };
-    };
-    responses: {
-      /** @description Upload completed successfully */
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Bad request */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description File not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  init_multipart_upload: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["InitUploadRequest"];
-      };
-    };
-    responses: {
-      /** @description Multipart upload initialized */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["MultipartUploadInit"];
-        };
-      };
-      /** @description Bad request */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Parent folder not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  get_pdf: {
-    parameters: {
-      query: {
-        /** @description Resource type */
-        pdfType: string;
-      };
-      header?: never;
-      path: {
-        /** @description Resource ID */
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Requested PDF generated */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Resource not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  fetch_presigned_urls_batch: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        /** @description The DB id of the task the files belong to */
-        task_id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Presigned URLs generated successfully */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["BatchPresignedUrlResponse"];
-        };
-      };
-      /** @description Bad request */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  fetch_presigned_url: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        /** @description Base64 encoded file key */
-        encoded_key: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Presigned URL generated successfully */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["PresignedUrlResponse"];
-        };
-      };
-      /** @description Bad request - Invalid encoding or key */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description File not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  delete_file: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        /** @description File ID */
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description File deleted successfully */
-      204: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description File not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  fetch_due_cards: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Due cards fetched successfully */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["CardProgressWithFields"][];
-        };
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  subscribe_to_deck: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        /** @description Deck ID */
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Deck subscribed to successfully */
-      204: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Deck not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  unsubscribe_from_deck: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        /** @description Deck ID */
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Deck subscribed to successfully */
-      204: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Deck not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  update_card_progress: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        /** @description Card ID */
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["ReviewPayload"];
-      };
-    };
-    responses: {
-      /** @description Card progress updated successfully */
-      204: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  reset_deck_progress: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        /** @description Deck ID */
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Card progress updated successfully */
-      204: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["CardProgressWithFields"][];
-        };
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  list_lessons: {
-    parameters: {
-      query?: {
-        /** @description Page number */
-        page?: number;
-        /** @description Items per page */
-        per_page?: number;
-        /** @description Search term */
-        search?: string;
-        /** @description Filter by assignee */
-        assignee?: string;
-        topic?: string;
-        sort_by?: components["schemas"]["SortField"];
-        sort_order?: components["schemas"]["SortOrder"];
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Lessons retrieved successfully */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["PaginatedLessons"];
-        };
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  create_lesson: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Lesson created successfully */
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "text/plain": string;
-        };
-      };
-      /** @description Bad request */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  delete_lesson_many: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": string[];
-      };
-    };
-    responses: {
-      /** @description Lessons deleted successfully */
-      204: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  fetch_lesson: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        /** @description Lesson ID */
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Lesson retrieved successfully */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["LessonWithPhoto"];
-        };
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Lesson not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  delete_lesson: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        /** @description Lesson ID */
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Lesson deleted successfully */
-      204: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Lesson not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  update_lesson: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        /** @description Lesson ID */
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["LessonUpdate"];
-      };
-    };
-    responses: {
-      /** @description Lesson updated successfully */
-      204: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Lesson not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  upsert_photo: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        /** @description Lesson ID */
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["UpsertPhoto"];
-      };
-    };
-    responses: {
-      /** @description Lesson updated successfully */
-      204: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Lesson not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  register_device_token: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["DeviceTokenPayload"];
-      };
-    };
-    responses: {
-      /** @description Device Token Registered Successfully */
-      204: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  request_hw: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Homework requested */
-      204: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  fetch_task_public: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        /** @description Task ID */
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Task with files retrieved */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["TaskPublicWithFiles"];
-        };
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Task not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  fetch_content_public: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        /** @description Content Slug */
-        slug: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Content retrieved successfully */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["ContentPublic"];
-        };
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Content not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  fetch_badges: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Badge data retrieved */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["NotificationBadges"];
-        };
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  fetch_context: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Context data retrieved */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["AppContext"];
-        };
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  fetch_dashboard: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Dashboard data retrieved */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["DashboardData"];
-        };
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  list_tasks: {
-    parameters: {
-      query?: {
-        /** @description Page number */
-        page?: number;
-        /** @description Items per page */
-        per_page?: number;
-        /** @description Search term */
-        search?: string;
-        /** @description Filter by assignee */
-        assignee?: string;
-        /** @description Filter by completion status */
-        completed?: boolean;
-        sort_by?: components["schemas"]["SortField"];
-        sort_order?: components["schemas"]["SortOrder"];
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Tasks retrieved successfully */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["PaginatedTasks"];
-        };
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  create_task: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Task created successfully */
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "text/plain": string;
-        };
-      };
-      /** @description Bad request */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  delete_task_many: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": string[];
-      };
-    };
-    responses: {
-      /** @description tasks deleted successfully */
-      204: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  fetch_task: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        /** @description Task ID */
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Task with files retrieved */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["TaskWithFilesResponse"];
-        };
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Task not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  toggle_task: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        /** @description Task ID */
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Task with files retrieved */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["TaskWithFilesResponse"];
-        };
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Task not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  delete_task: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        /** @description Task ID */
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Task deleted successfully */
-      204: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Task not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  update_task: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        /** @description Task ID */
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["TaskUpdate"];
-      };
-    };
-    responses: {
-      /** @description Task updated successfully */
-      204: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Task not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  fetch_me: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description User details retrieved */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["User"];
-        };
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  delete_user: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description User deleted successfully */
-      204: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  update_user: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["UserUpdate"];
-      };
-    };
-    responses: {
-      /** @description User updated successfully */
-      204: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Bad request */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  fetch_inviter: {
-    parameters: {
-      query?: {
-        /** @description Invite token */
-        invite?: string;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Inviter details retrieved */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["User"];
-        };
-      };
-      /** @description Invalid invite token */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  fetch_profile: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Profile details retrieved */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["Profile"];
-        };
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  upsert_profile: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["ProfileUpdate"];
-      };
-    };
-    responses: {
-      /** @description Profile updated successfully */
-      204: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Bad request */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  list_students: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Students list retrieved */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["Student"][];
-        };
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  fetch_student: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        /** @description Student ID */
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Student details retrieved */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["Student"];
-        };
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Student not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  upsert_student: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        /** @description Student ID */
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Student relationship created */
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  remove_student: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        /** @description Student ID */
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Student relationship removed */
-      204: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Student not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  update_student: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        /** @description Student ID */
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["UpdateStudentRequest"];
-      };
-    };
-    responses: {
-      /** @description Student updated successfully */
-      204: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Student not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
+    list_content: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Content retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Content"][];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    create_content: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Content created successfully */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/plain": string;
+                };
+            };
+            /** @description Bad request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    fetch_content: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Content ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Content retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Content"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Content not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    delete_content: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Content ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Content deleted successfully */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Content not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    update_content: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description content ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateContent"];
+            };
+        };
+        responses: {
+            /** @description content updated successfully */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description content not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    publish_content: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description content ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description content published successfully */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description content not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    unpublish_content: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description content ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description content published successfully */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description content not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    bind_student_to_teacher: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BindPayload"];
+            };
+        };
+        responses: {
+            /** @description Student bound to teacher successfully */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invalid bind data */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invalid invite token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    confirm_email: {
+        parameters: {
+            query: {
+                /** @description The confirmation token */
+                token: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Confirmation Successful */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invalid token */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    generate_invite_link: {
+        parameters: {
+            query: {
+                /** @description Invite token */
+                isRegistered: components["schemas"]["InviteQuery"];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Invite link generated */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/plain": string;
+                };
+            };
+            /** @description Invalid invite token */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    refresh: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RefreshTokenPayload"];
+            };
+        };
+        responses: {
+            /** @description Token refreshed */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RefreshTokenResponse"];
+                };
+            };
+            /** @description Invalid refresh token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    resend_verification: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Confirmation link resent */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invalid token */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    signin: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AuthPayload"];
+            };
+        };
+        responses: {
+            /** @description Authentication successful */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TokenPair"];
+                };
+            };
+            /** @description Invalid credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    signup: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SignUpPayload"];
+            };
+        };
+        responses: {
+            /** @description User registered successfully */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invalid registration data */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description User already exists */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    fetch_calendar: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Calendar retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CalendarFull"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Calendar not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    delete_attendee: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Attendee ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Attendee deleted successfully */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Attendee not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    update_attendee: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Attendee ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EventAttendeeUpdate"];
+            };
+        };
+        responses: {
+            /** @description Attendee updated successfully */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Attendee not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    list_events: {
+        parameters: {
+            query: {
+                start: string;
+                end: string;
+                role?: components["schemas"]["CalendarRole"];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Events retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EventSmall"][];
+                };
+            };
+            /** @description Invalid year or month */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Calendar not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    create_event: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EventCreate"];
+            };
+        };
+        responses: {
+            /** @description Event created successfully */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/plain": string;
+                };
+            };
+            /** @description Bad request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    fetch_event: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Event UID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Event retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EventWithAttendees"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Event not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    delete_event: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Event UID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Event deleted successfully */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Event not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    update_event: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Event UID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EventUpdate"];
+            };
+        };
+        responses: {
+            /** @description Event updated successfully */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Event not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    delete_calendar: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Calendar ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Calendar deleted successfully */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Calendar not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    update_calendar: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Calendar ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CalendarUpdate"];
+            };
+        };
+        responses: {
+            /** @description Calendar updated successfully */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Calendar not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    list_decks: {
+        parameters: {
+            query?: {
+                /** @description Page number */
+                page?: number;
+                /** @description Items per page */
+                per_page?: number;
+                /** @description Search term */
+                search?: string;
+                /** @description Filter by assignee */
+                assignee?: string;
+                visibility?: components["schemas"]["Visibility"];
+                sort_by?: components["schemas"]["SortField"];
+                sort_order?: components["schemas"]["SortOrder"];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description User decks retrieved */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginatedDecks"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    create_deck: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Deck created successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/plain": string;
+                };
+            };
+            /** @description Bad request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    delete_deck_many: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": string[];
+            };
+        };
+        responses: {
+            /** @description decks deleted successfully */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    list_decks_public: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Public decks retrieved */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DeckPublic"][];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    fetch_deck: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Deck ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Deck retrieved */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DeckWithCards"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Deck not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    delete_deck: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Deck ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Deck deleted successfully */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Deck not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    update_deck: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Deck ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DeckWithCardsUpdate"];
+            };
+        };
+        responses: {
+            /** @description Deck updated successfully */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Deck not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    duplicate_deck: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Deck ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Deck duplicated successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/plain": string;
+                };
+            };
+            /** @description Bad request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    abort_multipart_upload: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AbortMultipartRequest"];
+            };
+        };
+        responses: {
+            /** @description Upload aborted successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Bad request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description File not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    complete_multipart_upload: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CompleteMultipartRequest"];
+            };
+        };
+        responses: {
+            /** @description Upload completed successfully */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Bad request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description File not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    init_multipart_upload: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["InitUploadRequest"];
+            };
+        };
+        responses: {
+            /** @description Multipart upload initialized */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MultipartUploadInit"];
+                };
+            };
+            /** @description Bad request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Parent folder not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    get_pdf: {
+        parameters: {
+            query: {
+                /** @description Resource type */
+                pdfType: string;
+            };
+            header?: never;
+            path: {
+                /** @description Resource ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Requested PDF generated */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Resource not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    fetch_presigned_urls_batch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The DB id of the task the files belong to */
+                task_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Presigned URLs generated successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BatchPresignedUrlResponse"];
+                };
+            };
+            /** @description Bad request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    fetch_presigned_url: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Base64 encoded file key */
+                encoded_key: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Presigned URL generated successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PresignedUrlResponse"];
+                };
+            };
+            /** @description Bad request - Invalid encoding or key */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description File not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    delete_file: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description File ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description File deleted successfully */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description File not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    fetch_due_cards: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Due cards fetched successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CardProgressWithFields"][];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    subscribe_to_deck: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Deck ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Deck subscribed to successfully */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Deck not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    unsubscribe_from_deck: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Deck ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Deck subscribed to successfully */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Deck not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    update_card_progress: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Card ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReviewPayload"];
+            };
+        };
+        responses: {
+            /** @description Card progress updated successfully */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    reset_deck_progress: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Deck ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Card progress updated successfully */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CardProgressWithFields"][];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    list_lessons: {
+        parameters: {
+            query?: {
+                /** @description Page number */
+                page?: number;
+                /** @description Items per page */
+                per_page?: number;
+                /** @description Search term */
+                search?: string;
+                /** @description Filter by assignee */
+                assignee?: string;
+                topic?: string;
+                sort_by?: components["schemas"]["SortField"];
+                sort_order?: components["schemas"]["SortOrder"];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Lessons retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginatedLessons"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    create_lesson: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Lesson created successfully */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/plain": string;
+                };
+            };
+            /** @description Bad request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    delete_lesson_many: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": string[];
+            };
+        };
+        responses: {
+            /** @description Lessons deleted successfully */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    fetch_lesson: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Lesson ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Lesson retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LessonWithPhoto"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Lesson not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    delete_lesson: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Lesson ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Lesson deleted successfully */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Lesson not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    update_lesson: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Lesson ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LessonUpdate"];
+            };
+        };
+        responses: {
+            /** @description Lesson updated successfully */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Lesson not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    upsert_photo: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Lesson ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpsertPhoto"];
+            };
+        };
+        responses: {
+            /** @description Lesson updated successfully */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Lesson not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    register_device_token: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DeviceTokenPayload"];
+            };
+        };
+        responses: {
+            /** @description Device Token Registered Successfully */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    request_hw: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Homework requested */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    fetch_task_public: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Task ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Task with files retrieved */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TaskPublicWithFiles"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Task not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    fetch_content_public: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Content Slug */
+                slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Content retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ContentPublic"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Content not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    fetch_badges: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Badge data retrieved */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NotificationBadges"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    fetch_context: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Context data retrieved */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AppContext"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    fetch_dashboard: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Dashboard data retrieved */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DashboardData"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    list_tasks: {
+        parameters: {
+            query?: {
+                /** @description Page number */
+                page?: number;
+                /** @description Items per page */
+                per_page?: number;
+                /** @description Search term */
+                search?: string;
+                /** @description Filter by assignee */
+                assignee?: string;
+                /** @description Filter by completion status */
+                completed?: boolean;
+                sort_by?: components["schemas"]["SortField"];
+                sort_order?: components["schemas"]["SortOrder"];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Tasks retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginatedTasks"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    create_task: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Task created successfully */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/plain": string;
+                };
+            };
+            /** @description Bad request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    delete_task_many: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": string[];
+            };
+        };
+        responses: {
+            /** @description tasks deleted successfully */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    fetch_task: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Task ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Task with files retrieved */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TaskWithFilesResponse"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Task not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    toggle_task: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Task ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Task with files retrieved */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TaskWithFilesResponse"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Task not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    delete_task: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Task ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Task deleted successfully */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Task not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    update_task: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Task ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TaskUpdate"];
+            };
+        };
+        responses: {
+            /** @description Task updated successfully */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Task not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    fetch_me: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description User details retrieved */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["User"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    delete_user: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description User deleted successfully */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    update_user: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UserUpdate"];
+            };
+        };
+        responses: {
+            /** @description User updated successfully */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Bad request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    fetch_inviter: {
+        parameters: {
+            query?: {
+                /** @description Invite token */
+                invite?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Inviter details retrieved */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["User"];
+                };
+            };
+            /** @description Invalid invite token */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    fetch_profile: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Profile details retrieved */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Profile"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    upsert_profile: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ProfileUpdate"];
+            };
+        };
+        responses: {
+            /** @description Profile updated successfully */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Bad request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    list_students: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Students list retrieved */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Student"][];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    fetch_student: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Student ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Student details retrieved */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Student"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Student not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    upsert_student: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Student ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Student relationship created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    remove_student: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Student ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Student relationship removed */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Student not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    update_student: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Student ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateStudentRequest"];
+            };
+        };
+        responses: {
+            /** @description Student updated successfully */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Student not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
 }

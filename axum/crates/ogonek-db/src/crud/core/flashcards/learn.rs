@@ -165,7 +165,7 @@ mod tests {
         due_date: Option<DateTime<Utc>>,
     ) -> String {
         let progress_id = nanoid::nanoid!();
-        let due_date = due_date.unwrap_or_else(|| Utc::now());
+        let due_date = due_date.unwrap_or(Utc::now());
 
         sqlx::query!(
             r#"

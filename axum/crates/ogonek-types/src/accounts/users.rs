@@ -23,10 +23,16 @@ pub struct User {
     pub name: String,
     pub username: String,
     pub email: String,
-    #[serde(skip_serializing)]
-    pub pass: String,
     pub role: UserRole,
+    pub verified: bool,
 }
+
+pub struct UserForClaims {
+    pub id: String,
+    pub role: UserRole,
+    pub pass: String,
+}
+
 #[derive(sqlx::Type, Clone, Debug, PartialEq, Serialize, Deserialize, ToSchema)]
 #[sqlx(rename_all = "snake_case")]
 #[serde(rename_all = "lowercase")]

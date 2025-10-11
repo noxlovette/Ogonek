@@ -1,4 +1,7 @@
-use crate::{AppState, api::account};
+use crate::{
+    AppState,
+    api::account::{self, resend_verification},
+};
 use axum::{Router, routing::post};
 
 pub fn auth_routes() -> Router<AppState> {
@@ -8,4 +11,6 @@ pub fn auth_routes() -> Router<AppState> {
         .route("/refresh", post(account::refresh))
         .route("/invite", post(account::generate_invite_link))
         .route("/bind", post(account::bind_student_to_teacher))
+        .route("/confirm_email", post(account::confirm_email))
+        .route("/resend_email", post(resend_verification))
 }

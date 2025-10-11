@@ -11,6 +11,7 @@ pub fn user_routes() -> Router<AppState> {
         .route("/dashboard", get(state::fetch_dashboard))
         .nest("/student", student_routes())
         .nest("/profile", profile_routes())
+        .nest("/preferences", preferences_routes())
 }
 
 fn student_routes() -> Router<AppState> {
@@ -27,7 +28,7 @@ fn profile_routes() -> Router<AppState> {
     Router::new().route("/", get(fetch_profile).patch(upsert_profile))
 }
 
-pub fn preferences_routes() -> Router<AppState> {
+fn preferences_routes() -> Router<AppState> {
     Router::new().route(
         "/",
         get(preferences::fetch_preferences).patch(preferences::update_preferences),

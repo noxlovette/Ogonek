@@ -16,7 +16,9 @@ use ogonek_db::{
 };
 use ogonek_types::{ActionType, ModelType};
 
-/// Deletes a task
+/// Deletes a single task and associated files
+///
+/// Removes the task, associated files from database and S3, and handles cleanup of tracking data.
 #[utoipa::path(
     delete,
     path = "/{id}",
@@ -67,7 +69,9 @@ pub async fn delete_task(
     Ok(StatusCode::NO_CONTENT)
 }
 
-/// Deletes many tasks
+/// Deletes multiple tasks in bulk
+///
+/// Removes multiple tasks specified by their IDs for the authenticated user.
 #[utoipa::path(
     delete,
     path = "/many",

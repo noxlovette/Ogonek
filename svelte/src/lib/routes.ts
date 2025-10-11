@@ -9,34 +9,34 @@ export const routes = {
   admin: {
     content: () => `${API_BASE}/admin/content`,
     new_content: () => `${API_BASE}/admin/content`,
-    delete_content: (params: { id: string }) =>
-      `${API_BASE}/admin/content/${params.id}`,
-    update_content: (params: { id: string }) =>
-      `${API_BASE}/admin/content/${params.id}`,
-    publish_content: (params: { id: string }) =>
-      `${API_BASE}/admin/content/${params.id}/publish`,
-    unpublish_content: (params: { id: string }) =>
-      `${API_BASE}/admin/content/${params.id}/publish`,
+    delete_content: (params: { id: string }) => `${API_BASE}/admin/content/${params.id}`,
+    update_content: (params: { id: string }) => `${API_BASE}/admin/content/${params.id}`,
+    publish_content: (params: { id: string }) => `${API_BASE}/admin/content/${params.id}/publish`,
+    unpublish_content: (params: { id: string }) => `${API_BASE}/admin/content/${params.id}/publish`,
   },
   auth: {
     bind_student_to_teacher: () => `${API_BASE}/auth/bind`,
+    confirm_email: (params: { token: string }) => {
+      const urlParams = new URLSearchParams();
+      if (params.token) urlParams.set("token", params.token);
+      const query = urlParams.toString();
+      return `${API_BASE}/auth/confirm_email${query ? `?${query}` : ""}`;
+    },
     generate_invite_link: (params: { isRegistered: string }) => {
       const urlParams = new URLSearchParams();
-      if (params.isRegistered)
-        urlParams.set("isRegistered", params.isRegistered);
+      if (params.isRegistered) urlParams.set("isRegistered", params.isRegistered);
       const query = urlParams.toString();
       return `${API_BASE}/auth/invite${query ? `?${query}` : ""}`;
     },
     refresh: () => `${API_BASE}/auth/refresh`,
+    resend_verification: () => `${API_BASE}/auth/resend_email`,
     signin: () => `${API_BASE}/auth/signin`,
     signup: () => `${API_BASE}/auth/signup`,
   },
   calendars: {
     calendar: () => `${API_BASE}/calendars`,
-    delete_attendee: (params: { id: string }) =>
-      `${API_BASE}/calendars/attendees/${params.id}`,
-    update_attendee: (params: { id: string }) =>
-      `${API_BASE}/calendars/attendees/${params.id}`,
+    delete_attendee: (params: { id: string }) => `${API_BASE}/calendars/attendees/${params.id}`,
+    update_attendee: (params: { id: string }) => `${API_BASE}/calendars/attendees/${params.id}`,
     events: (params: { start: string; end: string; role?: string }) => {
       const urlParams = new URLSearchParams();
       if (params.start) urlParams.set("start", params.start);
@@ -46,27 +46,14 @@ export const routes = {
       return `${API_BASE}/calendars/events${query ? `?${query}` : ""}`;
     },
     new_event: () => `${API_BASE}/calendars/events`,
-    event: (params: { id: string }) =>
-      `${API_BASE}/calendars/events/${params.id}`,
-    delete_event: (params: { id: string }) =>
-      `${API_BASE}/calendars/events/${params.id}`,
-    update_event: (params: { id: string }) =>
-      `${API_BASE}/calendars/events/${params.id}`,
-    delete_calendar: (params: { id: string }) =>
-      `${API_BASE}/calendars/${params.id}`,
-    update_calendar: (params: { id: string }) =>
-      `${API_BASE}/calendars/${params.id}`,
+    event: (params: { id: string }) => `${API_BASE}/calendars/events/${params.id}`,
+    delete_event: (params: { id: string }) => `${API_BASE}/calendars/events/${params.id}`,
+    update_event: (params: { id: string }) => `${API_BASE}/calendars/events/${params.id}`,
+    delete_calendar: (params: { id: string }) => `${API_BASE}/calendars/${params.id}`,
+    update_calendar: (params: { id: string }) => `${API_BASE}/calendars/${params.id}`,
   },
   decks: {
-    all: (params: {
-      page?: string;
-      per_page?: string;
-      search?: string;
-      assignee?: string;
-      visibility?: string;
-      sort_by?: string;
-      sort_order?: string;
-    }) => {
+    all: (params: { page?: string; per_page?: string; search?: string; assignee?: string; visibility?: string; sort_by?: string; sort_order?: string }) => {
       const urlParams = new URLSearchParams();
       if (params.page) urlParams.set("page", params.page);
       if (params.per_page) urlParams.set("per_page", params.per_page);
@@ -84,8 +71,7 @@ export const routes = {
     deck: (params: { id: string }) => `${API_BASE}/decks/${params.id}`,
     delete: (params: { id: string }) => `${API_BASE}/decks/${params.id}`,
     update: (params: { id: string }) => `${API_BASE}/decks/${params.id}`,
-    duplicate: (params: { id: string }) =>
-      `${API_BASE}/decks/${params.id}/duplicate`,
+    duplicate: (params: { id: string }) => `${API_BASE}/decks/${params.id}/duplicate`,
   },
   files: {
     abort_multipart_upload: () => `${API_BASE}/files/abort`,
@@ -97,33 +83,19 @@ export const routes = {
       const query = urlParams.toString();
       return `${API_BASE}/files/pdf/${params.id}${query ? `?${query}` : ""}`;
     },
-    presigned_urls_batch: (params: { task_id: string }) =>
-      `${API_BASE}/files/presigned/batch/${params.task_id}`,
-    presigned_url: (params: { encoded_key: string }) =>
-      `${API_BASE}/files/presigned/${params.encoded_key}`,
+    presigned_urls_batch: (params: { task_id: string }) => `${API_BASE}/files/presigned/batch/${params.task_id}`,
+    presigned_url: (params: { encoded_key: string }) => `${API_BASE}/files/presigned/${params.encoded_key}`,
     delete_file: (params: { id: string }) => `${API_BASE}/files/${params.id}`,
   },
   learn: {
     due_cards: () => `${API_BASE}/learn`,
-    subscribe_to: (params: { id: string }) =>
-      `${API_BASE}/learn/subscribe/${params.id}`,
-    unsubscribe_from: (params: { id: string }) =>
-      `${API_BASE}/learn/subscribe/${params.id}`,
-    update_card_progress: (params: { id: string }) =>
-      `${API_BASE}/learn/${params.id}`,
-    reset_deck_progress: (params: { id: string }) =>
-      `${API_BASE}/learn/${params.id}`,
+    subscribe_to: (params: { id: string }) => `${API_BASE}/learn/subscribe/${params.id}`,
+    unsubscribe_from: (params: { id: string }) => `${API_BASE}/learn/subscribe/${params.id}`,
+    update_card_progress: (params: { id: string }) => `${API_BASE}/learn/${params.id}`,
+    reset_deck_progress: (params: { id: string }) => `${API_BASE}/learn/${params.id}`,
   },
   lessons: {
-    all: (params: {
-      page?: string;
-      per_page?: string;
-      search?: string;
-      assignee?: string;
-      topic?: string;
-      sort_by?: string;
-      sort_order?: string;
-    }) => {
+    all: (params: { page?: string; per_page?: string; search?: string; assignee?: string; topic?: string; sort_by?: string; sort_order?: string }) => {
       const urlParams = new URLSearchParams();
       if (params.page) urlParams.set("page", params.page);
       if (params.per_page) urlParams.set("per_page", params.per_page);
@@ -140,18 +112,15 @@ export const routes = {
     lesson: (params: { id: string }) => `${API_BASE}/lessons/${params.id}`,
     delete: (params: { id: string }) => `${API_BASE}/lessons/${params.id}`,
     update: (params: { id: string }) => `${API_BASE}/lessons/${params.id}`,
-    upsert_photo: (params: { id: string }) =>
-      `${API_BASE}/lessons/${params.id}/photo`,
+    upsert_photo: (params: { id: string }) => `${API_BASE}/lessons/${params.id}/photo`,
   },
   notifications: {
     register_device_token: () => `${API_BASE}/notifications/register`,
     request_hw: () => `${API_BASE}/notifications/request`,
   },
   public: {
-    task_public: (params: { id: string }) =>
-      `${API_BASE}/public/task/${params.id}`,
-    content_public: (params: { slug: string }) =>
-      `${API_BASE}/public/${params.slug}`,
+    task_public: (params: { id: string }) => `${API_BASE}/public/task/${params.id}`,
+    content_public: (params: { slug: string }) => `${API_BASE}/public/${params.slug}`,
   },
   state: {
     badges: () => `${API_BASE}/state/badges`,
@@ -159,15 +128,7 @@ export const routes = {
     dashboard: () => `${API_BASE}/state/dashboard`,
   },
   tasks: {
-    all: (params: {
-      page?: string;
-      per_page?: string;
-      search?: string;
-      assignee?: string;
-      completed?: string;
-      sort_by?: string;
-      sort_order?: string;
-    }) => {
+    all: (params: { page?: string; per_page?: string; search?: string; assignee?: string; completed?: string; sort_by?: string; sort_order?: string }) => {
       const urlParams = new URLSearchParams();
       if (params.page) urlParams.set("page", params.page);
       if (params.per_page) urlParams.set("per_page", params.per_page);
@@ -199,15 +160,11 @@ export const routes = {
     profile: () => `${API_BASE}/users/profile`,
     upsert_profile: () => `${API_BASE}/users/profile`,
     students: () => `${API_BASE}/users/student`,
-    student: (params: { id: string }) =>
-      `${API_BASE}/users/student/${params.id}`,
-    upsert_student: (params: { id: string }) =>
-      `${API_BASE}/users/student/${params.id}`,
-    remove_student: (params: { id: string }) =>
-      `${API_BASE}/users/student/${params.id}`,
-    update_student: (params: { id: string }) =>
-      `${API_BASE}/users/student/${params.id}`,
-  },
+    student: (params: { id: string }) => `${API_BASE}/users/student/${params.id}`,
+    upsert_student: (params: { id: string }) => `${API_BASE}/users/student/${params.id}`,
+    remove_student: (params: { id: string }) => `${API_BASE}/users/student/${params.id}`,
+    update_student: (params: { id: string }) => `${API_BASE}/users/student/${params.id}`,
+  }
 } as const;
 
 // Type helpers

@@ -7,6 +7,9 @@
     Divider,
     Title2,
     EditButton,
+    Merger,
+    HStack,
+    Callout,
   } from "$lib/components";
   import texts from "$lib/texts.js";
   let { data } = $props();
@@ -18,12 +21,16 @@
   <title>{student.name}</title>
 </svelte:head>
 <Toolbar>
-  <LargeTitle>{student.name}</LargeTitle>
-  <Title3>
-    {student.email}
-  </Title3>
+  <HStack>
+    <LargeTitle>{student.name}</LargeTitle>
+    <Callout>
+      {student.email}
+    </Callout>
+  </HStack>
   <Divider />
-  <EditButton href="/t/students/{student.id}/edit" />
+  <Merger>
+    <EditButton href="/t/students/{student.id}/edit" />
+  </Merger>
 </Toolbar>
 <Title2>Заметки</Title2>
 {#if student.markdown}

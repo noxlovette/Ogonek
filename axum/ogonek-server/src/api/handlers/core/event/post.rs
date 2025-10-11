@@ -8,7 +8,9 @@ use axum::{
 };
 use ogonek_db::core::calendar::event::create;
 use ogonek_types::EventCreate;
-/// Create a new event
+/// Creates a new calendar event for the authenticated user
+///
+/// Creates an event with automatic end time if not provided (defaults to 1 hour duration).
 #[utoipa::path(
     post,
     path = "/events",

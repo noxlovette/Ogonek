@@ -28,7 +28,9 @@ use ogonek_types::{ActionType, ModelType, TaskUpdate};
         (status = 401, description = "Unauthorized")
     )
 )]
-/// Updates the task
+/// Updates an existing task with assignment and notification logic
+///
+/// Modifies task properties and handles assignee changes with proper notification and tracking.
 pub async fn update_task(
     State(state): State<AppState>,
     Path(id): Path<String>,

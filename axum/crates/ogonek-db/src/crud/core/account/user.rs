@@ -9,7 +9,7 @@ pub async fn read_by_id(
     let user = sqlx::query_as!(
         User,
         r#"
-        SELECT username, email, role as "role!: UserRole", id, name, pass
+        SELECT username, email, role as "role!: UserRole", id, name, verified
         FROM "user"
         WHERE id = $1
         "#,
@@ -241,7 +241,6 @@ mod tests {
         assert_eq!(updated_user.name, "New Name");
         assert_eq!(updated_user.username, "newusername");
         assert_eq!(updated_user.email, "new@example.com");
-        assert_eq!(updated_user.pass, "new_hashed_password");
 
         // Cleanup
         cleanup_user(&db, &user_id).await;
@@ -271,7 +270,6 @@ mod tests {
         assert_eq!(unchanged_user.name, original_user.name);
         assert_eq!(unchanged_user.username, original_user.username);
         assert_eq!(unchanged_user.email, original_user.email);
-        assert_eq!(unchanged_user.pass, original_user.pass);
         assert_eq!(unchanged_user.role, original_user.role);
 
         // Cleanup

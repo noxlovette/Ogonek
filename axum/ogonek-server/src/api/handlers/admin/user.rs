@@ -1,7 +1,7 @@
 use crate::{
     api::{ADMIN_TAG, error::APIError},
     app::AppState,
-    services::{AuditBuilder, Claims, RequestMetadata, hash_password},
+    services::{AuditBuilder, AuthError, Claims, RequestMetadata, hash_password},
 };
 use axum::extract::{Json, State};
 use ogonek_db::{
@@ -30,7 +30,7 @@ pub async fn create_user(
     Json(payload): Json<SignUpPayload>,
 ) -> Result<Json<String>, APIError> {
     if payload.username.is_empty() || payload.pass.is_empty() {
-        return Err(APIError::InvalidCredentials);
+        return Err(APIError::AuthError(AuthError::InvalidCredentials));
     }
 
     let email = user::read_email(&state.db, &claims.sub).await?;
@@ -59,12 +59,12 @@ pub async fn create_user(
             .build();
 
         audit::create(&state.db, &failed_audit).await?;
-        return Err(APIError::AccessDenied);
+        return Err(APIError::AuthError(AuthError::AccessDenied));
     }
 
     payload.validate().map_err(|e| {
         eprintln!("{e:?}");
-        APIError::InvalidCredentials
+        APIError::AuthError(AuthError::InvalidCredentials)
     })?;
 
     let hashed_password = hash_password(&payload.pass)?;

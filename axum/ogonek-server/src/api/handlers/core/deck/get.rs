@@ -10,7 +10,9 @@ use ogonek_types::{
 
 use crate::{AppError, AppState, Claims, api::DECK_TAG};
 
-/// One deck
+/// Retrieves a single deck with all its cards
+///
+/// Returns deck details including all associated flashcards and marks it as seen.
 #[utoipa::path(
     get,
     tag = DECK_TAG,
@@ -37,7 +39,9 @@ pub async fn fetch_deck(
     Ok(Json(deck_with_cards))
 }
 
-/// Decks the user has access to
+/// Retrieves a paginated list of decks accessible to the user
+///
+/// Returns decks the user owns or has been assigned with pagination and filtering support.
 #[utoipa::path(
     get,
     tag = DECK_TAG,
@@ -73,7 +77,9 @@ pub async fn list_decks(
     }))
 }
 
-/// Only public decks
+/// Retrieves all publicly available decks
+///
+/// Returns a list of all decks marked as public visibility.
 #[utoipa::path(
     get,
     tag = DECK_TAG,

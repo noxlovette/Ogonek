@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Check } from "@lucide/svelte";
+  import { Save } from "@lucide/svelte";
   import { UniButton } from "..";
   import texts from "$lib/texts";
 </script>
@@ -10,5 +10,5 @@
   variant="prominent"
   type="submit"
   ariaLabel="Save"
-  Icon={Check}
+  Icon={Save}
 ></UniButton>

@@ -56,11 +56,9 @@ mod tests {
             assignee: None,
         };
 
-        let id = create(db, &task_create, creator_id, assignee_id)
+        return create(db, &task_create, creator_id, assignee_id)
             .await
             .unwrap();
-
-        id
     }
 
     #[sqlx::test]

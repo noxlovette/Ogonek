@@ -15,6 +15,9 @@ use ogonek_types::{
     PresignedUrlResponse,
 };
 
+/// Retrieves file metadata by file ID
+///
+/// Returns file information for the authenticated user.
 pub async fn fetch_file(
     State(state): State<AppState>,
     claims: Claims,
@@ -25,6 +28,9 @@ pub async fn fetch_file(
     Ok(Json(file))
 }
 
+/// Generates a presigned URL for file access
+///
+/// Creates a temporary URL for accessing a file stored in S3 using base64 encoded key.
 #[utoipa::path(
     get,
     path = "/presigned/{encoded_key}",
@@ -68,7 +74,9 @@ pub async fn fetch_presigned_url(
     ))
 }
 
-/// Fetches all the files associated with a task and returns their presigned URLs
+/// Generates presigned URLs for all files associated with a task
+///
+/// Returns batch presigned URLs for all files linked to the specified task.
 #[utoipa::path(
     post,
     path = "/presigned/batch/{task_id}",
@@ -113,6 +121,9 @@ pub async fn fetch_presigned_urls_batch(
     ))
 }
 
+/// Lists files accessible to the authenticated user
+///
+/// Returns files based on query parameters and user permissions.
 pub async fn list_files(
     State(state): State<AppState>,
     claims: Claims,
@@ -123,6 +134,9 @@ pub async fn list_files(
     Ok(Json(files))
 }
 
+/// Updates file metadata
+///
+/// Modifies file properties for the authenticated user.
 pub async fn update_file(
     State(state): State<AppState>,
     claims: Claims,
@@ -133,7 +147,9 @@ pub async fn update_file(
 
     Ok(StatusCode::NO_CONTENT)
 }
-/// Deletes file
+/// Deletes a file from database and S3 storage
+///
+/// Removes the file metadata and actual file from S3 bucket.
 #[utoipa::path(
     delete,
     path = "/{id}",

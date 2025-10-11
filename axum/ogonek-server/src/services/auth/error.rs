@@ -3,7 +3,7 @@ use axum::{
     http::StatusCode,
     response::{IntoResponse, Response},
 };
-use ogonek_db::DbError;
+use ogonek_db::{DbError, RedisError};
 use serde_json::json;
 use thiserror::Error;
 
@@ -46,6 +46,10 @@ pub enum AuthError {
     UserNotFound,
     #[error("Authentication failed")]
     AuthenticationFailed,
+    #[error("Get the fuck outta here")]
+    AccessDenied,
+    #[error("Verification failed: {0}")]
+    VerificationFailed(String),
     #[error("Conflict: {0}")]
     Conflict(String),
 }
@@ -63,6 +67,10 @@ impl IntoResponse for AuthError {
             AuthError::UserNotFound => (StatusCode::NOT_FOUND, "User not found"),
             AuthError::AuthenticationFailed => (StatusCode::UNAUTHORIZED, "Authentication failed"),
             AuthError::Conflict(ref message) => (StatusCode::CONFLICT, message.as_str()),
+            AuthError::AccessDenied => (StatusCode::FORBIDDEN, "get out of here"),
+            AuthError::VerificationFailed(ref message) => {
+                (StatusCode::INTERNAL_SERVER_ERROR, message.as_str())
+            }
         };
         let body = Json(json!({
             "error": error_message,
@@ -86,6 +94,12 @@ impl From<Argon2Error> for PasswordHashError {
     fn from(error: Argon2Error) -> Self {
         eprintln!("{error}");
         Self::HashingError(error)
+    }
+}
+
+impl From<RedisError> for AuthError {
+    fn from(err: RedisError) -> Self {
+        Self::VerificationFailed(err.to_string())
     }
 }
 

@@ -37,7 +37,7 @@ if ! cargo +nightly fmt --check; then
 fi
 
 echo -e "${YELLOW}🔍 Running cargo clippy...${NC}"
-run_cmd cargo clippy -- -D warnings
+run_cmd cargo clippy --all-features --all --tests --examples -- -D clippy::all -D warnings
 
 echo -e "${YELLOW}🧪 Running cargo tests...${NC}"
 run_cmd cargo test

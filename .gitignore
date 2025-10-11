@@ -21,6 +21,7 @@ test-results/
 *.csv
 *.key
 *.p8
+*.pem
 
 input.md
 output.pdf

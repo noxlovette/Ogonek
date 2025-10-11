@@ -120,9 +120,9 @@ mod additional_tests {
 
         // Verify default values
         assert_eq!(prefs.user_id, user_id);
-        assert_eq!(prefs.auto_subscribe, true);
-        assert_eq!(prefs.email_notifications, true);
-        assert_eq!(prefs.push_notifications, true);
+        assert!(prefs.auto_subscribe);
+        assert!(prefs.email_notifications);
+        assert!(prefs.push_notifications);
         assert_eq!(prefs.theme, "system");
         assert_eq!(prefs.language, "en");
     }
@@ -162,9 +162,9 @@ mod additional_tests {
         let prefs = read_or_create_defaults(&db, &user_id).await.unwrap();
 
         assert_eq!(prefs.user_id, user_id);
-        assert_eq!(prefs.auto_subscribe, false);
-        assert_eq!(prefs.email_notifications, false);
-        assert_eq!(prefs.push_notifications, false);
+        assert!(!prefs.auto_subscribe);
+        assert!(!prefs.email_notifications);
+        assert!(!prefs.push_notifications);
         assert_eq!(prefs.theme, "dark");
         assert_eq!(prefs.language, "fr");
     }
@@ -189,9 +189,9 @@ mod additional_tests {
 
         let prefs = read_by_user_id(&db, &user_id).await.unwrap().unwrap();
         // Only theme should change, others should remain defaults
-        assert_eq!(prefs.auto_subscribe, true);
-        assert_eq!(prefs.email_notifications, true);
-        assert_eq!(prefs.push_notifications, true);
+        assert!(prefs.auto_subscribe);
+        assert!(prefs.email_notifications);
+        assert!(prefs.push_notifications);
         assert_eq!(prefs.theme, "dark");
         assert_eq!(prefs.language, "en");
     }
@@ -236,9 +236,9 @@ mod additional_tests {
         let final_prefs = read_by_user_id(&db, &user_id).await.unwrap().unwrap();
 
         // Verify all changes accumulated correctly
-        assert_eq!(final_prefs.auto_subscribe, false); // From update1
-        assert_eq!(final_prefs.email_notifications, false); // From update3
-        assert_eq!(final_prefs.push_notifications, true); // Unchanged default
+        assert!(!final_prefs.auto_subscribe); // From update1
+        assert!(!final_prefs.email_notifications); // From update3
+        assert!(final_prefs.push_notifications); // Unchanged default
         assert_eq!(final_prefs.theme, "light"); // From update2
         assert_eq!(final_prefs.language, "de"); // From update3
     }

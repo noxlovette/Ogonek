@@ -10,7 +10,9 @@ use ogonek_types::{ActionType, ModelType};
 use reqwest::StatusCode;
 
 use crate::{AppError as APIError, AppState, Claims, api::DECK_TAG};
-/// Deletes a deck
+/// Deletes a single deck and associated data
+///
+/// Removes the deck and cleans up tracking data for assignees.
 #[utoipa::path(
     delete,
     tag = DECK_TAG,
@@ -52,7 +54,9 @@ pub async fn delete_deck(
     Ok(StatusCode::NO_CONTENT)
 }
 
-/// Deletes many decks
+/// Deletes multiple decks in bulk
+///
+/// Removes multiple decks specified by their IDs for the authenticated user.
 #[utoipa::path(
     delete,
     path = "/many",

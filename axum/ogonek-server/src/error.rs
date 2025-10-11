@@ -7,19 +7,8 @@ use thiserror::Error;
 
 #[derive(Debug, Error)]
 pub enum AppError {
-    // Authentication errors
-    #[error("Invalid credentials")]
-    InvalidCredentials,
-
-    #[error("Authentication failed")]
-    AuthenticationFailed,
-
-    #[error("Access denied")]
-    AccessDenied,
-
-    #[error("Invalid token")]
-    InvalidToken,
-
+    #[error("Auth Error: {0}")]
+    AuthError(#[from] AuthError),
     // Resource errors
     #[error("Resource not found: {0}")]
     NotFound(String),
@@ -44,16 +33,18 @@ pub enum AppError {
 
     #[error("Notification failed: {0}")]
     NotificationFailed(#[from] ogonek_notifications::NotificationError),
+
+    #[error("S3 Error: {0}")]
+    S3Error(#[from] S3Error),
+
+    #[error("Redis Error: {0}")]
+    RedisError(#[from] RedisError),
 }
 
 impl IntoResponse for AppError {
     fn into_response(self) -> Response {
         let (status, message) = match &self {
-            // Authentication errors -> 401/403
-            Self::InvalidCredentials => (StatusCode::UNAUTHORIZED, self.to_string()),
-            Self::AuthenticationFailed => (StatusCode::UNAUTHORIZED, self.to_string()),
-            Self::AccessDenied => (StatusCode::FORBIDDEN, self.to_string()),
-            Self::InvalidToken => (StatusCode::UNAUTHORIZED, self.to_string()),
+            Self::AuthError(message) => (StatusCode::UNAUTHORIZED, message.to_string()),
 
             // Resource errors -> 404/409
             Self::NotFound(_resource) => (StatusCode::NOT_FOUND, self.to_string()),
@@ -86,6 +77,10 @@ impl IntoResponse for AppError {
                     "Internal server error".to_string(),
                 )
             }
+
+            Self::S3Error(err) => (StatusCode::INTERNAL_SERVER_ERROR, err.to_string()),
+
+            Self::RedisError(err) => (StatusCode::INTERNAL_SERVER_ERROR, err.to_string()),
         };
 
         (status, message).into_response()
@@ -93,23 +88,6 @@ impl IntoResponse for AppError {
 }
 
 use crate::services::AuthError;
-// Convert from AuthError
-impl From<AuthError> for AppError {
-    fn from(err: AuthError) -> Self {
-        match err {
-            AuthError::WrongCredentials => Self::InvalidCredentials,
-            AuthError::InvalidCredentials => Self::InvalidCredentials,
-            AuthError::SignUpFail => Self::Internal("Failed to sign up".into()),
-            AuthError::TokenCreation => Self::Internal("Failed to create token".into()),
-            AuthError::InvalidToken => Self::InvalidToken,
-            AuthError::EmailTaken => Self::AlreadyExists("Email already taken".into()),
-            AuthError::UsernameTaken => Self::AlreadyExists("Username already taken".into()),
-            AuthError::UserNotFound => Self::NotFound("User not found".into()),
-            AuthError::AuthenticationFailed => Self::AuthenticationFailed,
-            AuthError::Conflict(msg) => Self::AlreadyExists(msg),
-        }
-    }
-}
 
 impl From<reqwest::Error> for AppError {
     fn from(err: reqwest::Error) -> Self {
@@ -138,7 +116,7 @@ impl From<MultipartError> for AppError {
     }
 }
 
-use ogonek_db::DbError;
+use ogonek_db::{DbError, RedisError};
 // Convert from DbError
 impl From<DbError> for AppError {
     fn from(err: DbError) -> Self {
@@ -166,21 +144,13 @@ impl From<PasswordHashError> for AppError {
     }
 }
 
-use ogonek_s3::S3Error;
-// Convert from S3Error
-impl From<S3Error> for AppError {
-    fn from(err: S3Error) -> Self {
-        match err {
-            S3Error::AccessDenied => Self::AccessDenied,
-            S3Error::NotFound(msg) => Self::NotFound(msg),
-            S3Error::Validation(msg) => Self::Validation(msg),
-            S3Error::Internal(msg) => Self::Internal(format!("S3 error: {msg}")),
-            S3Error::BadRequest(msg) => Self::BadRequest(format!("S3 bad request: {msg}")),
-            S3Error::AlreadyExists(msg) => Self::AlreadyExists(msg),
-        }
+use ogonek_aws::{S3Error, SESError};
+
+impl From<SESError> for AppError {
+    fn from(err: SESError) -> Self {
+        Self::Internal(err.to_string())
     }
 }
-
 // Convert from validator errors
 impl From<validator::ValidationErrors> for AppError {
     fn from(errs: validator::ValidationErrors) -> Self {

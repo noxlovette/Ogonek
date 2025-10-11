@@ -15,6 +15,9 @@
     Calendar,
     Divider,
     HLine,
+    Account,
+    Notifications,
+    Teacher,
   } from "$lib/components";
   import { studentStore, setUser, setProfile } from "$lib/stores";
 
@@ -23,13 +26,19 @@
   import type { Student } from "$lib/types";
   import Loader from "$lib/components/UI/navigation/Loader.svelte";
 
+  const isSettings = $derived(page.url.pathname.includes("settings"));
   let { data, children } = $props();
   const role = page.params.role;
 
-  let elementsMobile = [Dashboard, Todo, Lessons, Words];
+  const { students } = $derived(data);
+
+  let elementsMobile = $derived(
+    isSettings
+      ? [Dashboard, Account, Notifications, Teacher]
+      : [Dashboard, Todo, Lessons, Words],
+  );
 
   studentStore.setStudents(data.students);
-  setContext<string | null>("callURL", data.callURL ?? "https://zoom.us");
   setContext<Student[]>("students", data.students);
   setContext<number>("lessonCount", data.badges.unseenLessons);
   setContext<number>("deckCount", data.badges.unseenDecks);
@@ -40,32 +49,40 @@
 </script>
 
 <div class="flex flex-row gap-4 p-2 md:gap-6 md:p-5 lg:gap-8 lg:p-6">
-  <div class="gap-default hidden w-max flex-col md:flex">
+  <div class="gap-default hidden flex-col md:flex">
     <Sidebar
       ><Dashboard />
       <HLine />
-      <Todo />
-      <Lessons />
-      <Words />
-      <HLine></HLine>
-      {#if role == "s"}
-        <Zoom />
+      {#if !isSettings}
+        <Todo />
+        <Lessons />
+        <Words />
+        <HLine></HLine>
+        {#if role == "s"}
+          <Zoom href={data.callURL ?? "https://zoom.us"} />
+        {:else}
+          <Students />
+        {/if}
+        {#if role != "s"}
+          <Calendar />
+        {/if}
       {:else}
-        <Students />
-      {/if}
-      {#if role != "s"}
-        <Calendar />
+        <Account />
+        <Notifications />
+        <Teacher />
       {/if}
     </Sidebar>
-    <Sidebar>
-      {#if role == "s"}
-        <UsefulLinks />
-      {:else}
-        <StudentFilter />
-        <QuickAdd />
-        <Divider></Divider>
-      {/if}
-    </Sidebar>
+    {#if !isSettings}
+      <Sidebar>
+        {#if role == "s"}
+          <UsefulLinks />
+        {:else}
+          <StudentFilter {students} />
+          <QuickAdd />
+          <Divider></Divider>
+        {/if}
+      </Sidebar>
+    {/if}
   </div>
   <WorkArea>
     {@render children?.()}
